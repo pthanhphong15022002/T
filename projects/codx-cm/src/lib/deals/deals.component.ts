@@ -1236,31 +1236,58 @@ export class DealsComponent
     });
   }
   //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.dataSelected.approveStatus = '3';
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.codxCmService
-            .updateApproveStatus('DealsBusiness', data?.recID, '3')
-            .subscribe();
+  // release(data: any, processID: any) {
+  //   this.codxShareService
+  //     .codxRelease(
+  //       this.view.service,
+  //       data?.recID,
+  //       processID,
+  //       this.view.formModel.entityName,
+  //       this.view.formModel.funcID,
+  //       '',
+  //       data?.title,
+  //       ''
+  //     )
+  //     .subscribe((res2: any) => {
+  //       if (res2?.msgCodeError)
+  //         this.notificationsService.notify(res2?.msgCodeError);
+  //       else {
+  //         this.dataSelected.approveStatus = '3';
+  //         this.view.dataService.update(this.dataSelected).subscribe();
+  //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+  //         this.codxCmService
+  //           .updateApproveStatus('DealsBusiness', data?.recID, '3')
+  //           .subscribe();
+  //         this.notificationsService.notifyCode('ES007');
+  //       }
+  //     });
+  // }
+
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback
+    );
+  }
+  //call Back
+  releaseCallback(res: any) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+        .subscribe((q) => {
+          if (q) {
+            this.dataSelected = q;
+            this.view.dataService.update(this.dataSelected).subscribe();
+          }
           this.notificationsService.notifyCode('ES007');
-        }
-      });
+        });
+    }
   }
 
   //Huy duyet
@@ -1302,10 +1329,7 @@ export class DealsComponent
                 }
               });
           } else {
-            this.notificationsService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notificationsService.notifyCode('DP040');
           }
         });
       }
