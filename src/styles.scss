@@ -3449,8 +3449,10 @@ lib-employee-list{
 }
 .text-feed{
   height: 210px;
+  font-size: 12px!important;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+
 }
 
 .multiple-employee.w-25px.h-25px{
