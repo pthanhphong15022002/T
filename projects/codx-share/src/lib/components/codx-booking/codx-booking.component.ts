@@ -798,20 +798,16 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       if (!autoRelease ) {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
-          .subscribe((res: any) => {
+          .subscribe((category: any) => {
             this.codxShareService
-            .codxRelease(
+            .codxReleaseDynamic(
               'EP',
-              data?.recID,
-              res?.processID,
+              data,
+              category,
               'EP_Bookings',
-              this.formModel.funcID,
-              data?.createdBy,
+              this.formModel?.funcID,
               data?.title,
-              null,
-              [this.resourceOwner]
-            )
-              .subscribe((res:any) => {
+              (res:any) => {
                 if (res?.msgCodeError == null && res?.rowCount) {
                   this.notificationsService.notifyCode('ES007');
                   data.approveStatus = EPCONST.A_STATUS.Released;
@@ -822,7 +818,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);
                 }
-              });
+              },
+              data?.createdBy,
+              [this.resourceOwner],
+              null,
+            )
           });
       } else {
         data.approveStatus = EPCONST.A_STATUS.Approved;

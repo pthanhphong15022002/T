@@ -190,7 +190,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.baseCurr = dialogData.data?.baseCurr;
     this.isInit = true;
     this.loadInit();
-    
+
   }
   //#endregion
 
@@ -592,7 +592,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   lineChanged(e: any) {
     if (e.hasNoChange) {
-      this.gridCash.focusNextinput(this.gridCash.editIndex);
+      //this.gridCash.focusNextinput(this.gridCash.editIndex);
       return;
     }
     this.dataLine = e.data;
@@ -623,7 +623,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (res) {
             this.dataLine.dR2 = res.dR2;
             this.dataLine.cR2 = res.cR2;
-            this.gridCash.focusNextinput(this.gridCash.editIndex);
+            //this.gridCash.focusNextinput(this.gridCash.editIndex);
           }
         })
         if (this.journal.entryMode == '2') {
@@ -643,7 +643,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (res) {
             this.dataLine.dR2 = res.dR2;
             this.dataLine.cR2 = res.cR2;
-            this.gridCash.focusNextinput(this.gridCash.editIndex);
+            //this.gridCash.focusNextinput(this.gridCash.editIndex);
           }
         })
         if (this.journal.entryMode == '2') {
@@ -663,11 +663,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
             if (res) {
               this.dataLine.dr = res.dr;
-              this.gridCash.focusNextinput(this.gridCash.editIndex);
+              //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           })
-        }    
-        this.gridCash.focusNextinput(this.gridCash.editIndex);
+        }
+        //this.gridCash.focusNextinput(this.gridCash.editIndex);
         break;
       case 'cr2':
         if (this.dataLine.cR2 != 0 && this.dataLine.dR2 != 0) {
@@ -682,7 +682,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
             if (res) {
               this.dataLine.cr = res.cr;
-              this.gridCash.focusNextinput(this.gridCash.editIndex);
+              //this.gridCash.focusNextinput(this.gridCash.editIndex);
             }
           })
         }
@@ -806,18 +806,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.loadGrid();
         } else {
           this.popupSettledInvoices(this.typeSet);
-        }    
+        }
         if (this.hasSaved) {
-          if (this.cashpayment.updateColumn) {    
+          if (this.cashpayment.updateColumn) {
             this.cashpayment.updateColumn = null;
-            this.dialog.dataService.update(this.cashpayment).subscribe();     
+            this.dialog.dataService.update(this.cashpayment).subscribe();
             this.api
               .exec('AC', this.className, 'UpdateMasterAsync', [
                 this.cashpayment,
               ])
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
-                if (res) {                         
+                if (res) {
                   // if (res.unbounds.lineDefault != null) {
                   //   this.dataLine = res.unbounds.lineDefault;
                   // }
@@ -1865,7 +1865,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
     oAcct = this.acService.getCacheValue('account',this.dataLine.accountID);
     oOffAcct = this.acService.getCacheValue('account',this.dataLine.offsetAcctID);
- 
+
     let dicSetting = JSON.parse(this.journal.extras);
     if (dicSetting) {
       if (
@@ -2282,7 +2282,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }else{
       if (this.cbxPayee.ComponentCurrent.value) {
         payName = this.cbxPayee.ComponentCurrent.value + ' - ';
-      }   
+      }
     }
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
