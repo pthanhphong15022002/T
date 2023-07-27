@@ -23,6 +23,7 @@ subHeaderText:string = '';
 
 objectID:string = '';
 employeeName: any;
+gridViewSetup: any;
 
 constructor(
   private injector: Injector,
@@ -35,6 +36,7 @@ constructor(
   super(injector);
   this.dialogRef = dialogRef;
   this.title = dialogData?.data.titleAction;
+  this.gridViewSetup = dialogData?.data.gridViewSetup;
   this.subHeaderText = 'Công tác quản lý các mảng Dịch vụ hạ tầng, Dịch vụ tiện tích, Dịch vụ Điện nước'
 }
 
