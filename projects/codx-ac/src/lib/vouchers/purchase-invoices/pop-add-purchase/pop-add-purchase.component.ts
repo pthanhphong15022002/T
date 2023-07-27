@@ -295,31 +295,22 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   onCellChange(e: any) {
-    // if (e.data?.isAddNew == null) {
-    //   this.api
-    //     .exec(
-    //       'AC',
-    //       'PurchaseInvoicesLinesBusiness',
-    //       'CheckExistPurchaseInvoicesLines',
-    //       [e.data.recID]
-    //     )
-    //     .subscribe((res: any) => {
-    //       if (res) {
-    //         e.data.isAddNew = res;
-    //       } else {
-    //         this.api
-    //           .exec('AC', 'VATInvoicesBusiness', 'UpdateVATfromPurchaseAsync', [
-    //             this.master,
-    //             e.data,
-    //           ])
-    //           .subscribe(() => {});
-    //       }
-    //     });
-    // }
-    // console.log('onCellChange', e);
-    // if (!e.data[e.field]) {
-    //   return;
-    // }
+    console.log('onCellChange', e);
+    if (!e.data[e.field]) {
+      return;
+    }
+
+    const postFields: string[] = ['itemID'];
+    if (postFields.includes(e.field)) {
+      this.api
+        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
+          e.field,
+          e.data,
+        ])
+        .subscribe((line) => {
+          this.lines[e.idx] = Object.assign(this.lines[e.idx], line);
+        });
+    }
   }
 
   onClickClose() {
