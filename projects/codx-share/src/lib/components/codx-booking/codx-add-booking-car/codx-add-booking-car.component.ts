@@ -1016,20 +1016,16 @@ export class CodxAddBookingCarComponent
             if (this.approvalRule != '0') {
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
-                .subscribe((res: any) => {
+                .subscribe((category: any) => {
                   this.codxShareService
-                  .codxRelease(
+                  .codxReleaseDynamic(
                     'EP',
-                    this.returnData?.recID,
-                    res?.processID,
+                    this.returnData,
+                    category,
                     'EP_Bookings',
                     this.formModel.funcID,
-                    this.returnData?.createdBy,
                     this.returnData?.title,
-                    null,                    
-                    this.resourceOwner
-                  )
-                    .subscribe((res) => {
+                    (res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
                         this.returnData.approveStatus = '3';
@@ -1044,7 +1040,10 @@ export class CodxAddBookingCarComponent
                         // Thêm booking thành công nhưng gửi duyệt thất bại
                         this.dialogRef && this.dialogRef.close(this.returnData);
                       }
-                    });
+                    },
+                    this.returnData?.createdBy,
+                    this.resourceOwner,               
+                  )
                 });
             } else {
               this.notificationsService.notifyCode('ES007');
@@ -1058,7 +1057,6 @@ export class CodxAddBookingCarComponent
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
 
-            this.dialogRef && this.dialogRef.close(this.returnData);
           } else {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
