@@ -5,8 +5,8 @@
     <div class="w-100">
         <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
             <div class="d-flex align-items-center me-2">
-                <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
-                    <i class="icon-add_box icon-16"></i>
+                <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
+                    <i class="icon-i-check2-square icon-16"></i>
                 </div>
                 <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
                     Chọn đề nghị tạm ứng
@@ -23,17 +23,52 @@
     </div>
 </ng-template>
 <ng-template #body>
-    <div class="card-add mt-5" #cardbodyRef>
-        <ejs-tab #cashRef>
+    <div style="height: 110px !important;">
+        <ejs-tab enablePersistence="true">
             <e-tabitems>
-                <!-- Tab thông tin chứng từ -->
                 <e-tabitem>
                     <ng-template #headerText>
-                        <div class="d-flex align-items-top me-2 mt-3">
-                            <i class="icon-info icon-18 me-2"></i>
-                            <codx-label class="fw-bold fs-5-sm" fiedName="lblGeneral" [formModel]="form.formModel"
-                                default="Điều kiện lọc"></codx-label>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-filter_list icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral"
+                                [formModel]="form.formModel" default="Điều kiện lọc"></codx-label>
                         </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <div style="height: calc(100vh - 425px)!important;">
+        <ejs-tab enablePersistence="true">
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-i-list-check icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblDetail"
+                                [formModel]="form.formModel" default="Chi tiết"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="tabDetail"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <!-- <div>
+        <ejs-tab>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-format_list_numbered icon-18 me-2"></i>
+                            <codx-label style="font-size: 14px !important;" class="fw-bold" fiedName="lblGeneral"
+                              [formModel]="form.formModel" default="Điều kiện lọc"></codx-label>
+                          </div>
                     </ng-template>
                     <ng-template #content>
                         <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
@@ -43,7 +78,6 @@
         </ejs-tab>
         <ejs-tab>
             <e-tabitems>
-                <!-- Tab chi tiết bút toán -->
                 <e-tabitem>
                     <ng-template #headerText>
                         <div class="d-flex align-items-top me-2 mt-3">
@@ -58,68 +92,62 @@
                 </e-tabitem>
             </e-tabitems>
         </ejs-tab>
-    </div>
+    </div> -->
 </ng-template>
 <ng-template #tabBasic>
     <ng-container *ngIf="form?.formGroup">
-        <div class="row mt-6">
-            <div class="col-7 ac-left">
-                <div class="mw-750px">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <codx-label fiedName="objectID" [formModel]="form.formModel" default="Đối tượng">
-                                </codx-label>
-                                <codx-input type="text" field="objectID" [disabled]="true"
-                                    [crrValue]="cashpayment.objectName"></codx-input>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <codx-label fiedName="VoucherDate" [formModel]="form.formModel"
-                                        default="Ngày đề nghị từ">
-                                    </codx-label>
-                                    <codx-input field="VoucherDate" [crrValue]="dateNow" (valueChange)="valueChange($event)"
-                                        [formModel]="form.formModel">
-                                    </codx-input>
-                                </div>
-                            </div>
-                        </div>
+        <div class="p-3 tab-basic">
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <codx-label fiedName="objectID" default="Đối tượng">
+                        </codx-label>
+                        <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
                     </div>
                 </div>
-            </div>
-            <div class="col-2 ac-bettween"></div>
-            <div class="col-3 ac-right d-flex justify-content-end">
-                <div class="col-6 mt-5 justify-content-end">
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="submit()">
-                            <div class="d-flex align-items-center">
-                                <i class="icon-i-funnel icon-16 me-1"></i>
-                                <codx-label class="fs-6 fw-normal" fiedName="lblSave"
-                                    default="Lấy dữ liệu"></codx-label>
-                            </div>
-                        </button>
+                <div class="col-2">
+                    <div class="form-group">
+                        <codx-label fiedName="lblDate" default="Ngày đề nghị từ">
+                        </codx-label>
+                        <codx-input field="voucherDate" [formModel]="form.formModel"
+                            (valueChange)="valueChange($event)"></codx-input>
                     </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <codx-label [formModel]="form.formModel" default="Ngày đề nghị đến">
+                        </codx-label>
+                        <codx-input field="voucherDate" [formModel]="form.formModel" [disabled]="true"
+                            [crrValue]="cashpayment.voucherDate"></codx-input>
+                    </div>
+                </div>
+                <div class="col-3 d-flex align-items-center mt-1">
+                    <button type="button" class="btn btn-md btn-light-primary" style="min-width: 60px"
+                        (click)="submit()">
+                        <div class="d-flex align-items-center">
+                            <i class="icon-i-funnel icon-16 me-1"></i>
+                            <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>
     </ng-container>
 </ng-template>
 <ng-template #tabDetail>
-    <div class="h-100px tabset-content position-relative">
-        <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="dialog.formModel.formName"
-            [gridViewName]="dialog.formModel.gridViewName" [entityName]="dialog.formModel.entityName"
-            [dataSource]="dataCash" hideMoreFunc="true" service="AC" [autoLoad]="false"
-            [editSettings]="editSettings"></codx-gridview-v2>
+    <div class="h-100px tabcash-content position-relative">
+        <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" 
+            (onSelected)="onSelected($event)" [gridViewName]="dialog.formModel.gridViewName"
+            [entityName]="dialog.formModel.entityName" [dataSource]="dataCash" hideMoreFunc="true" service="AC"
+            [autoLoad]="false" [autoFitColumns]="false" [editSettings]="noEditSetting"></codx-gridview-v2>
     </div>
 </ng-template>
 <ng-template #footer>
     <div class="ms-2 me-2">
-        <button type="button" class="btn btn-primary" style="min-width: 60px">
+        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="accept()">
             <div class="d-flex align-items-center">
-                <i class="icon-check icon-16 me-1"></i>
-                <codx-label class="fw-normal" default="Xác nhận"></codx-label>
+                <i class="icon-download_done icon-16 me-1"></i>
+                <codx-label class="fw-normal" default="Chọn"></codx-label>
             </div>
         </button>
     </div>

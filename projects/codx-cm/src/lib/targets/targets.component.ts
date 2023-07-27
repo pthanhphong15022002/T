@@ -224,7 +224,7 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
-    var year = parseInt(data?.fromDate?.getFullYear());
+    var year = data?.fromDate ? parseInt(data?.fromDate?.getFullYear()) : new Date().getFullYear();
     this.year = year;
     this.loadTreeData(year?.toString());
     this.detectorRef.detectChanges();

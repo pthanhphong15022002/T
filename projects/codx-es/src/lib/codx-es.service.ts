@@ -455,7 +455,7 @@ export class CodxEsService {
       [data, isAdd]
     );
   }
-  getAllCategory(category:string): Observable<any> {
+  getAllCategory(category: string): Observable<any> {
     return this.api.execSv(
       'ES',
       'ES',
@@ -639,7 +639,7 @@ export class CodxEsService {
     );
   }
 
-  getCategoryByCateIDType(categoryID: string, category :string) {
+  getCategoryByCateIDType(categoryID: string, category: string) {
     return this.api.execSv<any>(
       'ES',
       'ES',
@@ -787,7 +787,45 @@ export class CodxEsService {
       [transID]
     );
   }
+  deleteFileByObjectID(objectID:string, objectType:string, delForever:boolean) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectIDAsync',
+      [objectID, objectType, delForever]
+    );
+  }
+  copyFileByObjectID(oldRecID:string, newRecID:string): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'CopyFileByObjectIDAsync',
+      [oldRecID, newRecID, "ES_SignFiles", "sign"]
+    );
+  }
+  
 
+  //Get AD template
+  getExcelTemplate(recID:string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'ExcelTemplatesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+  getWordTemplate(recID:string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'WordTemplatesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
   updateTransID(newTransID): Observable<any> {
     let oldTransID = '00000000-0000-0000-0000-000000000000';
     this.transID.subscribe((res) => {
@@ -849,7 +887,6 @@ export class CodxEsService {
   }
 
   //#endregion
-
   //#region EmailTemplate
   public lstTmpEmail = [];
   deleteEmailTemplate(): Observable<any> {
@@ -922,7 +959,6 @@ export class CodxEsService {
       [categoryID, null, true, null]
     );
   }
-
   getDetailSignFile(recID): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -1191,7 +1227,6 @@ export class CodxEsService {
       [content]
     );
   }
-  
 
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
@@ -1447,7 +1482,6 @@ export class CodxEsService {
     );
   }
 
-  
   //#endregion
 
   //#region CA
@@ -1572,13 +1606,23 @@ export class CodxEsService {
       [recID]
     );
   }
-  getDataValueOfSetting(formName:string,transType:string,category:string) {
+  getDataValueOfSetting(formName: string, transType: string, category: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'GetDataValueOfSettingAsync',
-      [formName,transType,category]
+      [formName, transType, category]
+    );
+  }
+
+  testCreateCA() {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      []
     );
   }
 }

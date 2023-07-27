@@ -1133,16 +1133,16 @@ export class CodxShareService {
 
   codxReleaseDynamic(
     module: string, //Tên service
-    data: any, //RecID nghiệp vụ gốc
-    category: any, //Mã quy trình duyệt
+    data: any, //data nghiệp vụ gốc – thay cho việc truyền recID như trước: phục vụ cho việc xuất dữ liệu
+    category: any, //Phân loại tài liệu hiện hành - thay cho việc truyền processID như trước: phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-    approvers: Array<string> = null, //Danh sách userID của RO
+    approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    releaseOnly: boolean = false
+    releaseOnly: boolean = false //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;

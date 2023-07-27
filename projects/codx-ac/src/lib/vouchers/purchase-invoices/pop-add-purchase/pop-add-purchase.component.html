@@ -34,7 +34,12 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ejs-tab heightAdjustMode="Fill" class="overflow-auto mb-4" id="styledTab" #tab>
+    <ejs-tab
+      heightAdjustMode="Fill"
+      class="overflow-auto mb-4"
+      id="styledTab"
+      #tab
+    >
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -114,14 +119,16 @@
                 [allowSorting]="true"
                 [dataSource]="vatInvoices"
                 [rowHeight]="35"
-                (cellChanged)="cellChangedInvoice($event)"
                 (created)="onGridCreated($event, gridVatInvoices)"
+                (onAddNew)="onEndAddNew2($event)"
+                (onEdit)="onEndEdit2($event)"
               ></codx-gridview-v2>
 
               <button
                 id="btnAddLine2"
                 class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
                 style="top: -28px"
+                (click)="onClickAddRow()"
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
@@ -136,76 +143,16 @@
       </e-tabitems>
     </ejs-tab>
 
-    <ng-container *ngIf="!isInvoiceRefHidden">
-      <div class="mb-3 text-primary fw-bold fs-5">
-        <codx-label
-          fiedName="lblRefInfo"
-          [formModel]="form.formModel"
-          default="Thông tin hóa đơn tham chiếu"
-        ></codx-label>
-      </div>
-      <div class="row">
-        <div class="col-2 form-group">
-          <codx-label
-            fiedName="invoiceForm"
-            [formModel]="form.formModel"
-            default="Mẫu số"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="invoiceForm"
-            [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="col-2 form-group">
-          <codx-label
-            fiedName="invoiceSeriNo"
-            [formModel]="form.formModel"
-            default="Ký hiệu"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="invoiceSeriNo"
-            [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
-          ></codx-input>
-        </div>
-        <div class="col-4 form-group">
-          <codx-label
-            fiedName="invoiceNo"
-            [formModel]="form.formModel"
-            default="Số hóa đơn"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="invoiceNo"
-            [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="col-4 form-group">
-          <codx-label
-            fiedName="invoiceDate"
-            [formModel]="form.formModel"
-            default="Ngày hóa đơn"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="invoiceDate"
-            [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </ng-container>
+    <div class="form-group d-flex align-items-center">
+      <i class="bi bi-card-text fs-1 text-dark"></i>
+      <codx-input
+        field="memo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        style="width: 100%"
+      >
+      </codx-input>
+    </div>
   </div>
 </ng-template>
 
@@ -296,7 +243,7 @@
   <div class="row mt-5">
     <div class="col-7 ac-left">
       <div class="mw-750px row">
-        <div class="col-3 form-group">
+        <div class="col-12 form-group">
           <codx-label
             fiedName="objectID"
             [formModel]="form.formModel"
@@ -308,16 +255,6 @@
             field="objectID"
             [formModel]="form.formModel"
             (valueChange)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="col-9 form-group">
-          <codx-label fiedName="pmtMethodID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="pmtMethodID"
-            [formModel]="form.formModel"
           >
           </codx-input>
         </div>
@@ -333,6 +270,20 @@
             field="pmtTermID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="pmtMethodID"
+            [formModel]="form.formModel"
+            default="Hình thức thanh toán"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="pmtMethodID"
+            [formModel]="form.formModel"
           >
           </codx-input>
         </div>
@@ -364,6 +315,66 @@
           >
           </codx-input>
         </div>
+
+        <div class="col-2 form-group">
+          <codx-label
+            fiedName="invoiceForm"
+            [formModel]="form.formModel"
+            default="Mẫu số"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceForm"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-2 form-group">
+          <codx-label
+            fiedName="invoiceSeriNo"
+            [formModel]="form.formModel"
+            default="Ký hiệu"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceSeriNo"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-2 form-group">
+          <codx-label
+            fiedName="invoiceNo"
+            [formModel]="form.formModel"
+            default="Số hóa đơn"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceNo"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label
+            fiedName="invoiceDate"
+            [formModel]="form.formModel"
+            default="Ngày hóa đơn"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="invoiceDate"
+            [formModel]="form.formModel"
+            (valueChange)="onInputChange($event)"
+          >
+          </codx-input>
+        </div>
         <div class="col-3 form-group">
           <codx-label
             fiedName="taxExchRate"
@@ -376,21 +387,6 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (controlBlur)="onInputChange($event)"
-          >
-          </codx-input>
-        </div>
-
-        <div class="col-12 form-group">
-          <codx-label
-            fiedName="memo"
-            [formModel]="form.formModel"
-            default="Diễn giải"
-          >
-          </codx-label>
-          <codx-input
-            field="memo"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
@@ -491,7 +487,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="form.formModel"
-    (clickMF)="clickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
     (changeDataMF)="onChangeMF($event)"
     [isBookMark]="true"
     type="view"

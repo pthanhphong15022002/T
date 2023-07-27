@@ -1459,44 +1459,43 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     if (this.approvalRule != '0') {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
-        .subscribe((res: any) => {
+        .subscribe((category: any) => {
           this.codxShareService
-            .codxRelease(
+            .codxReleaseDynamic(
               'EP',
-              this.returnData?.recID,
-              res?.processID,
+              this.returnData,
+              category,
               'EP_Bookings',
               this.formModel.funcID,
-              this.returnData?.createdBy,
               this.returnData?.title,
-              null,
-              this.resourceOwner
+              (res) => {
+                if (res?.msgCodeError == null && res?.rowCount) {
+                  this.notificationsService.notifyCode('ES007');
+                  this.returnData.approveStatus = '3';
+                  this.returnData.write = false;
+                  this.returnData.delete = false;
+                  this.codxBookingService
+                    .getBookingByRecID(this.returnData.recID)
+                    .subscribe((res) => {
+                      if (res) {
+                        this.returnData.approveStatus = res?.approveStatus;
+                        this.detectorRef.detectChanges();
+                      }
+                      (this.dialogRef.dataService as CRUDService)
+                      .update(this.returnData)
+                      .subscribe();
+                    });
+                  
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                } else {
+                  this.notificationsService.notifyCode(res?.msgCodeError);
+                  // Thêm booking thành công nhưng gửi duyệt thất bại
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                }
+              },
+              this.returnData?.createdBy,
+              this.resourceOwner,
             )
-            .subscribe((res) => {
-              if (res?.msgCodeError == null && res?.rowCount) {
-                this.notificationsService.notifyCode('ES007');
-                this.returnData.approveStatus = '3';
-                this.returnData.write = false;
-                this.returnData.delete = false;
-                this.codxBookingService
-                  .getBookingByRecID(this.returnData.recID)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.returnData.approveStatus = res?.approveStatus;
-                      this.detectorRef.detectChanges();
-                    }
-                    (this.dialogRef.dataService as CRUDService)
-                    .update(this.returnData)
-                    .subscribe();
-                  });
-                
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              } else {
-                this.notificationsService.notifyCode(res?.msgCodeError);
-                // Thêm booking thành công nhưng gửi duyệt thất bại
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              }
-            });
         });
     } else { 
       this.notificationsService.notifyCode('ES007');

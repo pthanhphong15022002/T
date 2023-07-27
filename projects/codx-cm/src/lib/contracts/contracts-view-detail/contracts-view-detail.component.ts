@@ -125,52 +125,10 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
 
   changeDataMF(event, data:CM_Contracts) {
-    if (event != null) {
-      event.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-
-        break;
-      case 'SYS03':
-
-        break;
-      case 'SYS04':
-
-        break;
-      case 'CM0204_4':
-        res.disabled = true;
-        break;
-      case 'CM0204_3'://tạo hợp đồng gia hạn
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_5'://Đã giao hàng
-      if(data?.status == '0'){
-        res.disabled = true;
-      }
-        break;
-      case 'CM0204_6'://hoàn tất hợp đồng
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_1'://Gửi duyệt
-        if(data?.status != '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_2'://Hủy yêu cầu duyệt
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
-        }
-      });
-    }
+    this.changeMF.emit({ e: event, data: data });
   }
-  clickMF(e, data) {
-    this.clickMoreFunc.emit({ e: e, data: data });
+  clickMF(event, data) {
+    this.clickMoreFunc.emit({ e: event, data: data });
   }
 
   getPayMentByContractID(contractID) {

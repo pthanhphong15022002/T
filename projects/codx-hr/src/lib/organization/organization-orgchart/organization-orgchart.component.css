@@ -75,24 +75,19 @@
   cursor: pointer;
 }
 
-.c-last {
-  border-bottom: 1px groove #80808054;
-}
 
 .p-collapse {
   display: flex;
-  padding: 10px;
-  border-top: 1px groove #80808054;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--gray-150);
   cursor: pointer;
-}
-
-.form-check .form-check-input {
-  position: relative;
+  background-color: var(--gray-50);
 }
 
 input[type="radio"] {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -105,24 +100,13 @@ input[type="radio"] {
   border-radius: unset;
 }
 input[type="checkbox"] {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   position: absolute;
   top: 50%;
   transform: translateY(30%);
   left: 4px;
   content: "";
-}
-
-.c-header {
-  position: fixed !important;
-  z-index: 10;
-  width: 100%;
-  top: 0;
-}
-
-.p-top {
-  margin-top: 60px;
 }
 
 .scroll-panel {
@@ -139,3 +123,24 @@ input[type="checkbox"] {
   -khtml-border-radius: 4px;
   border-radius: 4px;
 } */
+
+.form-check{
+  .form-check-input {
+    position: relative;
+    margin-left: -2rem;
+  }
+} 
+
+.form-check-label{
+  font-weight: normal;
+  margin-bottom: 0!important;
+  line-height: 20px;
+}
+.form-check:hover .form-check-label{
+  color: var(--gray-500);
+}
+.form-select{
+  font-size: var(--fs-body);
+    border-radius: 2px;
+    padding: 5px 0 5px 10px;
+}
