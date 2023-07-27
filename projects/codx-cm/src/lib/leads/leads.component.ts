@@ -150,6 +150,7 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
+    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
@@ -208,7 +209,7 @@ export class LeadsComponent
     try {
       this.getFuncID(this.funcID);
       this.getColorReason();
-      this.getProcessSetting();
+      // this.getProcessSetting();
       this.getCurrentSetting();
     } catch (error) {}
   }
