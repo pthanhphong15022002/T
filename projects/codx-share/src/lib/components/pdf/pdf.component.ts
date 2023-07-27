@@ -2908,11 +2908,13 @@ export class PdfComponent
     });
   }
 
-  testCreateCA() {
-    this.esService.testCreateCA().subscribe((res) => {
-      console.log('test', res);
-    });
-  }
+  // testCreateCA() {
+  //   this.signPDF(5, "test").then(res =>{
+  //     console.log('sign pdf', res);
+
+  //   })
+  //   this.api.execSv
+  // }
   //#endregion
 }
 //create new guid
