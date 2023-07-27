@@ -65,7 +65,68 @@
     </div>
   </div>
 
-  <div class="row mt-5 mb-3">
+  <div class="d-flex my-5">
+    <div class="me-4">
+      <codx-vll
+        *ngIf="EBasicSalaryObj.status"
+        [formModel]="formModel"
+        [field]="'Status'"
+        [value]="EBasicSalaryObj?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
+      >
+      </codx-vll>
+    </div>
+    <div
+      *ngIf="
+        EBasicSalaryObj.isCurrent &&
+        dateNow >= moment(EBasicSalaryObj.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(EBasicSalaryObj.expiredDate).format('YYYY-MM-DD') ||
+          EBasicSalaryObj.expiredDate === null)
+      "
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18"
+      [ngbPopover]="popIsNewest"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+    ></div>
+
+    <div
+      *ngIf="
+        EBasicSalaryObj?.isCurrent &&
+        dateNow > moment(EBasicSalaryObj.expiredDate).format('YYYY-MM-DD')
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popOverDue"
+      [style.color]="'#F64E60'"
+      class="icon-notifications icon-18"
+    ></div>
+
+    <div
+      *ngIf="
+        EBasicSalaryObj?.isCurrent &&
+        dateNow < moment(EBasicSalaryObj.effectedDate).format('YYYY-MM-DD')
+      "
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+      [ngbPopover]="popIsNotNewsest"
+      [style.color]="'#FFA800'"
+      class="icon-queue_play_next icon-18"
+    ></div>
+  </div>
+  <!-- <div class="row mt-5 mb-3">
     <div class="col-6">
       <codx-vll
         *ngIf="EBasicSalaryObj.status"
@@ -96,28 +157,7 @@
         ></codx-label>
       </div>
     </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
-      <codx-input
-        [disabled]="disabledInput"
-        field="effectedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
-      <codx-input
-        [disabled]="disabledInput"
-        field="expiredDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-  </div>
+  </div> -->
 
   <div class="form-group row">
     <div class="col-6">
@@ -155,9 +195,25 @@
     </div>
   </div>
 
-  <hr />
-
   <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      [disabled]="disabledInput"
+      field="note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+
+  <span class="text-primary fw-bold fs-6">
+    <codx-label
+      default="Quyết định"
+      name="lblDecision"
+      [formModel]="formModel"
+    ></codx-label>
+  </span>
+
+  <div class="form-group row mt-5">
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
@@ -178,7 +234,67 @@
     </div>
   </div>
 
-  <div class="form-group border-bottom pb-1">
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="EffectedDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [disabled]="disabledInput"
+        field="effectedDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [disabled]="disabledInput"
+        field="expiredDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-5">
+    <codx-label
+      class="fw-bold"
+      fiedName="SignerID"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [disabled]="disabledInput"
+      field="signerID"
+      [showInput]="false"
+      [formModel]="formModel"
+      [Group]="formGroup"
+      (valueChange)="handleSelectEmp($event)"
+    ></codx-input>
+  </div>
+  <div class="d-flex mb-8" *ngIf="loaded">
+    <div class="d-flex flex-column">
+      <codx-img
+        [width]="35"
+        class="me-4"
+        [objectId]="employeeSign?.employeeID"
+        [referType]="'avt'"
+        [objectName]="employeeSign?.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="text-dark fw-bold">
+        <span>
+          {{ employeeSign?.employeeName }}
+        </span>
+      </div>
+      <span class="text-gray-700 fs-7" *ngIf="employeeSign?.positionName">{{
+        employeeSign?.positionName
+      }}</span>
+    </div>
+  </div>
+
+  <!-- <div class="form-group border-bottom pb-1">
     <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
     <codx-input
       [disabled]="disabledInput"
@@ -197,20 +313,53 @@
       [formModel]="formModel"
       [Group]="formGroup"
     ></codx-input>
-  </div>
+  </div> -->
 
-  <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-    <codx-input
-      [disabled]="disabledInput"
-      field="note"
-      [formModel]="formModel"
-      [Group]="formGroup"
-    ></codx-input>
+  <div class="d-flex flex-column mb-4">
+    <div
+      class="d-flex justify-content-between align-items-center mb-2 form-group"
+    >
+      <codx-label
+        default="File đính kèm"
+        name="lblAttachments"
+        [formModel]="formModel"
+      >
+      </codx-label>
+    </div>
+    <div class="AttachmentFile-group flex-nowrap">
+      <codx-attachment
+        #attachment
+        [objectId]="EBasicSalaryObj?.recID"
+        [objectType]="formModel.entityName"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="formModel"
+        displayThumb="full"
+        showMessage="0"
+      >
+      </codx-attachment>
+    </div>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
+  <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
+    <button
+      (click)="popupUploadFile()"
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    >
+      <span class="icon-cloud_upload btn-text-primary me-2"></span>
+      <codx-label
+        fiedName="lblUploadFile"
+        default="Đính kèm"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
@@ -224,4 +373,34 @@
       ></codx-label>
     </button>
   </div>
+</ng-template>
+
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
 </ng-template>

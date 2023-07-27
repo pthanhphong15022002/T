@@ -38,6 +38,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
+import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -113,21 +114,23 @@ export class LeadsComponent
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
+  applyProcess: boolean = true;
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
   processId: any;
-
-  readonly applyForLead: string = '5';
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
   moreFuncInstance: any;
   dataColums: any;
   viewCrr: any;
-  isLoading = false;
+  paramDefault: any;
   action: any;
+  currencyIDDefault: any;
+  isLoading = false;
+  readonly applyForLead: string = '5';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -147,42 +150,43 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
+    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
+    // this.views = [
+    //   {
+    //     type: ViewType.listdetail,
+    //     sameData: true,
+    //     model: {
+    //       template: this.itemTemplate,
+    //       panelRightRef: this.templateDetail,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.kanban,
+    //     active: false,
+    //     sameData: false,
+    //     request: this.request,
+    //     request2: this.resourceKanban,
+    //     toolbarTemplate: this.footerButton,
+    //     model: {
+    //       template: this.cardKanban,
+    //       template2: this.viewColumKaban,
+    //       setColorHeader: true,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.grid,
+    //     active: false,
+    //     sameData: true,
+    //     model: {
+    //       resources: this.columnGrids,
+    //       template2: this.templateMore,
+    //       // frozenColumns: 1,
+    //     },
+    //   },
+    // ];
   }
   afterLoad() {
     this.request = new ResourceModel();
@@ -201,12 +205,33 @@ export class LeadsComponent
     this.resourceKanban.dataObj = this.dataObj;
   }
 
-  async executeApiCalls() {
+  executeApiCalls() {
     try {
-      await this.getFuncID(this.funcID);
-      await this.getColorReason();
-      await this.getProcessSetting();
+      this.getFuncID(this.funcID);
+      this.getColorReason();
+      // this.getProcessSetting();
+      this.getCurrentSetting();
     } catch (error) {}
+  }
+  async getCurrentSetting() {
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        // currnecy
+        let dataParamCurrency = res.filter(
+          (x) => x.category == '4' && !x.transType
+        )[0];
+        if (dataParamCurrency) {
+          this.paramDefault = JSON.parse(dataParamCurrency.dataValue);
+          this.currencyIDDefault = this.paramDefault['DefaultCurrency'];
+        }
+        // applyProcess
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          var applyProcessSetting = JSON.parse(dataParam.dataValue);
+          this.applyProcess = applyProcessSetting['ProcessLeadUsed'] == '1';
+        }
+      }
+    });
   }
   async getProcessSetting() {
     this.codxCmService
@@ -236,6 +261,16 @@ export class LeadsComponent
                 template: this.cardKanban,
                 template2: this.viewColumKaban,
                 setColorHeader: true,
+              },
+            },
+            {
+              type: ViewType.grid,
+              active: false,
+              sameData: true,
+              model: {
+                resources: this.columnGrids,
+                template2: this.templateMore,
+                // frozenColumns: 1,
               },
             },
           ];
@@ -350,7 +385,8 @@ export class LeadsComponent
       eventItem.disabled = !data.closed;
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed;
+      eventItem.disabled =
+        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
     };
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
@@ -617,6 +653,10 @@ export class LeadsComponent
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
       processId: this.processId,
+      gridViewSetup: this.gridViewSetup,
+      applyProcess: this.dataSelected.applyProcess,
+      currencyIDDefault: this.currencyIDDefault,
+      applyProcessSetting: this.applyProcess,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -820,18 +860,14 @@ export class LeadsComponent
             var isCheck = false;
             isCheck = lst.some((x) => !x?.roles?.isOnwer);
             if (isCheck) {
-              this.notificationsService.notifyCode(
-                'CM027'
-              ); //Đợi mssg
+              this.notificationsService.notifyCode('CM027'); //Đợi mssg
               return;
             } else {
               isCheck = !lst.every(
                 (x) => x.category == '1' || x.category == '2'
               );
               if (!!isCheck) {
-                this.notificationsService.notifyCode(
-                  'CM030'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM030'); //Đợi mssg
                 return;
               }
             }
@@ -839,15 +875,11 @@ export class LeadsComponent
             lst.forEach((element) => {
               if (!['0', '1'].includes(element?.status) && !isCheck) {
                 isCheck = true;
-                this.notificationsService.notifyCode(
-                  'CM028'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM028'); //Đợi mssg
                 return;
               } else if (element.closed && !isCheck) {
                 isCheck = true;
-                this.notificationsService.notifyCode(
-                  'CM029'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM029'); //Đợi mssg
                 return;
               }
             });
@@ -872,8 +904,8 @@ export class LeadsComponent
           }
         }
         break;
-        default:
-          break;
+      default:
+        break;
     }
     console.log('gộp: ', e);
   }
@@ -1106,12 +1138,13 @@ export class LeadsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       startControl: data.steps.startControl,
+      applyProcess: data.applyProcess,
     };
     var dialog = this.callfc.openForm(
-      PopupOwnerDealComponent,
+      PopupAssginDealComponent,
       '',
-      500,
-      280,
+      750,
+      400,
       '',
       obj,
       '',

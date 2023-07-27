@@ -162,7 +162,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
     if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
       connector.style!.strokeColor = '#3699FF';
-      connector.style!.strokeWidth = 5;
+      connector.style!.strokeWidth = 2;
     }
     return connector;
   }
@@ -182,6 +182,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     //this.getDataPositionByID(this.positionID);
   }
   ngOnChanges(changes: SimpleChanges): void {
+    this.posEmpPageIndex = 0;
+    this.scrolling = true;
+    this.currentViewPosEmp = { countEmp: 0, employees: [] }
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.haveHighLight = false;
@@ -320,6 +323,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   changeSelectedItem(data: any) {
     var index = this.data.findIndex(x => x.positionID == data?.positionID);
+    this.currentViewPosEmp.employees = this.data[index].employees;
+    this.currentViewPosEmp.countEmp = this.data[index].countEmp;
     this.haveHighLight = true;
     if (this.data[index]['isSelected']) {
       this.data[index]['isSelected'] = false;
@@ -423,21 +428,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                   hasChanged: true,
                 });
                 if (res?.positionID === this.positionID || res?.event?.positionID === this.positionID) {
-                  // if (res?.reportTo != data?.reportTo && res?.reportTo2 != data?.reportTo2) {
-                  //   this.getDataPositionByID(this.positionID);
-                  // }
-                  // else {
-                  //   data['parents'] = [];
-                  //   if (res?.event?.reportTo) (data['parents'] as any[]).push(res?.event?.reportTo);
-                  //   if (res?.event?.reportTo2) (data['parents'] as any[]).push(res?.event?.reportTo2);
-                  //   data.orgUnitID = res?.event?.orgUnitID;
-                  //   data.orgUnitName = res?.event?.orgUnitName;
-                  //   data.positionName = res?.event?.positionName;
-
-                  //   var i = this.data.findIndex(p => p.positionID === data.positionID)
-                  //   this.data[i]= data;
-                  //   if(this.diagram)this.setDataOrg(this.data);
-                  // }
                   this.getDataPositionByID(this.positionID);
                 }
               }
@@ -521,10 +511,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    var totalScroll = ele.offsetHeight + ele.scrollTop;
-    console.log(totalScroll, ele.scrollHeight)
-
-    if (this.scrolling && (totalScroll <= ele.scrollHeight + 1) && (totalScroll >= ele.scrollHeight - 1)) {
+    //var totalScroll = ele.offsetHeight + ele.scrollTop;
+    var totalScroll = ele.clientHeight + ele.scrollTop;
+    if (this.scrolling && totalScroll == ele.scrollHeight) {
       this.getEmpListPaging(positionID);
     }
   }
@@ -560,10 +549,11 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
               if (res) {
                 if (index >= 0) {
                   this.data[index].employees = this.data[index].employees.concat(res[0]);
+                  this.data[index].employees = [...new Map(this.data[index].employees.map(item => [item['employeeID'], item])).values()];;
                   this.data[index].countEmp = res[1];
                   this.currentViewPosEmp.countEmp = res[1];
-                  this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
-                  this.currentViewPosEmp.employees = [...new Map(this.currentViewPosEmp.employees.map(item => [item['employeeID'], item])).values()];;
+                  this.currentViewPosEmp.employees = this.data[index].employees;
+                  //this.currentViewPosEmp.employees = [...new Map(this.currentViewPosEmp.employees.map(item => [item['employeeID'], item])).values()];;
                 }
 
                 if (this.data[index]?.countEmp <= this.data[index].employees.length) {

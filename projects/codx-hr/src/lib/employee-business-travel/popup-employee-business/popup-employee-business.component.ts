@@ -52,6 +52,8 @@ export class PopupEmployeeBusinessComponent
   //Employee object
   employeeId: string;
 
+  loaded: boolean = false;
+  employeeSign;
   //Value check validate date
   beginDate: any;
   endDate: any;
@@ -124,6 +126,10 @@ export class PopupEmployeeBusinessComponent
           }
         });
     } else {
+      if (this.data.signerID) {
+        this.getEmployeeInfoById(this.data.signerID, true);
+      }
+
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.isAfterRender = true;
@@ -153,12 +159,14 @@ export class PopupEmployeeBusinessComponent
       });
     } else {
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        this.employeeSign = emp[0][0];
         if (emp[1] > 0) {
           let positionID = emp[0][0].positionID;
 
           if (positionID) {
             this.hrService.getPositionByID(positionID).subscribe((res) => {
               if (res) {
+                this.employeeSign.positionName = res.positionName;
                 this.data.signerPosition = res.positionName;
                 this.formGroup.patchValue({
                   signerPositionID: this.data.signerPosition,
@@ -172,6 +180,7 @@ export class PopupEmployeeBusinessComponent
               signerPositionID: this.data.signerPosition,
             });
           }
+          this.loaded = true;
           this.df.detectChanges();
         }
       });

@@ -461,56 +461,14 @@
       </e-tabitems>
     </ejs-tab>
 
-    <div class="row pt-5 mw-750px">
-      <div class="col-3 form-group">
-        <codx-label
-          fiedName="channelID"
-          [formModel]="form.formModel"
-          default="Kênh bán hàng"
-        ></codx-label>
-        <codx-input
-          field="channelID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-3 form-group">
-        <codx-label
-          fiedName="salespersonID"
-          [formModel]="form.formModel"
-          default="Nhân viên bán hàng"
-        ></codx-label>
-        <codx-input
-          field="salespersonID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="onInputChange($event)"
-        ></codx-input>
-      </div>
-      <div class="col-3 form-group">
-        <codx-label
-          fiedName="consultantID"
-          [formModel]="form.formModel"
-          default="Nhân viên tư vấn"
-        ></codx-label>
-        <codx-input
-          field="consultantID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
-        <codx-label
-          fiedName="projectID"
-          [formModel]="form.formModel"
-          default="Dự án"
-        ></codx-label>
-        <codx-input
-          field="projectID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
+    <div class="form-group d-flex align-items-center mt-4">
+      <i class="bi bi-card-text fs-1 text-dark"></i>
+      <codx-input
+        field="memo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        style="width: 100%"
+      ></codx-input>
     </div>
   </div>
 </ng-template>
@@ -703,10 +661,51 @@
     ></codx-input>
   </div>
 
-  <div class="col-12 form-group">
-    <codx-label fiedName="memo" [formModel]="form.formModel"></codx-label>
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="channelID"
+      [formModel]="form.formModel"
+      default="Kênh bán hàng"
+    ></codx-label>
     <codx-input
-      field="memo"
+      field="channelID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="salespersonID"
+      [formModel]="form.formModel"
+      default="Nhân viên bán hàng"
+    ></codx-label>
+    <codx-input
+      field="salespersonID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      (valueChange)="onInputChange($event)"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group">
+    <codx-label
+      fiedName="consultantID"
+      [formModel]="form.formModel"
+      default="Nhân viên tư vấn"
+    ></codx-label>
+    <codx-input
+      field="consultantID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
+    <codx-label
+      fiedName="projectID"
+      [formModel]="form.formModel"
+      default="Dự án"
+    ></codx-label>
+    <codx-input
+      field="projectID"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
     ></codx-input>

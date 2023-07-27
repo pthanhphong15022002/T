@@ -1,6 +1,26 @@
 import { filter } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogModel, DialogRef, FormModel, NotificationsService,} from 'codx-core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstancesStepsReasons } from '../../models/tmpModel';
@@ -8,10 +28,10 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 @Component({
   selector: 'step-task',
   templateUrl: './step-task.component.html',
-  styleUrls: ['./step-task.component.scss']
+  styleUrls: ['./step-task.component.scss'],
 })
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('task') task : CodxStepTaskComponent;
+  @ViewChild('task') task: CodxStepTaskComponent;
   @ViewChild('popupGuide') popupGuide;
   @Input() typeTask = 1; // 2 = hợp đồng
   @Input() customerID = '';
@@ -41,12 +61,12 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   listReasonsClick: any[];
   listStepReason: any[];
   listStepReasonValue: any[];
-  isClosed:boolean = true;
+  isClosed: boolean = true;
   iconReasonSuccess: any;
   iconReasonFail: any;
-  listStepSuccess:tmpInstancesStepsReasons[] = [];
-  listStepFail:tmpInstancesStepsReasons[] = [];
-  stepIdReason: string ='';
+  listStepSuccess: tmpInstancesStepsReasons[] = [];
+  listStepFail: tmpInstancesStepsReasons[] = [];
+  stepIdReason: string = '';
   dialogGuide: DialogRef;
   stepViews = [];
 
@@ -64,7 +84,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   };
   elementRef: any;
   renderer: any;
-  taskHeight = '415px'
+  taskHeight = '415px';
 
   constructor(
     private cache: CacheService,
@@ -73,28 +93,31 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private codxCmService: CodxCmService,
+    private codxCmService: CodxCmService
   ) {
-
-    this.promiseAll()
+    this.promiseAll();
   }
 
   ngOnInit(): void {
-    this.cache.valueList('DP032').subscribe(res => {
-      if(res?.datas){
-        this.status = res?.datas?.filter(data => data.value!= '4' && data.value!= '5');
+    this.cache.valueList('DP032').subscribe((res) => {
+      if (res?.datas) {
+        this.status = res?.datas?.filter(
+          (data) => data.value != '4' && data.value != '5'
+        );
       }
-    })
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.listInstanceStep){
+    if (changes?.listInstanceStep) {
       this.listInstanceStepShow = this.listInstanceStep;
-      if( !['0','1','2'].includes(this.dataSelected.status)) {
-        this.stepIdReason = this.listInstanceStep[this.listInstanceStep.length - 1].stepID
-        this.listStepReasonValue =this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+      if (!['0', '1', '2'].includes(this.dataSelected.status)) {
+        this.stepIdReason =
+          this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
+        this.listStepReasonValue =
+          this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
-      if (this.listInstanceStep?.length > 0){
+      if (this.listInstanceStep?.length > 0) {
         this.listInstanceStep.forEach((x) => {
           if (!x.isFailStep && !x.isSuccessStep) {
             let obj = {
@@ -105,43 +128,42 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           }
         });
       }
-      
     }
 
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
-      this.type = this.dataSelected.viewModeDetail || "S";
+      this.type = this.dataSelected.viewModeDetail || 'S';
     }
   }
 
   ngAfterViewInit(): void {
     this.setHeight();
   }
-  changeValue(e){
+  changeValue(e) {
     this.type = e.data;
   }
-  changeValueDropdownSelect(e){
-    if(e.field == 'status'){
-      if(e?.data?.length == 0){
+  changeValueDropdownSelect(e) {
+    if (e.field == 'status') {
+      if (e?.data?.length == 0) {
         this.listInstanceStepShow = this.listInstanceStep;
-
-      }else{
-        this.listInstanceStepShow = this.listInstanceStep.filter(step => e?.data?.includes(step.stepStatus))
+      } else {
+        this.listInstanceStepShow = this.listInstanceStep.filter((step) =>
+          e?.data?.includes(step.stepStatus)
+        );
       }
     }
-    if(e.field == 'show' && e.data?.length > 0){
+    if (e.field == 'show' && e.data?.length > 0) {
       this.isShowElement = e.data[0] == '1' ? true : false;
-    }else{
+    } else {
       this.isShowElement = true;
     }
   }
 
-
-  handelContinueStep(event, step){
-    this.continueStep.emit({isTaskEnd: event, step: step})
+  handelContinueStep(event, step) {
+    this.continueStep.emit({ isTaskEnd: event, step: step });
   }
 
-  handelSaveAssignTask(event){
+  handelSaveAssignTask(event) {
     this.saveAssignTask.emit(event);
   }
 
@@ -149,20 +171,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.typeTime = e;
   }
 
-  addTask(){
-    this.indexAddTask = this.listInstanceStep.findIndex(step => step.stepStatus == '1');
+  addTask() {
+    this.indexAddTask = this.listInstanceStep.findIndex(
+      (step) => step.stepStatus == '1'
+    );
     setTimeout(() => {
       this.indexAddTask = -1;
-    },1000);
+    }, 1000);
   }
 
-  async promiseAll(){
+  async promiseAll() {
     try {
       await this.getValueListReason();
-    }
-    catch (e) {
-
-    }
+    } catch (e) {}
   }
 
   async getValueListReason() {
@@ -173,26 +194,24 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
             this.iconReasonSuccess = item;
           } else if (item.value === 'F') {
             this.iconReasonFail = item;
+          } else if (item.value === 'R') {
+            this.stepNameReason = item?.text;
           }
-           else if (item.value === 'R') {
-          this.stepNameReason = item?.text;
-         }
-      }
+        }
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;
       }
     });
   }
-  async getListReason(processId,applyFor){
-    var datas = [processId,applyFor];
-    this.codxCmService.getListReasonByProcessId(datas).subscribe((res) =>{
-      if(res) {
+  async getListReason(processId, applyFor) {
+    var datas = [processId, applyFor];
+    this.codxCmService.getListReasonByProcessId(datas).subscribe((res) => {
+      if (res) {
         this.listStepSuccess = this.convertStepsReason(res[0]);
         this.listStepFail = this.convertStepsReason(res[1]);
-       this.listStepReason = this.getReasonByStepId(this.dataSelected.status);
+        this.listStepReason = this.getReasonByStepId(this.dataSelected.status);
       }
-    })
-
+    });
   }
 
   convertStepsReason(reasons: any) {
@@ -201,7 +220,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       var reasonInstance = new tmpInstancesStepsReasons();
       reasonInstance.processID = this.dataSelected.processID;
       reasonInstance.stepID = item.stepID;
-      reasonInstance.instanceID = this.dataSelected.refID
+      reasonInstance.instanceID = this.dataSelected.refID;
       reasonInstance.reasonName = item.reasonName;
       reasonInstance.reasonType = item.reasonType;
       reasonInstance.createdBy = item.createdBy;
@@ -210,15 +229,17 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     return listReasonInstance;
   }
 
-  getNameReason(isReason){
-    this.titleReason = isReason ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess): !isReason
-    ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
-    : '';
+  getNameReason(isReason) {
+    this.titleReason = isReason
+      ? this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+      : !isReason
+      ? this.joinTwoString(this.stepNameReason, this.stepNameFail)
+      : '';
     return this.titleReason;
   }
 
-  getReasonValue(isReason){
-    return isReason? this.iconReasonSuccess: this.iconReasonFail;
+  getReasonValue(isReason) {
+    return isReason ? this.iconReasonSuccess : this.iconReasonFail;
   }
 
   joinTwoString(valueFrist, valueTwo) {
@@ -232,8 +253,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
   async openPopupReason() {
-   this.listReasonsClick = [];
-   await this.getListReason(this.dataSelected.processID,this.applyFor);
+    this.listReasonsClick = [];
+    await this.getListReason(this.dataSelected.processID, this.applyFor);
     this.dialogPopupReason = this.callfc.openForm(
       this.viewReason,
       '',
@@ -257,8 +278,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSaveReason() {
-    if(this.listReasonsClick.length > 0 && this.listReasonsClick)
-    {
+    if (this.listReasonsClick.length > 0 && this.listReasonsClick) {
       var data = [
         this.dataSelected.refID,
         this.stepIdReason,
@@ -266,7 +286,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       ];
       this.codxCmService.updateListReason(data).subscribe((res) => {
         if (res) {
-          this.listStepReasonValue = JSON.parse(JSON.stringify(this.listReasonsClick));
+          this.listStepReasonValue = JSON.parse(
+            JSON.stringify(this.listReasonsClick)
+          );
           this.dialogPopupReason.close();
           this.notiService.notifyCode('SYS007');
           return;
@@ -310,7 +332,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
   onDeleteReason(dataReason) {
-    var data = [this.dataSelected.refID, this.dataSelected.stepID, dataReason.recID];
+    var data = [
+      this.dataSelected.refID,
+      this.dataSelected.stepID,
+      dataReason.recID,
+    ];
     this.codxCmService.deleteListReason(data).subscribe((res) => {
       if (res) {
         let idx = this.listStepReason.findIndex(
@@ -329,22 +355,22 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: Event) {
-   this.setHeight();
+    this.setHeight();
   }
 
-  setHeight(){
+  setHeight() {
     setTimeout(() => {
-      const main = document.querySelector('.codx-detail-main')as HTMLElement ;
+      const main = document.querySelector('.codx-detail-main') as HTMLElement;
       const mainHeight = main.offsetHeight;
       let taskHeight = mainHeight - 330;
-      if(taskHeight){
-        this.taskHeight = taskHeight.toString() + 'px'
+      if (taskHeight) {
+        this.taskHeight = taskHeight.toString() + 'px';
         // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
       }
     }, 500);
   }
 
-  autoStart(event){
+  autoStart(event) {
     this.changeProgress.emit(event);
   }
 
@@ -352,17 +378,17 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     p.close();
     let option = new DialogModel();
     option.zIndex = 1001;
-
-    this.dialogGuide = this.callfc.openForm(
-      this.popupGuide,
-      '',
-      600,
-      470,
-      '',
-      null,
-      '',
-      option
-    );
+    if (this.popupGuide) {
+      this.dialogGuide = this.callfc.openForm(
+        this.popupGuide,
+        '',
+        600,
+        470,
+        '',
+        null,
+        '',
+        option
+      );
+    }
   }
-
 }

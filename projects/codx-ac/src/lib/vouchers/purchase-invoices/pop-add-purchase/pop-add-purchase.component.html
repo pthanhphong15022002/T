@@ -119,14 +119,16 @@
                 [allowSorting]="true"
                 [dataSource]="vatInvoices"
                 [rowHeight]="35"
-                (cellChanged)="cellChangedInvoice($event)"
                 (created)="onGridCreated($event, gridVatInvoices)"
+                (onAddNew)="onEndAddNew2($event)"
+                (onEdit)="onEndEdit2($event)"
               ></codx-gridview-v2>
 
               <button
                 id="btnAddLine2"
                 class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
                 style="top: -28px"
+                (click)="onClickAddRow()"
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
@@ -485,7 +487,7 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="form.formModel"
-    (clickMF)="clickMF($event, data)"
+    (clickMF)="onClickMF($event, data)"
     (changeDataMF)="onChangeMF($event)"
     [isBookMark]="true"
     type="view"
