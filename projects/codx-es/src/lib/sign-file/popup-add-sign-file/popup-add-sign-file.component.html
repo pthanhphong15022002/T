@@ -195,7 +195,57 @@
         data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
         <div class="tab-content">
           <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-            <div class="w-100 form-content mw-500px mx-auto">
+            <div class="w-100 form-content mw-550px mx-auto">
+              <!-- <div class="w-100 d-flex flex-column" *ngIf="isTemplate">
+                <div class="w-100 d-flex flex-row ">
+                  <button class="col-4 px-1 es-button" role="button" (click)="chooseTemplateType(null)">
+                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1 " [ngClass]="data?.templateType == null?'es-bg-primary-light':''">
+                      <span class="d-flex flex-row justify-content-between align-items-center ">
+                        <i class="fa-solid fa-file-lines fs-2  pe-3"></i>
+                        <codx-label name="lblSignFile" default="Mẫu trình ký" class="fw-bold" [ngClass]="data?.templateType == null?'':'text-secondary'"></codx-label>
+                      </span>
+                      <button type="button" [ngClass]="data?.templateType == null?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == null)" (click)="addEditTemplateFile('file')">                    
+                      </button>
+                    </span>  
+                  </button>                        
+                  <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('excel')">
+                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1"  [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'es-bg-primary-light':''">
+                      <span class="d-flex flex-row justify-content-between align-items-center ">
+                        <i class="fa-solid fa-file-excel fs-2 pe-3" style="color: #347442;"></i>
+                        <codx-label name="lblExcelTemplate" default="Excel Template" class="fw-bold" [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'':'text-secondary'"></codx-label>
+                      </span>
+                      <button type="button" [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == 'AD_ExcelTemplates')"
+                       (click)="addEditTemplateFile('excel')">                    
+                      </button>
+                    </span>
+                  </button>
+                  <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('word')">
+                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1"  [ngClass]="data?.templateType == 'AD_WordTemplates'?'es-bg-primary-light':''">
+                      <span class="d-flex flex-row justify-content-between align-items-center ">
+                        <i class="fa-solid fa-file-word fs-2  pe-3" style="color: #005dc7;"></i>
+                        <codx-label name="lblWordTemplate" default="Word Template" class="fw-bold" [ngClass]="data?.templateType == 'AD_WordTemplates'?'':'text-secondary'"></codx-label>
+                      </span>
+                      <button type="button" [ngClass]="data?.templateType == 'AD_WordTemplates'?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == 'AD_WordTemplates')"
+                       (click)="addEditTemplateFile('word')">                    
+                      </button>
+                    </span>
+                  </button> 
+                </div>
+
+                <div class="" id="ADTemplate" *ngIf="data?.templateType!=null && data?.templateID!=null">
+                  <codx-attachment #attachmentADTemplate [objectType]="data?.templateType" hideImageUpload="0" [objectId]="data?.templateID"
+                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'1'" [functionID]="formModelCustom.funcID" type="inline"
+                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
+                  </codx-attachment>  
+                </div>
+                <div class="" id="fileTemplate" *ngIf="data?.templateType==null && data?.templateID==null">
+                  <codx-attachment #attachmentFileTemplate objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'1'" [functionID]="formModelCustom.funcID" type="inline"
+                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
+                  </codx-attachment>  
+                </div>
+              </div> -->
+
               <div class="text-center sign-attachment">
                 <div>
                   <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>              
@@ -212,9 +262,9 @@
                   (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign" [tmpRight]="tmpRightAttach">
                 </codx-attachment> -->
                 <ng-template #tmpRightAttach let-file>                  
-                    <!-- <div *ngIf="eSign"> 
-                      <codx-input type="checkbox" [checked]="true" (valueChange)="fileCheckChange($event,file)"></codx-input>
-                    </div> -->
+                    <div *ngIf="eSign"> 
+                      <codx-input type="checkbox" [checked]="checkFileESign(file?.recID)" (valueChange)="fileCheckChange($event,file)"></codx-input>
+                    </div>
                 </ng-template>
               </div>
               <div class="form-group">
@@ -333,7 +383,7 @@
           <div *ngIf="currentTab == 0"></div>
           <button *ngIf="!(currentTab == 1 && eSign == false)" type="button" class="btn btn-primary"
             (click)="continue(currentTab)" [ngClass]="
-              (attachment?.fileUploadList?.length <= 0 &&
+              ((attachment?.fileUploadList?.length <= 0 || attachmentFileTemplate?.fileUploadList?.length <= 0 || attachmentADTemplate?.fileUploadList?.length <= 0) &&
                 currentTab == 0 &&
                 data.files?.length <= 0) ||
               disableContinue == true || data?.title == null || data?.categoryID==null
