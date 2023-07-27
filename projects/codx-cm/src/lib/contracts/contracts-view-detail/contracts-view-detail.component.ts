@@ -76,7 +76,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   ) {
     super(inject);
     this.dialog = dialog;
-    this.listTypeContract = contractService.listTypeContract;
+    this.listTypeContract = [];
     if(!this.formModel){
       this.formModel = dt?.data?.formModel;
     }
@@ -91,9 +91,14 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.contract && this.contract){
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
       this.getPayMentByContractID(this.contract?.recID);
-      this.getListInstanceStep(this.contract);
+      if(this.contract?.applyProcess){
+        this.getListInstanceStep(this.contract);
+        this.listTypeContract = this.contractService.listTypeContract;
+      }else{
+        this.listTypeContract = this.contractService.listTypeContractNoTask;
+      }
     }
     if(changes?.listInsStepStart && changes?.listInsStepStart?.currentValue){
      this.listInsStep = this.listInsStepStart;
@@ -111,17 +116,20 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
 
   getListInstanceStep(contract) {
-    var data = [
-      contract?.refID,
-      contract?.processID,
-      contract?.status,
-      '4'
-    ];
-    this.codxCmService.getStepInstance(data).subscribe((res) => {
-      if (res) {
-        this.listInsStep = res;
-      }
-    });
+    if(contract?.processID){
+      var data = [
+        contract?.refID,
+        contract?.processID,
+        contract?.status,
+        '4'
+      ];
+      this.codxCmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listInsStep = res;
+        }
+      });
+    }
+    
   }
 
   changeDataMF(event, data:CM_Contracts) {
@@ -132,28 +140,40 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
 
   getPayMentByContractID(contractID) {
-    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
-      }else{
-        this.listPayment = [];
-        this.listPaymentHistory = [];
-      }
-    });
+    if(contractID){
+      this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
+        if (res) {
+          let listPayAll =  res as CM_ContractsPayments[];
+          this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
+          this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+        }else{
+          this.listPayment = [];
+          this.listPaymentHistory = [];
+        }
+      });
+    }else{
+      this.listPayment = [];
+      this.listPaymentHistory = [];
+    }
+   
   }
 
   getQuotationsAndQuotationsLinesByTransID(recID) {
-    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
-      if (res) {
-        this.quotations = res[0];
-        this.listQuotationsLine = res[1];
-      }else{
-        this.quotations = null;
-        this.listQuotationsLine = [];
-      }
-    });
+    if(recID){
+      this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
+        if (res) {
+          this.quotations = res[0];
+          this.listQuotationsLine = res[1];
+        }else{
+          this.quotations = null;
+          this.listQuotationsLine = [];
+        }
+      });
+    }else{
+      this.quotations = null;
+      this.listQuotationsLine = [];
+    }
+    
   }
 
   getAccount(){

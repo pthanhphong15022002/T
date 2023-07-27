@@ -879,7 +879,7 @@ export class AddContractsComponent implements OnInit {
       if (exchangeRateNew == 0) {
         this.notiService.notify(
           'Tỷ giá tiền tệ "' +
-            this.quotations.currencyID +
+            this.quotations?.currencyID +
             '" chưa thiết lập xin hay chọn lại !',
           '3'
         );
