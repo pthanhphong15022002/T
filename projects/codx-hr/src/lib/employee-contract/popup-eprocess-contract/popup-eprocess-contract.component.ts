@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  AuthStore,
   CallFuncService,
   CodxFormComponent,
   DataRequest,
@@ -23,6 +24,9 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import moment from 'moment';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-popup-eprocess-contract',
@@ -49,6 +53,7 @@ export class PopupEProcessContractComponent
   openFrom: string;
   employeeObj: any;
 
+  loaded: boolean = false;
   disabledInput = false;
   useForQTNS: boolean = false;
 
@@ -62,7 +67,12 @@ export class PopupEProcessContractComponent
   editBenefitObj: any;
   tempBenefitArr: any = [];
   //#endregion
+  employeeSign;
 
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
+
+  user: any;
   fmSubContract: FormModel;
   tabInfo: any[] = [
     {
@@ -71,24 +81,26 @@ export class PopupEProcessContractComponent
       name: 'contractInfo',
     },
     {
-      icon: 'icon-info',
+      icon: 'icon-description',
       text: 'Chế độ làm việc',
       name: 'workingInfo',
     },
     {
-      icon: 'icon-info',
+      icon: 'icon-attach_money',
       text: 'Lương & phụ cấp',
       name: 'empBenefit',
     },
   ];
 
   dataCbxContractType: any;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('tmpAddBenefit', { static: true })
   tmpAddBenefit: TemplateRef<any>;
 
   constructor(
+    private authStore: AuthStore,
     private injector: Injector,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
@@ -99,7 +111,7 @@ export class PopupEProcessContractComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
@@ -233,6 +245,8 @@ export class PopupEProcessContractComponent
     dialog.close();
   }
 
+  lstFile = [];
+
   initForm() {
     this.hrSevice
       .getOrgUnitID(
@@ -305,6 +319,11 @@ export class PopupEProcessContractComponent
           }
         });
       }
+
+      if (this.data.signerID) {
+        this.getEmployeeInfoById(this.data.signerID, 'signerID');
+      }
+
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.isAfterRender = true;
@@ -312,7 +331,7 @@ export class PopupEProcessContractComponent
     }
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     if (this.data.payForm == null) this.data.payForm = '';
     if (this.data.benefits == null) this.data.benefits = '';
 
@@ -336,6 +355,14 @@ export class PopupEProcessContractComponent
     this.data.divisionID = this.employeeObj?.divisionID;
     this.data.companyID = this.employeeObj?.companyID;
     this.data.positionID = this.employeeObj?.positionID;
+
+    (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+      if (item2?.status == 0) {
+        this.fileAdded(item2);
+      }
+    });
+    //Files
+    //this.data.attachments = this.attachment.fileUploadList.length;
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
@@ -446,7 +473,10 @@ export class PopupEProcessContractComponent
   setExpiredDate(month) {
     if (this.data.effectedDate) {
       let date = new Date(this.data.effectedDate);
-      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
+      //Trừ một ngày theo thay đổi mới
+      this.data.expiredDate = new Date(
+        date.setMonth(date.getMonth() + month) - 1
+      );
       this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
@@ -481,12 +511,14 @@ export class PopupEProcessContractComponent
         }
         if (fieldName === 'signerID') {
           this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+            this.employeeSign = emp[0][0];
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 
               if (positionID) {
                 this.hrSevice.getPositionByID(positionID).subscribe((res) => {
                   if (res) {
+                    this.employeeSign.positionName = res.positionName;
                     this.data.signerPosition = res.positionName;
                     this.formGroup.patchValue({
                       signerPosition: this.data.signerPosition,
@@ -499,6 +531,7 @@ export class PopupEProcessContractComponent
                   signerPosition: this.data.signerPosition,
                 });
               }
+              this.loaded = true;
             }
           });
         }
@@ -554,7 +587,6 @@ export class PopupEProcessContractComponent
   }
 
   handleSubContract(actionHeaderText: string, actionType: string, data: any) {
-    console.log(actionHeaderText);
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
@@ -587,5 +619,13 @@ export class PopupEProcessContractComponent
         }
       }
     });
+  }
+  //Files handle
+  fileAdded(event: any) {
+    this.data.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

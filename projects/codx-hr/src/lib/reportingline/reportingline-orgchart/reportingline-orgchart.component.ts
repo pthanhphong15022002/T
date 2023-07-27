@@ -476,7 +476,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
 
   }
   //#endregion
-  
+
   //#region emp list
   searchText: string = "";
   searchUser(event: any, positionId: string) {
@@ -503,6 +503,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
             if (index >= 0) {
               this.currentViewPosEmp.countEmp = res[1];
               this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+              this.currentViewPosEmp.employees = [...new Map(this.currentViewPosEmp.employees.map(item => [item['employeeID'], item])).values()];;
             }
             if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
               this.scrolling = false;
@@ -521,7 +522,9 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.viewEmpPosition = positionID;
     }
     var totalScroll = ele.offsetHeight + ele.scrollTop;
-    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+    console.log(totalScroll, ele.scrollHeight)
+
+    if (this.scrolling && (totalScroll <= ele.scrollHeight + 1) && (totalScroll >= ele.scrollHeight - 1)) {
       this.getEmpListPaging(positionID);
     }
   }
@@ -536,6 +539,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                 if (index >= 0) {
                   this.currentViewPosEmp.countEmp = res[1];
                   this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                  this.currentViewPosEmp.employees = [...new Map(this.currentViewPosEmp.employees.map(item => [item['employeeID'], item])).values()];;
                 }
 
                 if (this.currentViewPosEmp.countEmp <= this.currentViewPosEmp.employees.length) {
@@ -559,6 +563,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                   this.data[index].countEmp = res[1];
                   this.currentViewPosEmp.countEmp = res[1];
                   this.currentViewPosEmp.employees = this.currentViewPosEmp.employees.concat(res[0]);
+                  this.currentViewPosEmp.employees = [...new Map(this.currentViewPosEmp.employees.map(item => [item['employeeID'], item])).values()];;
                 }
 
                 if (this.data[index]?.countEmp <= this.data[index].employees.length) {
