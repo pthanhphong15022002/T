@@ -736,6 +736,7 @@ export class CM_Leads {
   closedBy: string;
   closedOn: Date;
   closed: boolean;
+  applyProcess:boolean = true;
   currencyID: string;
   exchangeRate: number;
   dealValue: number = 0;

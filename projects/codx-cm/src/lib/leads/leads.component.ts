@@ -38,6 +38,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
+import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -118,8 +119,6 @@ export class LeadsComponent
   colorReasonSuccess: any;
   colorReasonFail: any;
   processId: any;
-
-  readonly applyForLead: string = '5';
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
@@ -128,6 +127,7 @@ export class LeadsComponent
   viewCrr: any;
   isLoading = false;
   action: any;
+  readonly applyForLead: string = '5';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -350,7 +350,7 @@ export class LeadsComponent
       eventItem.disabled = !data.closed;
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed;
+      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed || data.applyProcess;
     };
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
@@ -617,6 +617,7 @@ export class LeadsComponent
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
       processId: this.processId,
+      gridViewSetup: this.gridViewSetup
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -1106,12 +1107,13 @@ export class LeadsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       startControl: data.steps.startControl,
+      applyProcess: data.applyProcess
     };
-    var dialog = this.callfc.openForm(
-      PopupOwnerDealComponent,
+        var dialog = this.callfc.openForm(
+        PopupAssginDealComponent,
       '',
-      500,
-      280,
+      750,
+      400,
       '',
       obj,
       '',
