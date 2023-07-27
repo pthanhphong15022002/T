@@ -356,11 +356,13 @@ export class PopupEProcessContractComponent
     this.data.companyID = this.employeeObj?.companyID;
     this.data.positionID = this.employeeObj?.positionID;
 
-    (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-      if (item2?.status == 0) {
-        this.fileAdded(item2);
-      }
-    });
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        if (item2?.status == 0) {
+          this.fileAdded(item2);
+        }
+      });
+    }
     //Files
     //this.data.attachments = this.attachment.fileUploadList.length;
 

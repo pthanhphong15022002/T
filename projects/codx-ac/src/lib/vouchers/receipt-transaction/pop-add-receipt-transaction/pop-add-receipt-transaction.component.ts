@@ -247,9 +247,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
     const postFields: string[] = [
       'itemID',
-      'costPrice',
+      //'costPrice',
       'quantity',
-      'costAmt',
+      //'costAmt',
       'lineType',
       'umid',
       'idiM0',
@@ -288,6 +288,17 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           // this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], res);
         });
     }
+
+    switch(e.field)
+    {
+      case 'costAmt':
+        this.costAmt_Change(e.data);
+        break;
+      case 'costPrice':
+        this.costPrice_Change(e.data);
+        break;
+    }
+
     // switch(e.field)
     // {
     //   case 'itemID':
@@ -1211,12 +1222,26 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
   }
 
-  calculateNetAmt(quantity: any, costPrice: any)
+  costPrice_Change(line: any)
   {
-    if(quantity == 0 || costPrice == 0)
-      return 0;
-    var costAmt = quantity * costPrice;
-    return costAmt;
+    if(line)
+    {
+      if(line.quantity != 0)
+      {
+        line.costAmt = line.costPrice * line.quantity;
+      }
+    }
+  }
+
+  costAmt_Change(line: any)
+  {
+    if(line)
+    {
+      if(line.quantity != 0)
+      {
+        line.costPrice = line.costAmt / line.quantity
+      }
+    }
   }
 
   autoAddRowSet(e: any) {

@@ -311,15 +311,18 @@ export class PdfComponent
           let sf = res?.signFile;
           if (sf) {
             sf.files.forEach((file: any, index) => {
-              this.lstFiles.push({
-                fileName: file.fileName,
-                fileRefNum: sf.refNo,
-                fileID: file.fileID,
-                fileUrl: environment.urlUpload + '/' + res.urls[index],
-                signers: res?.approvers,
-                areas: file.areas,
-                fileIdx: index,
-              });
+              if(file?.eSign){
+                this.lstFiles.push({
+                  fileName: file.fileName,
+                  fileRefNum: sf.refNo,
+                  fileID: file.fileID,
+                  fileUrl: environment.urlUpload + '/' + res.urls[index],
+                  signers: res?.approvers,
+                  areas: file.areas,
+                  fileIdx: index,
+                });
+              }
+              
             });
             this.lstSigners = res.approvers;
             this.lstSigners.forEach((signer) => {
@@ -351,7 +354,7 @@ export class PdfComponent
             } else {
               this.signerInfo = res.approvers[0];
             }
-            this.curFileID = sf?.files[0]?.fileID;
+            this.curFileID = this.lstFiles[0]['fileID'];
             this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;

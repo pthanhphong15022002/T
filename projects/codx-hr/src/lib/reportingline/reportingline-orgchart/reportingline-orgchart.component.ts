@@ -162,7 +162,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     }
     if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
       connector.style!.strokeColor = '#3699FF';
-      connector.style!.strokeWidth = 5;
+      connector.style!.strokeWidth = 2;
     }
     return connector;
   }
@@ -511,8 +511,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    var totalScroll = ele.offsetHeight + ele.scrollTop;
-
+    //var totalScroll = ele.offsetHeight + ele.scrollTop;
+    var totalScroll = ele.clientHeight + ele.scrollTop;
     if (this.scrolling && totalScroll == ele.scrollHeight) {
       this.getEmpListPaging(positionID);
     }

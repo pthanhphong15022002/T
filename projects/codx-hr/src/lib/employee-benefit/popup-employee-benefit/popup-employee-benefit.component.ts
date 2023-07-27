@@ -12,6 +12,7 @@ import {
 } from 'codx-core';
 import { FormGroup } from '@angular/forms';
 import moment from 'moment';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-employee-benefit',
@@ -39,9 +40,12 @@ export class PopupEmployeeBenefitComponent
   // decisionNoDisable: boolean = false;
   autoNumField: string;
   data: any;
+  loaded: boolean = false;
+  employeeSign;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
     private injector: Injector,
@@ -120,6 +124,13 @@ export class PopupEmployeeBenefitComponent
                   this.currentEJobSalaries.effectedDate = null;
                 }
               }
+
+              if (this.currentEJobSalaries.signerID) {
+                this.getEmployeeInfoById(
+                  this.currentEJobSalaries.signerID,
+                  'SignerID'
+                );
+              }
               this.formGroup.patchValue(this.currentEJobSalaries);
               this.formModel.currentData = this.currentEJobSalaries;
               this.isAfterRender = true;
@@ -150,12 +161,14 @@ export class PopupEmployeeBenefitComponent
         }
         if (fieldName === 'SignerID') {
           this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+            this.employeeSign = emp[0][0];
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 
               if (positionID) {
                 this.hrSevice.getPositionByID(positionID).subscribe((res) => {
                   if (res) {
+                    this.employeeSign.positionName = res.positionName;
                     this.currentEJobSalaries.signerPosition = res.positionName;
                     this.formGroup.patchValue({
                       signerPosition: this.currentEJobSalaries.signerPosition,
@@ -169,6 +182,7 @@ export class PopupEmployeeBenefitComponent
                   signerPosition: this.currentEJobSalaries.signerPosition,
                 });
               }
+              this.loaded = true;
               this.df.detectChanges();
             }
           });
@@ -228,7 +242,7 @@ export class PopupEmployeeBenefitComponent
     }
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -247,6 +261,15 @@ export class PopupEmployeeBenefitComponent
     }
 
     this.currentEJobSalaries.employeeID = this.employeeId;
+
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        if (item2?.status == 0) {
+          this.fileAdded(item2);
+        }
+      });
+    }
+
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice
         .AddEBenefit(this.currentEJobSalaries, this.useForQTNS)
@@ -270,5 +293,14 @@ export class PopupEmployeeBenefitComponent
         } else this.notify.notifyCode('SYS021');
       });
     }
+  }
+
+  //Files handle
+  fileAdded(event: any) {
+    this.data.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

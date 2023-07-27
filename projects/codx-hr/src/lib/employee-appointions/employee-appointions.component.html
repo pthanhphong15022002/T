@@ -91,25 +91,25 @@
             [ngbTooltip]="grvSetup?.Appoint?.headerText"
           ></codx-vll>
           <span
-            *ngIf="data.positionID || data.orgUnitID"
+            *ngIf="data?.positionID || data.orgUnitID"
             class="me-2 icon-i-info-circle-fill icon-6 text-gray-400"
           >
             -
           </span>
           <div
-            *ngIf="data.positionID || data.orgUnitID"
+            *ngIf="data?.positionID || data.orgUnitID"
             [ngbTooltip]="
-              data.positionID
+              data?.positionID
                 ? grvSetup?.PositionID?.headerText
                 : grvSetup?.OrgUnitID?.headerText
             "
             [innerHTML]="
-              data.positionID
-                ? (data.positionID
+              data?.positionID
+                ? (data?.positionID
                   | formatvalue : view.formModel : 'positionID'
                   | async)
                 : (data.orgUnitID
-                  | formatvalue : view.formModel : 'OrgUnitID'
+                  | formatvalue : view.formModel : 'orgUnitID'
                   | async)
             "
           ></div>
@@ -316,7 +316,9 @@
     [title]="data.emp?.employeeName"
     [titleCss]="'fs-6 text-dark'"
     [subTitle]="
-      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+      data?.emp?.positionID
+        | formatvalue : view.formModel : 'PositionID'
+        | async
     "
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
@@ -335,7 +337,7 @@
         [ngbTooltip]="grvSetup?.Appoint?.headerText"
       ></codx-vll>
       <span
-        *ngIf="data.positionID || data.orgUnitID"
+        *ngIf="data?.positionID || data.orgUnitID"
         class="me-2 icon-i-info-circle-fill icon-4 text-gray-400"
       >
       </span>
@@ -343,13 +345,13 @@
         class="text-nowrap"
         *ngIf="data.positionID || data.orgUnitID"
         [ngbTooltip]="
-          data.positionID
+          data?.positionID
             ? grvSetup?.PositionID?.headerText
             : grvSetup?.OrgUnitID?.headerText
         "
         [innerHTML]="
-          data.positionID
-            ? (data.positionID
+          data?.positionID
+            ? (data?.positionID
               | formatvalue : view.formModel : 'positionID'
               | async)
             : (data.orgUnitID
@@ -452,7 +454,7 @@
       <div class="justify-content-between text-secondary">
         <span
           [innerHTML]="
-            data.emp.positionID
+            data?.emp?.positionID
               | formatvalue : view.formModel : 'PositionID'
               | async
           "
@@ -468,20 +470,20 @@
           [ngbTooltip]="grvSetup?.Appoint?.headerText"
         ></codx-vll>
         <span
-          *ngIf="data.positionID || data.orgUnitID"
+          *ngIf="data?.positionID || data.orgUnitID"
           class="me-2 icon-i-info-circle-fill icon-6 text-gray-400"
         >
         </span>
         <div
           *ngIf="data.positionID || data.orgUnitID"
           [ngbTooltip]="
-            data.positionID
+            data?.positionID
               ? grvSetup?.PositionID?.headerText
               : grvSetup?.OrgUnitID?.headerText
           "
           [innerHTML]="
-            data.positionID
-              ? (data.positionID
+            data?.positionID
+              ? (data?.positionID
                 | formatvalue : view.formModel : 'positionID'
                 | async)
               : (data.orgUnitID

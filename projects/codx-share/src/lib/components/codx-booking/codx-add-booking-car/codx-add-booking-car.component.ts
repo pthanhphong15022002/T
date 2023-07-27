@@ -1016,73 +1016,67 @@ export class CodxAddBookingCarComponent
       this.startSaveNotEP(approval);
     } else {
       this.dialogRef.dataService
-        .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            if (!res.save) {
-              this.returnData = res.update;
-            } else {
-              this.returnData = res.save;
-            }
-            if (approval) {
-              if (this.approvalRule != '0') {
-                this.codxBookingService
-                  .getProcessByCategoryID(this.categoryID)
-                  .subscribe((res: any) => {
-                    this.codxShareService
-                      .codxRelease(
-                        'EP',
-                        this.returnData?.recID,
-                        res?.processID,
-                        'EP_Bookings',
-                        this.formModel.funcID,
-                        this.returnData?.createdBy,
-                        this.returnData?.title,
-                        null,
-                        this.resourceOwner
-                      )
-                      .subscribe((res) => {
-                        if (res?.msgCodeError == null && res?.rowCount) {
-                          this.notificationsService.notifyCode('ES007');
-                          this.returnData.approveStatus = '3';
-                          this.returnData.write = false;
-                          this.returnData.delete = false;
-                          (this.dialogRef.dataService as CRUDService)
-                            .update(this.returnData)
-                            .subscribe();
-                          this.dialogRef &&
-                            this.dialogRef.close(this.returnData);
-                        } else {
-                          this.notificationsService.notifyCode(
-                            res?.msgCodeError
-                          );
-                          // Thêm booking thành công nhưng gửi duyệt thất bại
-                          this.dialogRef &&
-                            this.dialogRef.close(this.returnData);
-                        }
-                      });
-                  });
-              } else {
-                this.notificationsService.notifyCode('ES007');
-                this.codxBookingService
-                  .afterApprovedManual(
-                    this.formModel.entityName,
-                    this.returnData.recID,
-                    '5'
-                  )
-                  .subscribe();
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              }
-
-              this.dialogRef && this.dialogRef.close(this.returnData);
-            } else {
-              this.dialogRef && this.dialogRef.close(this.returnData);
-            }
+      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+      .subscribe((res) => {
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
           } else {
-            this.onSaving = false;
-            return;
+            this.returnData = res.save;
           }
-        });
+          if (approval) {
+            if (this.approvalRule != '0') {
+              this.codxBookingService
+                .getProcessByCategoryID(this.categoryID)
+                .subscribe((category: any) => {
+                  this.codxShareService
+                  .codxReleaseDynamic(
+                    'EP',
+                    this.returnData,
+                    category,
+                    'EP_Bookings',
+                    this.formModel.funcID,
+                    this.returnData?.title,
+                    (res) => {
+                      if (res?.msgCodeError == null && res?.rowCount) {
+                        this.notificationsService.notifyCode('ES007');
+                        this.returnData.approveStatus = '3';
+                        this.returnData.write = false;
+                        this.returnData.delete = false;
+                        (this.dialogRef.dataService as CRUDService)
+                          .update(this.returnData)
+                          .subscribe();
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      } else {
+                        this.notificationsService.notifyCode(res?.msgCodeError);
+                        // Thêm booking thành công nhưng gửi duyệt thất bại
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      }
+                    },
+                    this.returnData?.createdBy,
+                    this.resourceOwner,               
+                  )
+                });
+            } else {
+              this.notificationsService.notifyCode('ES007');
+              this.codxBookingService
+                .afterApprovedManual(
+                  this.formModel.entityName,
+                  this.returnData.recID,
+                  '5'
+                )
+                .subscribe();
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+
+          } else {
+            this.dialogRef && this.dialogRef.close(this.returnData);
+          }
+        } else {
+          this.onSaving = false;
+          return;
+        }
+      });
     }
   }
 
