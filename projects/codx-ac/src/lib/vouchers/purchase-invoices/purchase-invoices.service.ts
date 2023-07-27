@@ -12,10 +12,23 @@ export class PurchaseInvoiceService {
     gridViewName: 'grvPurchaseInvoicesLines',
     entityPer: 'AC_PurchaseInvoicesLines',
   };
+  fmVATInvoices: FormModel = {
+    entityName: 'AC_VATInvoices',
+    formName: 'VATInvoices',
+    gridViewName: 'grvVATInvoices',
+    entityPer: 'AC_VATInvoices',
+  };
 
   constructor(
     private apiService: ApiHttpService,
-    private cacheService: CacheService,
+    cacheService: CacheService,
     private acService: CodxAcService
-  ) {}
+  ) {
+    cacheService
+      .gridViewSetup(
+        this.fmVATInvoices.formName,
+        this.fmVATInvoices.gridViewName
+      )
+      .subscribe();
+  }
 }
