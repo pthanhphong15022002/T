@@ -95,6 +95,7 @@ export class CodxCalendarComponent
 
   //calendar cell date
   cellStart = null;
+  preStartDate = null;
   cellEnd = null;
   isChangeMonth = true;
   permission = '';
@@ -357,6 +358,7 @@ export class CodxCalendarComponent
     this.FDdate = args.date;
     console.log('start end ' + this.cellStart + ' ' + this.cellEnd);
     this.getCalendarData();
+    this.preStartDate = this.cellStart;
     this.cellStart = null;
     let ele = document.getElementsByTagName('codx-schedule')[0];
     if (ele) {
@@ -499,6 +501,7 @@ export class CodxCalendarComponent
     if (this.isChangeMonth) {
       if (this.cellStart == null) {
         this.cellStart = args.date;
+        this.preStartDate = this.cellStart;
       }
       this.cellEnd = args.date;
     } else if (this.cellEnd.toDateString() == args.date.toDateString()) {
@@ -538,7 +541,7 @@ export class CodxCalendarComponent
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
         calendarType,
-        this.cellStart,
+        this.preStartDate,
         this.cellEnd,
         this.settings,
       ])
@@ -651,16 +654,17 @@ export class CodxCalendarComponent
           this.calendarType = this.defaultCalendar;
         }
         if (returnData.event) {
-          this.api
-            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-              this.calendarType,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                this.getDataAfterAddEvent(res);
-              }
-              this.detectorRef.detectChanges();
-            });
+          this.getCalendarData();
+          // this.api
+          //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+          //     this.calendarType,
+          //   ])
+          //   .subscribe((res: any) => {
+          //     if (res) {
+          //       this.getDataAfterAddEvent(res);
+          //     }
+          //     this.detectorRef.detectChanges();
+          //   });
         }
       });
   }
@@ -680,16 +684,18 @@ export class CodxCalendarComponent
           this.calendarType = this.defaultCalendar;
         }
         if (returnData.event) {
-          this.api
-            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-              this.calendarType,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                this.getDataAfterAddEvent(res);
-              }
-              this.detectorRef.detectChanges();
-            });
+          this.getCalendarData();
+
+          // this.api
+          //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+          //     this.calendarType,
+          //   ])
+          //   .subscribe((res: any) => {
+          //     if (res) {
+          //       this.getDataAfterAddEvent(res);
+          //     }
+          //     this.detectorRef.detectChanges();
+          //   });
         }
       });
   }
@@ -723,17 +729,19 @@ export class CodxCalendarComponent
         if (!this.calendarType) {
           this.calendarType = this.defaultCalendar;
         }
-        if (returnData.event) {
-          this.api
-            .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-              this.calendarType,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                this.getDataAfterAddEvent(res);
-              }
-            });
-        }
+        this.getCalendarData();
+
+        // if (returnData.event) {
+        //   this.api
+        //     .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+        //       this.calendarType,
+        //     ])
+        //     .subscribe((res: any) => {
+        //       if (res) {
+        //         this.getDataAfterAddEvent(res);
+        //       }
+        //     });
+        // }
       });
   }
 
@@ -770,15 +778,17 @@ export class CodxCalendarComponent
                 this.calendarType = this.defaultCalendar;
               }
               if (returnData.event) {
-                this.api
-                  .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-                    this.calendarType,
-                  ])
-                  .subscribe((res: any) => {
-                    if (res) {
-                      this.getDataAfterAddEvent(res);
-                    }
-                  });
+                this.getCalendarData();
+
+                // this.api
+                //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
+                //     this.calendarType,
+                //   ])
+                //   .subscribe((res: any) => {
+                //     if (res) {
+                //       this.getDataAfterAddEvent(res);
+                //     }
+                //   });
               }
             });
         }
@@ -822,7 +832,12 @@ export class CodxCalendarComponent
               'CO',
               'CalendarsBusiness',
               'GetCalendarDataAsync',
-              [this.calendarType]
+              [
+                this.calendarType,
+                this.preStartDate,
+                this.cellEnd,
+                this.settings,
+              ]
             );
           }
           return of(null);
@@ -871,7 +886,12 @@ export class CodxCalendarComponent
               'CO',
               'CalendarsBusiness',
               'GetCalendarDataAsync',
-              [this.calendarType]
+              [
+                this.calendarType,
+                this.preStartDate,
+                this.cellEnd,
+                this.settings,
+              ]
             );
           }
           return of(null);
