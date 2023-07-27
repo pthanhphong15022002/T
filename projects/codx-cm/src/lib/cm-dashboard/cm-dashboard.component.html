@@ -331,7 +331,7 @@
 
 <!-- Lý do thất bại -->
 <!-- title="Lý do thất bại " -->
-<ng-template #templateDeals>
+<!-- <ng-template #templateDeals>
   <div class="w-100 h-100" id="9" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
@@ -368,6 +368,51 @@
               ></div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- chart pyramid -->
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="9" style="overflow: hidden">
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblConversionRate"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
+    ></codx-label>
+    <div style="overflow-y: auto; max-height: 95%" *ngIf="true; else noData">
+      <div class="control-section">
+        <div>
+          <ejs-accumulationchart
+            id="pyramidcontainer"
+            #pyramid
+            style="display: block; width: 92%"
+            [legendSettings]="legendSettingsPy"
+            [tooltip]="tooltipPy"
+          >
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="ConversionRate"
+                [dataSource]="dataSourcePy"
+                xName="name"
+                yName="quantity"
+                [neckWidth]="neckWidth"
+                [neckHeight]="neckHeight"
+                [gapRatio]="gapRatio"
+                [emptyPointSettings]="emptyPointSettings"
+                width="70%"
+                height="80%"
+                [explode]="explode"
+                [dataLabel]="dataLabel"
+                type="Funnel"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
         </div>
       </div>
     </div>
