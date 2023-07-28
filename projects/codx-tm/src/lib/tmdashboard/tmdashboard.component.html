@@ -152,6 +152,20 @@
           </codx-vll>
         </div>
       </div>
+      <div class="d-flex justify-content-around align-items-center">
+        <div class="d-flex align-items-center">
+          <div
+            style="width: 20px; height: 5px; background-color: #a6dff5"
+          ></div>
+          <div>Được giao</div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div
+            style="width: 20px; height: 5px; background-color: #06ddb8"
+          ></div>
+          <div>Tự tạo</div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -342,7 +356,10 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
-    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+    <div
+      class="d-flex justify-content-center align-items-center w-100"
+      style="height: 60%"
+    >
       <div style="position: relative" class="w-100 h-100">
         <ejs-circulargauge class="d-block" style="width: 100%; height: 100%">
           <e-axes>
@@ -401,10 +418,37 @@
         </div>
       </div>
     </div>
+    <!-- aaaa -->
+    <div class="w-100" style="height: 40%">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian hoàn thành thực tế
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ myDBData.workPerformance?.actualHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
+        </div>
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian làm việc
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ myDBData.workPerformance?.workHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #my_dashboard>
+<!-- <ng-template #my_dashboard>
   <div class="w-100 h-100" id="9" title="Tổng thời gian hoàn thành thực tế">
     <div class="w-100 h-100 d-flex flex-column justify-content-center">
       <div class="fw-bold text-center" style="font-size: 0.75vw">
@@ -434,10 +478,10 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #my_dashboard>
-  <div id="11" title="Tỷ lệ công việc theo nhóm">
+  <div id="9" title="Tỷ lệ công việc theo nhóm">
     <div class="w-100 h-100">
       <div class="mt-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -482,7 +526,7 @@
             style="display: block"
             [tooltip]="tooltip"
             [centerLabel]="{
-              text: '71'
+              text: myDBData?.tasksByGroupQty + '<br>công việc'
             }"
           >
             <e-accumulation-series-collection>
@@ -550,7 +594,7 @@
 <ng-template #my_dashboard>
   <div
     class="w-100 h-100"
-    id="12"
+    id="10"
     title="Thống kê công việc hoàn thành và số giờ thực hiện"
   >
     <ejs-chart
