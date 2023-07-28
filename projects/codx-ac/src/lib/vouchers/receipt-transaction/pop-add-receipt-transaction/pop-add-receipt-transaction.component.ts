@@ -722,7 +722,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   .save(null, 0, '', '', false)
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
-                      this.vouchers = res.save.data;
+                      this.vouchers.voucherNo = res.save.data.voucherNo;
                       this.hasSaved = true;
                       this.loadModegrid();
                     }
