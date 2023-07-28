@@ -10,7 +10,22 @@
   <ng-template #body>
     <ng-container *ngIf="form?.formGroup">
       <div class="row form-group">
-        <div class="col-6">
+        <div class="col-2">
+          <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
+          </codx-label>
+          <codx-dropdown-calendar
+            #dropCalendar
+            [disabled]="action == 'edit' || isBusiness"
+            cssPopup="h-500px w-800px"
+            [value]="date"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-2"
+            [selectedType]="selectedType"
+            (change)="changeCalendar($event)"
+          ></codx-dropdown-calendar>
+        </div>
+        <div class="col-5">
           <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
           </codx-label>
           <codx-input
@@ -22,40 +37,7 @@
           >
           </codx-input>
         </div>
-
-        <div class="col-6">
-          <div class="row">
-            <div class="col-6">
-              <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
-              </codx-label>
-              <codx-dropdown-calendar
-                #dropCalendar
-                [disabled]="action == 'edit' || isBusiness"
-                cssPopup="h-500px w-800px"
-                [value]="date"
-                [displayOption]="ops"
-                cssClass="w-100 om-calendar"
-                class="me-2"
-                [selectedType]="selectedType"
-                (change)="changeCalendar($event)"
-              ></codx-dropdown-calendar>
-            </div>
-            <div class="col-6">
-              <codx-label [formModel]="form.formModel" fiedName="CurrencyID">
-              </codx-label>
-              <codx-input
-                [formModel]="form.formModel"
-                [crrValue]="data?.currencyID"
-                (valueChange)="valueChange($event)"
-                field="currencyID"
-              >
-              </codx-input>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
+        <div class="col-5">
           <codx-label [formModel]="form.formModel" fiedName="Target">
           </codx-label>
           <codx-input
@@ -64,84 +46,6 @@
             [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="target"
-          >
-          </codx-input>
-        </div>
-        <div class="col-6">
-          <div class="d-flex justify-content-between" style="margin-top: 19px">
-            <div class="me-3">
-              <codx-input
-                [field]="'allocation'"
-                [crrValue]="isAllocation"
-                type="checkbox"
-                (valueChange)="valueChange($event)"
-              ></codx-input>
-            </div>
-            <div class="w-100">
-              <codx-label [formModel]="form.formModel" fiedName="Allocation">
-              </codx-label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col-3">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblQuarter1"
-            default="Quý 1"
-          >
-          </codx-label>
-          <codx-input
-            type="number"
-            [crrValue]="quarter1"
-            [min]="0"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="quarter1"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblQuarter2"
-            default="Quý 2"
-          >
-          </codx-label>
-          <codx-input
-            type="number"
-            [crrValue]="quarter2"
-            [min]="0"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="quarter2"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3">
-          <codx-label
-            [formModel]="form.formModel"
-            name="lblQuarter3"
-            default="Quý 3"
-          >
-          </codx-label>
-          <codx-input
-            type="number"
-            [crrValue]="quarter3"
-            [min]="0"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="quarter3"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3">
-          <codx-label type="number" name="lblQuarter4" default="Quý 4">
-          </codx-label>
-          <codx-input
-            type="number"
-            [crrValue]="quarter4"
-            [min]="0"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="quarter4"
           >
           </codx-input>
         </div>
@@ -157,7 +61,7 @@
                 class="fw-bold fs-6"
                 name="lblSalesperson"
                 [formModel]="form.formModel"
-                default="Nhân viên bán hàng"
+                default="Phân công nhân viên bán hàng"
               >
               </codx-label>
             </div>
@@ -197,20 +101,10 @@
           >
           </codx-input> -->
         </div>
-        <ng-container *ngIf="lstOwners != null && lstOwners.length > 0">
+        <ng-container >
           <ng-container [ngTemplateOutlet]="templateOwners"></ng-container>
         </ng-container>
       </ng-container>
-
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="memo"
-        >
-        </codx-input>
-      </div>
     </ng-container>
   </ng-template>
   <ng-template #footer>
@@ -225,25 +119,34 @@
     </div>
   </ng-template>
   <ng-template #templateOwners>
-    <div class="table-container">
+    <div class="table-container px-3">
       <table>
         <thead>
           <tr>
             <th class="fixed-width-column-user" style="z-index: 100"></th>
-            <th class="fixed-width-column">{{ data?.year }}</th>
-            <th *ngFor="let quar of lstQuarters" class="fixed-width-column">
-              {{ quar?.text }}
+            <th class="" style="width: 70px">
+              <codx-label
+                class="fw-bold d-flex justify-content-end"
+                name="lblWeight"
+                [formModel]="dialog.formModel"
+                default="Trọng số"
+              ></codx-label>
             </th>
-            <th *ngFor="let time of lstTime" class="fixed-width-column">
-              {{ time?.text }}
+            <th style="width: 50px"></th>
+            <th class="fixed-width-column">
+              <codx-label
+                class="fw-bold d-flex justify-content-end"
+                fiedName="Target"
+                formName="CMTargetsLines"
+                gridViewName="grvCMTargetsLines"
+              ></codx-label>
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="lstOwners != null && lstOwners.length > 0">
           <tr *ngFor="let item of lstOwners">
             <td class="fixed-width-column-user">
               <div
-                *ngIf="!item.isExit"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od mb-1 p-2"
               >
                 <div class="action-menu-od me-1" (click)="removeUser(item)">
@@ -269,34 +172,107 @@
                 </div>
               </div>
             </td>
-            <td class="fixed-width-column">
-              <span
-                *ngIf="!item.isExit"
-                class=""
-                [ngbTooltip]="targetYear"
-                [innerHTML]="targetToFixed(item?.target)"
+            <td class="" style="width: 70px">
+              <div
+                [ngClass]="
+                  item?.userID == this.editingItem && typeChange === 'weight'
+                    ? 'user-nav-active'
+                    : null
+                "
+                *ngIf="editingItem !== item?.userID || typeChange !== 'weight'"
+                (click)="dbClick(item?.userID, 'weight')"
+                class="d-flex justify-content-end user-nav-item"
               >
-                <ng-template #targetYear>
-                  <div [innerHTML]="targetToFixed(item?.target)"></div>
+                <span class="me-1">{{ item?.weight.toFixed(2) }} </span>
+                %
+              </div>
+              <div
+                [ngClass]="
+                  item?.userID == this.editingItem && typeChange === 'weight'
+                    ? 'user-nav-active'
+                    : null
+                "
+                class="user-nav-item d-flex"
+                *ngIf="
+                  item?.userID == this.editingItem && typeChange === 'weight'
+                "
+              >
+                <input
+                  type="number"
+                  #lblWeight
+                  name="lblWeight"
+                  [min]="0"
+                  [max]="100"
+                  matInput
+                  autofocus
+                  [value]="item?.weight.toFixed(2)"
+                  (blur)="updateTarget(lblWeight.value, item?.userID, 'weight')"
+                  (keydown.enter)="
+                    updateTarget(lblWeight.value, item?.userID, 'weight')
+                  "
+                  class="no-border text-gray-600 no-spinner"
+                  style="margin-left: 0px; width: 70px"
+                />
+              </div>
+            </td>
+            <td style="width: 50px">
+              <span
+                *ngIf="item?.isExit"
+                class="w-10 icon-warning text-danger icon-16"
+                [ngbTooltip]="TooltipEdit"
+              >
+                <ng-template #TooltipEdit>
+                  <codx-label
+                    default="Đã chỉnh sửa"
+                    name="lblIsEdit"
+                    [formModel]="dialog.formModel"
+                  ></codx-label>
                 </ng-template>
               </span>
             </td>
-            <td class="fixed-width-column" *ngFor="let quar of lstQuarters">
-              <ng-container *ngFor="let quarU of item?.quarters">
-                <div *ngIf="quarU?.id === quar?.id && !item.isExit">
-                  <div
-                    class="line-clamp line-clamp-1"
-                    [ngbTooltip]="targetQuarter"
-                    [innerHTML]="targetToFixed(quarU?.target)"
-                  >
-                    <ng-template #targetQuarter>
-                      <div [innerHTML]="targetToFixed(quarU?.target)"></div>
-                    </ng-template>
-                  </div>
-                </div>
-              </ng-container>
+            <td class="fixed-width-column">
+              <div
+                [ngClass]="
+                  item?.userID == this.editingItem && typeChange === 'target'
+                    ? 'user-nav-active'
+                    : null
+                "
+                *ngIf="editingItem !== item?.userID || typeChange !== 'target'"
+                (click)="dbClick(item?.userID, 'target')"
+                class="d-flex justify-content-end user-nav-item"
+              >
+                <span class="" [innerHTML]="targetToFixed(item?.target)">
+                </span>
+              </div>
+              <div
+                [ngClass]="
+                  item?.userID == this.editingItem && typeChange === 'target'
+                    ? 'user-nav-active'
+                    : null
+                "
+                class="user-nav-item d-flex"
+                *ngIf="
+                  item?.userID == this.editingItem && typeChange === 'target'
+                "
+              >
+                <input
+                  type="number"
+                  #lblTarget
+                  name="lblTarget"
+                  [min]="0"
+                  matInput
+                  autofocus
+                  [value]="item?.target"
+                  (blur)="updateTarget(lblTarget.value, item?.userID, 'target')"
+                  (keydown.enter)="
+                    updateTarget(lblTarget.value, item?.userID, 'target')
+                  "
+                  class="no-border text-gray-600 no-spinner"
+                  style="margin-left: 0px"
+                />
+              </div>
             </td>
-            <td *ngFor="let time of lstTime" class="fixed-width-column">
+            <!-- <td *ngFor="let time of lstTime" class="fixed-width-column">
               <ng-container *ngFor="let line of time?.lines">
                 <span
                   *ngIf="line.salespersonID == item?.userID && !line.isExit"
@@ -312,16 +288,7 @@
                     [innerHTML]="targetToFixed(line?.target)"
                     [ngbTooltip]="targetToFixed(line?.target)"
                   >
-                    <!-- <input
-                      type="text"
-                      #lblTarget
-                      name="lblTarget"
-                      [value]="targetToFixed(line?.target)"
-                      [disabled]="true"
-                      [ngbTooltip]="targetToFixed(line?.target)"
-                      class="no-border text-gray-600"
-                      style="margin-left: 0px"
-                    /> -->
+
                   </div>
                   <div
                     [ngClass]="
@@ -350,72 +317,53 @@
                   </div>
                 </span>
               </ng-container>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- <div class="px-6 h-30">
-      <div class="row">
-        <div class="col-4">
-          <div class="mb-2"></div>
-          <div style="margin-top: 18px">
-            <div *ngFor="let item of lstOwners">
-              <div
-                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2"
-              >
-                <div class="d-flex justify-content-between list-title">
-                  <div class="d-flex align-items-top me-2">
-                    <codx-img
-                      class=""
-                      [objectId]="item?.userID"
-                      objectType="AD_Users"
-                    >
-                    </codx-img>
-                  </div>
-                  <div class="d-flex flex-column me-2">
-                    <div class="text-dark fw-bold fs-6">
-                      {{ item?.userName }}
-                    </div>
-                    <div class="text-gray-700">{{ item?.positionName }}</div>
-                  </div>
-                </div>
+    <div class="px-3">
+      <table>
+        <thead>
+          <tr class="background" style="background-color: #a3a2a2">
+            <th class="fixed-width-column-user" style="z-index: 100">
+              <codx-label
+                class="d-flex justify-content-center fw-bold"
+                name="lblSum"
+                [formModel]="dialog.formModel"
+                default="Tổng cộng"
+              ></codx-label>
+            </th>
+            <th class="" style="width: 70px">
+              <div class="d-flex justify-content-end">
+                <span class="fw-bold me-1" [innerHTML]="sumWeight()"></span>
+                %
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="col-8"
-          *ngIf="lstTime != null && lstTime.length > 0"
-          style="overflow-x: auto !important"
-        >
-          <div
-            [ngClass]="
-              isAllocation && data?.category != '3'
-                ? 'd-flex justify-content-between'
-                : 'd-flex justify-content-end'
-            "
-            class="mb-2"
-          >
-            <div class="d-flex flex-column" *ngFor="let item of lstTime">
-              <div
-                class="text-dark fw-bold text-nowrap pe-5"
-                style="margin-right: 20px"
-              >
-                {{ item?.text }}
-              </div>
-              <div class="mb-1" *ngFor="let item of lstOwners">
-                <div
-                  class="text-gray-700 text-nowrap pe-5"
-                  style="margin-right: 20px;margin-top: 6px;"
-                >
-                  {{ item?.target / lstTime.length }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
+            </th>
+            <th style="width: 50px"></th>
+            <th class="fixed-width-column">
+              <span
+                class="fw-bold d-flex justify-content-end"
+                [innerHTML]="sumTarget()"
+              ></span>
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="px-3 mt-5">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary"
+        (click)="clickRefered() "
+      >
+        <i class="icon-refresh text-primary icon-20 me-1"></i>
+        <codx-label
+          name="lblRefered"
+          [formModel]="form.formModel"
+          default="Khôi phục lại"
+        ></codx-label>
+      </button>
+    </div>
   </ng-template>
 </codx-form>

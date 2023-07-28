@@ -35,6 +35,7 @@ export class PopupAddTargetComponent {
   headerText = '';
   targetLine: CM_TargetsLines;
   lstTargetLines: CM_TargetsLines[] = [];
+  lstTargetLinesDelete: CM_TargetsLines[] = [];
   lstOwners = [];
   lstOwnersOld = [];
   //calendar - tháng - quý - năm
@@ -65,6 +66,7 @@ export class PopupAddTargetComponent {
   quarter4: number = 0;
   lstQuarters = [];
   count = 0;
+  currencyID: any;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -95,40 +97,54 @@ export class PopupAddTargetComponent {
 
   async ngOnInit() {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
-    var res = await firstValueFrom(this.cache.valueList('CRM046'));
-    if (res && res.datas) {
-      res?.datas?.forEach((element) => {
-        if (!this.lstQuarters?.some((x) => x.id == parseInt(element?.value))) {
-          var tmp = {};
-          tmp['recID'] = Util.uid();
-          tmp['id'] = parseInt(element?.value);
-          tmp['text'] = element?.text ?? element?.default;
-          tmp['target'] = 0;
-          tmp['userID'] = null;
-          this.lstQuarters.push(Object.assign({}, tmp));
-        }
-      });
-    }
+    // var res = await firstValueFrom(this.cache.valueList('CRM046'));
+    // if (res && res.datas) {
+    //   res?.datas?.forEach((element) => {
+    //     if (!this.lstQuarters?.some((x) => x.id == parseInt(element?.value))) {
+    //       var tmp = {};
+    //       tmp['recID'] = Util.uid();
+    //       tmp['id'] = parseInt(element?.value);
+    //       tmp['text'] = element?.text ?? element?.default;
+    //       tmp['target'] = 0;
+    //       tmp['userID'] = null;
+    //       this.lstQuarters.push(Object.assign({}, tmp));
+    //     }
+    //   });
+    // }
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.selectedType = this.getFormatCalendar(null);
       this.data.owner = null;
-      this.data.currencyID = 'VND';
+      this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+        if (res?.length > 0) {
+          let dataParam = res.filter(
+            (x) => x.category == '1' && !x.transType
+          )[0];
+          if (dataParam) {
+            let paramDefault = JSON.parse(dataParam.dataValue);
+            this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+            this.data.currencyID = this.currencyID;
+          }
+        }
+      });
     } else {
       this.selectedType = this.getFormatCalendar(this.data?.category);
       this.isBusiness = true;
       this.isExitTarget = true;
-      this.lstOwners?.forEach((res) => {
-        res['isExit'] = false;
+      this.lstOwners.forEach((element) => {
+        if (this.data.target > 0) {
+          element.weight = (element.target * 100) / this.data.target;
+        }
       });
+
       this.lstTargetLines?.forEach((res) => {
         res['isExit'] = false;
       });
-      this.setQuarterInOwner();
-      this.setQuartersByTargetOrLines('lines');
-      this.setSumTargetQuarterByEdit();
-      // this.setTargetToLine(1, 4);
-      this.getListTimeCalendar(this.text);
+      // this.setQuarterInOwner();
+      // this.setQuartersByTargetOrLines('lines');
+      // this.setSumTargetQuarterByEdit();
+      // // this.setTargetToLine(1, 4);
+      // this.getListTimeCalendar(this.text);
     }
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -151,11 +167,12 @@ export class PopupAddTargetComponent {
 
     if (this.action === 'add') {
       op.method = 'AddTargetAndTargetLineAsync';
+      data = [this.data, this.lstTargetLines];
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
+      data = [this.data, this.lstTargetLines, this.lstTargetLinesDelete];
     }
     op.className = 'TargetsBusiness';
-    data = [this.data, this.lstTargetLines];
 
     op.data = data;
     return true;
@@ -205,6 +222,13 @@ export class PopupAddTargetComponent {
       return;
     }
 
+    if (!this.checkTarget()) {
+      this.notiService.notifyCode(
+        'Mục tiêu năm không phù hợp với mục tiêu doanh số'
+      );
+      return;
+    }
+
     if (this.action == 'add') {
       this.onAdd();
     } else {
@@ -212,6 +236,19 @@ export class PopupAddTargetComponent {
     }
   }
 
+  checkTarget() {
+    if (this.lstOwners != null && this.lstOwners.length > 0) {
+      var target = 0;
+      this.lstOwners.forEach((res) => {
+        target += res.target;
+      });
+
+      if (target != this.data.target) {
+        return false;
+      }
+    }
+    return true;
+  }
   //#endregion
 
   //#region value change event
@@ -237,40 +274,39 @@ export class PopupAddTargetComponent {
   }
 
   valueChangeTarget(e, type) {
-    if (this.typeChange === type) {
-      switch (e?.field) {
-        case 'target':
-          if (this.data.target !== e.data) {
-            this.data.target = e?.data;
-            this.setQuartersByTargetOrLines('target');
-            this.getListTimeCalendar(this.text);
+    switch (e?.field) {
+      case 'target':
+        if (this.data.target !== e.data) {
+          this.data.target = e?.data;
+          this.setTargetOwner();
+          this.setListTargetLine();
+          // this.setQuartersByTargetOrLines('target');
+          // this.getListTimeCalendar(this.text);
+        }
+        break;
+      default:
+        if (this[e?.field] !== e.data) {
+          if (e?.data <= 0) {
+            this.sumTargetAll(0, this[e?.field]);
+            this[e?.field] = 0;
+          } else {
+            this.sumTargetAll(e?.data, this[e?.field]);
+            this[e?.field] = e?.data;
           }
-          break;
-        default:
-          if (this[e?.field] !== e.data) {
-            if (e?.data <= 0) {
-              this.sumTargetAll(0, this[e?.field]);
-              this[e?.field] = 0;
-            } else {
-              this.sumTargetAll(e?.data, this[e?.field]);
-              this[e?.field] = e?.data;
-            }
-            var count: number =
-              e?.field == 'quarter1'
-                ? 1
-                : e?.field == 'quarter2'
-                ? 2
-                : e?.field == 'quarter3'
-                ? 3
-                : 4;
-            this.setTargetToLine(count, count, e?.field);
-          }
+          var count: number =
+            e?.field == 'quarter1'
+              ? 1
+              : e?.field == 'quarter2'
+              ? 2
+              : e?.field == 'quarter3'
+              ? 3
+              : 4;
+          this.setTargetToLine(count, count, e?.field);
+        }
 
-          break;
-      }
-    } else {
-      this.typeChange = 'input';
+        break;
     }
+
     this.changedetectorRef.detectChanges();
   }
 
@@ -304,15 +340,13 @@ export class PopupAddTargetComponent {
           tmp['isExit'] = false;
           tmp['quarters'] = [];
           tmp['target'] = 0;
+          tmp['weight'] = 0;
+
           id = id + ';' + user?.UserID;
           this.lstOwners.push(Object.assign({}, tmp));
-        } else {
-          var index = this.lstOwners.findIndex((x) => x.userID == user?.UserID);
-          if (index != -1) {
-            this.lstOwners[index].isExit = false;
-          }
         }
       });
+      this.setTargetOwner('target');
     } else {
       e?.dataSelected?.forEach((user) => {
         var tmp = {};
@@ -323,20 +357,43 @@ export class PopupAddTargetComponent {
         tmp['isExit'] = false;
         tmp['quarters'] = [];
         tmp['target'] = 0;
+        tmp['weight'] = 0;
         id =
           id != null && id?.trim() != ''
             ? id + ';' + user?.UserID
             : user?.UserID;
         this.lstOwners.push(Object.assign({}, tmp));
       });
+      this.setTargetOwner('user');
     }
     this.data.owner = id;
-    this.setQuarterInOwner();
+    this.countClick = 0;
+    // this.setQuarterInOwner();
+    // this.setTargetToLine(1, 4);
+    // this.getListTimeCalendar(this.text);
     this.setListTargetLine();
-    this.setTargetToLine(1, 4);
-    this.getListTimeCalendar(this.text);
-
     this.changedetectorRef.detectChanges();
+  }
+
+  setTargetOwner(type = 'target') {
+    if (this.lstOwners != null && this.lstOwners.length > 0) {
+      var weightExit = 0;
+      this.lstOwners.forEach((res) => {
+        if (res.isExit) weightExit += res.weight;
+      });
+      for (var item of this.lstOwners) {
+        if (!item.isExit) {
+          if (type == 'user') {
+            item.weight = 100 / this.lstOwners.length;
+          } else {
+            item.weight =
+              (100 - weightExit) /
+              this.lstOwners.filter((x) => !x.isExit).length;
+          }
+        }
+        item.target = (this.data.target * item.weight) / 100;
+      }
+    }
   }
 
   setQuarterInOwner() {
@@ -496,7 +553,7 @@ export class PopupAddTargetComponent {
 
   setListTargetLine() {
     if (this.lstOwners != null && this.lstOwners.length > 0) {
-      for (var item of this.lstOwners.filter((x) => x.isExit == false)) {
+      for (var item of this.lstOwners) {
         for (let j = 1; j <= 12; j++) {
           var index = this.lstTargetLines.findIndex(
             (x) =>
@@ -518,7 +575,7 @@ export class PopupAddTargetComponent {
             startDate.setDate(startDate.getDate() + 1); //Như này lưu startDate trong mongoDb sẽ đúng nhưng hiển thị và console.log sẽ sai
             endDate.setMonth(month);
             endDate.setDate(endDate.getDate() + daysInMonth);
-            line.target = 0;
+            line.target = item.target / 12;
             line.startDate = startDate;
             line.endDate = endDate;
             line.isExit = false;
@@ -527,8 +584,7 @@ export class PopupAddTargetComponent {
             this.lstTargetLines.push(Object.assign({}, line));
             if (j > 12) j = 1;
           } else {
-            if (this.lstTargetLines[index].isExit)
-              this.lstTargetLines[index].isExit = false;
+            this.lstTargetLines[index].target = item.target / 12;
           }
         }
       }
@@ -618,6 +674,17 @@ export class PopupAddTargetComponent {
     return data ? this.decimalPipe.transform(data, '1.0-0') : 0;
   }
 
+  sumTarget() {
+    let target = 0;
+    this.lstOwners.forEach((res) => (target += res.target));
+    return this.targetToFixed(target);
+  }
+
+  sumWeight() {
+    let weight = 0;
+    this.lstOwners.forEach((res) => (weight += res.weight));
+    return this.targetToFixed(weight);
+  }
   //#endregion
 
   //#region get target and targetLine
@@ -629,26 +696,25 @@ export class PopupAddTargetComponent {
         if (this.data != null) {
           this.isAllocation = this.data?.allocation == '1' ? true : false;
           this.isExitTarget = true;
-          this.selectedType = this.getFormatCalendar(this.data?.category);
           this.isBusiness = true;
         }
         this.lstOwners = res[2] ?? [];
-
+        this.lstOwners.forEach((element) => {
+          if (this.data.target > 0) {
+            element.weight = (element.target * 100) / this.data.target;
+          }
+        });
         this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
         this.lstTargetLines = res[1] ?? [];
-        this.lstOwners?.forEach((res) => {
-          res['isExit'] = false;
-        });
         this.lstTargetLines?.forEach((res) => {
           res['isExit'] = false;
         });
-        this.typeChange = 'noInput';
-        // this.setTargetToLine();
-        this.setQuarterInOwner();
-        this.setQuartersByTargetOrLines('lines');
-        this.setSumTargetQuarterByEdit();
-        // this.setTargetToLine(1, 4);
-        this.getListTimeCalendar(this.text);
+        // // this.setTargetToLine();
+        // this.setQuarterInOwner();
+        // this.setQuartersByTargetOrLines('lines');
+        // this.setSumTargetQuarterByEdit();
+        // // this.setTargetToLine(1, 4);
+        // this.getListTimeCalendar(this.text);
       } else {
         if (this.isExitTarget) {
           this.lstTargetLines = [];
@@ -664,7 +730,7 @@ export class PopupAddTargetComponent {
           this.quarter2 = 0;
           this.quarter3 = 0;
           this.quarter4 = 0;
-          this.data.currencyID = 'VND';
+          this.data.currencyID = this.currencyID;
           this.lstTime.forEach((x) => (x.lines = []));
           this.lstOwners = [];
           this.isExitTarget = false;
@@ -727,7 +793,6 @@ export class PopupAddTargetComponent {
     this.data.period = year;
     this.data.year = year;
     this.text = e?.text;
-    this.getListTimeCalendar(e?.text);
     this.changedetectorRef.detectChanges();
   }
 
@@ -772,8 +837,28 @@ export class PopupAddTargetComponent {
     this.editingItem = null;
   }
 
-  dbClick(data) {
-    this.editingItem = data;
+  countClick = 0;
+  dbClick(data, type) {
+    if (type == 'target') {
+      if (this.data.target == 0) {
+        this.notiService.notifyCode(
+          'Phải có chỉ tiêu doanh số cả năm lớn hơn 0 mới được sửa'
+        );
+        return;
+      }
+    }
+    if (this.countClick == 0) {
+      if (this.lstOwners != null && this.lstOwners.length > 1) {
+        this.editingItem = data;
+        this.typeChange = type;
+        this.countClick = 0;
+      } else {
+        this.countClick += 1;
+        this.notiService.notifyCode('Cần có 2 nhân viên trở lên mới được sửa');
+        return;
+      }
+    }
+
     this.changedetectorRef.detectChanges();
   }
 
@@ -782,101 +867,137 @@ export class PopupAddTargetComponent {
     return this.editingItem === item;
   }
 
-  updateTarget(e, id, isAllo) {
-    var valid = /\D/;
+  updateTarget(e, id, type) {
     var index = -1;
     var indexTime = -1;
-    var month = 0;
-    index = this.lstTargetLines?.findIndex((x) => x.recID == id);
-
-    indexTime = this.lstTime?.findIndex((x) =>
-      x.lines?.some((y) => y.recID == id)
-    );
     var i = 0;
-    var targetOld = 0;
     if (parseFloat(e) < 0) {
       // this.lstOwners = JSON.parse(JSON.stringify(this.lstOwners));
       // this.lstTime = JSON.parse(JSON.stringify(this.lstTime));
       this.editingItem = null;
-      this.typeChange = 'input';
-
+      this.typeChange = '';
       return;
     }
-
     let target = parseFloat(e?.trim());
+
+    index = this.lstOwners.findIndex((x) => x.userID == id);
     if (index != -1) {
-      if (this.lstTargetLines[index].target !== target) {
-        var indexOwner = this.lstOwners?.findIndex(
-          (x) => x.userID === this.lstTargetLines[index].salespersonID
-        );
-
-        if (this.lstTargetLines[index].target < target) {
-          i = target - this.lstTargetLines[index].target;
-          this.data.target = this.data.target + i;
-          if (indexOwner != -1) {
-            this.lstOwners[indexOwner].target =
-              this.lstOwners[indexOwner]?.target + i;
-
-            for (var item of this.lstOwners[indexOwner]?.quarters) {
-              var start =
-                new Date(this.lstTargetLines[index].startDate)?.getMonth() + 1;
-              let count =
-                start >= 1 && start < 4
-                  ? 1
-                  : start >= 4 && start < 7
-                  ? 2
-                  : start >= 7 && start < 10
-                  ? 3
-                  : 4;
-
-              if (count === item.id) {
-                item.target = item.target + i;
-              }
-            }
+      if (type == 'weight') {
+        if (this.lstOwners[index].weight != target) {
+          if (this.checkWeight(id, target, 100, 'weight')) {
+            this.editingItem = null;
+            this.typeChange = '';
+            this.notiService.notifyCode('Giá trị không hợp lệ');
+            return;
           }
-        } else {
-          i = this.lstTargetLines[index].target - target;
-          this.data.target -= i;
-          if (indexOwner != -1) {
-            this.lstOwners[indexOwner].target =
-              this.lstOwners[indexOwner]?.target - i;
-            for (var item of this.lstOwners[indexOwner]?.quarters) {
-              var start =
-                new Date(this.lstTargetLines[index].startDate)?.getMonth() + 1;
-              let count =
-                start >= 1 && start < 4
-                  ? 1
-                  : start >= 4 && start < 7
-                  ? 2
-                  : start >= 7 && start < 10
-                  ? 3
-                  : 4;
-              if (count === item.id) {
-                item.target = item.target - i;
-              }
-            }
-          }
-        }
-        this.lstTargetLines[index].target = target;
-        if (indexTime != -1) {
-          this.lstTime[indexTime]?.lines.forEach((element) => {
-            if (element?.recID == id) {
-              element.target = target;
+
+          this.lstOwners[index].weight = parseFloat(target.toFixed(2));
+          this.lstOwners[index].target = (this.data.target * target) / 100;
+          this.lstOwners[index].isExit = true;
+          var weigth = 0;
+          let count = 0;
+          this.lstOwners.forEach((ele) => {
+            if (ele.isExit) {
+              weigth += ele.weight;
+            } else {
+              count++;
             }
           });
-        }
 
-        this.setQuartersByTargetOrLines('lines');
-        // this.setTargetToLine();
-      }
-      if (this.isAllocation) {
-        this.isAllocation = false;
-        this.data.allocation = '0';
+          this.lstOwners.forEach((res) => {
+            if (res.userID != id && !res.isExit) {
+              if (count > 0) {
+                res.weight = parseFloat(((100 - weigth) / count).toFixed(2));
+                res.target = (res.weight * this.data.target) / 100;
+              } else {
+                res.weight = 0;
+                res.target = 0;
+              }
+            }
+          });
+          if (this.data.target > 0) {
+            this.setListTargetLine();
+          }
+        }
+      } else {
+        if (this.lstOwners[index].target != target) {
+          if (this.checkWeight(id, target, this.data.target, 'target')) {
+            this.editingItem = null;
+            this.typeChange = '';
+            this.notiService.notifyCode('Giá trị không hợp lệ');
+            return;
+          }
+          this.lstOwners[index].target = target;
+          this.lstOwners[index].isExit = true;
+          this.lstOwners[index].weight = parseFloat(
+            ((target * 100) / this.data.target).toFixed(2)
+          );
+          let targetExSum = 0;
+          let countEx = 0;
+          this.lstOwners.forEach((ele) => {
+            if (ele.isExit) {
+              targetExSum += ele.target;
+            } else {
+              countEx++;
+            }
+          });
+
+          this.lstOwners.forEach((res) => {
+            if (res.userID != id && !res.isExit) {
+              if (countEx > 0) {
+                res.target = (this.data.target - targetExSum) / countEx;
+                res.weight = parseFloat(
+                  ((res.target * 100) / this.data.target).toFixed(2)
+                );
+              } else {
+                res.target = 0;
+                res.weight = 0;
+              }
+            }
+          });
+          if (this.data.target > 0) {
+            this.setListTargetLine();
+          }
+        }
       }
     }
     this.editingItem = null;
+    this.typeChange = '';
     this.changedetectorRef.detectChanges();
   }
+
+  checkWeight(id, weight, main: number, type) {
+    let weightExit = 0;
+    let isCheck = false;
+    if (weight > main) return true;
+    for (var item of this.lstOwners) {
+      if (item.userID != id && item.isExit) {
+        if (type == 'weight') {
+          weightExit += item.weight;
+        } else {
+          weightExit += item.target;
+        }
+      }
+    }
+    if (weightExit >= main) {
+      if (weight > 0) {
+        return true;
+      }
+    } else {
+      if (main - weightExit < weight) {
+        return true;
+      } else {
+        if (
+          this.lstOwners.filter((x) => !x.isExit).length == 1 &&
+          this.lstOwners.some((x) => !x.isExit && x.userID == id)
+        ) {
+          isCheck = weightExit + weight !== main ? true : false;
+        }
+      }
+    }
+    return isCheck;
+  }
+
   //#endregion
 
   //#region remove
@@ -888,45 +1009,43 @@ export class PopupAddTargetComponent {
       this.notiService.alertCode('SYS030').subscribe((x) => {
         if (x.event && x.event?.status) {
           if (x?.event?.status == 'Y') {
-            var targetOld = this.lstOwners[index]?.target;
-            for (var ow of this.lstOwners[index]?.quarters) {
-              this[`quarter${ow.id}`] = this[`quarter${ow.id}`] - ow?.target;
-            }
-            this.data.target = this.data.target - targetOld;
-            if (!this.isExitTarget) {
-              for (let i = 0; i < this.lstTargetLines.length; i++) {
-                let line = this.lstTargetLines[i];
-                if (line?.salespersonID == item?.userID) {
-                  this.lstTargetLines.splice(i, 1);
-                }
-              }
-              let id = '';
-              for (var j = 0; j < this.data?.owner?.split(';').length; j++) {
-                let owner = this.data?.owner?.split(';')[j];
-                if (owner == item?.userID) {
-                  this.data?.owner?.split(';').splice(j, 1);
-                } else {
-                  id = id ? id + ';' + owner : owner;
-                }
-              }
-              this.data.owner = id;
-              this.lstOwners.splice(index, 1);
-            } else {
-              for (let line of this.lstTargetLines) {
-                if (line?.salespersonID == item?.userID) {
-                  line.target = 0;
-                  line.isExit = true;
-                }
-              }
-              this.lstOwners[index].isExit = true;
-              this.lstOwners[index].target = 0;
-              for (var min of this.lstOwners[index]?.quarters) {
-                min.target = 0;
+            for (var i = this.lstTargetLines.length - 1; i >= 0; i--) {
+              var line = this.lstTargetLines[i];
+              if (line.salespersonID === item.userID) {
+                this.lstTargetLinesDelete.push(line);
+                this.lstTargetLines.splice(i, 1);
               }
             }
-            this.getListTimeCalendar(this.text);
-            this.setQuarterInOwner();
-            this.setTargetToLine(1, 4);
+
+            console.log('delete ', this.lstTargetLinesDelete);
+
+            console.log('line ', this.lstTargetLines);
+            let id = '';
+            for (var j = 0; j < this.data?.owner?.split(';').length; j++) {
+              let owner = this.data?.owner?.split(';')[j];
+              if (owner == item?.userID) {
+                this.data?.owner?.split(';').splice(j, 1);
+              } else {
+                id = id ? id + ';' + owner : owner;
+              }
+            }
+            this.data.owner = id;
+            this.lstOwners.forEach((res) => {
+              if (res.userID != item?.userID && !res.isExit) {
+                res.target +=
+                  this.lstOwners[index].target /
+                  this.lstOwners.filter(
+                    (x) => !x.isExit && item?.userID != x.userID
+                  ).length;
+                if (this.data.target > 0) {
+                  res.weight = (res.target * 100) / this.data.target;
+                }
+              }
+            });
+
+            this.lstOwners.splice(index, 1);
+            console.log('delete ', this.lstOwners);
+            this.setListTargetLine();
           }
           this.changedetectorRef.detectChanges();
         }
@@ -934,4 +1053,19 @@ export class PopupAddTargetComponent {
     }
   }
   //#endregion
+
+  clickRefered() {
+    if (this.lstOwners != null && this.lstOwners.length > 0) {
+      this.lstOwners.forEach((res) => {
+        if (this.data.target > 0) {
+          res.target = this.data.target / this.lstOwners.length;
+          res.weight = (res.target * 100) / this.data.target;
+        } else {
+          res.target = 0;
+          res.weight = 0;
+        }
+        res.isExit = false;
+      });
+    }
+  }
 }

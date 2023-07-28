@@ -26,6 +26,10 @@
 // }
 
 :host ::ng-deep {
+  .codx-form .card-body {
+    padding-bottom: 0 !important;
+  }
+
   #gridViewV2 {
     height: 100%;
     display: flex;
@@ -44,7 +48,20 @@
     height: calc(100% - 32px) !important;
   }
 
-  input[ng-reflect-name="memo"] {
+  codx-input[field="memo"] input {
     border: none;
+  }
+
+  codx-tabs .tab-footer {
+    ul {
+      border-bottom: 0;
+      height: 3.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    div {
+      padding-bottom: 0 !important;
+    }
   }
 }

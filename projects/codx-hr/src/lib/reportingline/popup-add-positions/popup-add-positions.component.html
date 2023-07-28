@@ -68,7 +68,8 @@
 
 
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+    <button type="button" class="btn btn-primary" (click)="OnSaveForm()"
+      [disabled]="!formModel.currentData.updateColumn">
       <codx-label [formModel]="formModel" [default]="'Lưu'"></codx-label>
     </button>
   </div>
