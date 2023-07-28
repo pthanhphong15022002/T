@@ -200,7 +200,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     width: 0,
   };
 
-  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle1: Object = { position: 'Outside', font: { size: '10px' } };
   labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
   //#endregion gauge
 
