@@ -775,7 +775,7 @@
               </div>
 
               <codx-vll
-                *ngIf="item.lineType !== '1'"
+                *ngIf="item.lineType"
                 [formModel]="fmVouchersLines"
                 field="LineType"
                 [value]="item.lineType"

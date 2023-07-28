@@ -1244,7 +1244,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  autoAddRowSet(e: any) {
+  autoAddRow(e: any) {
     switch (e.type) {
       case 'autoAdd':
         this.addRow();
