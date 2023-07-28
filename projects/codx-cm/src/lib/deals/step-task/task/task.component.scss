@@ -2,9 +2,7 @@
    display: flex;
    flex-direction: column;
 }
-.add-contract{
-//   flex: 1;
-}
+
 .icon-container{
    width: 32px;
    height: 32px;
@@ -17,7 +15,5 @@
 }
 
 .task-hover:hover > .steplist-hearder .task-name{
-   color: var(--text-primary)!important;
-   transform: scale(1.1)!important;
-    margin-left: 5px !important;
+   color: var(--primary-dark)!important;
  }

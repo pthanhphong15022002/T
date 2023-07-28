@@ -37,8 +37,8 @@ export class CashPaymentLine {
   settlementRule: any;
   share: any;
   subLGType: any;
-  vatAmt: any;
-  vatAmt2: any;
+  vatAmt: any = 0;
+  vatAmt2: any = 0;
   transID: any;
   unbounds: any;
   singleEntry:any;

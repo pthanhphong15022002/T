@@ -44,14 +44,14 @@
   <ng-container [ngTemplateOutlet]="tempHeader"></ng-container>
   <ng-container *ngFor="let data of listQuotations; let i = index">
     <div
-      class="has-action-menu py-3 border-bottom border-gray-100 px-5 line-quotations cursor-pointer"
+      class="has-action-menu border-bottom border-gray-100 line-quotations cursor-pointer"
       (dblclick)="viewDetail(data)"
     >
-      <div class="row py-2">
+      <div class="row py-1">
         <div class="col-1 d-flex justify-content-center align-items-center">
           <span>{{ i + 1 }}</span>
         </div>
-        <div class="col-3 d-flex flex-column justify-content-center">
+        <div class="col-4 d-flex flex-column justify-content-center">
           <span
             class="text-dark fw-bold"
             #quotationName
@@ -158,10 +158,10 @@
 </ng-template>
 
 <ng-template #tempHeader>
-  <div class="py-3 border-bottom border-gray-100 text-dark px-5">
-    <div class="row">
+  <div class="border-bottom border-gray-100 text-dark">
+    <div class="row py-2">
       <div class="col-1 d-flex justify-content-center align-items-center">
-        <span class="codx-label text-header">
+        <span class="codx-label fw-bold text-dark">
           <codx-label
             name="lblIndex"
             [formModel]="formModel"
@@ -169,8 +169,8 @@
           ></codx-label>
         </span>
       </div>
-      <div class="col-3 d-flex flex-column justify-content-center">
-        <span class="codx-label text-header">
+      <div class="col-4 d-flex flex-column justify-content-center">
+        <span class="codx-label fw-bold text-dark">
           <codx-label
             fiedName="QuotationName"
             [formModel]="formModel"
@@ -179,17 +179,17 @@
         ></span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="codx-label text-header">
+        <span class="codx-label fw-bold text-dark">
           <codx-label fiedName="TotalAmt" [formModel]="formModel"></codx-label
         ></span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="codx-label text-header">
+        <span class="codx-label fw-bold text-dark">
           <codx-label fiedName="CreatedOn" [formModel]="formModel"></codx-label
         ></span>
       </div>
       <div class="col-2 d-flex justify-content-end align-items-center">
-        <span class="codx-label text-header">
+        <span class="codx-label fw-bold text-dark">
           <codx-label fiedName="Status" [formModel]="formModel"></codx-label
         ></span>
       </div>

@@ -118,6 +118,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
       if (this.listInstanceStep?.length > 0) {
+        this.stepViews = [];
         this.listInstanceStep.forEach((x) => {
           if (!x.isFailStep && !x.isSuccessStep) {
             let obj = {

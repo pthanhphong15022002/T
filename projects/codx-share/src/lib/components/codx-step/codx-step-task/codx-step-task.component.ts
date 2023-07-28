@@ -1452,30 +1452,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async openPopupUpdateProgress(data, type) {
-    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){
+    let check = this.checkRoleUpdateProgress(data, type);
+    if(!check){
       return;
-    }
-
-    if (!this.isMoveStage && !this.isTaskFirst && this.currentStep?.stepStatus == "0") {
-      if (
-        !this.isOnlyView ||
-        !this.isStart ||
-        this.isClose ||
-        this.isViewStep
-      ) {
-        return;
-      }
-      let checkUpdate = this.stepService.checkUpdateProgress(
-        data,
-        type,
-        this.currentStep,
-        this.isRoleAll,
-        this.isOnlyView,
-        this.isUpdateProgressGroup,
-        this.isUpdateProgressStep,
-        this.user
-      );
-      if (!checkUpdate) return;
     }
     let askUpdateParent = false;
     let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some(
@@ -1675,44 +1654,44 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  checkUpdateProgress(dataUpdate, type) {
-    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){ // trường hợp chuyển giai đoạn khóa thay đổi group
-      return false;
-    }
-    if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
-      return true;
-    }
-    if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
-      if (type == 'P') {
-        return this.isUpdateProgressStep && this.isRoleAll ? true : false;
-      } else if (type == 'G') {
-        let isGroup = false;
-        if (!this.isRoleAll) {
-          isGroup = this.checRoleTask(dataUpdate, 'O');
-        }
-        return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
-          ? true
-          : false;
-      } else {
-        if (dataUpdate.status == '1') {
-          return false;
-        }
-        let isGroup = false;
-        let isTask = false;
-        if (!this.isRoleAll) {
-          let group = this.currentStep?.taskGroups?.find(
-            (g) => g.refID == dataUpdate?.taskGroupID
-          );
-          isGroup = group ? this.checRoleTask(group, 'O') : false;
-          if (!isGroup) {
-            isTask = this.checRoleTask(dataUpdate, 'O');
-          }
-        }
-        return this.isRoleAll || isGroup || isTask ? true : false;
-      }
-    }
-    return false;
-  }
+  // checkUpdateProgress(dataUpdate, type) {
+  //   if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){ // trường hợp chuyển giai đoạn khóa thay đổi group
+  //     return false;
+  //   }
+  //   if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
+  //     return true;
+  //   }
+  //   if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
+  //     if (type == 'P') {
+  //       return this.isUpdateProgressStep && this.isRoleAll ? true : false;
+  //     } else if (type == 'G') {
+  //       let isGroup = false;
+  //       if (!this.isRoleAll) {
+  //         isGroup = this.checRoleTask(dataUpdate, 'O');
+  //       }
+  //       return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
+  //         ? true
+  //         : false;
+  //     } else {
+  //       if (dataUpdate.status == '1') {
+  //         return false;
+  //       }
+  //       let isGroup = false;
+  //       let isTask = false;
+  //       if (!this.isRoleAll) {
+  //         let group = this.currentStep?.taskGroups?.find(
+  //           (g) => g.refID == dataUpdate?.taskGroupID
+  //         );
+  //         isGroup = group ? this.checRoleTask(group, 'O') : false;
+  //         if (!isGroup) {
+  //           isTask = this.checRoleTask(dataUpdate, 'O');
+  //         }
+  //       }
+  //       return this.isRoleAll || isGroup || isTask ? true : false;
+  //     }
+  //   }
+  //   return false;
+  // }
   //#endregion
 
   //#region view

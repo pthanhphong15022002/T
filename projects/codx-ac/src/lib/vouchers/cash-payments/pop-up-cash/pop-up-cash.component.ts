@@ -45,6 +45,7 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
   dataCash: Array<any> = [];
   objectName: any;
   dateSuggestion: any;
+  voucherNo:any;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -93,7 +94,15 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
   }
   valueChange(e: any) {
     if (e && e.data) {
-      this.dateSuggestion = e.data.fromDate;
+      switch(e.field.toLowerCase()){
+        case 'datesuggestion':
+          this.dateSuggestion = e.data.fromDate;
+          break;
+        case 'voucherno':
+          this.voucherNo = e.data;
+          break;
+      }
+      
     }
   }
   onSelected(e: any) {
@@ -104,6 +113,9 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
       .execApi('AC', 'CashPaymentsBusiness', 'LoadDataCashSuggestAsync', [
         this.cashpayment.voucherDate,
         this.dateSuggestion,
+        this.cashpayment.subType,
+        this.voucherNo
+
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {

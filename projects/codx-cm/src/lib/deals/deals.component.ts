@@ -375,10 +375,10 @@ export class DealsComponent
       }
     };
     var isDelete = (eventItem, data) => {
-      // if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-      //   eventItem.disabled = true;
-      // }
-        eventItem.disabled = false;
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
+        eventItem.disabled = true;
+      }
+        // eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -1676,5 +1676,11 @@ export class DealsComponent
     }
 
     this.loadViewModel();
+  }
+
+  autoStart(event){
+    if (event) {
+      this.startDeal(this.dataSelected);
+    }
   }
 }

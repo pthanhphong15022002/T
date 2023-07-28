@@ -57,7 +57,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
-    private stepService: StepService
+    private stepService: StepService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,6 +77,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {}
 
+  //#region get data
   getActivities(): void {
     this.api
       .exec<any>('DP', 'InstanceStepsBusiness', 'GetActivitiesAsync', [
@@ -91,7 +92,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
   }
-
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -102,22 +102,20 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     return formModel;
   }
 
-  getIconTask(task) {
-    let color = this.listTaskType?.find((x) => x.value === task.taskType);
-    return color?.icon;
-  }
-
-  getColor(task) {
-    let color = this.listTaskType?.find((x) => x.value === task.taskType);
-    return { color: color?.color };
-  }
-
   getRole(task, type) {
     let role =
       task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
     return type == 'ID' ? role?.objectID : role?.objectName;
   }
 
+  getTypeTask(task) {
+    this.taskType = this.listTaskType.find(
+      (type) => type.value == task?.taskType
+    );
+  }
+  //#endregion
+
+  //#region mode function
   async changeDataMFTask(event, task) {
     if (event != null) {
       event.forEach((res) => {
@@ -131,7 +129,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP25':
           case 'DP20':
           case 'DP26':
-          case 'SYS003'://đính kèm file
+          case 'SYS003': //đính kèm file
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -152,7 +150,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP24':
             if (task.taskType != 'M') res.disabled = true;
             break;
-          
+
           case 'DP27': // đặt xe
             if (task.taskType != 'B') res.disabled = true;
             break;
@@ -177,18 +175,15 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               res.disabled = true;
             }
             break;
+          case 'DP31': //Bắt đầu
+            if (task?.status != '1') {
+              res.disabled = true;
+            }
+            break;
         }
       });
     }
   }
-
-  convertMoreFunctions(listMore, more, type) {
-    let functionID = type == 'B' ? 'DP27' : 'DP24';
-    let moreFind = listMore?.find((m) => m.functionID == functionID);
-    let text = more?.text + ' ' + moreFind?.text?.toString()?.toLowerCase();
-    more.text = text;
-  }
-
   async clickMFTask(e: any, task?: any) {
     this.titleName = e.text;
     switch (e.functionID) {
@@ -219,50 +214,51 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP27':
         await this.stepService.addBookingCar(true);
         break;
+      case 'DP31':
+        this.startActivitie(task);
+        break;
     }
   }
-  getTypeTask(task) {
-    this.taskType = this.listTaskType.find(
-      (type) => type.value == task?.taskType
-    );
+  convertMoreFunctions(listMore, more, type) {
+    let functionID = type == 'B' ? 'DP27' : 'DP24';
+    let moreFind = listMore?.find((m) => m.functionID == functionID);
+    let text = more?.text + ' ' + moreFind?.text?.toString()?.toLowerCase();
+    more.text = text;
   }
-  deleteTask(task) {
-    if (!task?.recID) {
-      return;
-    }
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
-            task?.recID,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              let index = this.listActivitie?.findIndex(
-                (activitie) => activitie.recID == task.recID
-              );
-              this.listActivitie?.splice(index, 1);
-              this.notiService.notifyCode('SYS008');
-              this.detectorRef.detectChanges();
-            }
-          });
-      }
-    });
-  }
+  //#endregion
 
-  async copyTask(task) {
-    this.getTypeTask(task);
-    task['objectID'] = this.customerID;
-    task['id'] = null;
-    let taskOutput = await this.openPopupTask('copy', task);
+  //#region CRUD
+  async addTask() {
+    let task = new DP_Instances_Steps_Tasks();
+    task['progress'] = 0;
+    task['refID'] = Util.uid();
+    task['isTaskDefault'] = false;
+    task['taskType'] = this.taskType?.value;
+
+    let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {
+      let data = taskOutput?.event;
+      this.copyData(data, this.activitie);
+      let rolesTask = data?.roles;
+      let roles: DP_Activities_Roles[] = [];
+      if (rolesTask?.length > 0) {
+        rolesTask.forEach((element) => {
+          let role = new DP_Activities_Roles();
+          this.copyData(element, role);
+          roles.push(role);
+        });
+      }
+      this.activitie.roles = roles;
+      this.activitie.objectID = this.customerID;
+      this.activitie.status = '1';
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-          taskOutput?.event,
+          this.activitie,
         ])
         .subscribe((res) => {
           if (res) {
             this.listActivitie.push(res);
+            this.isNoData = false;
             this.notiService.notifyCode('SYS006');
             this.detectorRef.detectChanges();
           }
@@ -293,7 +289,72 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         });
     }
   }
+  deleteTask(task) {
+    if (!task?.recID) {
+      return;
+    }
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.api
+          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+            task?.recID,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              let index = this.listActivitie?.findIndex(
+                (activitie) => activitie.recID == task.recID
+              );
+              this.listActivitie?.splice(index, 1);
+              this.notiService.notifyCode('SYS008');
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
+    });
+  }
+  async copyTask(task) {
+    let dataCopy = JSON.parse(JSON.stringify(task));
+    this.getTypeTask(dataCopy);
+    dataCopy['refID'] = Util.uid();
+    dataCopy['recID'] = Util.uid();
+    dataCopy['progress'] = 0;
+    dataCopy['isTaskDefault'] = false;
+    delete dataCopy?.id;
+    dataCopy['modifiedOn'] = null;
+    dataCopy['modifiedBy'] = null;
 
+    let taskOutput = await this.openPopupTask('copy', dataCopy);
+    if (taskOutput?.event) {
+      let data = taskOutput?.event;
+      this.copyData(data, this.activitie);
+      let rolesTask = data?.roles;
+      let roles: DP_Activities_Roles[] = [];
+      if (rolesTask?.length > 0) {
+        rolesTask.forEach((element) => {
+          let role = new DP_Activities_Roles();
+          this.copyData(element, role);
+          roles.push(role);
+        });
+      }
+      this.activitie.roles = roles;
+      this.activitie.objectID = this.customerID;
+      this.activitie.status = '1';
+
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [this.activitie])
+        .subscribe((res) => {
+          if (res) {
+            this.listActivitie.push(res);
+            this.notiService.notifyCode('SYS006');
+            this.detectorRef.detectChanges();
+          }
+        });
+    }
+  }
+
+  //#endregion
+  
+  //#region open popup
   async chooseTypeTask() {
     let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
@@ -309,52 +370,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.addTask();
     }
   }
-
-  async addTask() {
-    let task = new DP_Instances_Steps_Tasks();
-    task['progress'] = 0;
-    task['refID'] = Util.uid();
-    task['isTaskDefault'] = false;
-    task['taskType'] = this.taskType?.value;
-
-    let taskOutput = await this.openPopupTask('add', task);
-    if (taskOutput?.event) {
-      let data = taskOutput?.event;
-      this.copyData(data, this.activitie);
-      let rolesTask = data?.roles;
-      let roles: DP_Activities_Roles[] = [];
-      if (rolesTask?.length > 0) {
-        rolesTask.forEach((element) => {
-          let role = new DP_Activities_Roles();
-          this.copyData(element, role);
-          roles.push(role);
-        });
-      }
-      this.activitie.roles = roles;
-      this.activitie.objectID = this.customerID;
-      this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-          this.activitie,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.listActivitie.push(res);
-            this.isNoData = false;
-            this.notiService.notifyCode('SYS006');
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
-  }
-
-  copyData(datacopy, data) {
-    if (datacopy && data) {
-      for (let key in datacopy) {
-        data[key] = datacopy[key];
-      }
-    }
-  }
-
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
       action,
@@ -387,8 +402,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async openPopupUpdateProgress(task, type) {
-    if(this.isPause){
-      return
+    if (this.isPause) {
+      return;
     }
     let dataInput = {
       data: task,
@@ -424,14 +439,18 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         .subscribe((res) => {
           if (res) {
             task.progress = dataPopupOutput?.event?.progressTask;
+            task.status = task.progress == 100 ? "3" : "2";
             this.listActivitie;
             this.notiService.notifyCode('SYS007');
+            this.detectorRef.detectChanges();
           }
         });
     }
     return dataPopupOutput;
   }
+  //#endregion
 
+  //#region view
   viewTask(data, type) {
     if (data) {
       let frmModel: FormModel = {
@@ -494,4 +513,34 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       });
     }
   }
+  //#endregion
+  
+  startActivitie(activitie) {
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'StartActivitiesAsync', [
+        activitie?.recID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          let index = this.listActivitie?.findIndex(
+            (x) => x.recID == res.recID
+          );
+          if (index >= 0) {
+            this.listActivitie?.splice(index, 1, res);
+            this.notiService.notifyCode('SYS007');
+          } else {
+          }
+        } else {
+        }
+      });
+  }
+
+  copyData(datacopy, data) {
+    if (datacopy && data) {
+      for (let key in datacopy) {
+        data[key] = datacopy[key];
+      }
+    }
+  }
+
 }
