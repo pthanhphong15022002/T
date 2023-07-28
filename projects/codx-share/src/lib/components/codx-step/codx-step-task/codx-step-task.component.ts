@@ -1420,6 +1420,37 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region progress
+
+  checkRoleUpdateProgress(data, type){
+    if(this.isMoveStage){// chuyển giai đoạn
+      if(type == "G"){
+        return this.isSuccessTaskDefault || this.isSuccessAllTask ? true : false;
+      }else{
+        return true;
+      }
+    }else{
+      if(this.isTaskFirst && this.currentStep?.stepStatus == "0"){
+        return true;
+      }else{
+        if (!this.isOnlyView || !this.isStart || this.isClose || this.isViewStep) {
+          return false;
+        }else{
+          let checkUpdate = this.stepService.checkUpdateProgress(
+            data,
+            type,
+            this.currentStep,
+            this.isRoleAll,
+            this.isOnlyView,
+            this.isUpdateProgressGroup,
+            this.isUpdateProgressStep,
+            this.user
+          );
+          return checkUpdate;
+        }
+      }
+    }
+  }
+
   async openPopupUpdateProgress(data, type) {
     if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){
       return;
@@ -1645,7 +1676,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   checkUpdateProgress(dataUpdate, type) {
-    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){
+    if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){ // trường hợp chuyển giai đoạn khóa thay đổi group
       return false;
     }
     if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
