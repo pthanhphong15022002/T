@@ -638,8 +638,10 @@ export class CashPaymentsComponent extends UIComponent {
           ])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
-            this.settledInvoices = res;
-            this.loadTotalSet();
+            if (res) {
+              this.settledInvoices = res;
+              this.loadTotalSet();
+            }       
           });
         break;
     }
@@ -647,9 +649,11 @@ export class CashPaymentsComponent extends UIComponent {
       .execApi('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.acctTrans = res;
-        this.loadTotal();
-        this.isLoadDataAcct = false;
+        if (res) {
+          this.acctTrans = res;
+          this.loadTotal();
+          this.isLoadDataAcct = false;
+        }    
       });
     this.changeTab(data.subType);
   }
@@ -714,11 +718,11 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.itemSelected = res;
+          data.status = '1';
+          this.itemSelected = data;
           this.loadDatadetail(this.itemSelected);
           this.view.dataService
             .update(this.itemSelected)
-            .pipe(takeUntil(this.destroy$))
             .subscribe();
         }
       });

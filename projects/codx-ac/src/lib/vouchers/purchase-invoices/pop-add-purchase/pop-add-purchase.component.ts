@@ -66,7 +66,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   vatType: string;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  expanded: boolean = false;
   fmVATInvoices: FormModel = {
     entityName: 'AC_VATInvoices',
     formName: 'VATInvoices',
@@ -527,6 +526,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       !e.closest('.e-gridcontent')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
+    }
+
+    if (!e.closest('.card-footer')) {
+      const el = document.querySelector('#footer');
+      el.classList.remove('expand');
+      el.classList.add('collape');
     }
   }
   //#endregion

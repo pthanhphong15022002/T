@@ -48,7 +48,7 @@
     height: calc(100% - 32px) !important;
   }
 
-  input[ng-reflect-name="memo"] {
+  codx-input[field="memo"] input {
     border: none;
   }
 
@@ -62,7 +62,6 @@
 
     div {
       padding-bottom: 0 !important;
-      padding-top: 0 !important;
     }
   }
 }

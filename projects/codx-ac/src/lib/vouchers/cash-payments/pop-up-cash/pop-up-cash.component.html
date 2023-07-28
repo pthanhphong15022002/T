@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <codx-label fiedName="lblDate" default="Ngày đề nghị từ">
                         </codx-label>
-                        <codx-input field="voucherDate" [formModel]="form.formModel"
+                        <codx-input field="dateSuggestion" type="datetime" format="d" [formModel]="form.formModel" placeholder=""
                             (valueChange)="valueChange($event)"></codx-input>
                     </div>
                 </div>
@@ -119,6 +119,13 @@
                         </codx-label>
                         <codx-input field="voucherDate" [formModel]="form.formModel" [disabled]="true"
                             [crrValue]="cashpayment.voucherDate"></codx-input>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <codx-label [formModel]="form.formModel" default="Số chứng từ đến">
+                        </codx-label>
+                        <codx-input field="voucherNo" type="text" (valueChange)="valueChange($event)"></codx-input>
                     </div>
                 </div>
                 <div class="col-3 d-flex align-items-center mt-1">
@@ -135,7 +142,7 @@
     </ng-container>
 </ng-template>
 <ng-template #tabDetail>
-    <div class="h-100px tabcash-content position-relative">
+    <div class="h-100px tabcash-content position-relative hidden-checkbox-mutilple">
         <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" 
             (onSelected)="onSelected($event)" [gridViewName]="dialog.formModel.gridViewName"
             [entityName]="dialog.formModel.entityName" [dataSource]="dataCash" hideMoreFunc="true" service="AC"
