@@ -410,7 +410,7 @@ export class LeadsComponent
     };
     var isOwner = (eventItem, data) => {
       eventItem.disabled =
-        !['0', '1', '2'].includes(data.status) || data.closed || !data.applyProcess;
+        !['0', '1', '2'].includes(data.status) || data.closed;
     };
     var isFailReason = (eventItem, data) => {
       eventItem.disabled =
