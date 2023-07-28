@@ -25,6 +25,7 @@ import {
   RequestOption,
   DialogModel,
   DataRequest,
+  DialogRef,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
@@ -36,7 +37,6 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { LeadDetailComponent } from './lead-detail/lead-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
-import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 @Component({
@@ -67,7 +67,8 @@ export class LeadsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
-
+  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
+  dialogQuestionCopy: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -129,8 +130,12 @@ export class LeadsComponent
   paramDefault: any;
   action: any;
   currencyIDDefault: any;
+  statusDefault:any;
+  valueListStatus: any;
   isLoading = false;
+
   readonly applyForLead: string = '5';
+  readonly fieldCbxStatus = { text: 'text', value: 'value'};
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -207,13 +212,25 @@ export class LeadsComponent
 
   executeApiCalls() {
     try {
-      this.getFuncID(this.funcID);
-      this.getColorReason();
-      // this.getProcessSetting();
-      this.getCurrentSetting();
+       this.getFuncID(this.funcID);
+       this.getColorReason();
+       this.getCurrentSetting();
+       this.getValuelistStatus();
+
     } catch (error) {}
   }
-  async getCurrentSetting() {
+  async getValuelistStatus() {
+    this.cache.valueList('CRM041').subscribe((func) => {
+      if (func) {
+        this.valueListStatus = func.datas.filter(x=> ['2','3','5','7'].includes(x.value)).map(item => ({
+          text: item.text,
+          value: item.value
+
+      }));
+      }
+    });
+  }
+  async getCurrentSetting(){
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
         // currnecy
@@ -368,7 +385,7 @@ export class LeadsComponent
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
-        this.checkMoreReason(data);
+        this.checkMoreReason(data) || !data.applyProcess;
     };
     var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
@@ -399,7 +416,7 @@ export class LeadsComponent
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
-        (data.status != '13' && this.checkMoreReason(data));
+        (data.status != '13' && this.checkMoreReason(data)) || !data.applyProcess;
     };
     var isDisabledDefault = (eventItem, data) => {
       eventItem.disabled = true;
@@ -582,6 +599,9 @@ export class LeadsComponent
       },
       CM0205_9: (data) => {
         this.popupOwnerRoles(data);
+      },
+      CM0205_12: (data) => {
+        this.OpenFormCopy(data);
       },
     };
     this.titleAction = e.text;
@@ -1190,5 +1210,55 @@ export class LeadsComponent
       option
     );
     popup.closed.subscribe((e) => {});
+  }
+  checkApplyProcess(data){
+    if(this.applyProcess && ['0', '1'].includes(data.status) &&  data.applyProcess) {
+      return true;
+    }
+    else if( !this.applyProcess && ['0', '1'].includes(data.status) &&  data.applyProcess){
+      return false;
+    }
+    else if( !['0', '1'].includes(data.status) && data.applyProcess ){
+      return true;
+    }
+    else {
+      return data.applyProcess;
+    }
+  }
+  saveCopy() {
+    if(this.dataSelected.status === this.statusDefault) {
+      this.dialogQuestionCopy.close();
+      this.notificationsService.notifyCode('SYS007');
+    }
+    else {
+      var datas = [this.dataSelected.recID,this.statusDefault];
+      this.codxCmService.changeStatus(datas).subscribe((res)=>{
+        if(res[0]){
+          this.dialogQuestionCopy.close();
+          this.dataSelected.status = res[0].status;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      })
+    }
+
+
+  }
+  OpenFormCopy(data) {
+    this.statusDefault = data.status;
+    this.dialogQuestionCopy = this.callfc.openForm(
+      this.popUpQuestionCopy,
+      '',
+      400,
+      200
+    );
+  }
+  valueChangeStatus($event){
+    if($event) {
+      this.statusDefault = $event;
+    }
   }
 }

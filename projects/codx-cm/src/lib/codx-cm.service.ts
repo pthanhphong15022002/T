@@ -1,3 +1,4 @@
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { Injectable } from '@angular/core';
 import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -684,12 +685,21 @@ export class CodxCmService {
     );
   }
   // API for More in deal
-  getEmployeesByEmpID(data) {
+  getEmployeesByDomainID(data) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetEmployeeInforAsync',
+      'GetEmpByUserIDAsync',
+      data
+    );
+  }
+  changeStatus(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'ChangeStatusLeadAsync',
       data
     );
   }

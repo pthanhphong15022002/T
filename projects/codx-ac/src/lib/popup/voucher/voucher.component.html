@@ -29,7 +29,7 @@
 <!-- End: Header -->
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add" #cardbodyRef>
+  <div class="card-add">
     <ejs-tab #cashRef>
       <e-tabitems>
         <e-tabitem>
@@ -95,7 +95,7 @@
           <div class="form-group">
             <codx-label fiedName="AccountID" [formModel]="form.formModel">
             </codx-label>
-            <codx-input [Group]="form.formGroup" field="accountID" [formModel]="form.formModel"
+            <codx-input field="accountID" [formModel]="form.formModel"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -114,7 +114,7 @@
               <div class="form-group">
                 <codx-label fiedName="InvoiceDueDate" default="Lọc từ ngày">
                 </codx-label>
-                <codx-input field="invoiceDueDate" [Group]="form.formGroup" (valueChange)="valueChange($event)"
+                <codx-input field="invoiceDueDate" (valueChange)="valueChange($event)"
                   [formModel]="form.formModel">
                 </codx-input>
               </div>
