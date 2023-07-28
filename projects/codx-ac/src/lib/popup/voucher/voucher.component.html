@@ -221,7 +221,7 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div class="tabset-content position-relative">
+  <div class="tabset-content position-relative hidden-checkbox-mutilple">
     <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
       [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
       service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false"
