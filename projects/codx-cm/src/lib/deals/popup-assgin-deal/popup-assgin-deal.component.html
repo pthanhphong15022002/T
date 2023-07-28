@@ -35,7 +35,8 @@
                         <codx-input
                         field="owner"
                         [formModel]="formModel"
-                        (valueChange)="cbxEmpChange($event)"
+                        (valueChange)="changeOwner($event)"
+                        [crrValue]="owner"
                       >
                       </codx-input>
                         </div>
