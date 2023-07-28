@@ -152,6 +152,20 @@
           </codx-vll>
         </div>
       </div>
+      <div class="d-flex justify-content-around align-items-center">
+        <div class="d-flex align-items-center">
+          <div
+            style="width: 20px; height: 5px; background-color: #a6dff5"
+          ></div>
+          <div>Được giao</div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div
+            style="width: 20px; height: 5px; background-color: #06ddb8"
+          ></div>
+          <div>Tự tạo</div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -342,7 +356,10 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
-    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+    <div
+      class="d-flex justify-content-center align-items-center w-100"
+      style="height: 60%"
+    >
       <div style="position: relative" class="w-100 h-100">
         <ejs-circulargauge class="d-block" style="width: 100%; height: 100%">
           <e-axes>
@@ -394,50 +411,43 @@
             transform: translate(50%, -50%);
           "
         >
-          <div class="text-center fs-20 text-gray-600 text-nowrap">KPI</div>
           <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
             {{ toFixed(myDBData?.workPerformance?.performance) }}
           </p>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
-
-<ng-template #my_dashboard>
-  <div class="w-100 h-100" id="9" title="Tổng thời gian hoàn thành thực tế">
-    <div class="w-100 h-100 d-flex flex-column justify-content-center">
-      <div class="fw-bold text-center" style="font-size: 0.75vw">
-        Tổng thời gian hoàn thành thực tế
-      </div>
-      <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">
-          {{ myDBData.workPerformance?.actualHours ?? 0 }}
+    <div class="w-100" style="height: 40%">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian hoàn thành thực tế
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ myDBData.workPerformance?.actualHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
         </div>
-        <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian làm việc
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ myDBData.workPerformance?.workHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="10" title="Tổng thời gian làm việc">
-    <div class="w-100 h-100 d-flex flex-column justify-content-center">
-      <div class="fw-bold text-center" style="font-size: 0.75vw">
-        Tổng thời gian làm việc
-      </div>
-      <div class="d-flex justify-content-center align-items-center">
-        <div class="fw-bold" style="font-size: 1.75vw">
-          {{ myDBData.workPerformance?.workHours ?? 0 }}
-        </div>
-        <div class="ms-2" style="font-size: 0.75vw">giờ</div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #my_dashboard>
-  <div id="11" title="Tỷ lệ công việc theo nhóm">
+  <div id="9" title="Tỷ lệ công việc theo nhóm">
     <div class="w-100 h-100">
       <div class="mt-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -482,7 +492,7 @@
             style="display: block"
             [tooltip]="tooltip"
             [centerLabel]="{
-              text: '71'
+              text: myDBData?.tasksByGroupQty + '<br>công việc'
             }"
           >
             <e-accumulation-series-collection>
@@ -550,7 +560,7 @@
 <ng-template #my_dashboard>
   <div
     class="w-100 h-100"
-    id="12"
+    id="10"
     title="Thống kê công việc hoàn thành và số giờ thực hiện"
   >
     <ejs-chart
@@ -919,17 +929,98 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="11" title="">
-    <div class="d-flex justify-content-center align-items-center">
-      <img
-        style="width: 50%; height: 50%"
-        src="assets/themes/sys/default/img/Empty_CircularGauge.svg"
-      />
+  <div class="w-100 h-100" id="11" title="Hiệu suất làm việc">
+    <div
+      class="d-flex justify-content-center align-items-center w-100"
+      style="height: 60%"
+    >
+      <div style="position: relative" class="w-100 h-100">
+        <ejs-circulargauge class="d-block" style="width: 100%; height: 100%">
+          <e-axes>
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="15"
+                  color="#FF8008"
+                  [linearGradient]="rangeLinearGradient2"
+                  startWidth="15"
+                  endWidth="15"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  type="Marker"
+                  [value]="teamDBData?.workPerformance?.performance"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div
+          *ngIf="teamDBData?.workPerformance?.performance"
+          style="
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+          "
+        >
+          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+            {{ toFixed(teamDBData?.workPerformance?.performance) }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="w-100" style="height: 40%">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian hoàn thành thực tế
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ teamDBData.workPerformance?.actualHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
+        </div>
+        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+          <div class="fw-bold text-center" style="font-size: 0.75vw">
+            Tổng thời gian làm việc
+          </div>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="fw-bold" style="font-size: 1.75vw">
+              {{ teamDBData.workPerformance?.workHours ?? 0 }}
+            </div>
+            <div class="ms-2" style="font-size: 0.75vw">giờ</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #team_dashboard>
+<!-- <ng-template #team_dashboard>
   <div class="w-100 h-100" id="12" title="Tổng thời gian hoàn thành thực tế">
     <div class="w-100 h-100 d-flex flex-column justify-content-center">
       <div class="fw-bold text-center" style="font-size: 0.75vw">
@@ -959,7 +1050,7 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!--#endregion -->
 

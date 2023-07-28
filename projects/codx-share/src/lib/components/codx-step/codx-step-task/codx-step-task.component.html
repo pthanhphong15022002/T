@@ -75,7 +75,7 @@
         class="disabled-inline"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
         [ngClass]="
-          checkUpdateProgress(currentStep, 'P')
+        checkRoleUpdateProgress(currentStep, 'P')
             ? 'cursor-pointer'
             : 'cursor-not-allowed'
         "
@@ -417,7 +417,7 @@
       class="disabled-inline"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
       [ngClass]="
-        checkUpdateProgress(data?.value, data?.type)
+        checkRoleUpdateProgress(data?.value, data?.type)
           ? 'cursor-pointer'
           : 'cursor-not-allowed'
       "
