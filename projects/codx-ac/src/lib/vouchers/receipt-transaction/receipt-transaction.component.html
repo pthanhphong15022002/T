@@ -37,7 +37,7 @@
     [hideMF]="false"
     [typeMF]="'hover'"
     [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeDataMF()"
+    (changeDataMF)="changeDataMF($event, data)"
     (click)="clickChange(data)"
     (clickMF)="clickMF($event, data)"
   >
@@ -50,6 +50,7 @@
     [hideMF]="false"
     [formModel]="view.formModel"
     [dataItem]="itemSelected"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
     [footer]="footer"
     (clickMF)="clickMF($event, itemSelected)"
   >
