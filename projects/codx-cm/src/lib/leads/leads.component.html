@@ -80,7 +80,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status == '2'; else statusDefault"
+          *ngIf="data.status == '2' && data.applyProcess ; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
           }"
@@ -178,6 +178,7 @@
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     [funcID]="funcID"
+    [applyProcess]="checkApplyProcess(dataSelected)"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
@@ -283,7 +284,7 @@
     <div class="me-auto">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status == '2'; else statusDefault"
+        *ngIf="data.status == '2' && data.applyProcess ; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
           }"
@@ -321,7 +322,7 @@
                 ></span>
               </div>
             </ng-template>
-            <codx-vll
+             <codx-vll
               [name]="gridViewSetup?.Status?.referedValue"
               [field]="'Status'"
               [value]="data?.status"
@@ -395,5 +396,31 @@
 
 <!-- View chi tiet kanban -gird -->
 <ng-template #popDetail let-popup>
-  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
+  <codx-form [body]="templateDetail" [dialog]="popup"
+  > </codx-form>
+</ng-template>
+
+
+<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+  <codx-form
+  [headerText]="titleAction"
+    [body]="bodyFormCopyName"
+    [footer]="footerFormCopyName"
+    [dialog]="dialogQuestionCopy"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyFormCopyName>
+<ejs-combobox [dataSource]="valueListStatus"  [fields]="fieldCbxStatus"
+(valueChange)="valueChangeStatus($event)"
+[placeholder]="gridViewSetup?.Status?.description"
+[allowFiltering]='true' [value]=""></ejs-combobox>
+
+</ng-template>
+
+<ng-template #footerFormCopyName>
+  <button type="button" class="btn btn-primary" (click)="saveCopy()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
 </ng-template>
