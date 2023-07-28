@@ -166,6 +166,12 @@ async getListUserByOrg(lstRoles, objectType) {
   return owner;
 }
 
+changeOwner(evt: any) {
+  if (evt?.data) {
+   this.owner = evt.data;
+  }
+}
+
 cbxEmpChange(evt: any) {
   if (evt?.data != null && evt?.data != '') {
     this.objectID = evt.data;
