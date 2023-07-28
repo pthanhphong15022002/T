@@ -62,7 +62,6 @@ export class EmployeeBenefitComponent extends UIComponent {
   dataCategory;
   cmtStatus: string = '';
   // genderGrvSetup: any;
-  processID;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
 
@@ -220,35 +219,59 @@ export class EmployeeBenefitComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         if (res) {
-          this.processID = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.processID.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              'Phụ cấp - ' + this.itemDetail.decisionNo,
-              ''
-            )
-            .subscribe((result) => {
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.dataCategory = res;
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.dataCategory,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
                   .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
                   .subscribe((res) => {
-                    console.log('Result after send edit' + res);
                     if (res) {
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();
                     }
                   });
-              } else this.notify.notifyCode(result?.msgCodeError);
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.processID.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     'Phụ cấp - ' + this.itemDetail.decisionNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
+          //         .subscribe((res) => {
+          //           console.log('Result after send edit' + res);
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else this.notify.notifyCode(result?.msgCodeError);
+          //   });
         }
       });
   }

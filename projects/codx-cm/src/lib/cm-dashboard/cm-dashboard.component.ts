@@ -18,7 +18,11 @@ import {
 import { LayoutComponent } from '../_layout/layout.component';
 import { GridModels } from '../models/tmpModel';
 import { Browser } from '@syncfusion/ej2-base';
-import { IPointRenderEventArgs } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChart,
+  AccumulationChartComponent,
+  IPointRenderEventArgs,
+} from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -166,6 +170,62 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   language = 'vn';
   currencyIDDefault: any = 'VND';
 
+  //pyramidcontainer
+  legendSettingsPy = {
+    visible: false,
+    toggleVisibility: false,
+  };
+  dataSourcePy = [
+    // {
+    //   name: 'Milk, Youghnut, Cheese',
+    //   quantity: 435,
+    // },
+    // {
+    //   name: 'Vegetables',
+    //   quantity: 470,
+    // },
+    // {
+    //   name: 'Meat, Poultry, Fish',
+    //   quantity: 475,
+    // },
+    // {
+    //   name: 'Rice, Pasta',
+    //   quantity: 930,
+    // },
+    // {
+    //   name: 'Fruits',
+    //   quantity: 520,
+    // },
+  ];
+  neckWidth = '0%';
+  neckHeight = '0%';
+  gapRatio: number = 0.03;
+
+  emptyPointSettings = {
+    // fill: 'red',
+    // mode: 'Drop',
+  };
+  explode: boolean = false;
+
+  tooltipPy: Object = {
+    header: '',
+    enable: true,
+    format: '${point.x} : <b>${point.y}</b>',
+  };
+  titlePy: string = 'Food Comparison Chart';
+
+  pyramid: AccumulationChartComponent | AccumulationChart;
+  dataLabel: Object = {
+    name: 'name',
+    visible: true,
+    position: 'Outside',
+    connectorStyle: { length: '1%' },
+    font: {
+      fontWeight: '600',
+    },
+  };
+  //end
+
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
@@ -271,6 +331,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
         this.productivityOwner =
           this.dataDashBoard.countsProductivityOwner ?? [];
+        this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);

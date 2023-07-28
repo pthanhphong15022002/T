@@ -52,7 +52,7 @@
         [value]="currentStep?.stepStatus"
         [showText]="true"
         [showBgColor]="true"
-        class="badge badge-primary badge-sm"
+        class="badge badge-primary badge-sm w-95px"
       >
       </codx-vll>
       <span
@@ -116,6 +116,7 @@
       cdkDropList
       class="list"
       (cdkDropListDropped)="drop($event, listGroupTask, true)"
+      [ngStyle]="isShowStep && currentStep ? {'margin-right': '38px'} : {}"
     >
       <div cdkDropListGroup>
         <ng-container *ngFor="let groupTask of listGroupTask">
@@ -273,12 +274,18 @@
 <ng-template #taskTemplate let-data="value">
   <div class="d-flex justify-content-start align-items-center has-action-menu task-hover">
     <!-- icon task -->
-    <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
+    <!-- <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
       <span
         class="icon-18 text-primary-600"
         [ngClass]="getIconTask(data?.task)"
       ></span>
-    </div>
+    </div> -->
+    <codx-icon-step
+      [typeTask]="data?.task?.taskType"
+      [listTypeTask]="listTaskType"
+      [isStep]="false"
+      [size]="30"
+    ></codx-icon-step>
     <div class="steplist-hearder">
       <div class="text-dark fw-bold d-flex justify-content-start">
         <div class="task-name line-clamp line-clamp-1">{{ data?.task?.taskName }}</div>

@@ -26,8 +26,6 @@ export class CashPaymentLine {
   objectID: any;
   objectType: any;
   offsetAcctID: any;
-  placeInService: any;
-  placeInServiceDate: any;
   projectID: any;
   reasonID: any;
   recID: any = Util.uid();
@@ -39,8 +37,8 @@ export class CashPaymentLine {
   settlementRule: any;
   share: any;
   subLGType: any;
-  taxAmt: any;
-  taxAmt2: any;
+  vatAmt: any;
+  vatAmt2: any;
   transID: any;
   unbounds: any;
   singleEntry:any;

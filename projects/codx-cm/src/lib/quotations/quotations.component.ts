@@ -96,7 +96,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   constructor(
     private inject: Injector,
-    private codxCM: CodxCmService,
     private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
@@ -150,7 +149,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
           if (this.currencyIDDefault != 'VND') {
             let day = new Date();
-            this.codxCM
+            this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
                 if (res && res != 0) this.exchangeRateDefault = res;
@@ -588,39 +587,37 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-      if (deals) {
-        this.codxCmService.getProcess(deals.processID).subscribe((process) => {
-          if (process) {
-            debugger;
-            // this.codxCmService
-            //   .getESCategoryByCategoryID(process.processNo)
-            //   .subscribe((res) => {
-            this.codxCmService
-              .getDeafaultCategory('CM_Quotations')
-              .subscribe((res) => {
-                if (!res) {
-                  this.notiService.notifyCode('ES028');
-                  return;
-                }
+    // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
+    //   if (deals) {
+    // this.codxCmService.getProcess('ES_CM0501').subscribe((process) => {
+    //   if (process) {
+    this.codxCmService
+      .getESCategoryByCategoryID('ES_CM0501')
+      .subscribe((res) => {
+        if (!res) {
+          this.notiService.notifyCode('ES028');
+          return;
+        }
 
-                if (res.eSign) {
-                  //kys soos
-                } else {
-                  this.release(dt, res);
-                }
-              });
-          } else {
-            this.notiService.notifyCode('DP040');
-          }
-        });
-      } else {
-        this.notiService.notify(
-          'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
-      }
-    });
+        if (res.eSign) {
+          //kys soos
+        } else {
+          this.release(dt, res);
+        }
+      });
+    // }
+    //     else {
+    //       this.notiService.notifyCode('DP040');
+    //     }
+    //   });
+    //  }
+    // else {
+    //   this.notiService.notify(
+    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+    //     '3'
+    //   );
+    //   }
+    // });
   }
   //Gửi duyệt
   release(data: any, category: any) {
@@ -663,7 +660,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   releaseCallback(res: any) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.codxCM
+      this.codxCmService
         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
         .subscribe((q) => {
           if (q) {
@@ -679,57 +676,57 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-          if (deals) {
-            this.codxCmService
-              .getProcess(deals.processID)
-              .subscribe((process) => {
-                if (process) {
-                  this.codxCmService
-                    .getESCategoryByCategoryID(process.processNo)
-                    .subscribe((res2: any) => {
-                      if (res2) {
-                        if (res2?.eSign == true) {
-                          //trình ký
-                        } else if (res2?.eSign == false) {
-                          //kí duyet
-                          this.codxShareService
-                            .codxCancel(
-                              'CM',
-                              dt?.recID,
-                              this.view.formModel.entityName,
-                              null,
-                              null
-                            )
-                            .subscribe((res3) => {
-                              if (res3) {
-                                this.itemSelected.approveStatus = '0';
-                                this.codxCmService
-                                  .updateApproveStatus(
-                                    'QuotationsBusiness',
-                                    dt?.recID,
-                                    '0'
-                                  )
-                                  .subscribe();
-                                this.notiService.notifyCode('SYS007');
-                              } else this.notiService.notifyCode('SYS021');
-                            });
-                        }
-                      }
-                    });
-                } else {
-                  this.notiService.notifyCode('DP040');
-                }
-              });
-          } else {
-            this.notiService.notify(
-              'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
-          }
-        });
+        // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
+        //   if (deals) {
+        //     this.codxCmService
+        //       .getProcess(deals.processID)
+        //       .subscribe((process) => {
+        //         if (process) {
+        this.codxCmService
+          .getESCategoryByCategoryID('ES_CM0501')
+          .subscribe((res2: any) => {
+            if (res2) {
+              if (res2?.eSign == true) {
+                //trình ký
+              } else if (res2?.eSign == false) {
+                //kí duyet
+                this.codxShareService
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    null,
+                    null
+                  )
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.itemSelected.approveStatus = '0';
+                      this.codxCmService
+                        .updateApproveStatus(
+                          'QuotationsBusiness',
+                          dt?.recID,
+                          '0'
+                        )
+                        .subscribe();
+                      this.notiService.notifyCode('SYS007');
+                    } else this.notiService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      } else {
+        this.notiService.notifyCode('DP040');
       }
     });
+    // } else {
+    //   this.notiService.notify(
+    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
+    //     '3'
+    //   );
+    // }
+    //     });
+    //   }
+    // });
   }
   //end duyet
   //--------------------------------------------------------------------//

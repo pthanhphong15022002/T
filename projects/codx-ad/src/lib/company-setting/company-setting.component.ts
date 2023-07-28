@@ -18,11 +18,14 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  LayoutService,
   NotificationsService,
+  PageTitleService,
   UIComponent,
   UploadFile,
   ViewModel,
   ViewType,
+  ViewsComponent,
 } from 'codx-core';
 import { CodxAdService } from '../codx-ad.service';
 import { AD_CompanySettings } from '../models/AD_CompanySettings.models';
@@ -106,7 +109,9 @@ export class CompanySettingComponent
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private notiService: NotificationsService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -338,6 +343,12 @@ export class CompanySettingComponent
     this.handleInputChange(event, this.optionMailHeader);
   }
 
+  viewChanged(evt: any, view: ViewsComponent) {
+    this.view = view;
+    var formName = view.function!.formName;
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
+  }
   async handleInputChange(event, optionCheck?: any) {
     if (event.target.files.length > 0) {
       var file: File = event.target.files[0];
@@ -457,10 +468,6 @@ export class CompanySettingComponent
       this.funcID,
       data
     );
-  }
-
-  viewChanged(e) {
-    console.log(e);
   }
 
   installModule(module: TN_OrderModule) {
