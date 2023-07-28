@@ -60,7 +60,6 @@ export class PopupAddSalesInvoiceComponent
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
-  expanded: boolean = false;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -494,6 +493,12 @@ export class PopupAddSalesInvoiceComponent
       !e.closest('.e-gridcontent')
     ) {
       this.grid.endEdit();
+    }
+
+    if (!e.closest('.card-footer')) {
+      const el = document.querySelector('#footer');
+      el.classList.remove('expand');
+      el.classList.add('collape');
     }
   }
   //#endregion
