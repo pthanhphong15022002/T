@@ -292,17 +292,10 @@ li {
 }
 
 .group-task:hover > .steplist-hearder > .group-name{
-  color: var(--text-primary)!important;
-  transform: scale(1.1);
-  margin-left: 5px;
-}
-.task-hover:hover > .steplist-hearder .task-name{
-  color: var(--text-primary)!important;
-  transform: scale(1.1)!important;
-   margin-left: 5px;
+  color: var(--primary-dark)!important;
+  
 }
 
-.step-content:hover .step-name{
-  transform: scale(1.1)!important;
-  margin-left: 5px;
+.task-hover:hover > .steplist-hearder .task-name{
+  color: var(--primary-dark)!important;
 }
