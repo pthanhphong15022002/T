@@ -130,10 +130,9 @@ export class TargetsComponent
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
-    this.getSchedule();
+    // this.getSchedule();
   }
   ngAfterViewInit(): void {
-
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -224,7 +223,9 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
-    var year = data?.fromDate ? parseInt(data?.fromDate?.getFullYear()) : new Date().getFullYear();
+    var year = data?.fromDate
+      ? parseInt(data?.fromDate?.getFullYear())
+      : new Date().getFullYear();
     this.year = year;
     this.loadTreeData(year?.toString());
     this.detectorRef.detectChanges();
@@ -282,27 +283,27 @@ export class TargetsComponent
           hideMoreFunc: true,
         },
       },
-      {
-        sameData: false,
-        type: ViewType.schedule,
-        active: false,
-        request2: this.scheduleHeader,
-        request: this.schedules,
-        toolbarTemplate: this.footerButton,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          eventModel: this.scheduleModel,
-          resourceModel: this.scheduleHeaderModel, //resource
-          template: this.cardTemplate,
-          template4: this.resourceHeader,
-          // template5: this.resourceTootip, //tooltip
-          template6: this.mfButton, //header
-          template8: this.contentTmp, //content
-          //template7: this.footerButton,//footer
-          // statusColorRef: 'EP022',
-        },
-      },
+      // {
+      //   sameData: false,
+      //   type: ViewType.schedule,
+      //   active: false,
+      //   request2: this.scheduleHeader,
+      //   request: this.schedules,
+      //   toolbarTemplate: this.footerButton,
+      //   showSearchBar: false,
+      //   showFilter: false,
+      //   model: {
+      //     eventModel: this.scheduleModel,
+      //     resourceModel: this.scheduleHeaderModel, //resource
+      //     template: this.cardTemplate,
+      //     template4: this.resourceHeader,
+      //     // template5: this.resourceTootip, //tooltip
+      //     template6: this.mfButton, //header
+      //     template8: this.contentTmp, //content
+      //     //template7: this.footerButton,//footer
+      //     // statusColorRef: 'EP022',
+      //   },
+      // },
     ];
     this.detectorRef.detectChanges();
   }
@@ -366,7 +367,6 @@ export class TargetsComponent
       let dialogModel = new DialogModel();
       dialogModel.DataService = this.view.dataService;
       dialogModel.FormModel = this.view?.formModel;
-      dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       var obj = {
         action: 'add',
@@ -375,8 +375,8 @@ export class TargetsComponent
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
         '',
-        this.widthWin,
-        this.heightWin,
+        850,
+        850,
         '',
         obj,
         '',
@@ -480,7 +480,6 @@ export class TargetsComponent
         let dialogModel = new DialogModel();
         dialogModel.DataService = this.view.dataService;
         dialogModel.FormModel = this.view?.formModel;
-        dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         var obj = {
           action: 'edit',
@@ -491,8 +490,8 @@ export class TargetsComponent
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
           '',
-          this.widthWin,
-          this.heightWin,
+          850,
+          850,
           '',
           obj,
           '',
