@@ -143,8 +143,8 @@
       </e-tabitems>
     </ejs-tab>
 
-    <div class="form-group d-flex align-items-center">
-      <i class="bi bi-card-text fs-1 text-dark"></i>
+    <div class="d-flex align-items-center">
+      <i class="icon-i-pencil-square fs-1 text-dark"></i>
       <codx-input
         field="memo"
         [formModel]="form.formModel"
@@ -186,7 +186,7 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-center me-3">
+      <!-- <div class="d-flex align-items-center me-3">
         <button
           *ngIf="!isEdit"
           type="button"
@@ -234,6 +234,13 @@
         >
           <i class="icon-close icon-18"></i>
         </div>
+      </div> -->
+
+      <div
+        class="btn btn-icon btn-light-danger btn-circle bg ms-2"
+        (click)="onClickClose()"
+      >
+        <i class="icon-close icon-18"></i>
       </div>
     </div>
   </div>
@@ -242,8 +249,8 @@
 <ng-template #tabCommonInfo>
   <div class="row mt-5">
     <div class="col-7 ac-left">
-      <div class="mw-750px row">
-        <div class="col-12 form-group">
+      <div class="mw-800px row">
+        <div class="col-8 form-group">
           <codx-label
             fiedName="objectID"
             [formModel]="form.formModel"
@@ -258,36 +265,7 @@
           >
           </codx-input>
         </div>
-
-        <div class="col-3 form-group">
-          <codx-label
-            fiedName="pmtTermID"
-            [formModel]="form.formModel"
-            default="Điều khoản thanh toán"
-          >
-          </codx-label>
-          <codx-input
-            field="pmtTermID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3 form-group">
-          <codx-label
-            fiedName="pmtMethodID"
-            [formModel]="form.formModel"
-            default="Hình thức thanh toán"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            field="pmtMethodID"
-            [formModel]="form.formModel"
-          >
-          </codx-input>
-        </div>
-        <div class="col-3 form-group">
+        <div class="col-4 form-group">
           <codx-label
             fiedName="buyer"
             [formModel]="form.formModel"
@@ -301,31 +279,60 @@
           >
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+
+        <div class="col-4 form-group">
           <codx-label
-            fiedName="invoiceDueDate"
+            fiedName="pmtTermID"
+            [formModel]="form.formModel"
+            default="Điều khoản thanh toán"
+          >
+          </codx-label>
+          <codx-input
+            field="pmtTermID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group">
+          <codx-label
+            fiedName="pmtMethodID"
+            [formModel]="form.formModel"
+            default="Hình thức thanh toán"
+          >
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="pmtMethodID"
+            [formModel]="form.formModel"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group">
+          <codx-label
+            fiedName="warehouseID"
             [formModel]="form.formModel"
             default="Hạn thanh toán"
           >
           </codx-label>
           <codx-input
-            field="invoiceDueDate"
+            field="warehouseID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           >
           </codx-input>
         </div>
 
-        <div class="col-2 form-group">
+        <div class="col-4 form-group">
           <codx-label
-            fiedName="invoiceForm"
+            fiedName="delModeID"
             [formModel]="form.formModel"
             default="Mẫu số"
           >
           </codx-label>
           <codx-input
             [Group]="form.formGroup"
-            field="invoiceForm"
+            field="delModeID"
             [formModel]="form.formModel"
             (valueChange)="onInputChange($event)"
           >
@@ -360,7 +367,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+        <div class="col-2 form-group">
           <codx-label
             fiedName="invoiceDate"
             [formModel]="form.formModel"
@@ -375,7 +382,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+        <div class="col-2 form-group">
           <codx-label
             fiedName="taxExchRate"
             [formModel]="form.formModel"
@@ -496,15 +503,10 @@
 
 <ng-template #footer>
   <div
-    class="codx-detail-footer dialog-footer"
+    class="position-relative"
+    style="border-top: 1px solid var(--bs-border-color)"
     [ngClass]="expanded ? 'expand' : 'collape'"
   >
-    <div
-      class="btn btn-white btn-icon tab-action"
-      (click)="expanded = !expanded"
-    >
-      <span class="icon-unfold_more icon-20"></span>
-    </div>
     <codx-tabs
       [entityName]="form.formModel.entityName"
       [formModel]="form.formModel"
@@ -512,5 +514,48 @@
       [funcID]="form.formModel.funcID"
       [TabControl]="tabInfo"
     ></codx-tabs>
+
+    <div class="d-flex align-items-center position-absolute" style="right: 1rem; top: 50%; transform: translateY(-50%)">
+      <button
+        *ngIf="!isEdit"
+        type="button"
+        class="btn btn-md btn-light-primary ms-2"
+        (click)="onClickSave(false)"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblSaveAndClear"
+          [formModel]="form.formModel"
+          default="Lưu & thêm"
+        ></codx-label>
+      </button>
+
+      <button
+        type="button"
+        style="min-width: 60px"
+        class="btn btn-md btn-primary ms-2 me-2"
+        (click)="onClickSave(true)"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblSave"
+          [formModel]="form.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+
+      <button
+        class="btn btn-md btn-danger"
+        (click)="onDiscard()"
+        *ngIf="masterService.hasSaved && master.status == '0'"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+    </div>
   </div>
 </ng-template>
