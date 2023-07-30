@@ -20,3 +20,11 @@
 ::ng-deep .tooltip-inner{
     min-width: fit-content;
 }
+.list-days-off{
+    max-height: 250px;
+    overflow: scroll;
+}
+.days-off-item{
+    min-height: 50px;
+    max-height: 65px;
+}

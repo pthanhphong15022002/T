@@ -78,7 +78,7 @@
 
 <!--#region my_dashboard  -->
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="1" title="Count chart - Chưa thực hiện">
+  <div class="w-100 h-100" id="1">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -90,7 +90,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="2" title="Count chart - Đang thực hiện">
+  <div class="w-100 h-100" id="2">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -102,7 +102,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="3" title="Count chart - Quá hạn">
+  <div class="w-100 h-100" id="3">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -114,7 +114,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="4" title="Count chart - Hoàn tất">
+  <div class="w-100 h-100" id="4">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -126,8 +126,8 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="5" title="Tỷ lệ công việc được giao">
-    <div class="assignchart-group w-100 h-100">
+  <div class="w-100 h-100" id="5">
+    <div class="assignchart-group w-100" style="height: 60%">
       <div
         *ngFor="let tasks of myDBData?.tasksByCategory; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end"
@@ -141,29 +141,22 @@
           [style.width]="
             (tasks.quantity / myDBData?.tasksByCategory[0].quantity) * 100 + '%'
           "
-        >
-          <codx-vll
-            [name]="'L1456'"
-            [value]="tasks.category"
-            [showText]="true"
-            [showBgColor]="false"
-            style="width: '25px'; height: '25px'"
-          >
-          </codx-vll>
-        </div>
+        ></div>
       </div>
+    </div>
+    <div class="w-100" style="height: 40%">
       <div class="d-flex justify-content-around align-items-center">
         <div class="d-flex align-items-center">
           <div
             style="width: 20px; height: 5px; background-color: #a6dff5"
           ></div>
-          <div>Được giao</div>
+          <div class="ms-2">Được giao</div>
         </div>
         <div class="d-flex align-items-center">
           <div
             style="width: 20px; height: 5px; background-color: #06ddb8"
           ></div>
-          <div>Tự tạo</div>
+          <div class="ms-2">Tự tạo</div>
         </div>
       </div>
     </div>
@@ -171,7 +164,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="6" title="Theo nguồn công việc">
+  <div class="w-100 h-100" id="6">
     <ejs-treemap
       align="center"
       style="display: block"
@@ -197,11 +190,14 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="7" title="Tỷ lệ hoàn thành công việc">
-    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+  <div class="w-100 h-100" id="7">
+    <div
+      class="d-flex justify-content-center align-items-center w-100"
+      style="height: 60%"
+    >
       <ejs-circulargauge
         class="d-block"
-        style="width: 70%; height: 70%"
+        style="width: 100%; height: 100%"
         background="transparent"
         #circulargauge=""
         [tooltip]="tooltip"
@@ -244,7 +240,7 @@
             [pointers]="[
               {
                 roundedCornerRadius: 20,
-                value: myDBData?.rateDoneTask,
+                value: toFixed(myDBData?.rateDoneTask),
                 type: 'RangeBar',
                 radius: '100%',
                 color: '#0078ff',
@@ -293,7 +289,7 @@
             [pointers]="[
               {
                 roundedCornerRadius: 20,
-                value: 50,
+                value: toFixed(myDBData?.rateDoneTaskOnTime),
                 type: 'RangeBar',
                 radius: '70%',
                 color: '#2cd9c5',
@@ -310,52 +306,54 @@
           </e-axis>
         </e-axes>
       </ejs-circulargauge>
-      <!-- <div class="container">
-        <div class="d-flex flex-column">
-          <div class="m-2">
-            <div class="d-flex align-items-center">
-              <div
-                class="me-2"
-                style="
-                  height: 15px;
-                  width: 15px;
-                  border-radius: 10%;
-                  background-color: #5465ff;
-                "
-              ></div>
-              <span>Tỷ lệ hoàn thành công việc</span>
-            </div>
-            <div class="ms-6">
-              <span class="fw-bold fs-3">{{ myDBData?.rateDoneTask }}%</span>
-            </div>
+    </div>
+    <div class="container w-100" style="height: 40%">
+      <div class="d-flex flex-column">
+        <div class="m-2">
+          <div class="d-flex align-items-center">
+            <div
+              class="me-2"
+              style="
+                height: 15px;
+                width: 15px;
+                border-radius: 10%;
+                background-color: #5465ff;
+              "
+            ></div>
+            <span>Tỷ lệ hoàn thành công việc</span>
           </div>
-          <div class="m-2">
-            <div class="d-flex align-items-center">
-              <div
-                class="me-2"
-                style="
-                  height: 15px;
-                  width: 15px;
-                  border-radius: 10%;
-                  background-color: #04deb7;
-                "
-              ></div>
-              <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
-            </div>
-            <div class="ms-6">
-              <span class="fw-bold fs-3"
-                >{{ myDBData?.rateDoneTaskOnTime }}%</span
-              >
-            </div>
+          <div class="ms-6">
+            <span class="fw-bold fs-3"
+              >{{ toFixed(myDBData?.rateDoneTask) }}%</span
+            >
           </div>
         </div>
-      </div> -->
+        <div class="m-2">
+          <div class="d-flex align-items-center">
+            <div
+              class="me-2"
+              style="
+                height: 15px;
+                width: 15px;
+                border-radius: 10%;
+                background-color: #04deb7;
+              "
+            ></div>
+            <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
+          </div>
+          <div class="ms-6">
+            <span class="fw-bold fs-3"
+              >{{ toFixed(myDBData?.rateDoneTaskOnTime) }}%</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div class="w-100 h-100" id="8" title="Hiệu suất làm việc">
+  <div class="w-100 h-100" id="8">
     <div
       class="d-flex justify-content-center align-items-center w-100"
       style="height: 60%"
@@ -447,7 +445,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div id="9" title="Tỷ lệ công việc theo nhóm">
+  <div id="9">
     <div class="w-100 h-100">
       <div class="mt-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -494,6 +492,7 @@
             [centerLabel]="{
               text: myDBData?.tasksByGroupQty + '<br>công việc'
             }"
+            [legendSettings]="{ visible: false }"
           >
             <e-accumulation-series-collection>
               <e-accumulation-series
@@ -545,9 +544,10 @@
           <div class="d-flex align-items-center min-w-200px">
             <div class="h-5px w-100 bg-gray-200 rounded-4">
               <div
-                class="bg-primary rounded-4 h-5px"
+                class="rounded-4 h-5px"
                 role="progressbar"
                 [style.width]="data.percentage + '%'"
+                [style.background-color]="'#3699ff'"
               ></div>
             </div>
           </div>
@@ -558,11 +558,7 @@
 </ng-template>
 
 <ng-template #my_dashboard>
-  <div
-    class="w-100 h-100"
-    id="10"
-    title="Thống kê công việc hoàn thành và số giờ thực hiện"
-  >
+  <div class="w-100 h-100" id="10">
     <ejs-chart
       style="display: block"
       align="center"
@@ -597,7 +593,7 @@
 
 <!--#region team_dashboard  -->
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="1" title="Chưa thực hiện">
+  <div class="w-100 h-100" id="1">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -609,7 +605,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="2" title="Đang thực hiện">
+  <div class="w-100 h-100" id="2">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -621,7 +617,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="3" title="Quá hạn">
+  <div class="w-100 h-100" id="3">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -633,7 +629,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="4" title="Hoàn tất">
+  <div class="w-100 h-100" id="4">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -645,7 +641,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="5" title="Đúng hạn">
+  <div class="w-100 h-100" id="5">
     <div
       class="w-100 h-100 d-flex justify-content-start align-items-center p-2"
     >
@@ -693,7 +689,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="6" title="Quá hạn">
+  <div class="w-100 h-100" id="6">
     <div
       class="w-100 h-100 d-flex justify-content-start align-items-center p-2"
     >
@@ -742,19 +738,19 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="7" title="Tỷ lệ công việc theo nhóm">
+  <div class="w-100 h-100" id="7">
     <ejs-accumulationchart
       #pie2
       class="w-100 h-100"
       style="display: block"
       [tooltip]="tooltip"
       [centerLabel]="{
-        text: '1000'
+        text: teamDBData?.tasksByGroupQty + '<br>công việc'
       }"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
-          [dataSource]="myDBData?.tasksByGroup"
+          [dataSource]="teamDBData?.tasksByGroup"
           xName="taskGroupName"
           yName="quantity"
           startAngle="0"
@@ -769,11 +765,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div
-    class="w-100 h-100"
-    id="8"
-    title="Tỷ lệ hoàn thành đúng hạn của nhân viên"
-  >
+  <div class="w-100 h-100" id="8">
     <div class="w-100 h-100">
       <div class="my-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -862,7 +854,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
+  <div id="9">
     <div class="topchart-group mt-3">
       <div
         *ngFor="let data of teamDBData?.topEmpByQtyTasks"
@@ -893,11 +885,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div
-    class="w-100 h-100"
-    id="10"
-    title="Thống kê công việc hoàn thành và số giờ thực hiện"
-  >
+  <div class="w-100 h-100" id="10">
     <ejs-chart
       style="display: block"
       align="center"
@@ -929,7 +917,7 @@
 </ng-template>
 
 <ng-template #team_dashboard>
-  <div class="w-100 h-100" id="11" title="Hiệu suất làm việc">
+  <div class="w-100 h-100" id="11">
     <div
       class="d-flex justify-content-center align-items-center w-100"
       style="height: 60%"
@@ -1056,7 +1044,7 @@
 
 <!--#region assign_dashboard  -->
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="1" title="Count chart - Chưa thực hiện">
+  <div class="w-100 h-100" id="1">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -1068,7 +1056,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="2" title="Count chart - Đang thực hiện">
+  <div class="w-100 h-100" id="2">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -1080,7 +1068,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="3" title="Count chart - Quá hạn">
+  <div class="w-100 h-100" id="3">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -1092,7 +1080,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="4" title="Count chart - Hoàn tất">
+  <div class="w-100 h-100" id="4">
     <count-chart
       class="w-100 h-100"
       [hasIcon]="true"
@@ -1104,7 +1092,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="5" title="Đúng hạn">
+  <div class="w-100 h-100" id="5">
     <div
       class="w-100 h-100 d-flex justify-content-start align-items-center p-2"
     >
@@ -1152,7 +1140,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="6" title="Quá hạn">
+  <div class="w-100 h-100" id="6">
     <div
       class="w-100 h-100 d-flex justify-content-start align-items-center p-2"
     >
@@ -1201,7 +1189,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div id="7" title="Tỷ lệ công việc theo nguồn">
+  <div id="7">
     <div class="w-100 h-100">
       <div class="my-5">
         <div class="d-flex justify-content-center align-items-center">
@@ -1248,6 +1236,7 @@
             [centerLabel]="{
               text: assignDBData?.tasksByRef?.totalTasks.toString()
             }"
+            [legendSettings]="{ visible: false }"
           >
             <e-accumulation-series-collection>
               <e-accumulation-series
@@ -1295,12 +1284,13 @@
           <div class="d-flex align-items-center min-w-200px">
             <div class="h-5px w-100 bg-gray-200 rounded-4">
               <div
-                class="bg-primary rounded-4 h-5px"
+                class="rounded-4 h-5px"
                 role="progressbar"
                 [style.width]="
                   (ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100 +
                   '%'
                 "
+                [style.background-color]="'#3699ff'"
                 aria-valuemin="0"
                 aria-valuemax="100"
               ></div>
@@ -1313,7 +1303,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div class="w-100 h-100" id="8" title="Thống kê theo nhóm công việc">
+  <div class="w-100 h-100" id="8">
     <div class="w-100 h-100">
       <div class="my-2" *ngFor="let task of assignDBData?.tasksByProject">
         <div>
@@ -1371,7 +1361,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div id="9" title="Top nhân viên hoàn thành nhiều công việc nhất">
+  <div id="9">
     <div class="topchart-group mt-3">
       <div
         *ngFor="let data of assignDBData?.topEmpByQtyTasks"
@@ -1414,24 +1404,27 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div id="10" title="Thống kê công việc theo dự án">
+  <div id="10">
     <ejs-accumulationchart
       id="pie"
       class="d-block"
       style="height: 100%; width: 100%"
       [legendSettings]="{
-    visible: false,
+    visible: true,
   }"
-      [tooltip]="{ enable: true, format: '${point.x}' }"
+      [tooltip]="{ enable: true }"
       [enableAnimation]="{
         enable: true
+      }"
+      [centerLabel]="{
+        text: assignDBData?.tasksByProjectQty + '<br>công việc'
       }"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
-          [dataSource]="data1"
-          xName="Product"
-          yName="Percentage"
+          [dataSource]="assignDBData?.tasksByProject"
+          xName="projectName"
+          yName="totalTasks"
           innerRadius="70%"
           [border]="{ width: 3 }"
         >
@@ -1442,7 +1435,7 @@
 </ng-template>
 
 <ng-template #assign_dashboard>
-  <div id="11" title=" Tỷ lệ hoàn thành đúng hạn giao việc">
+  <div id="11">
     <div class="w-100 h-100">
       <div class="my-5">
         <div class="d-flex justify-content-center align-items-center">
