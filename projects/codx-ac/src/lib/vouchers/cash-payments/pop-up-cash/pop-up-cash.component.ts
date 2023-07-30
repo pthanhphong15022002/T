@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -27,6 +28,7 @@ import { Subject, pipe, takeUntil } from 'rxjs';
   selector: 'lib-pop-up-cash',
   templateUrl: './pop-up-cash.component.html',
   styleUrls: ['./pop-up-cash.component.css'],
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class PopUpCashComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
@@ -61,14 +63,20 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
     this.cashpayment = dialogData.data?.cashpayment;
     this.objectName = dialogData.data?.objectName;
   }
-  onInit(): void {}
-  ngAfterViewInit() {
+  onInit(): void {
     this.acService.setPopupSize(this.dialog, '80%', '80%');
+  }
+  ngAfterViewInit() {
     this.dt.detectChanges();
   }
-  close() {
+
+  onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  close() {
+    this.onDestroy();
     this.dialog.close();
   }
   accept() {
@@ -80,8 +88,7 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {
-            this.destroy$.next();
-            this.destroy$.complete();
+            this.onDestroy();
             this.dialog.close({
               oCashRef: this.grid.arrSelectedRows[0],
               oLineRef: res,
@@ -89,6 +96,7 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
           }
         });
     } else {
+      this.onDestroy();
       this.dialog.close();
     }
   }
