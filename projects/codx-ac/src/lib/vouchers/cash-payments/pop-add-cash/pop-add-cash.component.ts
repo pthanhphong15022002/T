@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -59,6 +60,7 @@ import {
   templateUrl: './pop-add-cash.component.html',
   styleUrls: ['./pop-add-cash.component.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class PopAddCashComponent extends UIComponent implements OnInit {
   focus: any;
@@ -161,7 +163,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   typeSet: any;
   loading: any = false;
   loadingform: any = true;
-  isInit: any;
+  //isInit: any;
   oAccount: any;
   userID: any;
   voucherNoRef:any;
@@ -192,7 +194,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.journal = {...dialogData.data?.journal};
     this.modegrid = this.journal.addNewMode;
     this.baseCurr = dialogData.data?.baseCurr;
-    this.isInit = true;
     this.loadInit();
   }
   //#endregion
@@ -293,6 +294,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           );
           this.loadSubType(this.cashpayment.subType, this.tabObj);
         } else {
+          //this.dt.reattach();
           // this.form.formGroup.patchValue(
           //   { subType: this.cashpayment.subType },
           //   {
@@ -562,10 +564,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (this.action == 'add') {
       setTimeout(() => {
         this.loadingform = false;
+        this.dt.detectChanges();
       }, 500);
     } else {
       setTimeout(() => {
         this.loadingform = false;
+        this.dt.detectChanges();
       }, 1000);
     }
   }
@@ -645,6 +649,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (res) {
             this.dataLine.dR2 = res.dR2;
             this.dataLine.cR2 = res.cR2;
+            this.dt.detectChanges();
           }
         })
         if (this.journal.entryMode == '2') {
@@ -664,6 +669,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (res) {
             this.dataLine.dR2 = res.dR2;
             this.dataLine.cR2 = res.cR2;
+            this.dt.detectChanges();
           }
         })
         if (this.journal.entryMode == '2') {
@@ -683,6 +689,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
             if (res) {
               this.dataLine.dr = res.dr;
+              this.dt.detectChanges();
             }
           })
         }
@@ -700,12 +707,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
             if (res) {
               this.dataLine.cr = res.cr;
+              this.dt.detectChanges();
             }
           })
         }
         break;
       case 'note':
-        // xu li sau
+        this.dataLine.reasonID = e?.itemData?.ReasonID;
         break;
       default:
         break;
@@ -1347,6 +1355,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.notification.alertCode('AC0010', null).subscribe((res) => {
           if (res.event.status === 'Y') {
             this.loading = true;
+            this.dt.detectChanges();
             this.dialog.dataService
               .delete(
                 [this.cashpayment],
@@ -1362,6 +1371,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res.data != null) {
                   this.loading = false;
+                  this.dt.detectChanges();
                   this.notification.notifyCode('E0860');
                   this.dialog.close();
                   this.onDestroy();
@@ -1376,7 +1386,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    this.isInit = false;
+    //this.isInit = false;
   }
   //#endregion
 
@@ -1852,7 +1862,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'DIM2',
       'DIM3',
       'ProjectID',
-      'LoanContractID',
+      'ContractID',
       'AssetGroupID',
       'ObjectID',
       'Settlement',
@@ -2343,6 +2353,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             );
             if (res.line) {
               this.cashpaymentline = res.line;
+              this.dt.detectChanges();
             }
           }
         });
@@ -2460,6 +2471,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.cashpaymentline = res;
+        this.dt.detectChanges();
       });
   }
 

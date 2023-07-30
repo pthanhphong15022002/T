@@ -351,7 +351,7 @@
           </tr>
         </thead>
         <tbody *ngIf="!isLoadDataAcct">
-          <ng-container *ngFor="let item of acctTrans">
+          <ng-container *ngFor="let item of acctTrans;trackBy: trackByFn">
             <tr [style]="createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
               <td class="text-center">
                 <div class="d-flex justify-content-start ps-3">
@@ -593,7 +593,7 @@
           </tr>
         </thead>
         <tbody class="border-bottom">
-          <tr *ngFor="let item of settledInvoices">
+          <tr *ngFor="let item of settledInvoices;trackBy: trackByFn">
             <td>
               <div class="d-flex align-items-center justify-content-start ps-3">
                 <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">

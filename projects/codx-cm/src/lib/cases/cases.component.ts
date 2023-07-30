@@ -1128,7 +1128,7 @@ export class CasesComponent
             if (res.eSign) {
               //kys soos
             } else {
-              this.release(dt, res.processID);
+              this.release(dt, res);
             }
           });
       } else {
@@ -1136,32 +1136,34 @@ export class CasesComponent
       }
     });
   }
-  //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.dataSelected.approveStatus = '3';
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.codxCmService
-            .updateApproveStatus('DealsBusiness', data?.recID, '3')
-            .subscribe();
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback
+    );
+  }
+  //call Back
+  releaseCallback(res: any) {
+    //codxshare ko tra gi ve ca nen call api lai
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'CasesBusiness')
+        .subscribe((c) => {
+          if (c) {
+            this.dataSelected = c;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+          }
           this.notificationsService.notifyCode('ES007');
-        }
-      });
+        });
+    }
   }
 
   //Huy duyet

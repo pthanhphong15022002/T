@@ -1227,7 +1227,7 @@ export class DealsComponent
             if (res.eSign) {
               //kys soos
             } else {
-              this.release(dt, res.processID);
+              this.release(dt, res);
             }
           });
       } else {
@@ -1276,6 +1276,7 @@ export class DealsComponent
   }
   //call Back
   releaseCallback(res: any) {
+     //codxshare ko tra gi ve ca nen call api lai
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       this.codxCmService
@@ -1284,6 +1285,7 @@ export class DealsComponent
           if (q) {
             this.dataSelected = q;
             this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.notificationsService.notifyCode('ES007');
         });
