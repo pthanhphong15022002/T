@@ -294,6 +294,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           );
           this.loadSubType(this.cashpayment.subType, this.tabObj);
         } else {
+          //this.dt.reattach();
           // this.form.formGroup.patchValue(
           //   { subType: this.cashpayment.subType },
           //   {
@@ -712,7 +713,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
         break;
       case 'note':
-        // xu li sau
+        this.dataLine.reasonID = e?.itemData?.ReasonID;
         break;
       default:
         break;
@@ -1354,6 +1355,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.notification.alertCode('AC0010', null).subscribe((res) => {
           if (res.event.status === 'Y') {
             this.loading = true;
+            this.dt.detectChanges();
             this.dialog.dataService
               .delete(
                 [this.cashpayment],
@@ -1369,6 +1371,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res.data != null) {
                   this.loading = false;
+                  this.dt.detectChanges();
                   this.notification.notifyCode('E0860');
                   this.dialog.close();
                   this.onDestroy();
@@ -1859,7 +1862,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       'DIM2',
       'DIM3',
       'ProjectID',
-      'LoanContractID',
+      'ContractID',
       'AssetGroupID',
       'ObjectID',
       'Settlement',
