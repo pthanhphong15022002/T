@@ -90,6 +90,7 @@ export class PurchaseinvoicesComponent
     entityPer: 'AC_AcctTrans',
   };
   gvsAcctTrans: any;
+  parentFunc: any;
   journal: IJournal;
 
   constructor(
@@ -103,9 +104,7 @@ export class PurchaseinvoicesComponent
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
-        });
+        this.parentFunc = params.parent;
       }
     });
 
@@ -204,7 +203,9 @@ export class PurchaseinvoicesComponent
       },
     ];
 
-    this.view.setRootNode(this.parent?.customName);
+    this.cache.functionList(this.parentFunc).subscribe((res) => {
+      if (res) this.view.setRootNode(res.customName);
+    });
   }
 
   ngAfterViewChecked(): void {

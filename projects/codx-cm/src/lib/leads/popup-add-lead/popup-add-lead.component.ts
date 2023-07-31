@@ -188,6 +188,7 @@ export class PopupAddLeadComponent
     }
     else {
       this.lead.applyProcess =  dt?.data?.applyProcessSetting;
+
       this.checkApplyProcess(this.lead.applyProcess);
       this.lead.currencyID = this.currencyIDDefault;
       this.leadId = this.lead.recID;
@@ -305,7 +306,7 @@ export class PopupAddLeadComponent
       if (check) {
         this.lead.leadID = this.leadNoProcess;
         this.planceHolderAutoNumber = this.leadNoProcess;
-        this.disabledShowInput = true;
+        this.disabledShowInput = true; 
         this.removeItemInTab(true);
       } else {
         this.getAutoNumber();

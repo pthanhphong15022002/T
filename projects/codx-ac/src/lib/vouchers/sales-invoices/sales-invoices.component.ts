@@ -86,7 +86,7 @@ export class SalesInvoicesComponent
   gvsAcctTrans: any;
 
   columns: TableColumn[];
-
+  parentFunc: string;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -98,9 +98,7 @@ export class SalesInvoicesComponent
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
-        });
+        this.parentFunc = params.parent;
       }
     });
 
@@ -168,7 +166,7 @@ export class SalesInvoicesComponent
       });
 
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
-      this.journal = journal;
+      this.salesInvoiceService.journal = this.journal = journal;
     });
   }
 
@@ -199,7 +197,9 @@ export class SalesInvoicesComponent
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
-    this.view.setRootNode(this.parent?.customName);
+    this.cache.functionList(this.parentFunc).subscribe((res) => {
+      if (res) this.view.setRootNode(res.customName);
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -311,7 +311,7 @@ export class SalesInvoicesComponent
   }
 
   onChangeMF(mfs: any, data: ISalesInvoice): void {
-    console.log(mfs.filter((f) => !f.disabled));
+    // console.log(mfs.filter((f) => !f.disabled));
     let disabledFuncs: MF[] = [
       MF.GuiDuyet,
       MF.GhiSo,
