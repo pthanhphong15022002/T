@@ -390,7 +390,7 @@ export class OrgorganizationComponent extends UIComponent {
       )
       .subscribe((res: any[]) => {
         if (res && res[0].length > 0) {
-          if (this.pageIndex == 1) {
+          if (this.pageIndex == 1 || this.pageIndex == 2) {
             this.total = res[1];
           }
           this.lstMyTeam.push(...res[0]);
@@ -406,7 +406,15 @@ export class OrgorganizationComponent extends UIComponent {
   scroll(e: HTMLDivElement) {
     var total = e.offsetHeight + e.scrollTop;
 
-    if (this.scrolling && (total <= e.scrollHeight + 2) && (total > e.scrollHeight -2)) {
+    // if (this.scrolling && total == e.scrollHeight) {
+    //   this.scrolling = false;
+    //   this.getMyTeam();
+    // }
+    if (
+      this.scrolling &&
+      total <= e.scrollHeight + 2 &&
+      total > e.scrollHeight - 2
+    ) {
       this.scrolling = false;
       this.getMyTeam();
     }
@@ -414,11 +422,10 @@ export class OrgorganizationComponent extends UIComponent {
 
   //Click load employee
   clickOpen(event, data, employee) {
-    // console.log(employee.slice(0, 10));
     this.lstMyTeam = employee.slice(0, 10);
     this.orgId = data;
     this.scrolling = true;
-    this.pageIndex = 1;
+    this.pageIndex = 2;
     event.stopPropagation();
   }
 }
