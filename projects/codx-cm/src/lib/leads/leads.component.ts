@@ -232,19 +232,13 @@ export class LeadsComponent
   async getCurrentSetting(){
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
-        // currnecy
-        let dataParamCurrency = res.filter(
-          (x) => x.category == '4' && !x.transType
-        )[0];
-        if (dataParamCurrency) {
-          this.paramDefault = JSON.parse(dataParamCurrency.dataValue);
-          this.currencyIDDefault = this.paramDefault['DefaultCurrency'];
-        }
-        // applyProcess
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
         if (dataParam) {
           var applyProcessSetting = JSON.parse(dataParam.dataValue);
+          // applyProcess
           this.applyProcess = applyProcessSetting['ProcessLeadUsed'] == '1';
+          // currnecy
+          this.currencyIDDefault = applyProcessSetting['DefaultCurrency'];
         }
       }
     });

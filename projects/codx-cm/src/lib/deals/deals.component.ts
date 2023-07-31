@@ -29,6 +29,7 @@ import {
   Util,
   AlertConfirmInputConfig,
   DialogRef,
+  AuthStore,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -166,9 +167,11 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+
   ) {
     super(inject);
+
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.functionModule = f.module;

@@ -188,6 +188,7 @@ export class PopupAddLeadComponent
     }
     else {
       this.lead.applyProcess =  dt?.data?.applyProcessSetting;
+
       this.checkApplyProcess(this.lead.applyProcess);
       this.lead.currencyID = this.currencyIDDefault;
       this.leadId = this.lead.recID;
