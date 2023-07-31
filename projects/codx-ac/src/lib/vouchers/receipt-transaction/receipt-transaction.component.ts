@@ -12,6 +12,7 @@ import {
   ButtonModel,
   CallFuncService,
   DataRequest,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -29,6 +30,7 @@ import { PopAddReceiptTransactionComponent } from './pop-add-receipt-transaction
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 
 @Component({
   selector: 'lib-receipt-transaction',
@@ -200,6 +202,10 @@ export class ReceiptTransactionComponent extends UIComponent {
         break;
       case 'SYS002':
         this.export(data);
+        break;
+      case 'ACT070808':
+      case 'ACT071408':
+        this.print(data, e.functionID);
         break;
     }
   }
@@ -618,6 +624,48 @@ export class ReceiptTransactionComponent extends UIComponent {
         });
         break;
     }
+  }
+  
+  print(data: any, reportID: any, reportType: string = 'V') {
+    this.api
+      .execSv(
+        'rptsys',
+        'Codx.RptBusiniess.SYS',
+        'ReportListBusiness',
+        'GetListReportByIDandType',
+        [reportID, reportType]
+      )
+      .subscribe((res: any) => {
+        if (res != null) {
+          if (res.length > 1) {
+            this.openPopupCashReport(data, res);
+          } else if (res.length == 1) {
+            this.codxService.navigate(
+              '',
+              'ac/report/detail/' + `${res[0].recID}`
+            );
+          }
+        }
+      });
+  }
+
+  openPopupCashReport(data: any, reportList: any) {
+    var obj = {
+      data: data,
+      reportList: reportList,
+      url: 'ac/report/detail/',
+    };
+    let opt = new DialogModel();
+    var dialog = this.callfunc.openForm(
+      CodxListReportsComponent,
+      '',
+      400,
+      600,
+      '',
+      obj,
+      '',
+      opt
+    );
   }
   //#endregion
 }
