@@ -107,6 +107,7 @@ export class TargetsComponent
   data: any;
   schedule: any;
   columnGrids = [];
+  isShow = false;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -567,5 +568,9 @@ export class TargetsComponent
 
   targetToFixed(data) {
     return Math.round(data);
+  }
+
+  clickShow(isShow: boolean){
+
   }
 }

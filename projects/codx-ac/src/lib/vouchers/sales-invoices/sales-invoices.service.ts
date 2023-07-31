@@ -5,6 +5,7 @@ import {
   FormModel
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class SalesInvoiceService {
   };
   gvsSalesInvoicesLines: any;
   vats: any[];
+  journal: IJournal;
 
   constructor(
     private apiService: ApiHttpService,
