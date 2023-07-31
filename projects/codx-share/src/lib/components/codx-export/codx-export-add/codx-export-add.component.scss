@@ -27,3 +27,12 @@
 {
   border: solid 1.5px red  !important;
 }
+.export-add-listview .e-list-item
+{
+  padding: 7px 6px !important;
+}
+.bg-export-hover:hover
+{
+  background-color: var(--primary-lightest);
+  border-color: var(--primary) ;
+}
