@@ -3538,6 +3538,6 @@ lib-organization .content-tree li.menu-item>div.d-flex.align-items-center{
 .menu-nav .menu-item >.d-flex.align-items-center:hover{
   background-color: var(--primary-lighter);
 }
-.menu-item:has(.menu-sub.collapse.show) >.d-flex.align-items-center{
-  background-color: var(--gray-100);
-}
+// .menu-item:has(.menu-sub.collapse.show) >.d-flex.align-items-center{
+//   background-color: var(--gray-100);
+// }
