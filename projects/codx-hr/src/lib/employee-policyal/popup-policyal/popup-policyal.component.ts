@@ -103,6 +103,7 @@ export class PopupPolicyalComponent
   lstSelectedObj: any = [];
   lstSelectedExcludeObj: any = [];
 
+  autoNumField: any;
 
   dataSourceGridView1 : any = [];
   dataSourceGridView2 : any = [];
@@ -129,7 +130,6 @@ export class PopupPolicyalComponent
   actionType: string;
   idField = 'PolicyID';
   isAfterRender = false;
-  autoNumField: string;
   headerText: string;
   alpolicyObj: any;
   grvSetup
@@ -349,10 +349,14 @@ export class PopupPolicyalComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            if(res.key){
+              this.autoNumField = res.key;
+            }
             console.log('res ssss', res);
             res.data.status = '1'
-            if (res.activeOn == '0001-01-01T00:00:00') {
-              res.activeOn = null;
+            debugger
+            if (res.data.activeOn == '0001-01-01T00:00:00') {
+              res.data.activeOn = null;
             }
             this.alpolicyObj = res?.data;
             debugger
@@ -749,6 +753,7 @@ export class PopupPolicyalComponent
                   debugger
                 })
               }
+            this.dialog && this.dialog.close(this.alpolicyObj);
           }
           else{
             this.notify.notifyCode('SYS023');
@@ -1349,6 +1354,15 @@ export class PopupPolicyalComponent
 
   changeTab(event){
     this.currentTab = event.nextId;
+  }
+
+  onClickDeleteObject(data){
+    if(this.currentTab == ''){
+      
+    }
+    else if(this.currentTab == ''){
+
+    }
   }
 
   onClickHideComboboxPopup(event){

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel } from 'codx-core';
-import { CodxAcService } from '../../codx-ac.service';
+import { CacheService, FormModel } from 'codx-core';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../journals/journals.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +19,9 @@ export class PurchaseInvoiceService {
     gridViewName: 'grvVATInvoices',
     entityPer: 'AC_VATInvoices',
   };
+  journal: IJournal;
 
-  constructor(
-    private apiService: ApiHttpService,
-    cacheService: CacheService,
-    private acService: CodxAcService
-  ) {
+  constructor(cacheService: CacheService) {
     cacheService
       .gridViewSetup(
         this.fmVATInvoices.formName,

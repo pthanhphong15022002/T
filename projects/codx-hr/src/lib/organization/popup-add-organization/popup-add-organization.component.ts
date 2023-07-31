@@ -6,6 +6,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
@@ -34,6 +35,7 @@ export class PopupAddOrganizationComponent implements OnInit {
 
   msgCodeError: string = 'SYS009';
   orgUnitName: string = 'Đơn vị';
+  formModel: FormModel;
 
   constructor(
     private auth: AuthService,
@@ -45,6 +47,7 @@ export class PopupAddOrganizationComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
+    this.formModel = dialogRef?.formModel;
     this.user = this.auth.userValue;
     this.dialogData = dt.data;
     this.dialogRef = dialogRef;
@@ -55,6 +58,7 @@ export class PopupAddOrganizationComponent implements OnInit {
       this.isModeAdd = this.dialogData.isModeAdd;
     }
   }
+
   ngOnInit(): void {
     if (this.funcID) {
       this.getSetup(this.funcID);

@@ -186,7 +186,12 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="onSave()"
+      [disabled]="!formModel.currentData.updateColumn"
+    >
       <codx-label
         [formModel]="form.formModel"
         name="lblSubmit"

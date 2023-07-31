@@ -339,14 +339,14 @@ export class EmployeeListByOrgComponent {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
       let queryParams = {
         employeeID: data.employeeID,
-        page: this.view.dataService.page,
-        totalPage: this.view.dataService.pageCount,
+        page: this.grid.dataService.page,
+        totalPage: this.grid.dataService.pageCount,
       };
       let state = {
-        data: this.view.dataService.data.map(function (obj) {
+        data: this.grid.dataService.data.map(function (obj) {
           return { EmployeeID: obj.employeeID };
         }),
-        request: this.view.dataService.request,
+        request: this.grid.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });
