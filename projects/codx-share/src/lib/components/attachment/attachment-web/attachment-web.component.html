@@ -8,14 +8,68 @@
 </codx-form>
 <ng-template #header>
    <div class="d-flex justify-content-between align-items-center w-100">
-        <div class="d-flex align-items-center ">
-            <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 0" (click)="activeTab(0)">
-                <span class="fs-6 fw-normal">Kho tài liệu</span>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 0" (click)="activeTab(0)">
+                    <span class="fs-6 fw-normal">Kho tài liệu</span>
+                </div>
+                <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 1" (click)="activeTab(1)">
+                    <span class="fs-6 fw-normal">Tài liệu của tôi</span>
+                </div>
             </div>
-            <div class="d-flex align-items-center div-btn-tab-attachment py-4 px-5 cursor-pointer" [class.active]="tab == 1" (click)="activeTab(1)">
-                <span class="fs-6 fw-normal">Tài liệu của tôi</span>
+            <div class="d-flex align-items-center pt-2">
+                <span class="fs-6 fw-bold">{{tab == 0 ? 'Kho tài liệu' : 'Tài liệu của tôi'}}</span>
+                <ng-container *ngIf="listBreadCum.length < 4 , else elseBreadCum">
+                    <ng-container *ngFor="let item of listBreadCum">
+                        <i class="icon-navigate_next"></i>
+                        <span class="fs-6 fw-normal cursor-pointer" (click)="changeBreadCum(item)">{{item.text}}</span>
+                    </ng-container>
+                </ng-container>
+                <ng-template #elseBreadCum>
+                    <ng-container *ngFor="let item of listBreadCum , let i = index">
+                        <ng-container *ngIf="(i < 2)">
+                            <i class="icon-navigate_next"></i>
+                            <span class="fs-6 fw-normal cursor-pointer" (click)="changeBreadCum(item)">{{item.text}}</span>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="listBreadCum.length >= 4">
+                        <div class="dropdown" ngbDropdown  [container]="'body'">
+                            <div
+                                ngbDropdownToggle
+                                class="align-items-center d-flex cursor-pointer"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                <i class="icon-navigate_next"></i>
+                                <span class="icon-more_horiz icon-18"></span>
+                            </div>
+                            <div
+                                ngbDropdownMenu
+                                class="dropdown-menu overflow-auto"
+                                aria-labelledby="dropdownMenuButton"
+                            >
+                            <ng-container *ngFor="let item of listBreadCum , let i = index">
+                                <ng-container *ngIf="(i >= 2 && (listBreadCum.length - i) > 1 )">
+                                    <div class="p-2">
+                                        <span class="fs-6 fw-normal cursor-pointer" (click)="changeBreadCum(item)">{{item.text}}</span>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngFor="let item of listBreadCum , let i = index">
+                        <ng-container *ngIf="(listBreadCum.length - i) <= 1">
+                            <i class="icon-navigate_next"></i>
+                            <span class="fs-6 fw-normal cursor-pointer" (click)="changeBreadCum(item)">{{item.text}}</span>
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
             </div>
         </div>
+      
         <div class="cursor-pointer" (click)="close()">
             <i class="icon-close"></i>
         </div>
@@ -55,19 +109,25 @@
                     <tbody>
                       <tr *ngFor="let item of listData" class="border-top">
                         <td class="w-30px">
-                            <ng-container *ngIf="!item?.folderName">
-                                <codx-input type="checkbox" ></codx-input>
+                            <ng-container *ngIf="!item?.folderName && item?.read">
+                                <codx-input type="checkbox" (valueChange)="selectedFiles($event , item)"></codx-input>
                             </ng-container>
                         </td>
-                        <td class="d-flex align-items-center border-0">
+                        <td class="d-flex align-items-center border-0 cursor-pointer" [class.cursor-pointer]="item.folderName" (click)="selectedFolder(item)">
                             <img *ngIf="item.folderName" class="h-13px me-2" src="../../../assets/themes/dm/default/img/icon-folder.svg" />
                             <img *ngIf="!item.folderName" class="h-16px me-2" [src]="getThumbnail(item)" />
                             <span>{{item.folderName ? item.folderName : item.fileName}}</span>
+                            <span *ngIf="item.read == false" class="icon-security text-primary icon-16 mx-2" title="Tài liệu bảo mật"></span>
                         </td>
                         <td>{{item.createdOn | date: 'dd/MM/yyyy'}}</td>
                         <td> 
-                            <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
-                            [imageWidth]="25" [subTitle]="item.userName">
+                            <codx-temp-full 
+                                [imageId]="item.createdBy" 
+                                imageObjType="AD_Users" 
+                                imgCss="me-3 cursor-pointer"
+                                [imageWidth]="25" 
+                                [subTitle]="item.userName"
+                            >
                           </codx-temp-full>
                         </td>
                         <td>{{getSizeKB(item)}}</td>
@@ -79,9 +139,12 @@
     </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex">
-            <button type="button" class="btn btn-primary" ><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
+            <span>Đã chọn {{countItems}} tập tin</span>
+        </div>
+        <div class="d-flex">
+            <button type="button" class="btn btn-primary" (click)="onSave()"><codx-label default="Tải lên" fiedName="lblAttachmentUploadFile" formName="AttachmentUploadFile"></codx-label></button>
         </div>
     </div>
 </ng-template>

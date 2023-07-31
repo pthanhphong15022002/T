@@ -22,6 +22,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-employee-benefit.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -61,7 +62,8 @@ export class EmployeeBenefitComponent extends UIComponent {
   dataCategory;
   cmtStatus: string = '';
   // genderGrvSetup: any;
-  processID;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   //#region Update modal Status
   actionSubmit = 'HRTPro05A03';
@@ -151,11 +153,15 @@ export class EmployeeBenefitComponent extends UIComponent {
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeBenefitMoreFunc(this.editStatusObj)
+      .EditEmployeeBenefitMoreFunc(this.editStatusObj, true)
       .subscribe((res) => {
         if (res != null) {
+          console.log(res);
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
+          if (res[1]) {
+            res[1].emp = this.currentEmpObj;
+          }
           this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
@@ -167,7 +173,7 @@ export class EmployeeBenefitComponent extends UIComponent {
               'EBenefitsBusiness'
             )
             .subscribe((res) => {
-              console.log('kq luu track log', res);
+              //console.log('kq luu track log', res);
             });
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
@@ -199,6 +205,9 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         this.df.detectChanges();
       }
     });
@@ -210,35 +219,59 @@ export class EmployeeBenefitComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         if (res) {
-          this.processID = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.processID.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              'Phụ cấp - ' + this.itemDetail.decisionNo,
-              ''
-            )
-            .subscribe((result) => {
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.dataCategory = res;
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.dataCategory,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeBenefitMoreFunc(this.itemDetail)
+                  .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
                   .subscribe((res) => {
-                    console.log('Result after send edit' + res);
                     if (res) {
                       this.view?.dataService
                         ?.update(this.itemDetail)
                         .subscribe();
                     }
                   });
-              } else this.notify.notifyCode(result?.msgCodeError);
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.processID.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     'Phụ cấp - ' + this.itemDetail.decisionNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
+          //         .subscribe((res) => {
+          //           console.log('Result after send edit' + res);
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else this.notify.notifyCode(result?.msgCodeError);
+          //   });
         }
       });
   }
@@ -379,6 +412,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
+        useForQTNS: true,
       },
       option
     );

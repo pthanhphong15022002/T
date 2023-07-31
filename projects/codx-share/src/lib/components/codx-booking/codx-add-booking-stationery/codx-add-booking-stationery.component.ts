@@ -499,35 +499,34 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                       }
                     }
                     this.codxShareService
-                      .codxRelease(
+                      .codxReleaseDynamic(
                         'EP',
-                        item?.recID,
-                        category?.processID,
+                        item,
+                        category,
                         'EP_Bookings',
                         this.formModel.funcID,
-                        item?.createdBy,
                         item?.title,
-                        null,
+                        (res:any) => {
+                          if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                            this.notificationsService.notifyCode('ES007');
+                            item.approveStatus = '3';
+                            item.write = false;
+                            item.delete = false;
+                            (this.dialogRef.dataService as CRUDService)
+                              .update(item)
+                              .subscribe();
+                            this.dialogRef && this.dialogRef.close();
+                          } else {
+                            this.notificationsService.notifyCode(
+                              res?.msgCodeError
+                            );
+                            // Thêm booking thành công nhưng gửi duyệt thất bại
+                            this.dialogRef && this.dialogRef.close();
+                          }
+                        },
+                        item?.createdBy,
                         [curRO],
                       )
-                      .subscribe((res:any) => {
-                        if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                          this.notificationsService.notifyCode('ES007');
-                          item.approveStatus = '3';
-                          item.write = false;
-                          item.delete = false;
-                          (this.dialogRef.dataService as CRUDService)
-                            .update(item)
-                            .subscribe();
-                          this.dialogRef && this.dialogRef.close();
-                        } else {
-                          this.notificationsService.notifyCode(
-                            res?.msgCodeError
-                          );
-                          // Thêm booking thành công nhưng gửi duyệt thất bại
-                          this.dialogRef && this.dialogRef.close();
-                        }
-                      });
                   });
                 });
             } else {

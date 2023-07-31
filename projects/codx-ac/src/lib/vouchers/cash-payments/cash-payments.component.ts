@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
@@ -39,6 +40,7 @@ import { Subject, interval, takeUntil } from 'rxjs';
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
   styleUrls: ['./cash-payments.component.css'],
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -194,7 +196,11 @@ export class CashPaymentsComponent extends UIComponent {
         });
       }
     });
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
+  }
+
+  trackByFn(index, item) {
+    return item.recID;
   }
 
   ngOnDestroy() {
@@ -616,6 +622,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.isLoadDataAcct = true;
         this.itemSelected = event?.data;
         this.loadDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
         // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
         //   this.itemSelected = event?.data;
         //   return;
@@ -633,23 +640,28 @@ export class CashPaymentsComponent extends UIComponent {
       case '9':
       case '2':
         this.acService
-          .loadData('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
+          .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
             data.recID,
           ])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
-            this.settledInvoices = res;
-            this.loadTotalSet();
+            if (res) {
+              this.settledInvoices = res;
+              this.loadTotalSet();
+            }       
           });
         break;
     }
     this.acService
-      .loadData('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .execApi('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.acctTrans = res;
-        this.loadTotal();
-        this.isLoadDataAcct = false;
+        if (res) {
+          this.acctTrans = res;
+          this.loadTotal();
+          this.isLoadDataAcct = false;
+          this.detectorRef.detectChanges();
+        }    
       });
     this.changeTab(data.subType);
   }
@@ -709,39 +721,38 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   validateVourcher(data: any) {
-    // this.view.dataService.updateDatas.set(data['_uuid'], data);
-    // this.view.dataService.save().subscribe((res: any) => {
-    //   if (res && res.update.data != null) {
-    //     this.itemSelected = res.update.data;
-    //     this.loadDatadetail(this.itemSelected);
-    //     this.view.dataService.update(this.itemSelected).subscribe();
-    //   }
-    // });
-    this.acService.validateVourcher(data).subscribe((res => {
-      if (res) {
-        this.itemSelected = res;
-        this.loadDatadetail(this.itemSelected);
-        this.view.dataService.update(this.itemSelected)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe();
-      }
-    }))
+    this.acService
+      .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          data.status = '1';
+          this.itemSelected = data;
+          this.loadDatadetail(this.itemSelected);
+          this.view.dataService
+            .update(this.itemSelected)
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   post(data: any) {
-    this.acService.postVourcher(data).subscribe((res =>{
+    // this.acService.postVourcher(data).subscribe((res =>{
 
-    }))
+    // }))
   }
 
   loadjounal() {
     this.acService
-      .getJournal(this.journalNo)
+      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.journal = res[0];
-        this.oCash = res[1].data;
-        this.hideFields = res[2];
+        if (res) {
+          this.journal = res[0];
+          this.oCash = res[1].data;
+          this.hideFields = res[2];
+        }     
       });
   }
 

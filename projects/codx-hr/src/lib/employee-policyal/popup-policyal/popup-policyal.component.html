@@ -6,6 +6,7 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialog"
+  (tabChange)="changeTab($event)"
   [openMore]="true"
   [tabContent]="[overallInfo, policyInfo, setting, applyObj, subtractObj]"
   [data]="alpolicyObj"
@@ -713,32 +714,191 @@
         class="badge badge-success border-0 ms-2"
       >
       </codx-vll>
-      <button
+      <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"
     >
       <i class="icon-edit-one icon-18" 
       [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
       ></i>
-    </button>
+    </button> -->
     </span>
 </span>
-
-<div *ngFor="let obj of lstApplyObj">
-  <div>obj.priority</div>
+<div class="form-group row" *ngIf="lstPolicyBeneficiariesApply.length > 0">
+  <div class="col-6 d-flex flex-column fw-bold text-primary">
+      <codx-label
+          [formModel]="formModel"
+          [name]="'lblDetailApplyObj'"
+          [default]="'Chi tiết Đối tượng áp dụng'"
+      ></codx-label>
+  </div>
+  <div class="col-6 d-flex flex-row">
+      <button
+      class="btn btn-icon ms-3"
+      >
+      <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+      <i class="icon-arrow_drop_down icon-18" 
+      [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button>
+    <button
+    class="btn btn-icon ms-3"
+    >
+    <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+    <i class="icon-arrow_drop_up icon-18" 
+    [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+    ></i>
+  </button>
+  </div>
+</div>
+<div *ngFor="let obj of lstPolicyBeneficiariesApply">
+  <div>{{obj.priority}}</div>
   <div *ngFor="let detail of lstSelectedObj">
-    <div class="d-flex justify-content-around">
+    <div class="d-flex justify-content-between">
       <codx-vll
         [showText]="true"
-        [showBgColor]="true"
+        [showBgColor]="false"
         name="HRObject"
-        [value]="obj"
-        class="badge badge-success border-0 ms-2"
+        [value]="detail"
+        class=""
       >
       </codx-vll>
-
+            <button
+      class="btn btn-icon ms-3"
+      (click)="onClickOpenSelectApplyObjDetail(detail, obj)"
+    >
+      <i class="icon-edit-one icon-18" 
+      [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button>
+    </div>
+    <div *ngIf="obj.orgUnitID && detail == '1'">
+      <span *ngFor="let org of lstOrgUnitID">
+        <span *ngIf="org.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="org.id
+            | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.jobLevel && detail == '2'">
+      <span *ngFor="let joblevel of lstJobLevel">
+        <span *ngIf="joblevel.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="joblevel.id
+            | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.positionID && detail == '3'">
+      <span *ngFor="let position of lstPositionID">
+        <span *ngIf="position.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="position.id
+            | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeTypeID && detail == '4'">
+      <span *ngFor="let empType of lstEmployeeTypeID">
+        <span *ngIf="empType.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="empType.id
+            | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.labourType && detail == '5'">
+      <span *ngFor="let labourType of lstLabourType">
+        <span *ngIf="labourType.rec == obj.recID">
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="false"
+        name="HR022"
+        [value]="labourType.id"
+        ngClass="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.contractTypeID && detail == '6'">
+      <span *ngFor="let contractType of lstContractTypeID">
+        <span *ngIf="contractType.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="contractType.id
+            | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeID && detail == '7'">
+      <span *ngFor="let emp of lstEmployeeID">
+        <span *ngIf="emp.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="emp.id
+            | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeStatus && detail == '8'">
+      <span *ngFor="let empStatus of lstEmpStatus">
+        <span *ngIf="empStatus.rec == obj.recID">
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="false"
+        name="HR003"
+        [value]="empStatus.id"
+        ngClass="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+        </span>
+      </span>
     </div>
   </div>
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+    <codx-label
+    default="Hoặc"
+    name="lblOr"
+    [formModel]="formModel"
+  ></codx-label>
+  </div>
+</div>
+<codx-combobox-popup
+*ngIf="!isHidden"
+[comboboxName]="currentCbxName"
+[multiple]="true"
+[width]="600"
+[height]="500"
+[value]="currentCbxValue"
+(clickSave)="onClickHideComboboxPopup($event)"
+>
+</codx-combobox-popup>
+
+<div class="d-flex justify-content-end">
+  <button
+    type="button"
+    class="btn btn-sm btn-light-primary"
+    (click)="addApplyObj()"
+  >
+    <i class="icon-add icon-16 ms-n1"></i>
+    <codx-label
+      name="lblAddNew"
+      default="Thêm mới"
+      [formModel]="formModel"
+    ></codx-label>
+  </button>
 </div>
 
     <!-- <codx-combobox-popup
@@ -752,36 +912,263 @@
     >
     </codx-combobox-popup> -->
 
-    <div class="form-group row">
-      <div class="col-6 d-flex flex-column">
-          <codx-label
-              fiedName="HasIncludeObjects"
-              [formModel]="formModel"
-              [default]="'Chi tiết Đối tượng áp dụng'"
-          ></codx-label>
-      </div>
-      <div class="col-6 d-flex flex-row">
-          <button
-          class="btn btn-icon ms-3"
-          >
-          <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
-          <i class="icon-arrow_drop_down icon-18" 
-          [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
-          ></i>
-        </button>
-        <button
-        class="btn btn-icon ms-3"
-        >
-        <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
-        <i class="icon-arrow_drop_up icon-18" 
-        [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
-        ></i>
-      </button>
-      </div>
-  </div>
+
 </ng-template>
 
-<ng-template #subtractObj> </ng-template>
+<ng-template #subtractObj> 
+  <div class="form-group row">
+    <div class="col-6 d-flex flex-column">
+        <codx-label
+            fiedName="HasExcludeObjects"
+            [formModel]="formModel"
+        ></codx-label>
+        <codx-label
+        [name]="'HasExcludeObjects'"
+        [default]="grvSetup.HasExcludeObjects.headerNote"
+        [formModel]="formModel"
+></codx-label>
+    </div>
+    <div class="col-6 d-flex flex-row">
+        <codx-input
+            class="mt-2"
+            field="hasExcludeObjects"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="ValChangeHasExcludeObj($event)"
+        ></codx-input>
+        <!-- <codx-input
+        class="mt-2"
+        field="includeObjects"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        (valueChange)="ValChangeSelectObj($event)"
+    ></codx-input> -->
+        <button
+        class="btn btn-icon ms-3"
+        (click)="onClickOpenSelectExcludeObj()"
+      >
+        <i class="icon-edit-one icon-18" 
+        [ngClass]="alpolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
+        ></i>
+      </button>
+    </div>
+</div>
+<span *ngIf="alpolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
+    <span *ngFor="let obj of lstSelectedExcludeObj">
+      <!-- <span
+      class="badge badge-success border-0 ms-2"
+      [innerHTML]="obj
+          | formatvalue : benefitFormModel : 'benefitID'
+          | async"
+    ></span> -->
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        name="HRObject"
+        [value]="obj"
+        class="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+      <!-- <button
+      class="btn btn-icon ms-3"
+      (click)="onClickOpenSelectIncludeObj()"
+    >
+      <i class="icon-edit-one icon-18" 
+      [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button> -->
+    </span>
+</span>
+<div class="form-group row" *ngIf="lstPolicyBeneficiariesExclude.length > 0">
+  <div class="col-6 d-flex flex-column fw-bold text-primary">
+      <codx-label
+          [formModel]="formModel"
+          [name]="'lblDetailApplyObj'"
+          [default]="'Chi tiết Đối tượng loại trừ'"
+      ></codx-label>
+  </div>
+  <div class="col-6 d-flex flex-row">
+      <button
+      class="btn btn-icon ms-3"
+      >
+      <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+      <i class="icon-arrow_drop_down icon-18" 
+      [ngClass]="alpolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button>
+    <button
+    class="btn btn-icon ms-3"
+    >
+    <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+    <i class="icon-arrow_drop_up icon-18" 
+    [ngClass]="alpolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
+    ></i>
+  </button>
+  </div>
+</div>
+<div *ngFor="let obj of lstPolicyBeneficiariesExclude">
+  <div>{{obj.priority}}</div>
+  <div *ngFor="let detail of lstSelectedExcludeObj">
+    <div class="d-flex justify-content-between">
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="false"
+        name="HRObject"
+        [value]="detail"
+        class=""
+      >
+      </codx-vll>
+            <button
+      class="btn btn-icon ms-3"
+      (click)="onClickOpenSelectExcludeObjDetail(detail, obj)"
+    >
+      <i class="icon-edit-one icon-18" 
+      [ngClass]="alpolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
+      ></i>
+    </button>
+    </div>
+    <div *ngIf="obj.orgUnitID && detail == '1'">
+      <span *ngFor="let org of lstOrgUnitID">
+        <span *ngIf="org.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="org.id
+            | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.jobLevel && detail == '2'">
+      <span *ngFor="let joblevel of lstJobLevel">
+        <span *ngIf="joblevel.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="joblevel.id
+            | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.positionID && detail == '3'">
+      <span *ngFor="let position of lstPositionID">
+        <span *ngIf="position.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="position.id
+            | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeTypeID && detail == '4'">
+      <span *ngFor="let empType of lstEmployeeTypeID">
+        <span *ngIf="empType.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="empType.id
+            | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.labourType && detail == '5'">
+      <span *ngFor="let labourType of lstLabourType">
+        <span *ngIf="labourType.rec == obj.recID">
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="false"
+        name="HR022"
+        [value]="labourType.id"
+        ngClass="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.contractTypeID && detail == '6'">
+      <span *ngFor="let contractType of lstContractTypeID">
+        <span *ngIf="contractType.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="contractType.id
+            | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeID && detail == '7'">
+      <span *ngFor="let emp of lstEmployeeID">
+        <span *ngIf="emp.rec == obj.recID"
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="emp.id
+            | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+            | async"
+        >
+        </span>
+      </span>
+    </div>
+    <div *ngIf="obj.employeeStatus && detail == '8'">
+      <span *ngFor="let empStatus of lstEmpStatus">
+        <span *ngIf="empStatus.rec == obj.recID">
+        <codx-vll
+        [showText]="true"
+        [showBgColor]="false"
+        name="HR003"
+        [value]="empStatus.id"
+        ngClass="badge badge-success border-0 ms-2"
+      >
+      </codx-vll>
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+    <codx-label
+    default="Hoặc"
+    name="lblOr"
+    [formModel]="formModel"
+  ></codx-label>
+  </div>
+</div>
+<!-- <codx-combobox-popup
+*ngIf="!isHidden"
+[comboboxName]="currentCbxName"
+[multiple]="true"
+[width]="600"
+[height]="500"
+[value]="currentCbxValue"
+(clickSave)="onClickHideComboboxPopup($event)"
+>
+</codx-combobox-popup> -->
+
+<div class="d-flex justify-content-end">
+  <button
+    type="button"
+    class="btn btn-sm btn-light-primary"
+    (click)="addExcludeObj()"
+  >
+    <i class="icon-add icon-16 ms-n1"></i>
+    <codx-label
+      name="lblAddNew"
+      default="Thêm mới"
+      [formModel]="formModel"
+    ></codx-label>
+  </button>
+</div>
+
+    <!-- <codx-combobox-popup
+    *ngIf="!isHidden && alpolicyObj.hasIncludeObjects"
+    [comboboxName]="'HRObject'"
+    [multiple]="true"
+    [width]="600"
+    [height]="500"
+    [value]="alpolicyObj.includeObjects"
+    (clickSave)="onClickHideComboboxPopup($event)"
+    >
+    </codx-combobox-popup> -->
+
+
+</ng-template>
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">

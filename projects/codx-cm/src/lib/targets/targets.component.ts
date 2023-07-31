@@ -107,6 +107,7 @@ export class TargetsComponent
   data: any;
   schedule: any;
   columnGrids = [];
+  isShow = false;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -130,67 +131,9 @@ export class TargetsComponent
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
-    this.getSchedule();
+    // this.getSchedule();
   }
   ngAfterViewInit(): void {
-    let lst = [];
-
-    for (let i = 0; i < 13; i++) {
-      var tmp = {};
-      if (i == 0) {
-        tmp['field'] = '';
-        tmp['headerText'] = '';
-        tmp['width'] = 350;
-        tmp['template'] = this[`templateMonth${0}`];
-      } else {
-        tmp['field'] = '';
-        tmp['headerText'] = 'Tháng ' + i;
-        tmp['width'] = 175;
-        tmp['template'] = this[`templateMonth${i}`];
-      }
-      lst.push(Object.assign({}, tmp));
-    }
-    this.columnGrids = lst;
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnGrids,
-          hideMoreFunc: true,
-        },
-      },
-      {
-        sameData: false,
-        type: ViewType.schedule,
-        active: false,
-        request2: this.scheduleHeader,
-        request: this.schedules,
-        toolbarTemplate: this.footerButton,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          eventModel: this.scheduleModel,
-          resourceModel: this.scheduleHeaderModel, //resource
-          template: this.cardTemplate,
-          template4: this.resourceHeader,
-          // template5: this.resourceTootip, //tooltip
-          template6: this.mfButton, //header
-          template8: this.contentTmp, //content
-          //template7: this.footerButton,//footer
-          // statusColorRef: 'EP022',
-        },
-      },
-    ];
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -281,7 +224,9 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
-    var year = parseInt(data?.fromDate?.getFullYear());
+    var year = data?.fromDate
+      ? parseInt(data?.fromDate?.getFullYear())
+      : new Date().getFullYear();
     this.year = year;
     this.loadTreeData(year?.toString());
     this.detectorRef.detectChanges();
@@ -302,7 +247,67 @@ export class TargetsComponent
     this.fmTargetLines = formModel;
     this.detectorRef.detectChanges();
   }
-  onLoading(e) {}
+  onLoading(e) {
+    let lst = [];
+
+    for (let i = 0; i < 13; i++) {
+      var tmp = {};
+      if (i == 0) {
+        tmp['field'] = '';
+        tmp['headerText'] = '';
+        tmp['width'] = 350;
+        tmp['template'] = this[`templateMonth${0}`];
+      } else {
+        tmp['field'] = '';
+        tmp['headerText'] = 'Tháng ' + i;
+        tmp['width'] = 175;
+        tmp['template'] = this[`templateMonth${i}`];
+      }
+      lst.push(Object.assign({}, tmp));
+    }
+    this.columnGrids = lst;
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          hideMoreFunc: true,
+        },
+      },
+      // {
+      //   sameData: false,
+      //   type: ViewType.schedule,
+      //   active: false,
+      //   request2: this.scheduleHeader,
+      //   request: this.schedules,
+      //   toolbarTemplate: this.footerButton,
+      //   showSearchBar: false,
+      //   showFilter: false,
+      //   model: {
+      //     eventModel: this.scheduleModel,
+      //     resourceModel: this.scheduleHeaderModel, //resource
+      //     template: this.cardTemplate,
+      //     template4: this.resourceHeader,
+      //     // template5: this.resourceTootip, //tooltip
+      //     template6: this.mfButton, //header
+      //     template8: this.contentTmp, //content
+      //     //template7: this.footerButton,//footer
+      //     // statusColorRef: 'EP022',
+      //   },
+      // },
+    ];
+    this.detectorRef.detectChanges();
+  }
   searchChanged(e) {}
   selectedChange(e) {}
   //#endregion
@@ -363,7 +368,6 @@ export class TargetsComponent
       let dialogModel = new DialogModel();
       dialogModel.DataService = this.view.dataService;
       dialogModel.FormModel = this.view?.formModel;
-      dialogModel.IsFull = true;
       dialogModel.zIndex = 999;
       var obj = {
         action: 'add',
@@ -372,8 +376,8 @@ export class TargetsComponent
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
         '',
-        this.widthWin,
-        this.heightWin,
+        850,
+        850,
         '',
         obj,
         '',
@@ -401,37 +405,6 @@ export class TargetsComponent
                 this.lstDataTree.push(Object.assign({}, data));
               }
             }
-            if (this.schedule) {
-              // if (lstOwners != null && lstOwners?.length > 0) {
-              //   var resource = this.schedule['resourceDataSource'];
-              //   lstOwners.forEach((item) => {
-              //     if (
-              //       !resource?.find(
-              //         (user) => user.salespersonID === item.userID
-              //       )
-              //     ) {
-              //       var tmp = {};
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['ClassName'] = 'e-child-node';
-              //       tmp['Count'] = 0;
-              //       tmp['events'] = 11;
-              //       tmp['positionName'] = item?.positionName;
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['value'] = item?.userID;
-              //       tmp['target'] = 0;
-              //       tmp['text'] = item?.userName;
-              //       tmp['userName'] = item?.userName;
-              //       resource?.push(tmp);
-              //     }
-              //   });
-
-              //   this.schedule['resourceDataSource'] = resource;
-              //   this.schedule['displayResource'] = resource;
-              //   this.view.currentView = this.schedule;
-              //   this.view?.currentView?.refesh();
-              // }
-              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-            }
           }
           this.detectorRef.detectChanges();
         }
@@ -442,42 +415,23 @@ export class TargetsComponent
   async edit(data) {
     let lstOwners = [];
     let lstTargetLines = [];
-    if (this.businessLineID != null) {
-      lstOwners = this.lstOwners;
-      lstTargetLines = this.lstTargetLines;
-      if (this.data != null && this.data?.recID == data?.recID) {
-        this.view.dataService.dataSelected = this.data;
-      } else {
-        var tar = await firstValueFrom(
-          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
-        );
-        if (tar != null) {
-          lstOwners = tar[2];
-          lstTargetLines = tar[1];
-          this.view.dataService.dataSelected = tar[0];
-        }
-      }
-    } else {
-      var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(
-          data?.businessLineID,
-          data.year > 0 ? data.year : data.period
-        )
-      );
-      if (tar != null) {
-        lstOwners = tar[2];
-        lstTargetLines = tar[1];
-        this.view.dataService.dataSelected = tar[0];
-      }
+    var tar = await firstValueFrom(
+      this.cmSv.getTargetAndLinesAsync(
+        data?.businessLineID,
+        data.year > 0 ? data.year : data.period
+      )
+    );
+    if (tar != null) {
+      lstOwners = tar[2];
+      lstTargetLines = tar[1];
+      this.view.dataService.dataSelected = tar[0];
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         let dialogModel = new DialogModel();
         dialogModel.DataService = this.view.dataService;
         dialogModel.FormModel = this.view?.formModel;
-        dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
         var obj = {
           action: 'edit',
@@ -488,8 +442,8 @@ export class TargetsComponent
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
           '',
-          this.widthWin,
-          this.heightWin,
+          850,
+          850,
           '',
           obj,
           '',
@@ -511,10 +465,9 @@ export class TargetsComponent
                 );
                 if (index != -1) {
                   this.lstDataTree[index] = data;
+                } else {
+                  this.lstDataTree.push(Object.assign({}, data));
                 }
-              }
-              if (this.schedule) {
-                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
               }
               // this.lstDataTree.push(Object.assign({}, data));
 
@@ -565,5 +518,15 @@ export class TargetsComponent
 
   targetToFixed(data) {
     return Math.round(data);
+  }
+
+  clickShow(isShow: boolean) {
+    if (this.lstDataTree != null && this.lstDataTree.length > 0) {
+      this.lstDataTree.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
   }
 }

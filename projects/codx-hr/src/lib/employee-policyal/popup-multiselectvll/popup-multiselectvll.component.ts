@@ -51,6 +51,7 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   }
 
   onChangeSelect(event, data){
+    debugger
     if(event.data == true){
       this.lstDataSelected.push(data.value);
     }

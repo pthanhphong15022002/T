@@ -1,0 +1,118 @@
+<codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef"   [headerText]="title"
+  [showHeader]="true" [headerText]="title" [subHeaderText]="subHeaderText" >
+
+  <ng-template #body>
+    <div class="d-flex justify-content-center w-100 pt-2">
+      <ejs-tab id="element">
+        <e-tabitems>
+            <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top">
+                    <span class="fa-solid icon-account_circle me-2"></span>
+                    <span>
+                      <codx-label
+                      class="fw-bold"
+                      default="Thông tin chung"
+                      [formModel]="formModel"
+                      name="lblEmployee"
+                    ></codx-label>
+                    </span>
+
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="d-flex justify-content-center pb-3">
+                    <div class="mt-5 w-100 d-flex justify-content-center">
+                      <div class="w-75">
+                        <div *ngIf="!applyProcess; else process">
+                          <!-- <codx-input
+                          type="combobox"
+                          [refValue]="'Employees'"
+                          [placeholder]="gridViewSetup?.Owner?.description"
+                          (valueChange)="cbxEmpChange($event)"
+                          [crrValue]="ownerOld"
+                        ></codx-input> -->
+                        <codx-input
+                        field="owner"
+                        [formModel]="formModel"
+                        (valueChange)="changeOwner($event)"
+                        [crrValue]="owner"
+                      >
+                      </codx-input>
+                        </div>
+                        <ng-template #process>
+                          <ejs-combobox [dataSource]="listParticipants"
+                          (valueChange)="cbxEmpChange($event)" [fields]="fieldCbxParticipants"
+                          [placeholder]="gridViewSetup?.Owner?.description"
+                          [allowFiltering]='true' [value]="owner"
+                          ></ejs-combobox>
+                        </ng-template>
+
+
+                      <div class="d-flex justify-content-between align-items-center  w-100 pt-5" *ngIf="objectID">
+                        <div class="d-flex flex-row w-75">
+                          <span class="me-4">
+                            <codx-img [objectId]="objectID" [objectType]="'AD_Users'"></codx-img>
+                          </span>
+                          <div class="d-flex flex-column" >
+                            <span class="fs-6 text-dark fw-bold">{{employeeName}}</span>
+                            <span class="text-gray-700">{{positionName}}</span>
+                            <span class="fs-7 text-gray-500">{{orgUnitName}}</span>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-icon btn-light-danger" role="button" (click)="deleteOrg()">
+                          <i class="icon-close"></i>
+                        </button>
+                      </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-top">
+                  <span class="icon-info icon-16 me-2"></span>
+                  <span>
+                    <codx-label
+                    class="fw-bold"
+                    default="Vùng dữ liệu"
+                    [formModel]="formModel"
+                    name="lblInformation"
+                  ></codx-label>
+                  </span>
+
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <div class="d-flex justify-content-center p-5">
+                  <codx-no-data></codx-no-data>
+                </div>
+              </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+
+
+  </ng-template>
+
+
+  <ng-template #footer>
+    <!--Footer-->
+      <div class="d-flex justify-content-center">
+        <div class="my-3 d-flex align-items-center">
+          <button type="button" (click)="cancel()"
+            class="btn btn-outline-primary">
+            <codx-label name="lblCancel" default="Hủy"></codx-label>
+          </button>
+          <button type="button" (click)="onSaveForm()"
+            class="btn btn-primary ms-2">
+            <codx-label name="lblSave" default="Lưu" ></codx-label>
+          </button>
+        </div>
+    </div>
+
+  </ng-template>
+</codx-form>

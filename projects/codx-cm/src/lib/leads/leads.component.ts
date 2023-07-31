@@ -25,6 +25,7 @@ import {
   RequestOption,
   DialogModel,
   DataRequest,
+  DialogRef,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
@@ -36,8 +37,8 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { LeadDetailComponent } from './lead-detail/lead-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
-import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
+import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -66,7 +67,8 @@ export class LeadsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
-
+  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
+  dialogQuestionCopy: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -113,21 +115,27 @@ export class LeadsComponent
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
+  applyProcess: boolean = true;
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
   processId: any;
-
-  readonly applyForLead: string = '5';
   dataDrop: any;
   stepIdClick: any;
   crrStepID: any;
   moreFuncInstance: any;
   dataColums: any;
   viewCrr: any;
-  isLoading = false;
+  paramDefault: any;
   action: any;
+  currencyIDDefault: any;
+  statusDefault:any;
+  valueListStatus: any;
+  isLoading = false;
+
+  readonly applyForLead: string = '5';
+  readonly fieldCbxStatus = { text: 'text', value: 'value'};
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -147,42 +155,43 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
+    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
-        },
-      },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
+    // this.views = [
+    //   {
+    //     type: ViewType.listdetail,
+    //     sameData: true,
+    //     model: {
+    //       template: this.itemTemplate,
+    //       panelRightRef: this.templateDetail,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.kanban,
+    //     active: false,
+    //     sameData: false,
+    //     request: this.request,
+    //     request2: this.resourceKanban,
+    //     toolbarTemplate: this.footerButton,
+    //     model: {
+    //       template: this.cardKanban,
+    //       template2: this.viewColumKaban,
+    //       setColorHeader: true,
+    //     },
+    //   },
+    //   {
+    //     type: ViewType.grid,
+    //     active: false,
+    //     sameData: true,
+    //     model: {
+    //       resources: this.columnGrids,
+    //       template2: this.templateMore,
+    //       // frozenColumns: 1,
+    //     },
+    //   },
+    // ];
   }
   afterLoad() {
     this.request = new ResourceModel();
@@ -201,12 +210,44 @@ export class LeadsComponent
     this.resourceKanban.dataObj = this.dataObj;
   }
 
-  async executeApiCalls() {
+  executeApiCalls() {
     try {
-      await this.getFuncID(this.funcID);
-      await this.getColorReason();
-      await this.getProcessSetting();
+       this.getFuncID(this.funcID);
+       this.getColorReason();
+       this.getCurrentSetting();
+       this.getValuelistStatus();
+
     } catch (error) {}
+  }
+  async getValuelistStatus() {
+    this.cache.valueList('CRM041').subscribe((func) => {
+      if (func) {
+        this.valueListStatus = func.datas.filter(x=> ['2','3','5','7'].includes(x.value)).map(item => ({
+          text: item.text,
+          value: item.value
+      }));
+      }
+    });
+  }
+  async getCurrentSetting(){
+    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+      if (res?.length > 0) {
+        // currnecy
+        let dataParamCurrency = res.filter(
+          (x) => x.category == '4' && !x.transType
+        )[0];
+        if (dataParamCurrency) {
+          this.paramDefault = JSON.parse(dataParamCurrency.dataValue);
+          this.currencyIDDefault = this.paramDefault['DefaultCurrency'];
+        }
+        // applyProcess
+        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          var applyProcessSetting = JSON.parse(dataParam.dataValue);
+          this.applyProcess = applyProcessSetting['ProcessLeadUsed'] == '1';
+        }
+      }
+    });
   }
   async getProcessSetting() {
     this.codxCmService
@@ -236,6 +277,16 @@ export class LeadsComponent
                 template: this.cardKanban,
                 template2: this.viewColumKaban,
                 setColorHeader: true,
+              },
+            },
+            {
+              type: ViewType.grid,
+              active: false,
+              sameData: true,
+              model: {
+                resources: this.columnGrids,
+                template2: this.templateMore,
+                // frozenColumns: 1,
               },
             },
           ];
@@ -333,7 +384,7 @@ export class LeadsComponent
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
-        this.checkMoreReason(data);
+        this.checkMoreReason(data) || !data.applyProcess;
     };
     var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
@@ -350,7 +401,8 @@ export class LeadsComponent
       eventItem.disabled = !data.closed;
     };
     var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['0', '1'].includes(data.status) || data.closed;
+      eventItem.disabled =
+        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
     };
     var isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
@@ -363,7 +415,7 @@ export class LeadsComponent
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
-        (data.status != '13' && this.checkMoreReason(data));
+        (data.status != '13' && this.checkMoreReason(data)) || !data.applyProcess;
     };
     var isDisabledDefault = (eventItem, data) => {
       eventItem.disabled = true;
@@ -547,6 +599,9 @@ export class LeadsComponent
       CM0205_9: (data) => {
         this.popupOwnerRoles(data);
       },
+      CM0205_12: (data) => {
+        this.OpenFormCopy(data);
+      },
     };
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
@@ -617,6 +672,10 @@ export class LeadsComponent
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
       processId: this.processId,
+      gridViewSetup: this.gridViewSetup,
+      applyProcess: this.dataSelected.applyProcess,
+      currencyIDDefault: this.currencyIDDefault,
+      applyProcessSetting: this.applyProcess,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -820,18 +879,14 @@ export class LeadsComponent
             var isCheck = false;
             isCheck = lst.some((x) => !x?.roles?.isOnwer);
             if (isCheck) {
-              this.notificationsService.notifyCode(
-                'CM027'
-              ); //Đợi mssg
+              this.notificationsService.notifyCode('CM027'); //Đợi mssg
               return;
             } else {
               isCheck = !lst.every(
                 (x) => x.category == '1' || x.category == '2'
               );
               if (!!isCheck) {
-                this.notificationsService.notifyCode(
-                  'CM030'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM030'); //Đợi mssg
                 return;
               }
             }
@@ -839,15 +894,11 @@ export class LeadsComponent
             lst.forEach((element) => {
               if (!['0', '1'].includes(element?.status) && !isCheck) {
                 isCheck = true;
-                this.notificationsService.notifyCode(
-                  'CM028'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM028'); //Đợi mssg
                 return;
               } else if (element.closed && !isCheck) {
                 isCheck = true;
-                this.notificationsService.notifyCode(
-                  'CM029'
-                );//Đợi mssg
+                this.notificationsService.notifyCode('CM029'); //Đợi mssg
                 return;
               }
             });
@@ -872,8 +923,8 @@ export class LeadsComponent
           }
         }
         break;
-        default:
-          break;
+      default:
+        break;
     }
     console.log('gộp: ', e);
   }
@@ -1106,12 +1157,13 @@ export class LeadsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       startControl: data.steps.startControl,
+      applyProcess: data.applyProcess,
     };
     var dialog = this.callfc.openForm(
-      PopupOwnerDealComponent,
+      PopupAssginDealComponent,
       '',
-      500,
-      280,
+      750,
+      400,
       '',
       obj,
       '',
@@ -1157,5 +1209,55 @@ export class LeadsComponent
       option
     );
     popup.closed.subscribe((e) => {});
+  }
+  checkApplyProcess(data){
+    if(this.applyProcess && ['0', '1'].includes(data.status) &&  data.applyProcess) {
+      return true;
+    }
+    else if( !this.applyProcess && ['0', '1'].includes(data.status) &&  data.applyProcess){
+      return false;
+    }
+    else if( !['0', '1'].includes(data.status) && data.applyProcess ){
+      return true;
+    }
+    else {
+      return data.applyProcess;
+    }
+  }
+  saveCopy() {
+    if(this.dataSelected.status === this.statusDefault) {
+      this.dialogQuestionCopy.close();
+      this.notificationsService.notifyCode('SYS007');
+    }
+    else {
+      var datas = [this.dataSelected.recID,this.statusDefault];
+      this.codxCmService.changeStatus(datas).subscribe((res)=>{
+        if(res[0]){
+          this.dialogQuestionCopy.close();
+          this.dataSelected.status = res[0].status;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      })
+    }
+
+
+  }
+  OpenFormCopy(data) {
+    this.statusDefault = data.status;
+    this.dialogQuestionCopy = this.callfc.openForm(
+      this.popUpQuestionCopy,
+      '',
+      400,
+      200
+    );
+  }
+  valueChangeStatus($event){
+    if($event) {
+      this.statusDefault = $event;
+    }
   }
 }

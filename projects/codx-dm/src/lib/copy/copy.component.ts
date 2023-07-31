@@ -90,12 +90,16 @@ export class CopyComponent implements OnInit {
               }
               this.changeDetectorRef.detectChanges();
             });
-          else this.btnDisabled = true;
+         
         }  
         else 
           this.fullName = this.data.folderName;
       }
-    
+      
+      if(!this.copy)
+      {
+        this.btnDisabled = true;
+      }
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }

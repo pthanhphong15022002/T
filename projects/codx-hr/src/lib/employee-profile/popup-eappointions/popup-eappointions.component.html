@@ -63,7 +63,7 @@
       </div>
       <div class="col-2 d-flex justify-content-end">
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           [showInput]="false"
           field="employeeID"
           [formModel]="formModel"
@@ -92,7 +92,7 @@
     <div class="form-group row">
       <codx-label fiedName="Appoint" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="appoint"
         [formModel]="formModel"
         [Group]="formGroup"
@@ -101,33 +101,10 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label
-          fiedName="EffectedDate"
-          [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="effectedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="expiredDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
+          (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -141,6 +118,7 @@
         ></codx-label>
         <codx-input
           [disabled]="true"
+          (render)="onRenderOldOrgUnitID($event)"
           field="oldOrgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -152,8 +130,9 @@
       <div class="col-6">
         <codx-label fiedName="JobLevel" [formModel]="formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           field="jobLevel"
+          (render)="onRenderJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangeJobLevel($event)"
@@ -164,6 +143,7 @@
         <codx-input
           [disabled]="true"
           field="oldJobLevel"
+          (render)="onRenderOldJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -174,8 +154,9 @@
       <div class="col-6">
         <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           field="positionID"
+          (render)="onRenderPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangePosition($event)"
@@ -189,6 +170,7 @@
         <codx-input
           [disabled]="true"
           field="oldPositionID"
+          (render)="onRenderOldPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -200,6 +182,7 @@
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
+        (render)="onRenderLocationID($event)"
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -213,6 +196,7 @@
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
+        (render)="onRenderOldLocationID($event)"
           [disabled]="true"
           field="oldLocationID"
           [formModel]="formModel"
@@ -221,15 +205,23 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mb-5">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
-      [disabled]="disabledInput"
+        [disabled]="disabledInput"
         field="note"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
     </div>
+
+    <span class="text-primary fw-bold fs-6">
+      <codx-label
+        default="Quyết định"
+        name="lblDecision"
+        [formModel]="formModel"
+      ></codx-label>
+    </span>
 
     <div class="form-group row mt-5">
       <div class="col-6">
@@ -244,7 +236,7 @@
       <div class="col-6">
         <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           field="signedDate"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -252,11 +244,105 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          [disabled]="disabledInput"
+          field="effectedDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          [disabled]="disabledInput"
+          field="expiredDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-5">
+      <codx-label
+        class="fw-bold"
+        fiedName="SignerID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [disabled]="disabledInput"
+        field="signerID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showInput]="false"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="d-flex mb-8" *ngIf="loaded">
+      <div class="d-flex flex-column">
+        <codx-img
+          [width]="35"
+          class="me-4"
+          [objectId]="employeeSign?.employeeID"
+          [referType]="'avt'"
+          [objectName]="employeeSign?.employeeName"
+          [objectType]="'HR_Employees'"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column">
+        <div class="text-dark fw-bold">
+          <span>
+            {{ employeeSign?.employeeName }}
+          </span>
+        </div>
+        <span class="text-gray-700 fs-7" *ngIf="employeeSign?.positionName">{{
+          employeeSign?.positionName
+        }}</span>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column mb-4">
+      <div
+        class="d-flex justify-content-between align-items-center mb-2 form-group"
+      >
+        <codx-label
+          default="File đính kèm"
+          name="lblAttachments"
+          [formModel]="formModel"
+        >
+        </codx-label>
+      </div>
+      <div class="AttachmentFile-group flex-nowrap">
+        <codx-attachment
+          #attachment
+          [objectId]="EAppointionObj?.recID"
+          [objectType]="formModel.entityName"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          [formModel]="formModel"
+          displayThumb="full"
+          showMessage="0"
+        >
+        </codx-attachment>
+      </div>
+    </div>
+    <!-- <div class="form-group">
       <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
       <div class="border-bottom pb-1">
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           field="signerID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -276,13 +362,29 @@
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div>
+    </div> -->
   </ng-template>
 </codx-form>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+  <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
+    <button
+      (click)="popupUploadFile()"
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+    >
+      <span class="icon-cloud_upload btn-text-primary me-2"></span>
+      <codx-label
+        fiedName="lblUploadFile"
+        default="Đính kèm"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+
+    <button
+      class="btn btn-primary"
+      (click)="onSaveForm()"
+      [disabled]="!formModel.currentData.updateColumn"
+    >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

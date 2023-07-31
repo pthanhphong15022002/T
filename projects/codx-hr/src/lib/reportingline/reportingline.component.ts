@@ -22,6 +22,7 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { ReportinglineDetailComponent } from './reportingline-detail/reportingline-detail.component';
 import { ReportinglineOrgChartComponent } from './reportingline-orgchart/reportingline-orgchart.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-reportingline',
@@ -61,6 +62,7 @@ export class ReportinglineComponent extends UIComponent {
     inject: Injector,
     private adService: CodxAdService,
     private notiService: NotificationsService,
+    private shareService: CodxShareService,
   ) {
     super(inject);
   }
@@ -211,6 +213,16 @@ export class ReportinglineComponent extends UIComponent {
           break;
         case 'SYS02':
           this.delete(data);
+          break;
+        default:
+          this.shareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.view.formModel,
+            this.view.dataService,
+            this
+          );
           break;
       }
     }
@@ -374,10 +386,10 @@ export class ReportinglineComponent extends UIComponent {
       this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionId, this.posEmpPageSize, 0, this.searchText])
         .subscribe(res => {
           if (res) {
-            if (index >= 0){
+            if (index >= 0) {
               this.view.dataService.data[index].staffEmp = this.view.dataService.data[index].staffEmp.concat(res[0]);
               this.view.dataService.data[index].staff = res[1];
-            } 
+            }
             if (this.view.dataService.data[index]?.staff <= this.view.dataService.data[index].staffEmp.length) {
               this.scrolling = false;
             } else {
@@ -394,8 +406,10 @@ export class ReportinglineComponent extends UIComponent {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    var totalScroll = ele.offsetHeight + ele.scrollTop;
-    if (this.scrolling && (totalScroll <= ele.scrollHeight + 2) && (totalScroll >= ele.scrollHeight - 2)) {  
+    
+    //var totalScroll = ele.offsetHeight + ele.scrollTop;
+    var totalScroll = ele.clientHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
       this.getEmpListPaging(positionID);
     }
   }
@@ -405,10 +419,10 @@ export class ReportinglineComponent extends UIComponent {
       this.api.execSv<any>('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetListEmpPositionsAsync', [positionID, this.posEmpPageSize, this.posEmpPageIndex, this.searchText])
         .subscribe(res => {
           if (res) {
-            if (index >= 0){
+            if (index >= 0) {
               this.view.dataService.data[index].staffEmp = this.view.dataService.data[index].staffEmp.concat(res[0]);
               this.view.dataService.data[index].staff = res[1];
-            } 
+            }
 
             if (this.view.dataService.data[index]?.staff <= this.view.dataService.data[index].staffEmp.length) {
               this.scrolling = false;
@@ -423,4 +437,5 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
 
+  
 }

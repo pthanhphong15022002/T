@@ -1,22 +1,7 @@
 <ng-container *ngIf="loaded">
-  <div [class]="'detail-form'">
-    <div class="d-flex" *ngIf="!hidenMF && objectID">
-      <button
-        type="button"
-        class="btn btn-sm btn-primary"
-        (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
-      >
-        <i class="icon-person_add_alt_1 icon-16 me-1"></i>
-        <codx-label
-          name="lblQuickAdd"
-          [formModel]="formModelContact"
-          default="Thêm nhanh liên hệ"
-        ></codx-label>
-      </button>
-    </div>
-  </div>
+  
   <div
-    class="codx-listcontact pb-10"
+    class="codx-listcontact pb-6"
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
   >
     <div class="d-flex mb-1" *ngIf="selectAll">
@@ -40,6 +25,22 @@
       </ng-container>
     </div>
   </div>
+  <div [class]="'mb-1'">
+    <div class="d-flex" *ngIf="!hidenMF && objectID">
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+      >
+        <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+        <codx-label
+          name="lblQuickAdd"
+          [formModel]="formModelContact"
+          default="Thêm nhanh liên hệ"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-container>
 
 <ng-template #noData>
@@ -55,6 +56,22 @@
             {{ "SYS011" | mssg | async }}
           </div>
         </div>
+        <!-- <div [class]="'d-flex justify-content-center mt-5'" >
+          <div class="d-flex" *ngIf="!hidenMF && objectID">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+            >
+              <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+              <codx-label
+                name="lblQuickAdd"
+                [formModel]="formModelContact"
+                default="Thêm nhanh liên hệ"
+              ></codx-label>
+            </button>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -66,8 +83,8 @@
     [ngClass]="data.recID == this.currentRecID ? 'user-nav-active' : null"
     class="d-flex align-items-top p-3 border-bottom border-gray-150 has-action-menu-od user-nav-item"
   >
-    <div class="d-flex flex-column w-100 me-3">
-      <div class="d-flex align-items-center">
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-items-center pe-3">
         <div class="me-1" *ngIf="isConvertLeadToCus">
           <input
             type="checkbox"
@@ -129,7 +146,7 @@
         </div>
       </div>
     </div>
-    <div class="w-250px min-w-250px d-flex flex-column">
+    <div class="w-175px min-w-175px d-flex flex-column">
       <div class="mb-1 d-flex align-items-center" *ngIf="data?.mobile">
         <span
           [ngbTooltip]="popupAllowCall"
@@ -196,7 +213,7 @@
         ></span>
       </div>
     </div>
-    <div class="action-menu-od w-100px">
+    <div class="action-menu-od">
       <codx-mfunc
         [hidden]="hidenMF"
         [formModel]="formModelContact"

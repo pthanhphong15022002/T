@@ -23,6 +23,7 @@ import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-s
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-basic-salary',
@@ -79,6 +80,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
   viewActive: string;
+  moment = moment;
+  dateNow = moment().format('YYYY-MM-DD');
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
@@ -186,7 +189,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
           .delete([data], true, (option: RequestOption) =>
             this.beforeDelete(option, data.recID)
           )
-          .subscribe(() => {});
+          .subscribe();
         break;
       //Edit
       case 'SYS03':
@@ -258,7 +261,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     );
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        this.view.dataService.update(res.event).subscribe();
+        // this.view.dataService.update(res.event).subscribe();
+        this.view.dataService.update(res.event[0]).subscribe();
+
+        if (res.event[1]) {
+          this.view.dataService.update(res.event[1]).subscribe();
+        }
         this.df.detectChanges();
       }
     });
@@ -282,6 +290,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         funcID: this.view.funcID,
         salaryObj: data,
         fromListView: true,
+        useForQTNS: true,
       },
       option
     );
@@ -292,7 +301,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         } else if (actionType == 'copy') {
           this.view.dataService.add(res.event).subscribe();
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event).subscribe();
+          res.event[0].emp = res.event.emp;
+          this.view.dataService.update(res.event[0]).subscribe();
         }
         this.df.detectChanges();
       }
@@ -328,14 +338,18 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   onSaveUpdateForm() {
     this.hrService
-      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj)
+      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj, true)
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
-          res.emp = this.currentEmpObj;
+          res[0].emp = this.currentEmpObj;
+          if (res[1]) {
+            res[1].emp = this.currentEmpObj;
+          }
+
           this.hrService
             .addBGTrackLog(
-              res.recID,
+              res[0].recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
@@ -381,26 +395,20 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.dataCategory.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              this.view.function.description +
-                ' - ' +
-                this.itemDetail.decisionNo,
-              ''
-            )
-            .subscribe((result) => {
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.dataCategory,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail, false)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService
@@ -408,10 +416,40 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                         .subscribe();
                     }
                   });
-              } else {
-                this.notify.notifyCode(result?.msgCodeError);
-              }
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.dataCategory.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     this.view.function.description +
+          //       ' - ' +
+          //       this.itemDetail.decisionNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .UpdateEmployeeBasicSalariesInfo(this.itemDetail, false)
+          //         .subscribe((res) => {
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else {
+          //       this.notify.notifyCode(result?.msgCodeError);
+          //     }
+          //   });
         }
       });
   }

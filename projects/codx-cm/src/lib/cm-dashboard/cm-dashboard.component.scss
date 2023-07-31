@@ -109,3 +109,19 @@
 	align-items: center;
 	cursor: pointer;
 }
+.color-note {
+  width:10px;
+  height: 10px;
+}
+.trackball-control-section ellipse[id*=_Trackball_0] {
+  stroke-width: 1 !important;
+}  
+.line-clamp-name {
+  display: inline-block!important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+}

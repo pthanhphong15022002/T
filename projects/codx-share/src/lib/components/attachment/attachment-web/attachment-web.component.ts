@@ -16,9 +16,16 @@ export class AttachmentWebComponent implements AfterViewInit{
   dialog : any;
   tab = 0;
   data:any;
-  listData = [];
+ 
   loaded = false;
   isScroll = true;
+  countItems = 0;
+  idParent:any;
+
+  listData = [];
+  listSelected = [];
+  listBreadCum = [];
+
   constructor(
     private shareService : CodxShareService,
     private folderService : FolderService,
@@ -28,6 +35,8 @@ export class AttachmentWebComponent implements AfterViewInit{
   ) 
   { 
     this.dialog = dialog;
+    this.folderService.options.funcID = "DMT00";
+    this.fileService.options.funcID = "DMT00";
     this.getData();
   }
   
@@ -47,6 +56,26 @@ export class AttachmentWebComponent implements AfterViewInit{
   activeTab(index:any)
   {
     this.tab = index;
+    this.listSelected = [];
+    this.listData = [];
+    this.listBreadCum = [];
+    this.countItems = 0;
+    this.isScroll = true;
+    //Tài liệu của tôi
+    if(index == 1)
+    {
+      this.folderService.options.funcID = "DMT03";
+      this.fileService.options.funcID = "DMT03";
+      this.getDataMe("");
+      this.getDataFiles("");
+    }
+    //Kho tài liệu
+    else if(index == 0)
+    {
+      this.folderService.options.funcID = "DMT00";
+      this.fileService.options.funcID = "DMT00";
+      this.getDataMe(this.idParent);
+    }
   }
 
   getData()
@@ -54,17 +83,31 @@ export class AttachmentWebComponent implements AfterViewInit{
     this.folderService.getFolders("").subscribe((res) => {
       if(res && res[0])
       {
+        this.idParent = res[0][0].recID;
         this.folderService.options.pageLoading = true;
-        this.folderService.getFolders(res[0][0].recID).subscribe(item=>{
-          this.data = item[0];
-          this.setDataService();
-          this.loaded = true;
-        });
+        this.getDataMe(this.idParent);
       }
       else this.loaded = true;
     });
   }
 
+  getDataMe(id:any)
+  {
+    this.loaded = false;
+    this.folderService.getFolders(id).subscribe((res) => {
+      if(res && res[0])
+      {
+        this.data = res[0];
+        this.setDataService();
+        this.loaded = true;
+        if(this.folderService.options.funcID == "DMT03")
+        {
+          this.listData = this.listData.concat(res[0]);
+        }
+      }
+      else this.loaded = true;
+    });
+  }
   setDataService()
   {
     // this.treeview.dataService.service = "DM";
@@ -78,10 +121,36 @@ export class AttachmentWebComponent implements AfterViewInit{
   {
     if(e && e?.data)
     {
-      this.listData = e?.data?.items
+      this.countItems = 0;
+      this.listSelected = [];
+      this.listData = e?.data?.items;
       this.getDataFiles(e?.data?.recID)
+      var breadCumb = this.treeview.getBreadCumb(e?.data?.recID);
+      this.listBreadCum = breadCumb.reverse();
     }
-    
+  }
+
+  changeBreadCum(data:any)
+  {
+    this.treeview.getCurrentNode(data.id);
+  }
+
+  selectedFiles(e:any , data:any)
+  {
+    if(e.data) {
+      this.countItems ++;
+      this.listSelected.push(data);
+    }
+    else {
+      this.countItems --;
+      this.listSelected = this.listSelected.filter(x=>x.recID != data.recID);
+    }
+  }
+
+  selectedFolder(data:any)
+  {
+    if(!data.folderName) return;
+    this.treeview.getCurrentNode(data.recID);
   }
 
   getDataFiles(id:any)
@@ -90,7 +159,6 @@ export class AttachmentWebComponent implements AfterViewInit{
     this.fileService.GetFiles(id).subscribe((res) => {
       if (res && res[0])
       {
-        debugger
         this.listData = this.listData.concat(res[0]);
       }
     });
@@ -105,5 +173,10 @@ export class AttachmentWebComponent implements AfterViewInit{
 
   getThumbnail(data:any) {
     return `../../../assets/codx/dms/${this.shareService.getIconFile(data.extension)}`; //this.getAvatar(ext);
+  }
+
+  onSave()
+  {
+    this.dialog.close(this.listSelected);
   }
 }

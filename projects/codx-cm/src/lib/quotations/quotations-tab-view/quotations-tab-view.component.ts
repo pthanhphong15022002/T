@@ -91,6 +91,7 @@ export class QuotationsTabViewComponent
   itemSelected: any;
   popupView: DialogRef;
   isNewVersion: boolean;
+  oldVersion: any;
 
   constructor(
     private inject: Injector,
@@ -99,7 +100,7 @@ export class QuotationsTabViewComponent
     private codxShareService: CodxShareService,
     private routerActive: ActivatedRoute,
     private notiService: NotificationsService,
-    private codxCM: CodxCmService,
+    private codxCmService: CodxCmService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -239,7 +240,23 @@ export class QuotationsTabViewComponent
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   add() {
@@ -289,6 +306,7 @@ export class QuotationsTabViewComponent
       action: action,
       headerText: action == 'add' ? this.titleActionAdd : this.titleAction,
       copyToRecID: copyToRecID,
+      isNewVersion: this.isNewVersion,
     };
     let option = new DialogModel();
     option.IsFull = true;
@@ -307,8 +325,16 @@ export class QuotationsTabViewComponent
     dialog.closed.subscribe((e) => {
       if (e?.event) {
         this.listQuotations.push(e.event);
-        if (this.isNewVersion) this.isNewVersion = false;
+        if (this.isNewVersion && this.oldVersion) {
+          this.oldVersion.newVerCreated = true;
+          let idx = this.listQuotations.findIndex(
+            (x) => x.recID == this.oldVersion.recID
+          );
+          if (idx != -1) this.listQuotations[idx] = this.oldVersion;
+          this.oldVersion = null;
+        }
       }
+      this.isNewVersion = false;
     });
   }
 
@@ -338,6 +364,7 @@ export class QuotationsTabViewComponent
       option
     );
     dialog.closed.subscribe((e) => {
+      if (this.isNewVersion) this.isNewVersion = false;
       if (e?.event) {
         let dataUp = e?.event;
         let idxUp = this.listQuotations.findIndex(
@@ -364,22 +391,18 @@ export class QuotationsTabViewComponent
           data[field] = dataCopy[field];
         });
       }
+
+      if (this.isNewVersion) {
+        data.revision = dataCopy.revision;
+        data.versionNo = dataCopy.versionNo;
+        data.versionName = dataCopy.versionName;
+        data.status = '0';
+        data.approveStatus = '1';
+        data.approvedDate = null;
+        data.refID = dataCopy.recID;
+      }
       this.quotation = data;
       this.openPopup(this.quotation, 'copy', copyToRecID);
-      // if (!this.quotation.quotationsID) {
-      //   this.api
-      //     .execSv<any>(
-      //       'SYS',
-      //       'AD',
-      //       'AutoNumbersBusiness',
-      //       'GenAutoNumberAsync',
-      //       [this.formModel.funcID, this.formModel.entityName, 'QuotationsID']
-      //     )
-      //     .subscribe((id) => {
-      //       res.quotationID = id;
-      //       this.openPopup(this.quotation, 'copy', copyToRecID);
-      //     });
-      // } else this.openPopup(this.quotation, 'copy', copyToRecID);
     });
   }
 
@@ -457,6 +480,7 @@ export class QuotationsTabViewComponent
     switch (dt.status) {
       case '4':
       case '2':
+        this.oldVersion = JSON.parse(JSON.stringify(data));
         dt.versionNo =
           dt.versionNo[0] + (Number.parseInt(dt.versionNo.slice(1)) + 1);
         dt.revision = 0;
@@ -480,106 +504,87 @@ export class QuotationsTabViewComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCM.getDeals(dt.dealID).subscribe((deals) => {
-      if (deals) {
-        this.codxCM.getProcess(deals.processID).subscribe((process) => {
-          if (process) {
-            this.codxCM
-              .getESCategoryByCategoryID(process.processNo)
-              .subscribe((res) => {
-                if (res.eSign) {
-                  //kys soos
-                } else {
-                  this.release(dt, res.processID);
-                }
-              });
-          } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
-          }
-        });
-      } else {
-        this.notiService.notify(
-          'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-          '3'
-        );
-      }
-    });
-  }
-  //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-        else {
-          this.itemSelected.approveStatus = '3';
-          this.view.dataService.update(this.itemSelected).subscribe();
-          // if (this.kanban) this.kanban.updateCard(this.itemSelected);
-          this.codxCM
-            .updateApproveStatus('DealsBusiness', data?.recID, '3')
-            .subscribe();
-          this.notiService.notifyCode('ES007');
+    this.codxCmService
+      .getESCategoryByCategoryID('ES_CM0501')
+      .subscribe((res) => {
+        if (!res) {
+          this.notiService.notifyCode('ES028');
+          return;
+        }
+
+        if (res.eSign) {
+          //kys soos
+        } else {
+          this.release(dt, res);
         }
       });
+  }
+  //Gửi duyệt
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback
+    );
+  }
+  //call Back
+  releaseCallback(res: any) {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+        .subscribe((q) => {
+          if (q) {
+            this.itemSelected = q;
+            this.view.dataService.update(this.itemSelected).subscribe();
+          }
+          this.notiService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.codxCM.getProcess(dt.processID).subscribe((process) => {
-          if (process) {
-            this.codxCM
-              .getESCategoryByCategoryID(process.processNo)
-              .subscribe((res2: any) => {
-                if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxShareService
-                      .codxCancel(
-                        'CM',
-                        dt?.recID,
-                        this.view.formModel.entityName,
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          this.itemSelected.approveStatus = '0';
-                          this.codxCM
-                            .updateApproveStatus(
-                              'QuotationsBusiness',
-                              dt?.recID,
-                              '0'
-                            )
-                            .subscribe();
-                          this.notiService.notifyCode('SYS007');
-                        } else this.notiService.notifyCode('SYS021');
-                      });
-                  }
-                }
-              });
-          } else {
-            this.notiService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
-          }
-        });
+        this.codxCmService
+          .getESCategoryByCategoryID('ES_CM0501')
+          .subscribe((res2: any) => {
+            if (res2) {
+              if (res2?.eSign == true) {
+                //trình ký
+              } else if (res2?.eSign == false) {
+                //kí duyet
+                this.codxShareService
+                  .codxCancel(
+                    'CM',
+                    dt?.recID,
+                    this.view.formModel.entityName,
+                    null,
+                    null
+                  )
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.itemSelected.approveStatus = '0';
+                      this.codxCmService
+                        .updateApproveStatus(
+                          'QuotationsBusiness',
+                          dt?.recID,
+                          '0'
+                        )
+                        .subscribe();
+                      this.notiService.notifyCode('SYS007');
+                    } else this.notiService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      } else {
+        this.notiService.notifyCode('DP040');
       }
     });
   }

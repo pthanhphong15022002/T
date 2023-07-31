@@ -34,17 +34,21 @@ export class CodxAcService {
         if (res) this.stores.set('account', res);
       });
 
-    this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
-      .subscribe((res) => {
-        if (res) this.stores.set('account', res);
-      });
+    // this.api
+    //   .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
+    //   .subscribe((res) => {
+    //     if (res) this.stores.set('subobject', res);
+    //   });
   }
 
   getCacheValue(storeName: string, value: string) {
     let v = '';
     if (this.stores.has(storeName)) v = this.stores.get(storeName)[value];
     return v;
+  }
+
+  getGridViewSetup(formName:any,gridViewName:any){
+    return this.cache.gridViewSetup(formName,gridViewName)
   }
 
   setCacheFormModel(formModel: FormModel) {
@@ -63,6 +67,10 @@ export class CodxAcService {
   }
 
   loadData(assemblyName: any, className: any, methodName: any, data: any) {
+    return this.api.exec(assemblyName, className, methodName, data);
+  }
+
+  execApi(assemblyName: any, className: any, methodName: any, data: any){
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
@@ -348,11 +356,6 @@ export class CodxAcService {
       map((data) => JSON.parse(data.dataValue))
     );
   }
-
-  getJournal(journalNo){
-    return this.api
-      .exec<any>('AC', 'JournalsBusiness', 'GetJournalAsync', [journalNo])
-  }
   
   getCompanySetting(){
     return this.cache.companySetting();
@@ -383,16 +386,7 @@ export class CodxAcService {
   }
 
   setPopupSize(dialog: any, width: any, height: any) {
-    dialog.dialog.properties.height = width;
-    dialog.dialog.properties.width = height;
-  }
-
-  validateVourcher(data){
-    return this.api
-    .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
-  }
-  postVourcher(data){
-    return this.api
-    .exec('AC', 'CashPaymentsBusiness', 'PostAsync', [data])
+    dialog.dialog.properties.height = height;
+    dialog.dialog.properties.width = width;
   }
 }
