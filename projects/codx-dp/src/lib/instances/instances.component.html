@@ -22,7 +22,10 @@
 </codx-views>
 <!-- Dashboard -->
 <ng-template #dashBoard>
-  <codx-instance-dashboard [vllStatus]="vllStatus" [processID]="processID"></codx-instance-dashboard>
+  <codx-instance-dashboard
+    [vllStatus]="vllStatus"
+    [processID]="processID"
+  ></codx-instance-dashboard>
 </ng-template>
 
 <!-- KANBAN -->
@@ -241,7 +244,18 @@
 </ng-template>
 
 <ng-template #baseHeaderRightTmp let-data>
-  <span [class]="data.closed ? 'icon-lock text-danger' : ''"> </span>
+  <span
+    [class]="data.closed ? 'icon-lock text-danger' : ''"
+    [ngbTooltip]="TooltipEdit"
+  >
+    <ng-template #TooltipEdit>
+      <codx-label
+        default="Nhiệm vụ đã đóng"
+        name="lblIsClosed"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </ng-template>
+  </span>
 </ng-template>
 
 <ng-template #descTmp let-data>
