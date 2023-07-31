@@ -28,6 +28,7 @@ import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
+import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
 
 @Component({
   selector: 'lib-targets',
@@ -107,6 +108,7 @@ export class TargetsComponent
   data: any;
   schedule: any;
   columnGrids = [];
+  isShow = false;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -332,6 +334,9 @@ export class TargetsComponent
         case 'SYS03':
           this.edit(data);
           break;
+        case 'CM0206_1':
+          this.popupChangeAllocationRate(data);
+          break;
       }
     }
   }
@@ -345,7 +350,22 @@ export class TargetsComponent
             break;
           case 'SYS02':
             if (type == 'tree') res.disabled = true;
-
+            break;
+          case 'SYS03':
+            if (type == 'tree') {
+              if (data.parentID != null) res.disabled = true;
+            }
+            break;
+          case 'CM0206_1':
+            if (type == 'tree') {
+              if (data.parentID == null || data.target == 0) {
+                if (data.parentID == null){
+                  res.disabled = true;
+                }else{
+                  res.isblur = true;
+                }
+              }
+            }
             break;
         }
       });
@@ -404,37 +424,6 @@ export class TargetsComponent
                 this.lstDataTree.push(Object.assign({}, data));
               }
             }
-            if (this.schedule) {
-              // if (lstOwners != null && lstOwners?.length > 0) {
-              //   var resource = this.schedule['resourceDataSource'];
-              //   lstOwners.forEach((item) => {
-              //     if (
-              //       !resource?.find(
-              //         (user) => user.salespersonID === item.userID
-              //       )
-              //     ) {
-              //       var tmp = {};
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['ClassName'] = 'e-child-node';
-              //       tmp['Count'] = 0;
-              //       tmp['events'] = 11;
-              //       tmp['positionName'] = item?.positionName;
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['value'] = item?.userID;
-              //       tmp['target'] = 0;
-              //       tmp['text'] = item?.userName;
-              //       tmp['userName'] = item?.userName;
-              //       resource?.push(tmp);
-              //     }
-              //   });
-
-              //   this.schedule['resourceDataSource'] = resource;
-              //   this.schedule['displayResource'] = resource;
-              //   this.view.currentView = this.schedule;
-              //   this.view?.currentView?.refesh();
-              // }
-              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-            }
           }
           this.detectorRef.detectChanges();
         }
@@ -445,35 +434,17 @@ export class TargetsComponent
   async edit(data) {
     let lstOwners = [];
     let lstTargetLines = [];
-    if (this.businessLineID != null) {
-      lstOwners = this.lstOwners;
-      lstTargetLines = this.lstTargetLines;
-      if (this.data != null && this.data?.recID == data?.recID) {
-        this.view.dataService.dataSelected = this.data;
-      } else {
-        var tar = await firstValueFrom(
-          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
-        );
-        if (tar != null) {
-          lstOwners = tar[2];
-          lstTargetLines = tar[1];
-          this.view.dataService.dataSelected = tar[0];
-        }
-      }
-    } else {
-      var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(
-          data?.businessLineID,
-          data.year > 0 ? data.year : data.period
-        )
-      );
-      if (tar != null) {
-        lstOwners = tar[2];
-        lstTargetLines = tar[1];
-        this.view.dataService.dataSelected = tar[0];
-      }
+    var tar = await firstValueFrom(
+      this.cmSv.getTargetAndLinesAsync(
+        data?.businessLineID,
+        data.year > 0 ? data.year : data.period
+      )
+    );
+    if (tar != null) {
+      lstOwners = tar[2];
+      lstTargetLines = tar[1];
+      this.view.dataService.dataSelected = tar[0];
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -513,10 +484,9 @@ export class TargetsComponent
                 );
                 if (index != -1) {
                   this.lstDataTree[index] = data;
+                } else {
+                  this.lstDataTree.push(Object.assign({}, data));
                 }
-              }
-              if (this.schedule) {
-                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
               }
               // this.lstDataTree.push(Object.assign({}, data));
 
@@ -565,7 +535,52 @@ export class TargetsComponent
   }
   //#endregion
 
+  //#region Month
+  async popupChangeAllocationRate(data) {
+    var lstLinesBySales = [];
+    lstLinesBySales = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'TargetsLinesBusiness',
+        'GetSalesPersonsByBusinessIDAsync',
+        [data?.businessLineID, data?.salespersonID]
+      )
+    );
+    let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view?.formModel;
+    dialogModel.zIndex = 999;
+    var obj = {
+      data: data,
+      title: this.titleAction,
+      lstLinesBySales: lstLinesBySales,
+    };
+    var dialog = this.callfc.openForm(
+      PopupChangeAllocationRateComponent,
+      '',
+      850,
+      850,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {});
+  }
+  //#endregion
+
   targetToFixed(data) {
     return Math.round(data);
+  }
+
+  clickShow(isShow: boolean) {
+    if (this.lstDataTree != null && this.lstDataTree.length > 0) {
+      this.lstDataTree.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
   }
 }

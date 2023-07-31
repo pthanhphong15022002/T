@@ -1193,26 +1193,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
         } else if (total == 1) {
           if (!this.fileUploadList[0]) {
             this.closeBtnUp = false;
-            this.notificationsService.notifyCode(
-              'DM006',
-              0,
-              this.fileUploadList[0].fileName
-            );
+            this.notificationsService.notifyCode('DM006',0,this.fileUploadList[0].fileName);
             return null;
           }
-
           data[0].description = this.description[0];
           data[0].data = '';
 
           if(data[0].uploadId) this.addFile(data[0]);
           else this.addFileLargeLong(data[0]);
           this.lstRawFile = [];
-          //this.addFile(this.fileUploadList[0]);
-
           this.atSV.fileList.next(this.fileUploadList);
-        } else {
-          // this.cacheService.message('DM001')
-          // this.notificationsService.notifyCode("");
+        } 
+        else 
+        {
           this.notificationsService.notify(this.title2);
           this.closeBtnUp = false;
         }
@@ -1517,6 +1510,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
     fileItem.uploadId = retUpload.Data?.UploadId; //"";
     fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
     //fileItem = await this.serviceAddFile(fileItem);
+
+    //Không cần lưu data vào DM
+    if(this.isSaveSelected == "2")
+      return this.fileSave.emit(fileItem);
 
     if (isAddFile) this.addFile(fileItem);
   }
@@ -3404,7 +3401,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
     this.isCopyRight = this.fileUploadList.length;
     this.changeDetectorRef.detectChanges();
-    if (this.isSaveSelected == '1') {
+    if (this.isSaveSelected == '1' || this.isSaveSelected == '2') {
       this.onMultiFileSave();
     }
     return false;
