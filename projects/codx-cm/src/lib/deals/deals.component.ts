@@ -1015,6 +1015,7 @@ export class DealsComponent
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
+      currencyIDDefault: this.currencyIDDefault,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,

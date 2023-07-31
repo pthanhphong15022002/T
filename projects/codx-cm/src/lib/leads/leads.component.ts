@@ -225,7 +225,6 @@ export class LeadsComponent
         this.valueListStatus = func.datas.filter(x=> ['2','3','5','7'].includes(x.value)).map(item => ({
           text: item.text,
           value: item.value
-
       }));
       }
     });
