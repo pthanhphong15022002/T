@@ -168,7 +168,7 @@ export class SalesInvoicesComponent
       });
 
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
-      this.journal = journal;
+      this.salesInvoiceService.journal = this.journal = journal;
     });
   }
 
@@ -311,7 +311,7 @@ export class SalesInvoicesComponent
   }
 
   onChangeMF(mfs: any, data: ISalesInvoice): void {
-    console.log(mfs.filter((f) => !f.disabled));
+    // console.log(mfs.filter((f) => !f.disabled));
     let disabledFuncs: MF[] = [
       MF.GuiDuyet,
       MF.GhiSo,
