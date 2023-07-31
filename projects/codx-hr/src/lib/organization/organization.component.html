@@ -532,7 +532,7 @@
         </ng-container>
         <span
           *ngIf="employees?.length > 1 && employees?.length !== 2"
-          class="multiple-employee rounded-circle w-100"
+          class="multiple-employee rounded-circle w-100 h-28"
           [ngClass]="item?.counts > 100 ? 'px-1' : 'px-2'"
         >
           <span class="text-white fs-7">+{{ item?.counts - 1 }}</span>
@@ -559,7 +559,7 @@
               | filter : searchText : 'employeeName' : '' : ''
           "
         > -->
-          <div class="d-flex align-items-centerp py-1">
+          <div class="d-flex align-items-center py-1 h-50px">
             <codx-img
               [objectId]="emp.employeeID"
               [objectType]="'HR_Employees'"
