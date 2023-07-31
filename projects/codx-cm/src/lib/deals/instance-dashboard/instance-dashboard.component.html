@@ -62,7 +62,7 @@
   <div
     class="h-100"
     id="5"
-    title="Count chart -Cơ hội theo giai đoan"
+    title="Count chart -Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
     style="overflow: hidden"
   >
     <div class="mb-2">
@@ -70,56 +70,32 @@
         class="fs-5 fw-bold"
         name="header-countStep"
         [formModel]="formModel"
-        default="Cơ hội theo giai đoạn"
+        default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
       ></codx-label>
     </div>
-    <div
-      *ngIf="countStep"
-      class="w-100 d-flex justify-content-center"
-      style="position: absolute; left: 25%"
-    >
-      <div class="group-btn" style="z-index: 10">
-        <div
-          [ngClass]="isQuantity ? 'lblDetail' : 'lblRatio'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-          (click)="setQuantity(true)"
-        >
-          <codx-label
-            name="lblDetail"
-            [formModel]="formModel"
-            default="Số lượng"
-          >
-          </codx-label>
-        </div>
-        <div
-          [ngClass]="isQuantity ? 'lblRatio' : 'lblDetail'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-          (click)="setQuantity(false)"
-        >
-          <codx-label
-            name="lblRatio"
-            [formModel]="formModel"
-            default="Tỷ lệ"
-          ></codx-label>
-        </div>
-      </div>
-    </div>
-    <div class="h-100" *ngIf="countStep; else tempNoData">
+    <div class="h-100" *ngIf="dataSourcePy; else tempNoData">
       <ejs-accumulationchart
-        id="donut-container"
-        [tooltip]="tooltip"
-        selectionMode="Point"
-        [annotations]="annotations"
+        id="pyramidcontainer"
+        #pyramid
+        style="display: block; width: 92%"
+        [legendSettings]="legendSettingsPy"
+        [tooltip]="tooltipPy"
       >
-        <e-accumulation-series-collection>
+        <e-accumulation-series-collection> 
           <e-accumulation-series
-            [dataSource]="countStep"
+            name="ConversionRate"
+            [dataSource]="dataSourcePy"
             xName="name"
-            [startAngle]="startAngle"
-            yName="count"
-            [radius]="radius"
-            [innerRadius]="innerRadius"
+            yName="quantity"
+            [neckWidth]="neckWidth"
+            [neckHeight]="neckHeight"
+            [gapRatio]="gapRatio"
+            [emptyPointSettings]="emptyPointSettings"
+            width="70%"
+            height="80%"
+            [explode]="explode"
             [dataLabel]="dataLabel"
+            type="Funnel"
           >
           </e-accumulation-series>
         </e-accumulation-series-collection>
@@ -330,7 +306,7 @@
     </div>
     <div
       style="max-height: 130px; overflow: scroll"
-      *ngIf="countFails?.lenght > 0; else tempNoDataMin"
+      *ngIf="countFails?.length > 0; else tempNoDataMin"
     >
       <div *ngFor="let fails of countFails">
         <div class="mx-2 my-2">

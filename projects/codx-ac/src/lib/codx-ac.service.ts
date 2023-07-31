@@ -386,7 +386,7 @@ export class CodxAcService {
   }
 
   setPopupSize(dialog: any, width: any, height: any) {
-    dialog.dialog.properties.height = width;
-    dialog.dialog.properties.width = height;
+    dialog.dialog.properties.height = height;
+    dialog.dialog.properties.width = width;
   }
 }

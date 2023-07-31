@@ -39,7 +39,7 @@
           <div class="text-gray-600 fs-7 mb-1">
             <span
               [innerHTML]="
-                data?.emp?.positionID
+                data?.emp?.positionID || data?.positionID
                   | formatvalue : view.formModel : 'positionID'
                   | async
               "

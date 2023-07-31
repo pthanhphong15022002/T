@@ -58,6 +58,8 @@ export class PopupAddEmployeeComponent implements OnInit {
   trainLevel: string = '';
   funcID: string = '';
   // orgNote: string = '';
+
+  hasChangedData: boolean = false;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -93,6 +95,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (res) {
             this.data = res;
             this.form.formGroup.patchValue(this.data);
+            this.hasChangedData = false;
           }
         })
     }
@@ -117,6 +120,8 @@ export class PopupAddEmployeeComponent implements OnInit {
     if (event) {
       let field = Util.camelize(event.field);
       let value = event.data;
+      if (this.data[field] !== value)
+        this.hasChangedData = true;
       this.data[field] = value;
 
       switch (field) {
@@ -327,23 +332,28 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   //update data
   update(data: any) {
-    if (data) {
-      this.api
-        .execSv(
-          'HR',
-          'ERM.Business.HR',
-          'EmployeesBusiness',
-          'UpdateWithOrgFieldAsync',
-          [data]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.codxModifiedOn = new Date();
-            this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
-          }
-          this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
-          this.dialogRef.close(res ? res : null);
-        });
+    if (this.hasChangedData) {
+      if (data) {
+        this.api
+          .execSv(
+            'HR',
+            'ERM.Business.HR',
+            'EmployeesBusiness',
+            'UpdateWithOrgFieldAsync',
+            [data]
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.codxModifiedOn = new Date();
+              this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
+            }
+            this.notifySV.notifyCode(res ? 'SYS007' : 'SYS021');
+            this.dialogRef.close(res ? res : null);
+          });
+      }
+    }else {
+      this.notifySV.notifyCode('SYS007');
+      this.dialogRef.close(null);
     }
   }
 

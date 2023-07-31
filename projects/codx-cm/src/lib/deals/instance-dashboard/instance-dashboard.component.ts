@@ -217,34 +217,7 @@ export class InstanceDashboardComponent implements OnInit {
   countOwners;
   countFails;
   countSuscess;
-  productivityOwner = [
-    {
-      name: 'Trương Đặng Ngọc Phúc',
-      percentage: 90,
-      money:5000000,
-    },
-    {
-      name: 'Nguyễn Thanh Dung',
-      percentage: 70,
-      money:5000000,
-    },
-    {
-      name: 'Trần Công Sơn',
-      percentage: 60,
-      money:5000000,
-    },
-    {
-      name: 'Hồ Thị Trang Ngân',
-      percentage: 30,
-      money:5000000,
-    }, {
-      name: 'Lê Nguyên Trí',
-      percentage: 20,
-      money:5000000,
-    },
-
-
-  ]
+  productivityOwner = [];
   productivityYear: ProductivityYear[] = [];
 
   CountInsSteps: any;
@@ -339,7 +312,24 @@ public marker1: Object = {
 };
 tooltip = {};
  
-
+legendSettingsPy = {
+  visible: false,
+  toggleVisibility: false,
+};
+tooltipPy: Object = {
+  header: '',
+  enable: true,
+  format: '${point.x} : <b>${point.y}</b>',
+};
+dataSourcePy;
+neckWidth = '0%';
+neckHeight = '0%';
+gapRatio: number = 0.03;
+emptyPointSettings = {
+  // fill: 'red',
+  // mode: 'Drop',
+};
+explode: boolean = false;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -364,7 +354,7 @@ tooltip = {};
       if (res && res.datas) this.arrVllStatus = res.datas;
     });
     this.funcID = this.router.snapshot.params['funcID'];
-    this.getDataDashboard('ProcessID==@0', this.processID);
+    this.getDataDashboard(null, null);
   }
 
   setQuantity(data) {
@@ -394,23 +384,24 @@ tooltip = {};
   ) {
     let model = new GridModels();
     model.funcID = this.funcID;
-    model.entityName = 'DP_Instances';
+    model.entityName = 'CM_Deals';
     model.predicates = predicates;
     model.dataValues = dataValues;
     let data = await firstValueFrom(
-      this.api.exec('DP', 'InstancesBusiness', 'GetDataDashBoardAsync', [
+      this.api.exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [
         model,
         params,
       ])
     );
     if (data) {
       this.dataDashBoard = data;
-      this.countStep = this.dataDashBoard?.countStep;
-      this.countOwners = this.dataDashBoard?.countsOwners;
+      this.countStep = this.dataDashBoard?.countsBussinessLines;
+      this.countOwners = this.dataDashBoard?.countsOwnersTopLowToHight;
       this.countFails = this.dataDashBoard?.countsReasonsFails;
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
-      this.countInstances = this.dataDashBoard?.countsInstance;
-      this.productivityOwner = this.dataDashBoard?.productivity;
+      this.countInstances = this.dataDashBoard?.counts;
+      this.productivityOwner = this.dataDashBoard?.countsProductivityOwner;
+      this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
 
       let counts = this.dataDashBoard?.counts;
       for (var prop in counts) {

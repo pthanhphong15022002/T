@@ -378,7 +378,7 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
-      //  eventItem.disabled = false;
+        // eventItem.disabled = false;
     };
     var isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -1015,6 +1015,7 @@ export class DealsComponent
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
+      currencyIDDefault: this.currencyIDDefault,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1227,7 +1228,7 @@ export class DealsComponent
             if (res.eSign) {
               //kys soos
             } else {
-              this.release(dt, res.processID);
+              this.release(dt, res);
             }
           });
       } else {
@@ -1276,6 +1277,7 @@ export class DealsComponent
   }
   //call Back
   releaseCallback(res: any) {
+     //codxshare ko tra gi ve ca nen call api lai
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       this.codxCmService
@@ -1284,6 +1286,7 @@ export class DealsComponent
           if (q) {
             this.dataSelected = q;
             this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.notificationsService.notifyCode('ES007');
         });
@@ -1676,5 +1679,11 @@ export class DealsComponent
     }
 
     this.loadViewModel();
+  }
+
+  autoStart(event){
+    if (event) {
+      this.startDeal(this.dataSelected);
+    }
   }
 }

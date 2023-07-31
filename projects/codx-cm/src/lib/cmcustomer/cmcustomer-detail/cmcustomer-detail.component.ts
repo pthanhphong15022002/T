@@ -18,10 +18,13 @@ import {
   CacheService,
   AlertConfirmInputConfig,
   NotificationsService,
+  Util,
+  ApiHttpService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
 import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -98,6 +101,7 @@ export class CmCustomerDetailComponent implements OnInit {
     private callFc: CallFuncService,
     private cache: CacheService,
     private cmSv: CodxCmService,
+    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService
   ) {}
@@ -366,5 +370,71 @@ export class CmCustomerDetailComponent implements OnInit {
     } else {
       return data.competitorName;
     }
+  }
+
+  ReadExcel(e) {
+    let file = e?.target?.files[0];
+    let fileRead = new FileReader();
+    let datas = [];
+    fileRead.readAsBinaryString(file);
+
+    fileRead.onload = (e) => {
+      var ex = XLSX.read(fileRead.result, { type: 'binary' });
+      var sheetName = ex.SheetNames;
+
+      let files = XLSX.utils.sheet_to_json(ex.Sheets[sheetName[0]]);
+      datas = files;
+      var lstCustomers = [];
+      var lstContacts = [];
+      var lstAddress = [];
+      for (var item of datas) {
+        var tmpCus = {};
+        var tmpContact = {};
+        var tmpAd = {};
+        tmpCus['recID'] = Util.uid();
+        tmpCus['customerID'] = item['Mã']?.trim();
+        tmpCus['customerName'] = item['Tên khách hàng']?.trim();
+        tmpCus['shortName'] = item['Tên viết tắt']?.trim();
+        tmpCus['address'] = item['Địa chỉ']?.trim();
+        tmpCus['webPage'] = item['Website']?.trim();
+        tmpCus['Owner'] = item['Nhân viên bán hàng'];
+        if (tmpCus['address'] != null && tmpCus['address']?.trim() != '') {
+          tmpAd['recID'] = Util.uid();
+          tmpAd['adressType'] = '6';
+          tmpAd['adressName'] = tmpCus['address'];
+          tmpAd['isDefault'] = true;
+          tmpAd['objectID'] = tmpCus['recID'];
+        }
+
+        if (item['Tên'] != null && item['Tên']?.trim() != '') {
+
+          tmpContact['lastName'] = item['Họ & đệm']?.trim();
+          tmpContact['firstName'] = item['Tên']?.trim();
+          tmpContact['contactName'] =
+            tmpContact['lastName'] + ' ' + tmpContact['firstName'];
+          tmpContact['objectID'] = tmpCus['recID'];
+          tmpContact['objectName'] = tmpCus['customerName'];
+          tmpContact['isDefault'] = true;
+          tmpContact['objectType'] = '1';
+          tmpContact['mobile'] = item['Điện thoại'];
+          tmpContact['personalEmail'] = item['Email'];
+        }
+
+        lstCustomers.push(Object.assign({}, tmpCus));
+        lstContacts.push(Object.assign({}, tmpContact));
+        lstAddress.push(Object.assign({}, tmpAd));
+      }
+      console.log(lstCustomers);
+      console.log(lstContacts);
+      this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'ImportExcelAsync',
+          [lstCustomers, lstContacts, lstAddress]
+        )
+        .subscribe((res) => {});
+    };
   }
 }

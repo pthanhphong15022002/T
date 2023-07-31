@@ -68,13 +68,10 @@
         id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
       >
-        <img
-          src="../assets/themes/ac/default/img/attachment.svg"
-          class="w-20px h-20px me-2"
-        />
+        <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
         <codx-input
           style="width: 100%"
-          class="fw-bold"
+          class="fw-bold border-0"
           [Group]="form.formGroup"
           field="memo"
           [formModel]="form.formModel"
@@ -290,8 +287,8 @@
         service="IV"
         [autoLoad]="false"
         [autoFitColumns]="false"
-        [autoAddRow]="true"
-        (eventAction)="autoAddRowSet($event)"
+        [autoAddRow]="false"
+        (eventAction)="autoAddRow($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"

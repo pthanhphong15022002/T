@@ -1,6 +1,3 @@
-<ng-container *ngIf="isInit">
-  <!-- <ejs-sidebar (close)="onCloseSidebar($event)" type="Slide" #sidebar width="100%" (created)="onCreatedSidebar($event)" id="default-sidebar" style="visibility: hidden" > 
-</ejs-sidebar> -->
   <codx-form #form [body]="body" [footer]="footer" [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment"
     [customToolbar]="subToolbar" [openMore]="false" class="ac-dialog ac-animation-slideRight">
   </codx-form>
@@ -224,7 +221,7 @@
                     </codx-label>
                     <div class="ac-input">
                       <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" disabled="true"
-                        type="text" [formModel]="form.formModel" [crrValue]="dRRef">
+                        type="number" [formModel]="form.formModel" [crrValue]="dRRef">
                       </codx-input>
                     </div>
 
@@ -747,7 +744,7 @@
           [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
           predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
           [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-          [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [preSaveCheck]="true"
+          [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" 
           (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
           (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
         <div #btnRef class="btn-addline">
@@ -775,7 +772,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="loadingform" class="ac-load-grid">
+        <!-- <div *ngIf="loadingform" class="ac-load-grid">
           <ejs-progressbar *ngIf="action == 'edit'" #annotationsave id="load-save-container" type="Circular"
             [maximum]="100" [minimum]="0" [value]="20" width="60" height="60" [animation]="animation"
             [isIndeterminate]="true">
@@ -783,7 +780,7 @@
               <e-progressbar-annotation content=" "> </e-progressbar-annotation>
             </e-progressbar-annotations>
           </ejs-progressbar>
-        </div>
+        </div> -->
       </div>
     </ng-container>
     <!-- <ng-container *ngIf="(form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428')">
@@ -869,14 +866,14 @@
             </div>
           </div>
         </div>
-        <div *ngIf="loadingform" class="ac-load-grid">
+        <!-- <div *ngIf="loadingform" class="ac-load-grid">
           <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
             [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
             <e-progressbar-annotations>
               <e-progressbar-annotation content=" "> </e-progressbar-annotation>
             </e-progressbar-annotations>
           </ejs-progressbar>
-        </div>
+        </div> -->
       </div>
     </ng-container>
   </ng-template>
@@ -927,7 +924,7 @@
     </button>
     </div>
   </div> -->
-    <div ngClass="collape" class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="cashpayment">
+    <div style="display: grid !important;" ngClass="collape" class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="cashpayment">
       <!-- <div class="btn btn-white btn-icon tab-action">
         <span (click)="expand()" class="icon-unfold_more icon-20"></span>
         
@@ -1106,4 +1103,3 @@
     </ng-container>
   </ng-template>
   <!-- End: addline -->
-</ng-container>

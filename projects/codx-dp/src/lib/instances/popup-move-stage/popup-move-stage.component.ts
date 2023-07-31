@@ -68,6 +68,7 @@ export class PopupMoveStageComponent implements OnInit {
   positionName = '';
   userName = '';
   owner = '';
+  ownerName = '';
   stepOld: any;
   firstInstance: any;
   listTaskGroupDone: any = [];
@@ -106,7 +107,7 @@ export class PopupMoveStageComponent implements OnInit {
   processID:any;
   stepID:any;
   probability:any;
-  expectedClosed:any;
+  expectedClosed:any = null;
   isLoad: boolean = false;
   formModelDeal: FormModel = {
     formName: 'CMDeals',
@@ -374,9 +375,6 @@ export class PopupMoveStageComponent implements OnInit {
 
   updateDataInstance(data: any) {
     this.instancesStepOld = data;
-    // if(data.owner ){
-    //   this.owner = data.owner;
-    // }
     this.fieldsNull = this.instancesStepOld.fields.filter((x) => !x.dataValue);
     this.instancesStepOld.actualEnd =  this.checkDuration(this.isDurationControl,this.instancesStepOld?.actualEnd);
     this.listTaskDone = this.instancesStepOld.tasks.filter(
@@ -483,6 +481,8 @@ export class PopupMoveStageComponent implements OnInit {
     var data = [
       this.recID,
       this.stepIdOld,
+      this.owner,
+      this.ownerName,
       this.instancesStepOld,
       listTmpTask,
       listTmpGroup,
@@ -509,36 +509,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   setRoles() {
     var tmp = this.lstParticipants.find((x) => x.userID == this.owner);
-    if (
-      this.instancesStepOld.roles != null &&
-      this.instancesStepOld.roles.length > 0
-    ) {
-      var index = this.instancesStepOld.roles.findIndex(
-        (x) => x.roleType == 'S'
-      );
-      if (index != -1) {
-        if (this.instancesStepOld.roles[index].objectID != this.owner) {
-          this.instancesStepOld.roles[index].objectID = this.owner;
-          this.instancesStepOld.roles[index].objectName = tmp?.userName;
-          this.instancesStepOld.roles[index].objectType = 'U';
-        }
-      } else {
-        var u = new DP_Instances_Steps_Roles();
-        u['objectID'] = this.owner;
-        u['objectName'] = tmp?.userName;
-        u['objectType'] = 'U';
-        u['roleType'] = 'S';
-        this.instancesStepOld.roles.push(u);
-      }
-    } else {
-      this.instancesStepOld.roles = [];
-      var u = new DP_Instances_Steps_Roles();
-      u['objectID'] = this.owner;
-      u['objectName'] = tmp?.userName;
-      u['objectType'] = 'U';
-      u['roleType'] = 'S';
-      this.instancesStepOld.roles.push(u);
-    }
+    this.ownerName = tmp?.userName;
   }
 
   valueChange($event) {
@@ -866,7 +837,7 @@ export class PopupMoveStageComponent implements OnInit {
   checkRadioProgress(event) {
     if (event?.field == "all") {
       if(event?.data){
-        this.progressDefault = false;     
+        this.progressDefault = false;
       }
       setTimeout(() => {
         this.progressAll = event?.data;
@@ -878,7 +849,7 @@ export class PopupMoveStageComponent implements OnInit {
       }
       setTimeout(() => {
         this.progressDefault = event?.data;
-      },0);   
+      },0);
     }
   }
 }

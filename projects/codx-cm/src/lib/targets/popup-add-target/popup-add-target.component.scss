@@ -12,18 +12,15 @@
 
 .table-container {
   overflow-x: auto;
-  max-height: calc(100vh - 450px) !important;
+  max-height: calc(100vh - 500px) !important;
 }
 
+.fixed-width-column-user {
+  width: 370px !important;
+}
 .fixed-width-column {
-  width: 83px !important;
+  width: 120px !important;
 }
-
-.fixed-width-column-user{
-  width: 270px !important;
-
-}
-
 table {
   width: auto;
   table-layout: fixed;
@@ -44,8 +41,11 @@ td {
   text-overflow: ellipsis;
 }
 
+.background {
+  background-color: #e8e4e4 !important;
+}
+
 th {
-  background-color: #ffffff;
   position: sticky;
   left: 0;
   top: 0;
@@ -63,8 +63,9 @@ td:first-child {
   border: none;
   background-color: transparent;
   outline: none;
-  margin-left: -10px;
-  margin-top: -5px;
+  margin-top: 0px;
+  display: flex;
+  justify-content: end;
 }
 
 .user-nav-item.user-nav-active {

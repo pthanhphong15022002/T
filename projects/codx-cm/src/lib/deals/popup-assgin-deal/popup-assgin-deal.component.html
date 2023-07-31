@@ -24,13 +24,30 @@
                   <div class="d-flex justify-content-center pb-3">
                     <div class="mt-5 w-100 d-flex justify-content-center">
                       <div class="w-75">
+                        <div *ngIf="!applyProcess; else process">
+                          <!-- <codx-input
+                          type="combobox"
+                          [refValue]="'Employees'"
+                          [placeholder]="gridViewSetup?.Owner?.description"
+                          (valueChange)="cbxEmpChange($event)"
+                          [crrValue]="ownerOld"
+                        ></codx-input> -->
                         <codx-input
-                        type="combobox"
-                        [refValue]="'Employees'"
-                        placeholder="Tìm kiếm"
-                        (valueChange)="cbxEmpChange($event)"
-                        [crrValue]="cbbEmpData"
-                      ></codx-input>
+                        field="owner"
+                        [formModel]="formModel"
+                        (valueChange)="changeOwner($event)"
+                        [crrValue]="owner"
+                      >
+                      </codx-input>
+                        </div>
+                        <ng-template #process>
+                          <ejs-combobox [dataSource]="listParticipants"
+                          (valueChange)="cbxEmpChange($event)" [fields]="fieldCbxParticipants"
+                          [placeholder]="gridViewSetup?.Owner?.description"
+                          [allowFiltering]='true' [value]="owner"
+                          ></ejs-combobox>
+                        </ng-template>
+
 
                       <div class="d-flex justify-content-between align-items-center  w-100 pt-5" *ngIf="objectID">
                         <div class="d-flex flex-row w-75">
@@ -69,7 +86,9 @@
                 </div>
               </ng-template>
               <ng-template #content>
-                <div class="d-flex justify-content-center p-5"> chị khanh báo thủ 3</div>
+                <div class="d-flex justify-content-center p-5">
+                  <codx-no-data></codx-no-data>
+                </div>
               </ng-template>
           </e-tabitem>
         </e-tabitems>
