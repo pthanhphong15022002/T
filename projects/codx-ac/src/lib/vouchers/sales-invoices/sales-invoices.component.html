@@ -17,6 +17,7 @@
     [dataItem]="data"
     [formModel]="view.formModel"
     (clickMF)="onClickMF($event, data)"
+    (changeDataMF)="onChangeMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
@@ -37,6 +38,7 @@
     typeMF="hover"
     moreFuncCss="me-15"
     (clickMF)="onClickMF($event, data)"
+    (changeDataMF)="onChangeMF($event, data)"
   >
   </codx-temp-full>
 </ng-template>
@@ -101,6 +103,7 @@
     [dataItem]="master"
     [footer]="contentFooter"
     (clickMF)="onClickMF($event, master)"
+    (changeDataMF)="onChangeMF($event, master)"
   >
   </codx-detail-tmp>
 </ng-template>
@@ -138,9 +141,15 @@
 <ng-template #body>
   <div class="d-flex flex-column h-100">
     <div class="d-flex align-items-center justify-content-between mb-2">
-      <span class="fw-bold line-clamp line-clamp-1 fs-4">{{
-        master?.objectName
-      }}</span>
+      <span class="fw-bold line-clamp line-clamp-1 fs-4">
+        <span
+          [innerHTML]="
+            master?.objectName
+              | formatvalue : view.formModel : 'objectName'
+              | async
+          "
+        ></span>
+      </span>
       <codx-vll
         [formModel]="view.formModel"
         field="Status"
