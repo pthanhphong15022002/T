@@ -206,14 +206,15 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .openForm(
             CodxExportAddComponent,
             null,
-            900,
-            700,
+            1100,
+            800,
             null,
             {
               action: val,
               type: this.type,
               refType: this.refType,
               refID: this.refID,
+              formModel: this.formModel
             },
             '',
             option

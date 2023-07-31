@@ -139,6 +139,7 @@ export class PopupAddDealComponent
   functionModule: any;
   paramView: any;
   processIdDefault: string = '';
+  currencyIDDefault: string = '';
 
   // load data form DP
   isLoading: boolean = false;
@@ -161,7 +162,6 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
-
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
 
@@ -170,6 +170,7 @@ export class PopupAddDealComponent
       }
     } else {
       this.deal = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)): this.deal;
+
     }
 
     if (dt?.data.processID) {
@@ -181,11 +182,15 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
-
     if (this.action === this.actionCopy) {
       this.deal.owner = null;
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
+    }
+    if(this.action === this.actionAdd)
+    {
+     this.currencyIDDefault = dt?.data?.currencyIDDefault;
+     this.deal.currencyID = this.currencyIDDefault;
     }
   }
 

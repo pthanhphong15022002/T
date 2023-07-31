@@ -405,37 +405,6 @@ export class TargetsComponent
                 this.lstDataTree.push(Object.assign({}, data));
               }
             }
-            if (this.schedule) {
-              // if (lstOwners != null && lstOwners?.length > 0) {
-              //   var resource = this.schedule['resourceDataSource'];
-              //   lstOwners.forEach((item) => {
-              //     if (
-              //       !resource?.find(
-              //         (user) => user.salespersonID === item.userID
-              //       )
-              //     ) {
-              //       var tmp = {};
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['ClassName'] = 'e-child-node';
-              //       tmp['Count'] = 0;
-              //       tmp['events'] = 11;
-              //       tmp['positionName'] = item?.positionName;
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['value'] = item?.userID;
-              //       tmp['target'] = 0;
-              //       tmp['text'] = item?.userName;
-              //       tmp['userName'] = item?.userName;
-              //       resource?.push(tmp);
-              //     }
-              //   });
-
-              //   this.schedule['resourceDataSource'] = resource;
-              //   this.schedule['displayResource'] = resource;
-              //   this.view.currentView = this.schedule;
-              //   this.view?.currentView?.refesh();
-              // }
-              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-            }
           }
           this.detectorRef.detectChanges();
         }
@@ -446,35 +415,17 @@ export class TargetsComponent
   async edit(data) {
     let lstOwners = [];
     let lstTargetLines = [];
-    if (this.businessLineID != null) {
-      lstOwners = this.lstOwners;
-      lstTargetLines = this.lstTargetLines;
-      if (this.data != null && this.data?.recID == data?.recID) {
-        this.view.dataService.dataSelected = this.data;
-      } else {
-        var tar = await firstValueFrom(
-          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
-        );
-        if (tar != null) {
-          lstOwners = tar[2];
-          lstTargetLines = tar[1];
-          this.view.dataService.dataSelected = tar[0];
-        }
-      }
-    } else {
-      var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(
-          data?.businessLineID,
-          data.year > 0 ? data.year : data.period
-        )
-      );
-      if (tar != null) {
-        lstOwners = tar[2];
-        lstTargetLines = tar[1];
-        this.view.dataService.dataSelected = tar[0];
-      }
+    var tar = await firstValueFrom(
+      this.cmSv.getTargetAndLinesAsync(
+        data?.businessLineID,
+        data.year > 0 ? data.year : data.period
+      )
+    );
+    if (tar != null) {
+      lstOwners = tar[2];
+      lstTargetLines = tar[1];
+      this.view.dataService.dataSelected = tar[0];
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -514,10 +465,9 @@ export class TargetsComponent
                 );
                 if (index != -1) {
                   this.lstDataTree[index] = data;
+                } else {
+                  this.lstDataTree.push(Object.assign({}, data));
                 }
-              }
-              if (this.schedule) {
-                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
               }
               // this.lstDataTree.push(Object.assign({}, data));
 
@@ -570,7 +520,13 @@ export class TargetsComponent
     return Math.round(data);
   }
 
-  clickShow(isShow: boolean){
-
+  clickShow(isShow: boolean) {
+    if (this.lstDataTree != null && this.lstDataTree.length > 0) {
+      this.lstDataTree.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
   }
 }
