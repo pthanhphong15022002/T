@@ -28,6 +28,7 @@ import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
+import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
 
 @Component({
   selector: 'lib-targets',
@@ -333,6 +334,9 @@ export class TargetsComponent
         case 'SYS03':
           this.edit(data);
           break;
+        case 'CM0206_1':
+          this.popupChangeAllocationRate(data);
+          break;
       }
     }
   }
@@ -346,7 +350,22 @@ export class TargetsComponent
             break;
           case 'SYS02':
             if (type == 'tree') res.disabled = true;
-
+            break;
+          case 'SYS03':
+            if (type == 'tree') {
+              if (data.parentID != null) res.disabled = true;
+            }
+            break;
+          case 'CM0206_1':
+            if (type == 'tree') {
+              if (data.parentID == null || data.target == 0) {
+                if (data.parentID == null){
+                  res.disabled = true;
+                }else{
+                  res.isblur = true;
+                }
+              }
+            }
             break;
         }
       });
@@ -513,6 +532,41 @@ export class TargetsComponent
     opt.service = 'CM';
     opt.data = [itemSelected.recID];
     return true;
+  }
+  //#endregion
+
+  //#region Month
+  async popupChangeAllocationRate(data) {
+    var lstLinesBySales = [];
+    lstLinesBySales = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'TargetsLinesBusiness',
+        'GetSalesPersonsByBusinessIDAsync',
+        [data?.businessLineID, data?.salespersonID]
+      )
+    );
+    let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view?.formModel;
+    dialogModel.zIndex = 999;
+    var obj = {
+      data: data,
+      title: this.titleAction,
+      lstLinesBySales: lstLinesBySales,
+    };
+    var dialog = this.callfc.openForm(
+      PopupChangeAllocationRateComponent,
+      '',
+      850,
+      850,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {});
   }
   //#endregion
 
