@@ -234,6 +234,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
         case 'voucherno':
           this.vouchers.voucherNo = e.data;
+          break;
+        case 'refno':
+          this.vouchers.refNo = e.data;
+          break;
+        case 'requester':
+          this.vouchers.requester = e.data;
+          break;
+        case 'requestdate':
+          this.vouchers.requestDate = e.data;
+          break;
       }
     }
   }
