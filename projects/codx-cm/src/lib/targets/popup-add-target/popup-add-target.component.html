@@ -183,7 +183,7 @@
                 (click)="dbClick(item?.userID, 'weight')"
                 class="d-flex justify-content-end user-nav-item"
               >
-                <span class="me-1">{{ item?.weight.toFixed(2) }} </span>
+                <span class="me-1" [innerHTML]="formatNumberWithoutTrailingZeros(item?.weight)"></span>
                 %
               </div>
               <div

@@ -184,9 +184,7 @@ export class PopupAddTargetComponent {
       .subscribe(async (res) => {
         if (res) {
           this.dialog.close([
-            res.save,
-            this.lstOwners,
-            this.data?.businessLineID,
+            res.save
           ]);
         }
       });
@@ -202,9 +200,7 @@ export class PopupAddTargetComponent {
             .subscribe();
 
           this.dialog.close([
-            res.update,
-            this.lstOwners,
-            this.data?.businessLineID,
+            res.update
           ]);
         }
       });
@@ -672,6 +668,14 @@ export class PopupAddTargetComponent {
 
   targetToFixed(data) {
     return data ? this.decimalPipe.transform(data, '1.0-0') : 0;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   sumTarget() {

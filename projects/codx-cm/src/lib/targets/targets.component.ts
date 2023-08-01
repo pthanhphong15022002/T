@@ -25,7 +25,7 @@ import {
 } from 'codx-core';
 import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.component';
 import { DecimalPipe } from '@angular/common';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
 import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
@@ -141,6 +141,7 @@ export class TargetsComponent
   schedule: any;
   columnGrids = [];
   isShow = false;
+  isShowGrid = false;
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
@@ -514,27 +515,19 @@ export class TargetsComponent
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e != null && e?.event != null) {
-          if (e?.event[0] != null && e?.event[0][1] != null) {
-            var data = e?.event[0][1];
-            this.view.dataService.update(data).subscribe();
-            var lstOwners = e?.event[1];
-            var lstTargetLines = e?.event[0][0];
-            if (data.year == this.year) {
-              this.businessLineID = e?.event[2];
-              this.lstTargetLines = lstTargetLines;
-              this.lstOwners = lstOwners;
-              this.data = e?.event[0][2];
-              var index = this.lstDataTree.findIndex(
-                (x) => x.businessLineID == data?.businessLineID
-              );
-              if (index != -1) {
-                this.lstDataTree[index] = data;
-                // this.lstDataTree.splice(index, 1);
-              } else {
-                this.lstDataTree.push(Object.assign({}, data));
-              }
+          var data = e?.event;
+          if (data.year == this.year) {
+            var index = this.lstDataTree.findIndex(
+              (x) => x.businessLineID == data?.businessLineID
+            );
+            if (index != -1) {
+              this.lstDataTree[index] = data;
+              // this.lstDataTree.splice(index, 1);
+            } else {
+              this.lstDataTree.push(Object.assign({}, data));
             }
           }
+
           this.detectorRef.detectChanges();
         }
       });
@@ -579,30 +572,23 @@ export class TargetsComponent
           dialogModel
         );
         dialog.closed.subscribe((e) => {
-          this.businessLineID = null;
           if (!e?.event) this.view.dataService.clear();
           if (e != null && e?.event != null) {
-            if (e?.event[0] != null && e?.event[0][1] != null) {
-              var data = e?.event[0][1];
-              this.view.dataService.update(data).subscribe();
-              if (data.year == this.year) {
-                this.businessLineID = e?.event[2];
-                this.lstTargetLines = e?.event[0][0];
-                this.lstOwners = e?.event[1];
-                this.data = e?.event[0][2];
-                var index = this.lstDataTree.findIndex(
-                  (x) => x.businessLineID == data?.businessLineID
-                );
-                if (index != -1) {
-                  this.lstDataTree[index] = data;
-                } else {
-                  this.lstDataTree.push(Object.assign({}, data));
-                }
+            var data = e?.event;
+            this.view.dataService.update(data).subscribe();
+            if (data.year == this.year) {
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+              } else {
+                this.lstDataTree.push(Object.assign({}, data));
               }
-              // this.lstDataTree.push(Object.assign({}, data));
-
-              this.detectorRef.detectChanges();
             }
+            // this.lstDataTree.push(Object.assign({}, data));
+
+            this.detectorRef.detectChanges();
           }
         });
       });
@@ -677,7 +663,56 @@ export class TargetsComponent
       '',
       dialogModel
     );
-    dialog.closed.subscribe((e) => {});
+    dialog.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      if (e != null && e?.event != null) {
+        if (
+          this.view?.dataService?.data != null &&
+          this.view?.dataService?.data.length > 0
+        ) {
+          var index = this.view?.dataService?.data?.findIndex(
+            (x) => e.event.businessLineID == x.businessLineID
+          );
+          if (index != -1) {
+            var data = this.view?.dataService?.data[index]?.items;
+            if (data != null) {
+              var indexItem = data.findIndex(
+                (x) => x.salespersonID == e?.event.salespersonID
+              );
+              if (indexItem != -1) {
+                data[indexItem] = e.event;
+                this.view.dataService.data[index].items = data;
+              }
+            }
+            if (this.view.dataService.data[index].targetsLines != null) {
+              const targetLines =
+                this.view.dataService.data[index].targetsLines;
+              const updatedItems = [];
+
+              for (const item of targetLines) {
+                let foundLineEv = e.event?.targetsLines.find(
+                  (lineEv) =>
+                    new Date(item.startDate)?.getMonth() + 1 ===
+                      new Date(lineEv.startDate)?.getMonth() + 1 &&
+                    item.salespersonID == lineEv.salespersonID
+                );
+
+                if (foundLineEv) {
+                  Object.assign(item, foundLineEv);
+                }
+
+                updatedItems.push(item);
+              }
+
+              this.view.dataService.data[index].targetsLines = updatedItems;
+            }
+            this.view.dataService
+              .update(this.view.dataService.data[index])
+              .subscribe();
+          }
+        }
+      }
+    });
   }
   //#endregion
 
@@ -696,6 +731,15 @@ export class TargetsComponent
   }
 
   //#region setting grid
+  clickShowGrid(item, isShow: boolean) {
+    if (item != null && item?.items != null) {
+      item?.items.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    item.isCollapse = isShow;
+    this.detectorRef.detectChanges();
+  }
 
   PopoverDetail(e, p: any, emp) {
     let parent = e.currentTarget.parentElement.offsetWidth;

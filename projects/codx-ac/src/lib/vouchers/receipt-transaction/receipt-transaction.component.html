@@ -154,10 +154,10 @@
         </codx-label>
         <span
           class="text-gray-600"
-          #warehouseName
+          #warehouseID
           [innerHTML]="
-            itemSelected?.warehouseName
-              | formatvalue : view.formModel : 'warehouseName' : warehouseName
+            itemSelected?.warehouseID
+              | formatvalue : view.formModel : 'warehouseID' : warehouseID
               | async
           "
         ></span>

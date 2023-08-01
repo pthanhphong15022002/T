@@ -735,11 +735,10 @@
           [default]="'Chi tiết Đối tượng áp dụng'"
       ></codx-label>
   </div>
-  <div class="col-6 d-flex flex-row">
+  <!-- <div class="col-6 d-flex flex-row" *ngIf="lstPolicyBeneficiariesApply.length > 1">
       <button
       class="btn btn-icon ms-3"
       >
-      <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
       <i class="icon-arrow_drop_down icon-32" 
       [ngClass]="alpolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
       ></i>
@@ -747,19 +746,37 @@
     <button
     class="btn btn-icon ms-3"
     >
-    <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+    <i class="icon-arrow_drop_up icon-32" 
+    [ngClass]="alpolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
+    ></i>
+  </button>
+  </div> -->
+</div>
+
+<div *ngFor="let obj of lstPolicyBeneficiariesApply">
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <div></div>
+    <div class="col-6 d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesApply.length > 1">
+      <button
+      class="btn btn-icon ms-3"
+      >
+      <i class="icon-arrow_drop_down icon-32" 
+      [ngClass]="alpolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
+      ></i>
+    </button>
+    <button
+    class="btn btn-icon ms-3"
+    >
     <i class="icon-arrow_drop_up icon-32" 
     [ngClass]="alpolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
     ></i>
   </button>
   </div>
-</div>
-
-<div *ngFor="let obj of lstPolicyBeneficiariesApply">
+  </div>
   <div class="border">
   <div class="d-flex mb-3 fw-bold align-items-center justify-content-between border-bottom">
   <div class="text-primary ms-3">{{obj.priority}}</div>
-  <div class="text-dark me-3 btn btn-icon">x</div>
+  <div class="text-dark me-3 btn btn-icon" (click)="onClickDeleteObject(obj)">x</div>
 </div>
   <div *ngFor="let detail of lstSelectedObj">
     <div class="d-flex justify-content-between">
@@ -997,8 +1014,30 @@
           [default]="'Chi tiết Đối tượng loại trừ'"
       ></codx-label>
   </div>
-  <div class="col-6 d-flex flex-row">
+  <!-- <div class="col-6 d-flex flex-row" *ngIf="lstPolicyBeneficiariesExclude.length > 1">
       <button
+      class="btn btn-icon ms-3"
+      >
+      <i class="icon-arrow_drop_down icon-32" 
+      [ngClass]="alpolicyObj.hasExcludeObjects? 'text-primary':'text-gray-400'"
+      ></i>
+    </button>
+    <button
+    class="btn btn-icon ms-3"
+    >
+    <i class="icon-arrow_drop_up icon-32" 
+    [ngClass]="alpolicyObj.hasExcludeObjects? 'text-primary':'text-gray-400'"
+    ></i>
+  </button>
+  </div> -->
+</div>
+
+<div *ngFor="let obj of lstPolicyBeneficiariesExclude">
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <div></div>
+    <div class="col-6 d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesExclude.length > 1">
+      <button
+      *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesExclude.length"
       class="btn btn-icon ms-3"
       >
       <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
@@ -1008,6 +1047,7 @@
     </button>
     <button
     class="btn btn-icon ms-3"
+    *ngIf="obj.priority < lstPolicyBeneficiariesExclude.length + 1 && obj.priority > 1"
     >
     <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
     <i class="icon-arrow_drop_up icon-32" 
@@ -1015,13 +1055,11 @@
     ></i>
   </button>
   </div>
-</div>
-
-<div *ngFor="let obj of lstPolicyBeneficiariesExclude">
+  </div>
   <div class="border">
     <div class="d-flex mb-3 align-items-center justify-content-between border-bottom">
   <div class="text-primary ms-3">{{obj.priority}}</div>
-  <div class="fw-bold btn btn-icon me-3">x</div>
+  <div class="fw-bold btn btn-icon me-3" (click)="onClickDeleteObject(obj)">x</div>
 </div>
 
   <div *ngFor="let detail of lstSelectedExcludeObj">

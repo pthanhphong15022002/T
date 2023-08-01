@@ -329,6 +329,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
       }
     }
   }
+  
   getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
@@ -363,6 +364,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
     //this.container.documentEditor.documentName = this.data?.fileName; 
     http.send(JSON.stringify(content));
   }
+
   getFile(e: any) {
     if (!e || (e && e.length == 0)) return;
     this.idCrrFile = e[0].recID;

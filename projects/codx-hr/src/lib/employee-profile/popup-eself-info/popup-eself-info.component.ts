@@ -28,6 +28,8 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   saveflag = false;
   isAfterRender = false;
   action: '';
+  trainFieldStr: '';
+  trainLevelStr: '';
   @ViewChild('form') form: CodxFormComponent;
 
   tabInfo: any[] = [
@@ -65,6 +67,52 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.formModel.currentData = this.data;
     this.cr.detectChanges();
     this.isAfterRender = true;
+  }
+
+  renderTrainFieldID(event){
+    this.trainFieldStr = event.component.itemsSelected[0].TrainFieldName;
+  }
+
+  renderTrainLevel(event){
+    debugger
+  }
+
+  valChangeTrainLevel(event){
+    debugger
+    let id = event.data
+    for(let i = 0; i<event.component.dataSource.length; i++){
+      if(event.component.dataSource[i].value == id){
+        this.trainLevelStr = event.component.dataSource[i].text
+      }
+    }
+
+    let trainFieldId = this.data.trainFieldID;
+    let trainLev = this.data.trainLevel;
+
+    if (trainFieldId != null && trainLev != null) {
+      this.data.degreeName = this.trainLevelStr + ' ' + this.trainFieldStr;
+    } else if (trainFieldId) {
+      this.data.degreeName = this.trainFieldStr;
+    } else if (trainLev) {
+      this.data.degreeName = this.trainLevelStr;
+    }
+    this.formGroup.patchValue({ degreeName: this.data.degreeName });
+  }
+
+  valChangeTrainFieldId(event){
+    this.trainFieldStr = event.component.itemsSelected[0].TrainFieldName;
+
+    let trainFieldId = this.data.trainFieldID;
+    let trainLev = this.data.trainLevel;
+
+    if (trainFieldId != null && trainLev != null) {
+      this.data.degreeName = this.trainLevelStr + ' ' + this.trainFieldStr;
+    } else if (trainFieldId) {
+      this.data.degreeName = this.trainFieldStr;
+    } else if (trainLev) {
+      this.data.degreeName = this.trainLevelStr;
+    }
+    this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   setTitle(evt: any){
