@@ -93,6 +93,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   paramDefault: any;
   currencyIDDefault = 'VND';
   exchangeRateDefault = 1;
+  applyApprover = '0';
 
   constructor(
     private inject: Injector,
@@ -141,9 +142,25 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   async loadSetting() {
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
-        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
-        if (dataParam) {
-          this.paramDefault = JSON.parse(dataParam.dataValue);
+        //approver
+        let dataParam4 = res.filter(
+          (x) => x.category == '4' && !x.transType
+        )[0];
+        if (dataParam4) {
+          let dataValue = JSON.parse(dataParam4.dataValue);
+          if (Array.isArray(dataValue)) {
+            let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
+            if (setting) this.applyApprover = setting['ApprovalRule'];
+            debugger;
+          }
+        }
+
+        //tien te
+        let dataParam1 = res.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam1) {
+          this.paramDefault = JSON.parse(dataParam1.dataValue);
           this.currencyIDDefault =
             this.paramDefault['DefaultCurrency'] ?? 'VND';
           this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
@@ -296,28 +313,31 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         switch (res.functionID) {
           //gui duyet
           case 'CM0202_1':
-            if (data.status != '0' && data.status != '4') {
+            if (
+              (data.status != '0' && data.status != '4') ||
+              this.applyApprover != '1'
+            ) {
               res.disabled = true;
             }
             break;
           //huy duyet
           case 'CM0202_2':
-            if (data.status != '1') {
+            if (data.status != '1' || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;
           //tao hop dong
           case 'CM0202_3':
-            if (data.status != '2') {
+            if (data.status != '2' && this.applyApprover == '1') {
               res.isblur = true;
             }
             break;
           //tao version moi
           case 'CM0202_4':
-            if (data.status < 2) {
+            if (data.status < 2 && this.applyApprover == '1') {
               res.isblur = true;
             }
-            if (data?.newVerCreated) {
+            if (data?.newVerCreated || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;

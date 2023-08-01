@@ -744,66 +744,35 @@ export class ContractsComponent extends UIComponent {
   }
 
   //------------------------- Ký duyệt  ----------------------------------------//
-  // approvalTrans(dt) {
-  //   this.cmService.getProcess(dt?.processID).subscribe((process) => {
-  //     if (process) {
-  //       this.cmService
-  //         .getESCategoryByCategoryID(process.processNo)
-  //         .subscribe((res) => {
-  //           if (!res) {
-  //             this.notiService.notifyCode('ES028');
-  //             return;
-  //           }
-  //           if (res.eSign) {
-  //             //kys soos
-  //           } else {
-  //             this.release(dt, res.processID);
-  //           }
-  //         });
-  //     } else {
-  //       this.notiService.notifyCode('DP040');
-  //     }
-  //   });
-  // }
-  // //Gửi duyệt
-  // release(data: any, processID: any) {
-  //   this.codxShareService
-  //     .codxRelease(
-  //       this.view.service,
-  //       data?.recID,
-  //       processID,
-  //       this.view.formModel.entityName,
-  //       this.view.formModel.funcID,
-  //       '',
-  //       data?.title,
-  //       ''
-  //     )
-  //     .subscribe((res2: any) => {
-  //       if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-  //       else {
-  //         this.itemSelected.approveStatus = '3';
-  //         this.view.dataService.update(this.itemSelected).subscribe();
-  //         // if (this.kanban) this.kanban.updateCard(this.itemSelected);
-  //         this.cmService
-  //           .updateApproveStatus('DealsBusiness', data?.recID, '3')
-  //           .subscribe();
-  //         this.notiService.notifyCode('ES007');
-  //       }
-  //     });
-  // }
   approvalTrans(dt) {
-    this.cmService.getESCategoryByCategoryID('ES_CM0502').subscribe((res) => {
-      if (!res) {
-        this.notiService.notifyCode('ES028');
-        return;
-      }
-
-      if (res.eSign) {
-        //kys soos
-      } else {
-        this.release(dt, res);
-      }
-    });
+    if (dt?.processID) {
+      this.cmService.getProcess(dt?.processID).subscribe((process) => {
+        if (process) {
+          this.cmService
+            .getESCategoryByCategoryID(process.processNo)
+            .subscribe((res) => {
+              this.approvalTransAction(dt, res);
+            });
+        } else {
+          this.notiService.notifyCode('DP040');
+        }
+      });
+    } else {
+      this.cmService.getESCategoryByCategoryID('ES_CM0502').subscribe((res) => {
+        this.approvalTransAction(dt, res);
+      });
+    }
+  }
+  approvalTransAction(data, category) {
+    if (!category) {
+      this.notiService.notifyCode('ES028');
+      return;
+    }
+    if (category.eSign) {
+      //kys soos
+    } else {
+      this.release(data, category);
+    }
   }
   //Gửi duyệt
   release(data: any, category: any) {
