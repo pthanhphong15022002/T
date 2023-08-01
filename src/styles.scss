@@ -3482,10 +3482,14 @@ codx-view-list-tree{
     background-color: white;
   }
 } 
-.menu-nav .menu-item >.d-flex.align-items-center:hover{
-  background-color: var(--primary-lightest);
-}
-
-.e-listview .e-list-item.e-active {
-  background-color: #eaeff7;
+.e-pane .aside-menu{
+  .menu-nav .menu-item >.d-flex.align-items-center:hover{
+    background-color: transparent;
+    span{
+      color: var(--gray-600);
+    }
+  }
+  .menu-nav .menu-item .item-selected{
+    color: var(--primary-dark);
+  }
 }
