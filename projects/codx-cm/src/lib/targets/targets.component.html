@@ -276,17 +276,33 @@
           class="i-collapse cursor-pointer icon-22 icon-arrow_drop_down me-2"
         ></span>
       </div>
-      <div
-        class="fw-bold mb-1 mt-1 line-clamp line-clamp-1"
-        [ngbPopover]="item?.title"
-        #p="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="PopoverDetail($event, p, item)"
-        (mouseleave)="p.close()"
-        placement="bottom right top"
-        [popoverClass]="item.recID"
-      >
-        {{ item?.title }}
+      <div class="d-flex flex-column">
+        <div
+          class="fw-bold mb-1 mt-1 line-clamp line-clamp-1"
+          [ngbPopover]="item?.title"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, p, item)"
+          (mouseleave)="p.close()"
+          placement="bottom right top"
+          [popoverClass]="item.recID"
+        >
+          {{ item?.title }}
+        </div>
+        <div
+          class="fw-bold text-gray-600"
+          [innerHTML]="
+            item?.currencyID
+              | formatvalue : view.formModel : 'CurrencyID'
+              | async
+          "
+          [ngbTooltip]="tooltipCurrency"
+        >
+        <ng-template #tooltipCurrency>
+          <codx-label [formModel]="view.formModel" fiedName="CurrencyID" default="Tiền tệ">
+          </codx-label>
+        </ng-template>
+      </div>
       </div>
     </div>
 
@@ -294,7 +310,11 @@
       <ng-container *ngFor="let busi of item?.items">
         <div
           class="d-flex container treeview height-child"
-          *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse && busi.isCollapse"
+          *ngIf="
+            item.businessLineID == busi.businessLineID &&
+            busi.isCollapse &&
+            busi.isCollapse
+          "
         >
           <codx-mfunc
             [formModel]="view.formModel"
