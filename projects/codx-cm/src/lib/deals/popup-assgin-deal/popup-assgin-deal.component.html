@@ -80,7 +80,15 @@
               </ng-template>
               <ng-template #content>
                 <div class="d-flex justify-content-center p-5">
-                  <codx-no-data></codx-no-data>
+                  <!-- <codx-no-data></codx-no-data> -->
+
+                  <codx-input
+                  field="buid"
+                  [formModel]="formModel"
+                  (valueChange)="changeOwner($event)"
+                >
+                </codx-input>
+
                 </div>
               </ng-template>
           </e-tabitem>
