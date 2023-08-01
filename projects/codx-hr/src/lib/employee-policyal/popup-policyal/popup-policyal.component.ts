@@ -135,6 +135,10 @@ export class PopupPolicyalComponent
   grvSetup
   grvSetupPolicyDetail
 
+
+  originPolicyId : any;
+  policyIdEdited = false;
+
   cbxName:any;
   isHidden=true;
 
@@ -199,6 +203,9 @@ export class PopupPolicyalComponent
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    if(this.alpolicyObj && this.actionType == 'edit'){
+      this.originPolicyId = this.alpolicyObj.policyID;
+    }
   }
 
   openFormUploadFile() {
@@ -714,7 +721,9 @@ export class PopupPolicyalComponent
   }
 
   onInputPolicyID(evt){
-
+    if(this.actionType == 'edit'){
+      this.policyIdEdited = true;
+    }
   }
 
   onClickExpandIsMonth(){
@@ -1356,13 +1365,29 @@ export class PopupPolicyalComponent
     this.currentTab = event.nextId;
   }
 
-  onClickDeleteObject(data){
-    if(this.currentTab == ''){
-      
-    }
-    else if(this.currentTab == ''){
+  replace2ObjPriority(arr, obj1, obj2){
+    let priorTemp = obj1.priority 
+    obj1.priority = obj2.priority 
+    obj2.priority = priorTemp
+  }
 
+  onClickDeleteObject(data){
+    debugger
+    if(this.currentTab == 'applyObj'){
+      let index = this.lstPolicyBeneficiariesApply.indexOf(data);
+      if(index != -1){
+        this.lstPolicyBeneficiariesApply.splice(index, 1);
+        this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
+      }
     }
+    else if(this.currentTab == 'subtractObj'){
+      let index = this.lstPolicyBeneficiariesExclude.indexOf(data);
+      if(index != -1){
+        this.lstPolicyBeneficiariesExclude.splice(index, 1);
+        this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
+      }
+    }
+    this.df.detectChanges();
   }
 
   onClickHideComboboxPopup(event){
