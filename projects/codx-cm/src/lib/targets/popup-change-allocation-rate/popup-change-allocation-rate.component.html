@@ -31,7 +31,7 @@
           <span
             class="fw-bold"
             [innerHTML]="
-              targetToFixedWei(data?.target)
+              data?.target
                 | formatvalue : form.formModel : 'Target'
                 | async
             "
@@ -97,7 +97,7 @@
                     (click)="dbClick(item?.lineID, 'weight')"
                     class="d-flex justify-content-end user-nav-item"
                   >
-                    <span class="me-1" [innerHTML]="targetToFixedWei(item?.weight.toFixed(2))"></span>
+                    <span class="me-1" [innerHTML]="formatNumberWithoutTrailingZeros(item?.weight)"></span>
                     %
                   </div>
                   <div

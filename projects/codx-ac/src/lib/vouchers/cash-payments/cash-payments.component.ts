@@ -829,8 +829,8 @@ export class CashPaymentsComponent extends UIComponent {
   print(data: any, reportID: any, reportType: string = 'V') {
     this.api
       .execSv(
-        'rptsys',
-        'Codx.RptBusiniess.SYS',
+        'rptrp',
+        'Codx.RptBusiness.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',
         [reportID, reportType]
