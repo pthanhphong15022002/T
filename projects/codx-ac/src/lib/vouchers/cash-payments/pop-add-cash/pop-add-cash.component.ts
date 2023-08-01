@@ -55,6 +55,7 @@ import {
   ILoadedEventArgs,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
+import { VATInvoices } from '../../../models/VATInvoices.model';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -69,6 +70,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   public gridCash: CodxGridviewV2Component;
   @ViewChild('gridSet')
   public gridSet: CodxGridviewV2Component;
+  @ViewChild('gridVat')
+  public gridVat: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
@@ -117,6 +120,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   modegrid: any;
   cashpaymentline: Array<any> = [];
   settledInvoices: Array<any> = [];
+  vatInvoices: Array<any> = [];
+  oriVatInvoices: Array<any> = [];
   hideFields: Array<any> = [];
   hideFieldsSet: Array<any> = [];
   requireFields = [];
@@ -835,6 +840,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case '3':
         this.popupCash();
         break;
+      case '4':
+        this.addVatInvoice();
+        break;
     }
     this.formAction();
   }
@@ -1136,26 +1144,91 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     });
   }
 
-  popupVat() {
-    let obj = {
-      cashpayment: this.cashpayment,
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'VATInvoices';
-    dataModel.gridViewName = 'grvVATInvoices';
-    dataModel.entityName = 'AC_VATInvoices';
-    opt.FormModel = dataModel;
-    let cashdialog = this.callfc.openForm(
-      PopUpVatComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      opt
-    );
+  addVatInvoice() {
+    this.tabObj.select(2);
+    this.setLineVATDefault();
+    
+    // if (this.gridCash?.arrSelectedRows.length > 0) {
+    //   let data = new VATInvoices();
+    //   let idx = this.gridVat.dataSource.length;
+    //   data.rowNo = idx + 1;
+    //   data.transID = this.cashpayment.recID;
+    //   data.lineID = this.gridCash?.arrSelectedRows[0].recID;
+    //   console.log(data);
+    // }
+    
+    // let obj = {
+    //   cashpayment: this.cashpayment,
+    // };
+    // let opt = new DialogModel();
+    // let dataModel = new FormModel();
+    // dataModel.formName = 'VATInvoices';
+    // dataModel.gridViewName = 'grvVATInvoices';
+    // dataModel.entityName = 'AC_VATInvoices';
+    // opt.FormModel = dataModel;
+    // let cashdialog = this.callfc.openForm(
+    //   PopUpVatComponent,
+    //   '',
+    //   null,
+    //   null,
+    //   '',
+    //   obj,
+    //   '',
+    //   opt
+    // );
+  }
+  setLineVATDefault(){
+    let ins = setInterval(() => {
+      if (this.gridVat) {
+        clearInterval(ins);
+        let data = new VATInvoices();
+        let idx = this.gridVat.dataSource.length;
+        data.rowNo = idx + 1;
+        data.transID = this.cashpayment.recID;
+        if (this.cashpaymentline.length > 0 && this.gridCash?.rowDataSelected) {
+          data.lineID = this.gridCash?.rowDataSelected?.recID;
+        }else{
+          this.setLineDefault();
+          data.lineID = this.dataLine.recID;
+        }          
+        this.gridVat.addRow(data,this.gridVat.dataSource.length);
+        this.dt.detectChanges();
+      }
+      setTimeout(() => {
+        if (ins) clearInterval(ins);
+        this.dt.detectChanges();
+      }, 10000);
+    })
+  }
+  tabSelected(e){
+    if (e.selectedIndex == 2) {
+      if (this.cashpaymentline.length > 0 && this.gridCash?.rowDataSelected) {
+        this.vatInvoices = [...this.oriVatInvoices.filter((x) => x.lineID == this.gridCash?.rowDataSelected?.recID)];
+      }  
+      this.dt.detectChanges();
+    }
+  }
+  onAddNewVat(data){
+    this.oriVatInvoices.push(data);
+    if (!this.gridCash?.rowDataSelected) {
+      this.cashpaymentline.push(this.dataLine);
+      this.gridCash.rowDataSelected = this.dataLine;
+      this.gridCash.refresh();
+      this.dt.detectChanges();
+    }
+    this.acService
+      .execApi('AC', 'VATInvoicesBusiness', 'AddLineVATAsync', [
+        this.gridCash.rowDataSelected,
+        data,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+  onEditVat(data){
+    let idx = this.oriVatInvoices.findIndex((x) => x.recID == data.recID && x.lineID == data.lineID);
+    if (idx > -1) {
+      this.oriVatInvoices[idx] = data;
+    }
   }
   //#endregion
 
@@ -1432,6 +1505,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (this.modegrid) {
       case '1':
         this.setLineDefault();
+        this.gridCash.endEdit();
+        this.gridCash.addRow(this.dataLine, this.gridCash.dataSource.length);
         // idx = this.gridCash.dataSource.length;
         // this.dataLine.rowNo = idx + 1;
         // this.requireFields = this.dataLine.unbounds
@@ -1532,6 +1607,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'edit':
         this.hasSaved = true;
         switch(this.cashpayment.subType){
+          case '9':
           case '1':
             this.acService
             .execApi(
@@ -1743,29 +1819,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   loadSubType(i, ele) {
     switch (i) {
       case '3':
-        ele.hideTab(0, false);
-        ele.hideTab(1, true);
-        this.loadFormSubType('3');
-        break;
       case '4':
         ele.hideTab(0, false);
-        ele.hideTab(1, false);
+        ele.hideTab(1, true);
+        ele.hideTab(2, true);
         this.loadFormSubType('3');
         break;
+      // case '4':
+      //   ele.hideTab(0, false);
+      //   ele.hideTab(1, false);
+      //   this.loadFormSubType('3');
+      //   break;
       case '9':
         ele.hideTab(0, false);
         ele.hideTab(1, false);
+        ele.hideTab(2, false);
         this.loadFormSubType('1');
         break;
       case '1':
       case '11':
         ele.hideTab(0, false);
         ele.hideTab(1, true);
+        ele.hideTab(2, true);
         this.loadFormSubType('1');
         break;
       case '2':
         ele.hideTab(0, true);
         ele.hideTab(1, false);
+        ele.hideTab(2, true);
         this.loadFormSubType('1');
         break;
     }
@@ -2017,8 +2098,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         });
     }
-    this.gridCash.endEdit();
-    this.gridCash.addRow(this.dataLine, this.gridCash.dataSource.length);
   }
 
   calcRemainAmt(totalAmt) {

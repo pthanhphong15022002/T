@@ -281,7 +281,7 @@
         <div
           class="text-gray-700 ms-2"
           *ngIf="data?.memo"
-          [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
+          [innerHTML]="sanitizer.bypassSecurityTrustHtml(data?.memo)"
         ></div>
         <div
           class="text-gray-700 ms-3"

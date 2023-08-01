@@ -3327,7 +3327,7 @@ codx-card-center .card.codx_cardcenter{
 }
 lib-popup-detail{
 .conmement-body{
-    height: calc(100vh - 190px);
+    height: calc(100vh - 196px);
     overflow: auto;
 }
 }
@@ -3482,6 +3482,14 @@ codx-view-list-tree{
     background-color: white;
   }
 } 
-.menu-nav .menu-item >.d-flex.align-items-center:hover{
-  background-color: var(--primary-lightest);
+.e-pane .aside-menu{
+  .menu-nav .menu-item >.d-flex.align-items-center:hover{
+    background-color: transparent;
+    span{
+      color: var(--gray-600);
+    }
+  }
+  .menu-nav .menu-item .item-selected{
+    color: var(--primary-dark);
+  }
 }

@@ -2,7 +2,7 @@ import { concat } from 'rxjs';
 import { change } from '@syncfusion/ej2-grids';
 import { Component, Injector, TemplateRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ButtonModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
@@ -15,7 +15,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   entityName = 'HR_EAnnualLeave';
-  className = 'EAnnualLeaveBusiness';
+  className = 'EAnnualLeavesBusiness';
   method = 'GetListEmployeeAnnualLeaveAsync';
   idField = 'recID';
 
@@ -25,6 +25,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   grvSetup: any;
   grvEDaysOff: any;
   popupLoading: boolean = false;
+  request: any;
 
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
@@ -32,9 +33,12 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   @ViewChild('templateListHRTAL02') templateListHRTAL02?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL02') headerTemplateHRTAL02?: TemplateRef<any>;
 
-  currentEmp;
+  @ViewChild('treeTemplate') treeTemplate: TemplateRef<any>;
+  @ViewChild('rightTemplateHRTAL01') rightTemplateHRTAL01: TemplateRef<any>;
 
-
+  itemSelected: any;
+  console = console;
+  currentView: any;
 
   constructor(
     inject: Injector,
@@ -47,6 +51,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.routerActive.params.subscribe((params: Params) => {
       this.funcID = params['funcID'];
       this.initViewSetting();
+      this.onInit();
+      this.currentView = this.view.dataService.currentView;
     })
   }
   onInit(): void {
@@ -63,6 +69,20 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.getEDaysOffGrvSetUp();
   }
   initViewSetting() {
+    if(this.view){
+      this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'recID';
+      this.view.idField = 'recID';
+    }
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'EAnnualLeavesBusiness';
+    this.request.method = 'GetListEmployeeAnnualLeaveAsync';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ParentID';
+    this.request.idField = 'orgUnitID';
+
     switch (this.funcID) {
       case 'HRTAL01':
         this.views = [
@@ -79,11 +99,14 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             id: '2',
             type: ViewType.tree_masterdetail,
+            request: this.request,
             sameData: false,
-            //active: true,
             model: {
-              // template: this.templateListHRTAL01,
-              // headerTemplate: this.headerTemplateHRTAL01,
+              resizable: true,
+              isCustomize: true,
+              template: this.treeTemplate,
+              panelRightRef: this.rightTemplateHRTAL01,
+              resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
             },
           },
         ];
@@ -103,15 +126,50 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             id: '2',
             type: ViewType.tree_masterdetail,
+            request: this.request,
             sameData: false,
-            //active: true,
             model: {
-              // template: this.templateListHRTAL01,
-              // headerTemplate: this.headerTemplateHRTAL01,
+              resizable: true,
+              isCustomize: true,
+              template: this.treeTemplate,
+              panelRightRef: this.rightTemplateHRTAL01,
+              resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
             },
-          },
+          }
         ];
         break;
+    }
+  }
+  selectedChange(val: any) {
+    this.itemSelected = val.data;
+    //this.detectorRef.detectChanges();
+  }
+  viewChanging(event: any) {
+    if(this.view.currentView.viewModel){
+      this.currentView = this.view.dataService.currentView.ViewModel;
+    }
+    if(this.currentView)
+    this.view.dataService.currentView['ViewModel'] = this.currentView; //test
+
+    if (event?.view?.id === '2' || event?.id === '2') {
+      this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
+    } else if (event?.view?.id === '1' || event?.id === '1') {
+      this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'recID';
+      this.view.idField = 'recID';
+    }
+  }
+  viewChanged(event: any) {
+    if (event?.view?.id === '2' || event?.id === '2') {
+      this.view.dataService.parentIdField = 'ParentID';
+      this.view.dataService.idField = 'orgUnitID';
+      this.view.idField = 'orgUnitID';
+    } else if (event?.view?.id === '1' || event?.id === '1') {
+      this.view.dataService.parentIdField = '';
+      this.view.dataService.idField = 'recID';
+      this.view.idField = 'recID';
     }
   }
   getFunction(funcID: string) {
@@ -129,7 +187,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       });
     }
   }
-  getEDaysOffGrvSetUp(){
+  getEDaysOffGrvSetUp() {
     this.cache.functionList('HRTPro09').subscribe((func: any) => {
       if (func?.formName && func?.gridViewName) {
         this.cache
