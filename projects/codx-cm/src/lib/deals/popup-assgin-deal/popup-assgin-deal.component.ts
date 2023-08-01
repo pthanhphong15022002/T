@@ -63,7 +63,6 @@ constructor(
   this.gridViewSetup = dialogData?.data.gridViewSetup;
   this.formModel = dialogData?.data.formModel;
   this.startControl=  dialogData?.data.startControl
-  this.subHeaderText = 'Công tác quản lý các mảng Dịch vụ hạ tầng, Dịch vụ tiện tích, Dịch vụ Điện nước';
   this.applyProcess && this.promiseAll();
 }
 
