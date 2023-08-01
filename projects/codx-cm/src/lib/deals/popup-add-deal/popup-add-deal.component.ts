@@ -144,6 +144,7 @@ export class PopupAddDealComponent
 
   // load data form DP
   isLoading: boolean = false;
+  isBlock:boolean = true;
   currencyIDOld: string;
   constructor(
     private inject: Injector,
@@ -385,6 +386,7 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if(!this.isBlock) return;
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -461,7 +463,6 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
     }
-
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
     this.executeSaveData();
@@ -1006,5 +1007,9 @@ export class PopupAddDealComponent
   }
   valueTagChange(e) {
     this.deal.tags = e.data;
+  }
+  addFileCompleted(e){
+    this.isBlock = e;
+
   }
 }

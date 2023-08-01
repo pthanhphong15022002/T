@@ -215,7 +215,7 @@ onSaveForm() {
 }
 
 saveOwner(){
-  this.setRoles();
+ this.applyProcess && this.setRoles();
   var datas = [this.recID, this.owner,this.ownerStep, this.startControl];
   if(this.applyFor == "1"){
     this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {

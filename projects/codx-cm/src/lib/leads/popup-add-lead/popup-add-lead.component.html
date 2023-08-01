@@ -168,7 +168,7 @@
         </codx-label>
         <codx-input
           field="companyPhone"
-          type="number"
+          type="text"
           [placeholder]="gridViewSetup?.CompanyPhone?.description"
           [crrValue]="lead?.companyPhone"
           (valueChange)="valueChange($event)"
@@ -187,9 +187,9 @@
         >
         </codx-label>
         <codx-input
-          type="number"
-          [crrValue]="lead?.faxNo"
+          type="text"
           [placeholder]="gridViewSetup?.FaxNo?.description"
+          [crrValue]="lead?.faxNo"
           field="faxNo"
           (valueChange)="valueChange($event)"
         >
