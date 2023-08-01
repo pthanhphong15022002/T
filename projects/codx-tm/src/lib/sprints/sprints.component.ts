@@ -380,7 +380,10 @@ export class SprintsComponent extends UIComponent {
           '',
           dialogModel
         );
-        dialog.beforeClose.subscribe((res) => {
+        dialog.closed.subscribe((res) => {
+          if (res?.event) {
+            this.view.dataService.update(res?.event).subscribe();
+          }
           if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
         });
       }

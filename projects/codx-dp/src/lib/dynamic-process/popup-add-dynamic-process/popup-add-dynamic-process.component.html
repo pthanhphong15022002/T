@@ -1706,7 +1706,6 @@
     </div>
   </div>
 </ng-template>
-
 <ng-template #stage>
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
@@ -1837,8 +1836,10 @@
                 [ngStyle]="{ background: iconReasonSuccess?.textColor }"
               >
                 <i
-                  [class]="iconReasonSuccess?.icon"
-                  [ngStyle]="{ color: iconReasonSuccess?.color }"
+                  [class]="stepSuccess?.icon"
+
+                  [ngStyle]="isDefaultStep ? {} : { color: stepSuccess?.iconColor }
+                "
                 >
                 </i>
               </div>
@@ -1847,7 +1848,7 @@
                 [ngStyle]="{color: setColorTestStep(stepSuccess)}"
               >
                 <div class="fw-bold">
-                  {{ stepNameSuccess }}
+                  {{ stepSuccess?.stepName }}
                 </div>
                 <div class="fs-7 line-clamp line-clamp-1">
                   {{ noteSuccess }}
@@ -1875,8 +1876,8 @@
                 [ngStyle]="{ background: iconReasonFail?.textColor }"
               >
                 <i
-                  [class]="iconReasonFail?.icon"
-                  [ngStyle]="{ color: iconReasonFail?.color }"
+                  [class]="stepFail?.icon"
+                  [ngStyle]="isDefaultStep ? {} : { color: iconReasonFail?.iconColor }"
                 >
                 </i>
               </div>
@@ -1885,7 +1886,7 @@
                 [ngStyle]="{color: setColorTestStep(stepFail)}"
               >
                 <div class="fw-bold">
-                  {{ stepNameFail }}
+                  {{ stepFail?.stepName }}
                 </div>
                 <div class="fs-7 line-clamp line-clamp-1">
                   {{ noteFail }}
@@ -2433,7 +2434,6 @@
   <!-- [crrValue]="field?.rankIcon"
     (valueChange)="valueChangeIcon($event)" -->
 </ng-template>
-
 <ng-template #addStageFooter>
   <div class="d-flex justify-content-end">
     <button
@@ -2447,7 +2447,7 @@
       type="button"
       class="btn btn-primary"
       [disabled]="isSaveStep"
-      (click)="saveStep()"
+      (click)="isEditReason ? editReason() :saveStep()"
     >
       <codx-label
         name="lblSuscess"

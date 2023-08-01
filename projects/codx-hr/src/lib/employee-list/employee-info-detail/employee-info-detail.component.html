@@ -3812,7 +3812,13 @@
                     <div class="w-100">
                       <div class="d-flex align-items-center">
                         <div class="w-100px d-flex justify-content-end">
-                          <span class="text-dark fw-bold">{{ data.benefitAmt }}</span>
+                          <span class="text-dark fw-bold"
+                          [innerHTML]="
+                              data?.benefitAmt
+                                | formatvalue : benefitFormodel : 'benefitAmt'
+                                | async
+                            "
+                          ></span>
                         </div>
                         <div class="w-100px d-flex align-items-center">
                           <span class="text-gray-400 mx-2">/</span>

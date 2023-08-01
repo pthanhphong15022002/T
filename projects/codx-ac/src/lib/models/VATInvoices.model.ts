@@ -53,7 +53,6 @@ export class VATInvoices {
   transID: any;
   umid: any;
   unitPrice: any;
-  isTaxDetail:any;
   vatid:any;
   updateColumn: any;
 }

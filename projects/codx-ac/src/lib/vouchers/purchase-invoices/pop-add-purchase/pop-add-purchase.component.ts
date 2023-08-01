@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   HostListener,
   Injector,
@@ -23,7 +22,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -37,7 +36,6 @@ import { PurchaseInvoiceService } from '../purchase-invoices.service';
   selector: 'lib-pop-add-purchase',
   templateUrl: './pop-add-purchase.component.html',
   styleUrls: ['./pop-add-purchase.component.scss'],
-  // encapsulation: ViewEncapsulation.None,
 })
 export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Constructor
@@ -66,7 +64,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   vatType: string;
   hasSaved: any = false;
   isSaveMaster: any = false;
-  expanded: boolean = false;
   fmVATInvoices: FormModel = {
     entityName: 'AC_VATInvoices',
     formName: 'VATInvoices',
@@ -88,13 +85,11 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   ];
   lockFields: string[];
   voucherNoPlaceholderText$: Observable<string>;
-  journalStateSubject = new BehaviorSubject<boolean>(false);
   acParams: any;
 
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private dt: ChangeDetectorRef,
     private notiService: NotificationsService,
     private journalService: JournalService,
     purchaseInvoiceService: PurchaseInvoiceService,
@@ -106,6 +101,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     this.fmPurchaseInvoicesLines =
       purchaseInvoiceService.fmPurchaseInvoicesLines;
     this.fmVATInvoices = purchaseInvoiceService.fmVATInvoices;
+    this.journal = purchaseInvoiceService.journal;
 
     this.formTitle = dialogData.data?.formTitle;
 
@@ -131,6 +127,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
+    this.vatType = this.journal.subType;
+
+    if (this.journal.assignRule === '2') {
+      this.ignoredFields.push('VoucherNo');
+    }
+
+    this.hiddenFields = this.journalService.getHiddenFields(this.journal);
+
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
@@ -144,23 +148,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.dialog.formModel.gridViewName
       )
       .subscribe((res) => {
-        if (res) {
-          this.grvPurchaseInvoices = res;
-        }
+        this.grvPurchaseInvoices = res;
       });
-
-    this.journalService.getJournal(this.master.journalNo).subscribe((res) => {
-      this.journal = res;
-      this.vatType = this.journal.subType;
-
-      if (this.journal.assignRule === '2') {
-        this.ignoredFields.push('VoucherNo');
-      }
-
-      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-
-      this.journalStateSubject.next(true);
-    });
 
     if (this.isEdit) {
       const options1 = new DataRequest();
@@ -183,7 +172,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit(): void {}
   //#endregion
 
   //#region Event
@@ -250,51 +239,45 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   onGridCreated(e, grid: CodxGridviewV2Component): void {
-    this.journalStateSubject.subscribe((loaded) => {
-      if (!loaded) {
-        return;
-      }
+    if (this.journal.addNewMode === '2') {
+      return;
+    }
 
-      if (this.journal.addNewMode === '2') {
-        return;
+    // ❌ cache problem
+    let toggleFields: string[] = [
+      ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
+      ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
+    ];
+    for (const c of grid.columnsGrid) {
+      if (toggleFields.includes(c.fieldName)) {
+        c.isVisible = true;
+        grid.visibleColumns.push(c);
       }
+    }
+    grid.hideColumns(this.hiddenFields);
 
-      // ❌ cache problem
-      let toggleFields: string[] = [
-        ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
-        ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
-      ];
-      for (const c of grid.columnsGrid) {
-        if (toggleFields.includes(c.fieldName)) {
-          c.isVisible = true;
-          grid.visibleColumns.push(c);
+    for (const v of grid.visibleColumns) {
+      if (v.fieldName === 'DIM1') {
+        if (['1', '2'].includes(this.journal.diM1Control)) {
+          v.predicate = '@0.Contains(DepartmentID)';
+          v.dataValue = `[${this.journal.diM1}]`;
         }
       }
-      grid.hideColumns(this.hiddenFields);
 
-      for (const v of grid.visibleColumns) {
-        if (v.fieldName === 'DIM1') {
-          if (['1', '2'].includes(this.journal.diM1Control)) {
-            v.predicate = '@0.Contains(DepartmentID)';
-            v.dataValue = `[${this.journal.diM1}]`;
-          }
-        }
-
-        if (v.fieldName === 'DIM2') {
-          if (['1', '2'].includes(this.journal.diM2Control)) {
-            v.predicate = '@0.Contains(CostCenterID)';
-            v.dataValue = `[${this.journal.diM2}]`;
-          }
-        }
-
-        if (v.fieldName === 'DIM3') {
-          if (['1', '2'].includes(this.journal.diM3Control)) {
-            v.predicate = '@0.Contains(CostItemID)';
-            v.dataValue = `[${this.journal.diM3}]`;
-          }
+      if (v.fieldName === 'DIM2') {
+        if (['1', '2'].includes(this.journal.diM2Control)) {
+          v.predicate = '@0.Contains(CostCenterID)';
+          v.dataValue = `[${this.journal.diM2}]`;
         }
       }
-    });
+
+      if (v.fieldName === 'DIM3') {
+        if (['1', '2'].includes(this.journal.diM3Control)) {
+          v.predicate = '@0.Contains(CostItemID)';
+          v.dataValue = `[${this.journal.diM3}]`;
+        }
+      }
+    }
   }
 
   onCellChange(e: any) {
@@ -316,17 +299,16 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
   }
 
-  onClickClose() {
+  onClickClose(): void {
     this.dialog.close();
   }
 
-  onDiscard() {
+  onDiscard(): void {
     this.dialog.dataService
       .delete([this.master], true, null, '', 'AC0010', null, null, false)
       .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
+        if (!res.error) {
+          this.resetForm();
         }
       });
   }
@@ -527,6 +509,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       !e.closest('.e-gridcontent')
     ) {
       this.gridPurchaseInvoiceLines.endEdit();
+    }
+
+    if (!e.closest('.card-footer')) {
+      const el = document.querySelector('#footer');
+      el.classList.remove('expand');
+      el.classList.add('collape');
     }
   }
   //#endregion

@@ -60,7 +60,6 @@ export class PopupAddSalesInvoiceComponent
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
-  expanded: boolean = false;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
@@ -74,7 +73,6 @@ export class PopupAddSalesInvoiceComponent
     mode: 'Normal',
   };
   isReturnInvoice: boolean;
-  journalStateSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
@@ -88,6 +86,7 @@ export class PopupAddSalesInvoiceComponent
     super(injector);
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
     this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
+    this.journal = salesInvoiceService.journal;
 
     this.masterService = dialogRef.dataService;
     this.formTitle = dialogData.data.formTitle;
@@ -113,20 +112,14 @@ export class PopupAddSalesInvoiceComponent
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
-    this.journalService.getJournal(this.master.journalNo).subscribe((res) => {
-      this.journal = res;
+    this.editSettings.mode =
+      this.journal.addNewMode == '2' ? 'Dialog' : 'Normal';
 
-      this.editSettings.mode =
-        this.journal.addNewMode == '2' ? 'Dialog' : 'Normal';
+    if (this.journal.assignRule === '2') {
+      this.ignoredFields.push('VoucherNo');
+    }
 
-      if (this.journal.assignRule === '2') {
-        this.ignoredFields.push('VoucherNo');
-      }
-
-      this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-
-      this.journalStateSubject.next(true);
-    });
+    this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
     if (this.isEdit) {
       const options = new DataRequest();
@@ -243,51 +236,45 @@ export class PopupAddSalesInvoiceComponent
   onCreate(e): void {
     console.log(this.grid);
 
-    this.journalStateSubject.subscribe((loaded) => {
-      if (!loaded) {
-        return;
-      }
+    if (this.journal.addNewMode === '2') {
+      return;
+    }
 
-      if (this.journal.addNewMode === '2') {
-        return;
+    // ❌ cache problem
+    let toggleFields: string[] = [
+      ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
+      ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
+    ];
+    for (const c of this.grid.columnsGrid) {
+      if (toggleFields.includes(c.fieldName)) {
+        c.isVisible = true;
+        this.grid.visibleColumns.push(c);
       }
+    }
+    this.grid.hideColumns(this.hiddenFields);
 
-      // ❌ cache problem
-      let toggleFields: string[] = [
-        ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
-        ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
-      ];
-      for (const c of this.grid.columnsGrid) {
-        if (toggleFields.includes(c.fieldName)) {
-          c.isVisible = true;
-          this.grid.visibleColumns.push(c);
+    for (const v of this.grid.visibleColumns) {
+      if (v.fieldName === 'DIM1') {
+        if (['1', '2'].includes(this.journal.diM1Control)) {
+          v.predicate = '@0.Contains(DepartmentID)';
+          v.dataValue = `[${this.journal.diM1}]`;
         }
       }
-      this.grid.hideColumns(this.hiddenFields);
 
-      for (const v of this.grid.visibleColumns) {
-        if (v.fieldName === 'DIM1') {
-          if (['1', '2'].includes(this.journal.diM1Control)) {
-            v.predicate = '@0.Contains(DepartmentID)';
-            v.dataValue = `[${this.journal.diM1}]`;
-          }
-        }
-
-        if (v.fieldName === 'DIM2') {
-          if (['1', '2'].includes(this.journal.diM2Control)) {
-            v.predicate = '@0.Contains(CostCenterID)';
-            v.dataValue = `[${this.journal.diM2}]`;
-          }
-        }
-
-        if (v.fieldName === 'DIM3') {
-          if (['1', '2'].includes(this.journal.diM3Control)) {
-            v.predicate = '@0.Contains(CostItemID)';
-            v.dataValue = `[${this.journal.diM3}]`;
-          }
+      if (v.fieldName === 'DIM2') {
+        if (['1', '2'].includes(this.journal.diM2Control)) {
+          v.predicate = '@0.Contains(CostCenterID)';
+          v.dataValue = `[${this.journal.diM2}]`;
         }
       }
-    });
+
+      if (v.fieldName === 'DIM3') {
+        if (['1', '2'].includes(this.journal.diM3Control)) {
+          v.predicate = '@0.Contains(CostItemID)';
+          v.dataValue = `[${this.journal.diM3}]`;
+        }
+      }
+    }
   }
 
   onCellChange(e): void {
@@ -494,6 +481,12 @@ export class PopupAddSalesInvoiceComponent
       !e.closest('.e-gridcontent')
     ) {
       this.grid.endEdit();
+    }
+
+    if (!e.closest('.card-footer')) {
+      const el = document.querySelector('#footer');
+      el.classList.remove('expand');
+      el.classList.add('collape');
     }
   }
   //#endregion

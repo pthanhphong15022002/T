@@ -36,7 +36,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
   moduleID: any;
   postType: any;
   validate: any = 0;
-  itemposting: IVPostingAccounts;
+  itemposting: any;
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -60,7 +60,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.formType = dialogData.data?.formType;
     this.subheaderText = dialogData.data?.subheaderText;
     this.cache
-      .gridViewSetup('IVPostingAccounts', 'grvIVPostingAccounts')
+      .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
       .subscribe((res: []) => {
         if (res) {
           this.gridViewSetup = res;
@@ -81,20 +81,20 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.itemposting[e.field] = e.data;
   }
   valueChangeCust(e: any) {
-    this.itemposting.custSelection = '';
-    if (e.field == 'custLevel' && e.data == '3') {
-      this.gridViewSetup['CustSelection'].isRequire = false;
+    this.itemposting.objectValue = '';
+    if (e.field == 'objectLevel' && e.data == '3') {
+      this.gridViewSetup['ObjectValue'].isRequire = false;
     } else {
-      this.gridViewSetup['CustSelection'].isRequire = true;
+      this.gridViewSetup['ObjectValue'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
   }
   valueChangeItemLevel(e: any) {
-    this.itemposting.itemSelection = '';
+    this.itemposting.itemValue = '';
     if (e.data == '4') {
-      this.gridViewSetup['ItemSelection'].isRequire = false;
+      this.gridViewSetup['ItemValue'].isRequire = false;
     } else {
-      this.gridViewSetup['ItemSelection'].isRequire = true;
+      this.gridViewSetup['ItemValue'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
   }
@@ -103,10 +103,10 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
   //#region Function
   checkValidate() {
     if (this.itemposting.itemLevel == '4') {
-      this.gridViewSetup['ItemSelection'].isRequire = false;
+      this.gridViewSetup['ItemValue'].isRequire = false;
     }
-    if (this.itemposting.custLevel == '3') {
-      this.gridViewSetup['CustSelection'].isRequire = false;
+    if (this.itemposting.objectLevel == '3') {
+      this.gridViewSetup['ObjectValue'].isRequire = false;
     }
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.itemposting);

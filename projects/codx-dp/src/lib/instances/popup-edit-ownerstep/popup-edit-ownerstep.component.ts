@@ -33,9 +33,11 @@ export class PopupEditOwnerstepComponent {
     this.data = dt?.data[2];
 
     this.applyFor = dt?.data[3];
-    this.dataCM = dt?.data[4];
-    var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
-    var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
+    // this.dataCM = dt?.data[4];
+    // var recID =  this.dataCM  ? this.dataCM.refID : this.data?.recID;
+    // var stepID =  this.dataCM  ? this.dataCM.stepID : this.data?.stepID;
+    var recID =  this.data?.recID;
+    var stepID =   this.data?.stepID;
     if(this.applyFor != '0') {
 
       this.getListPermission(this.dataCM.processID,this.applyFor,stepID);

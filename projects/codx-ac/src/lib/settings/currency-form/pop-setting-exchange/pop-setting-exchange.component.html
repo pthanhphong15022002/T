@@ -14,7 +14,7 @@
                [checked]="currentdate" [disabled]="currentdate" field="calculation" (valueChange)="valueChangeCalculation($event)">
                 </codx-input>
               </div>
-              <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày chính xác"></codx-label>
+              <codx-label [formModel]="form.formModel" default="Ngày chính xác"></codx-label>
           </div>
       </div>
       <div class="col-5">
@@ -24,7 +24,7 @@
                 [checked]="forwarddate" [disabled]="forwarddate" field="calculation" (valueChange)="valueChangeCalculation($event)">
                 </codx-input>
               </div>
-              <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày gần nhất"></codx-label>
+              <codx-label [formModel]="form.formModel" default="Ngày gần nhất"></codx-label>
           </div>
       </div>
   </div>
@@ -39,7 +39,7 @@
                [checked]="multiplication" [disabled]="multiplication" field="multi" (valueChange)="valueChangeMulti($event)">
                 </codx-input>
               </div>
-              <codx-label [formModel]="form.formModel" fiedName="Multi" default="Nhân"></codx-label>
+              <codx-label [formModel]="form.formModel" default="Nhân"></codx-label>
           </div>
       </div>
       <div class="col-5">
@@ -49,7 +49,7 @@
                 [checked]="division" [disabled]="division" field="multi" (valueChange)="valueChangeMulti($event)">
                 </codx-input>
               </div>
-              <codx-label [formModel]="form.formModel" fiedName="Multi" default="Chia"></codx-label>
+              <codx-label [formModel]="form.formModel" default="Chia"></codx-label>
           </div>
       </div>
   </div>
