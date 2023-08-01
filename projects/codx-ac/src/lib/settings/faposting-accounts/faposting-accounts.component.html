@@ -81,7 +81,7 @@
 </ng-template>
 
 <ng-template #templateRight>
-  <div class="ms-5 h-100">
+  <div class="tabline-content ms-5 h-100">
     <codx-gridview-v2
       #grid
       funcId="ACS250"
@@ -94,13 +94,11 @@
 </ng-template>
 
 <ng-template #templateMore let-data>
-  <div class="has-action-menu" style="height: 30px">
-    <codx-mfunc
+  <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="handleClickMoreFuncs($event, data)"
       [isBookMark]="true"
-      type="hover"
+      type="view"
     ></codx-mfunc>
-  </div>
 </ng-template>
