@@ -312,7 +312,24 @@ public marker1: Object = {
 };
 tooltip = {};
  
-
+legendSettingsPy = {
+  visible: false,
+  toggleVisibility: false,
+};
+tooltipPy: Object = {
+  header: '',
+  enable: true,
+  format: '${point.x} : <b>${point.y}</b>',
+};
+dataSourcePy;
+neckWidth = '0%';
+neckHeight = '0%';
+gapRatio: number = 0.03;
+emptyPointSettings = {
+  // fill: 'red',
+  // mode: 'Drop',
+};
+explode: boolean = false;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -384,6 +401,7 @@ tooltip = {};
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.counts;
       this.productivityOwner = this.dataDashBoard?.countsProductivityOwner;
+      this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
 
       let counts = this.dataDashBoard?.counts;
       for (var prop in counts) {

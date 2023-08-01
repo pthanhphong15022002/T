@@ -189,6 +189,7 @@ export class ContractsComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   async onInit(): Promise<void> {

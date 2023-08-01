@@ -28,6 +28,7 @@ import { DecimalPipe } from '@angular/common';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
+import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
 
 @Component({
   selector: 'lib-targets',
@@ -50,18 +51,50 @@ export class TargetsComponent
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('templateMonth0') templateMonth0?: TemplateRef<any>;
+  //BusinessLine
+  @ViewChild('headerBusinessLine', { static: true })
+  headerBusinessLine: TemplateRef<any>;
+  @ViewChild('templateBusinessLine') templateBusinessLine: TemplateRef<any>;
+  //Năm
+  @ViewChild('headerYear', { static: true }) headerYear: TemplateRef<any>;
+  @ViewChild('templateYear') templateYear: TemplateRef<any>;
+  //4 quý
+  @ViewChild('headerQuarter1', { static: true })
+  headerQuarter1: TemplateRef<any>;
+  @ViewChild('templateQuarter1') templateQuarter1: TemplateRef<any>;
+  @ViewChild('headerQuarter2', { static: true })
+  headerQuarter2: TemplateRef<any>;
+  @ViewChild('templateQuarter2') templateQuarter2: TemplateRef<any>;
+  @ViewChild('headerQuarter3', { static: true })
+  headerQuarter3: TemplateRef<any>;
+  @ViewChild('templateQuarter3') templateQuarter3: TemplateRef<any>;
+  @ViewChild('headerQuarter4', { static: true })
+  headerQuarter4: TemplateRef<any>;
+  @ViewChild('templateQuarter4') templateQuarter4: TemplateRef<any>;
+  //12 tháng
+  @ViewChild('headerMonth1', { static: true }) headerMonth1: TemplateRef<any>;
   @ViewChild('templateMonth1') templateMonth1?: TemplateRef<any>;
+  @ViewChild('headerMonth2', { static: true }) headerMonth2: TemplateRef<any>;
   @ViewChild('templateMonth2') templateMonth2?: TemplateRef<any>;
+  @ViewChild('headerMonth3', { static: true }) headerMonth3: TemplateRef<any>;
   @ViewChild('templateMonth3') templateMonth3?: TemplateRef<any>;
+  @ViewChild('headerMonth4', { static: true }) headerMonth4: TemplateRef<any>;
   @ViewChild('templateMonth4') templateMonth4?: TemplateRef<any>;
+  @ViewChild('headerMonth5', { static: true }) headerMonth5: TemplateRef<any>;
   @ViewChild('templateMonth5') templateMonth5?: TemplateRef<any>;
+  @ViewChild('headerMonth6', { static: true }) headerMonth6: TemplateRef<any>;
   @ViewChild('templateMonth6') templateMonth6?: TemplateRef<any>;
+  @ViewChild('headerMonth7', { static: true }) headerMonth7: TemplateRef<any>;
   @ViewChild('templateMonth7') templateMonth7?: TemplateRef<any>;
+  @ViewChild('headerMonth8', { static: true }) headerMonth8: TemplateRef<any>;
   @ViewChild('templateMonth8') templateMonth8?: TemplateRef<any>;
+  @ViewChild('headerMonth9', { static: true }) headerMonth9: TemplateRef<any>;
   @ViewChild('templateMonth9') templateMonth9?: TemplateRef<any>;
+  @ViewChild('headerMonth10', { static: true }) headerMonth10: TemplateRef<any>;
   @ViewChild('templateMonth10') templateMonth10?: TemplateRef<any>;
+  @ViewChild('headerMonth11', { static: true }) headerMonth11: TemplateRef<any>;
   @ViewChild('templateMonth11') templateMonth11?: TemplateRef<any>;
+  @ViewChild('headerMonth12', { static: true }) headerMonth12: TemplateRef<any>;
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
@@ -89,7 +122,7 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetAsync';
+  method: string = 'GetListTreeTargetLineAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -107,6 +140,10 @@ export class TargetsComponent
   data: any;
   schedule: any;
   columnGrids = [];
+  isShow = false;
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -247,28 +284,105 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
-    let lst = [];
-
-    for (let i = 0; i < 13; i++) {
-      var tmp = {};
-      if (i == 0) {
-        tmp['field'] = '';
-        tmp['headerText'] = '';
-        tmp['width'] = 350;
-        tmp['template'] = this[`templateMonth${0}`];
-      } else {
-        tmp['field'] = '';
-        tmp['headerText'] = 'Tháng ' + i;
-        tmp['width'] = 175;
-        tmp['template'] = this[`templateMonth${i}`];
-      }
-      lst.push(Object.assign({}, tmp));
-    }
-    this.columnGrids = lst;
+    this.columnGrids = [
+      {
+        headerTemplate: this.headerBusinessLine,
+        template: this.templateBusinessLine,
+        width: 350,
+      },
+      //năm
+      {
+        headerTemplate: this.headerYear,
+        template: this.templateYear,
+        width: 150,
+      },
+      //quý
+      {
+        headerTemplate: this.headerQuarter1,
+        template: this.templateQuarter1,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter2,
+        template: this.templateQuarter2,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter3,
+        template: this.templateQuarter3,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter4,
+        template: this.templateQuarter4,
+        width: 150,
+      },
+      //Tháng
+      {
+        headerTemplate: this.headerMonth1,
+        template: this.templateMonth1,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth2,
+        template: this.templateMonth2,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth3,
+        template: this.templateMonth3,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth4,
+        template: this.templateMonth4,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth5,
+        template: this.templateMonth5,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth6,
+        template: this.templateMonth6,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth7,
+        template: this.templateMonth7,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth8,
+        template: this.templateMonth8,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth9,
+        template: this.templateMonth9,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth10,
+        template: this.templateMonth10,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth11,
+        template: this.templateMonth11,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth12,
+        template: this.templateMonth12,
+        width: 150,
+      },
+    ];
     this.views = [
       {
         type: ViewType.content,
-        active: true,
+        active: false,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -277,7 +391,7 @@ export class TargetsComponent
       {
         type: ViewType.grid,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resources: this.columnGrids,
           hideMoreFunc: true,
@@ -332,6 +446,9 @@ export class TargetsComponent
         case 'SYS03':
           this.edit(data);
           break;
+        case 'CM0206_1':
+          this.popupChangeAllocationRate(data);
+          break;
       }
     }
   }
@@ -344,7 +461,19 @@ export class TargetsComponent
             res.disabled = true;
             break;
           case 'SYS02':
-            if (type == 'tree') res.disabled = true;
+            res.disabled = true;
+            break;
+          case 'SYS03':
+            if (data.parentID != null) res.disabled = true;
+            break;
+          case 'CM0206_1':
+            if (data.parentID == null || data.target == 0) {
+              if (data.parentID == null) {
+                res.disabled = true;
+              } else {
+                res.isblur = true;
+              }
+            }
 
             break;
         }
@@ -387,6 +516,7 @@ export class TargetsComponent
         if (e != null && e?.event != null) {
           if (e?.event[0] != null && e?.event[0][1] != null) {
             var data = e?.event[0][1];
+            this.view.dataService.update(data).subscribe();
             var lstOwners = e?.event[1];
             var lstTargetLines = e?.event[0][0];
             if (data.year == this.year) {
@@ -404,37 +534,6 @@ export class TargetsComponent
                 this.lstDataTree.push(Object.assign({}, data));
               }
             }
-            if (this.schedule) {
-              // if (lstOwners != null && lstOwners?.length > 0) {
-              //   var resource = this.schedule['resourceDataSource'];
-              //   lstOwners.forEach((item) => {
-              //     if (
-              //       !resource?.find(
-              //         (user) => user.salespersonID === item.userID
-              //       )
-              //     ) {
-              //       var tmp = {};
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['ClassName'] = 'e-child-node';
-              //       tmp['Count'] = 0;
-              //       tmp['events'] = 11;
-              //       tmp['positionName'] = item?.positionName;
-              //       tmp['salespersonID'] = item?.userID;
-              //       tmp['value'] = item?.userID;
-              //       tmp['target'] = 0;
-              //       tmp['text'] = item?.userName;
-              //       tmp['userName'] = item?.userName;
-              //       resource?.push(tmp);
-              //     }
-              //   });
-
-              //   this.schedule['resourceDataSource'] = resource;
-              //   this.schedule['displayResource'] = resource;
-              //   this.view.currentView = this.schedule;
-              //   this.view?.currentView?.refesh();
-              // }
-              this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
-            }
           }
           this.detectorRef.detectChanges();
         }
@@ -445,35 +544,17 @@ export class TargetsComponent
   async edit(data) {
     let lstOwners = [];
     let lstTargetLines = [];
-    if (this.businessLineID != null) {
-      lstOwners = this.lstOwners;
-      lstTargetLines = this.lstTargetLines;
-      if (this.data != null && this.data?.recID == data?.recID) {
-        this.view.dataService.dataSelected = this.data;
-      } else {
-        var tar = await firstValueFrom(
-          this.cmSv.getTargetAndLinesAsync(data?.businessLineID, data.year)
-        );
-        if (tar != null) {
-          lstOwners = tar[2];
-          lstTargetLines = tar[1];
-          this.view.dataService.dataSelected = tar[0];
-        }
-      }
-    } else {
-      var tar = await firstValueFrom(
-        this.cmSv.getTargetAndLinesAsync(
-          data?.businessLineID,
-          data.year > 0 ? data.year : data.period
-        )
-      );
-      if (tar != null) {
-        lstOwners = tar[2];
-        lstTargetLines = tar[1];
-        this.view.dataService.dataSelected = tar[0];
-      }
+    var tar = await firstValueFrom(
+      this.cmSv.getTargetAndLinesAsync(
+        data?.businessLineID,
+        data.year > 0 ? data.year : data.period
+      )
+    );
+    if (tar != null) {
+      lstOwners = tar[2];
+      lstTargetLines = tar[1];
+      this.view.dataService.dataSelected = tar[0];
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -503,6 +584,7 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             if (e?.event[0] != null && e?.event[0][1] != null) {
               var data = e?.event[0][1];
+              this.view.dataService.update(data).subscribe();
               if (data.year == this.year) {
                 this.businessLineID = e?.event[2];
                 this.lstTargetLines = e?.event[0][0];
@@ -513,10 +595,9 @@ export class TargetsComponent
                 );
                 if (index != -1) {
                   this.lstDataTree[index] = data;
+                } else {
+                  this.lstDataTree.push(Object.assign({}, data));
                 }
-              }
-              if (this.schedule) {
-                this.view.load(); //Load kiểu này do schedule không load lại được theo target. Bùa rồi nhưng vẫn khôn được.
               }
               // this.lstDataTree.push(Object.assign({}, data));
 
@@ -565,7 +646,123 @@ export class TargetsComponent
   }
   //#endregion
 
+  //#region Month
+  async popupChangeAllocationRate(data) {
+    var lstLinesBySales = [];
+    lstLinesBySales = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'TargetsLinesBusiness',
+        'GetSalesPersonsByBusinessIDAsync',
+        [data?.businessLineID, data?.salespersonID]
+      )
+    );
+    let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view?.formModel;
+    dialogModel.zIndex = 999;
+    var obj = {
+      data: data,
+      title: this.titleAction,
+      lstLinesBySales: lstLinesBySales,
+    };
+    var dialog = this.callfc.openForm(
+      PopupChangeAllocationRateComponent,
+      '',
+      850,
+      850,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {});
+  }
+  //#endregion
+
   targetToFixed(data) {
     return Math.round(data);
   }
+
+  clickShow(isShow: boolean) {
+    if (this.lstDataTree != null && this.lstDataTree.length > 0) {
+      this.lstDataTree.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
+  }
+
+  //#region setting grid
+
+  PopoverDetail(e, p: any, emp) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.title != null || emp.positionName != null) {
+        if (parent <= child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
+
+  sumQuarter(lstLines = [], i: number) {
+    var target = 0;
+
+    if (lstLines != null && lstLines.length > 0) {
+      lstLines.forEach((element) => {
+        if (
+          this.checkMonthQuarter(i, new Date(element.startDate)?.getMonth() + 1)
+        )
+          target += element.target;
+      });
+    }
+
+    return this.targetToFixed(target);
+  }
+
+  checkMonthQuarter(i, month) {
+    if (i == 1) {
+      if (month >= 1 && month < 4) {
+        return true;
+      }
+    } else if (i == 2) {
+      if (month >= 4 && month < 7) {
+        return true;
+      }
+    } else if (i == 3) {
+      if (month >= 7 && month < 10) {
+        return true;
+      }
+    } else if (i == 4) {
+      if (month >= 10 && month < 13) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getTargetMonth(lstTargetLines = [], month: number) {
+    let target = 0;
+
+    if (lstTargetLines != null && lstTargetLines.length > 0) {
+      lstTargetLines.forEach((element) => {
+        if (month === new Date(element.startDate)?.getMonth() + 1)
+          target += element.target;
+      });
+    }
+
+    return this.targetToFixed(target);
+  }
+  //#endregion
 }

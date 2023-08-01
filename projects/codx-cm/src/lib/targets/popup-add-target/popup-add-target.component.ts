@@ -382,8 +382,8 @@ export class PopupAddTargetComponent {
         if (res.isExit) weightExit += res.weight;
       });
       for (var item of this.lstOwners) {
-        if (!item.isExit) {
-          if (type == 'user') {
+        if (!item.isExit && this.action == 'add') {
+          if (type == 'user' ) {
             item.weight = 100 / this.lstOwners.length;
           } else {
             item.weight =
@@ -883,7 +883,7 @@ export class PopupAddTargetComponent {
     index = this.lstOwners.findIndex((x) => x.userID == id);
     if (index != -1) {
       if (type == 'weight') {
-        if (this.lstOwners[index].weight != target) {
+        if (parseFloat(this.lstOwners[index].weight.toFixed(2)) != target) {
           if (this.checkWeight(id, target, 100, 'weight')) {
             this.editingItem = null;
             this.typeChange = '';
@@ -891,7 +891,7 @@ export class PopupAddTargetComponent {
             return;
           }
 
-          this.lstOwners[index].weight = parseFloat(target.toFixed(2));
+          this.lstOwners[index].weight = target;
           this.lstOwners[index].target = (this.data.target * target) / 100;
           this.lstOwners[index].isExit = true;
           var weigth = 0;
@@ -907,7 +907,7 @@ export class PopupAddTargetComponent {
           this.lstOwners.forEach((res) => {
             if (res.userID != id && !res.isExit) {
               if (count > 0) {
-                res.weight = parseFloat(((100 - weigth) / count).toFixed(2));
+                res.weight = (100 - weigth) / count;
                 res.target = (res.weight * this.data.target) / 100;
               } else {
                 res.weight = 0;
@@ -929,9 +929,8 @@ export class PopupAddTargetComponent {
           }
           this.lstOwners[index].target = target;
           this.lstOwners[index].isExit = true;
-          this.lstOwners[index].weight = parseFloat(
-            ((target * 100) / this.data.target).toFixed(2)
-          );
+          this.lstOwners[index].weight = (target * 100) / this.data.target;
+
           let targetExSum = 0;
           let countEx = 0;
           this.lstOwners.forEach((ele) => {
@@ -946,9 +945,9 @@ export class PopupAddTargetComponent {
             if (res.userID != id && !res.isExit) {
               if (countEx > 0) {
                 res.target = (this.data.target - targetExSum) / countEx;
-                res.weight = parseFloat(
-                  ((res.target * 100) / this.data.target).toFixed(2)
-                );
+                res.weight =
+                  res.target * 100 / this.data.target
+
               } else {
                 res.target = 0;
                 res.weight = 0;
@@ -1066,6 +1065,7 @@ export class PopupAddTargetComponent {
         }
         res.isExit = false;
       });
+      this.setListTargetLine();
     }
   }
 }

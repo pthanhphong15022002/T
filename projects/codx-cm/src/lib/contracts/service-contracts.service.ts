@@ -12,6 +12,7 @@ export class ContractsService {
     { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
+    { name: 'steps', textDefault: 'Quy trình xử lý', icon: 'icon-more', isActive: false },
     { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
     // { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
   ];
@@ -20,6 +21,7 @@ export class ContractsService {
     { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
+    { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
     // { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
   ];
   constructor(
