@@ -1009,7 +1009,7 @@ export class CasesComponent
           action: 'edit',
           formMD: this.formModelCrr,
           titleAction: this.titleAction,
-          applyFor: this.applyFor
+          applyFor: this.applyFor,
         };
         let dialogCustomcases = this.callfc.openSide(
           PopupAddCasesComponent,
@@ -1116,25 +1116,36 @@ export class CasesComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-      if (process) {
-        this.codxCmService
-          .getESCategoryByCategoryID(process.processNo)
-          .subscribe((res) => {
-            if (!res) {
-              this.notificationsService.notifyCode('ES028');
-              return;
-            }
-            if (res.eSign) {
-              //kys soos
-            } else {
-              this.release(dt, res);
-            }
-          });
-      } else {
-        this.notificationsService.notify('DP040');
-      }
-    });
+    if (dt?.processID) {
+      this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
+        if (process) {
+          this.codxCmService
+            .getESCategoryByCategoryID(process.processNo)
+            .subscribe((res) => {
+              this.approvalTransAction(dt, res);
+            });
+        } else {
+          this.notificationsService.notifyCode('DP040');
+        }
+      });
+    } else {
+      this.codxCmService
+        .getESCategoryByCategoryID('ES_CM0504')
+        .subscribe((res) => {
+          this.approvalTransAction(dt, res);
+        });
+    }
+  }
+  approvalTransAction(data, category) {
+    if (!category) {
+      this.notificationsService.notifyCode('ES028');
+      return;
+    }
+    if (category.eSign) {
+      //kys soos
+    } else {
+      this.release(data, category);
+    }
   }
   release(data: any, category: any) {
     this.codxShareService.codxReleaseDynamic(
@@ -1159,7 +1170,6 @@ export class CasesComponent
             this.dataSelected = c;
             this.view.dataService.update(this.dataSelected).subscribe();
             if (this.kanban) this.kanban.updateCard(this.dataSelected);
-
           }
           this.notificationsService.notifyCode('ES007');
         });
