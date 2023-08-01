@@ -141,6 +141,9 @@ export class TargetsComponent
   schedule: any;
   columnGrids = [];
   isShow = false;
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -513,6 +516,7 @@ export class TargetsComponent
         if (e != null && e?.event != null) {
           if (e?.event[0] != null && e?.event[0][1] != null) {
             var data = e?.event[0][1];
+            this.view.dataService.update(data).subscribe();
             var lstOwners = e?.event[1];
             var lstTargetLines = e?.event[0][0];
             if (data.year == this.year) {
@@ -580,6 +584,7 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             if (e?.event[0] != null && e?.event[0][1] != null) {
               var data = e?.event[0][1];
+              this.view.dataService.update(data).subscribe();
               if (data.year == this.year) {
                 this.businessLineID = e?.event[2];
                 this.lstTargetLines = e?.event[0][0];
@@ -691,6 +696,25 @@ export class TargetsComponent
   }
 
   //#region setting grid
+
+  PopoverDetail(e, p: any, emp) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.title != null || emp.positionName != null) {
+        if (parent <= child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
 
   sumQuarter(lstLines = [], i: number) {
     var target = 0;
