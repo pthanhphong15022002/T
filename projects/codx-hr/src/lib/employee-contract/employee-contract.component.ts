@@ -338,22 +338,6 @@ export class EmployeeContractComponent extends UIComponent {
       dialogModel
     );
   }
-  // unites get data source
-  getReportSource(reportID: string, reportField: string, objectID: string) {
-    return this.api
-      .execSv(
-        'rptsys',
-        'Codx.RptBusiness.CM',
-        'ReportBusiness',
-        'GetReportSourceByIDAsync',
-        [reportID, reportField, objectID]
-      )
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
-  }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     this.currentEmpObj = this.itemDetail?.emp;
