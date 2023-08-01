@@ -669,23 +669,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.attachment?.clearData();
           if (res && res.save) {
             this.dialog.close(res.save[0]);
-            //   var task = res.save[0];
-            //       //send mail FE
-            //       // if (task.category == '3') {
-            //       //   if (this.param?.ConfirmControl == '1')
-            //       //     this.tmSv
-            //       //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
-            //       //       .subscribe();
-            //       //   else
-            //       //     this.tmSv
-            //       //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
-            //       //       .subscribe();
-            //       // }
-
-            //       // if (task?.category == '1' && task.verifyControl == '1')
-            //       //   this.tmSv
-            //       //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
-            //       //     .subscribe();
           }
         });
     }
