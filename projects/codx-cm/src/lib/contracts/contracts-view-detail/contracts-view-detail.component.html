@@ -277,6 +277,10 @@
           *ngSwitchCase="'task'"
           [ngTemplateOutlet]="task"
         ></some-element>
+        <some-element
+          *ngSwitchCase="'steps'"
+          [ngTemplateOutlet]="steps"
+        ></some-element>
         <!-- <some-element
           *ngSwitchCase="'termsAndRelated'"
           [ngTemplateOutlet]="termsAndRelatedTemplate"
@@ -805,12 +809,17 @@
   ></codx-tabs>
 </ng-template>
  <!-- nvthuan công việc -->
- <ng-template #task let-data="value">
+ <ng-template #steps let-data="value">
   <div *ngIf="listInsStep?.length > 0">
     <step-task
     [dataSelected]="contract"
     [listInstanceStep]="listInsStep"
     (changeProgress)="autoStart($event)"
   ></step-task>
+  </div>
+</ng-template>
+<ng-template #task let-data="value">
+  <div>
+    <task [customerID]="contract?.recID"></task>
   </div>
 </ng-template>

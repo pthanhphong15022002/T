@@ -233,6 +233,11 @@ export class AddContractsComponent implements OnInit {
       this.contracts.currencyID = this.currnecyID;
       this.loadExchangeRate(this.contracts.currencyID);
       this.setContractByDataOutput();
+      if(!this.contracts.applyProcess){
+        this.getAutoNumber();
+      }else{
+        this.disabledShowInput = true;
+      }
     }
 
     if (this.action == 'edit') {
@@ -253,6 +258,11 @@ export class AddContractsComponent implements OnInit {
         this.contracts?.quotationID
       );
       this.getPayMentByContractID(this.contracts?.recID);
+      if(!this.contracts.applyProcess){
+        this.getAutoNumber();
+      }else{
+        this.disabledShowInput = true;
+      }
     }
   }
   setContractByDataOutput() {
@@ -970,6 +980,7 @@ export class AddContractsComponent implements OnInit {
   }
 
   getFields(steps: any): boolean {
+    this.listField = [];
     if (steps?.length > 0 && steps != null) {
       for (let i = 0; i < steps.length; i++) {
         if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
@@ -1056,12 +1067,10 @@ export class AddContractsComponent implements OnInit {
           }
         });
         !this.leadNoSetting && this.getAutoNumberSetting();
-      //   this.lead.leadID = this.leadNoSetting;
-      //   this.disabledShowInput = true;
-      // } else {
-      //   this.planceHolderAutoNumber = '';
-      //   this.lead.leadID = '';
-      //   this.disabledShowInput = false;
+      } else {
+        this.planceHolderAutoNumber = '';
+        this.contracts.contractID = null;
+        this.disabledShowInput = false;
       }
     });
   }
@@ -1074,6 +1083,8 @@ export class AddContractsComponent implements OnInit {
       )
       .subscribe((autoNum) => {
         this.leadNoSetting = autoNum;
+        this.contracts.contractID = this.leadNoSetting;
+        this.disabledShowInput = true;
         // this.lead.leadID = this.leadNoSetting;
       });
   }
