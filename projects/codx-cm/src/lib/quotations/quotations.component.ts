@@ -29,6 +29,7 @@ import { CodxCmService } from '../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CM_Contracts } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
+import { debug } from 'util';
 
 @Component({
   selector: 'lib-quotations',
@@ -96,6 +97,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   currencyIDDefault = 'VND';
   exchangeRateDefault = 1;
   applyApprover = '0';
+  t: any;
 
   constructor(
     private inject: Injector,
@@ -153,7 +155,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           if (Array.isArray(dataValue)) {
             let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
             if (setting) this.applyApprover = setting['ApprovalRule'];
-            debugger;
           }
         }
 
@@ -372,6 +373,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   clickMF(e, data) {
     this.titleAction = e.text;
     this.itemSelected = data;
+    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -427,7 +429,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
     // res.status = res.status ?? '0';
-    res.exchangeRate = res.exchangeRate ?? this.exchangeRateDefault;
+    res.exchangeRate =
+      res.exchangeRate && res.exchangeRate != 0
+        ? res.exchangeRate
+        : this.exchangeRateDefault;
     res.totalAmt = res.totalAmt ?? 0;
     res.currencyID = res.currencyID ?? this.currencyIDDefault;
 
@@ -635,10 +640,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-    //   if (deals) {
-    // this.codxCmService.getProcess('ES_CM0501').subscribe((process) => {
-    //   if (process) {
     this.codxCmService
       .getESCategoryByCategoryID('ES_CM0501')
       .subscribe((res) => {
@@ -653,19 +654,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           this.release(dt, res);
         }
       });
-    // }
-    //     else {
-    //       this.notiService.notifyCode('DP040');
-    //     }
-    //   });
-    //  }
-    // else {
-    //   this.notiService.notify(
-    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-    //     '3'
-    //   );
-    //   }
-    // });
   }
   //Gửi duyệt
   release(data: any, category: any) {
@@ -720,16 +708,12 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     }
   }
 
+  loadChange() {}
+
   //Huy duyet
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-        //   if (deals) {
-        //     this.codxCmService
-        //       .getProcess(deals.processID)
-        //       .subscribe((process) => {
-        //         if (process) {
         this.codxCmService
           .getESCategoryByCategoryID('ES_CM0501')
           .subscribe((res2: any) => {
@@ -766,15 +750,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.notiService.notifyCode('DP040');
       }
     });
-    // } else {
-    //   this.notiService.notify(
-    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-    //     '3'
-    //   );
-    // }
-    //     });
-    //   }
-    // });
   }
   //end duyet
   //--------------------------------------------------------------------//

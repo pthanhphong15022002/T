@@ -196,34 +196,6 @@ export class PopupAddQuotationsComponent implements OnInit {
         });
     } else {
       this.disabledShowInput = true;
-      // this.cache.viewSettingValues('CMParameters').subscribe((res) => {
-      //   if (res?.length > 0) {
-      //     let dataParam = res.filter(
-      //       (x) => x.category == '1' && !x.transType
-      //     )[0];
-      //     if (dataParam) {
-      //       let paramDefault = JSON.parse(dataParam.dataValue);
-      //       let currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
-      //       let exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
-      //       if (currencyIDDefault != 'VND') {
-      //         let day = new Date();
-      //         this.codxCM
-      //           .getExchangeRate(currencyIDDefault, day)
-      //           .subscribe((res) => {
-      //             if (res && res != 0) exchangeRateDefault = res;
-      //             else {
-      //               currencyIDDefault = 'VND';
-      //               exchangeRateDefault = 1;
-      //             }
-
-      //             this.quotations.currencyID = currencyIDDefault;
-      //             this.quotations.exchangeRate = currencyIDDefault;
-      //             this.form.formGroup.patchValue(this.quotations);
-      //           });
-      //       }
-      //     }
-      //   }
-      // });
     }
   }
 
@@ -524,7 +496,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         }
         this.currencyIDOld = this.quotations.currencyID;
         let exchangeRateOld = this.quotations.exchangeRate;
-        if (exchangeRateOld != exchangeRateNew) {
+        if (exchangeRateOld && exchangeRateOld != exchangeRateNew) {
           this.quotations.exchangeRate = exchangeRateNew;
           this.quotations['totalSalesAmt'] =
             (this.quotations['totalSalesAmt'] * exchangeRateOld) /
