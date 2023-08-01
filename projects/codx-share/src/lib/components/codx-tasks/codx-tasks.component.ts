@@ -1028,8 +1028,6 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-
-            if (kanban) kanban.updateCard(taskAction);
             if (this.itemSelected.status == '90')
               this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');

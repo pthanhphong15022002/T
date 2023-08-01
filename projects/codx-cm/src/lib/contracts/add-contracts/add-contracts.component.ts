@@ -168,7 +168,7 @@ export class AddContractsComponent implements OnInit {
 
     this.user = this.authStore.get();
     this.getFormModel();
-    this.listTypeContract = contractService.listTypeContract;
+    this.listTypeContract = contractService.listTypeContractAdd;
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
         if (this.headerTest) {
