@@ -99,6 +99,7 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
+      this.stepsTasks['durationDay'] = 1;
     } else if (this.action == 'copy') {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();

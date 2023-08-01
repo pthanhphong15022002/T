@@ -25,13 +25,6 @@
                     <div class="mt-5 w-100 d-flex justify-content-center">
                       <div class="w-75">
                         <div *ngIf="!applyProcess; else process">
-                          <!-- <codx-input
-                          type="combobox"
-                          [refValue]="'Employees'"
-                          [placeholder]="gridViewSetup?.Owner?.description"
-                          (valueChange)="cbxEmpChange($event)"
-                          [crrValue]="ownerOld"
-                        ></codx-input> -->
                         <codx-input
                         field="owner"
                         [formModel]="formModel"
@@ -87,7 +80,15 @@
               </ng-template>
               <ng-template #content>
                 <div class="d-flex justify-content-center p-5">
-                  <codx-no-data></codx-no-data>
+                  <!-- <codx-no-data></codx-no-data> -->
+
+                  <codx-input
+                  field="buid"
+                  [formModel]="formModel"
+                  (valueChange)="changeOwner($event)"
+                >
+                </codx-input>
+
                 </div>
               </ng-template>
           </e-tabitem>
