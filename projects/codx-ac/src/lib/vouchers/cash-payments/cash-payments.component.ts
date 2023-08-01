@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
@@ -39,6 +40,7 @@ import { Subject, interval, takeUntil } from 'rxjs';
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
   styleUrls: ['./cash-payments.component.css'],
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -194,7 +196,11 @@ export class CashPaymentsComponent extends UIComponent {
         });
       }
     });
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
+  }
+
+  trackByFn(index, item) {
+    return item.recID;
   }
 
   ngOnDestroy() {
@@ -616,6 +622,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.isLoadDataAcct = true;
         this.itemSelected = event?.data;
         this.loadDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
         // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
         //   this.itemSelected = event?.data;
         //   return;
@@ -638,8 +645,10 @@ export class CashPaymentsComponent extends UIComponent {
           ])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
-            this.settledInvoices = res;
-            this.loadTotalSet();
+            if (res) {
+              this.settledInvoices = res;
+              this.loadTotalSet();
+            }       
           });
         break;
     }
@@ -647,9 +656,12 @@ export class CashPaymentsComponent extends UIComponent {
       .execApi('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.acctTrans = res;
-        this.loadTotal();
-        this.isLoadDataAcct = false;
+        if (res) {
+          this.acctTrans = res;
+          this.loadTotal();
+          this.isLoadDataAcct = false;
+          this.detectorRef.detectChanges();
+        }    
       });
     this.changeTab(data.subType);
   }
@@ -714,12 +726,13 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.itemSelected = res;
+          data.status = '1';
+          this.itemSelected = data;
           this.loadDatadetail(this.itemSelected);
           this.view.dataService
             .update(this.itemSelected)
-            .pipe(takeUntil(this.destroy$))
             .subscribe();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -735,9 +748,11 @@ export class CashPaymentsComponent extends UIComponent {
       .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.journal = res[0];
-        this.oCash = res[1].data;
-        this.hideFields = res[2];
+        if (res) {
+          this.journal = res[0];
+          this.oCash = res[1].data;
+          this.hideFields = res[2];
+        }     
       });
   }
 

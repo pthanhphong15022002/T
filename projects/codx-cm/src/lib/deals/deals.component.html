@@ -534,6 +534,7 @@
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     [checkMoreReason]="checkMoreReason(dataSelected)"
+    (changeProgress)="autoStart($event)"
   >
   </codx-deal-detail>
 </ng-template>
@@ -729,4 +730,8 @@
         | async
     "
   ></span>
+</ng-template>
+
+<ng-template #dashBoard>
+  <codx-instance-dashboard [vllStatus]="'DP028'" [processID]="processID"></codx-instance-dashboard>
 </ng-template>

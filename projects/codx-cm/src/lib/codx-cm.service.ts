@@ -1,3 +1,4 @@
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { Injectable } from '@angular/core';
 import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -684,7 +685,33 @@ export class CodxCmService {
     );
   }
   // API for More in deal
-
+  getEmployeesByDomainID(data) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmpByUserIDAsync',
+      data
+    );
+  }
+  changeStatus(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'ChangeStatusLeadAsync',
+      data
+    );
+  }
+  isExistLeadId(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'IsExitsAutoCodeNumberAsync',
+      data
+    );
+  }
   startDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1102,6 +1129,16 @@ export class CodxCmService {
       recID
     );
   }
+  //get trinh ki mac dinh
+  getDeafaultCategory(entityName) {
+    return this.api.exec<any>(
+      'ES',
+      'CategoriesBusiness',
+      'GetDefaulProcessIDAsync',
+      entityName
+    );
+  }
+
   //get data instance
   getDataInstance(recID) {
     return this.api.exec<any>(

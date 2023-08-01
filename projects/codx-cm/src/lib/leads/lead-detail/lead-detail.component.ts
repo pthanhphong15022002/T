@@ -36,6 +36,8 @@ export class LeadDetailComponent implements OnInit {
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() action: any;
+  @Input() applyProcess: any;
+
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -157,7 +159,7 @@ export class LeadDetailComponent implements OnInit {
 
   async promiseAllLoad() {
     this.isDataLoading = true;
-    await this.getListInstanceStep();
+    this.applyProcess && await this.getListInstanceStep();
     await this.getTmpDeal();
   }
   async executeApiCalls(){

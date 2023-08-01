@@ -834,24 +834,9 @@
               [applyFor]="'1'"
               (continueStep)="continueStep($event)"
               (saveAssignTask)="saveAssignTask($event)"
+              (changeProgress)="autoStart($event)"
             ></step-task>
             </div>
-          </ng-template>
-        </e-tabitem>
-        <e-tabitem >
-          <ng-template #headerText>
-            <div class="d-flex align-items-top">
-              <span class="icon-i-chat-right icon-16 me-2"></span>
-              <codx-label
-                class="fw-bold"
-                default="Thảo luận"
-                [formModel]="formModel"
-                name="lblComment"
-              ></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content let-data >
-
           </ng-template>
         </e-tabitem>
       </e-tabitems>

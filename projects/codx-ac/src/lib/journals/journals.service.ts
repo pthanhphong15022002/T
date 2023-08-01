@@ -47,12 +47,12 @@ export class JournalService {
   }
 
   getJournal(journalNo: string): Observable<IJournal> {
-    return this.apiService
-      .exec<any>('AC', 'JournalsBusiness', 'GetAsync', journalNo)
-      .pipe(
-        tap(),
-        map((r) => r)
-      );
+    return this.apiService.exec<any>(
+      'AC',
+      'JournalsBusiness',
+      'GetAsync',
+      journalNo
+    );
 
     // const journalOptions = new DataRequest();
     // journalOptions.entityName = 'AC_Journals';
@@ -72,25 +72,27 @@ export class JournalService {
 
   /**
    * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
-   * @param isEdit A boolean value that indicates whether you are in edit mode.*/
+   * @param isUpdate A boolean value that indicates whether you are in edit mode.*/
   checkVoucherNoBeforeSave(
     journal: IJournal,
     model: any,
     service: string,
     entityName: string,
     form: CodxFormComponent,
-    isEdit: boolean,
+    isUpdate: boolean,
     saveFunction: () => void
   ): void {
     if (
-      journal.assignRule !== '0' &&
+      journal.assignRule === '0' && // thu cong
       this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
       const options = new DataRequest();
       options.entityName = entityName;
-      options.predicates = !isEdit ? 'VoucherNo=@0' : 'VoucherNo=@0&&RecID!=@1';
-      options.dataValues = !isEdit
+      options.predicates = !isUpdate
+        ? 'VoucherNo=@0'
+        : 'VoucherNo=@0&&RecID!=@1';
+      options.dataValues = !isUpdate
         ? model.voucherNo
         : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;

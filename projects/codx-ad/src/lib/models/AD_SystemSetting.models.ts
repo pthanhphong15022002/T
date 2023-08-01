@@ -1,4 +1,4 @@
-export class AD_SystemSetting{
+export class AD_SystemSetting {
   language: string;
   dBaseCurr: number;
   dSourceCurr: number;
@@ -12,11 +12,12 @@ export class AD_SystemSetting{
   pwLifeDays: number;
   pwExpireWarning: number;
   pwDuplicate: number;
+  pwSensitive: boolean;
   blockSystem: number;
-  freezeInMinutes: number
+  freezeInMinutes: number;
 }
 
-export class SYS_FunctionList{
+export class SYS_FunctionList {
   functionID: string;
   functionType: string;
   defaultName: string;

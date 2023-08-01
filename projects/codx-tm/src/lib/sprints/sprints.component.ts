@@ -14,8 +14,6 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
-  LayoutInitService,
-  NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -31,6 +29,7 @@ import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popup-tabs-views-details.component';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-sprints',
@@ -70,7 +69,7 @@ export class SprintsComponent extends UIComponent {
 
   constructor(
     inject: Injector,
-    private notiService: NotificationsService,
+    private codxShareService: CodxShareService,
     private tmSv: CodxTMService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -244,9 +243,6 @@ export class SprintsComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
-      case 'sendemail':
-        this.sendemail(data);
-        break;
       case 'TMT03011':
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
@@ -254,8 +250,20 @@ export class SprintsComponent extends UIComponent {
         this.viewBoard(data);
         break;
       default:
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
         break;
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
   click(evt: ButtonModel) {
     this.titleAction = evt?.text;
@@ -272,14 +280,15 @@ export class SprintsComponent extends UIComponent {
 
   shareBoard(e, data) {
     var listUserDetail = [];
-    let isAdmin = this.user?.administrator || data?.createdBy==this.user?.userID
+    let isAdmin =
+      this.user?.administrator || data?.createdBy == this.user?.userID;
     if (data.iterationID) {
       var obj = {
         boardAction: data,
         listUserDetail: listUserDetail,
         title: e?.customName,
         vllShare: 'TM003',
-        isAdmin : isAdmin
+        isAdmin: isAdmin,
       };
       this.api
         .execSv<any>(
@@ -329,7 +338,7 @@ export class SprintsComponent extends UIComponent {
     //   //   // ) {
     //   //   //   x.disabled = true;
     //   //   // }
-    //   //   // an edit và delete 
+    //   //   // an edit và delete
     //   //   if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID && !this.user?.administrator) {
     //   //     x.disabled = true;
     //   //   }
@@ -358,7 +367,7 @@ export class SprintsComponent extends UIComponent {
         };
 
         let dialogModel = new DialogModel();
-        dialogModel.FormModel= this.view.formModel
+        dialogModel.FormModel = this.view.formModel;
         dialogModel.IsFull = true;
         dialogModel.zIndex = 900;
         var dialog = this.callfc.openForm(
@@ -371,7 +380,10 @@ export class SprintsComponent extends UIComponent {
           '',
           dialogModel
         );
-        dialog.beforeClose.subscribe((res) => {
+        dialog.closed.subscribe((res) => {
+          if (res?.event) {
+            this.view.dataService.update(res?.event).subscribe();
+          }
           if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
         });
       }

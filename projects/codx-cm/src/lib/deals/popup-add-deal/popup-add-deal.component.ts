@@ -51,7 +51,6 @@ export class PopupAddDealComponent
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   CodxListContactsComponent;
   @ViewChild('form') form: CodxFormComponent;
-
   // setting values in system
   dialog: DialogRef;
   //type any
@@ -116,6 +115,7 @@ export class PopupAddDealComponent
   //type any
   gridViewSetup: any;
   listProcess: any;
+  user:any;
   owner: any;
   dateMessage: any;
   dateMax: any;
@@ -139,9 +139,12 @@ export class PopupAddDealComponent
   functionModule: any;
   paramView: any;
   processIdDefault: string = '';
+  currencyIDDefault: string = '';
+  defaultDeal: string = '';
 
   // load data form DP
   isLoading: boolean = false;
+  isBlock:boolean = true;
   currencyIDOld: string;
   constructor(
     private inject: Injector,
@@ -153,6 +156,7 @@ export class PopupAddDealComponent
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.titleAction = dt?.data?.titleAction;
@@ -161,7 +165,6 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
-
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
 
@@ -170,6 +173,7 @@ export class PopupAddDealComponent
       }
     } else {
       this.deal = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)): this.deal;
+
     }
 
     if (dt?.data.processID) {
@@ -181,11 +185,15 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
-
     if (this.action === this.actionCopy) {
       this.deal.owner = null;
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
+    }
+    if(this.action === this.actionAdd)
+    {
+     this.currencyIDDefault = dt?.data?.currencyIDDefault;
+     this.deal.currencyID = this.currencyIDDefault;
     }
   }
 
@@ -200,6 +208,9 @@ export class PopupAddDealComponent
           this.customerOld = this.customerID;
           this.deal.customerID = this.customerID;
           this.customerName = $event.component.itemsSelected[0].CustomerName;
+          if(!this.deal.dealName?.trim()) {
+            this.deal.dealName = this.customerName;
+          }
           this.getListContactByObjectID(this.customerID);
         }
       }
@@ -375,6 +386,7 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
+    if(!this.isBlock) return;
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -451,7 +463,6 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
     }
-
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
     this.executeSaveData();
@@ -482,48 +493,6 @@ export class PopupAddDealComponent
   cbxChange($event, field) {
     if ($event) {
       this.deal[field] = $event;
-    }
-  }
-  cbxProcessChange($event) {
-    if ($event) {
-      this.deal['processID'] = $event.data;
-      if ($event) {
-        var result = this.checkProcessInList($event);
-        if (result) {
-          this.listInstanceSteps = result?.steps;
-          this.listParticipants = result?.permissions;
-          this.deal.dealID = result?.dealId;
-          this.deal.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
-          this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-          this.changeDetectorRef.detectChanges();
-        } else {
-          this.getListInstanceSteps($event);
-        }
-      }
-    }
-  }
-  valueChangeProcess($event) {
-    if ($event && $event.data) {
-      var processId = $event.data;
-      var result = this.checkProcessInList(processId);
-      if (result) {
-        this.listInstanceSteps = result?.steps;
-        this.listParticipants = result?.permissions;
-        this.deal.dealID = result?.dealId;
-        this.deal.endDate = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          null
-        );
-        this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-        this.changeDetectorRef.detectChanges();
-      } else {
-        this.getListInstanceSteps(processId);
-      }
     }
   }
   valueChangeCustom(event) {
@@ -585,8 +554,9 @@ export class PopupAddDealComponent
             this.deal.processID = processId;
             var result = this.checkProcessInList(processId);
             if (result) {
+              this.listParticipants = null;
               this.listInstanceSteps = result?.steps;
-              this.listParticipants = result?.permissions;
+              this.listParticipants = JSON.parse(JSON.stringify(result?.permissions));
               this.deal.dealID = result?.dealId;
               this.deal.endDate = this.HandleEndDate(
                 this.listInstanceSteps,
@@ -594,6 +564,15 @@ export class PopupAddDealComponent
                 null
               );
               this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+              if(this.listParticipants.length > 0 && this.listParticipants) {
+                var index = this.listParticipants.findIndex(x=>x.userID ===  this.user.userID);
+                if(index != -1) {
+                  this.owner = this.user.userID;
+                }
+                else {
+                  this.owner = null;
+                }
+              }
               this.changeDetectorRef.detectChanges();
             } else {
               this.getListInstanceSteps(processId);
@@ -740,7 +719,8 @@ export class PopupAddDealComponent
         }
         this.listInstanceSteps = res[0];
         this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-        this.listParticipants = obj.permissions;
+        this.listParticipants = null;
+        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
         } else {
@@ -749,7 +729,17 @@ export class PopupAddDealComponent
             this.action,
             null
           );
+          if(this.listParticipants.length > 0 && this.listParticipants) {
+            var index = this.listParticipants.findIndex(x=>x.userID ===  this.user.userID);
+            if(index != -1) {
+              this.owner = this.user.userID;
+            }
+            else {
+              this.owner = null;
+            }
+          }
           this.deal.dealID = res[2];
+
         }
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
@@ -1017,5 +1007,9 @@ export class PopupAddDealComponent
   }
   valueTagChange(e) {
     this.deal.tags = e.data;
+  }
+  addFileCompleted(e){
+    this.isBlock = e;
+
   }
 }

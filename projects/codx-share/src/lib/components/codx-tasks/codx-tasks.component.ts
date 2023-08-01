@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -50,6 +52,7 @@ import {
   ILoadedEventArgs,
   ProgressTheme,
 } from '@syncfusion/ej2-angular-progressbar';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -98,6 +101,10 @@ export class CodxTasksComponent
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
+
+  //add resourece cho Sprint
+  @Output() resourceNew = new EventEmitter<any>();
+  //
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -198,6 +205,7 @@ export class CodxTasksComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private tmSv: CodxTasksService,
+    private codxShareService: CodxShareService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef
   ) {
@@ -514,27 +522,22 @@ export class CodxTasksComponent
         taskCopy: null,
         disabledProject: this.disabledProject,
       };
-      var dialog = this.callfc.openSide(
-        PopupAddComponent,
-        obj,
-        // [
-        //   this.view.dataService.dataSelected,
-        //   'add',
-        //   this.isAssignTask,
-        //   this.titleAction,
-        //   this.funcID,
-        //   null,
-        //   this.disabledProject,
-        // ],
-        option
-      );
+      var dialog = this.callfc.openSide(PopupAddComponent, obj, option);
       dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
+        if (!e?.event) {
+          this.view.dataService.clear();
+        }
+        if (e?.event) {
+          if (this.funcID == 'TMT03011')
+            //chua xu ly this.funcID=="TMT05011"
+            this.resourceNew.emit(e?.event?.owner);
+        }
+
+        //if (e?.event == null)
         //   this.view.dataService.delete(
         //     [this.view.dataService.dataSelected],
         //     false
-        //   );
+        //);
       });
     });
   }
@@ -603,27 +606,16 @@ export class CodxTasksComponent
         taskCopy: data,
         disabledProject: this.disabledProject,
       };
-      this.dialog = this.callfc.openSide(
-        PopupAddComponent,
-        obj,
-        // [
-        //   this.view.dataService.dataSelected,
-        //   'copy',
-        //   this.isAssignTask,
-        //   this.titleAction,
-        //   this.funcID,
-        //   data,
-        //   this.disabledProject,
-        // ],
-        option
-      );
+      this.dialog = this.callfc.openSide(PopupAddComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
+        if (!e?.event) {
+          this.view.dataService.clear();
+        }
+        if (e?.event) {
+          if (this.funcID == 'TMT03011')
+            //chua xu ly this.funcID=="TMT05011"
+            this.resourceNew.emit(e?.event?.owner);
+        }
       });
     });
   }
@@ -1036,8 +1028,6 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-
-            if (kanban) kanban.updateCard(taskAction);
             if (this.itemSelected.status == '90')
               this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');
@@ -1737,18 +1727,22 @@ export class CodxTasksComponent
       case 'TMT02027':
         this.openExtendsAction(e.data, data);
         break;
-      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        this.importFile();
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
         break;
-      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        this.exportFile();
-        break;
-      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
-        //???? chắc làm sau ??
-        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   changeDataMF(e, data) {
@@ -1770,6 +1764,7 @@ export class CodxTasksComponent
                   (data.owner == data.createdBy && data.category == '2'))) ||
               data.status == '80' ||
               data.status == '90' ||
+              data.status == '05' ||
               data.extendControl == '0'
             )
               x.disabled = true;
@@ -1785,19 +1780,23 @@ export class CodxTasksComponent
           case 'TMT04023':
             if (data.approveStatus != '3') x.disabled = true;
             break;
-          //an giao viec
-          case 'TMT02015':
-          case 'TMT02025':
-            if (data.status == '90' || data.status == '80') x.disabled = true;
-            break;
           case 'SYS005':
             x.disabled = true;
             break;
+          //an giao viec
+          case 'TMT02015':
+          case 'TMT02025':
           //an cap nhat tien do khi hoan tat
           case 'TMT02018':
           case 'TMT02026':
           case 'TMT02035':
-            if (data.status == '90' || data.status == '80') x.disabled = true;
+            if (
+              data.status == '90' ||
+              data.status == '80' ||
+              data.status == '05' ||
+              data.status == '00'
+            )
+              x.disabled = true;
             break;
           //an voi ca TMT026
           case 'SYS02':
@@ -1825,86 +1824,6 @@ export class CodxTasksComponent
             break;
         }
       });
-
-      //cu chua clean
-      // e.forEach((x) => {
-      //   //tắt duyệt confirm
-      //   if (
-      //     (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-      //     data.confirmStatus != '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   if (
-      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
-      //     data.verifyControl == '0' &&
-      //     data.category == '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //tắt duyệt xác nhận
-      //   if (
-      //     (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
-      //     data.verifyStatus != '1'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //tắt duyệt đánh giá
-      //   if (
-      //     (x.functionID == 'TMT04021' ||
-      //       x.functionID == 'TMT04022' ||
-      //       x.functionID == 'TMT04023') &&
-      //     data.approveStatus != '3'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an giao viec
-      //   if (x.functionID == 'SYS005') {
-      //     x.disabled = true;
-      //   }
-      //   if (
-      //     (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
-      //     data.status == '90'
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an cap nhat tien do khi hoan tat
-      //   if (
-      //     (x.functionID == 'TMT02018' ||
-      //       x.functionID == 'TMT02026' ||
-      //       x.functionID == 'TMT02035') &&
-      //     (data.status == '90' || data.status == '80')
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an voi ca TMT026
-      //   if (
-      //     (x.functionID == 'SYS02' ||
-      //       x.functionID == 'SYS03' ||
-      //       x.functionID == 'SYS04') &&
-      //     (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an voi ca TMT03011
-      //   if (
-      //     (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
-      //     data.category == '1' &&
-      //     data.createdBy != this.user?.userID &&
-      //     !this.user?.administrator &&
-      //     (x.functionID == 'SYS02' || x.functionID == 'SYS03')
-      //   ) {
-      //     x.disabled = true;
-      //   }
-      //   //an gia hạn cong viec
-      //   if (
-      //     (x.functionID == 'TMT02019' || x.functionID == 'TMT02027') &&
-      //     (data.status == '80' ||
-      //       data.status == '90' ||
-      //       data.extendControl == '0')
-      //   )
-      //     x.disabled = true;
-      // });
     }
   }
 

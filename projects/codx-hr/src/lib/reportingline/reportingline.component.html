@@ -133,7 +133,9 @@
                 </ng-container>
                 <ng-template #manyEmployees>
                     <span *ngIf="data?.staff > 2" class="multiple-employee rounded-circle">
-                        <span class="text-white fs-3">+{{(data.staff - 1)}}</span>
+                        <span class="text-white"
+                            [ngClass]="(data.staff - 1) < 100 ? 'fs-5' : 
+                            ((data.staff -1 < 1000)? 'fs-6': 'fs-9')">+{{(data.staff - 1)}}</span>
                     </span>
                 </ng-template>
             </div>
@@ -146,10 +148,10 @@
             <div class="py-2">
                 <codx-searchbar (searchEvent)="searchUser($event, data?.positionID) "></codx-searchbar>
             </div>
-            <div #posListEmp class="hr-list-employee"
+            <div #posListEmp class="hr-list-employee" id="listPosEmp"
                 (scroll)="onScrollEmpList(posListEmp,data?.positionID, data.staff)">
                 <ng-container *ngFor="let emp of data.staffEmp">
-                    <div class="d-flex align-items-centerp py-1">
+                    <div class="d-flex align-items-centerp py-1 h-50px">
                         <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
                             [objectName]="emp.employeeName" [width]="30">
                         </codx-img>

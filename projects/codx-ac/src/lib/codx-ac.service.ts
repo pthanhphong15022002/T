@@ -8,10 +8,8 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { BehaviorSubject, Observable, map, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Reason } from './models/Reason.model';
-import { Subject } from '@microsoft/signalr';
-import { log } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -219,46 +217,6 @@ export class CodxAcService {
     return isValid;
   }
 
-  /** Same as validateFormDataUsingGvs but show only the first error message and return its field name respectively. */
-  validateFormDataUsingGvs2(
-    gridViewSetup: any,
-    data: any,
-    irregularDataPropNames: string[] = [],
-    ignoredFields: string[] = []
-  ): [isValid: boolean, invalidFieldName: string] {
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-
-    for (const propName in gridViewSetup) {
-      if (gridViewSetup[propName].isRequire) {
-        if (ignoredFields.includes(propName.toLowerCase())) {
-          continue;
-        }
-
-        const dataPropName =
-          irregularDataPropNames.find(
-            (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? this.toCamelCase(propName);
-
-        if (
-          gridViewSetup[propName].dataType === 'String' &&
-          !data[dataPropName]?.trim()
-        ) {
-          //console.log('invalid', { propName });
-
-          this.notiService.notifyCode(
-            'SYS009',
-            0,
-            `"${gridViewSetup[propName]?.headerText}"`
-          );
-
-          return [false, dataPropName];
-        }
-      }
-    }
-
-    return [true, ''];
-  }
-
   /** @example StudentId => studentId */
   toCamelCase(pascalCase: string): string {
     return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
@@ -386,7 +344,7 @@ export class CodxAcService {
   }
 
   setPopupSize(dialog: any, width: any, height: any) {
-    dialog.dialog.properties.height = width;
-    dialog.dialog.properties.width = height;
+    dialog.dialog.properties.height = height;
+    dialog.dialog.properties.width = width;
   }
 }

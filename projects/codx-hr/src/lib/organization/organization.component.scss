@@ -18,21 +18,27 @@
   padding-left: 5% !important;
 }
 
+.h-28 {
+  height: 28px !important;
+  line-height: 28px !important;
+}
+
 .number-users {
   min-height: 27px;
 }
 .multiple-employee {
   z-index: 10;
-  width: 30px;
-  height: 30px;
-  margin-left: -4px;
-  line-height: 30px;
+ // width: 30px;
+ // height: 30px;
+ // margin-left: -4px;
+  line-height: 35px;
   background-color: rgba(158, 157, 157, 0.5);
   text-align: center;
 }
 
 .hr-list-employee {
   max-height: 200px;
+  height: 200px;
   overflow: auto;
 }
 

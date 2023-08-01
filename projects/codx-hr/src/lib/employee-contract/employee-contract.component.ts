@@ -317,7 +317,7 @@ export class EmployeeContractComponent extends UIComponent {
 
   printContract(moreFC: any, objectID: string) {
     let parameters = {
-      recID:objectID
+      recID: objectID,
     };
     let dialogModel = new DialogModel();
     dialogModel.FormModel = this.view.formModel;
@@ -325,7 +325,7 @@ export class EmployeeContractComponent extends UIComponent {
     let data = {
       headerText: moreFC.text,
       reportID: moreFC.functionID,
-      parameters:parameters
+      parameters: parameters,
     };
     this.callfc.openForm(
       CodxListReportsComponent,
@@ -432,21 +432,15 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService
-            .codxRelease(
-              'HR',
-              this.itemDetail.recID,
-              this.dataCategory.processID,
-              this.view.formModel.entityName,
-              this.view.formModel.funcID,
-              '',
-              this.view.function.description +
-                ' - ' +
-                this.itemDetail.contractNo,
-              ''
-            )
-            .subscribe((result) => {
-              if (result?.msgCodeError == null && result?.rowCount) {
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            this.dataCategory,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.contractNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
@@ -459,8 +453,38 @@ export class EmployeeContractComponent extends UIComponent {
                         .subscribe();
                     }
                   });
-              } else this.notify.notifyCode(result?.msgCodeError);
-            });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+          // this.codxShareService
+          //   .codxRelease(
+          //     'HR',
+          //     this.itemDetail.recID,
+          //     this.dataCategory.processID,
+          //     this.view.formModel.entityName,
+          //     this.view.formModel.funcID,
+          //     '',
+          //     this.view.function.description +
+          //       ' - ' +
+          //       this.itemDetail.contractNo,
+          //     ''
+          //   )
+          //   .subscribe((result) => {
+          //     if (result?.msgCodeError == null && result?.rowCount) {
+          //       this.notify.notifyCode('ES007');
+          //       this.itemDetail.status = '3';
+          //       this.itemDetail.approveStatus = '3';
+          //       this.hrService
+          //         .editEContract(this.itemDetail, false)
+          //         .subscribe((res) => {
+          //           if (res) {
+          //             this.view?.dataService
+          //               ?.update(this.itemDetail)
+          //               .subscribe();
+          //           }
+          //         });
+          //     } else this.notify.notifyCode(result?.msgCodeError);
+          //   });
         }
       });
   }

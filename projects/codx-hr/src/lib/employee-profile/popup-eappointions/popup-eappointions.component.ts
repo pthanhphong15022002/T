@@ -12,6 +12,8 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-eappointions',
@@ -39,29 +41,32 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   autoNumField: string;
   eAppointionHeaderTexts: any;
   disabledInput = false;
+  employeeSign;
+  loaded: boolean = false;
 
+  oldOrgUnitID: any;
+  oldJobLevelID: any;
+  oldPositionID: any;
+  oldLocationID: any;
 
-  originUnitID: any;
-  originJobLevelID: any;
-  originPositionID: any;
-  originLocationID: any;
+  newOrgUnitID: any;
+  newJobLevelID: any;
+  newPositionID: any;
+  newLocationID: any;
 
-  editedUnitID: any;
-  editedJobLevel: any;
-  editedPosition: any;
-  editedLocation: any;
+  newOrgUnitStr: any;
+  newJobLevelStr: any;
+  newPositionStr: any;
+  newLocationStr: any;
 
-  editedUnitIDStr: any;
-  editedJobLevelStr: any;
-  editedPositionStr: any;
-  editedLocationStr: any;
-
-  oldUnitIDStr: any;
+  oldOrgUnitStr: any;
   oldJobLevelStr: any;
   oldPositionStr: any;
   oldLocationStr: any;
 
+
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
@@ -79,28 +84,42 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.isUseEmployee = data?.data?.isUseEmployee;
     if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
 
-    if (data?.data?.empObj)
+    if (data?.data?.empObj && this.actionType == 'add')
     {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
-      this.originUnitID =  this.employeeObj.orgUnitID;
-      this.originJobLevelID = this.employeeObj.jobLevel;
-      this.originPositionID = this.employeeObj.positionID;
-      this.originLocationID = this.employeeObj.locationID;
+      this.oldOrgUnitID =  this.employeeObj.orgUnitID;
+      this.oldJobLevelID = this.employeeObj.jobLevel;
+      this.oldPositionID = this.employeeObj.positionID;
+      this.oldLocationID = this.employeeObj.locationID;
 
-      this.editedUnitID =  this.employeeObj.orgUnitID;
-      this.editedJobLevel = this.employeeObj.jobLevel;
-      this.editedPosition = this.employeeObj.positionID;
-      this.editedLocation = this.employeeObj.locationID;
+      debugger
+      this.newOrgUnitID = this.employeeObj.orgUnitID;
+      this.newJobLevelID = this.employeeObj.jobLevel;
+      this.newPositionID = this.employeeObj.positionID;
+      this.newLocationID = this.employeeObj.locationID;
+    }
+    else if(data?.data?.empObj && this.actionType == 'edit'){
+      this.oldOrgUnitID =  this.EAppointionObj.oldOrgUnitID;
+      this.oldJobLevelID = this.EAppointionObj.oldJobLevel;
+      this.oldPositionID = this.EAppointionObj.oldPositionID;
+      this.oldLocationID = this.EAppointionObj.oldLocationID;
+
+      debugger
+      this.newOrgUnitID = this.EAppointionObj.orgUnitID;
+      this.newJobLevelID = this.EAppointionObj.jobLevel;
+      this.newPositionID = this.EAppointionObj.positionID;
+      this.newLocationID = this.EAppointionObj.locationID;
     }
     this.formModel = dialog.formModel;
   }
+
 
   initForm() {
     this.hrService
@@ -136,7 +155,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.cr.detectChanges();
           }
         });
-    } else if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+    } else if (
+      this.actionType === 'edit' ||
+      this.actionType === 'copy' ||
+      this.actionType === 'view'
+    ) {
+      if (this.EAppointionObj.signerID) {
+        this.getEmployeeInfoById(this.EAppointionObj.signerID, 'SignerID');
+      }
       this.formGroup.patchValue(this.EAppointionObj);
       this.formModel.currentData = this.EAppointionObj;
       this.isAfterRender = true;
@@ -164,12 +190,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         }
         if (fieldName === 'SignerID') {
           this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+            this.employeeSign = emp[0][0];
             if (emp[1] > 0) {
               let positionID = emp[0][0].positionID;
 
               if (positionID) {
                 this.hrService.getPositionByID(positionID).subscribe((res) => {
                   if (res) {
+                    this.employeeSign.positionName = res.positionName;
                     this.EAppointionObj.signerPosition = res.positionName;
                     this.formGroup.patchValue({
                       signerPosition: this.EAppointionObj.signerPosition,
@@ -183,6 +211,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
                   signerPosition: this.EAppointionObj.signerPosition,
                 });
               }
+              this.loaded = true;
               this.df.detectChanges();
             }
           });
@@ -193,9 +222,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrService.getHeaderText(this.funcID).then((res)=>{
+    this.hrService.getHeaderText(this.funcID).then((res) => {
       this.eAppointionHeaderTexts = res;
-    })
+    });
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
@@ -226,157 +255,213 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeOrgUnitID(event){
-    let viewMem = event.component?.setting.viewMember
-    let newVal = event.component.itemsSelected[0][viewMem]
-    if(this.actionType == 'edit'){
-      this.notify.alertCode('HR027',null,...[
-        this.eAppointionHeaderTexts.OrgUnitID, 
-        this.editedUnitIDStr, 
-        newVal, 
-        this.EAppointionObj.oldOrgUnitID, 
-        this.EAppointionObj.oldOrgUnitID, 
-        this.originUnitID]).subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.editedUnitIDStr = newVal;
-        }
-        else{
-          if(event.data != this.originUnitID && this.originUnitID){
-            this.EAppointionObj.oldOrgUnitID = this.originUnitID;
-          }
-          else if(event.data == this.originUnitID){
-            this.EAppointionObj.oldOrgUnitID = '';
-          }
-          this.formGroup.patchValue(this.EAppointionObj);
-          this.detectorRef.detectChanges();
-        }})
+    debugger
+    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldOrgUnitID){
+      this.EAppointionObj.oldOrgUnitID = this.newOrgUnitID;
+      this.newOrgUnitID = event.data;
     }
-    else{
-      if(event.data != this.originUnitID && this.originUnitID){
-        this.EAppointionObj.oldOrgUnitID = this.originUnitID;
+    else if(this.actionType == 'edit' && this.oldOrgUnitID){
+      if(event.data == this.EAppointionObj.oldOrgUnitID){
+        this.EAppointionObj.oldOrgUnitID = null;
       }
-      else if(event.data == this.originUnitID){
-        this.EAppointionObj.oldOrgUnitID = '';
-      }
-      this.formGroup.patchValue(this.EAppointionObj);
-      this.detectorRef.detectChanges();
+      this.newOrgUnitID = event.data;
     }
-    this.editedUnitID = event.data;
+    this.formGroup.patchValue(this.EAppointionObj);
+    this.detectorRef.detectChanges();
+          
+    // let viewMem = event.component?.setting.viewMember
+    // let newVal = event.component.itemsSelected[0][viewMem]
+    // if(this.actionType == 'edit'){
+    //   this.notify.alertCode('HR027',null,...[
+    //     this.eAppointionHeaderTexts.OrgUnitID, 
+    //     this.newOrgUnitStr, 
+    //     newVal, 
+    //     this.EAppointionObj.oldOrgUnitID, 
+    //     this.EAppointionObj.oldOrgUnitID, 
+    //     this.oldOrgUnitID]).subscribe((x) => {
+    //     if (x.event?.status == 'Y') {
+    //       this.newOrgUnitStr = newVal;
+    //     }
+    //     else{
+    //       if(event.data != this.oldOrgUnitID && this.oldOrgUnitID){
+    //         this.EAppointionObj.oldOrgUnitID = this.oldOrgUnitID;
+    //       }
+    //       else if(event.data == this.oldOrgUnitID){
+    //         this.EAppointionObj.oldOrgUnitID = '';
+    //       }
+    //       this.formGroup.patchValue(this.EAppointionObj);
+    //       this.detectorRef.detectChanges();
+    //     }})
+    // }
+    // else{
+    //   if(event.data != this.oldOrgUnitID && this.oldOrgUnitID){
+    //     this.EAppointionObj.oldOrgUnitID = this.oldOrgUnitID;
+    //   }
+    //   else if(event.data == this.oldOrgUnitID){
+    //     this.EAppointionObj.oldOrgUnitID = '';
+    //   }
+    //   this.formGroup.patchValue(this.EAppointionObj);
+    //   this.detectorRef.detectChanges();
+    // }
+    // this.newOrgUnitID = event.data;
   }
 
   onChangeJobLevel(event){
-    let viewMem = event.component?.setting.viewMember
-    let newVal = event.component.itemsSelected[0][viewMem]
-    if(this.actionType == 'edit'){
-      this.notify.alertCode('HR027',null,...[
-        this.eAppointionHeaderTexts.JobLevel, 
-        this.editedJobLevelStr, 
-        newVal, 
-        this.EAppointionObj.oldJobLevel, 
-        this.EAppointionObj.oldJobLevel, 
-        this.originJobLevelID]).subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.editedJobLevelStr = newVal;
-        }
-        else{
-          if(event.data != this.originJobLevelID && this.originJobLevelID){
-            this.EAppointionObj.oldJobLevel = this.originJobLevelID;
-          }
-          else if(event.data == this.originJobLevelID){
-            this.EAppointionObj.oldJobLevel = '';
-          }
-          this.formGroup.patchValue(this.EAppointionObj);
-          this.detectorRef.detectChanges();
-        }})
+
+    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldJobLevel){
+      this.EAppointionObj.oldJobLevel = this.newJobLevelID;
+      this.newJobLevelID = event.data;
     }
-    else{
-      if(event.data != this.originJobLevelID && this.originJobLevelID){
-        this.EAppointionObj.oldJobLevel = this.originJobLevelID;
+    else if(this.actionType == 'edit' && this.oldJobLevelID){
+      if(event.data == this.EAppointionObj.oldJobLevel){
+        this.EAppointionObj.oldJobLevel = null;
       }
-      else if(event.data == this.originJobLevelID){
-        this.EAppointionObj.oldJobLevel = '';
-      }
-      this.formGroup.patchValue(this.EAppointionObj);
-      this.detectorRef.detectChanges();
+      this.newJobLevelID = event.data;
     }
-    this.editedJobLevel = event.data;
+    this.formGroup.patchValue(this.EAppointionObj);
+    this.detectorRef.detectChanges();
+    // let viewMem = event.component?.setting.viewMember
+    // let newVal = event.component.itemsSelected[0][viewMem]
+    // debugger
+    // if(this.actionType == 'edit'){
+    //   this.notify.alertCode('HR027',null,...[
+    //     this.eAppointionHeaderTexts.JobLevel, 
+    //     this.newJobLevelStr, 
+    //     newVal, 
+    //     this.oldJobLevelStr, 
+    //     this.oldJobLevelStr, 
+    //     this.newJobLevelStr]).subscribe((x) => {
+    //     if (x.event?.status == 'Y') {
+    //       debugger
+    //       if(event.data == this.oldJobLevelID){
+    //         this.EAppointionObj.oldJobLevel = '';
+    //         this.oldJobLevelID = ''
+    //         this.oldJobLevelStr = ''
+    //       }
+    //       this.newJobLevelStr = newVal;
+    //     }
+    //     else{
+    //       this.EAppointionObj.oldJobLevel = this.newJobLevelID
+    //       this.newJobLevelID = event.data;
+    //       this.newJobLevelStr = newVal;
+    //     }
+    //     this.formGroup.patchValue(this.EAppointionObj);
+    //     this.detectorRef.detectChanges();
+    //   })
+    // }
+    // else{
+    //   if(event.data != this.oldJobLevelID && this.oldJobLevelID){
+    //     this.EAppointionObj.oldJobLevel = this.oldJobLevelID;
+    //   }
+    //   else if(event.data == this.oldJobLevelID){
+    //     this.EAppointionObj.oldJobLevel = '';
+    //   }
+    //   this.formGroup.patchValue(this.EAppointionObj);
+    //   this.detectorRef.detectChanges();
+    // }
+
   }
 
-  onChangePosition(event){
-    let viewMem = event.component?.setting.viewMember
-    let newVal = event.component.itemsSelected[0][viewMem]
+  onChangePosition(event) {
+    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldPositionID){
+      this.EAppointionObj.oldPositionID = this.newPositionID;
+      this.newPositionID = event.data;
+    }
+    else if(this.actionType == 'edit' && this.oldPositionID){
+      if(event.data == this.EAppointionObj.oldPositionID){
+        this.EAppointionObj.oldPositionID = null;
+      }
+      this.newPositionID = event.data;
+    }
+    this.formGroup.patchValue(this.EAppointionObj);
+    this.detectorRef.detectChanges();
+    // let viewMem = event.component?.setting.viewMember;
+    // let newVal = event.component.itemsSelected[0][viewMem];
 
-    if(this.actionType == 'edit'){
-      this.notify.alertCode('HR027',null,...[
-        this.eAppointionHeaderTexts.PositionID, 
-        this.editedPositionStr, 
-        newVal, 
-        this.EAppointionObj.oldPositionID, 
-        this.EAppointionObj.oldPositionID, 
-        this.originPositionID]).subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.editedPositionStr = newVal;
-        }
-        else{
-          if(event.data != this.originPositionID && this.originPositionID){
-            this.EAppointionObj.oldPositionID = this.originPositionID;
-          }
-          else if(event.data == this.originPositionID){
-            this.EAppointionObj.oldPositionID = '';
-          }
-          this.formGroup.patchValue(this.EAppointionObj);
-          this.detectorRef.detectChanges();
-        }})
-    }
-    else{
-      if(event.data != this.originPositionID && this.originPositionID){
-        this.EAppointionObj.oldPositionID = this.originPositionID;
-      }
-      else if(event.data == this.originPositionID){
-        this.EAppointionObj.oldPositionID = '';
-      }
-      this.formGroup.patchValue(this.EAppointionObj);
-      this.detectorRef.detectChanges();
-    }
-    this.editedPosition = event.data;
+    // if(this.actionType == 'edit'){
+    //   this.notify.alertCode('HR027',null,...[
+    //     this.eAppointionHeaderTexts.PositionID, 
+    //     this.newPositionStr, 
+    //     newVal, 
+    //     this.EAppointionObj.oldPositionID, 
+    //     this.EAppointionObj.oldPositionID, 
+    //     this.oldPositionID]).subscribe((x) => {
+    //     if (x.event?.status == 'Y') {
+    //       this.newPositionStr = newVal;
+    //     }
+    //     else{
+    //       if(event.data != this.oldPositionID && this.oldPositionID){
+    //         this.EAppointionObj.oldPositionID = this.oldPositionID;
+    //       }
+    //       else if(event.data == this.oldPositionID){
+    //         this.EAppointionObj.oldPositionID = '';
+    //       }
+    //       this.formGroup.patchValue(this.EAppointionObj);
+    //       this.detectorRef.detectChanges();
+    //     }})
+    // }
+    // else{
+    //   if(event.data != this.oldPositionID && this.oldPositionID){
+    //     this.EAppointionObj.oldPositionID = this.oldPositionID;
+    //   }
+    //   else if(event.data == this.oldPositionID){
+    //     this.EAppointionObj.oldPositionID = '';
+    //   }
+    //   this.formGroup.patchValue(this.EAppointionObj);
+    //   this.detectorRef.detectChanges();
+    // }
+    // this.newPositionID = event.data;
   }
 
-  onChangeLocation(event){
-    let viewMem = event.component?.setting.viewMember
-    let newVal = event.component.itemsSelected[0][viewMem]
+  onChangeLocation(event) {
+    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldLocationID){
+      this.EAppointionObj.oldLocationID = this.newLocationID;
+      this.newLocationID = event.data;
+    }
+    else if(this.actionType == 'edit' && this.oldLocationID){
+      if(event.data == this.EAppointionObj.oldLocationID){
+        this.EAppointionObj.oldLocationID = null;
+      }
+      this.newLocationID = event.data;
+    }
+    this.formGroup.patchValue(this.EAppointionObj);
+    this.detectorRef.detectChanges();
+    // let viewMem = event.component?.setting.viewMember;
+    // let newVal = event.component.itemsSelected[0][viewMem];
 
-    if(this.actionType == 'edit'){
-      this.notify.alertCode('HR027',null,...[
-        this.eAppointionHeaderTexts.LocationID, 
-        this.editedLocationStr, 
-        newVal, 
-        this.EAppointionObj.oldLocationID, 
-        this.EAppointionObj.oldLocationID, 
-        this.originLocationID]).subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.editedLocationStr = newVal;
-        }
-        else{
-          if(event.data != this.originLocationID && this.originLocationID){
-            this.EAppointionObj.oldLocationID = this.originLocationID;
-          }
-          else if(event.data == this.originLocationID){
-            this.EAppointionObj.oldLocationID = '';
-          }
-          this.formGroup.patchValue(this.EAppointionObj);
-          this.detectorRef.detectChanges();
-        }})
-    }
-    else{
-      if(event.data != this.originLocationID && this.originLocationID){
-        this.EAppointionObj.oldLocationID = this.originLocationID;
-      }
-      else if(event.data == this.originLocationID){
-        this.EAppointionObj.oldLocationID = '';
-      }
-      this.formGroup.patchValue(this.EAppointionObj);
-      this.detectorRef.detectChanges();
-    }
-    this.editedLocation = event.data;
+    // if(this.actionType == 'edit'){
+    //   this.notify.alertCode('HR027',null,...[
+    //     this.eAppointionHeaderTexts.LocationID, 
+    //     this.newLocationStr, 
+    //     newVal, 
+    //     this.oldLocationStr, 
+    //     this.oldLocationStr, 
+    //     this.newLocationStr]).subscribe((x) => {
+    //     if (x.event?.status == 'Y') {
+    //       this.newLocationStr = newVal;
+    //     }
+    //     else{
+    //       if(event.data != this.oldLocationID && this.oldLocationID){
+    //         this.EAppointionObj.oldLocationID = this.oldLocationID;
+    //       }
+    //       else if(event.data == this.oldLocationID){
+    //         this.EAppointionObj.oldLocationID = '';
+    //       }
+    //       this.formGroup.patchValue(this.EAppointionObj);
+    //       this.detectorRef.detectChanges();
+    //     }})
+    // }
+    // else{
+    //   if(event.data != this.oldLocationID && this.oldLocationID){
+    //     this.EAppointionObj.oldLocationID = this.oldLocationID;
+    //   }
+    //   else if(event.data == this.oldLocationID){
+    //     this.EAppointionObj.oldLocationID = '';
+    //   }
+    //   this.formGroup.patchValue(this.EAppointionObj);
+    //   this.detectorRef.detectChanges();
+    // }
+    // this.newLocationID = event.data;
   }
 
   valueChange(event) {
@@ -403,8 +488,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-
-  onSaveForm() {
+  async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -421,9 +505,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       }
     }
 
-    // if (this.actionType === 'copy' || this.actionType === 'add') {
-    //   delete this.EAppointionObj.recID;
-    // }
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        if (item2?.status == 0) {
+          this.fileAdded(item2);
+        }
+      });
+    }
+
     this.EAppointionObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
@@ -432,8 +521,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.notify.notifyCode('SYS006');
             // this.successFlag = true;
-            this.dialog && this.dialog.close(p);
             p.emp = this.employeeObj;
+            this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS023');
         });
     } else {
@@ -454,5 +543,46 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           } else this.notify.notifyCode('SYS021');
         });
     }
+  }
+
+  onRenderOrgUnitID(event){
+    this.newOrgUnitStr = event.itemsSelected[0]?.text
+  }
+
+  onRenderOldOrgUnitID(event){
+    this.oldOrgUnitStr = event.itemsSelected[0]?.OrgUnitName;;
+  }
+
+  onRenderJobLevel(event){
+    this.newJobLevelStr = event.itemsSelected[0]?.Description
+  }
+
+  onRenderOldJobLevel(event){
+    this.oldJobLevelStr = event.itemsSelected[0]?.Description
+  }
+
+  onRenderPositionID(event){
+    this.newPositionStr = event.itemsSelected[0]?.PositionName
+  }
+
+  onRenderOldPositionID(event){
+    this.oldPositionStr = event.itemsSelected[0]?.PositionName
+  }
+
+  onRenderLocationID(event){
+    this.newLocationStr = event.itemsSelected[0]?.LocationName
+  }
+
+  onRenderOldLocationID(event){
+    this.oldLocationStr = event.itemsSelected[0]?.LocationName
+  }
+
+  //Files handle
+  fileAdded(event: any) {
+    this.EAppointionObj.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

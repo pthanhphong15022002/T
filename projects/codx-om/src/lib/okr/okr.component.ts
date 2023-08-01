@@ -63,8 +63,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   orgFuncID = OMCONST.FUNCID.ORG;
   persFuncID = OMCONST.FUNCID.PERS;
   /////////
-  auth: AuthStore;
-  okrService: CodxOmService;
   gridView: any;
   showPlanMF = false;
   //Kỳ
@@ -137,14 +135,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
-    private authService: AuthService
+    private authStore: AuthStore,
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    this.auth = inject.get(AuthStore);
-    this.curUser = this.auth.get();
-    this.curUser = this.authService.userValue;
-    this.okrService = inject.get(CodxOmService);
+    this.curUser = this.authStore.get();
     this.createCOObject();
   }
 
@@ -359,7 +354,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.year != 0
     ) {
       this.sharedPlan = [];
-      this.okrService
+      this.codxOmService
         .getSharedPlans(this.dataRequest, periodID, interval, year)
         .subscribe((sharedPlan: any) => {
           //Reset data View
@@ -379,7 +374,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.dataOKRPlans = plan;
       this.planNull=false;
       //this.createCOObject();
-      this.okrService.getAllOKROfPlan(plan?.recID).subscribe((okrs: any) => {
+      this.codxOmService.getAllOKROfPlan(plan?.recID).subscribe((okrs: any) => {
         if (okrs) {
           this.dataOKR = okrs;
         } else {
@@ -419,7 +414,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.interval != '' &&
       this.year != 0
     ) {
-      this.okrService
+      this.codxOmService
         .getOKRPlans(this.dataRequest, periodID, interval, year)
         .subscribe((item: any) => {
           //Reset data View
@@ -437,7 +432,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             }
             this.planNull = false;
             this.createCOObject();
-            this.okrService
+            this.codxOmService
               .getAllOKROfPlan(item?.recID)
               .subscribe((okrs: any) => {
                 if (okrs) {
@@ -474,13 +469,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
   updateOKRPlans(planRecID: string) {
-    this.okrService.getOKRPlansByID(planRecID).subscribe((res: any) => {
+    this.codxOmService.getOKRPlansByID(planRecID).subscribe((res: any) => {
       if (res) {
         this.dataOKRPlans.status = res?.status;
         this.dataOKRPlans.progress = res?.progress;
       }
     });
-    this.okrService.getAllOKROfPlan(planRecID).subscribe((okrs: any) => {
+    this.codxOmService.getAllOKROfPlan(planRecID).subscribe((okrs: any) => {
       if (okrs) {
         let x = okrs;
         this.getOrgTreeOKR();

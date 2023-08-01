@@ -8,6 +8,7 @@
   [data]="vouchers"
   [customToolbar]="subToolbar"
   [openMore]="false"
+  class="ac-dialog ac-animation-slideRight"
 >
 </codx-form>
 <!-- Start: Sub header -->
@@ -60,6 +61,79 @@
       </e-tabitems>
     </ejs-tab>
   </div>
+  <div class="row">
+    <div class="col-7">
+      <div
+        *ngIf="form.formGroup"
+        id="ac-column-def"
+        class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
+      >
+        <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
+        <codx-input
+          style="width: 100%"
+          class="fw-bold border-0"
+          [Group]="form.formGroup"
+          field="memo"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <!-- <div class="col-5">
+      <div class="d-flex align-items-center justify-content-end">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+          <button
+            type="button"
+            class="btn btn-md btn-light-primary"
+            (click)="onSaveAdd()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-add_to_photos icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSave"
+                default="Lưu & thêm"
+              ></codx-label>
+            </div>
+          </button>
+        </div>
+        <div class="ms-2 me-2">
+          <button
+            type="button"
+            class="btn btn-md btn-primary"
+            style="min-width: 60px"
+            (click)="onSave()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-save_alt icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSave"
+                default="Lưu"
+              ></codx-label>
+            </div>
+          </button>
+        </div>
+        <div *ngIf="vouchers?.status == '0'" class="ms-2">
+          <button
+            type="button"
+            class="btn btn-md btn-danger"
+            (click)="onDiscard()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-settings_backup_restore icon-18"></i>
+              <codx-label
+                class="fs-6 fw-normal"
+                fiedName="lblDiscard"
+                default="Hủy bỏ"
+              ></codx-label>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div> -->
+  </div>
 </ng-template>
 <!-- End: Body -->
 
@@ -93,10 +167,7 @@
               <div class="form-group">
                 <!-- Tên Kho -->
                 <div class="form-group">
-                  <codx-label
-                    field="WarehouseName"
-                    default="Tên kho"
-                  >
+                  <codx-label field="WarehouseName" default="Tên kho">
                   </codx-label>
                   <codx-input
                     type="text"
@@ -216,9 +287,9 @@
         service="IV"
         [autoLoad]="false"
         [autoFitColumns]="false"
-        [autoAddRow]="true"
-        (eventAction)="autoAddRowSet($event)"
-        (created)="gridCreated()"
+        [autoAddRow]="false"
+        (eventAction)="autoAddRow($event)"
+        (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
         (onDoubleClick)="onDoubleClick($event)"
@@ -376,10 +447,7 @@
                     class="fs-6 fw-bold"
                     [innerHTML]="
                       item.idiM4
-                        | formatvalue
-                          : fmVouchersLines
-                          : 'idiM4'
-                          : idiM4
+                        | formatvalue : fmVouchersLines : 'idiM4' : idiM4
                         | async
                     "
                   ></span>
@@ -494,10 +562,7 @@
                       class="fs-6 fw-bold"
                       [innerHTML]="
                         item.diM2
-                          | formatvalue
-                            : fmVouchersLines
-                            : 'diM2'
-                            : diM2
+                          | formatvalue : fmVouchersLines : 'diM2' : diM2
                           | async
                       "
                     ></span>
@@ -517,10 +582,7 @@
                       class="fs-6 fw-bold"
                       [innerHTML]="
                         item.diM3
-                          | formatvalue
-                            : fmVouchersLines
-                            : 'diM3'
-                            : diM3
+                          | formatvalue : fmVouchersLines : 'diM3' : diM3
                           | async
                       "
                     ></span>
@@ -541,10 +603,7 @@
                       class="fs-6 fw-bold"
                       [innerHTML]="
                         item.diM1
-                          | formatvalue
-                            : fmVouchersLines
-                            : 'diM1'
-                            : diM1
+                          | formatvalue : fmVouchersLines : 'diM1' : diM1
                           | async
                       "
                     ></span>
@@ -688,48 +747,56 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <div *ngIf="formType != 'edit'" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-md btn-light-primary"
-            (click)="onSaveAdd()"
-          >
-            <codx-label
-              class="fw-normal"
-              fiedName="lblSave"
-              default="Lưu & thêm"
-            ></codx-label>
-          </button>
-        </div>
-        <div class="ms-2 me-2">
-          <button
-            type="button"
-            class="btn btn-md btn-primary"
-            style="min-width: 60px"
-            (click)="onSave()"
-          >
-            <codx-label
-              class="fw-normal"
-              fiedName="lblSave"
-              default="Lưu"
-            ></codx-label>
-          </button>
-        </div>
-        <div *ngIf="vouchers?.status == '0' && hasSaved" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-md btn-danger"
-            (click)="onDiscard()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-settings_backup_restore icon-18"></i>
-              <codx-label
-                class="fs-6 fw-normal"
-                fiedName="lblDiscard"
-                default="Hủy bỏ"
-              ></codx-label>
-            </div>
-          </button>
+        <div class="d-flex align-items-center justify-content-end">
+          <div *ngIf="formType != 'edit'" class="ms-2">
+            <button
+              type="button"
+              class="btn btn-md btn-light-primary"
+              (click)="onSaveAdd()"
+            >
+              <div class="d-flex align-items-center">
+                <i class="icon-add_to_photos icon-16"></i>
+                <codx-label
+                  class="fw-normal"
+                  fiedName="lblSave"
+                  default="Lưu & thêm"
+                ></codx-label>
+              </div>
+            </button>
+          </div>
+          <div class="ms-2 me-2">
+            <button
+              type="button"
+              class="btn btn-md btn-primary"
+              style="min-width: 60px"
+              (click)="onSave()"
+            >
+              <div class="d-flex align-items-center">
+                <i class="icon-save_alt icon-16"></i>
+                <codx-label
+                  class="fw-normal"
+                  fiedName="lblSave"
+                  default="Lưu"
+                ></codx-label>
+              </div>
+            </button>
+          </div>
+          <div *ngIf="vouchers?.status == '0'" class="ms-2">
+            <button
+              type="button"
+              class="btn btn-md btn-danger"
+              (click)="onDiscard()"
+            >
+              <div class="d-flex align-items-center">
+                <i class="icon-settings_backup_restore icon-18"></i>
+                <codx-label
+                  class="fs-6 fw-normal"
+                  fiedName="lblDiscard"
+                  default="Hủy bỏ"
+                ></codx-label>
+              </div>
+            </button>
+          </div>
         </div>
         <div class="ms-2">
           <div

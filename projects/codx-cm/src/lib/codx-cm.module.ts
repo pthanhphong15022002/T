@@ -92,7 +92,9 @@ import {
   LineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
-import { CmApprovalComponent } from './cm-approval/cm-approval.component';
+import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin-deal.component';
+import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-dashboard.component';
+import { PopupChangeAllocationRateComponent } from './targets/popup-change-allocation-rate/popup-change-allocation-rate.component';
 
 export const routes: Routes = [
   {
@@ -138,14 +140,6 @@ export const routes: Routes = [
         component: TargetsComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: '',
-      //   loadChildren: () =>
-      //     import('projects/codx-cm/src/lib/codx-approvel.module').then(
-      //       (m) => m.CodxApprovelModule
-      //     ),
-      //   data: { noReuse: true },
-      // },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -225,7 +219,9 @@ const T_Component: Type<any>[] = [
   PopupAddTargetComponent,
   CodxTabCmComponent,
   ViewTreeTargetsComponent,
-  CmApprovalComponent,
+  PopupAssginDealComponent,
+  InstanceDashboardComponent,
+  PopupChangeAllocationRateComponent
 ];
 
 @NgModule({

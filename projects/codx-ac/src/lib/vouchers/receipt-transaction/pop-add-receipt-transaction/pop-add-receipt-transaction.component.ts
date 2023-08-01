@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
@@ -9,10 +9,11 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { PopAddLineReceiptTransactionComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
+import { itemMove } from '@syncfusion/ej2-angular-treemap';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { Vouchers } from '../../../models/Vouchers.model';
   templateUrl: './pop-add-receipt-transaction.component.html',
   styleUrls: ['./pop-add-receipt-transaction.component.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection : ChangeDetectionStrategy.OnPush,
 })
 export class PopAddReceiptTransactionComponent extends UIComponent implements OnInit{
 
@@ -33,6 +35,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('warehouse') warehouse: CodxInputComponent;
+  private destroy$ = new Subject<void>();
 
   keymodel: any = [];
   reason: Array<Reason> = [];
@@ -48,6 +51,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   modeGrid: any;
   vouchersLines: Array<VouchersLines> = [];
   vouchersLinesDelete: Array<VouchersLines> = [];
+  dataUpdate: VouchersLines = new VouchersLines();
   lockFields = [];
   tab: number = 0;
   total: any = 0;
@@ -106,7 +110,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.routerActive.queryParams.subscribe((res) => {
+    this.routerActive.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
       if (res && res?.journalNo) this.journalNo = res.journalNo;
     });
     this.headerText = dialogData.data?.headerText;
@@ -114,9 +120,13 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
+    if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
+      this.lockFields = [...dialogData?.data.lockFields];
+    }
     this.funcID = dialog.formModel.funcID;
     this.cache
       .gridViewSetup(this.fmVouchers.formName, this.fmVouchers.gridViewName)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -124,6 +134,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       });
     this.cache
     .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
+    .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
         this.gridViewSetupLine = res;
@@ -145,14 +156,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.dt.detectChanges();
   }
 
+  ngOnDestroy() {
+    this.view.setRootNode('');
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   //#endregion
 
   //#region Event
 
-  gridCreated() {
-    this.gridVouchersLine.hideColumns(this.lockFields);
+  gridInit(columnsGrid)
+  {
+    this.setVisibleColumn(columnsGrid);
+    this.setHideColumns(columnsGrid);
     setTimeout(() => {
       this.loadingform = false;
+      this.dt.detectChanges();
     }, 1000);
   }
 
@@ -191,7 +215,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
 
           case 'reasonid':
-            this.vouchers.reasonID = e.data;
+            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
           let text = e?.component?.itemsSelected[0]?.ReasonName;
           this.setReason(field, text, 0);
           break;
@@ -227,11 +251,22 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     //   this.setPredicateByIDIM4(e.data[e.field]);
     // }
 
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return;
+        }
+    }
+
     const postFields: string[] = [
       'itemID',
-      'costPrice',
+      //'costPrice',
       'quantity',
-      'costAmt',
+      //'costAmt',
       'lineType',
       'umid',
       'idiM0',
@@ -252,12 +287,40 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers,
           e.data,
         ])
-        .subscribe((line) => {
-          console.log(line);
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          console.log(res);
+          if(res)
+          {
+            var arrColumn = [];
+            arrColumn = res.updateColumns.split(';');
+            arrColumn.forEach((a) => {
+              if (a) {
+                let field = Util.camelize(a);
+                e.data[field] = res[field];
+              }
+            });
+            this.dt.detectChanges();
+            this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+          }
           
-          this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], line);
+          // this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], res);
         });
     }
+
+    switch(e.field)
+    {
+      case 'costAmt':
+        this.costAmt_Change(e.data);
+        break;
+      case 'costPrice':
+        this.costPrice_Change(e.data);
+        break;
+      case 'reasonID':
+        e.data.note = e.itemData.ReasonName;
+        break;
+    }
+
     // switch(e.field)
     // {
     //   case 'itemID':
@@ -279,6 +342,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     } else {
       this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
+        .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
@@ -299,6 +363,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     } else {
       this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
+        .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
@@ -311,14 +376,30 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   onDiscard(){
+    if(this.modeGrid == 1)
+    {
+      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      {
+        this.discard();
+      }
+    }
+    else
+    {
+      this.discard();
+    }
+  }
+
+  discard()
+  {
     this.dialog.dataService
-      .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-      .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
-        }
-      });
+    .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res.data != null) {
+        this.dialog.close();
+        this.dt.detectChanges();
+      }
+    });
   }
 
   onDoubleClick(data)
@@ -408,7 +489,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.vouchers['_uuid'],
         this.vouchers
       );
-      this.dialog.dataService.save(null, 0, '', '', false).subscribe((res) => {
+      this.dialog.dataService.save(null, 0, '', '', false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
         if (res && res.update.data != null) {
           this.dt.detectChanges();
         }
@@ -434,6 +517,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             );
             this.dialog.dataService
               .save(null, 0, '', 'SYS006', true)
+              .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if(res.update.error)
                 {
@@ -454,6 +538,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     this.dialog.dataService.clear();
                     this.dialog.dataService
                       .addNew((o) => this.setDefault(o))
+                      .pipe(takeUntil(this.destroy$))
                       .subscribe((res) => {
                       this.vouchers = res;
                       this.setWarehouseID();
@@ -480,7 +565,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               this.form,
               this.formType === 'edit',
               () => {
-                this.dialog.dataService.save().subscribe((res) => {
+                this.dialog.dataService.save()
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
                   if(res.save.error)
                   {
                     this.vouchers.status = '0';
@@ -496,6 +583,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                       this.dialog.dataService.clear();
                       this.dialog.dataService
                       .addNew((o) => this.setDefault(o))
+                      .pipe(takeUntil(this.destroy$))
                       .subscribe((res) => {
                         this.vouchers = res;
                         this.setWarehouseID();
@@ -529,7 +617,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.vouchers['_uuid'],
                 this.vouchers
               );
-              this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+              this.dialog.dataService.save(null, 0, '', '', true)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
                 if (res && res.update.data != null) {
                   this.dialog.close({
                     update: true,
@@ -556,6 +646,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
           this.vouchers.recID,
         ])
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           if (res.length > 0) {
             this.keymodel = Object.keys(res[0]);
@@ -580,28 +671,28 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.getWarehouseName(this.vouchers.warehouseID);
     }
 
-    if (
-      this.vouchers &&
-      this.vouchers.unbounds &&
-      this.vouchers.unbounds.lockFields &&
-      this.vouchers.unbounds.lockFields.length
-    ){
-      this.lockFields = this.vouchers.unbounds
-        .lockFields as Array<string>;
-    }
-    else{
-      this.api
-        .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
-          this.vouchers
-        ])
-        .subscribe((res: any) => {
-          if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
-            this.vouchers.unbounds = res.unbounds;
-            this.lockFields = this.vouchers.unbounds
-              .lockFields as Array<string>;
-          }
-        });
-    }
+    // if (
+    //   this.vouchers &&
+    //   this.vouchers.unbounds &&
+    //   this.vouchers.unbounds.lockFields &&
+    //   this.vouchers.unbounds.lockFields.length
+    // ){
+    //   this.lockFields = this.vouchers.unbounds
+    //     .lockFields as Array<string>;
+    // }
+    // else{
+    //   this.api
+    //     .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
+    //       this.vouchers
+    //     ])
+    //     .subscribe((res: any) => {
+    //       if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
+    //         this.vouchers.unbounds = res.unbounds;
+    //         this.lockFields = this.vouchers.unbounds
+    //           .lockFields as Array<string>;
+    //       }
+    //     });
+    // }
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
@@ -614,7 +705,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     options.predicates = 'JournalNo=@0';
     options.dataValues = this.vouchers.journalNo;
     options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options).subscribe((res) => {
+    this.acService.loadDataAsync('AC', options)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
       this.journal = res[0]?.dataValue
         ? { ...res[0], ...JSON.parse(res[0].dataValue) }
         : res[0];
@@ -648,6 +741,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             );
             this.dialog.dataService
               .save(null, 0, '', '', false)
+              .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
                   this.loadModegrid();
@@ -664,8 +758,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               () => {
                 this.dialog.dataService
                   .save(null, 0, '', '', false)
+                  .pipe(takeUntil(this.destroy$))
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
+                      this.vouchers.voucherNo = res.save.data.voucherNo;
                       this.hasSaved = true;
                       this.loadModegrid();
                     }
@@ -681,6 +777,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           );
           this.dialog.dataService
             .save(null, 0, '', '', false)
+            .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res && res.update.data != false) {
                 this.loadModegrid();
@@ -699,6 +796,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.vouchers,
         data,
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           switch (this.modeGrid) {
@@ -737,6 +835,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     opt.FormModel = dataModel;
     this.cache
       .gridViewSetup('VouchersLines', 'grvVouchersLines')
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
@@ -749,7 +848,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             '',
             opt
           );
-          dialogs.closed.subscribe((res) => {
+          dialogs.closed
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
             if (res.event != null) {
               var dataline = res.event['data'];
               if(dataline)
@@ -795,6 +896,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         opt.Resizeable = false;
         this.cache
           .gridViewSetup('VouchersLines', 'grvVouchersLines')
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
@@ -807,7 +909,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 '',
                 opt
               );
-              dialogs.closed.subscribe((res) => {
+              dialogs.closed
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
                 if (res.event != null) {
                   var dataline = res.event['data'];
                   this.vouchersLines[index] = dataline;
@@ -829,6 +933,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.vouchers,
         data,
       ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
           switch (this.modeGrid) {
@@ -851,7 +956,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
   
   deleteRow(data) {
-    this.notification.alertCode('SYS030', null).subscribe((res) => {
+    this.notification.alertCode('SYS030', null)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
       if (res.event.status === 'Y') {
         switch (this.modeGrid) {
           case '1':
@@ -879,6 +986,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
         this.api
           .execAction<any>(this.fmVouchersLines.entityName, [data], 'DeleteAsync')
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
@@ -890,6 +998,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   'UpdateAfterDelete',
                   [this.vouchersLines]
                 )
+                .pipe(takeUntil(this.destroy$))
                 .subscribe((res) => {
                   this.notification.notifyCode('SYS008', 0, '');
                   this.loadTotal();
@@ -1135,6 +1244,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   getWarehouseName(warehouseID: any){
     this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
+    .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
           this.vouchers.warehouseName = res;
@@ -1165,15 +1275,29 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
   }
 
-  calculateNetAmt(quantity: any, costPrice: any)
+  costPrice_Change(line: any)
   {
-    if(quantity == 0 || costPrice == 0)
-      return 0;
-    var costAmt = quantity * costPrice;
-    return costAmt;
+    if(line)
+    {
+      if(line.quantity != 0)
+      {
+        line.costAmt = line.costPrice * line.quantity;
+      }
+    }
   }
 
-  autoAddRowSet(e: any) {
+  costAmt_Change(line: any)
+  {
+    if(line)
+    {
+      if(line.quantity != 0)
+      {
+        line.costPrice = line.costAmt / line.quantity
+      }
+    }
+  }
+
+  autoAddRow(e: any) {
     switch (e.type) {
       case 'autoAdd':
         this.addRow();
@@ -1183,34 +1307,31 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.addRow();
         }
         break;
-      case 'closeEdit':
-        this.gridVouchersLine.autoAddRow = true;
-        break;
     }
   }
 
-  setPredicatesByItemID(dataValue: string): void {
-    for (const v of this.gridVouchersLine.visibleColumns) {
-      if (
-        ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
-          v.fieldName?.toLowerCase()
-        )
-      ) {
-        v.predicate = 'ItemID=@0';
-        v.dataValue = dataValue;
-      }
-    }
-  }
+  // setPredicatesByItemID(dataValue: string): void {
+  //   for (const v of this.gridVouchersLine.visibleColumns) {
+  //     if (
+  //       ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
+  //         v.fieldName?.toLowerCase()
+  //       )
+  //     ) {
+  //       v.predicate = 'ItemID=@0';
+  //       v.dataValue = dataValue;
+  //     }
+  //   }
+  // }
 
-  setPredicateByIDIM4(dataValue: string): void {
-    const idim5 = this.gridVouchersLine.visibleColumns.find(
-      (v) => v.fieldName?.toLowerCase() === 'idim5'
-    );
-    if (idim5) {
-      idim5.predicate = 'WarehouseID=@0';
-      idim5.dataValue = dataValue;
-    }
-  }
+  // setPredicateByIDIM4(dataValue: string): void {
+  //   const idim5 = this.gridVouchersLine.visibleColumns.find(
+  //     (v) => v.fieldName?.toLowerCase() === 'idim5'
+  //   );
+  //   if (idim5) {
+  //     idim5.predicate = 'WarehouseID=@0';
+  //     idim5.dataValue = dataValue;
+  //   }
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
@@ -1237,6 +1358,43 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.gridVouchersLine.endEdit();
       }
     }
+  }
+
+  setVisibleColumn(columnsGrid)
+  {
+    let arr = [
+      'IDIM0',
+      'IDIM1',
+      'IDIM2',
+      'IDIM3',
+      'IDIM4',
+      'IDIM5',
+      'IDIM6',
+      'IDIM7',
+      'IDIM8',
+      'IDIM9',
+    ];
+    let visibleColumns = arr.filter((x) => !this.lockFields.includes(x));
+    if(visibleColumns.length > 0)
+    {
+      visibleColumns.forEach((fieldName) => {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+        if (i > -1) {
+          columnsGrid[i].isVisible = true;
+        }
+      });
+    }
+  }
+
+  setHideColumns(columnsGrid)
+  {
+    this.lockFields.forEach((fieldName) => {
+      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+      if (i > -1) {
+        columnsGrid[i].isVisible = false;
+      }
+    });
+    //this.gridVouchersLine.hideColumns(this.lockFields);
   }
   //#endregion
 }

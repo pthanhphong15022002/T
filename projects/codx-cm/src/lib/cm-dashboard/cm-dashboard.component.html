@@ -158,7 +158,7 @@
     <ng-container
       *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
     >
-      <div class="w-100" [style.height]="'92%'">
+      <div class="w-100" style="height: 90%">
         <ejs-chart
           id="chart-container"
           class="w-100"
@@ -331,7 +331,7 @@
 
 <!-- Lý do thất bại -->
 <!-- title="Lý do thất bại " -->
-<ng-template #templateDeals>
+<!-- <ng-template #templateDeals>
   <div class="w-100 h-100" id="9" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
@@ -372,11 +372,60 @@
       </div>
     </div>
   </div>
+</ng-template> -->
+
+<!-- chart pyramid -->
+<ng-template #templateDeals>
+  <div
+    class="w-100 h-100"
+    id="9"
+    style="height: 100% !important; overflow: hidden"
+  >
+    <codx-label
+      class="fs-5 fw-bold"
+      name="lblConversionRate"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
+    ></codx-label>
+    <div style="height: 100% !important" *ngIf="true; else noData">
+      <!-- <div class="control-section">
+        <div> -->
+      <ejs-accumulationchart
+        id="pyramidcontainer"
+        #pyramid
+        style="height: 100%"
+        [legendSettings]="legendSettingsPy"
+        [tooltip]="tooltipPy"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            name="ConversionRate"
+            [dataSource]="dataSourcePy"
+            xName="name"
+            yName="quantity"
+            [neckWidth]="neckWidth"
+            [neckHeight]="neckHeight"
+            [gapRatio]="gapRatio"
+            [emptyPointSettings]="emptyPointSettings"
+            width="60%"
+            height="100%"
+            [explode]="explode"
+            [dataLabel]="dataLabel"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+      <!-- </div>
+      </div> -->
+    </div>
+  </div>
 </ng-template>
 
 <!-- Thống kê hiệu suất trong năm -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="10" title="">
+  <div class="w-100 h-100" id="10" title="" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
       name="lblEfficiency"
@@ -384,38 +433,38 @@
       gridViewName="grvCMMyDashboard"
       default="Thống kê hiệu suất trong năm"
     ></codx-label>
-    <ng-container *ngIf="dataStatisticTarget; else noData">
-      <div class="row w-100">
+    <ng-container *ngIf="dataStatisticTarget?.length > 0; else noData">
+      <div class="d-flex row w-100" style="height: 95% !important">
         <div class="col-10">
-          <div class="control-section mb-10">
-            <div class="trackball-control-section" align="center">
-              <ejs-chart
-                style="display: block"
-                id="chartcontainer"
-                [primaryXAxis]="primaryXAxisRatio"
-                [primaryYAxis]="primaryYAxisRatio"
-                [tooltip]="tooltip"
-                [legendSettings]="legend"
-                (pointRender)="setColorPoint($event)"
+          <!-- <div class="control-section mb-10"> -->
+          <!-- <div class="trackball-control-section" align="center"> -->
+          <ejs-chart
+            id="chartcontainer"
+            style="height: 100%"
+            [primaryXAxis]="primaryXAxisRatio"
+            [primaryYAxis]="primaryYAxisRatio"
+            [tooltip]="tooltip"
+            [legendSettings]="legend"
+            (pointRender)="setColorPoint($event)"
+          >
+            <e-series-collection>
+              <e-series
+                [dataSource]="dataStatisticTarget"
+                [minRadius]="minRadius"
+                [maxRadius]="maxRadius"
+                type="Bubble"
+                xName="totalTarget"
+                yName="totalDealValue"
+                size="quantity"
+                [marker]="markerRatio"
+                tooltipMappingName="businessLineName"
+                [border]="border"
               >
-                <e-series-collection>
-                  <e-series
-                    [dataSource]="dataStatisticTarget"
-                    [minRadius]="minRadius"
-                    [maxRadius]="maxRadius"
-                    type="Bubble"
-                    xName="totalTarget"
-                    yName="totalDealValue"
-                    size="quantity"
-                    [marker]="markerRatio"
-                    tooltipMappingName="businessLineName"
-                    [border]="border"
-                  >
-                  </e-series>
-                </e-series-collection>
-              </ejs-chart>
-            </div>
-          </div>
+              </e-series>
+            </e-series-collection>
+          </ejs-chart>
+          <!-- </div> -->
+          <!-- </div> -->
         </div>
         <div class="col-2">
           <codx-label
@@ -453,7 +502,7 @@
       default="Thống kê năng suất nhân viên"
     ></codx-label>
     <ng-container *ngIf="productivityOwner?.length > 0; else noData">
-      <div style="overflow-y: auto; max-height: 90%">
+      <div style="overflow-y: auto; max-height: 95%">
         <div *ngFor="let productivity of productivityOwner">
           <div class="mx-2 my-3">
             <div class="d-flex justify-content-between">

@@ -1,8 +1,8 @@
-.add-contract{
-   position: fixed;
-   bottom: 53px;
-   z-index: 10;
+.list-contracts{
+   display: flex;
+   flex-direction: column;
 }
+
 .icon-container{
    width: 32px;
    height: 32px;
@@ -13,3 +13,7 @@
 .drap-drop :hover{
    background-color: rgb(245, 245, 245);
 }
+
+.task-hover:hover > .steplist-hearder .task-name{
+   color: var(--primary-dark)!important;
+ }

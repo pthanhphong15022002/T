@@ -1,4 +1,8 @@
 :host ::ng-deep {
+  .codx-form .card-body {
+    padding-bottom: 0 !important;
+  }
+  
   #gridViewV2 {
     height: 100%;
     display: flex;
@@ -15,6 +19,23 @@
 
   #styledTab > div:last-of-type {
     // sometimes it calculates the height wrong (height: calc(100% - 0px)), so I have to fix it here
-    height: calc(100% - 32px) !important; 
+    height: calc(100% - 32px) !important;
+  }
+
+  codx-input[field="memo"] input {
+    border: none;
+  }
+
+  codx-tabs .tab-footer {
+    ul {
+      border-bottom: 0;
+      height: 3.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    div {
+      padding-bottom: 0 !important;
+    }
   }
 }

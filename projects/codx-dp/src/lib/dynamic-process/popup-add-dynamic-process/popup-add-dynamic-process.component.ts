@@ -314,7 +314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     purple: '#5710b2',
     navy: '#192440',
   };
-
+  isEditReason =  false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -2647,6 +2647,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       taskGroup['createdBy'] = this.userId;
       taskGroup['stepID'] = this.step['recID'];
       taskGroup['task'] = [];
+      taskGroup['durationDay'] = 1;
     }
     this.popupGroupJob = this.callfc.openForm(
       StepTaskGroupComponent,
@@ -3109,19 +3110,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isReason = false;
 
   customerReason(reason: DP_Steps) {
-    this.isReason = true;
-    reason.icon = reason?.isFailStep
-      ? this.iconReasonFail?.icon
-      : this.iconReasonSuccess?.icon;
-    reason.iconColor = reason?.isFailStep
-      ? this.iconReasonFail?.color
-      : this.iconReasonSuccess?.color;
-
-    this.stepName = reason?.isFailStep
-      ? this.stepNameFail
-      : this.stepNameSuccess;
+    this.stepNew = JSON.parse(JSON.stringify(reason));
+    this.stepEdit = reason;
+    this.stepName = this.stepNew['stepName'];
+    this.isEditReason = true;
+    this.action = "edit";
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
-    // this.isReason = false;
+  }
+  
+  editReason(){
+    this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
+    this.stepEdit['textColor'] = this.stepNew['textColor'];
+    this.stepEdit['icon'] = this.stepNew['icon'];
+    this.stepEdit['iconColor'] = this.stepNew['iconColor'];
+    this.stepEdit['stepName'] = this.stepName;
+    this.stepEdit['modifiedOn'] = new Date();
+    this.stepEdit['modifiedBy'] = this.userId;
+    if (this.action == 'edit' && this.stepNew.recID) {
+      this.listStepEdit.push(this.stepNew.recID);
+    }
+    this.isEditReason = false;
+    this.popupAddStage.close();
   }
   // drop
   async drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {
@@ -4158,6 +4167,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.noteResult = item.text;
           }
         }
+        this.stepSuccess.icon = this.iconReasonSuccess?.icon;
+        this.stepFail.icon = this.iconReasonSuccess?.icon
+
+        this.stepSuccess.backgroundColor = null;
+        this.stepFail.backgroundColor = null;
+
+        this.stepSuccess.textColor = null;
+        this.stepFail.textColor = null;
+
+        this.stepSuccess.iconColor = null;
+        this.stepFail.iconColor = null;
+
+        this.stepSuccess.stepName = this.iconReasonSuccess?.text;
+        this.stepFail.stepName = this.iconReasonFail?.text;
 
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;

@@ -76,7 +76,7 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   ) {
     super(inject);
     this.dialog = dialog;
-    this.listTypeContract = contractService.listTypeContract;
+    this.listTypeContract = [];
     if(!this.formModel){
       this.formModel = dt?.data?.formModel;
     }
@@ -91,9 +91,14 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.contract && this.contract){
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
+      this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
       this.getPayMentByContractID(this.contract?.recID);
-      this.getListInstanceStep(this.contract);
+      if(this.contract?.applyProcess){
+        this.getListInstanceStep(this.contract);
+        this.listTypeContract = this.contractService.listTypeContract;
+      }else{
+        this.listTypeContract = this.contractService.listTypeContractNoTask;
+      }
     }
     if(changes?.listInsStepStart && changes?.listInsStepStart?.currentValue){
      this.listInsStep = this.listInsStepStart;
@@ -111,91 +116,64 @@ export class ContractsViewDetailComponent extends UIComponent implements  OnChan
   }
 
   getListInstanceStep(contract) {
-    var data = [
-      contract?.refID,
-      contract?.processID,
-      contract?.status,
-      '4'
-    ];
-    this.codxCmService.getStepInstance(data).subscribe((res) => {
-      if (res) {
-        this.listInsStep = res;
-      }
-    });
-  }
-
-  changeDataMF(event, data:CM_Contracts) {
-    if (event != null) {
-      event.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS02':
-
-        break;
-      case 'SYS03':
-
-        break;
-      case 'SYS04':
-
-        break;
-      case 'CM0204_4':
-        res.disabled = true;
-        break;
-      case 'CM0204_3'://tạo hợp đồng gia hạn
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_5'://Đã giao hàng
-      if(data?.status == '0'){
-        res.disabled = true;
-      }
-        break;
-      case 'CM0204_6'://hoàn tất hợp đồng
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_1'://Gửi duyệt
-        if(data?.status != '0'){
-          res.disabled = true;
-        }
-        break;
-      case 'CM0204_2'://Hủy yêu cầu duyệt
-        if(data?.status == '0'){
-          res.disabled = true;
-        }
-        break;
+    if(contract?.processID){
+      var data = [
+        contract?.refID,
+        contract?.processID,
+        contract?.status,
+        '4'
+      ];
+      this.codxCmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listInsStep = res;
         }
       });
     }
+    
   }
-  clickMF(e, data) {
-    this.clickMoreFunc.emit({ e: e, data: data });
+
+  changeDataMF(event, data:CM_Contracts) {
+    this.changeMF.emit({ e: event, data: data });
+  }
+  clickMF(event, data) {
+    this.clickMoreFunc.emit({ e: event, data: data });
   }
 
   getPayMentByContractID(contractID) {
-    this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
-      if (res) {
-        let listPayAll =  res as CM_ContractsPayments[];
-        this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
-        this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
-      }else{
-        this.listPayment = [];
-        this.listPaymentHistory = [];
-      }
-    });
+    if(contractID){
+      this.contractService.getPaymentsByContractID(contractID).subscribe((res) => {
+        if (res) {
+          let listPayAll =  res as CM_ContractsPayments[];
+          this.listPayment = listPayAll.filter(pay => pay.lineType == '0');
+          this.listPaymentHistory = listPayAll.filter(pay => pay.lineType == '1');
+        }else{
+          this.listPayment = [];
+          this.listPaymentHistory = [];
+        }
+      });
+    }else{
+      this.listPayment = [];
+      this.listPaymentHistory = [];
+    }
+   
   }
 
   getQuotationsAndQuotationsLinesByTransID(recID) {
-    this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
-      if (res) {
-        this.quotations = res[0];
-        this.listQuotationsLine = res[1];
-      }else{
-        this.quotations = null;
-        this.listQuotationsLine = [];
-      }
-    });
+    if(recID){
+      this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
+        if (res) {
+          this.quotations = res[0];
+          this.listQuotationsLine = res[1];
+        }else{
+          this.quotations = null;
+          this.listQuotationsLine = [];
+        }
+      });
+    }else{
+      this.quotations = null;
+      this.listQuotationsLine = [];
+    }
+    
   }
 
   getAccount(){

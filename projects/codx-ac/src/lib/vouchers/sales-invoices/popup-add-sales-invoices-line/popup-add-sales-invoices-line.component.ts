@@ -54,9 +54,9 @@ export class PopupAddSalesInvoicesLineComponent
   hiddenFields: string[] = [];
   dataService: CRUDService;
   transID: string;
-  vats: any[];
   nameByIdPipe = new NameByIdPipe();
   journalNo: string;
+  journal: IJournal;
 
   constructor(
     injector: Injector,
@@ -68,7 +68,7 @@ export class PopupAddSalesInvoicesLineComponent
   ) {
     super(injector);
     this.gvs = this.salesInvoiceService.gvsSalesInvoicesLines;
-    this.vats = this.salesInvoiceService.vats;
+    this.journal = this.salesInvoiceService.journal;
 
     this.dataService = dialogRef.dataService;
     this.line = this.dataService.dataSelected;
@@ -86,44 +86,38 @@ export class PopupAddSalesInvoicesLineComponent
 
   //#region Init
   onInit(): void {
-    this.journalService
-      .getJournal(this.journalNo)
-      .subscribe((res: IJournal) => {
-        const journal: IJournal = res;
+    this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
-        this.hiddenFields = this.journalService.getHiddenFields(journal);
-
-        this.journalService.loadComboboxBy067(
-          journal,
-          'diM1Control',
-          'diM1',
-          this.diM1,
-          'DepartmentID',
-          this.form.formGroup,
-          'diM1',
-          this.isEdit
-        );
-        this.journalService.loadComboboxBy067(
-          journal,
-          'diM2Control',
-          'diM2',
-          this.diM2,
-          'CostCenterID',
-          this.form.formGroup,
-          'diM2',
-          this.isEdit
-        );
-        this.journalService.loadComboboxBy067(
-          journal,
-          'diM3Control',
-          'diM3',
-          this.diM3,
-          'CostItemID',
-          this.form.formGroup,
-          'diM3',
-          this.isEdit
-        );
-      });
+    this.journalService.loadComboboxBy067(
+      this.journal,
+      'diM1Control',
+      'diM1',
+      this.diM1,
+      'DepartmentID',
+      this.form.formGroup,
+      'diM1',
+      this.isEdit
+    );
+    this.journalService.loadComboboxBy067(
+      this.journal,
+      'diM2Control',
+      'diM2',
+      this.diM2,
+      'CostCenterID',
+      this.form.formGroup,
+      'diM2',
+      this.isEdit
+    );
+    this.journalService.loadComboboxBy067(
+      this.journal,
+      'diM3Control',
+      'diM3',
+      this.diM3,
+      'CostItemID',
+      this.form.formGroup,
+      'diM3',
+      this.isEdit
+    );
 
     const title$ = this.cache.valueList('AC070').pipe(
       tap((t) => console.log(t)),

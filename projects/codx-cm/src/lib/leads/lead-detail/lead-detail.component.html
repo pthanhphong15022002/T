@@ -28,7 +28,12 @@
       </div>
 
       </div>
-
+      <ng-template #toolTipDealValue>
+        <div class="text-end text-sm-start">
+          <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+          >: {{ dataSelected?.dealValue }}
+        </div>
+      </ng-template>
       <div class="container_detail mt-1">
         <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
@@ -58,6 +63,63 @@
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-end">
+                <div
+                  class="d-flex align-items-top fs-5-sm"
+                  [ngbTooltip]="toolTipDealValue"
+                >
+                  <span
+                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+                  ></span>
+                  <span
+                    class="fw-bold line-clamp-menu pe-1"
+                    *ngIf="dataSelected?.dealValue; else defaultNull"
+                    #dealValue
+                    [innerHTML]="
+                      dataSelected?.dealValue
+                        | formatvalue : formModel : 'dealValue' : dealValue
+                        | async
+                    "
+                  ></span>
+                  <span *ngIf="dataSelected?.currencyID"
+                    [ngClass]="
+                      dataSelected?.currencyID ? '' : 'line-clamp-menu'
+                    "
+                    class="text-gray-700"
+                    [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                    #currencyID
+                    [innerHTML]="
+                      dataSelected?.currencyID
+                        | formatvalue : formModel : 'currencyID'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-end mt-1">
+                <div
+                  class="d-flex align-items-center"
+                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                >
+                  <span
+                    class="icon-check_circle text-green icon-14 mt-1 pe-1"
+                  ></span>
+                  <span
+                    *ngIf="dataSelected?.probability; else defaultNull"
+                    class="line-clamp-menu"
+                    [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                    #probability
+                    [innerHTML]="
+                      dataSelected?.probability
+                        | formatvalue : formModel : 'probability' : probability
+                        | async
+                    "
+                  ></span
+                  >%
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -72,7 +134,7 @@
                     [setRequire]="false"
                     [formModel]="formModel"
                   ></codx-label>
-                  <span
+                  <!-- <span
                     class="text-gray-700 line-clamp line-clamp-1"
                     #industries
                     [innerHTML]="
@@ -85,7 +147,36 @@
                           : 'grvCMLeads'
                         | async
                     "
-                  ></span>
+                  ></span> -->
+                  <div class="mt-1">
+                    <div
+                      *ngFor="
+                        let item of dataSelected?.industries?.split(';');
+                        index as i
+                      "
+                      class="d-inline"
+                    >
+                      <span
+                      #industries
+                        class="text-gray-700"
+                        [innerHTML]="
+                          item  | formatvalue
+                          : formModel
+                          : 'industries'
+                          : industries
+                          : 'CMLeads'
+                          : 'grvCMLeads'
+                        | async
+                        "
+                      ></span
+                      >
+                      <span
+                        class="me-1"
+                        *ngIf="i < dataSelected?.industries?.split(';').length - 1"
+                        >,</span
+                      >
+                    </div>
+                  </div>
                 </div>
                 <div class="d-flex align-items-top">
                   <codx-label
@@ -119,7 +210,7 @@
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
                     <div
-                      *ngIf="dataSelected.status == '2'; else statusDefault"
+                    *ngIf="dataSelected.status == '2' && dataSelected.applyProcess ; else statusDefault"
                       [ngStyle]="{
                         'background-color':
                           dataSelected?.steps['backgroundColor']
@@ -623,7 +714,7 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem *ngIf="dataSelected?.steps?.isHaveField">
+        <e-tabitem *ngIf="applyProcess">
         <ng-template #headerText>
           <div class="d-flex align-items-top">
             <span class="icon-add_to_photos icon-16 me-1"></span>
@@ -668,7 +759,7 @@
               </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem >
+        <e-tabitem *ngIf="applyProcess">
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -697,7 +788,7 @@
               <span class="icon-i-chat-right icon-16 me-2"></span>
               <codx-label
                 class="fw-bold"
-                default="Bình luận"
+                default="Thảo luận"
                 [formModel]="formModel"
                 name="lblComment"
               ></codx-label>
@@ -884,3 +975,4 @@
 <ng-template #information>
 
 </ng-template>
+<ng-template #defaultNull> <span class="pe-1">0</span></ng-template>

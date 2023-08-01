@@ -132,6 +132,9 @@ import { OrgEmpContactDetailCardComponent } from './empcontacts/org-emp-contact-
 import { EmployeeListByOrgComponent } from './employee-list/employee-list-by-org/employee-list-by-org.component';
 import { PopupMultiselectvllComponent } from './employee-policyal/popup-multiselectvll/popup-multiselectvll.component';
 import { PopupUpdateStatusComponent } from './employee-list/popup/popup-update-status/popup-update-status.component';
+import { EmployeeAnnualLeaveComponent } from './employee-annual-leave/employee-annual-leave.component';
+import { DatePipe } from './pipe/date-time.pipe';
+import { EmployeeAnnualLeaveByOrgComponent } from './employee-annual-leave/employee-annual-leave-by-org/employee-annual-leave-by-org.component';
 export const routes: Routes = [
   {
     path: '',
@@ -241,6 +244,10 @@ export const routes: Routes = [
       {
         path: 'policybenefits/:funcID',
         component: EmployeePolicybenefitsComponent,
+      },
+      {
+        path: 'eannualleave/:funcID',
+        component: EmployeeAnnualLeaveComponent,
       },
       // {
       //   path: 'employeeinfomation/:funcID',
@@ -419,7 +426,10 @@ const T_Component: Type<any>[] = [
   OrgEmpContactDetailCardComponent,
   EmployeeListByOrgComponent,
   PopupUpdateStatusComponent,
-  PopupMultiselectvllComponent
+  PopupMultiselectvllComponent,
+  EmployeeAnnualLeaveComponent,
+  EmployeeAnnualLeaveByOrgComponent,
+  DatePipe
 ];
 @NgModule({
   imports: [
