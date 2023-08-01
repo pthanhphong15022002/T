@@ -1,5 +1,5 @@
 <codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef"   [headerText]="title"
-  [showHeader]="true" [headerText]="title" [subHeaderText]="subHeaderText" >
+  [showHeader]="true" [headerText]="title" >
 
   <ng-template #body>
     <div class="d-flex justify-content-center w-100 pt-2">
@@ -25,13 +25,6 @@
                     <div class="mt-5 w-100 d-flex justify-content-center">
                       <div class="w-75">
                         <div *ngIf="!applyProcess; else process">
-                          <!-- <codx-input
-                          type="combobox"
-                          [refValue]="'Employees'"
-                          [placeholder]="gridViewSetup?.Owner?.description"
-                          (valueChange)="cbxEmpChange($event)"
-                          [crrValue]="ownerOld"
-                        ></codx-input> -->
                         <codx-input
                         field="owner"
                         [formModel]="formModel"
