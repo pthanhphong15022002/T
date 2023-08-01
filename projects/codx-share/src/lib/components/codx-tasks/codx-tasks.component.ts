@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -99,6 +101,10 @@ export class CodxTasksComponent
   @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
+
+  //add resourece cho Sprint
+  @Output() resourceNew = new EventEmitter<any>();
+  //
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -516,27 +522,22 @@ export class CodxTasksComponent
         taskCopy: null,
         disabledProject: this.disabledProject,
       };
-      var dialog = this.callfc.openSide(
-        PopupAddComponent,
-        obj,
-        // [
-        //   this.view.dataService.dataSelected,
-        //   'add',
-        //   this.isAssignTask,
-        //   this.titleAction,
-        //   this.funcID,
-        //   null,
-        //   this.disabledProject,
-        // ],
-        option
-      );
+      var dialog = this.callfc.openSide(PopupAddComponent, obj, option);
       dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
+        if (!e?.event) {
+          this.view.dataService.clear();
+        }
+        if (e?.event) {
+          if (this.funcID == 'TMT03011')
+            //chua xu ly this.funcID=="TMT05011"
+            this.resourceNew.emit(e?.event?.owner);
+        }
+
+        //if (e?.event == null)
         //   this.view.dataService.delete(
         //     [this.view.dataService.dataSelected],
         //     false
-        //   );
+        //);
       });
     });
   }
@@ -605,27 +606,16 @@ export class CodxTasksComponent
         taskCopy: data,
         disabledProject: this.disabledProject,
       };
-      this.dialog = this.callfc.openSide(
-        PopupAddComponent,
-        obj,
-        // [
-        //   this.view.dataService.dataSelected,
-        //   'copy',
-        //   this.isAssignTask,
-        //   this.titleAction,
-        //   this.funcID,
-        //   data,
-        //   this.disabledProject,
-        // ],
-        option
-      );
+      this.dialog = this.callfc.openSide(PopupAddComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
+        if (!e?.event) {
+          this.view.dataService.clear();
+        }
+        if (e?.event) {
+          if (this.funcID == 'TMT03011')
+            //chua xu ly this.funcID=="TMT05011"
+            this.resourceNew.emit(e?.event?.owner);
+        }
       });
     });
   }
@@ -1038,8 +1028,6 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-
-            if (kanban) kanban.updateCard(taskAction);
             if (this.itemSelected.status == '90')
               this.detail.getDataHistoryProgress(this.itemSelected.recID);
           } else this.notiService.notifyCode('SYS021');

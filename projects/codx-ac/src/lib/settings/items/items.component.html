@@ -23,11 +23,16 @@
   <codx-label
     fiedName="inventModelID"
     [formModel]="view.formModel"
+    default="Mô hình tồn kho"
   ></codx-label>
 </ng-template>
 
 <ng-template #header3Template>
-  <codx-label fiedName="dimGroupID" [formModel]="view.formModel"></codx-label>
+  <codx-label
+    fiedName="dimGroupID"
+    [formModel]="view.formModel"
+    default="Yếu tố tồn kho"
+  ></codx-label>
 </ng-template>
 
 <ng-template #column1Template let-data>
@@ -85,14 +90,7 @@
     default="Phương pháp tính giá"
     class="label-colon"
   ></codx-label>
-  <span
-    class="fw-bold"
-    [innerHTML]="
-      data?.inventModelID
-        | formatvalue : view.formModel : 'inventModelID'
-        | async
-    "
-  ></span>
+  <span class="fw-bold">{{ data.unbounds?.inventModelName }}</span>
 </ng-template>
 
 <ng-template #column3Template let-data>
@@ -102,12 +100,9 @@
     default="Theo dõi"
     class="label-colon"
   ></codx-label>
-  <span
-    class="fw-bold"
-    [innerHTML]="
-      data?.dimGroupID | formatvalue : view.formModel : 'dimGroupID' | async
-    "
-  ></span>
+  <span class="fw-bold">
+    {{ data.unbounds?.dimGroupName }}
+  </span>
 </ng-template>
 
 <ng-template #moreTemplate let-data>
