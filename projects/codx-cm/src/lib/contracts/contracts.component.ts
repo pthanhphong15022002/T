@@ -574,7 +574,22 @@ export class ContractsComponent extends UIComponent {
         //thất bại
         this.moveReason(data, false);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //TODO: đợi core
   }
 
   async addContract() {

@@ -27,6 +27,8 @@ import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-qu
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CM_Contracts } from '../models/cm_model';
+import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 
 @Component({
   selector: 'lib-quotations',
@@ -584,7 +586,33 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   // tạo hợp đồng
   createContract(dt) {
-    //viet vao day thuan
+    let contract = new CM_Contracts();
+    let data = {
+      projectID: null,
+      action: "add",
+      contract: contract || null,
+      account: null ,
+      type: 'quotation',
+      actionName: this.titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = this.formModel;
+    let popupContract = this.callfunc.openForm(
+      AddContractsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    ).closed.subscribe(contract => {
+      if(contract){
+        this.notiService.notifyCode('SYS006');
+      }
+    });
   }
   // end
 
