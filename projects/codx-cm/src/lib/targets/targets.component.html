@@ -175,6 +175,7 @@
     class="container"
     [formModel]="view.formModel"
     fiedName="BusinessLineID"
+    default="Dòng sản phẩm"
     [setRequire]="false"
   >
   </codx-label>
@@ -262,7 +263,16 @@
         type="view"
       >
       </codx-mfunc>
-      <div class="fw-bold mb-1 mt-1">
+      <div
+        class="fw-bold mb-1 mt-1 line-clamp line-clamp-1"
+        [ngbPopover]="item?.title"
+        #p="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, p, item)"
+        (mouseleave)="p.close()"
+        placement="bottom right top"
+        [popoverClass]="item.recID"
+      >
         {{ item?.title }}
       </div>
     </div>
@@ -294,7 +304,16 @@
               <span class="text-dark fw-bold">
                 {{ busi?.title }}
               </span>
-              <div class="">
+              <div
+                class="line-clamp line-clamp-1"
+                [ngbPopover]="busi?.positionName"
+                #p="ngbPopover"
+                [openDelay]="500"
+                (mouseenter)="PopoverDetail($event, p, busi)"
+                (mouseleave)="p.close()"
+                placement="bottom right top"
+                [popoverClass]="busi.recID"
+              >
                 {{ busi?.positionName }}
               </div>
             </div>

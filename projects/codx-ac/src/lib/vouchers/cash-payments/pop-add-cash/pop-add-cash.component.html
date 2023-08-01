@@ -30,7 +30,7 @@
       </ejs-tab>
     </div>
     <div tabindex="-1" style="height: calc(100vh - 405px)!important;">
-      <ejs-tab #tabObj enablePersistence="true" (created)="created($event, tabObj)">
+      <ejs-tab #tabObj enablePersistence="true" (created)="created($event, tabObj)" (selected)="tabSelected($event)">
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
@@ -46,7 +46,7 @@
           </e-tabitem>
           <e-tabitem tabIndex="-1" aria-hidden="true">
             <ng-template #headerText>
-              <div #cashRef class="d-flex align-items-top me-2 mt-2">
+              <div class="d-flex align-items-top me-2 mt-2">
                 <i *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="icon-format_list_numbered icon-18 me-2"></i>
                 <i *ngIf="cashpayment?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
                 <codx-label *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '3' || cashpayment?.subType == '4'" style="font-size: 14px !important;" class="fw-bold"
@@ -57,6 +57,18 @@
             </ng-template>
             <ng-template #content>
               <ng-container *ngTemplateOutlet="tabsettledInvoices"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem tabIndex="-1" aria-hidden="true">
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">    
+                <i class="icon-i-file-earmark-arrow-up icon-18 me-2"></i>
+                <codx-label style="font-size: 14px !important;" class="fw-bold"
+                  fiedName="lblDetail3" [formModel]="form.formModel" default="Hóa đơn GTGT"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabVat"></ng-container>
             </ng-template>
           </e-tabitem>
         </e-tabitems>
@@ -758,7 +770,7 @@
             </div>
             <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
               <button tabindex="-1" class="btn btn-sm btn-light-primary"
-                (keydown.enter)="popupVat(); $event.preventDefault();" (click)="popupVat()">
+                (keydown.enter)="addRow('4'); $event.preventDefault();" (click)="addRow('4')">
                 <i class="icon-i-graph-up icon-16"></i>
                 <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
               </button>
@@ -841,6 +853,68 @@
         </codx-gridview-v2>
         <div class="btn-addline">
           <div class="d-flex align-items-center">
+            <div *ngIf="action != 'edit' && (cashpayment?.subType == '2' || cashpayment?.subType == '9' )">
+              <button id="btnset" class="btn btn-sm btn-light-primary"
+                (keydown.enter)="settlement(0); $event.preventDefault();" (click)="settlement(0)">
+                <i class="icon-i-wallet2 icon-16"></i>
+                <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
+                  default="Đề xuất thanh toán"></codx-label>
+              </button>
+            </div>
+            <div *ngIf="(cashpayment?.subType == '2') || (cashpayment?.subType == '9')" class="ms-2">
+              <button class="btn btn-sm btn-light-primary" (keydown.enter)="settlement(1); $event.preventDefault();"
+                (click)="settlement(1)">
+                <i class="icon-i-clipboard-plus icon-16"></i>
+                <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
+                  default="Cấn trừ tự động"></codx-label>
+              </button>
+            </div>
+            <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
+              <button tabindex="-1" class="btn btn-sm btn-light-primary"
+                (keydown.enter)="addRow('3'); $event.preventDefault();" (click)="addRow('3')">
+                <i class="icon-library_add_check icon-16"></i>
+                <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Chọn đề nghị tạm ứng"></codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- <div *ngIf="loadingform" class="ac-load-grid">
+          <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
+            [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
+            <e-progressbar-annotations>
+              <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+            </e-progressbar-annotations>
+          </ejs-progressbar>
+        </div> -->
+      </div>
+    </ng-container>
+  </ng-template>
+  <!-- End: VoucherLineRefs -->
+
+  <!-- Start: VoucherLineRefs -->
+  <ng-template #tabVat>
+    <ng-container
+      *ngIf="(cashpayment?.subType == '9') && (form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429')">
+      <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
+        <codx-gridview-v2 #gridVat formName="VATInvoices" gridViewName="grvVATInvoices" 
+          entityName="AC_VATInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
+          [allowFiltering]="true" [autoAddRow]="true" [allowSorting]="true" (onAddNew)="onAddNewVat($event)" (onEdit)="onEditVat($event)"
+          [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false"
+          [dataSource]="vatInvoices">
+        </codx-gridview-v2>
+        <div #btnRef class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
+              <button tabindex="-1" class="btn btn-sm btn-light-primary"
+                (keydown.enter)="addRow('4'); $event.preventDefault();" (click)="addRow('4')">
+                <i class="icon-i-graph-up icon-16"></i>
+                <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="btn-addline">
+          <div class="d-flex align-items-center">
             <div *ngIf="action != 'edit' && cashpayment?.subType == '2'">
               <button id="btnset" class="btn btn-sm btn-light-primary"
                 (keydown.enter)="settlement(0); $event.preventDefault();" (click)="settlement(0)">
@@ -865,7 +939,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- <div *ngIf="loadingform" class="ac-load-grid">
           <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
             [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
@@ -1012,7 +1086,7 @@
       </div>
       <ng-container>
         <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
-          class="input-circle h-20px input-border-0 w-400px mt-1 mb-1">
+          class="input-circle h-20px input-border-0 w-400px mb-1">
           <codx-dropdown-select #cbxSub [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
             cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
             [refValue]="gridViewSetup['SubType'].referedValue" [value]="cashpayment.subType" emptyText="Loại phiếu"
