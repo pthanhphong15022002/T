@@ -51,18 +51,50 @@ export class TargetsComponent
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('templateMonth0') templateMonth0?: TemplateRef<any>;
+  //BusinessLine
+  @ViewChild('headerBusinessLine', { static: true })
+  headerBusinessLine: TemplateRef<any>;
+  @ViewChild('templateBusinessLine') templateBusinessLine: TemplateRef<any>;
+  //Năm
+  @ViewChild('headerYear', { static: true }) headerYear: TemplateRef<any>;
+  @ViewChild('templateYear') templateYear: TemplateRef<any>;
+  //4 quý
+  @ViewChild('headerQuarter1', { static: true })
+  headerQuarter1: TemplateRef<any>;
+  @ViewChild('templateQuarter1') templateQuarter1: TemplateRef<any>;
+  @ViewChild('headerQuarter2', { static: true })
+  headerQuarter2: TemplateRef<any>;
+  @ViewChild('templateQuarter2') templateQuarter2: TemplateRef<any>;
+  @ViewChild('headerQuarter3', { static: true })
+  headerQuarter3: TemplateRef<any>;
+  @ViewChild('templateQuarter3') templateQuarter3: TemplateRef<any>;
+  @ViewChild('headerQuarter4', { static: true })
+  headerQuarter4: TemplateRef<any>;
+  @ViewChild('templateQuarter4') templateQuarter4: TemplateRef<any>;
+  //12 tháng
+  @ViewChild('headerMonth1', { static: true }) headerMonth1: TemplateRef<any>;
   @ViewChild('templateMonth1') templateMonth1?: TemplateRef<any>;
+  @ViewChild('headerMonth2', { static: true }) headerMonth2: TemplateRef<any>;
   @ViewChild('templateMonth2') templateMonth2?: TemplateRef<any>;
+  @ViewChild('headerMonth3', { static: true }) headerMonth3: TemplateRef<any>;
   @ViewChild('templateMonth3') templateMonth3?: TemplateRef<any>;
+  @ViewChild('headerMonth4', { static: true }) headerMonth4: TemplateRef<any>;
   @ViewChild('templateMonth4') templateMonth4?: TemplateRef<any>;
+  @ViewChild('headerMonth5', { static: true }) headerMonth5: TemplateRef<any>;
   @ViewChild('templateMonth5') templateMonth5?: TemplateRef<any>;
+  @ViewChild('headerMonth6', { static: true }) headerMonth6: TemplateRef<any>;
   @ViewChild('templateMonth6') templateMonth6?: TemplateRef<any>;
+  @ViewChild('headerMonth7', { static: true }) headerMonth7: TemplateRef<any>;
   @ViewChild('templateMonth7') templateMonth7?: TemplateRef<any>;
+  @ViewChild('headerMonth8', { static: true }) headerMonth8: TemplateRef<any>;
   @ViewChild('templateMonth8') templateMonth8?: TemplateRef<any>;
+  @ViewChild('headerMonth9', { static: true }) headerMonth9: TemplateRef<any>;
   @ViewChild('templateMonth9') templateMonth9?: TemplateRef<any>;
+  @ViewChild('headerMonth10', { static: true }) headerMonth10: TemplateRef<any>;
   @ViewChild('templateMonth10') templateMonth10?: TemplateRef<any>;
+  @ViewChild('headerMonth11', { static: true }) headerMonth11: TemplateRef<any>;
   @ViewChild('templateMonth11') templateMonth11?: TemplateRef<any>;
+  @ViewChild('headerMonth12', { static: true }) headerMonth12: TemplateRef<any>;
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
@@ -90,7 +122,7 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTargetAsync';
+  method: string = 'GetListTreeTargetLineAsync';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -249,28 +281,105 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
-    let lst = [];
-
-    for (let i = 0; i < 13; i++) {
-      var tmp = {};
-      if (i == 0) {
-        tmp['field'] = '';
-        tmp['headerText'] = '';
-        tmp['width'] = 350;
-        tmp['template'] = this[`templateMonth${0}`];
-      } else {
-        tmp['field'] = '';
-        tmp['headerText'] = 'Tháng ' + i;
-        tmp['width'] = 175;
-        tmp['template'] = this[`templateMonth${i}`];
-      }
-      lst.push(Object.assign({}, tmp));
-    }
-    this.columnGrids = lst;
+    this.columnGrids = [
+      {
+        headerTemplate: this.headerBusinessLine,
+        template: this.templateBusinessLine,
+        width: 350,
+      },
+      //năm
+      {
+        headerTemplate: this.headerYear,
+        template: this.templateYear,
+        width: 150,
+      },
+      //quý
+      {
+        headerTemplate: this.headerQuarter1,
+        template: this.templateQuarter1,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter2,
+        template: this.templateQuarter2,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter3,
+        template: this.templateQuarter3,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerQuarter4,
+        template: this.templateQuarter4,
+        width: 150,
+      },
+      //Tháng
+      {
+        headerTemplate: this.headerMonth1,
+        template: this.templateMonth1,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth2,
+        template: this.templateMonth2,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth3,
+        template: this.templateMonth3,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth4,
+        template: this.templateMonth4,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth5,
+        template: this.templateMonth5,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth6,
+        template: this.templateMonth6,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth7,
+        template: this.templateMonth7,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth8,
+        template: this.templateMonth8,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth9,
+        template: this.templateMonth9,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth10,
+        template: this.templateMonth10,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth11,
+        template: this.templateMonth11,
+        width: 150,
+      },
+      {
+        headerTemplate: this.headerMonth12,
+        template: this.templateMonth12,
+        width: 150,
+      },
+    ];
     this.views = [
       {
         type: ViewType.content,
-        active: true,
+        active: false,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -279,7 +388,7 @@ export class TargetsComponent
       {
         type: ViewType.grid,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resources: this.columnGrids,
           hideMoreFunc: true,
@@ -349,23 +458,20 @@ export class TargetsComponent
             res.disabled = true;
             break;
           case 'SYS02':
-            if (type == 'tree') res.disabled = true;
+            res.disabled = true;
             break;
           case 'SYS03':
-            if (type == 'tree') {
-              if (data.parentID != null) res.disabled = true;
-            }
+            if (data.parentID != null) res.disabled = true;
             break;
           case 'CM0206_1':
-            if (type == 'tree') {
-              if (data.parentID == null || data.target == 0) {
-                if (data.parentID == null){
-                  res.disabled = true;
-                }else{
-                  res.isblur = true;
-                }
+            if (data.parentID == null || data.target == 0) {
+              if (data.parentID == null) {
+                res.disabled = true;
+              } else {
+                res.isblur = true;
               }
             }
+
             break;
         }
       });
@@ -583,4 +689,56 @@ export class TargetsComponent
     this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
+
+  //#region setting grid
+
+  sumQuarter(lstLines = [], i: number) {
+    var target = 0;
+
+    if (lstLines != null && lstLines.length > 0) {
+      lstLines.forEach((element) => {
+        if (
+          this.checkMonthQuarter(i, new Date(element.startDate)?.getMonth() + 1)
+        )
+          target += element.target;
+      });
+    }
+
+    return this.targetToFixed(target);
+  }
+
+  checkMonthQuarter(i, month) {
+    if (i == 1) {
+      if (month >= 1 && month < 4) {
+        return true;
+      }
+    } else if (i == 2) {
+      if (month >= 4 && month < 7) {
+        return true;
+      }
+    } else if (i == 3) {
+      if (month >= 7 && month < 10) {
+        return true;
+      }
+    } else if (i == 4) {
+      if (month >= 10 && month < 13) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getTargetMonth(lstTargetLines = [], month: number) {
+    let target = 0;
+
+    if (lstTargetLines != null && lstTargetLines.length > 0) {
+      lstTargetLines.forEach((element) => {
+        if (month === new Date(element.startDate)?.getMonth() + 1)
+          target += element.target;
+      });
+    }
+
+    return this.targetToFixed(target);
+  }
+  //#endregion
 }

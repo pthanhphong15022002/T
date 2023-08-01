@@ -765,6 +765,7 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
+    if(data?.deleted) return;
     let isRead = this.checkPermissionRead(data);
     if (isRead) {
       this.viewDetailProcess(data);

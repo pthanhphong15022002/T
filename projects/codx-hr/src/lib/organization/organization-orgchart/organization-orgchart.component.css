@@ -154,3 +154,20 @@ input[type="checkbox"] {
   border-radius: 2px;
   padding: 5px 0 5px 10px;
 }
+
+.showhim {
+  position: relative;
+  display: flex;
+  width: 28%;
+}
+
+.showme {
+  position: absolute;
+  display: none;
+  left: 47%;
+  top: -35%;
+}
+
+.showhim:hover .showme {
+  display: block;
+}

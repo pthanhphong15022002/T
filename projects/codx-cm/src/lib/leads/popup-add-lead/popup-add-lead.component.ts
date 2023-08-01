@@ -306,7 +306,7 @@ export class PopupAddLeadComponent
       if (check) {
         this.lead.leadID = this.leadNoProcess;
         this.planceHolderAutoNumber = this.leadNoProcess;
-        this.disabledShowInput = true;
+        this.disabledShowInput = true; 
         this.removeItemInTab(true);
       } else {
         this.getAutoNumber();

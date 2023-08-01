@@ -3327,7 +3327,7 @@ codx-card-center .card.codx_cardcenter{
 }
 lib-popup-detail{
 .conmement-body{
-    height: calc(100vh - 190px);
+    height: calc(100vh - 196px);
     overflow: auto;
 }
 }
@@ -3484,4 +3484,8 @@ codx-view-list-tree{
 } 
 .menu-nav .menu-item >.d-flex.align-items-center:hover{
   background-color: var(--primary-lightest);
+}
+
+.e-listview .e-list-item.e-active {
+  background-color: #eaeff7;
 }
