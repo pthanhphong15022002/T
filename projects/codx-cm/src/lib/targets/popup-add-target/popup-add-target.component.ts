@@ -382,8 +382,8 @@ export class PopupAddTargetComponent {
         if (res.isExit) weightExit += res.weight;
       });
       for (var item of this.lstOwners) {
-        if (!item.isExit) {
-          if (type == 'user') {
+        if (!item.isExit && this.action == 'add') {
+          if (type == 'user' ) {
             item.weight = 100 / this.lstOwners.length;
           } else {
             item.weight =

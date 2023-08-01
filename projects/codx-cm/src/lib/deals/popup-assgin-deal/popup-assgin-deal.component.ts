@@ -53,17 +53,17 @@ constructor(
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
   if(this.applyProcess) {
-    this.applyFor = dialogData?.data.applyFor;
-    this.recID = dialogData?.data?.recID;
+
     this.refID = dialogData?.data?.refID;
     this.stepID =  dialogData?.data?.stepID,
     this.processID = dialogData?.data.processID;
   }
+  this.recID = dialogData?.data?.recID;
+  this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
   this.formModel = dialogData?.data.formModel;
   this.startControl=  dialogData?.data.startControl
-  this.subHeaderText = 'Công tác quản lý các mảng Dịch vụ hạ tầng, Dịch vụ tiện tích, Dịch vụ Điện nước';
   this.applyProcess && this.promiseAll();
 }
 
@@ -215,7 +215,7 @@ onSaveForm() {
 }
 
 saveOwner(){
-  this.setRoles();
+ this.applyProcess && this.setRoles();
   var datas = [this.recID, this.owner,this.ownerStep, this.startControl];
   if(this.applyFor == "1"){
     this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
