@@ -306,7 +306,7 @@
   <div class="d-flex justify-content-between">
     <div></div>
     <button
-      type="button"
+      type="button"button
       class="btn btn-primary ms-1"
       (click)="saveOpportunity()"
     >
@@ -328,6 +328,7 @@
               [objectType]="'DP_Instances_Steps_Fields'"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
+              (addFileCompleted)="addFileCompleted($event)"
             >
             </codx-input-custom-field>
           </div>
