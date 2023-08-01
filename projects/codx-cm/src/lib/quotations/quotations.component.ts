@@ -151,7 +151,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           if (Array.isArray(dataValue)) {
             let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
             if (setting) this.applyApprover = setting['ApprovalRule'];
-            debugger;
           }
         }
 
@@ -696,12 +695,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-        //   if (deals) {
-        //     this.codxCmService
-        //       .getProcess(deals.processID)
-        //       .subscribe((process) => {
-        //         if (process) {
         this.codxCmService
           .getESCategoryByCategoryID('ES_CM0501')
           .subscribe((res2: any) => {
@@ -738,15 +731,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.notiService.notifyCode('DP040');
       }
     });
-    // } else {
-    //   this.notiService.notify(
-    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-    //     '3'
-    //   );
-    // }
-    //     });
-    //   }
-    // });
   }
   //end duyet
   //--------------------------------------------------------------------//
