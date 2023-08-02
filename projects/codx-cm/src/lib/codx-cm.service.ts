@@ -1315,15 +1315,5 @@ export class CodxCmService {
       [sformName, category]
     );
   }
-
-  getSettingValue(sformName) {
-    return this.api.exec<any>(
-      'SYS',
-      'SettingValuesBusiness',
-      'GetSettingValueAsync',
-      sformName
-    );
-  }
-
   //end
 }

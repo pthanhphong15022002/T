@@ -198,6 +198,11 @@ export class VoucherComponent extends UIComponent implements OnInit {
       this.mapDataValues.set('accountID', e.data);
     }
 
+    if (field === 'currencyID' && e.data) {
+      this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+      this.mapDataValues.set('currencyID', e.data);
+    }
+
     if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {
       this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
       this.mapDataValues.set(

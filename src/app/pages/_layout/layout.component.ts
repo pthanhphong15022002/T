@@ -25,11 +25,6 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   }
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe()
-  }
+  
 
 }
