@@ -183,12 +183,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   getReport(){
     this.api
     .execSv(
-      'rptsys',
-      'Codx.RptBusiniess.SYS',
+      'rptrp',
+      'Codx.RptBusiness.RP',
       'ReportListBusiness',
       'GetAsync',
-      this.reportID
-    )
+      this.reportID)
     .subscribe((res: any) => {
       if (res) {
         this.data = res;
@@ -230,49 +229,31 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // getReportParams(){
-  //   this.api
-  //   .execSv(
-  //     'rptsys',
-  //     'Codx.Businiess.CM',
-  //     'LVReportHelper',
-  //     'GetReportParamAsync',
-  //     this.reportID
-  //   )
-  //   .subscribe((res: any) => {
-  //     if (res) {
-  //       this.parameters = res.parameters;
-  //     }
-  //   });
-  // }
-
   setReportParams(){
-    this.notiService.alertCode("Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?").subscribe((res:any)=>{
-      if(res.event.status == 'Y'){
-        let serviceName = this.data.service;
-        if (!this.data.service) serviceName = 'rpt' + this.moduleName;
-        if(serviceName.includes('undefined')){
-          serviceName = 'rptsys';
-        }
-         this.api
-              .execSv(
-                'rptsys',
-                'Codx.RptBusiness.CM',
-                'LVReportHelper',
-                'GetReportParamsAsync',
-                this.reportID
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  this.parameters = res;
-                  this.data.parameters = this.parameters;
-                  this.api.execSv('rptsys',
-                  'Codx.RptBusiniess.SYS',
+    this.notiService.alertCode("Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?")
+    .subscribe((res:any)=>{
+      if(res.event.status == 'Y')
+      {
+        this.api.execSv(
+            'rptrp',
+            'Codx.RptBusiness.CM',
+            'LVReportHelper',
+            'GetReportParamsAsync',
+            [this.reportID])
+            .subscribe((res: any) => {
+              if (res) 
+              {
+                this.parameters = res;
+                this.data.parameters = this.parameters;
+                this.api.execSv(
+                  'rptrp',
+                  'Codx.RptBusiness.RP',
                   'ReportListBusiness',
-                  'UpdateReportInfoAsync',
-                  this.data).subscribe()
-                }
-              });
+                  'AddUpdateAsync',
+                  [this.data])
+                  .subscribe();
+              }
+          });
       }
     })
   }
@@ -282,13 +263,16 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.data = {};
     this.data.description = null;
 
-    this.cache.functionList(this.rootFunction).subscribe((res) => {
+    this.cache.functionList(this.rootFunction)
+    .subscribe((res) => {
       if (res) {
         this.moduleName = res.module;
         this.data.moduleID=this.moduleName;
-        this.api.execSv("rptsys", 'Codx.RptBusiniess.SYS',
+        this.api.execSv("rptrp",
+        'Codx.RptBusiness.RP',
         'ReportListBusiness',
-        'CreateFunctionIDAsync',[ this.moduleName,'R']).subscribe((res:any)=>{
+        'CreateFunctionIDAsync',[ this.moduleName,'R'])
+        .subscribe((res:any)=>{
           if(res){
             this.reportID = res;
             this.data.reportID = this.reportID;
@@ -340,7 +324,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   deleteParam(evt: any){
     if(evt && evt.recID){
       this.notiService.alertCode("Xóa tham số?").subscribe((res:any)=>{
-        if(res.event.status == 'Y'){
+        if(res.event.status == 'Y')
+        {
           // this.api.execSv(
           //   'SYS',
           //   'ERM.Business.SYS',
@@ -444,7 +429,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     })
   }
 
-  async saveForm() {
+  saveForm() {
     if (!this.data.recID) {
       this.data.recID = this.recID;
     }
@@ -475,38 +460,32 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     this.api
       .execSv(
-        'rptsys',
-        'Codx.RptBusiniess.SYS',
+        'rptrp',
+        'Codx.RptBusiness.RP',
         'ReportListBusiness',
         'AddUpdateAsync',
-        [this.data, this.fuctionItem]
-      )
-      .subscribe((res) => {
-        this.data.reportContent && this.setDataset();
+        [this.data])
+        .subscribe((res:any) => {
+        if(this.data.reportContent){
+          this.setDataset();
+        }
         this.dialog.close();
       });
 
   }
   setDataset(){
+    debugger
     let serviceName = this.data.service;
-    if (!this.data.service) serviceName = 'rpt' + this.moduleName;
-     this.api
-          .execSv(
-            'rptsys',
-            'Codx.RptBusiness.CM',
-            'LVReportHelper',
-            'SetReportDatasetAsync',
-            this.reportID
-          )
-          .subscribe();
+    if (!serviceName) {
+      serviceName = 'rpt' + this.moduleName.toLowerCase();
+    }
+    this.api.execSv(serviceName,'Codx.RptBusiness.CM','ReportBusiness','SetDatasetAsync',this.reportID).subscribe();
   }
 
 
   uploading(e:BeforeUploadEventArgs){
-    debugger
   }
   beforeUpload(e:BeforeUploadEventArgs){
-    debugger
   }
   isBlockBtn:boolean = false;
   fileSelected(e:any){
@@ -549,21 +528,26 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 }
 
 download(){
-  this.api.execSv('rptsys',
-                  'Codx.RptBusiniess.SYS',
-                  'ReportBusiness',
-                  'GetRootFileAsync',
-                  this.data.recID).subscribe((res:any)=>{
-                    let linkSource = res;
-                    if(linkSource.split(',').length ==1){
-                      linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
-                    }
-                    const downloadLink = document.createElement("a");
-                    downloadLink.href = linkSource;
-                    downloadLink.download = this.data.reportName;
-                    downloadLink.click();
-                  });
-
+  let serviceName = this.data.service ? this.data.service : 'rpt'+this.data.module.toLowerCase(); 
+  let reportName = this.data.reportName;
+  if(serviceName && reportName)
+  {
+    this.api.execSv(serviceName,
+    'Codx.RptBusiness.CM',
+    'ReportBusiness',
+    'GetRootFileAsync',
+    reportName)
+    .subscribe((res:any)=>{
+      let linkSource = res;
+      if(linkSource.split(',').length ==1){
+        linkSource = `data:application/${reportName ? reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
+      }
+      const downloadLink = document.createElement("a");
+      downloadLink.href = linkSource;
+      downloadLink.download = reportName;
+      downloadLink.click();
+    });
+  }
 }
 
 fileRendering(e:any){
