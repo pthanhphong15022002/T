@@ -774,13 +774,6 @@
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
-          <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
-            <button tabindex="-1" class="btn btn-sm btn-light-primary"
-              (keydown.enter)="addRow('4'); $event.preventDefault();" (click)="addRow('4')">
-              <i class="icon-i-graph-up icon-16"></i>
-              <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
-            </button>
-          </div>
           <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
             <button tabindex="-1" class="btn btn-sm btn-light-primary"
               (keydown.enter)="addRow('3'); $event.preventDefault();" (click)="addRow('3')">
@@ -902,27 +895,27 @@
     *ngIf="(cashpayment?.subType == '9') && (form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429')">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #gridVat formName="VATInvoices" gridViewName="grvVATInvoices" [showEmptyRecord]="false"
-        entityName="AC_VATInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
-        [allowFiltering]="true" [autoAddRow]="true" [allowSorting]="true" (onAddNew)="onAddNewVat($event)"
-        (onEdit)="onEditVat($event)" [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false"
+        entityName="AC_VATInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35" (cellChanged)="lineVatchange($event)"
+        [allowFiltering]="true" [autoAddRow]="false" [allowSorting]="true" (onAddNew)="onAddNewVat($event)" (eventAction)="autoAddRowVat($event)"
+        (onEdit)="onEditVat($event)" [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false" [showEmptyRecord]="false"
         [dataSource]="vatInvoices">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
             <button tabindex="-1" class="btn btn-sm btn-light-primary"
-              (keydown.enter)="setLineVATDefault(); $event.preventDefault();" (click)="setLineVATDefault()">
+              (keydown.enter)="addRow('4'); $event.preventDefault();" (click)="addRow('4')">
               <i class="icon-i-graph-up icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
             </button>
           </div>
-          <div *ngIf="cashpayment?.subType == '9' && !hasSelected" class="ms-2">
+          <!-- <div *ngIf="cashpayment?.subType == '9' && !hasSelected" class="ms-2">
             <button tabindex="-1" class="btn btn-sm btn-light-primary"
               (keydown.enter)="createAccounting(); $event.preventDefault();" (click)="createAccounting()">
               <i class="icon-i-file-earmark-spreadsheet icon-16"></i>
               <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Tạo hạch toán"></codx-label>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- <div class="btn-addline">
@@ -1040,7 +1033,7 @@
         <span (click)="expand()" class="icon-unfold_more icon-20"></span>
         
       </div> -->
-    <div class="d-flex align-items-center justify-content-end btn-ac-footer">
+    <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
       <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
         (click)="onDiscard()">
         <div class="d-flex align-items-center">
