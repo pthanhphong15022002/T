@@ -76,10 +76,10 @@ export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
-      let captChaControl = this.loginForm.controls['captCha'];
-      captChaControl.valueChanges.subscribe((e) => {
-        this.captChaValid = captChaControl.valid;
-      });
+      // let captChaControl = this.loginForm.controls['captCha'];
+      // captChaControl.valueChanges.subscribe((e) => {
+      //   this.captChaValid = captChaControl.valid;
+      // });
     }
 
     // if (

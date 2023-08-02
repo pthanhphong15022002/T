@@ -53,11 +53,11 @@
             <div class="text-gray-600 fs-7">
               <span
                 *ngIf="
-                  itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+                  itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
                   else noOrgUnitName
                 "
                 >{{
-                  itemDetail.orgUnitName || itemDetail.emp.orgUnitName
+                  itemDetail?.orgUnitName || itemDetail.emp.orgUnitName
                 }}</span
               >
               <ng-template #noOrgUnitName>
@@ -175,7 +175,7 @@
           "
         >
         </span>
-        <span class="fw-bold text-dark" *ngIf="itemDetail.totalDaysOff"
+        <span class="fw-bold text-dark" *ngIf="itemDetail?.totalDaysOff"
           >ngày</span
         >
       </div>
