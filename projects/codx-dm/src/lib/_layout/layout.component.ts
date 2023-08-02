@@ -22,7 +22,7 @@ import {
   CacheService,
   Util,
 } from 'codx-core';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+
 import { Observable } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
@@ -332,12 +332,7 @@ db.DM_FolderInfo.updateMany(
 
   }
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe();
-  }
+  
   onJump() {
     //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
     if (

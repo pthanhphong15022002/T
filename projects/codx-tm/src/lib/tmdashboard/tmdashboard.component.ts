@@ -66,7 +66,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   teamDBData: any;
   assignDBData: any;
 
-  isEditMode: boolean = false;
+  isEditMode: boolean = true;
 
   paletteColor = ['#06ddb8', '#a6dff5'];
 
