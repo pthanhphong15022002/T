@@ -211,7 +211,7 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
 
   onEditVatPosting(data: any)
   {
-    this.title = 'Thêm thiết lập hạch toán';
+    this.title = 'Chỉnh sửa thiết lập hạch toán';
     var obj = {
       headerText: this.title,
       data: { ...data },
