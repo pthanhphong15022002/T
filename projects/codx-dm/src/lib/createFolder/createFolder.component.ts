@@ -274,7 +274,6 @@ export class CreateFolderComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger
     this.user = this.auth.get();
     this.dialog = dialog;
     this.titleDialog = data.data.title;

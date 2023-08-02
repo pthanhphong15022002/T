@@ -340,11 +340,13 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      (render)="renderTrainFieldID($event)"
         [Group]="formGroup"
         [formModel]="formModel"
+        (valueChange)="valChangeTrainFieldId($event)"
         field="trainFieldID"
-        (keyup)="updateDegreeName()"
-      ></codx-input>
+        ></codx-input>
+        <!-- (keyup)="updateDegreeName()" -->
     </div>
     <div class="col-6">
       <codx-label
@@ -352,11 +354,13 @@
         [formModel]="formModel"
       ></codx-label>
       <codx-input
+      (render)="renderTrainLevel($event)"
         [Group]="formGroup"
         [formModel]="formModel"
+        (valueChange)="valChangeTrainLevel($event)"
         field="trainLevel"
-        (keyup)="updateDegreeName()"
-      ></codx-input>
+        ></codx-input>
+        <!-- (keyup)="updateDegreeName()" -->
     </div>
   </div>
 

@@ -599,6 +599,7 @@ export class CM_Cases {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  applyProcess:boolean;
 }
 
 export class CM_Partners {

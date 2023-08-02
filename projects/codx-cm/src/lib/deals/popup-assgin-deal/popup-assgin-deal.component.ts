@@ -53,12 +53,13 @@ constructor(
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
   if(this.applyProcess) {
-    this.applyFor = dialogData?.data.applyFor;
-    this.recID = dialogData?.data?.recID;
+
     this.refID = dialogData?.data?.refID;
     this.stepID =  dialogData?.data?.stepID,
     this.processID = dialogData?.data.processID;
   }
+  this.recID = dialogData?.data?.recID;
+  this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
   this.formModel = dialogData?.data.formModel;

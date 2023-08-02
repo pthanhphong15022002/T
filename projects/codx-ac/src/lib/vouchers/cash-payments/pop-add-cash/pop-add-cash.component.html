@@ -928,26 +928,50 @@
       <!-- <div class="btn-addline">
           <div class="d-flex align-items-center">
             <div *ngIf="action != 'edit' && cashpayment?.subType == '2'">
-              <button id="btnset" class="btn btn-sm btn-light-primary"
-                (keydown.enter)="settlement(0); $event.preventDefault();" (click)="settlement(0)">
+              <button
+                id="btnset"
+                class="btn btn-sm btn-light-primary"
+                (keydown.enter)="settlement(0); $event.preventDefault()"
+                (click)="settlement(0)"
+              >
                 <i class="icon-i-wallet2 icon-16"></i>
-                <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice1"
-                  default="Đề xuất thanh toán"></codx-label>
+                <codx-label
+                  [formModel]="form.formModel"
+                  fiedName="lblAddSettledInvoice1"
+                  default="Đề xuất thanh toán"
+                ></codx-label>
               </button>
             </div>
             <div *ngIf="cashpayment?.subType == '2'" class="ms-2">
-              <button class="btn btn-sm btn-light-primary" (keydown.enter)="settlement(1); $event.preventDefault();"
-                (click)="settlement(1)">
+              <button
+                class="btn btn-sm btn-light-primary"
+                (keydown.enter)="settlement(1); $event.preventDefault()"
+                (click)="settlement(1)"
+              >
                 <i class="icon-i-clipboard-plus icon-16"></i>
-                <codx-label [formModel]="form.formModel" fiedName="lblAddSettledInvoice"
-                  default="Cấn trừ tự động"></codx-label>
+                <codx-label
+                  [formModel]="form.formModel"
+                  fiedName="lblAddSettledInvoice"
+                  default="Cấn trừ tự động"
+                ></codx-label>
               </button>
             </div>
-            <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
-              <button tabindex="-1" class="btn btn-sm btn-light-primary"
-                (keydown.enter)="addRow('3'); $event.preventDefault();" (click)="addRow('3')">
+            <div
+              *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'"
+              class="ms-2"
+            >
+              <button
+                tabindex="-1"
+                class="btn btn-sm btn-light-primary"
+                (keydown.enter)="addRow('3'); $event.preventDefault()"
+                (click)="addRow('3')"
+              >
                 <i class="icon-library_add_check icon-16"></i>
-                <codx-label [formModel]="form.formModel" fiedName="lblAddVat" default="Chọn đề nghị tạm ứng"></codx-label>
+                <codx-label
+                  [formModel]="form.formModel"
+                  fiedName="lblAddVat"
+                  default="Chọn đề nghị tạm ứng"
+                ></codx-label>
               </button>
             </div>
           </div>

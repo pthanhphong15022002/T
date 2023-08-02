@@ -15,6 +15,7 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { PopupAddCustomerGroupsComponent } from './popup-add-customer-groups/popup-add-customer-groups.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-customer-groups',
@@ -55,7 +56,8 @@ export class CustomerGroupsComponent extends UIComponent {
     private route: ActivatedRoute,
     private layout: LayoutService,
     private notifySvr: NotificationsService,
-    private userStore: AuthStore
+    private userStore: AuthStore,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -175,7 +177,22 @@ export class CustomerGroupsComponent extends UIComponent {
       case 'SYS04':
         this.copy(evt, data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          evt,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
 
   changeDataMF(e: any, data) {}

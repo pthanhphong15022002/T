@@ -52,7 +52,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   getReportList(reportID:string){
     if(reportID)
     {
-      this.api.execSv("rptsys","Codx.RptBusiness.CM","ReportBusiness","GetByReportIDAsync",[reportID])
+      this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
         if(res)
           this.lstReport = res;
