@@ -1251,20 +1251,20 @@ export class DealsComponent
   }
   //call Back
   releaseCallback(res: any) {
-    //codxshare ko tra gi ve ca nen call api lai
-    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.dataSelected = q;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
-    }
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.dataSelected = q;
+    //         this.view.dataService.update(this.dataSelected).subscribe();
+    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+    //       }
+    //       this.notificationsService.notifyCode('ES007');
+    //     });
+    // }
   }
 
   //Huy duyet

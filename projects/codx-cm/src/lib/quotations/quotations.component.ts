@@ -610,20 +610,13 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
-    this.callfunc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    ).closed.subscribe(contract => {
-      if(contract){
-        this.notiService.notifyCode('SYS006');
-      }
-    });
+    this.callfunc
+      .openForm(AddContractsComponent, '', null, null, '', data, '', option)
+      .closed.subscribe((contract) => {
+        if (contract) {
+          this.notiService.notifyCode('SYS006');
+        }
+      });
   }
   // end
 
@@ -700,18 +693,19 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //call Back
   releaseCallback(res: any) {
-    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
-    }
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    // this.codxCmService
+    //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+    //   .subscribe((q) => {
+    //     if (q) {
+    //       this.itemSelected = q;
+    //       this.view.dataService.update(this.itemSelected).subscribe();
+    //     }
+    //     this.notiService.notifyCode('ES007');
+    //   });
+    //}
   }
 
   loadChange() {}
