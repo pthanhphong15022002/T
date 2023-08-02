@@ -639,7 +639,7 @@ export class ReceiptTransactionComponent extends UIComponent {
     this.api
       .execSv(
         'rptsys',
-        'Codx.RptBusiniess.SYS',
+        'Codx.RptBusiniess.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',
         [reportID, reportType]
