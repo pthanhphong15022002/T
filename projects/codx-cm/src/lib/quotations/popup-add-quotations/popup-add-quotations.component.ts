@@ -194,7 +194,9 @@ export class PopupAddQuotationsComponent implements OnInit {
             // }
           }
         });
-    } else this.disabledShowInput = true;
+    } else {
+      this.disabledShowInput = true;
+    }
   }
 
   beforeSave(op: RequestOption) {
@@ -494,7 +496,7 @@ export class PopupAddQuotationsComponent implements OnInit {
         }
         this.currencyIDOld = this.quotations.currencyID;
         let exchangeRateOld = this.quotations.exchangeRate;
-        if (exchangeRateOld != exchangeRateNew) {
+        if (exchangeRateOld && exchangeRateOld != exchangeRateNew) {
           this.quotations.exchangeRate = exchangeRateNew;
           this.quotations['totalSalesAmt'] =
             (this.quotations['totalSalesAmt'] * exchangeRateOld) /

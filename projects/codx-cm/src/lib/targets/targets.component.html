@@ -104,7 +104,7 @@
       <div class="ms-2 me-2" ngbDropdown [container]="'body'">
         <div
           role="button"
-          class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+          class="d-flex border rounded p-2 w-90px"
           (click)="clickShow(!isShow)"
           *ngIf="isShow == true"
         >
@@ -113,7 +113,7 @@
         </div>
         <div
           role="button"
-          class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+          class="d-flex border rounded p-2 w-90px"
           (click)="clickShow(!isShow)"
           *ngIf="isShow == false"
         >
@@ -263,17 +263,55 @@
         type="view"
       >
       </codx-mfunc>
-      <div
-        class="fw-bold mb-1 mt-1 line-clamp line-clamp-1"
-        [ngbPopover]="item?.title"
-        #p="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="PopoverDetail($event, p, item)"
-        (mouseleave)="p.close()"
-        placement="bottom right top"
-        [popoverClass]="item.recID"
-      >
-        {{ item?.title }}
+      <div class="ms-2 me-2 w-30px">
+        <span
+          (click)="clickShowGrid(item, !item.isCollapse)"
+          *ngIf="item.isCollapse == true"
+          class="i-collapse cursor-pointer icon-22 icon-arrow_right me-2"
+        ></span>
+
+        <span
+          (click)="clickShowGrid(item, !item.isCollapse)"
+          *ngIf="item.isCollapse == false"
+          class="i-collapse cursor-pointer icon-22 icon-arrow_drop_down me-2"
+        ></span>
+      </div>
+      <div class="d-flex flex-column w-240px">
+        <div
+          class="fw-bold mb-1 mt-1 line-clamp line-clamp-1"
+          [ngbPopover]="item?.title"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, p, item)"
+          (mouseleave)="p.close()"
+          placement="bottom right top"
+          [popoverClass]="item.recID"
+        >
+          {{ item?.title }}
+        </div>
+        <span
+          class="fw-bold text-gray-600"
+          [innerHTML]="
+            item?.currencyID
+              | formatvalue : view.formModel : 'CurrencyID'
+              | async
+          "
+          [ngbPopover]="tooltipCurrency"
+          #p1="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="p1.open()"
+          (mouseleave)="p1.close()"
+          placement="bottom right top"
+        >
+          <ng-template #tooltipCurrency>
+            <codx-label
+              [formModel]="view.formModel"
+              fiedName="CurrencyID"
+              default="Tiền tệ"
+            >
+            </codx-label>
+          </ng-template>
+        </span>
       </div>
     </div>
 
@@ -281,7 +319,7 @@
       <ng-container *ngFor="let busi of item?.items">
         <div
           class="d-flex container treeview height-child"
-          *ngIf="item.businessLineID == busi.businessLineID"
+          *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
         >
           <codx-mfunc
             [formModel]="view.formModel"
@@ -340,7 +378,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="busi?.target > 0"
@@ -374,7 +412,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="sumQuarter(busi.targetsLines, 1) > 0"
@@ -408,7 +446,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="sumQuarter(busi.targetsLines, 2) > 0"
@@ -442,7 +480,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="sumQuarter(busi.targetsLines, 3) > 0"
@@ -476,7 +514,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="sumQuarter(busi.targetsLines, 4) > 0"
@@ -510,7 +548,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 1) > 0"
@@ -544,7 +582,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 2) > 0"
@@ -578,7 +616,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 3) > 0"
@@ -612,7 +650,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 4) > 0"
@@ -646,7 +684,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 5) > 0"
@@ -679,7 +717,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 6) > 0"
@@ -712,7 +750,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 7) > 0"
@@ -746,7 +784,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 8) > 0"
@@ -780,7 +818,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 9) > 0"
@@ -814,7 +852,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 10) > 0"
@@ -847,7 +885,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 11) > 0"
@@ -880,7 +918,7 @@
     <ng-container *ngFor="let busi of item?.items">
       <div
         class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID"
+        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
       >
         <span
           *ngIf="getTargetMonth(busi.targetsLines, 12) > 0"

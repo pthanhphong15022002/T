@@ -1,12 +1,12 @@
 <div class="card-ep-report" *ngIf="module">
 <codx-views
   #view
-  service="rptsys"
+  service="rptrp"
   entityName="RP_ReportList"
   idField="reportID"
-  assemblyName="Codx.RptBusiniess.SYS"
+  assemblyName="Codx.RptBusiness.RP"
   className="ReportListBusiness"
-  method="GetReportsByModule1Async"
+  method="GetReportsByModuleWebAsync"
   [predicates]="'Module=@0&&ReportType=@1'"
   [dataValues]="this.module.toUpperCase()+';R'"
   (viewChanged)="viewChanged($event)"
@@ -19,7 +19,6 @@
 </codx-views>
 </div>
 <ng-template #templateListCard let-data>
-  <!-- <codx-img [cssClass]="'w-100 h-100'" [objectId]="data.recID" [objectName]="data.reportName" [objectType]="'SYS_ReportList'"  [imageType]="'square'" [isFull]="true"></codx-img> -->
   <codx-card-img
     cardCss="border w-250px h-200px card-vpp"
     [imageObjType]="'RP_ReportList'"
@@ -36,8 +35,6 @@
     [content]="data.customName"
     [dataItem]="data"
     [imageRecId]="data.recID"
-
-
   >
   </codx-card-img>
 </ng-template>

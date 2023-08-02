@@ -903,7 +903,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   classFile(item, className) {
-    if (item.folderName != null) return className;
+    if (item.folderName) return className;
     else return `${className} noDrop`;
   }
 
