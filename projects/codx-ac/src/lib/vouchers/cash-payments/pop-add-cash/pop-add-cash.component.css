@@ -4,11 +4,15 @@
 }
 
 .tabset-content .e-content{
-    height: calc(100vh - 615px)!important;
+    height: calc(90vh - 394px) !important
  }
 
 .tabcash-content .e-content{
-    height: calc(100vh - 500px)!important;
+    height:  calc(90vh - 350px) !important
+}
+
+.tabset-content .e-gridfooter{
+    padding-right: 0px !important;
 }
 
 .hidden-checkbox-mutilple .e-table .e-columnheader .e-headercell .e-headerchkcelldiv .e-checkbox-wrapper{
@@ -167,7 +171,6 @@
     position: relative;
 }
 /* css footer */
-
 /* css aniamtion slide form */
 .ac-animation-slideRight{
     animation-name: slideRight;
@@ -192,5 +195,12 @@
         /* transform: translate3d(0%, 0, 0); */
     }
   }
+  /* css row emptyRecord */
+.ac-empty-record{
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    border-top:1px solid ;
+    height: 30px !important;
+}
 
 

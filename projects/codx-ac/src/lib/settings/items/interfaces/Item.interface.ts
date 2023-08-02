@@ -54,7 +54,7 @@ export interface Item {
   createdBy: string;
   modifiedOn: string | null;
   modifiedBy: string;
-  note: string;
+  //note: string;
   cwConversion: number | null;
   autoConversion: boolean | null;
   conversionFormula: string;

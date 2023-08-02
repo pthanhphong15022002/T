@@ -282,10 +282,6 @@
 
 <!-- (wheel)="onMouseWheel($event)" -->
 
-<!-- <button class="btn btn-primary" (click)="onScale(0.5)">50%</button>
-<button class="btn btn-primary mx-2" (click)="onScale(1)">100%</button>
-<button class="btn btn-primary" (click)="onScale(1.5)">150%</button> -->
-
 <!-- <org-diagram
   [items]="items"
   [annotations]="annotations"
@@ -317,7 +313,7 @@
 </org-diagram> -->
 
 <div class="me-4 mt-4 d-flex justify-content-end">
-  <div class="showhim">
+  <!-- <div class="showhim">
     <input
       min="1"
       max="100"
@@ -329,7 +325,7 @@
       [style]="stylesObj"
     />
     <div class="showme">{{ scaleNumber * 100 + " %" }}</div>
-  </div>
+  </div> -->
 
   <button class="btn btn-primary btn-sm me-2" (click)="clearSetting()">
     <i class="icon-clear_all icon-16"></i> Cài đặt lại
@@ -981,23 +977,6 @@
 
       <!-- #endregion-->
 
-      <!-- #region tiêu đề nhóm -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[2] = !collapsed[2]"
-        [attr.aria-expanded]="!collapsed[2]"
-        aria-controls="collapseExample"
-      >
-        <span>Tiêu đề nhóm</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[2] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse2="ngbCollapse" [ngbCollapse]="!collapsed[2]">
-        <span>collapse</span>
-      </div> -->
-      <!-- #endregion-->
       <!-- #region đánh dấu -->
       <div
         class="p-collapse"
@@ -1384,6 +1363,7 @@
         </select>
       </div>
       <!-- #endregion-->
+
       <!-- #region khoảng cách -->
       <div
         class="p-collapse"
@@ -1699,6 +1679,7 @@
         </div>
       </div>
       <!-- #endregion-->
+
       <!-- #region Kết nối -->
       <div
         class="p-collapse"
@@ -1975,6 +1956,7 @@
         </div>
       </div>
       <!-- #endregion-->
+
       <!-- #region Tiêu đề -->
       <div
         class="p-collapse"
@@ -2296,23 +2278,7 @@
         </select>
       </div>
       <!-- #endregion-->
-      <!-- #region Gọi ra -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[7] = !collapsed[7]"
-        [attr.aria-expanded]="!collapsed[7]"
-        aria-controls="collapseExample"
-      >
-        <span>Gọi ra</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[7] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse7="ngbCollapse" [ngbCollapse]="!collapsed[7]">
-        <span>collapse</span>
-      </div> -->
-      <!-- #endregion-->
+
       <!-- #region Tương tác -->
       <div
         class="p-collapse"
@@ -2384,6 +2350,7 @@
         </div>
       </div>
       <!-- #endregion-->
+
       <!-- #region Hiển thị -->
       <div
         class="p-collapse"
@@ -2402,8 +2369,6 @@
         #collapse9="ngbCollapse"
         [ngbCollapse]="!collapsed[9]"
       >
-        <!-- <p class="text-dark fw-bold mt-5 mb-3">Phóng to thu nhỏ</p> -->
-
         <div class="text-dark mt-3 mb-1">Tùy chọn hiển thị đi kèm</div>
 
         <select class="form-select" #teams (change)="onSelected(teams.value)">
@@ -2412,6 +2377,7 @@
         </select>
       </div>
       <!-- #endregion-->
+
       <!-- #region Khung -->
       <div
         class="p-collapse c-first"
@@ -2606,10 +2572,19 @@
       </div>
       <!-- #endregion-->
     </div>
+
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 
-<div class="sample">
+<div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
     [cursorItem]="0"
     [navigationMode]="navigationMode"

@@ -7,7 +7,6 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutNoAside',
   templateUrl: './_noAside.component.html',
@@ -34,9 +33,5 @@ export class LayoutNoAsideComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void { }
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.callfc.openSide(NoteDrawerComponent, '', option);
-  }
+  
 }

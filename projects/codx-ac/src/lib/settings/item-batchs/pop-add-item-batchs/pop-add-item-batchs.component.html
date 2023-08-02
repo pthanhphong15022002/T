@@ -11,178 +11,164 @@
 </codx-form>
 
 <ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="ItemID"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="itemID"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="ItemID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="itemID"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="BatchNo"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="batchNo"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-                [disabled]="keyField == 'BatchNo' ? true : false || formType == 'edit' ? true : false"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="BatchNo" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="batchNo"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          [disabled]="
+            keyField == 'BatchNo'
+              ? true
+              : false || formType == 'edit'
+              ? true
+              : false
+          "
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="ManufaturedDate"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="manufaturedDate"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="ManufaturedDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="manufaturedDate"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="ExpiredDate"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="expiredDate"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="ExpiredDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="expiredDate"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="BestBeforeDate"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="bestBeforeDate"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="BestBeforeDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="bestBeforeDate"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="VendorBatchNo"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="vendorBatchNo"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="VendorBatchNo" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="vendorBatchNo"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="VendorBatchDate"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="vendorBatchDate"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="VendorBatchDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="vendorBatchDate"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="VendorExpiredDate"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="vendorExpiredDate"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="VendorExpiredDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="vendorExpiredDate"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="Note"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="note"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="note"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
-        <div class="form-group">
-            <codx-label
-                fiedName="Stop"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-            <codx-input
-                [Group]="form.formGroup"
-                field="stop"
-                [formModel]="form.formModel"
-                (valueChange)="valueChange($event)"
-              >
-            </codx-input>
-        </div>
+      <div class="form-group">
+        <codx-label fiedName="Stop" [formModel]="form.formModel"> </codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          field="stop"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #footer>
-    <div class="d-flex align-items-center justify-content-end">
-      <div class="d-flex justify-content-end">
-        <div class="ms-2">
-          <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-          </button>
-        </div>
+  <div class="d-flex align-items-center justify-content-end">
+    <div class="d-flex justify-content-end">
+      <div class="ms-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          style="min-width: 60px"
+          (click)="onSave()"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName"
+            default="Lưu"
+          ></codx-label>
+        </button>
       </div>
     </div>
-  </ng-template>
+  </div>
+</ng-template>

@@ -5,6 +5,7 @@ import { AuthService, AuthStore, DialogModel, LayoutService, PageLink, PageTitle
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -297,7 +298,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   url:string = "";
   test(recID:string){
     let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
-    this.url = `http://localhost:9002/api/reportdowload/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
+    this.url = `${environment.apiUrl}/api/${this.funcItem.service}/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
   }
 }
 
