@@ -27,7 +27,7 @@ import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-qu
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { CM_Contracts } from '../models/cm_model';
+import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 import { debug } from 'util';
 
@@ -161,41 +161,34 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   loadParam() {
-    this.codxCmService.getSettingValue('CMParameters').subscribe((res) => {
-      if (res?.length > 0) {
-        //approver
-        let dataParam4 = res.filter(
-          (x) => x.category == '4' && !x.transType
-        )[0];
-        if (dataParam4) {
-          let dataValue = JSON.parse(dataParam4.dataValue);
-          if (Array.isArray(dataValue)) {
-            let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
-            if (setting) this.applyApprover = setting['ApprovalRule'];
-          }
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
         }
+      }
+    });
 
-        //tien te
-        let dataParam1 = res.filter(
-          (x) => x.category == '1' && !x.transType
-        )[0];
-        if (dataParam1) {
-          this.paramDefault = JSON.parse(dataParam1.dataValue);
-          this.currencyIDDefault =
-            this.paramDefault['DefaultCurrency'] ?? 'VND';
-          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
-          if (this.currencyIDDefault != 'VND') {
-            let day = new Date();
-            this.codxCmService
-              .getExchangeRate(this.currencyIDDefault, day)
-              .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
-                else {
-                  this.currencyIDDefault = 'VND';
-                  this.exchangeRateDefault = 1;
-                }
-              });
-          }
+    //tien te
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        this.paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = this.paramDefault['DefaultCurrency'] ?? 'VND';
+        this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+        if (this.currencyIDDefault != 'VND') {
+          let day = new Date();
+          this.codxCmService
+            .getExchangeRate(this.currencyIDDefault, day)
+            .subscribe((res) => {
+              if (res && res != 0) this.exchangeRateDefault = res;
+              else {
+                this.currencyIDDefault = 'VND';
+                this.exchangeRateDefault = 1;
+              }
+            });
         }
       }
     });
@@ -594,8 +587,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   // tạo hợp đồng
-  createContract(dt) {
+  createContract(quotation: CM_Quotations) {
     let contract = new CM_Contracts();
+    contract.customerID = quotation?.customerID;
+    contract.quotationID = quotation?.recID;
     let data = {
       projectID: null,
       action: 'add',
@@ -608,7 +603,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
-    let popupContract = this.callfunc
+    this.callfunc
       .openForm(AddContractsComponent, '', null, null, '', data, '', option)
       .closed.subscribe((contract) => {
         if (contract) {
@@ -691,18 +686,20 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //call Back
   releaseCallback(res: any) {
-    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
-    }
+    console.log(this);
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    // this.codxCmService
+    //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+    //   .subscribe((q) => {
+    //     if (q) {
+    //       this.itemSelected = q;
+    //       this.view.dataService.update(this.itemSelected).subscribe();
+    //     }
+    //     this.notiService.notifyCode('ES007');
+    //   });
+    //}
   }
 
   loadChange() {}

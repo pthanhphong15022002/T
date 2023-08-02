@@ -180,7 +180,7 @@
             *ngIf="isShow == true"
           >
             <i class="icon-i-arrows-collapse me-2"></i>
-            <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
+            <codx-label default="Thu gọn" [formModel]="view.formModel" fiedName="lblCollapse"></codx-label>
           </div>
           <div
             role="button"
@@ -198,7 +198,6 @@
         </div>
       </div>
       <div class="">
-
         <codx-dropdown-calendar
           cssPopup="h-500px w-800px"
           [value]="date"
@@ -212,7 +211,7 @@
       </div>
 
     </div>
-    <div class="mt-2 scroll-grid h-100">
+    <div class="mt-2 h-100">
       <codx-gridview-v2
         #gridBusiness
         [formName]="view.formModel?.formName"

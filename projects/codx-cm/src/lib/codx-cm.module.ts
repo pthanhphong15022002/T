@@ -118,7 +118,7 @@ export const routes: Routes = [
       {
         path: 'quotations/:funcID',
         component: QuotationsComponent,
-        data: { noReuse: true },
+        // data: { noReuse: true },
       },
       {
         path: 'contracts/:funcID',

@@ -249,17 +249,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-    // if (!e.data[e.field]) {
-    //   return;
-    // }
-
-    // if (e.field === 'itemID') {
-    //   this.setPredicatesByItemID(e.data.itemID);
-    // }
-
-    // if (e.field.toLowerCase() === 'idim4') {
-    //   this.setPredicateByIDIM4(e.data[e.field]);
-    // }
 
     if(this.dataUpdate)
     {
@@ -313,8 +302,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
           }
-          
-          // this.vouchersLines[e.idx] = Object.assign(this.vouchersLines[e.idx], res);
         });
     }
 
@@ -330,16 +317,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         e.data.note = e.itemData.ReasonName;
         break;
     }
-
-    // switch(e.field)
-    // {
-    //   case 'itemID':
-    //     this.loadItemID(e.value);
-    //     break;
-    //   case 'idiM4':
-    //     this.loadWarehouseID(e.value);
-    //     break;
-    // }
   }
 
   onAddNew(e: any) {
@@ -410,11 +387,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         this.dt.detectChanges();
       }
     });
-  }
-
-  onDoubleClick(data)
-  {
-    // this.loadPredicate(this.gridVouchersLine.visibleColumns, data.rowData);
   }
 
   onClose()
@@ -551,7 +523,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                       .pipe(takeUntil(this.destroy$))
                       .subscribe((res) => {
                       this.vouchers = res;
-                      this.setWarehouseID();
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
                       this.isSaveMaster = false;
@@ -596,7 +567,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                       .pipe(takeUntil(this.destroy$))
                       .subscribe((res) => {
                         this.vouchers = res;
-                        this.setWarehouseID();
                         this.form.formGroup.patchValue(this.vouchers);
                       });
                     }
@@ -667,14 +637,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           }
         });
     }
-    // if(this.formType == 'copy' && this.vouchers.warehouseID)
-    // {
-    //   this.getWarehouseName(this.vouchers.warehouseID);
-    // }
-    // if(this.formType == 'add')
-    // {
-    //   this.setWarehouseID();
-    // }
 
     if(this.vouchers.warehouseID)
     {
@@ -809,12 +771,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
+          res.lineType = 1;
           switch (this.modeGrid) {
             case '1':
               idx = this.gridVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               this.gridVouchersLine.addRow(res, idx);
-              // this.loadPredicate(this.gridVouchersLine.visibleColumns, res);
               break;
             case '2':
               idx = this.vouchersLines.length;
@@ -881,7 +843,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case '1':
         this.gridVouchersLine.gridRef.selectRow(Number(data.index));
         this.gridVouchersLine.gridRef.startEdit();
-        // this.loadPredicate(this.gridVouchersLine.visibleColumns, data);
         break;
       case '2':
         let index = this.vouchersLines.findIndex(
@@ -952,7 +913,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.gridVouchersLine.addRow(res, idx);
-              // this.loadPredicate(this.gridVouchersLine.visibleColumns, data);
               break;
             case '2':
               idx = this.vouchersLines.length;
@@ -1109,127 +1069,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //     }
   //   }
   // }
-  
-  // loadItemID(value) {
-  //   let isFocus = true;
-  //   let id;
-  //   let sArray = [
-  //     'packingspecifications',
-  //     'styles',
-  //     'itemcolors',
-  //     'itembatchs',
-  //     'itemseries',
-  //   ];
-  //   var elements = document
-  //     .querySelector('.tabLine')
-  //     .querySelectorAll('codx-inplace');
-  //   elements.forEach((e) => {
-  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
-  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-  //       input.value = "";
-  //       input.predicate = 'ItemID="' + value + '"';
-  //       input.loadSetting();
-  //       if(isFocus)
-  //       {
-  //         id = e.id;
-  //         isFocus = false;
-  //       }
-  //     }
-  //   });
-  //   var element = document.getElementById(id);
-  //   var codxInplace = window.ng.getComponent(element) as CodxInplaceComponent;
-  //   setTimeout(() => {
-  //     codxInplace.enableEditMode();
-  //   }, 500);
-  // }
-
-  // loadItemID(value) {
-  //   let sArray = [
-  //     'packingspecifications',
-  //     'styles',
-  //     'itemcolors',
-  //     'itembatchs',
-  //     'itemseries',
-  //   ];
-  //   var elements = document
-  //     .querySelector('.tabLine')
-  //     .querySelectorAll('codx-inplace');
-  //   elements.forEach((e) => {
-  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
-  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-  //       input.value = "";
-  //       input.predicate = 'ItemID="' + value + '"';
-  //       input.loadSetting();
-  //     }
-  //   });
-  // }
-
-  loadPredicate(visibleColumns, data)
-  {
-    var arr = [
-      'IDIM0',
-      'IDIM1',
-      'IDIM2',
-      'IDIM3',
-      'IDIM5',
-      'IDIM6',
-      'IDIM7',
-    ];
-    arr.forEach((fieldName) => {
-      let idx = this.gridVouchersLine.visibleColumns.findIndex(
-        (x) => x.fieldName == fieldName
-      );
-      if (idx > -1) {
-        switch (fieldName) {
-          case 'IDIM0':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-          case 'IDIM1':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-          case 'IDIM2':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-          case 'IDIM3':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-          case 'IDIM5':
-            visibleColumns[idx].predicate = '@0.Contains(WarehouseID)';
-            visibleColumns[idx].dataValue = `[${data?.idiM4}]`;
-            break;
-          case 'IDIM6':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-          case 'IDIM7':
-            visibleColumns[idx].predicate = '@0.Contains(ItemID)';
-            visibleColumns[idx].dataValue = `[${data?.itemID}]`;
-            break;
-        }
-      }
-    });
-  }
-
-  // loadWarehouseID(value) {
-  //   let sArray = [
-  //     'warehouselocations',
-  //   ];
-  //   var element = document
-  //     .querySelector('.tabLine')
-  //     .querySelectorAll('codx-inplace');
-  //   element.forEach((e) => {
-  //     var input = window.ng.getComponent(e) as CodxInplaceComponent;
-  //     if (sArray.includes(input.dataService.comboboxName.toLowerCase())) {
-  //       input.value = "";
-  //       input.predicate = 'WarehouseID="' + value + '"';
-  //       input.loadSetting();
-  //     }
-  //   });
-  // }
 
   setReason(field, text, idx) {
     if (!this.reason.some((x) => x.field == field)) {
@@ -1263,26 +1102,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           });
         }
       });
-  }
-
-  setWarehouseID(){
-    switch(this.funcID)
-      {
-        case 'ACT0708':
-          if(this.vouchers.warehouseID)
-          {
-            // this.vouchers.warehouseID = this.vouchers.warehouseReceipt;
-            this.getWarehouseName(this.vouchers.warehouseID);
-          }
-          break;
-        case 'ACT0714':
-          if(this.vouchers.warehouseID)
-          {
-            // this.vouchers.warehouseID = this.vouchers.warehouseIssue;
-            this.getWarehouseName(this.vouchers.warehouseID);
-          }
-          break;
-      }
   }
 
   costPrice_Change(line: any)
@@ -1319,29 +1138,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         break;
     }
   }
-
-  // setPredicatesByItemID(dataValue: string): void {
-  //   for (const v of this.gridVouchersLine.visibleColumns) {
-  //     if (
-  //       ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
-  //         v.fieldName?.toLowerCase()
-  //       )
-  //     ) {
-  //       v.predicate = 'ItemID=@0';
-  //       v.dataValue = dataValue;
-  //     }
-  //   }
-  // }
-
-  // setPredicateByIDIM4(dataValue: string): void {
-  //   const idim5 = this.gridVouchersLine.visibleColumns.find(
-  //     (v) => v.fieldName?.toLowerCase() === 'idim5'
-  //   );
-  //   if (idim5) {
-  //     idim5.predicate = 'WarehouseID=@0';
-  //     idim5.dataValue = dataValue;
-  //   }
-  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
@@ -1404,7 +1200,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         columnsGrid[i].isVisible = false;
       }
     });
-    //this.gridVouchersLine.hideColumns(this.lockFields);
   }
   //#endregion
 }

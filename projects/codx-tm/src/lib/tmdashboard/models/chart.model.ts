@@ -1,7 +1,7 @@
 import { AxisModel, ChartAreaModel } from '@syncfusion/ej2-angular-charts';
 import { SeriesSetting } from 'codx-core';
 
-export class BI_Charts {
+export class BG_Charts {
   recID: string;
   dashboardID: string;
   location?: string;
