@@ -377,7 +377,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -386,7 +386,7 @@ export class TargetsComponent
       {
         type: ViewType.chart,
         sameData: false,
-        active: true,
+        active: false,
         model: {
           panelRightRef: this.templateGrid,
         },
