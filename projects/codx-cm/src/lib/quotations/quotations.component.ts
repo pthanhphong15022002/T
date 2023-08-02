@@ -144,6 +144,23 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   async loadSetting() {
+    this.loadParam();
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
+    );
+    this.vllStatus = this.grvSetup['Status'].referedValue;
+    this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
+    //lay grid view
+    let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+      this.getColumsGrid(this.grvSetup);
+    }
+  }
+
+  loadParam() {
     this.codxCmService.getSettingValue('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
         //approver
@@ -182,19 +199,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         }
       }
     });
-    this.grvSetup = await firstValueFrom(
-      this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
-    );
-    this.vllStatus = this.grvSetup['Status'].referedValue;
-    this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
-    //lay grid view
-    let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
-    if (Array.isArray(arrField)) {
-      this.arrFieldIsVisible = arrField
-        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-        .map((x: any) => x.fieldName);
-      this.getColumsGrid(this.grvSetup);
-    }
   }
 
   getColumsGrid(grvSetup) {
