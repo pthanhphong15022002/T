@@ -159,7 +159,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
     };
   }
   checkViewKowTyeGroup() {
-    if (this.itemDetail['kowID']) {
+    if (this.itemDetail?.kowID) {
       for (let i in this.groupKowTypeView) {
         this.groupKowTypeView[i].isShow = this.groupKowTypeView[
           i

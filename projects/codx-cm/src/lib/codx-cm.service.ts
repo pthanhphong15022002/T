@@ -1301,9 +1301,29 @@ export class CodxCmService {
       [bussinessID, year]
     );
   }
-  //#region
 
   getOneObject(recID, className) {
     return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
   }
+
+  //#region getParamModule
+  getParam(sformName, category) {
+    return this.api.exec<any>(
+      'SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      [sformName, category]
+    );
+  }
+
+  getSettingValue(sformName) {
+    return this.api.exec<any>(
+      'SYS',
+      'SettingValuesBusiness',
+      'GetSettingValueAsync',
+      sformName
+    );
+  }
+
+  //end
 }
