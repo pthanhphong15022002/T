@@ -97,7 +97,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.oldPositionID = this.employeeObj.positionID;
       this.oldLocationID = this.employeeObj.locationID;
 
-      debugger;
       this.newOrgUnitID = this.employeeObj.orgUnitID;
       this.newJobLevelID = this.employeeObj.jobLevel;
       this.newPositionID = this.employeeObj.positionID;
@@ -253,7 +252,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeOrgUnitID(event) {
-    debugger;
     if (
       this.actionType == 'add' ||
       (this.actionType == 'edit' && !this.EAppointionObj.oldOrgUnitID)

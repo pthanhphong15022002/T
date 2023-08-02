@@ -212,7 +212,7 @@
       </div>
 
     </div>
-    <div class="mt-2 scroll-grid">
+    <div class="mt-2 scroll-grid h-100">
       <codx-gridview-v2
         #gridBusiness
         [formName]="view.formModel?.formName"
@@ -229,6 +229,7 @@
         [autoLoad]="false"
         [autoFitColumns]="false"
         [dataSource]="lstDataTree"
+        [height]="'100%'"
       >
       </codx-gridview-v2>
     </div>
