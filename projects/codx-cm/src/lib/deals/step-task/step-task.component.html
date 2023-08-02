@@ -301,7 +301,21 @@
       <button
         type="button"
         class="btn btn-icon btn-sm btn-light"
-        (click)="dialogGuide.close()"
+        (click)="zoomGuide()"
+      >
+        <span class="icon-picture_in_picture_alt icon-16"></span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light"
+        (click)="zoomGuide()"
+      >
+        <span class="icon-photo_size_select_small icon-16"></span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light"
+        (click)="closeGuide()"
       >
         <span class="icon-close icon-16"></span>
       </button>
