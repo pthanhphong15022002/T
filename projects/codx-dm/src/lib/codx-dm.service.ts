@@ -1572,7 +1572,7 @@ export class CodxDMService {
         this.callfc.openForm(
           MoveComponent,
           '',
-          950,
+          500,
           650,
           '',
           [type, data, title, true],
