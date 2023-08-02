@@ -44,6 +44,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   method = 'GetListDealAndDealCompetitorAsync';
   vllStatus = '';
   currentRecID = '';
+  id: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -53,7 +54,13 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     private cmSv: CodxCmService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    this.getListDealAndDealCompetitor();
+    if (changes['dealID']) {
+      if (changes['dealID'].currentValue != null) {
+        if (changes['dealID'].currentValue == this.id) return;
+        this.id = changes['dealID'].currentValue;
+        this.getListDealAndDealCompetitor();
+      }
+    }
   }
   async ngOnInit() {
     this.formModel = await this.cmSv.getFormModel('CM02011');
@@ -175,9 +182,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     }
   }
 
-  changeDataMF(e, data) {
-
-  }
+  changeDataMF(e, data) {}
 
   setStatus(title, data) {
     data.dealID = this.dealID;
@@ -241,7 +246,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
           PopupAddDealcompetitorComponent,
           '',
           800,
-          600,
+          800,
           '',
           obj,
           '',
