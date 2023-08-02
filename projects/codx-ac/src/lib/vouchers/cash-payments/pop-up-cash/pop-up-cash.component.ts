@@ -64,7 +64,7 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
     this.objectName = dialogData.data?.objectName;
   }
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '80%', '80%');
+    this.acService.setPopupSize(this.dialog, '80%', '90%');
   }
   ngAfterViewInit() {
     this.dt.detectChanges();
@@ -129,6 +129,8 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.dataCash = res;
+          this.grid.refresh();
+          this.dt.detectChanges();
         }
       });
   }
