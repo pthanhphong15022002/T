@@ -19,6 +19,7 @@ import {
   SidebarModel,
   ApiHttpService,
   CacheService,
+  AuthStore,
 } from 'codx-core';
 import {
   FileInfo,
@@ -313,7 +314,7 @@ export class CodxDMService {
   constructor(
     private domSanitizer: DomSanitizer,
     private cache: CacheService,
-    private auth: AuthService,
+    private auth: AuthStore,
     private folderService: FolderService,
     private fileService: FileService,
     private callfc: CallFuncService,
@@ -321,8 +322,7 @@ export class CodxDMService {
     //  private confirmationDialogService: ConfirmationDialogService,
     private notificationsService: NotificationsService
   ) {
-    var data: any = this.auth.user$;
-    this.user = data.source.value;
+    this.user = this.auth.get();
     this.currentNode = '';
     this.folderId.next('');
     this.disableInput.next(true);
@@ -1068,7 +1068,7 @@ export class CodxDMService {
     var ret = false;
     if (data.bookmarks != null) {
       data.bookmarks.forEach((item) => {
-        if (item.objectID == this.user.userID) {
+        if (item.objectID == this.user?.userID) {
           ret = true;
         }
       });
@@ -1093,7 +1093,7 @@ export class CodxDMService {
   showBookmark(item) {
     if (item.bookmarks != null) {
       var list = item.bookmarks.filter(
-        (x) => x.objectID == this.user.userID.toString()
+        (x) => x.objectID == this.user?.userID
       );
       if (list.length > 0) return true;
       else return false;
