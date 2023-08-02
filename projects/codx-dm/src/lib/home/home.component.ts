@@ -251,7 +251,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
                   this.getDataFolder(res2.recID,true);
                   var breadcumb = this.dmSV.breadcumb.getValue();
                   if(!breadcumb.includes(res2.folderName)) breadcumb.push(res2.folderName);
-                  if(!this.dmSV.breadcumbLink.includes(res2.recID))this.dmSV.breadcumbLink.push(res2.recID);
+                  var index = this.dmSV.breadcumbLink.findIndex(x=>x == res2.recID);
+                  if(index >= 0)
+                  {
+                    this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,index + 1);
+                  }
+                  else this.dmSV.breadcumbLink.push(res2.recID);
+                  
                   this.dmSV.breadcumb.next(breadcumb);
                 }
               });
@@ -318,7 +324,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
               this.dmSV.parentFolder.next(res2);
               var breadcumb = this.dmSV.breadcumb.getValue();
               if(!breadcumb.includes(res2.folderName)) breadcumb.push(res2.folderName);
-              if(!this.dmSV.breadcumbLink.includes(res2.recID))this.dmSV.breadcumbLink.push(res2.recID);
+              var index = this.dmSV.breadcumbLink.findIndex(x=>x == res2.recID);
+              if(index >= 0)
+              {
+                this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,index);
+              }
+              else this.dmSV.breadcumbLink.push(res2.recID);
               this.dmSV.breadcumb.next(breadcumb);
             }
           });
@@ -903,7 +914,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   classFile(item, className) {
-    if (item.folderName != null) return className;
+    if (item.folderName) return className;
     else return `${className} noDrop`;
   }
 

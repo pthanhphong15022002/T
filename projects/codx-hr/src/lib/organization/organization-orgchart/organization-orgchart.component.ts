@@ -244,7 +244,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
-        //this.dataTree.pagefit = 'pageFitModeNone';
+        this.dataTree.pagefit = 'pageFitModeNone';
         break;
       case 'pageFitModeWidth':
         this.pagefit = this.PageFitMode.PageWidth;
@@ -265,7 +265,7 @@ export class OrganizationOrgchartComponent implements OnInit {
       //Orientation
       case 'orientationTop':
         this.orientationType = this.OrientationType.Top;
-        //this.dataTree.orientationType = 'orientationTop';
+        this.dataTree.orientationType = 'orientationTop';
         break;
       case 'orientationBottom':
         this.orientationType = this.OrientationType.Bottom;
@@ -1203,5 +1203,11 @@ export class OrganizationOrgchartComponent implements OnInit {
           });
       }
     }
+  }
+
+  onSaveForm() {
+    this.hrService.SaveSettingValue(this.dataTree).subscribe((res: any) => {
+      console.log(JSON.parse(res.dataValue));
+    });
   }
 }

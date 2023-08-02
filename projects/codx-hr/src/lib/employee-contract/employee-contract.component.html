@@ -136,7 +136,12 @@
           </ng-template>
         </ng-container>
         <div
-          *ngIf="data?.isCurrent && !data?.isExpire"
+          *ngIf="
+            data?.status === '5' &&
+            dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+            (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+              data.expiredDate === null)
+          "
           #popOver="ngbPopover"
           [openDelay]="500"
           (mouseenter)="popOver.open()"
@@ -301,7 +306,12 @@
   </codx-temp-full>
   <ng-template #titleRight>
     <div
-      *ngIf="data?.isCurrent && !data?.isExpire"
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
@@ -419,7 +429,14 @@
 
 <ng-template #baseHeaderRightTmp let-data>
   <div>
-    <ng-container *ngIf="data?.isCurrent && !data?.isExpire">
+    <ng-container
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
+    >
       <span
         [style.color]="'#0078FF'"
         class="icon-bookmark icon-18"
