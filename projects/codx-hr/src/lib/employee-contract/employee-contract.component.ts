@@ -20,17 +20,17 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import moment from 'moment';
+import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable, map } from 'rxjs';
 import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
-import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxOdService } from 'projects/codx-od/src/public-api';
-import { isObservable, map } from 'rxjs';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-import moment from 'moment';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -152,7 +152,7 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.editStatusObj = data;
-    this.currentEmpObj = data.emp;
+    this.currentEmpObj = data?.emp;
     this.formGroup.patchValue(this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -440,12 +440,13 @@ export class EmployeeContractComponent extends UIComponent {
             this.view.formModel.funcID,
             this.view.function.description + ' - ' + this.itemDetail.contractNo,
             (res: any) => {
+              console.log(res);
               if (res?.msgCodeError == null && res?.rowCount) {
-                this.notify.notifyCode('ES007');
+                //this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .editEContract(this.itemDetail, false)
+                  .editEContract(this.itemDetail, true)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService

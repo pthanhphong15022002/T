@@ -119,11 +119,27 @@
                 | formatvalue : fmTargetLines : 'CurrencyID'
                 | async
             "
+            [ngbPopover]="tooltipCurrency"
+            #p1="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="p1.open()"
+            (mouseleave)="p1.close()"
+            placement="bottom right top"
           >
+            <ng-template #tooltipCurrency>
+              <codx-label
+                [formModel]="formModel"
+                fiedName="CurrencyID"
+                default="Tiền tệ"
+              >
+              </codx-label>
+            </ng-template>
           </span>
           <codx-mfunc
-            [ngStyle]="item?.parentID == null ? {'top': '-24px'} : {'top': '-5px'}"
-            style="position: relative;"
+            [ngStyle]="
+              item?.parentID == null ? { top: '-24px' } : { top: '-5px' }
+            "
+            style="position: relative"
             [formModel]="formModel"
             (clickMF)="clickMF($event, item)"
             (changeDataMF)="changeDataMF($event, item)"

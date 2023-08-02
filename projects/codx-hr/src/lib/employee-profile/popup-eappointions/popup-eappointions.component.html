@@ -46,18 +46,31 @@
                 "
               ></span>
             </div>
-            <span class="text-gray-700" *ngIf="employeeObj.orgUnitName">{{
-              employeeObj?.orgUnitName
-            }}</span>
-            <!-- <div class="text-gray-700">
-              <span
-                [innerHTML]="
-                  employeeObj?.orgUnitID ?? employeeObj?.emp?.orgUnitID
-                    | formatvalue : formModel : 'orgUnitID'
-                    | async
-                "
-              ></span>
-            </div> -->
+
+            <ng-container *ngIf="employeeObj?.orgUnitName; else noOrgUnit">
+              <span>
+                {{ employeeObj?.orgUnitName }}
+              </span>
+            </ng-container>
+            <!-- <span
+              class="text-gray-700"
+              *ngIf="employeeObj?.orgUnitName;
+              else
+              #noOrgUnit"
+              >{{ employeeObj?.orgUnitName }}</span
+            > -->
+
+            <ng-template #noOrgUnit>
+              <div class="text-gray-700">
+                <span
+                  [innerHTML]="
+                    employeeObj?.orgUnitID ?? employeeObj?.emp?.orgUnitID
+                      | formatvalue : formModel : 'orgUnitID'
+                      | async
+                  "
+                ></span>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -103,7 +116,7 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput"
+          [disabled]="disabledInput"
           (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
           [formModel]="formModel"
@@ -181,8 +194,8 @@
       <div class="col-6">
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput"
-        (render)="onRenderLocationID($event)"
+          [disabled]="disabledInput"
+          (render)="onRenderLocationID($event)"
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -195,8 +208,8 @@
           [formModel]="formModel"
         ></codx-label>
         <codx-input
-        [disabled]="disabledInput"
-        (render)="onRenderOldLocationID($event)"
+          [disabled]="disabledInput"
+          (render)="onRenderOldLocationID($event)"
           [disabled]="true"
           field="oldLocationID"
           [formModel]="formModel"
