@@ -986,6 +986,19 @@ codx-view-list-detail .codx-detail-footer.expand .tab_footer {
   right: 15px;
 }
 
+.e-dlg-content .codx-detail-footer.expand .tab-content {
+  overflow: auto;
+  padding: 0 15px;
+  position: relative;
+  height: 360px;
+  padding-bottom: 0 !important;
+}
+
+.e-dlg-content .codx-detail-footer.expand .tab_footer {
+  bottom: 8px;
+  right: 15px;
+}
+
 codx-view-list-detail
   .codx-detail-footer.expand
   .tab_footer
@@ -1877,7 +1890,7 @@ textarea.codx-textarea {
 
 codx-dropdown-calendar {
   button.dropdown-toggle.btn {
-    height: 33px !important;
+    height: 28px !important;
     line-height: inherit;
   }
   .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(
@@ -1885,7 +1898,7 @@ codx-dropdown-calendar {
     ):not(.btn-flush):not(.btn-icon) {
     padding-top: 4px !important;
     padding-bottom: 4px !important;
-    height: 33px !important;
+    height: 28px !important;
   }
 }
 .page-pw{
@@ -3044,7 +3057,7 @@ codx-layout{
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
-    min-height: 28px;
+    min-height: 26px;
     padding: 3px 8px 3px 8px;
   }
   input.e-input {
@@ -3327,7 +3340,7 @@ codx-card-center .card.codx_cardcenter{
 }
 lib-popup-detail{
 .conmement-body{
-    height: calc(100vh - 190px);
+    height: calc(100vh - 196px);
     overflow: auto;
 }
 }
@@ -3482,6 +3495,14 @@ codx-view-list-tree{
     background-color: white;
   }
 } 
-.menu-nav .menu-item >.d-flex.align-items-center:hover{
-  background-color: var(--primary-lightest);
+.e-pane .aside-menu{
+  .menu-nav .menu-item >.d-flex.align-items-center:hover{
+    background-color: transparent;
+    span{
+      color: var(--gray-600);
+    }
+  }
+  .menu-nav .menu-item .item-selected{
+    color: var(--primary-dark);
+  }
 }

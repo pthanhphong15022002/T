@@ -48,16 +48,5 @@ export class PopupEditParamComponent implements OnInit, AfterViewInit {
 
   onSaveForm(){
     this.dialog.close(this.data)
-    // this.api.execSv<any>(
-    //   'rptsys',
-    //   'Codx.RptBusiniess.SYS',
-    //   'ReportListBusiness',
-    //   'UpdateReportParamAsync',
-    //   this.data
-    // ).subscribe(res => {
-    //   if(res){
-    //     this.dialog.close(true);
-    //   }
-    // });
   }
 }

@@ -2647,6 +2647,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       taskGroup['createdBy'] = this.userId;
       taskGroup['stepID'] = this.step['recID'];
       taskGroup['task'] = [];
+      taskGroup['durationDay'] = 1;
     }
     this.popupGroupJob = this.callfc.openForm(
       StepTaskGroupComponent,

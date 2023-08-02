@@ -351,7 +351,7 @@ export class CodxTMService {
     );
   }
 
-  getListUserIDByListGroupID(listGroupID){
+  getListUserIDByListGroupID(listGroupID) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
@@ -534,7 +534,7 @@ export class CodxTMService {
       resolve(obj as object);
     });
   }
-//cai thang này đe sinh instanceID - trước kia hàm add nó sinh giờ ko sinh thì t tự sinh
+  //cai thang này đe sinh instanceID - trước kia hàm add nó sinh giờ ko sinh thì t tự sinh
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
       'SYS',
@@ -542,6 +542,17 @@ export class CodxTMService {
       'AutoNumbersBusiness',
       'GenAutoNumberAsync',
       [funcID, entityName, key]
+    );
+  }
+
+  //update res sprint
+  upResourceSprint(iterationID, rescourceNew) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'SprintsBusiness',
+      'UpdatesResoureSprintsAsync',
+      [iterationID, rescourceNew]
     );
   }
 

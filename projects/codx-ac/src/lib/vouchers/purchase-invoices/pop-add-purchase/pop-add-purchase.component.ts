@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   HostListener,
   Injector,
@@ -37,7 +36,6 @@ import { PurchaseInvoiceService } from '../purchase-invoices.service';
   selector: 'lib-pop-add-purchase',
   templateUrl: './pop-add-purchase.component.html',
   styleUrls: ['./pop-add-purchase.component.scss'],
-  // encapsulation: ViewEncapsulation.None,
 })
 export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Constructor

@@ -215,7 +215,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
 
           case 'reasonid':
-            this.vouchers.reasonID = e.data;
+            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
           let text = e?.component?.itemsSelected[0]?.ReasonName;
           this.setReason(field, text, 0);
           break;
@@ -234,6 +234,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
         case 'voucherno':
           this.vouchers.voucherNo = e.data;
+          break;
+        case 'refno':
+          this.vouchers.refNo = e.data;
+          break;
+        case 'requester':
+          this.vouchers.requester = e.data;
+          break;
+        case 'requestdate':
+          this.vouchers.requestDate = e.data;
+          break;
       }
     }
   }

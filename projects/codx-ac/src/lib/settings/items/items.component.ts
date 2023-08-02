@@ -1,11 +1,10 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
@@ -206,25 +205,12 @@ export class ItemsComponent extends UIComponent {
     // debug
     console.log('delete', { data });
 
-    this.view.dataService
-      .delete([data], true, (req: RequestOption) => {
-        req.methodName = 'DeleteItemAsync';
-        req.className = 'ItemsBusiness';
-        req.assemblyName = 'ERM.Business.IV';
-        req.service = 'IV';
-        req.data = [data];
-
-        return true;
-      })
-      .subscribe((res: any) => {
-        console.log(res);
-        if (res) {
-          this.acService.deleteFile(
-            data.itemID,
-            this.view.formModel.entityName
-          );
-        }
-      });
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      console.log(res);
+      if (res) {
+        this.acService.deleteFile(data.itemID, this.view.formModel.entityName);
+      }
+    });
   }
   //#endregion
 

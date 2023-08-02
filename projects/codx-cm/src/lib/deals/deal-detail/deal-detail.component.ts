@@ -107,12 +107,6 @@ export class DealDetailComponent implements OnInit {
      this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
       {
-        name: 'Comment',
-        textDefault: 'Thảo luận',
-        isActive: false,
-        template: null,
-      },
-      {
         name: 'Attachment',
         textDefault: 'Đính kèm',
         isActive: false,
@@ -136,6 +130,12 @@ export class DealDetailComponent implements OnInit {
         isActive: false,
         template: this.referencesDeal,
         icon: 'icon-i-link',
+      },
+      {
+        name: 'Comment',
+        textDefault: 'Thảo luận',
+        isActive: false,
+        template: null,
       },
     ];
   }

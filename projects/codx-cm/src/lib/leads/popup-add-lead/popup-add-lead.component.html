@@ -46,7 +46,13 @@
         </div>
       </div>
     </div>
-
+    <codx-input
+    field="buid"
+    [formModel]="form.formModel"
+    [Group]="form.formGroup"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -168,7 +174,7 @@
         </codx-label>
         <codx-input
           field="companyPhone"
-          type="number"
+          type="text"
           [placeholder]="gridViewSetup?.CompanyPhone?.description"
           [crrValue]="lead?.companyPhone"
           (valueChange)="valueChange($event)"
@@ -187,9 +193,9 @@
         >
         </codx-label>
         <codx-input
-          type="number"
-          [crrValue]="lead?.faxNo"
+          type="text"
           [placeholder]="gridViewSetup?.FaxNo?.description"
+          [crrValue]="lead?.faxNo"
           field="faxNo"
           (valueChange)="valueChange($event)"
         >

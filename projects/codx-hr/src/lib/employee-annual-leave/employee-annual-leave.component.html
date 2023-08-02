@@ -1,6 +1,7 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
     [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
-    [selectedFirst]="true">
+    [selectedFirst]="true" (viewChanging)="viewChanging($event)"
+    (viewChanged)="viewChanged($event)" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 
@@ -17,7 +18,7 @@
                 [default]="'Tồn năm trước'"></codx-label>
         </div>
         <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="AlThisYear" [setRequire]="false" [formModel]="view.formModel"
+            <codx-label fiedName="lblAlThisYear" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Tiêu chuẩn năm nay'"></codx-label>
         </div>
         <div class="w-30 text-dark fw-bold p-3 fw-500">
@@ -73,7 +74,6 @@
             <ng-template #noALPreYear>
                 <span class="place-holder">{{grvSetup['ALPreYear'].headerText}}</span>
             </ng-template>
-
         </div>
         <!-- Tiêu chuẩn năm nay -->
         <div class="w-25 p-3">
@@ -131,14 +131,8 @@
         </div>
     </div>
 </ng-template>
-
 <!-- end template list -->
 <!-- #endregion  -->
-
-
-
-<!-- #region TreeView  -->
-<!-- endregion -->
 
 <!-- #region ListView HRTAL02 -->
 <!-- headerTemplate -->
@@ -322,7 +316,8 @@
                                 </div>
                                 <div ngbDropdownMenu class="dropdown-menu w-350px p-3"
                                     aria-labelledby="dropdownMenuButton">
-                                    <ng-container *ngTemplateOutlet=" daysOffPopup; context: { $implicit: data.listDaysOff}">
+                                    <ng-container
+                                        *ngTemplateOutlet=" daysOffPopup; context: { $implicit: data.listDaysOff}">
                                     </ng-container>
                                 </div>
                             </div>
@@ -370,8 +365,7 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div class="list-days-off"
-            *ngIf="data?.length > 0 && popupLoading ==false ; else noDataNotification">
+        <div class="list-days-off" *ngIf="data?.length > 0 && popupLoading ==false ; else noDataNotification">
             <div *ngFor="let item of data" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
                     <i class="icon-event text-dark icon-16 me-1"> </i>
@@ -393,7 +387,7 @@
                     </span>
                 </div>
                 <ng-template #reasonToolTip>
-                    <div class="d-flex flex-column">    
+                    <div class="d-flex flex-column">
                         <span class="label-text-color">{{grvEDaysOff['Reason'].headerText}}</span>
                         <span class="data-text-color" *ngIf="reasonField1.scrollHeight > reasonField1.clientHeight">
                             {{item?.reason}}
@@ -413,3 +407,20 @@
 </ng-template>
 <!-- endregion -->
 <!-- endregion -->
+
+
+
+<!-- #region tree-view-Mode -->
+<ng-template #treeTemplate let-data>
+    <div class="d-flex align-items-center py-1">
+        <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
+    </div>
+</ng-template>
+<!-- endtree-view-Mode -->
+
+<!-- #region tree-view HRTAL01 -->
+<ng-template #rightTemplateHRTAL01>
+    <lib-employee-annual-leave-by-org [orgUnitID]="" [funcID]="funcID" [gridViewSetup]="grvSetup" [view]="view">
+    </lib-employee-annual-leave-by-org>
+</ng-template>
+<!-- #endregion tree-view HRTAL01 -->

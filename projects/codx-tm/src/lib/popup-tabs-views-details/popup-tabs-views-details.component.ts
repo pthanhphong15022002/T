@@ -56,6 +56,8 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   showMoreFunc = true;
   offset = '0px';
   listRecID = [];
+  loading: boolean = true;
+  dataUp: any;
 
   constructor(
     private tmSv: CodxTMService,
@@ -86,14 +88,14 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
     }
 
     if (this.data?.meetingID) {
-     // this.getListRecID(this.data?.meetingID);  bỏ dùng RefNo
-     
+      // this.getListRecID(this.data?.meetingID);  bỏ dùng RefNo
+
       this.createdByName = this.data?.userName;
       this.nameObj = this.data?.meetingName;
       this.projectID = this.data?.refID;
       this.resources = this.dataObj?.resources;
       this.meetingID = this.data?.meetingID;
-      this.dataObjAssign ={sessionID : this.meetingID}
+      this.dataObjAssign = { sessionID: this.meetingID };
       this.name = 'Comments';
       this.all = [
         {
@@ -179,5 +181,37 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
         this.dataObjAssign = { listRecID: listRecID };
       }
     });
+  }
+
+  //add new resource
+  addNewResource(e) {
+    if (!e) return;
+    let arrResNew = [];
+    if (!this.resources) {
+      this.resources = e;
+      arrResNew = e.split(';');
+    } else {
+      let arrRes = e.split(';');
+      let arrResOld = this.resources.split(';');
+      arrRes.forEach((x) => {
+        let check = arrResOld.some((p) => p == x);
+        if (!check) arrResNew.push(x);
+      });
+      if (arrResNew.length > 0) arrResOld = arrResOld.concat(arrResNew);
+      this.resources = arrResOld.join(';');
+    }
+    this.loading = false;
+    this.tmSv.upResourceSprint(this.iterationID, arrResNew).subscribe((res) => {
+      if (res) {
+        this.dataUp = JSON.parse(JSON.stringify(this.data));
+        this.dataUp.resources = this.resources;
+      }
+      this.loading = true;
+    });
+  }
+
+  closePopup() {
+    if (!this.loading) return;
+    this.dialog.close(this.dataUp);
   }
 }
