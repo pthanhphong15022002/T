@@ -7,7 +7,6 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutNoAside',
   templateUrl: './_noAsideToolbarFluid.component.html',
@@ -34,10 +33,5 @@ export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void { }
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe();
-  }
+  
 }

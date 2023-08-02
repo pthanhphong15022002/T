@@ -56,6 +56,9 @@ import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
 import { PopAddItemBatchsComponent } from './item-batchs/pop-add-item-batchs/pop-add-item-batchs.component';
 import { ItemSeriesComponent } from './item-series/item-series.component';
 import { PopAddItemSeriesComponent } from './item-series/pop-add-item-series/pop-add-item-series.component';
+import { VATCodesComponent } from './vatcodes/vatcodes.component';
+import { PopAddVatcodesComponent } from './vatcodes/pop-add-vatcodes/pop-add-vatcodes.component';
+import { PopAddVatpostingComponent } from './vatcodes/pop-add-vatposting/pop-add-vatposting.component';
 
 var routes: Routes = [
   {
@@ -130,6 +133,10 @@ var routes: Routes = [
         path: 'itemseries/:funcID',
         component: ItemSeriesComponent,
       },
+      {
+        path: 'vatcodes/:funcID',
+        component: VATCodesComponent,
+      },
     ],
   },
 ];
@@ -183,6 +190,9 @@ var routes: Routes = [
     PopAddItemBatchsComponent,
     ItemSeriesComponent,
     PopAddItemSeriesComponent,
+    VATCodesComponent,
+    PopAddVatcodesComponent,
+    PopAddVatpostingComponent,
   ],
   imports: [
     CommonModule,

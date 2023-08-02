@@ -27,7 +27,7 @@ import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-qu
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { CM_Contracts } from '../models/cm_model';
+import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 import { debug } from 'util';
 
@@ -594,8 +594,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   // tạo hợp đồng
-  createContract(dt) {
+  createContract(quotation: CM_Quotations) {
     let contract = new CM_Contracts();
+    contract.customerID = quotation?.customerID;
+    contract.quotationID = quotation?.recID;
     let data = {
       projectID: null,
       action: 'add',
@@ -608,13 +610,20 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
-    let popupContract = this.callfunc
-      .openForm(AddContractsComponent, '', null, null, '', data, '', option)
-      .closed.subscribe((contract) => {
-        if (contract) {
-          this.notiService.notifyCode('SYS006');
-        }
-      });
+    this.callfunc.openForm(
+      AddContractsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    ).closed.subscribe(contract => {
+      if(contract){
+        this.notiService.notifyCode('SYS006');
+      }
+    });
   }
   // end
 

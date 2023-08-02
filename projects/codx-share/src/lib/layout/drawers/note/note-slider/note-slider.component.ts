@@ -18,16 +18,16 @@ import {
   Optional,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import { AddNoteComponent } from '../../../components/calendar-notes/add-note/add-note.component';
-import { UpdateNotePinComponent } from '../../../components/calendar-notes/update-note-pin/update-note-pin.component';
-import { SaveNoteComponent } from '../../../components/calendar-notes/add-note/save-note/save-note.component';
-import { NoteService } from '../../../components/calendar-notes/note.service';
+import { NoteService } from 'projects/codx-share/src/lib/components/calendar-notes/note.service';
+import { AddNoteComponent } from 'projects/codx-share/src/lib/components/calendar-notes/add-note/add-note.component';
+import { SaveNoteComponent } from 'projects/codx-share/src/lib/components/calendar-notes/add-note/save-note/save-note.component';
+import { UpdateNotePinComponent } from 'projects/codx-share/src/lib/components/calendar-notes/update-note-pin/update-note-pin.component';
 @Component({
-  selector: 'app-note-drawer',
-  templateUrl: './note-drawer.component.html',
-  styleUrls: ['./note-drawer.component.scss'],
+  selector: 'app-note-slider',
+  templateUrl: './note-slider.component.html',
+  styleUrls: ['./note-slider.component.scss'],
 })
-export class NoteDrawerComponent extends UIComponent implements OnInit {
+export class NoteSliderComponent extends UIComponent implements OnInit {
   @Input() dataAdd = new Notes();
 
   data: any;
@@ -67,21 +67,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.user = this.authStore.get();
-    this.dataValue = `${this.user?.userID}`;
     this.dialog = dialog;
-    this.cache
-      .moreFunction('PersonalNotes', 'grvPersonalNotes')
-      .subscribe((res) => {
-        if (res) {
-          this.editMF = res[2];
-          this.deleteMF = res[3];
-          this.pinMF = res[0];
-          this.saveMF = res[1];
-        }
-      });
-    this.cache.functionList('WPT08').subscribe((res) => {
-      if (res) this.functionList = res;
-    });
+    //chưa biết Nguyên viết gì ??
     var dataSv = new CRUDService(injector);
     dataSv.request.pageSize = 10;
     dataSv.idField = 'recID';
@@ -89,6 +76,24 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    if(this.user)
+    {
+      this.dataValue = this.user.userID;
+    }
+    this.cache
+    .moreFunction('PersonalNotes', 'grvPersonalNotes')
+    .subscribe((res) => {
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
+    });
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
+    
     this.loadData();
     this.getMaxPinNote();
   }

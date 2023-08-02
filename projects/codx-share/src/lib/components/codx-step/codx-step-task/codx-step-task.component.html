@@ -107,7 +107,6 @@
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <!-- [@fadeInOut] -->
   <div
     class="main-body ms-6"
     *ngIf="listGroupTask?.length > 0 && isShowElement"
@@ -273,13 +272,6 @@
 
 <ng-template #taskTemplate let-data="value">
   <div class="d-flex justify-content-start align-items-center has-action-menu task-hover">
-    <!-- icon task -->
-    <!-- <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
-      <span
-        class="icon-18 text-primary-600"
-        [ngClass]="getIconTask(data?.task)"
-      ></span>
-    </div> -->
     <codx-icon-step
       [typeTask]="data?.task?.taskType"
       [listTypeTask]="listTaskType"
