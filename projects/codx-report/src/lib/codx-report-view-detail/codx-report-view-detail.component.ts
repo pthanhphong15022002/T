@@ -63,18 +63,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.getMessageDefault();
   }
 
-  getMessageDefault(){
-    this.cache.message("SYS043")
-    .subscribe((mssg:any) => {
-      if(mssg.defaultName)
-        this.mssgSYS043 = mssg.defaultName;
-    });
-    this.cache.message("SYS044")
-    .subscribe((mssg:any) => {
-      if(mssg.defaultName)
-        this.mssgSYS044 = mssg.defaultName;
-    });
-  }
+  
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
   }
@@ -137,7 +126,85 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     //   this.getReport(this.funcID);
     // }
   }
+  //get report by ID
+  getReport(funcID:string){
+    this.api
+    .execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetAsync',
+      [funcID])
+      .subscribe((res: any) => {
+      if (res) {
+        this.funcItem = res;
+        this.reportID = res.reportID;
+        this.isRunMode = res.runMode == "1";
+        this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
+        // this.pageTitle.setSubTitle("");
+        if(res.displayMode == "3"){
+          this.test(res.recID);
+        }
+      }
+    });
+  }
+  
+  getRootFunction(module:string, type:string){
+    this.api
+    .execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type])
+    .subscribe((res:any)=>{
+      if(res){
+        this.rootFunction = res;
+        this.pageTitle.setRootNode(this.rootFunction.customName);
+        let parent: PageLink = {
+          title: this.rootFunction.customName,
+          path: this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID
+        }
+        this.pageTitle.setParent(parent);
+        this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
+      }
+    })
+  }
 
+  getReportList(moduleID:string,reportType:string){
+    this.api
+    .execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetReportsByModuleAsync",[reportType,moduleID])
+    .subscribe((res:any)=>{
+      this.orgReportList = res;
+      let arrChildren : Array<PageLink>=[];
+      for(let i=0 ;i< this.orgReportList.length;i++){
+        let pageLink: PageLink = {
+          title: this.orgReportList[i].customName,
+          path:this.rootFunction.module.toLowerCase()+'/report/detail/' + this.orgReportList[i].recID
+        };
+       arrChildren.push(pageLink);
+      }
+      this.pageTitle.setChildren(arrChildren);
+      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
+      this.setBreadCrumb(this.funcItem);
+    })
+  }
+
+  setBreadCrumb(func:any,deleteChild:boolean=false){
+    if(func){
+      !deleteChild && this.pageTitle.setSubTitle(func.customName)
+      deleteChild && this.pageTitle.setSubTitle("");
+    }
+  }
+
+  // get message
+  getMessageDefault(){
+    this.cache.message("SYS043")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS043 = mssg.defaultName;
+    });
+    this.cache.message("SYS044")
+    .subscribe((mssg:any) => {
+      if(mssg.defaultName)
+        this.mssgSYS044 = mssg.defaultName;
+    });
+  }
   onActions(e:any){
     if(e.id == 'btnViewDs'){
       let dialog = new DialogModel;
@@ -179,7 +246,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   isRunMode = false;
   filterReportChange(e:any){
-    debugger
     if(this.isRunMode)
       this.isRunMode = false;
     // if(e[0]){
@@ -206,64 +272,12 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.test(this.funcItem.recID);
   }
 
-  getRootFunction(module:string, type:string){
-    this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
-      if(res){
-        this.rootFunction = res;
-        this.pageTitle.setRootNode(this.rootFunction.customName)
-        let parent: PageLink = {
-          title: this.rootFunction.customName,
-          path: this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID
-        }
-        this.pageTitle.setParent(parent)
-        this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
-      }
-    })
-  }
-  //get report by ID
-  getReport(funcID:string){
-    this.api
-    .execSv(
-      'rptsys',
-      'Codx.RptBusiness.CM',
-      'ReportBusiness',
-      'GetAsync',
-      [funcID])
-      .subscribe((res: any) => {
-      if (res) {
-        this.funcItem = res;
-        this.reportID = res.reportID;
-        this.isRunMode = res.runMode == "1";
-        this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        this.pageTitle.setSubTitle("");
-        if(res.displayMode == "3"){
-          this.test(res.recID);
-        }
-      }
-    });
-  }
-  setBreadCrumb(func:any,deleteChild:boolean=false){
-    if(func){
-      !deleteChild && this.pageTitle.setSubTitle(func.customName)
-      deleteChild && this.pageTitle.setSubTitle("");
-    }
-  }
-  getReportList(moduleID:string,reportType:string){
-    this.api.execSv("rptsys",'Codx.RptBusiniess.SYS',"ReportListBusiness","GetReportsByModuleAsync",[reportType,moduleID]).subscribe((res:any)=>{
-      this.orgReportList = res;
-      let arrChildren : Array<PageLink>=[];
-      for(let i=0 ;i< this.orgReportList.length;i++){
-        let pageLink: PageLink = {
-          title: this.orgReportList[i].customName,
-          path:this.rootFunction.module.toLowerCase()+'/report/detail/' + this.orgReportList[i].recID
-        };
-       arrChildren.push(pageLink);
-      }
-      this.pageTitle.setChildren(arrChildren);
-      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
-      this.setBreadCrumb(this.funcItem);
-    })
-  }
+  
+  
+  
+
+
+  
   itemSelect(e:any){
     if(e){
       this.funcItem = e;
@@ -282,7 +296,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
 
   url:string = "";
   test(recID:string){
-    debugger
     let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
     this.url = `http://localhost:9002/api/reportdowload/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
   }
