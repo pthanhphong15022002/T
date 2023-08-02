@@ -50,6 +50,8 @@ export class TargetsComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
+
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   //BusinessLine
   @ViewChild('headerBusinessLine', { static: true })
@@ -122,7 +124,7 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTreeTargetLineAsync';
+  method: string = '';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -271,17 +273,7 @@ export class TargetsComponent
   //#endregion
   //#region event codx-view
   viewChanged(e) {
-    if (e?.view?.type == 8) {
-      if (!this.schedule)
-        this.schedule = (this.view?.currentView as any)?.schedule;
-    } else {
-      this.schedule = null;
-    }
-    var formModel = new FormModel();
-    formModel.formName = 'CMTargetsLines';
-    formModel.gridViewName = 'grvCMTargetsLines';
-    formModel.entityName = 'CM_TargetsLines';
-    this.fmTargetLines = formModel;
+    this.clickShow(false);
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
@@ -390,12 +382,11 @@ export class TargetsComponent
         },
       },
       {
-        type: ViewType.grid,
-        sameData: true,
+        type: ViewType.chart,
+        sameData: false,
         active: true,
         model: {
-          resources: this.columnGrids,
-          hideMoreFunc: true,
+          panelRightRef: this.templateGrid,
         },
       },
       // {
@@ -515,7 +506,7 @@ export class TargetsComponent
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e != null && e?.event != null) {
-          var data = e?.event;
+          var data = e?.event[0];
           if (data.year == this.year) {
             var index = this.lstDataTree.findIndex(
               (x) => x.businessLineID == data?.businessLineID
@@ -526,7 +517,11 @@ export class TargetsComponent
             } else {
               this.lstDataTree.push(Object.assign({}, data));
             }
+            if( this.lstDataTree != null){
+              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+            }
           }
+
 
           this.detectorRef.detectChanges();
         }
@@ -574,8 +569,7 @@ export class TargetsComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e != null && e?.event != null) {
-            var data = e?.event;
-            this.view.dataService.update(data).subscribe();
+            var data = e?.event[0];
             if (data.year == this.year) {
               var index = this.lstDataTree.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
@@ -584,6 +578,9 @@ export class TargetsComponent
                 this.lstDataTree[index] = data;
               } else {
                 this.lstDataTree.push(Object.assign({}, data));
+              }
+              if( this.lstDataTree != null){
+                this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
             }
             // this.lstDataTree.push(Object.assign({}, data));
@@ -666,51 +663,11 @@ export class TargetsComponent
     dialog.closed.subscribe((e) => {
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        if (
-          this.view?.dataService?.data != null &&
-          this.view?.dataService?.data.length > 0
-        ) {
-          var index = this.view?.dataService?.data?.findIndex(
-            (x) => e.event.businessLineID == x.businessLineID
-          );
-          if (index != -1) {
-            var data = this.view?.dataService?.data[index]?.items;
-            if (data != null) {
-              var indexItem = data.findIndex(
-                (x) => x.salespersonID == e?.event.salespersonID
-              );
-              if (indexItem != -1) {
-                data[indexItem] = e.event;
-                this.view.dataService.data[index].items = data;
-              }
-            }
-            if (this.view.dataService.data[index].targetsLines != null) {
-              const targetLines =
-                this.view.dataService.data[index].targetsLines;
-              const updatedItems = [];
+        let indexTree = this.lstDataTree.findIndex(
+          (x) => e.event.businessLineID == x.businessLineID
+        );
 
-              for (const item of targetLines) {
-                let foundLineEv = e.event?.targetsLines.find(
-                  (lineEv) =>
-                    new Date(item.startDate)?.getMonth() + 1 ===
-                      new Date(lineEv.startDate)?.getMonth() + 1 &&
-                    item.salespersonID == lineEv.salespersonID
-                );
-
-                if (foundLineEv) {
-                  Object.assign(item, foundLineEv);
-                }
-
-                updatedItems.push(item);
-              }
-
-              this.view.dataService.data[index].targetsLines = updatedItems;
-            }
-            this.view.dataService
-              .update(this.view.dataService.data[index])
-              .subscribe();
-          }
-        }
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -724,6 +681,14 @@ export class TargetsComponent
     if (this.lstDataTree != null && this.lstDataTree.length > 0) {
       this.lstDataTree.forEach((res) => {
         res.isCollapse = isShow;
+      });
+
+      this.lstDataTree.forEach((res) => {
+        if (res.items != null) {
+          res?.items.forEach((res) => {
+            res.isCollapse = isShow;
+          });
+        }
       });
     }
     this.isShow = isShow;
