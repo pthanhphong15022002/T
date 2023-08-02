@@ -15,7 +15,7 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
@@ -50,11 +50,7 @@ export class LayoutInstancesComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void {}
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.callfc.openSide(NoteDrawerComponent, '', option);
-  }
+  
   viewNameProcess(ps) {
     this.processView = ps;
     this.stepViews=[] ;
