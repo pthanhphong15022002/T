@@ -239,7 +239,7 @@ export class PopupAddTargetComponent {
         target += res.target;
       });
 
-      if (target != this.data.target) {
+      if (Math.round(target) != Math.round(this.data.target)) {
         return false;
       }
     }

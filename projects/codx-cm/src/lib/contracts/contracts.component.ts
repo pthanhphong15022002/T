@@ -178,6 +178,9 @@ export class ContractsComponent extends UIComponent {
       textDefault: 'Đơn hàng',
     },
   ];
+  //param
+  applyApprover = '0';
+  paramDefault: any;
 
   constructor(
     private inject: Injector,
@@ -574,7 +577,22 @@ export class ContractsComponent extends UIComponent {
         //thất bại
         this.moveReason(data, false);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //TODO: đợi core
   }
 
   async addContract() {
@@ -1132,5 +1150,17 @@ export class ContractsComponent extends UIComponent {
           }
         });
     }
+  }
+
+  loadParam() {
+    this.cmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
   }
 }

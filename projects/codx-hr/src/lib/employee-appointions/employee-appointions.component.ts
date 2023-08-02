@@ -130,7 +130,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       PopupEappointionsComponent,
       {
         actionType: actionType,
-        employeeId: data?.employeeID || this.currentEmpObj.employeeID,
+        employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         appointionObj: data,
         headerText: actionHeaderText,
@@ -154,7 +154,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   AddAppoint(event): void {
-    this.currentEmpObj = this.itemDetail.emp;
+    this.currentEmpObj = this.itemDetail?.emp;
     if (event.id == 'btnAdd') {
       this.HandleEAppoint(
         event.text + ' ' + this.view.function.description,
