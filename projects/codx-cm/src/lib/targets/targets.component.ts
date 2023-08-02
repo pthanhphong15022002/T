@@ -147,6 +147,7 @@ export class TargetsComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  viewMode = 9;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -274,6 +275,7 @@ export class TargetsComponent
   //#region event codx-view
   viewChanged(e) {
     this.clickShow(false);
+    this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
@@ -517,11 +519,10 @@ export class TargetsComponent
             } else {
               this.lstDataTree.push(Object.assign({}, data));
             }
-            if( this.lstDataTree != null){
+            if (this.lstDataTree != null && this.viewMode == 9) {
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
           }
-
 
           this.detectorRef.detectChanges();
         }
@@ -579,7 +580,7 @@ export class TargetsComponent
               } else {
                 this.lstDataTree.push(Object.assign({}, data));
               }
-              if( this.lstDataTree != null){
+              if (this.lstDataTree != null && this.viewMode == 9) {
                 this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
             }
@@ -666,6 +667,41 @@ export class TargetsComponent
         let indexTree = this.lstDataTree.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
+
+        if (indexTree != -1) {
+          var data = this.lstDataTree[indexTree]?.items;
+          if (data != null) {
+            var indexItem = data.findIndex(
+              (x) => x.salespersonID == e?.event.salespersonID
+            );
+            if (indexItem != -1) {
+              data[indexItem] = e.event;
+              this.lstDataTree[indexTree].items = data;
+            }
+          }
+          if (data[indexItem].targetsLines != null) {
+            const targetLines = this.lstDataTree[indexTree].targetsLines;
+            const updatedItems = [];
+            for (const item of targetLines) {
+              let foundLineEv = e.event?.targetsLines.find(
+                (lineEv) =>
+                  new Date(item.startDate)?.getMonth() + 1 ===
+                    new Date(lineEv.startDate)?.getMonth() + 1 &&
+                  item.salespersonID == lineEv.salespersonID
+              );
+
+              if (foundLineEv) {
+                Object.assign(item, foundLineEv);
+              }
+
+              updatedItems.push(item);
+            }
+            this.lstDataTree[indexTree].targetsLines = updatedItems;
+          }
+          if (this.lstDataTree != null && this.viewMode == 9) {
+            this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+          }
+        }
 
         this.detectorRef.detectChanges();
       }
