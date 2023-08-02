@@ -64,7 +64,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   oldPositionStr: any;
   oldLocationStr: any;
 
-
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -91,27 +90,24 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
 
-    if (data?.data?.empObj && this.actionType == 'add')
-    {
+    if (data?.data?.empObj && this.actionType == 'add') {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
-      this.oldOrgUnitID =  this.employeeObj.orgUnitID;
+      this.oldOrgUnitID = this.employeeObj.orgUnitID;
       this.oldJobLevelID = this.employeeObj.jobLevel;
       this.oldPositionID = this.employeeObj.positionID;
       this.oldLocationID = this.employeeObj.locationID;
 
-      debugger
       this.newOrgUnitID = this.employeeObj.orgUnitID;
       this.newJobLevelID = this.employeeObj.jobLevel;
       this.newPositionID = this.employeeObj.positionID;
       this.newLocationID = this.employeeObj.locationID;
-    }
-    else if(data?.data?.empObj && this.actionType == 'edit'){
-      this.oldOrgUnitID =  this.EAppointionObj.oldOrgUnitID;
+    } else if (data?.data?.empObj && this.actionType == 'edit') {
+      this.oldOrgUnitID = this.EAppointionObj.oldOrgUnitID;
       this.oldJobLevelID = this.EAppointionObj.oldJobLevel;
       this.oldPositionID = this.EAppointionObj.oldPositionID;
       this.oldLocationID = this.EAppointionObj.oldLocationID;
 
-      debugger
+      debugger;
       this.newOrgUnitID = this.EAppointionObj.orgUnitID;
       this.newJobLevelID = this.EAppointionObj.jobLevel;
       this.newPositionID = this.EAppointionObj.positionID;
@@ -120,14 +116,15 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.formModel = dialog.formModel;
   }
 
-
   initForm() {
     this.hrService
       .getOrgUnitID(
         this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
       )
       .subscribe((res) => {
-        this.employeeObj.orgUnitName = res.orgUnitName;
+        if (this?.employeeObj) {
+          this.employeeObj.orgUnitName = res.orgUnitName;
+        }
       });
 
     if (this.actionType == 'add') {
@@ -254,30 +251,31 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  onChangeOrgUnitID(event){
-    debugger
-    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldOrgUnitID){
+  onChangeOrgUnitID(event) {
+    if (
+      this.actionType == 'add' ||
+      (this.actionType == 'edit' && !this.EAppointionObj.oldOrgUnitID)
+    ) {
       this.EAppointionObj.oldOrgUnitID = this.newOrgUnitID;
       this.newOrgUnitID = event.data;
-    }
-    else if(this.actionType == 'edit' && this.oldOrgUnitID){
-      if(event.data == this.EAppointionObj.oldOrgUnitID){
+    } else if (this.actionType == 'edit' && this.oldOrgUnitID) {
+      if (event.data == this.EAppointionObj.oldOrgUnitID) {
         this.EAppointionObj.oldOrgUnitID = null;
       }
       this.newOrgUnitID = event.data;
     }
     this.formGroup.patchValue(this.EAppointionObj);
     this.detectorRef.detectChanges();
-          
+
     // let viewMem = event.component?.setting.viewMember
     // let newVal = event.component.itemsSelected[0][viewMem]
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
-    //     this.eAppointionHeaderTexts.OrgUnitID, 
-    //     this.newOrgUnitStr, 
-    //     newVal, 
-    //     this.EAppointionObj.oldOrgUnitID, 
-    //     this.EAppointionObj.oldOrgUnitID, 
+    //     this.eAppointionHeaderTexts.OrgUnitID,
+    //     this.newOrgUnitStr,
+    //     newVal,
+    //     this.EAppointionObj.oldOrgUnitID,
+    //     this.EAppointionObj.oldOrgUnitID,
     //     this.oldOrgUnitID]).subscribe((x) => {
     //     if (x.event?.status == 'Y') {
     //       this.newOrgUnitStr = newVal;
@@ -306,14 +304,15 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     // this.newOrgUnitID = event.data;
   }
 
-  onChangeJobLevel(event){
-
-    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldJobLevel){
+  onChangeJobLevel(event) {
+    if (
+      this.actionType == 'add' ||
+      (this.actionType == 'edit' && !this.EAppointionObj.oldJobLevel)
+    ) {
       this.EAppointionObj.oldJobLevel = this.newJobLevelID;
       this.newJobLevelID = event.data;
-    }
-    else if(this.actionType == 'edit' && this.oldJobLevelID){
-      if(event.data == this.EAppointionObj.oldJobLevel){
+    } else if (this.actionType == 'edit' && this.oldJobLevelID) {
+      if (event.data == this.EAppointionObj.oldJobLevel) {
         this.EAppointionObj.oldJobLevel = null;
       }
       this.newJobLevelID = event.data;
@@ -325,11 +324,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     // debugger
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
-    //     this.eAppointionHeaderTexts.JobLevel, 
-    //     this.newJobLevelStr, 
-    //     newVal, 
-    //     this.oldJobLevelStr, 
-    //     this.oldJobLevelStr, 
+    //     this.eAppointionHeaderTexts.JobLevel,
+    //     this.newJobLevelStr,
+    //     newVal,
+    //     this.oldJobLevelStr,
+    //     this.oldJobLevelStr,
     //     this.newJobLevelStr]).subscribe((x) => {
     //     if (x.event?.status == 'Y') {
     //       debugger
@@ -359,16 +358,17 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     //   this.formGroup.patchValue(this.EAppointionObj);
     //   this.detectorRef.detectChanges();
     // }
-
   }
 
   onChangePosition(event) {
-    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldPositionID){
+    if (
+      this.actionType == 'add' ||
+      (this.actionType == 'edit' && !this.EAppointionObj.oldPositionID)
+    ) {
       this.EAppointionObj.oldPositionID = this.newPositionID;
       this.newPositionID = event.data;
-    }
-    else if(this.actionType == 'edit' && this.oldPositionID){
-      if(event.data == this.EAppointionObj.oldPositionID){
+    } else if (this.actionType == 'edit' && this.oldPositionID) {
+      if (event.data == this.EAppointionObj.oldPositionID) {
         this.EAppointionObj.oldPositionID = null;
       }
       this.newPositionID = event.data;
@@ -380,11 +380,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
 
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
-    //     this.eAppointionHeaderTexts.PositionID, 
-    //     this.newPositionStr, 
-    //     newVal, 
-    //     this.EAppointionObj.oldPositionID, 
-    //     this.EAppointionObj.oldPositionID, 
+    //     this.eAppointionHeaderTexts.PositionID,
+    //     this.newPositionStr,
+    //     newVal,
+    //     this.EAppointionObj.oldPositionID,
+    //     this.EAppointionObj.oldPositionID,
     //     this.oldPositionID]).subscribe((x) => {
     //     if (x.event?.status == 'Y') {
     //       this.newPositionStr = newVal;
@@ -414,12 +414,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeLocation(event) {
-    if(this.actionType == 'add' || this.actionType == 'edit' && !this.EAppointionObj.oldLocationID){
+    if (
+      this.actionType == 'add' ||
+      (this.actionType == 'edit' && !this.EAppointionObj.oldLocationID)
+    ) {
       this.EAppointionObj.oldLocationID = this.newLocationID;
       this.newLocationID = event.data;
-    }
-    else if(this.actionType == 'edit' && this.oldLocationID){
-      if(event.data == this.EAppointionObj.oldLocationID){
+    } else if (this.actionType == 'edit' && this.oldLocationID) {
+      if (event.data == this.EAppointionObj.oldLocationID) {
         this.EAppointionObj.oldLocationID = null;
       }
       this.newLocationID = event.data;
@@ -431,11 +433,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
 
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
-    //     this.eAppointionHeaderTexts.LocationID, 
-    //     this.newLocationStr, 
-    //     newVal, 
-    //     this.oldLocationStr, 
-    //     this.oldLocationStr, 
+    //     this.eAppointionHeaderTexts.LocationID,
+    //     this.newLocationStr,
+    //     newVal,
+    //     this.oldLocationStr,
+    //     this.oldLocationStr,
     //     this.newLocationStr]).subscribe((x) => {
     //     if (x.event?.status == 'Y') {
     //       this.newLocationStr = newVal;
@@ -545,36 +547,36 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  onRenderOrgUnitID(event){
-    this.newOrgUnitStr = event.itemsSelected[0]?.text
+  onRenderOrgUnitID(event) {
+    this.newOrgUnitStr = event.itemsSelected[0]?.text;
   }
 
-  onRenderOldOrgUnitID(event){
-    this.oldOrgUnitStr = event.itemsSelected[0]?.OrgUnitName;;
+  onRenderOldOrgUnitID(event) {
+    this.oldOrgUnitStr = event.itemsSelected[0]?.OrgUnitName;
   }
 
-  onRenderJobLevel(event){
-    this.newJobLevelStr = event.itemsSelected[0]?.Description
+  onRenderJobLevel(event) {
+    this.newJobLevelStr = event.itemsSelected[0]?.Description;
   }
 
-  onRenderOldJobLevel(event){
-    this.oldJobLevelStr = event.itemsSelected[0]?.Description
+  onRenderOldJobLevel(event) {
+    this.oldJobLevelStr = event.itemsSelected[0]?.Description;
   }
 
-  onRenderPositionID(event){
-    this.newPositionStr = event.itemsSelected[0]?.PositionName
+  onRenderPositionID(event) {
+    this.newPositionStr = event.itemsSelected[0]?.PositionName;
   }
 
-  onRenderOldPositionID(event){
-    this.oldPositionStr = event.itemsSelected[0]?.PositionName
+  onRenderOldPositionID(event) {
+    this.oldPositionStr = event.itemsSelected[0]?.PositionName;
   }
 
-  onRenderLocationID(event){
-    this.newLocationStr = event.itemsSelected[0]?.LocationName
+  onRenderLocationID(event) {
+    this.newLocationStr = event.itemsSelected[0]?.LocationName;
   }
 
-  onRenderOldLocationID(event){
-    this.oldLocationStr = event.itemsSelected[0]?.LocationName
+  onRenderOldLocationID(event) {
+    this.oldLocationStr = event.itemsSelected[0]?.LocationName;
   }
 
   //Files handle

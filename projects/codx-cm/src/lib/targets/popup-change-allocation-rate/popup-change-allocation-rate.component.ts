@@ -5,6 +5,7 @@ import {
   DialogRef,
   NotificationsService,
   ApiHttpService,
+  AuthService,
 } from 'codx-core';
 
 @Component({
@@ -22,16 +23,19 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   typeChange = '';
   lstMonths = [];
   isSave = false;
+  language = 'vn';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private decimalPipe: DecimalPipe,
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private auth: AuthService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(data?.data?.data));
+    this.language = this.auth.userValue?.language?.toLowerCase();
     this.title = data?.data?.title;
     this.lstLinesBySales = data?.data?.lstLinesBySales;
   }
@@ -59,10 +63,11 @@ export class PopupChangeAllocationRateComponent implements OnInit {
           [this.lstLinesBySales]
         )
         .subscribe((res) => {
-          if(res && res.length > 0){
+          if (res && res.length > 0) {
+            this.outPutClosedSave(res);
             this.notiService.notifyCode('SYS007');
-            this.dialog.close();
-          }else{
+            this.dialog.close(this.data);
+          } else {
             this.notiService.notifyCode('SYS021');
             this.dialog.close();
           }
@@ -73,6 +78,72 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     }
   }
 
+  outPutClosedSave(lstLinesBySales) {
+    if (lstLinesBySales != null && lstLinesBySales.length > 0) {
+      var check = lstLinesBySales.every((x) => x.target > 0);
+      if (check) {
+        this.data.titleMonth = this.language == 'vn' ? 'Cả năm' : 'Whole year';
+      } else {
+        let titleMonth = '';
+        for (var lines of lstLinesBySales) {
+          let month = new Date(lines.startDate)?.getMonth() + 1;
+          if (lines.target > 0) {
+            if (titleMonth == '') {
+              titleMonth = titleMonth + month;
+            } else {
+              titleMonth = titleMonth + ';' + month;
+            }
+          }
+        }
+        if (titleMonth !== null && titleMonth !== '') {
+          let months = titleMonth.split(';');
+
+          let monthList = [];
+          for (let i = 0; i < months.length; i++) {
+            let monthStr = months[i];
+            let month = parseInt(monthStr, 10);
+            if (!isNaN(month)) {
+              monthList.push(month);
+            }
+          }
+
+          monthList.sort((a, b) => a - b);
+
+          titleMonth = monthList.join(';');
+
+          let formattedMonths = [];
+          let start = monthList[0];
+          let end = monthList[0];
+          let lang = this.language === 'vn' ? 'Tháng ' : 'Month ';
+
+          for (let i = 1; i < monthList.length; i++) {
+            if (monthList[i] === end + 1) {
+              end = monthList[i];
+            } else {
+              if (start === end) {
+                formattedMonths.push(lang + start);
+              } else {
+                formattedMonths.push(lang + start + ' - ' + lang + end);
+              }
+              start = end = monthList[i];
+            }
+          }
+
+          if (start === end) {
+            formattedMonths.push(lang + start);
+          } else {
+            formattedMonths.push(lang + start + ' - ' + lang + end);
+          }
+
+          titleMonth = formattedMonths.join(', ');
+          this.data.isCollapse = false;
+          this.data.titleMonth = titleMonth;
+        }
+      }
+      this.data.targetsLines = lstLinesBySales;
+    }
+  }
+
   checkTarget() {
     if (this.lstLinesBySales != null && this.lstLinesBySales.length > 0) {
       var target = 0;
@@ -80,7 +151,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         target += res.target;
       });
 
-      if (Math.round(target) != this.data.target) {
+      if (Math.round(target) != Math.round(this.data.target)) {
         return false;
       }
     }
@@ -136,8 +207,12 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     return this.targetToFixed(weight);
   }
 
-  targetToFixedWei(data) {
-    return Math.round(data);
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   targetToFixed(data) {

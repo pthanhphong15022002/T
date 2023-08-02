@@ -33,6 +33,7 @@ import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/po
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
 import { EntityName, getClassName } from '../utils/unknown.util';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-item',
@@ -408,7 +409,7 @@ export class PopupAddItemComponent
     });
   }
 
-  onClickSave(): void {
+  async onClickSave(): Promise<void> {
     console.log('item', this.item);
     console.log('itemsPurchase', this.itemsPurchase);
     console.log('itemsSales', this.itemsSales);
@@ -449,21 +450,20 @@ export class PopupAddItemComponent
       return;
     }
 
-    if (this.keyField == 'ItemID' && !this.item.itemID) {
-      this.api
-        .exec('ERM.Business.AC', 'CommonBusiness', 'GenerateAutoNumberAsync')
-        .subscribe((autoNumber: string) => {
-          if (autoNumber) {
-            this.item.itemID = autoNumber;
-            this.updateFileDirectReload();
-          }
-        });
-    } else {
-      this.updateFileDirectReload();
-    }
-  }
+    if (this.keyField === 'ItemID' && !this.item.itemID) {
+      const autoNumber: string = await lastValueFrom(
+        this.api.exec(
+          'ERM.Business.AC',
+          'CommonBusiness',
+          'GenerateAutoNumberAsync'
+        )
+      );
 
-  updateFileDirectReload() {
+      if (autoNumber) {
+        this.item.itemID = autoNumber;
+      }
+    }
+
     if (this.itemImage?.imageUpload?.item) {
       this.itemImage
         .updateFileDirectReload(this.item.itemID)
