@@ -147,6 +147,7 @@ export class TargetsComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  viewMode = 9;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -274,6 +275,7 @@ export class TargetsComponent
   //#region event codx-view
   viewChanged(e) {
     this.clickShow(false);
+    this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
@@ -375,7 +377,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -384,7 +386,7 @@ export class TargetsComponent
       {
         type: ViewType.chart,
         sameData: false,
-        active: true,
+        active: false,
         model: {
           panelRightRef: this.templateGrid,
         },
@@ -517,11 +519,11 @@ export class TargetsComponent
             } else {
               this.lstDataTree.push(Object.assign({}, data));
             }
-            if( this.lstDataTree != null){
+            if (this.lstDataTree != null && this.viewMode == 9) {
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
           }
-
+          this.isShow = false;
 
           this.detectorRef.detectChanges();
         }
@@ -579,11 +581,12 @@ export class TargetsComponent
               } else {
                 this.lstDataTree.push(Object.assign({}, data));
               }
-              if( this.lstDataTree != null){
+              if (this.lstDataTree != null && this.viewMode == 9) {
                 this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
             }
             // this.lstDataTree.push(Object.assign({}, data));
+            this.isShow = false;
 
             this.detectorRef.detectChanges();
           }
@@ -663,10 +666,45 @@ export class TargetsComponent
     dialog.closed.subscribe((e) => {
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        let indexTree = this.lstDataTree.findIndex(
+        let index = this.lstDataTree.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
 
+        if (index != -1) {
+          var data = this.lstDataTree[index]?.items;
+          if (data != null) {
+            var indexItem = data.findIndex(
+              (x) => x.salespersonID == e?.event.salespersonID
+            );
+            if (indexItem != -1) {
+              data[indexItem] = e.event;
+              this.lstDataTree[index].items = data;
+            }
+          }
+          if (this.lstDataTree[index].targetsLines != null) {
+            const targetLines = this.lstDataTree[index].targetsLines;
+            const updatedItems = [];
+
+            for (const item of targetLines) {
+              let foundLineEv = e.event?.targetsLines.find(
+                (lineEv) =>
+                  new Date(item.startDate)?.getMonth() + 1 ===
+                    new Date(lineEv.startDate)?.getMonth() + 1 &&
+                  item.salespersonID == lineEv.salespersonID
+              );
+
+              if (foundLineEv) {
+                Object.assign(item, foundLineEv);
+              }
+
+              updatedItems.push(item);
+            }
+
+            this.lstDataTree[index].targetsLines = updatedItems;
+          }
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+        }
+        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -681,15 +719,14 @@ export class TargetsComponent
     if (this.lstDataTree != null && this.lstDataTree.length > 0) {
       this.lstDataTree.forEach((res) => {
         res.isCollapse = isShow;
-      });
-
-      this.lstDataTree.forEach((res) => {
-        if (res.items != null) {
+        if (res.items != null && this.viewMode == 9) {
           res?.items.forEach((res) => {
             res.isCollapse = isShow;
           });
         }
       });
+      if (this.viewMode == 9)
+        this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
     }
     this.isShow = isShow;
     this.detectorRef.detectChanges();
@@ -697,12 +734,13 @@ export class TargetsComponent
 
   //#region setting grid
   clickShowGrid(item, isShow: boolean) {
+    item.isCollapse = isShow;
     if (item != null && item?.items != null) {
       item?.items.forEach((res) => {
         res.isCollapse = isShow;
       });
     }
-    item.isCollapse = isShow;
+    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 

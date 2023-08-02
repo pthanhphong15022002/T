@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -27,11 +27,6 @@ export class NosubAsideComponent extends LayoutBaseComponent {
     this.childMenu.next(e.recID);
   }
   menuClick(e) {}
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    var dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    dialog.closed.subscribe();
-  }
+  
 
 }

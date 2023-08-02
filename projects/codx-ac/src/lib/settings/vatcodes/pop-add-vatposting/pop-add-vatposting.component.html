@@ -1,0 +1,209 @@
+<codx-form
+  #form
+  [headerText]=""
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  subToolbarCss="text-end"
+  [customToolbar]="subToolbar"
+  [data]="vatPosting"
+>
+</codx-form>
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-2">
+      <div class="d-flex justify-content-start me-2">
+        <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+          <i *ngIf="formType == 'add'" class="icon-add_box icon-16"></i>
+          <i *ngIf="formType == 'copy'" class="icon-content_copy icon-16"></i>
+          <i *ngIf="formType == 'edit'" class="icon-edit_square icon-16"></i>
+        </div>
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <div
+              class="dialog-title line-clamp line-clamp-1 me-3"
+            >
+              {{ headerText }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="ms-2">
+          <div
+            class="btn btn-icon btn-sm btn-light-primary btn-circle bg"
+            (click)="close()"
+          >
+            <i class="icon-close icon-16"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+              <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
+            </button>
+        </div>
+        <div class="ms-2">
+            <button type="button" class="btn btn-primary" (click)="onSave()">
+                <codx-label
+                    fiedName="lblSave"
+                    [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName"
+                    default="Lưu"
+                ></codx-label>
+                </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #body>
+    <ng-container *ngIf="form.formGroup">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="BUID" >
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="buid"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="PostType">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="postType"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="vatAcctID">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="vatAcctID"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ObjectType">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="objectType"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ObjectID">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="objectID"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="PostOffset">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="postOffset"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="OffsetAcctID">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="offsetAcctID"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DIM1">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="diM1"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel"fiedName="DIM2">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="diM2"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DIM3">
+                    </codx-label>
+                    <codx-input
+                        [Group]="form.formGroup"
+                        field="diM3"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

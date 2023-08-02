@@ -32,27 +32,27 @@
         (click)="showGuide(popoverDetails)"
       >
         <span
-          class="icon-event_notes icon-24 text-hover-primary cursor-pointer"
+          class="icon-event_notes icon-20 text-hover-primary cursor-pointer"
         ></span>
       </div>
     </div>
     <div class="right d-flex align-items-center">
       <div
         (click)="addTask()"
-        class="d-flex align-items-center me-4 cursor-pointer"
+        class="d-flex align-items-center me-3 cursor-pointer"
         #popoverDetails="ngbPopover"
         [ngbPopover]="'Thêm công việc'"
         (mouseenter)="popoverDetails.open()"
         (mouseleave)="popoverDetails.close()"
       >
-        <i *ngIf="isShowElement" class="icon-22 icon-add_task text-primary"></i>
+        <i *ngIf="isShowElement" class="icon-20 icon-add_task text-primary"></i>
       </div>
       <!-- <codx-valuelist
          [valueSelected]="type"
          [name]="'DP034'"
          (valueChange)="changeValue($event)"
       ></codx-valuelist> -->
-      <div *ngIf="type == 'G'" class="me-4">
+      <div *ngIf="type == 'G'" class="me-3 value-30px">
         <codx-input
           type="valuelist"
           [crrValue]="crrViewGant"
@@ -60,13 +60,15 @@
           (valueChange)="changeViewTimeGant($event)"
         ></codx-input>
       </div>
-      <codx-input
-        field="viewModeDetail"
-        type="valuelist"
-        [crrValue]="type"
-        [refValue]="'DP047'"
-        (valueChange)="changeValue($event)"
-      ></codx-input>
+      <div class="value-30px">
+        <codx-input
+          field="viewModeDetail"
+          type="valuelist"
+          [crrValue]="type"
+          [refValue]="'DP047'"
+          (valueChange)="changeValue($event)"
+        ></codx-input>
+      </div>
     </div>
   </header>
   <main class="main-step" [ngStyle]="{ height: taskHeight }">
