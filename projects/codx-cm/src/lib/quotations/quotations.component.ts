@@ -144,7 +144,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   async loadSetting() {
-    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+    this.codxCmService.getSettingValue('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
         //approver
         let dataParam4 = res.filter(
@@ -594,9 +594,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     let contract = new CM_Contracts();
     let data = {
       projectID: null,
-      action: "add",
+      action: 'add',
       contract: contract || null,
-      account: null ,
+      account: null,
       type: 'quotation',
       actionName: this.titleAction,
     };
@@ -604,20 +604,13 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = this.formModel;
-    let popupContract = this.callfunc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    ).closed.subscribe(contract => {
-      if(contract){
-        this.notiService.notifyCode('SYS006');
-      }
-    });
+    let popupContract = this.callfunc
+      .openForm(AddContractsComponent, '', null, null, '', data, '', option)
+      .closed.subscribe((contract) => {
+        if (contract) {
+          this.notiService.notifyCode('SYS006');
+        }
+      });
   }
   // end
 
