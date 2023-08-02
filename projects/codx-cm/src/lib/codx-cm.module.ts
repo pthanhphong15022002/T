@@ -109,7 +109,7 @@ export const routes: Routes = [
       {
         path: 'deals/:funcID',
         component: DealsComponent,
-        data: { noReuse: true },
+        // data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
@@ -123,17 +123,17 @@ export const routes: Routes = [
       {
         path: 'contracts/:funcID',
         component: ContractsComponent,
-        data: { noReuse: true },
+        // data: { noReuse: true },
       },
       {
         path: 'cases/:funcID',
         component: CasesComponent,
-        data: { noReuse: true },
+        // data: { noReuse: true },
       },
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
-        data: { noReuse: true },
+        // data: { noReuse: true },
       },
       {
         path: 'dashboard/:funcID',

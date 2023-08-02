@@ -649,40 +649,40 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCM
-    //         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.itemSelected = q;
-    //             this.view.dataService.update(this.itemSelected).subscribe();
-    //           }
-    //           this.notiService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.itemSelected = q;
+                this.view.dataService.update(this.itemSelected).subscribe();
+              }
+              this.notiService.notifyCode('ES007');
+            });
+        }
+      });
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
@@ -701,8 +701,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     //   });
     //}
   }
-
-  loadChange() {}
 
   //Huy duyet
   cancelApprover(dt) {
