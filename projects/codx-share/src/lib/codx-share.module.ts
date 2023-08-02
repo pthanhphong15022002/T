@@ -55,7 +55,6 @@ import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inne
 //import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 //import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 // import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
-import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
@@ -212,6 +211,8 @@ import { CodxAddESignFileComponent } from './components/codx-approval-procress/c
 import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { CodxInstancesComponent } from './components/codx-instances/codx-instances.component';
+import { NoteSliderComponent } from './layout/drawers/note/note-slider/note-slider.component';
+import { CodxNotesComponent } from './layout/drawers/note/codx-note/codx-notes.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -243,7 +244,10 @@ const T_Component: Type<any>[] = [
   // CodxReportComponent,
   // CodxReportViewerComponent,
   // CodxReportDesignerComponent,
-  NoteDrawerComponent,
+  // Codx note
+  NoteSliderComponent,
+  CodxNotesComponent,
+
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingComponent,

@@ -76,7 +76,13 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
+
+    if (data?.data?.dayoffObj) {
+      this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
+    } else {
+      this.dayoffObj = {};
+    }
+
     this.fromListView = data?.data?.fromListView;
     if (this.dayoffObj?.employeeID && this.fromListView) {
       this.employId = this.dayoffObj?.employeeID;
@@ -97,7 +103,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.formModel = dialog.formModel;
 
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
   }
@@ -121,7 +127,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.hrSevice
       .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
       .subscribe((res) => {
-        this.empObj.orgUnitName = res.orgUnitName;
+        if (this?.empObj) {
+          this.empObj.orgUnitName = res.orgUnitName;
+        }
       });
 
     this.cache
@@ -169,7 +177,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
         this.formGroup.patchValue(this.dayoffObj);
         this.formModel.currentData = this.dayoffObj;
         this.isAfterRender = true;

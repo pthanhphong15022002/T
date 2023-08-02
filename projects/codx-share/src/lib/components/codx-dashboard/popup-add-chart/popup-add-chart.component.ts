@@ -702,6 +702,7 @@ export class PopupAddChartComponent implements OnInit {
     if(this.crosshair) chartSettings.crosshair = {...this.crosshair};
     if(this.title) chartSettings.title = this.title;
     this.dialog && this.dialog.close(chartSettings);
+    console.log(this.chartSetting)
   }
 
   moreChart(){

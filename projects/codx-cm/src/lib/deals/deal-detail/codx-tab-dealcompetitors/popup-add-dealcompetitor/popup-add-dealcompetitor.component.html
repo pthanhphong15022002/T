@@ -32,7 +32,7 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="row mb-4 mt-5">
+  <div class="row mb-4 mt-5" *ngIf="action != 'edit'">
     <div class="d-flex align-items-center col-6">
       <span
         class="d-flex align-items-center"
@@ -92,7 +92,8 @@
     <ejs-combobox
       [dataSource]="lstCbx"
       [fields]="fieldCompetitor"
-      [value]="data?.competitorID"
+      [value]="competitorID"
+      [placeholder]="gridViewSetup?.CompetitorID?.description"
       (valueChange)="cbxChange($event)"
     ></ejs-combobox>
   </div>
@@ -147,30 +148,114 @@
     >
     </codx-input>
   </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <span class="font-size-lg fw-bold flex-grow-1">
+        <codx-label [formModel]="form.formModel" fiedName="Rating">
+        </codx-label>
+      </span>
+      <span class="d-flex">
+        <ngb-rating
+          [(rate)]="currentRate"
+          max="5"
+          (rateChange)="(false)"
+          (hover)="hovered = $event"
+          (leave)="hovered = currentRate"
+          [readonly]="false"
+        >
+          <ng-template let-fill="fill" let-index="index">
+            <span
+              class="star"
+              [class.filled]="fill === 100"
+              [class.bad]="index < 5"
+              >&#9733;</span
+            >
+          </ng-template>
+        </ngb-rating>
+      </span>
+    </div>
+  </div>
+  <ng-container>
+    <div
+      *ngIf="showLabelAttachment"
+      class="d-flex align-items-center justify-content-between mt-4"
+      style="float: left; clear: left"
+    >
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+        <div class="fw-bold text-primary">
+          <codx-label
+            name="lblAttachments"
+            [formModel]="form.formModel"
+            default="Tài liệu đính kèm"
+          >
+          </codx-label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectId]="data.recID"
+        [objectType]="form.formModel.entityName"
+        [referType]="'source'"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        [formModel]="dialog.formModel"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+        showMessage="0"
+        [dataSelected]="data"
+      >
+      </codx-attachment>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <div class="me-2">
-      <button
-        type="button"
-        (click)="dialog.close()"
-        class="btn btn-outline-primary"
-      >
+  <div class="d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
         <codx-label
-          name="lblCancel"
-          [formModel]="dialog.formModel"
-          default="Hủy"
+          name="UploadFile"
+          [formModel]="form.formModel"
+          default="Upload File"
         ></codx-label>
-      </button>
-    </div>
-    <div class="">
-      <button type="button" (click)="onSave()" class="btn btn-primary">
-        <codx-label
-          name="lblSave"
-          [formModel]="dialog.formModel"
-          default="Đồng ý"
-        ></codx-label>
-      </button>
+      </span>
+    </button>
+    <div class="d-flex justify-content-end">
+      <div class="me-2">
+        <button
+          type="button"
+          (click)="dialog.close()"
+          class="btn btn-outline-primary"
+        >
+          <codx-label
+            name="lblCancel"
+            [formModel]="dialog.formModel"
+            default="Hủy"
+          ></codx-label>
+        </button>
+      </div>
+      <div class="">
+        <button type="button" (click)="onSave()" class="btn btn-primary">
+          <codx-label
+            name="lblSave"
+            [formModel]="dialog.formModel"
+            default="Đồng ý"
+          ></codx-label>
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>

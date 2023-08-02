@@ -99,49 +99,35 @@ export class PopupAddTargetComponent {
 
   async ngOnInit() {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
-      }
-    }
+
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.data.owner = null;
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      if (param?.length > 0) {
+        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          this.data.currencyID = this.currencyID;
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+        }
+      }
     } else {
       this.lstOwners.forEach((element) => {
         if (this.data.target > 0) {
           element.weight = (element.target * 100) / this.data.target;
         }
       });
-      if (this.data.currencyID !== this.currencyID) {
-        let day = this.data.createdOn ?? new Date();
-
-        let exchangeRateOld = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.data.currencyID, day)
-        );
-
-        if (this.exchangeRate > 0) {
-          this.data.target =
-            (this.data.target * exchangeRateOld?.exchRate) / this.exchangeRate;
-          this.lstOwners.forEach((element) => {
-            element.target =
-              (element.target * exchangeRateOld?.exchRate) / this.exchangeRate;
-          });
-          this.lstTargetLines?.forEach((res) => {
-            res.target =
-              (res.target * exchangeRateOld?.exchRate) / this.exchangeRate;
-          });
-        }
-      }
+      let exchangeRateCurrent = await firstValueFrom(
+        this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
+      );
+      this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
     }
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -161,13 +147,35 @@ export class PopupAddTargetComponent {
   }
 
   //#region
+  async exChangeRate(currencyIDOld, currencyID) {
+    if (currencyIDOld !== currencyID) {
+      let day = this.data.createdOn ?? new Date();
 
+      let exchangeRate = await firstValueFrom(
+        this.cmSv.getExchangeRate(currencyID, day)
+      );
+
+      if (this.exchangeRate > 0) {
+        this.data.target =
+          (this.data.target / exchangeRate?.exchRate) * this.exchangeRate;
+        this.lstOwners.forEach((element) => {
+          element.target =
+            (element.target / exchangeRate?.exchRate) * this.exchangeRate;
+        });
+        this.lstTargetLines?.forEach((res) => {
+          res.target =
+            (res.target / exchangeRate?.exchRate) * this.exchangeRate;
+        });
+
+      }
+      this.exchangeRate = exchangeRate?.exchRate ?? 0;
+    }
+  }
   //#endregion
 
   //#region  save
   beforeSave(op) {
     var data = [];
-    this.data.currencyID = this.currencyID;
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
@@ -239,7 +247,7 @@ export class PopupAddTargetComponent {
         target += res.target;
       });
 
-      if (target != this.data.target) {
+      if (Math.round(target) != Math.round(this.data.target)) {
         return false;
       }
     }
@@ -249,10 +257,18 @@ export class PopupAddTargetComponent {
 
   //#region value change event
   valueChange(e) {
-    if (this.businessLineID != e?.data) {
-      this.businessLineID = e?.data;
-      if (e?.field == 'businessLineID' && e?.data?.trim() != '') {
-        this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+    if (e?.field == 'businessLineID') {
+      if (this.businessLineID != e?.data) {
+        this.businessLineID = e?.data;
+        if (e?.data?.trim() != '') {
+          this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+        }
+      }
+    } else {
+      if (this.data[e?.field] != e?.data) {
+        this.exChangeRate(this.data.currencyID, e?.data);
+
+        this.data[e.field] = e.data;
       }
     }
 
@@ -702,30 +718,10 @@ export class PopupAddTargetComponent {
           });
           this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
           this.lstTargetLines = res[1] ?? [];
-          if (this.data.currencyID !== this.currencyID) {
-            let day = this.data?.createdOn ?? new Date();
-            let exchangeRateOld = await firstValueFrom(
-              this.cmSv.getExchangeRate(this.data.currencyID, day)
-            );
-
-            if (this.exchangeRate > 0) {
-              this.data.target =
-                (this.data.target * exchangeRateOld?.exchRate) /
-                this.exchangeRate;
-              this.lstOwners.forEach((element) => {
-                element.target =
-                  (element.target * exchangeRateOld?.exchRate) /
-                  this.exchangeRate;
-                if (this.data.target > 0) {
-                  element.weight = (element.target * 100) / this.data.target;
-                }
-              });
-              this.lstTargetLines?.forEach((res) => {
-                res.target =
-                  (res.target * exchangeRateOld?.exchRate) / this.exchangeRate;
-              });
-            }
-          }
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
+          );
+          this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
         } else {
           if (this.isExitTarget) {
             this.lstTargetLines = [];

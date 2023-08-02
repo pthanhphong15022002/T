@@ -47,7 +47,9 @@
                   [width]="35"
                   #image
                   [objectId]="data?.userID"
+                  [objectType]="'AD_Users'"
                 ></codx-img>
+
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <ng-container *ngFor="let role of listRoles">
                     <ng-container

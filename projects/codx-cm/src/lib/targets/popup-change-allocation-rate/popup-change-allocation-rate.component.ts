@@ -136,10 +136,13 @@ export class PopupChangeAllocationRateComponent implements OnInit {
           }
 
           titleMonth = formattedMonths.join(', ');
-          this.data.isCollapse = false;
           this.data.titleMonth = titleMonth;
         }
       }
+      this.data.isCollapse = true;
+      lstLinesBySales.forEach(element => {
+        element.isCollapse = true;
+      });
       this.data.targetsLines = lstLinesBySales;
     }
   }
