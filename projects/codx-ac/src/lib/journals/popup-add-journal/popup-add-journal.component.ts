@@ -123,6 +123,9 @@ export class PopupAddJournalComponent
 
     this.dataService = dialogRef.dataService;
     this.journal = { ...this.journal, ...this.dataService?.dataSelected };
+
+    this.journal.vatControl = this.journal.vatControl === '1';
+
     this.oldJournal = { ...this.journal };
     this.isEdit = dialogData.data.formType === 'edit';
   }
@@ -435,6 +438,8 @@ export class PopupAddJournalComponent
     if (!this.journalTypes109.includes(this.journal.journalType)) {
       this.journal.idimControl = null;
     }
+
+    this.journal.vatControl = this.journal.vatControl ? '1' : '0';
 
     const dataValueObj = {};
     for (const prop of this.dataValueProps088) {
