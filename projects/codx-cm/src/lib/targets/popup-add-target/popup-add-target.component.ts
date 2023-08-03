@@ -116,6 +116,7 @@ export class PopupAddTargetComponent {
             this.cmSv.getExchangeRate(this.currencyID, new Date())
           );
           this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+          this.data.exchangeRate = this.exchangeRate
         }
       }
     } else {
@@ -124,10 +125,8 @@ export class PopupAddTargetComponent {
           element.weight = (element.target * 100) / this.data.target;
         }
       });
-      let exchangeRateCurrent = await firstValueFrom(
-        this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
-      );
-      this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+
+      this.exchangeRate = this.data.exchangeRate ?? 0;
     }
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -176,6 +175,7 @@ export class PopupAddTargetComponent {
   //#region  save
   beforeSave(op) {
     var data = [];
+    this.data.exchangeRate = this.exchangeRate ?? 0;
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
@@ -709,6 +709,7 @@ export class PopupAddTargetComponent {
             this.isAllocation = this.data?.allocation == '1' ? true : false;
             this.isExitTarget = true;
             this.isBusiness = true;
+            this.exchangeRate = this.data.exchangeRate ?? 0;
           }
           this.lstOwners = res[2] ?? [];
           this.lstOwners.forEach((element) => {
@@ -718,10 +719,7 @@ export class PopupAddTargetComponent {
           });
           this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
           this.lstTargetLines = res[1] ?? [];
-          let exchangeRateCurrent = await firstValueFrom(
-            this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
-          );
-          this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+
         } else {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
