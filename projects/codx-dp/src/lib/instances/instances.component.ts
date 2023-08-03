@@ -902,8 +902,8 @@ export class InstancesComponent
                   res.isblur = true;
                 }
                 break;
-              case 'SYS004':
-              case 'SYS002':
+              // case 'SYS004':
+              // case 'SYS002':
               case 'DP21':
                 res.disabled = true;
                 break;
@@ -946,8 +946,8 @@ export class InstancesComponent
                 break;
               case 'DP09':
               case 'DP10':
-              case 'SYS004':
-              case 'SYS002':
+              // case 'SYS004':
+              // case 'SYS002':
               case 'DP02':
               case 'DP23':
                 mf.disabled = true;

@@ -424,8 +424,9 @@
                 [autoLoad]="false"
                 [dataSource]="lines"
                 [rowHeight]="35"
+                [showRowNumber]="true"
                 (cellChanged)="onCellChange($event)"
-                (created)="onCreate($event)"
+                (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -492,6 +493,19 @@
       style="top: 4px"
     >
       <button
+        class="btn btn-md btn-danger"
+        (click)="onDiscard()"
+        *ngIf="masterService.hasSaved && master.status == '0'"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+
+      <button
         *ngIf="!isEdit"
         type="button"
         class="btn btn-md btn-light-primary"
@@ -516,19 +530,6 @@
           fiedName="lblSave"
           [formModel]="form.formModel"
           default="Lưu"
-        ></codx-label>
-      </button>
-
-      <button
-        class="btn btn-md btn-danger"
-        (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && master.status == '0'"
-      >
-        <codx-label
-          class="fs-6 fw-normal"
-          fiedName="lblDiscard"
-          [formModel]="form.formModel"
-          default="Hủy bỏ"
         ></codx-label>
       </button>
     </div>
