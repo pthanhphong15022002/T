@@ -2810,6 +2810,7 @@ codx-toolbar {
     }
    
   }
+  
   .card-footer {
     padding: 5px !important;
     padding-bottom: 0 !important;
@@ -2822,6 +2823,7 @@ codx-toolbar {
   }
   
 }
+
 .aside.aside-extended{
   padding-left: 0px!important;
 }
@@ -3492,5 +3494,30 @@ codx-view-list-tree{
   }
   .menu-nav .menu-item .item-selected{
     color: var(--primary-dark);
+  }
+}
+.e-tab .e-tab-header .e-scroll-nav .e-nav-left-arrow::before, .e-tab .e-tab-header .e-scroll-nav .e-nav-right-arrow::before {
+  font-size: 16px;
+}
+.e-hscroll .e-scroll-nav {
+  background: var(--gray-150)!important;
+}
+
+.e-dlg-content .codx-detail-footer{
+  position: relative;
+  border-top: 1px var(--gray-150) solid;
+  .tab-action {
+    position: absolute;
+    top: 2px;
+    right: 15px;
+  }
+  .py-5.tab-content {
+    padding-top: 5px !important;
+    padding-bottom: 0 !important;
+    padding-left: 25px;
+    padding-right: 15px;
+  }
+  codx-tabs .nav-link {
+    padding: 8px;
   }
 }
