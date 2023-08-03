@@ -309,8 +309,8 @@
                         </codx-label>
                         <ng-container *ngIf="data.daysOff; else noDaysOff">
                             <div ngbDropdown [container]="'body'">
-                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer item-active" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer item-active"
+                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" (click)="onShowDaysOff(data)">
                                     {{data.daysOff}}
                                 </div>
@@ -365,8 +365,9 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div class="list-days-off" *ngIf="data?.length > 0 && popupLoading ==false ; else noDataNotification">
-            <div *ngFor="let item of data" class="d-flex flex-column days-off-item">
+        <div #listDataDaysOff class="list-days-off" *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
+            (scroll)="onScrollList(listDataDaysOff)">
+            <div *ngFor="let item of listDaysOff" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
                     <i class="icon-event text-dark icon-16 me-1"> </i>
                     <span *ngIf="item.beginDate" class="data-text-color"
