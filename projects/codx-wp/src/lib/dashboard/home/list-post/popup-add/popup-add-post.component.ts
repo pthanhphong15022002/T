@@ -301,7 +301,8 @@ export class PopupAddPostComponent implements OnInit {
   sharePost() {
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
-    this.data.approveControl = this.data.shares.isActive ? "0" : "1";
+    // this.data.approveControl = this.data.shares.isActive ? "0" : "1";
+    this.data.approveControl = this.isApproval ? "1" : "0";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
