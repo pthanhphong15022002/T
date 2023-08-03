@@ -29,6 +29,7 @@ import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
 import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-targets',
@@ -148,12 +149,15 @@ export class TargetsComponent
   popupOld: any;
   popoverList: any;
   viewMode = 9;
+  viewCurrent = '1';
+  lstCurrentView = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
-    private cmSv: CodxCmService
+    private cmSv: CodxCmService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
@@ -164,10 +168,18 @@ export class TargetsComponent
   }
 
   onInit(): void {
-    this.showButtonAdd = true;
+    this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
     };
+    this.year = new Date().getFullYear();
+    this.loadTreeData(this.year?.toString());
+
+    this.cache.valueList('CRM050').subscribe((res) => {
+      if (res && res.datas) {
+        this.lstCurrentView = res.datas;
+      }
+    });
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -237,7 +249,7 @@ export class TargetsComponent
         this.assemblyNameTree,
         this.classNameTree,
         this.methodTree,
-        this.requestTree
+        [this.requestTree, this.viewCurrent]
       )
       .pipe(
         finalize(() => {
@@ -250,6 +262,17 @@ export class TargetsComponent
       );
   }
 
+  viewBusinessLines(valueView) {
+    if (valueView != this.viewCurrent) {
+      this.lstDataTree = [];
+      this.viewCurrent = valueView;
+      this.loadTreeData(this.year?.toString());
+    }
+    this.detectorRef.detectChanges();
+  }
+  isActive(item: any): boolean {
+    return this.viewCurrent === item;
+  }
   clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -267,8 +290,11 @@ export class TargetsComponent
     var year = data?.fromDate
       ? parseInt(data?.fromDate?.getFullYear())
       : new Date().getFullYear();
-    this.year = year;
-    this.loadTreeData(year?.toString());
+    if (year != this.year) {
+      this.year = year;
+      this.loadTreeData(year?.toString());
+    }
+
     this.detectorRef.detectChanges();
   }
   //#endregion
@@ -388,7 +414,7 @@ export class TargetsComponent
         sameData: false,
         active: true,
         model: {
-          panelRightRef: this.templateGrid,
+          panelRightRef: this.panelRight,
         },
       },
       // {
@@ -442,6 +468,17 @@ export class TargetsComponent
           break;
         case 'CM0206_1':
           this.popupChangeAllocationRate(data);
+          break;
+        default:
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            null,
+            this.view.formModel,
+            this.view.dataService,
+            this
+          );
+          // this.df.detectChanges();
           break;
       }
     }

@@ -6751,7 +6751,7 @@
         {{ data?.trainFrom | fmDT }} 
       </span>
   
-      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo"> 
+      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo" *ngIf="data?.trainTo"> 
         - 
         {{ data?.trainTo | fmDT }}
       </span>
@@ -6864,7 +6864,7 @@
           {{ data?.effectedDate | fmDT }}
 
         </span>
-        <span
+        <span *ngIf="data?.expiredDate"
         placement="top" [title]="appointionHeaderTexts.ExpiredDate"
         >
         - {{ data?.expiredDate | fmDT }}
