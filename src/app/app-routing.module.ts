@@ -263,10 +263,6 @@ export const routes: Routes = [
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path: ':tenant',
-    children: [...childAuthRoutes, ...childPublicRoutes],
-  },
-  {
     path: 'privacy',
     component: PrivacyComponent,
   },
@@ -277,6 +273,10 @@ export const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent,
+  },
+  {
+    path: ':tenant',
+    children: [...childAuthRoutes, ...childPublicRoutes],
   },
   {
     path: '',
