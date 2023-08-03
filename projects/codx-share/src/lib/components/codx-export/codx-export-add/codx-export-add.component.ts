@@ -238,22 +238,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
             .subscribe((item) => {
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
-                this.attachment.objectId = item[1].recID;
-                //this.attachment.saveFiles();
-                //Upload file
-                this.attachment.saveFilesObservable().then(saveFile=>{
-                  if(saveFile){
-                    saveFile.subscribe(saved=>{
-                      if(saved){
-                        //Trả về thông tin khi upload file thành công
-                        this.dialog.close([item[1], this.type]);
-                      }
-                      else{
-                        this.notifySvr.notify('SYS023');
-                      }
-                    })
-                  }                
-                })
+                this.attachment2.objectId = item[1].recID;
+                this.attachment2.saveFiles();
+                this.dialog.close([item[1], this.type]);
               } else this.notifySvr.notifyCode('SYS023');
             });
         } else this.notifySvr.notifyCode('OD022');
@@ -280,26 +267,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
                 this.file
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe();
-                this.attachment.objectId = item[1][0].recID;
-                //this.attachment.saveFiles();
-                //Upload file mới
-                this.attachment.saveFilesObservable().then(saveFile=>{
-                  if(saveFile){
-                    saveFile.subscribe(saved=>{
-                      if(saved){
-                        //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
-                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
-                      }
-                      else{
-                        this.notifySvr.notify('SYS021');
-                      }
-                    })
-                  }
-                })
+                this.attachment2.objectId = item[1][0].recID;
+                this.attachment2.saveFiles();
               }
-              else{
-                this.dialog.close([item[1][0], this.type]);
-              }
+              this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notify('SYS021');
           });
       }
@@ -315,22 +286,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
           .subscribe((item) => {
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
-              this.attachment.objectId = item[1][0].recID;
-              //this.attachment.saveFiles();
-              //Upload file
-              this.attachment.saveFilesObservable().then(saveFile=>{
-                if(saveFile){
-                  saveFile.subscribe(saved=>{
-                    if(saved){
-                      //Trả về thông tin khi upload file thành công
-                      this.dialog.close([item[1][0], this.type]);
-                    }
-                    else{
-                      this.notifySvr.notify('SYS023');
-                    }
-                  })
-                }                
-              })
+              this.attachment1.objectId = item[1][0].recID;
+              this.onSaveWord();
+              this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
@@ -354,36 +312,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
             if (!item) return;
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
-              this.attachment.objectId = item[1][0].recID;
-              //Nếu upload lại file
-              if (this.fileCount > 0) {
-                /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
-                  console.log(item);
-                }); */
-                this.file
-                  .deleteFileToTrash(this.idCrrFile, '', true)
-                  .subscribe();
-                this.attachment.objectId = item[1][0].recID;
-
-                //this.attachment.saveFiles();
-                //Upload file mới
-                this.attachment.saveFilesObservable().then(saveFile=>{
-                  if(saveFile){
-                    saveFile.subscribe(saved=>{
-                      if(saved){
-                        //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
-                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
-                      }
-                      else{
-                        this.notifySvr.notify('SYS021');
-                      }
-                    })
+              if (this.isContentChange) {
+                this.file.deleteFileToTrash(this.idCrrFile, '', true).subscribe(res=>{
+                  if(res)
+                  {
+                    this.attachment1.objectId = this.data.recID;
+                    this.onSaveWord();
                   }
-                })
+                
+                });
+              
               }
-              else{
-                this.dialog.close([item[1][0], this.type]);
-              }
+              this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notify('SYS021');
           });
       }
