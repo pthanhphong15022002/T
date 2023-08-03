@@ -112,21 +112,23 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center me-2">
-          <span class="icon-16 icon-av_timer me-1"></span>
+          <span class="icon-16 text-gray-600 icon-av_timer me-1"></span>
           <span
-            class="text-gray-700"
+            class="text-gray-600"
             [innerHTML]="
               data.deadline | formatvalue : view.formModel : 'deadline' | async
             "
           ></span>
         </div>
-        <codx-imgs
-          [width]="25"
-          [objectId]="data.createdBy"
-          ojectType="AD_Users"
-          [numberImages]="1"
-        >
-        </codx-imgs>
+        <div class="h-25px">
+          <codx-imgs
+            [width]="25"
+            [objectId]="data.createdBy"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+        </div>
       </div>
     </div>
   </div>
