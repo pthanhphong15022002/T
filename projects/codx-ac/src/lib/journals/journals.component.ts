@@ -16,6 +16,7 @@ import { NameByIdPipe } from '../pipes/nameById.pipe';
 import { IJournalPermission } from './interfaces/IJournalPermission.interface';
 import { JournalService } from './journals.service';
 import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
+import { IJournal } from './interfaces/IJournal.interface';
 
 @Component({
   selector: 'lib-journal',
@@ -280,12 +281,12 @@ export class JournalsComponent extends UIComponent {
       });
   }
 
-  edit(e, data): void {
+  edit(e, data: IJournal): void {
     console.log('edit', { data });
 
     let tempData = { ...data };
-    if (data.dataValue) {
-      tempData = { ...data, ...JSON.parse(data.dataValue) };
+    if (data.extras) {
+      tempData = { ...data, ...JSON.parse(data.extras) };
     }
 
     this.view.dataService.dataSelected = tempData;
@@ -311,12 +312,12 @@ export class JournalsComponent extends UIComponent {
     });
   }
 
-  copy(e, data): void {
+  copy(e, data: IJournal): void {
     console.log('copy', data);
 
     let tempData = { ...data };
-    if (data.dataValue) {
-      tempData = { ...data, ...JSON.parse(data.dataValue) };
+    if (data.extras) {
+      tempData = { ...data, ...JSON.parse(data.extras) };
     }
 
     this.view.dataService.dataSelected = tempData;
@@ -351,16 +352,6 @@ export class JournalsComponent extends UIComponent {
         if (res) {
           this.journalService.deleteAutoNumber(data.autoNumber);
           this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-          this.api
-            .exec(
-              'AC',
-              'JournalsPermissionBusiness',
-              'DeleteByJournalNoAsync',
-              data.journalNo
-            )
-            .subscribe((res) => {
-              console.log('DeleteByJournalNoAsync', res);
-            });
         }
       });
     });

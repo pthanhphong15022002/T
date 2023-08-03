@@ -73,6 +73,6 @@ export interface IJournal {
   addNewMode: string;
   postingMode: string;
   unbounds: any;
-  postedDateControl: string;
+  // postedDateControl: string;
   entryMode: string;
 }
