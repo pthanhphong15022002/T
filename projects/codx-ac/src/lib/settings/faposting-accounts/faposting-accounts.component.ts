@@ -4,6 +4,7 @@ import {
   Injector,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CodxGridviewComponent,
@@ -19,6 +20,7 @@ import { PopupAddFAPostingAccountComponent } from './popup-add-faposting-account
   selector: 'lib-faposting-accounts',
   templateUrl: './faposting-accounts.component.html',
   styleUrls: ['./faposting-accounts.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FAPostingAccountsComponent
   extends UIComponent

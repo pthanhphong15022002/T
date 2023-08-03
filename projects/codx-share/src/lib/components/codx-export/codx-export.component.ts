@@ -163,6 +163,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadEx() {
     this.request.entityName = 'AD_ExcelTemplates';
+    this.request.dataValue = this.refType || this.formModel.entityName;
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
@@ -170,6 +171,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadWord() {
     this.request.entityName = 'AD_WordTemplates';
+    this.request.dataValue = this.refType || this.formModel.entityName;
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
@@ -206,14 +208,15 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .openForm(
             CodxExportAddComponent,
             null,
-            900,
-            700,
+            1100,
+            800,
             null,
             {
               action: val,
               type: this.type,
               refType: this.refType,
               refID: this.refID,
+              formModel: this.formModel
             },
             '',
             option

@@ -119,8 +119,9 @@
               | async
           "
         ></div>
-        <span class="mx-1">-</span>
+        <span *ngIf="itemDetail?.expiredDate" class="mx-1">-</span>
         <div
+          *ngIf="itemDetail?.expiredDate"
           class="fw-bold me-4"
           [innerHTML]="
             itemDetail?.expiredDate
@@ -188,10 +189,10 @@
           </codx-label>
           <span
             *ngIf="
-              itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+              itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
               else noOrgUnitName
             "
-            >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+            >{{ itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName }}</span
           >
           <ng-template #noOrgUnitName>
             <span class="place-holder">{{
@@ -206,7 +207,7 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span *ngIf="itemDetail.jobLevel; else noJobLevel">{{
+          <span *ngIf="itemDetail?.jobLevel; else noJobLevel">{{
             itemDetail.jobLevel
           }}</span>
           <ng-template #noJobLevel>

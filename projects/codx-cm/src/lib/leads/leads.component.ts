@@ -225,7 +225,6 @@ export class LeadsComponent
         this.valueListStatus = func.datas.filter(x=> ['2','3','5','7'].includes(x.value)).map(item => ({
           text: item.text,
           value: item.value
-
       }));
       }
     });
@@ -233,19 +232,13 @@ export class LeadsComponent
   async getCurrentSetting(){
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
-        // currnecy
-        let dataParamCurrency = res.filter(
-          (x) => x.category == '4' && !x.transType
-        )[0];
-        if (dataParamCurrency) {
-          this.paramDefault = JSON.parse(dataParamCurrency.dataValue);
-          this.currencyIDDefault = this.paramDefault['DefaultCurrency'];
-        }
-        // applyProcess
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
         if (dataParam) {
           var applyProcessSetting = JSON.parse(dataParam.dataValue);
+          // applyProcess
           this.applyProcess = applyProcessSetting['ProcessLeadUsed'] == '1';
+          // currnecy
+          this.currencyIDDefault = applyProcessSetting['DefaultCurrency'];
         }
       }
     });
@@ -389,7 +382,7 @@ export class LeadsComponent
     };
     var isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
-      // eventItem.disabled  = false;
+    // eventItem.disabled  = false;
     };
     var isEdit = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
@@ -421,6 +414,9 @@ export class LeadsComponent
     var isDisabledDefault = (eventItem, data) => {
       eventItem.disabled = true;
     };
+    var isStartFirst = (eventItem, data) => {
+      eventItem.disabled = ![ '3', '5'].includes(data.status);
+    };
 
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
@@ -441,6 +437,9 @@ export class LeadsComponent
       SYS04: isCRD,
       SYS102: isDisabledDefault,
       SYS02: isCRD,
+      CM0205_13:isStartFirst // tiep tup van
+      // CM0205_14 // co su dung quy trinh
+      // CM0205_15 // khong su dung quy trinh
     };
     return functionMappings[type];
   }
@@ -603,6 +602,12 @@ export class LeadsComponent
       CM0205_12: (data) => {
         this.OpenFormCopy(data);
       },
+      CM0205_13: (data) => {
+        this.startFirst(data)
+      },
+      default: () => {
+         console.log("default");
+      }
     };
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
@@ -940,6 +945,31 @@ export class LeadsComponent
             if (resDP) {
               var datas = [data.recID, resDP[0]];
               this.codxCmService.startLead(datas).subscribe((res) => {
+                if (res) {
+                  this.dataSelected = res[0];
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.detailViewLead.reloadListStep(resDP[1]);
+                  this.notificationsService.notifyCode('SYS007');
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                }
+                this.detectorRef.detectChanges();
+              });
+            }
+          });
+        }
+      });
+  }
+  startFirst(data) {
+    this.notificationsService
+      .alertCode('DP033', null, ['"' + data?.leadName + ' bạn có muốn quay trở lại đầu tiên không"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.codxCmService.moveBackStartInstance([data.refID,data.status,data.processID,this.applyForLead]).subscribe((resDP) => {
+            if (resDP) {
+              var datas = [data.recID, resDP[0]];
+              this.codxCmService.moveStartFirstLead(datas).subscribe((res) => {
                 if (res) {
                   this.dataSelected = res[0];
                   this.dataSelected = JSON.parse(

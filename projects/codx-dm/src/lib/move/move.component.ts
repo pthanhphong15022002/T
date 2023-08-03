@@ -540,7 +540,7 @@ export class MoveComponent implements OnInit {
         });
     } else {
       this.folderService
-        .copyFolder(that.id, that.fullName, that.selectId, that.selection, 2)
+        .copyFolder(that.id, that.fullName, that.selectId, this.selection, 2)
         .subscribe(async (res) => {
           if (res.status == 0) {
             var list = that.dmSV.listFolder;

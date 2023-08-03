@@ -28,7 +28,7 @@
       <div>
         <button
           class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
-          (click)="dialog.close()"
+          (click)="closePopup()"
         >
           <span class="icon-close icon-18"></span>
         </button>
@@ -117,7 +117,9 @@
         </ng-container>
       </div>
     </div>
-    <div class="view-details-content rounded-2 bg-body scroll-y py-3 px-5 pb-0 mt-1">
+    <div
+      class="view-details-content rounded-2 bg-body scroll-y py-3 px-5 pb-0 mt-1"
+    >
       <div
         class="sprints-task-detail"
         data-kt-scroll="true"
@@ -149,24 +151,25 @@
               [showButtonAdd]="showButtonAdd"
               [showMoreFunc]="showMoreFunc"
               [funcID]="'TMT03011'"
+              (resourceNew)="addNewResource($event)"
             >
             </codx-tasks-share>
           </ng-container>
         </ng-container>
-        
-          <ng-container *ngIf="name == 'History'">
+
+        <ng-container *ngIf="name == 'History'">
+          <ng-container>
             <ng-container>
-              <ng-container>
-                <div class="pt-3">
+              <div class="pt-3">
                 <codx-history
                   [objectID]="iterationID"
                   [formModel]="dialog?.formModel"
                 ></codx-history>
               </div>
-              </ng-container>
             </ng-container>
           </ng-container>
-        
+        </ng-container>
+
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
             <codx-tree-comment

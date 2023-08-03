@@ -33,7 +33,7 @@ import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/po
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
 import { EntityName, getClassName } from '../utils/unknown.util';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-item',
@@ -58,11 +58,12 @@ export class PopupAddItemComponent
   gvsItemsSales: any;
   gvsItemsProduction: any;
 
+  ignoredFields: string[] = [];
   title: string = '';
   isEdit: boolean = false;
   disabled: boolean = false;
   tempItemID: string = '';
-  keyField: any = '';
+  keyField: string = '';
   selectedDimGroup: any;
   tabInfo = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Common information' },
@@ -148,9 +149,13 @@ export class PopupAddItemComponent
     this.item = this.dataService?.dataSelected;
     this.tempItemID = this.item?.itemID;
     this.dialogRef.formModel.currentData = this.item;
-    this.keyField = this.dataService?.keyField;
     this.isEdit = this.dialogData.data.formType === 'edit';
     this.disabled = this.isEdit;
+
+    this.keyField = this.dataService?.keyField;
+    if (this.keyField === 'ItemID') {
+      this.ignoredFields.push(this.keyField);
+    }
 
     this.fgItemsPurchase = this.codxService.buildFormGroup(
       this.fmItemsPurchase.formName,
@@ -404,24 +409,18 @@ export class PopupAddItemComponent
     });
   }
 
-  onClickSave(): void {
+  async onClickSave(): Promise<void> {
     console.log('item', this.item);
     console.log('itemsPurchase', this.itemsPurchase);
     console.log('itemsSales', this.itemsSales);
     console.log('itemsProduction', this.itemsProduction);
-
-    let ignoredFields: string[] = []
-    if(this.keyField == 'ItemID')
-    {
-      ignoredFields.push(this.keyField);
-    }
 
     if (
       !this.acService.validateFormData(
         this.form.formGroup,
         this.gridViewSetup,
         ['UMID'],
-        ignoredFields
+        this.ignoredFields
       )
     ) {
       return;
@@ -450,29 +449,21 @@ export class PopupAddItemComponent
     ) {
       return;
     }
-    if(this.keyField == 'CurrencyID')
-    {
-      this.api.exec(
-        'ERM.Business.AC',
-        'CommonBusiness',
-        'GenerateAutoNumberAsync',
-      )
-      .subscribe((autoNumber: string) => {
-        if(autoNumber)
-        {
-          this.item.itemID = autoNumber;
-          this.updateFileDirectReload();
-        }
-      });
-    }
-    else
-    {
-      this.updateFileDirectReload();
-    }
-  }
 
-  updateFileDirectReload()
-  {
+    if (this.keyField === 'ItemID' && !this.item.itemID) {
+      const autoNumber: string = await lastValueFrom(
+        this.api.exec(
+          'ERM.Business.AC',
+          'CommonBusiness',
+          'GenerateAutoNumberAsync'
+        )
+      );
+
+      if (autoNumber) {
+        this.item.itemID = autoNumber;
+      }
+    }
+
     if (this.itemImage?.imageUpload?.item) {
       this.itemImage
         .updateFileDirectReload(this.item.itemID)
@@ -853,7 +844,7 @@ export class PopupAddItemComponent
     this.acService.loadDataAsync(service, option).subscribe((res: any[]) => {
       if (first) {
         const formModel: string = 'fm' + this.acService.toPascalCase(prop);
-        const formGroup: string = "fg" + this.acService.toPascalCase(prop);
+        const formGroup: string = 'fg' + this.acService.toPascalCase(prop);
 
         this[prop] = this[formModel].currentData = res[0];
         this[formGroup].patchValue(res[0]);

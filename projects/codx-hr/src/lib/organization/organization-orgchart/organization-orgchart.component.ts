@@ -63,7 +63,7 @@ import { DataVll } from '../../model/HR_OrgChart.model';
   styleUrls: ['./organization-orgchart.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OrganizationOrgchartComponent implements OnInit {
+export class OrganizationOrgchartComponent {
   console = console;
   PageFitMode = PageFitMode;
   NavigationMode = NavigationMode;
@@ -91,7 +91,7 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   dataVll: Array<DataVll>;
   //Variable diagram
-  pagefit: any = PageFitMode.AutoSize;
+  pagefit: any = PageFitMode.FitToPage;
   orientationType: any;
   childrenPlacementType: any;
   verticalAlignment: any;
@@ -168,6 +168,7 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   @ViewChild('input') input: ElementRef;
   collapsed: boolean[] = [];
+  dataTree: any = {};
 
   annotations: Array<LevelAnnotationConfig> = [];
   datasetting: any = null;
@@ -201,7 +202,12 @@ export class OrganizationOrgchartComponent implements OnInit {
   selectedTeam = '';
 
   //style slider
-  stylesObj = { width: '30%', display: 'flex', margin: '5px 14px' };
+  stylesObj = {
+    width: '100%',
+    display: 'flex',
+    margin: '5px 14px',
+    cursor: 'pointer',
+  };
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
@@ -224,103 +230,123 @@ export class OrganizationOrgchartComponent implements OnInit {
     private hrService: CodxHrService,
     private notify: NotificationsService
   ) {
-    this.isGetManager(this.selectedTeam);
+    //this.isGetManager(this.selectedTeam);
   }
 
   showVal(value) {
-    this.scaleNumber = value / 100;
+    this.scaleNumber = parseInt(value) / 100;
   }
 
   //Settings
   changeMode(e) {
-    var target = e.target.id;
-
+    var target = e?.target?.id ?? e;
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
+        this.dataTree.pagefit = 'pageFitModeNone';
         break;
       case 'pageFitModeWidth':
         this.pagefit = this.PageFitMode.PageWidth;
+        this.dataTree.pagefit = 'pageFitModeWidth';
         break;
       case 'pageFitModeHeight':
         this.pagefit = this.PageFitMode.PageHeight;
+        this.dataTree.pagefit = 'pageFitModeHeight';
         break;
       case 'pageFitModeFit':
         this.pagefit = this.PageFitMode.FitToPage;
-        break;
-      case 'pageFitModeSelect':
-        this.pagefit = this.PageFitMode.SelectionOnly;
+        this.dataTree.pagefit = 'pageFitModeFit';
         break;
 
       //Orientation
       case 'orientationTop':
         this.orientationType = this.OrientationType.Top;
+        this.dataTree.orientationType = 'orientationTop';
         break;
       case 'orientationBottom':
         this.orientationType = this.OrientationType.Bottom;
+        this.dataTree.orientationType = 'orientationBottom';
         break;
       case 'orientationLeft':
         this.orientationType = this.OrientationType.Left;
+        this.dataTree.orientationType = 'orientationLeft';
         break;
       case 'orientationRight':
         this.orientationType = this.OrientationType.Right;
+        this.dataTree.orientationType = 'orientationRight';
         break;
       case 'orientationNone':
         this.orientationType = this.OrientationType.None;
+        this.dataTree.orientationType = 'orientationNone';
         break;
 
       //PlacementType children
       case 'childrenPlacementAuto':
         this.childrenPlacementType = this.ChildrenPlacementType.Auto;
+        this.dataTree.childrenPlacementType = 'childrenPlacementAuto';
         break;
       case 'childrenPlacementVertical':
         this.childrenPlacementType = this.ChildrenPlacementType.Vertical;
+        this.dataTree.childrenPlacementType = 'childrenPlacementVertical';
         break;
       case 'childrenPlacementHorizontal':
         this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
+        this.dataTree.childrenPlacementType = 'childrenPlacementHorizontal';
         break;
       case 'childrenPlacementMatrix':
         this.childrenPlacementType = this.ChildrenPlacementType.Matrix;
+        this.dataTree.childrenPlacementType = 'childrenPlacementMatrix';
         break;
 
       //Hạng mục căn dọc
       case 'itemVerticalTop':
         this.verticalAlignment = this.VerticalAlignment.Top;
+        //this.dataTree.verticalAlignment = 'itemVerticalTop';
         break;
       case 'itemVerticalMiddle':
         this.verticalAlignment = this.VerticalAlignment.Middle;
+        //this.dataTree.verticalAlignment = 'itemVerticalMiddle';
         break;
       case 'itemVerticalBottom':
         this.verticalAlignment = this.VerticalAlignment.Bottom;
+        //this.dataTree.verticalAlignment = 'itemVerticalBottom';
         break;
 
       //Hạng mục căn ngang
       case 'horizontalAlignmentCenter':
         this.horizontalAlignment = this.HorizontalAlignmentType.Center;
+        //this.dataTree.horizontalAlignment = 'horizontalAlignmentCenter';
         break;
       case 'horizontalAlignmentleft':
         this.horizontalAlignment = this.HorizontalAlignmentType.Left;
+        //this.dataTree.horizontalAlignment = 'horizontalAlignmentleft';
         break;
       case 'horizontalAlignmentRight':
         this.horizontalAlignment = this.HorizontalAlignmentType.Right;
+        //this.dataTree.horizontalAlignment = 'horizontalAlignmentRight';
         break;
 
       case 'crossBranch':
         this.alignBranches = e.target.checked;
+        //this.dataTree.alignBranches = 'crossBranch';
         break;
 
       //Hạng mục lá con
       case 'leavesPlaceAuto':
         this.leavesPlacementType = this.LeavesPlacementType.Auto;
+        //this.dataTree.leavesPlacementType = 'leavesPlaceAuto';
         break;
       case 'leavesPlaceVertical':
         this.leavesPlacementType = this.LeavesPlacementType.Vertical;
+        //this.dataTree.leavesPlacementType = 'leavesPlaceVertical';
         break;
       case 'leavesPlaceHorizontal':
         this.leavesPlacementType = this.LeavesPlacementType.Horizontal;
+        //this.dataTree.leavesPlacementType = 'leavesPlaceHorizontal';
         break;
       case 'leavesPlaceMatrix':
         this.leavesPlacementType = this.LeavesPlacementType.Matrix;
+        //this.dataTree.leavesPlacementType = 'leavesPlaceMatrix';
         break;
 
       case 'placeAdviserAbove':
@@ -710,7 +736,7 @@ export class OrganizationOrgchartComponent implements OnInit {
         this.frameoutBottom = parseInt(e.target.value);
         break;
       default:
-      // code block
+        break;
     }
   }
 
@@ -718,18 +744,26 @@ export class OrganizationOrgchartComponent implements OnInit {
   //   this.scaleNumber = data;
   // }
 
-  // onMouseWheel(evt) {
-  //   if (evt.deltaY > 0) {
-  //     this.scaleNumber = this.scaleNumber - 0.1;
-  //   } else {
-  //     this.scaleNumber = this.scaleNumber + 0.1;
-  //   }
-  // }
+  onMouseWheel(evt) {
+    if (evt.ctrlKey) {
+      evt.preventDefault();
+      if (evt.deltaY > 0) {
+        if (this.scaleNumber > 0.3) {
+          this.scaleNumber = this.scaleNumber - 0.1;
+        }
+      } else {
+        if (this.scaleNumber < 1) {
+          this.scaleNumber = this.scaleNumber + 0.1;
+        }
+      }
+    }
+  }
 
   clearSetting() {
-    this.pagefit = this.PageFitMode.AutoSize;
-    this.orientationType = '';
-    this.childrenPlacementType = '';
+    this.pagefit = this.PageFitMode.FitToPage;
+    this.orientationType = this.OrientationType.Top;
+    this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
+
     this.verticalAlignment = '';
     this.horizontalAlignment = '';
     this.alignBranches = false;
@@ -744,7 +778,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.selectCheckBoxLabel = '';
     this.markerHeight = 1;
     this.minimizedItemOpacity = 1;
-
     this.hightlightBottom = 1;
     this.minimizedItemShapeType = '';
     this.minimizedItemLineType = '';
@@ -754,7 +787,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.dotLevelShift = 30;
     this.lineLevelShift = 1;
     this.normalItemsInterval = 1;
-
     this.dotItemsInterval = 30;
     this.lineItemsInterval = 30;
     this.cousinsIntervalMultiplier = 5;
@@ -762,7 +794,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.paddingIntervalTop = 1;
     this.paddingIntervalRight = 1;
     this.paddingIntervalBottom = 1;
-
     this.arrowsDirection = '';
     this.connectorType = '';
     this.elbowType = '';
@@ -773,7 +804,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.lineWidth = 1;
     this.labelOrientation = '';
     this.labelPlacement = '';
-
     this.labelFontSize = '';
     this.labelFontFamily = '';
     this.labelFontWeight = '';
@@ -787,6 +817,65 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.frameoutTop = 1;
     this.frameoutRight = 1;
     this.frameoutBottom = 1;
+
+    //Clear under database
+    this.dataTree.pagefit = 'pageFitModeFit';
+    this.dataTree.orientationType = 'orientationTop';
+    this.dataTree.childrenPlacementType = 'childrenPlacementHorizontal';
+
+    this.dataTree.verticalAlignment = '';
+    this.dataTree.horizontalAlignment = '';
+    this.dataTree.alignBranches = false;
+    this.dataTree.leavesPlacementType = '';
+    this.dataTree.placeAssitantAbove = false;
+    this.dataTree.maximumColumnsInMatrix = 1;
+    this.dataTree.minimalVisibility = '';
+    this.dataTree.minimumVisibleLevels = 1;
+    this.dataTree.selectionPathMode = '';
+    this.dataTree.hasButtons = '';
+    this.dataTree.hasSelectorCheckbox = 'selectionCheckboxFalse';
+    this.dataTree.selectCheckBoxLabel = '';
+    this.dataTree.markerHeight = 1;
+    this.dataTree.minimizedItemOpacity = 1;
+    this.dataTree.hightlightBottom = 1;
+    this.dataTree.minimizedItemShapeType = '';
+    this.dataTree.minimizedItemLineType = '';
+    this.dataTree.minimizedItemCornerRadius = 10;
+    this.dataTree.normalLevelShift = 50;
+    this.dataTree.minimizedItemLineWidth = 2;
+    this.dataTree.dotLevelShift = 30;
+    this.dataTree.lineLevelShift = 1;
+    this.dataTree.normalItemsInterval = 1;
+    this.dataTree.dotItemsInterval = 30;
+    this.dataTree.lineItemsInterval = 30;
+    this.dataTree.cousinsIntervalMultiplier = 5;
+    this.dataTree.paddingIntervalLeft = 1;
+    this.dataTree.paddingIntervalTop = 1;
+    this.dataTree.paddingIntervalRight = 1;
+    this.dataTree.paddingIntervalBottom = 1;
+    this.dataTree.arrowsDirection = '';
+    this.dataTree.connectorType = '';
+    this.dataTree.elbowType = '';
+    this.dataTree.bevelSize = 1;
+    this.dataTree.elbowDotSize = 1;
+    this.dataTree.linesType = '';
+    this.dataTree.linesColor = '#000';
+    this.dataTree.lineWidth = 1;
+    this.dataTree.labelOrientation = '';
+    this.dataTree.labelPlacement = '';
+    this.dataTree.labelFontSize = '';
+    this.dataTree.labelFontFamily = '';
+    this.dataTree.labelFontWeight = '';
+    this.dataTree.navigationMode = '';
+    this.dataTree.showFrame = false;
+    this.dataTree.frameLeft = 1;
+    this.dataTree.frameTop = 1;
+    this.dataTree.frameRight = 1;
+    this.dataTree.frameBottom = 1;
+    this.dataTree.frameoutLeft = 1;
+    this.dataTree.frameoutTop = 1;
+    this.dataTree.frameoutRight = 1;
+    this.dataTree.frameoutBottom = 1;
   }
 
   openSetting() {
@@ -802,7 +891,6 @@ export class OrganizationOrgchartComponent implements OnInit {
       },
       option
     );
-    this.dialogEditStatus.closed.subscribe();
   }
 
   CloseDialog(dialog: DialogRef) {
@@ -873,7 +961,40 @@ export class OrganizationOrgchartComponent implements OnInit {
     //this.dt.detectChanges();
   }
 
+  // getDataInit() {
+  //   this.hrService
+  //     .GetParameterByHRAsync('HRParameters', '1')
+  //     .subscribe((res: any) => {
+  //       this.dataTree = JSON.parse(res);
+  //       console.log(this.dataTree);
+
+  //       this.selectedTeam = this.dataTree.isGetManager;
+  //       console.log(this.selectedTeam);
+  //       for (const [key, value] of Object.entries(this.dataTree)) {
+  //         this.changeMode(value);
+  //       }
+  //     });
+
+  //   this.cacheService.valueList('L0605').subscribe((res) => {
+  //     if (res) {
+  //       this.dataVll = res.datas;
+  //     }
+  //   });
+  // }
   ngOnInit(): void {
+    this.hrService
+      .GetParameterByHRAsync('HRParameters', '1')
+      .subscribe((res: any) => {
+        this.dataTree = JSON.parse(res);
+
+        this.selectedTeam = this.dataTree.isGetManager;
+        this.isGetManager(this.selectedTeam);
+
+        for (const [key, value] of Object.entries(this.dataTree)) {
+          this.changeMode(value);
+        }
+      });
+
     this.cacheService.valueList('L0605').subscribe((res) => {
       if (res) {
         this.dataVll = res.datas;
@@ -881,9 +1002,9 @@ export class OrganizationOrgchartComponent implements OnInit {
     });
   }
 
-  //#region  Get manager depend combobox
+  //#region Get manager depend combobox
   isGetManager(value) {
-    if (value.includes('Không')) {
+    if (value.includes('No')) {
       this.getDataPositionByID(this.orgUnitID, false);
     } else {
       this.getDataPositionByID(this.orgUnitID, true);
@@ -904,11 +1025,15 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   //#endregion
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes.orgUnitID.currentValue != changes.orgUnitID.previousValue &&
+      !changes.orgUnitID.firstChange
+    ) {
       if (this.orgUnitID) {
         //Function get new orgchart
         this.isGetManager(this.selectedTeam);
+
         //this.dt.detectChanges();
         //Function get olg orgchart
         // this.dataService.setPredicates([], [this.orgUnitID], (res) => {
@@ -1091,7 +1216,9 @@ export class OrganizationOrgchartComponent implements OnInit {
     if (children.length > 0) {
       children.forEach((e) => {
         this.items = this.items.filter((x) => x.id !== e.id);
-        this.removeNode(String(e.id));
+        if (e.id) {
+          this.removeNode(String(e.id));
+        }
       });
     }
   }
@@ -1110,7 +1237,6 @@ export class OrganizationOrgchartComponent implements OnInit {
         });
         this.removeNode(node.id);
       }
-      //this.setDataOrg(this.data);
     } else {
       if (node.id) {
         let listPos = [];
@@ -1125,7 +1251,7 @@ export class OrganizationOrgchartComponent implements OnInit {
             'ERM.Business.HR',
             'OrganizationUnitsBusiness',
             'GetChildChartAsync',
-            [node.id, this.selectedTeam.includes('Không') ? false : true]
+            [node.id, this.selectedTeam.includes('No') ? false : true]
           )
           .subscribe((res: any) => {
             if (res) {
@@ -1156,7 +1282,6 @@ export class OrganizationOrgchartComponent implements OnInit {
                     },
                   })
                 );
-                // }
               });
             } else {
               result = this.items;
@@ -1165,5 +1290,20 @@ export class OrganizationOrgchartComponent implements OnInit {
           });
       }
     }
+  }
+
+  onSaveForm() {
+    if (this.selectedTeam.includes('No')) {
+      this.dataTree.isGetManager = 'No';
+    } else {
+      this.dataTree.isGetManager = 'Yes';
+    }
+    this.hrService
+      .SaveSettingValue('HRParameters', '1', this.dataTree)
+      .subscribe((res: any) => {
+        if (res) {
+          this.dialogEditStatus && this.dialogEditStatus.close();
+        }
+      });
   }
 }

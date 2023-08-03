@@ -794,53 +794,9 @@
       field="creater"
       labelName="lblCreater"
       [label]="gvs.Creater?.description"
-      [objectType]="createrObjectType"
-      [objectId]="creater"
+      [permissions]="createrPermissions"
       (change)="onShareInputChange($event)"
     ></lib-group-share>
-
-    <!-- <div class="form-group">
-      <div class="row align-items-center">
-        <div class="col-7 d-flex flex-column gap-1">
-          <codx-label
-            fiedName="creater"
-            [formModel]="form.formModel"
-          ></codx-label>
-          <codx-label
-            fiedName="lblCreater"
-            [formModel]="form.formModel"
-            [default]="gvs.Creater?.description"
-            class="text-gray-500 font-italic fw-normal"
-          ></codx-label>
-        </div>
-
-        <div class="col-4">
-          <lib-dropdown-detail
-            *ngIf="createrObjectType === 'U' || !createrObjectType"
-            [formModel]="form.formModel"
-            [objectId]="creater"
-            [objectType]="createrObjectType"
-          ></lib-dropdown-detail>
-        </div>
-
-        <div class="col-1">
-          <button
-            class="btn btn-icon btn-light-primary"
-            (click)="onClickOpenPermissionPopup()"
-          >
-            <i class="icon-connection-point icon-16"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="pb-2" *ngIf="createrObjectType && createrObjectType !== 'U'">
-        <lib-dropdown-detail
-          [formModel]="form.formModel"
-          [objectId]="creater"
-          [objectType]="createrObjectType"
-        ></lib-dropdown-detail>
-      </div>
-    </div> -->
 
     <div class="form-group row align-items-center">
       <div class="col-8 d-flex flex-column gap-1">
@@ -878,8 +834,7 @@
       field="approver"
       labelName="lblApprover"
       [label]="gvs.Approver?.description"
-      [objectType]="approverObjectType"
-      [objectId]="approver"
+      [permissions]="approverPermissions"
       (change)="onShareInputChange($event)"
     ></lib-group-share>
 
@@ -911,8 +866,7 @@
       field="poster"
       labelName="lblPoster"
       [label]="gvs.Poster?.description"
-      [objectType]="posterObjectType"
-      [objectId]="poster"
+      [permissions]="posterPermissions"
       (change)="onShareInputChange($event)"
     ></lib-group-share>
 
@@ -934,8 +888,7 @@
         field="unposter"
         labelName="lblUnposter"
         [label]="gvs.Unposter?.description"
-        [objectType]="unposterObjectType"
-        [objectId]="unposter"
+        [permissions]="unposterPermissions"
         (change)="onShareInputChange($event)"
       ></lib-group-share>
 
@@ -972,8 +925,7 @@
       field="sharer"
       labelName="lblSharer"
       [label]="gvs.Sharer?.description"
-      [objectType]="sharerObjectType"
-      [objectId]="sharer"
+      [permissions]="sharerPermissions"
       (change)="onShareInputChange($event)"
     ></lib-group-share>
   </ng-container>

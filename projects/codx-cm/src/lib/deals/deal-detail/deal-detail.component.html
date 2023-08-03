@@ -29,7 +29,10 @@
     </ng-template>
     <ng-template #header let-data>
       <div class="d-flex justify-content-between">
-        <div class="text-info d-flex align-items-center"   [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText">
+        <div
+          class="text-info d-flex align-items-center"
+          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+        >
           <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
           <span
             class="text-dark fs-6 fw-bold line-clamp-menu"
@@ -112,7 +115,8 @@
                         | async
                     "
                   ></span>
-                  <span *ngIf="dataSelected?.currencyID"
+                  <span
+                    *ngIf="dataSelected?.currencyID"
                     [ngClass]="
                       dataSelected?.currencyID ? '' : 'line-clamp-menu'
                     "
@@ -149,7 +153,11 @@
                   >%
                 </div>
                 <span
-                  [ngClass]="dataSelected?.expectedClosed? 'text-gray-600 ms-3':'text-gray-600 ms-3 line-clamp line-clamp-1'"
+                  [ngClass]="
+                    dataSelected?.expectedClosed
+                      ? 'text-gray-600 ms-3'
+                      : 'text-gray-600 ms-3 line-clamp line-clamp-1'
+                  "
                   #expectedClosed
                   [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
                   [innerHTML]="
@@ -355,16 +363,16 @@
                   <ng-template #tooltipConsultant>
                     <div class="d-flex justify-content-center fw-bold fs-6">
                       <span
-                      #consultantID
-                      [innerHTML]="
-                      dataSelected?.consultantID
-                          | formatvalue
-                            : formModel
-                            : 'consultantID'
-                            : consultantID
-                          | async
-                      "
-                    ></span>
+                        #consultantID
+                        [innerHTML]="
+                          dataSelected?.consultantID
+                            | formatvalue
+                              : formModel
+                              : 'consultantID'
+                              : consultantID
+                            | async
+                        "
+                      ></span>
                     </div>
                     <div class="d-flex justify-content-center">
                       {{ gridViewSetup["ConsultantID"]?.headerText }}
@@ -381,10 +389,13 @@
                       ></codx-label>
                     </div>
                     <div class="d-flex justify-content-end">
-                      <div style="position: relative"  [ngbTooltip]="tooltipSalesperson" *ngIf="dataSelected?.salespersonID">
+                      <div
+                        style="position: relative"
+                        [ngbTooltip]="tooltipSalesperson"
+                        *ngIf="dataSelected?.salespersonID"
+                      >
                         <codx-img
                           [width]="30"
-
                           [objectId]="dataSelected.salespersonID"
                           objectType="AD_Users"
                           [referType]="'avt'"
@@ -403,7 +414,11 @@
                           /></span>
                         </div>
                       </div>
-                      <div style="position: relative"  [ngbTooltip]="tooltipConsultant" *ngIf="dataSelected?.consultantID">
+                      <div
+                        style="position: relative"
+                        [ngbTooltip]="tooltipConsultant"
+                        *ngIf="dataSelected?.consultantID"
+                      >
                         <codx-imgs
                           [width]="30"
                           [objectId]="dataSelected?.consultantID"
@@ -424,14 +439,11 @@
                           /></span>
                         </div>
                       </div>
-
-
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -439,9 +451,8 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <div style="overflow: hidden;">
-    <ejs-tab
-    >
+  <div style="overflow: hidden">
+    <ejs-tab>
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -449,13 +460,12 @@
               <span class="icon-info icon-16 me-2"></span>
               <span>
                 <codx-label
-                class="fw-bold"
-                default="Thông tin chung"
-                [formModel]="formModel"
-                name="lblInformation"
-              ></codx-label>
+                  class="fw-bold"
+                  default="Thông tin chung"
+                  [formModel]="formModel"
+                  name="lblInformation"
+                ></codx-label>
               </span>
-
             </div>
           </ng-template>
           <ng-template #content>
@@ -467,7 +477,9 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label default="Mã cơ hội"></codx-label>:
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
@@ -477,7 +489,9 @@
                   </div>
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           fiedName="ChannelID"
                           class="me-2 label-colon"
@@ -507,7 +521,9 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           fiedName="Category"
                           class="me-2 label-colon"
@@ -523,7 +539,9 @@
                   </div>
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           fiedName="CampaignID"
                           class="me-2 label-colon"
@@ -553,7 +571,9 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           class="me-2 label-colon"
                           [setRequire]="false"
@@ -581,7 +601,9 @@
                   </div>
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           class="me-2 label-colon"
                           [setRequire]="false"
@@ -611,7 +633,9 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           class="me-2 label-colon"
                           [setRequire]="false"
@@ -627,7 +651,10 @@
                           *ngIf="dataSelected?.probability; else defaultNull"
                           [innerHTML]="
                             dataSelected?.probability
-                              | formatvalue : formModel : 'probability' : probability
+                              | formatvalue
+                                : formModel
+                                : 'probability'
+                                : probability
                               | async
                           "
                         ></span
@@ -637,7 +664,9 @@
                   </div>
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           class="me-2 label-colon"
                           [setRequire]="false"
@@ -667,7 +696,9 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="mb-1 d-flex align-items-top">
-                      <div class="w-150px min-w-150px text-gray-600 codx-textlabel">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
                         <codx-label
                           class="me-2 label-colon"
                           [setRequire]="false"
@@ -703,14 +734,41 @@
                 <span
                   #memo
                   [innerHTML]="
-                    dataSelected.memo | formatvalue : formModel : 'memo' : memo | async
+                    dataSelected.memo
+                      | formatvalue : formModel : 'memo' : memo
+                      | async
                   "
                 ></span>
+              </div>
+              <div *ngIf="dataSelected?.steps?.isHaveField">
+                <div class="mt-5">
+                  <codx-label
+                    class="fw-bold text-primary"
+                    default="Trường tùy chỉnh"
+                    [formModel]="formModel"
+                    name="lblField"
+                  ></codx-label>
+                </div>
+                <div class="d-flex flex-column">
+                  <ng-container *ngFor="let item of listSteps">
+                    <codx-fields-detail-temp
+                      *ngIf="item?.fields?.length > 0"
+                      [dataStep]="item"
+                      [showColumnControl]="showColumnControl(item.stepID)"
+                      [isUpdate]="
+                        ['1', '2'].includes(dataSelected.status) &&
+                        dataSelected?.roles?.isOnwer
+                      "
+                      (saveDataStep)="saveDataStep($event)"
+                    >
+                    </codx-fields-detail-temp>
+                  </ng-container>
+                </div>
               </div>
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem *ngIf="dataSelected?.steps?.isHaveField">
+        <!-- <e-tabitem *ngIf="dataSelected?.steps?.isHaveField">
         <ng-template #headerText>
           <div class="d-flex align-items-top">
             <span class="icon-add_to_photos icon-16 me-1"></span>
@@ -736,7 +794,7 @@
             </ng-container>
           </div>
         </ng-template>
-        </e-tabitem>
+        </e-tabitem> -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
@@ -784,18 +842,18 @@
           </ng-template>
           <ng-template #content>
             <div class="mt-4">
-            <codx-tab-dealcompetitors
-                  [dealID]="dataSelected.recID"
-                  [hidenMF]="
-                    !dataSelected?.roles?.isOnwer ||
-                    dataSelected.closed ||
-                    ['1', '0', '3', '5'].includes(dataSelected.status)
-                  "
-                ></codx-tab-dealcompetitors>
-              </div>
+              <codx-tab-dealcompetitors
+                [dealID]="dataSelected.recID"
+                [hidenMF]="
+                  !dataSelected?.roles?.isOnwer ||
+                  dataSelected.closed ||
+                  ['1', '0', '3', '5'].includes(dataSelected.status)
+                "
+              ></codx-tab-dealcompetitors>
+            </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem >
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -809,11 +867,19 @@
           </ng-template>
           <ng-template #content let-data="value">
             <div class="mt-4">
-              <step-task [typeTask]="2" [customerID]="dataSelected?.recID" [isPause]="['0', '1','3','5'].includes(dataSelected.status) || !dataSelected?.roles?.isOnwer || dataSelected.closed"></step-task>
+              <step-task
+                [typeTask]="2"
+                [customerID]="dataSelected?.recID"
+                [isPause]="
+                  ['0', '1', '3', '5'].includes(dataSelected.status) ||
+                  !dataSelected?.roles?.isOnwer ||
+                  dataSelected.closed
+                "
+              ></step-task>
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem >
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -828,31 +894,15 @@
           <ng-template #content let-data="value">
             <div *ngIf="listSteps?.length > 0 && listSteps">
               <step-task
-              [isDataLoading]="isDataLoading"
-              [dataSelected]="dataSelected"
-              [listInstanceStep]="listSteps"
-              [applyFor]="'1'"
-              (continueStep)="continueStep($event)"
-              (saveAssignTask)="saveAssignTask($event)"
-              (changeProgress)="autoStart($event)"
-            ></step-task>
+                [isDataLoading]="isDataLoading"
+                [dataSelected]="dataSelected"
+                [listInstanceStep]="listSteps"
+                [applyFor]="'1'"
+                (continueStep)="continueStep($event)"
+                (saveAssignTask)="saveAssignTask($event)"
+                (changeProgress)="autoStart($event)"
+              ></step-task>
             </div>
-          </ng-template>
-        </e-tabitem>
-        <e-tabitem >
-          <ng-template #headerText>
-            <div class="d-flex align-items-top">
-              <span class="icon-i-chat-right icon-16 me-2"></span>
-              <codx-label
-                class="fw-bold"
-                default="Thảo luận"
-                [formModel]="formModel"
-                name="lblComment"
-              ></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content let-data >
-
           </ng-template>
         </e-tabitem>
       </e-tabitems>

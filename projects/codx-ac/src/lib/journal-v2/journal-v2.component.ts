@@ -29,6 +29,7 @@ import { Router } from '@angular/router';
 import { JournalService } from '../journals/journals.service';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
+import { IJournal } from '../journals/interfaces/IJournal.interface';
 
 @Component({
   selector: 'lib-test-journal',
@@ -50,7 +51,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   posters: { journalNo: string; value: string }[];
   ViewType = ViewType;
   statusFilter: any = 1;
-  status:string;
+  status: string;
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -134,12 +135,11 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
-        
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
-        this.vll86 = res.datas; 
+        this.vll86 = res.datas;
         this.status = res.datas[0].value;
       }
     });
@@ -321,12 +321,12 @@ export class JournalV2Component extends UIComponent implements OnInit {
       });
   }
 
-  edit(e, data): void {
+  edit(e, data: IJournal): void {
     console.log('edit', { data });
 
     let tempData = { ...data };
-    if (data.dataValue) {
-      tempData = { ...data, ...JSON.parse(data.dataValue) };
+    if (data.extras) {
+      tempData = { ...data, ...JSON.parse(data.extras) };
     }
 
     this.view.dataService.dataSelected = tempData;
@@ -352,12 +352,12 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
   }
 
-  copy(e, data): void {
+  copy(e, data: IJournal): void {
     console.log('copy', data);
 
     let tempData = { ...data };
-    if (data.dataValue) {
-      tempData = { ...data, ...JSON.parse(data.dataValue) };
+    if (data.extras) {
+      tempData = { ...data, ...JSON.parse(data.extras) };
     }
 
     this.view.dataService.dataSelected = tempData;
@@ -392,16 +392,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         if (res) {
           this.journalService.deleteAutoNumber(data.autoNumber);
           this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-          this.api
-            .exec(
-              'AC',
-              'JournalsPermissionBusiness',
-              'DeleteByJournalNoAsync',
-              data.journalNo
-            )
-            .subscribe((res) => {
-              console.log('DeleteByJournalNoAsync', res);
-            });
         }
       });
     });

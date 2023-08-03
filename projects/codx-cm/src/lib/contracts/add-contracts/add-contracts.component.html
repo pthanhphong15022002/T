@@ -159,22 +159,24 @@
           </div>
         </div>
       </div>
-      <div class="row form-group">
+      <div class="row form-group" *ngIf="contracts?.applyProcess">
         <div class="col-12">
-          <div class="mt-2 d-flex align-items-center">
-            <codx-input
-              field="applyProcess"
-              [formModel]="dialog.formModel"
-              (valueChange)="valueChangeText($event)"
-              [crrValue]="contracts?.applyProcess"
-            >
-            </codx-input>
+          <div>
             <codx-label
               [formModel]="dialog.formModel"
-              fiedName="ApplyProcess"
-              class="ps-2 pt-1"
+              fiedName="processID"
+              default="Quy trình áp dụng"
             >
             </codx-label>
+          </div>
+          <div class>
+            <codx-input
+              [formModel]="dialog.formModel"
+              field="processID"
+              [crrValue]="contracts?.processID"
+              (valueChange)="cbxProcessChange($event)"
+            >
+            </codx-input>
           </div>
         </div>
       </div>
@@ -201,6 +203,39 @@
             >
             </codx-input>
           </div>
+        </div>
+
+        <div class="col-6">
+          <div>
+            <codx-label
+              [formModel]="dialog.formModel"
+              fiedName=""
+              default="Người phụ trách"
+            >
+            </codx-label>
+          </div>
+
+          <div *ngIf="!contracts?.applyProcess; else ownerProcess">
+            <codx-input
+              field="owner"
+              [formModel]="dialog.formModel"
+              (valueChange)="valueChangeCombobox($event)"
+              [crrValue]="contracts?.owner"
+            >
+            </codx-input>
+          </div>
+
+          <ng-template #ownerProcess>     
+            <div>
+              <ejs-combobox
+                [dataSource]="listParticipants"
+                (valueChange)="valueChangeOwner($event)"
+                [fields]="fieldCbxParticipants"
+                [allowFiltering]="true"
+                [value]="contracts?.owner"
+              ></ejs-combobox>
+            </div>
+          </ng-template> 
         </div>
       </div>
 
@@ -286,46 +321,6 @@
               (valueChange)="changeValueDate($event)"
             >
             </codx-input>
-          </div>
-        </div>
-      </div>
-      <div class="row form-group" *ngIf="contracts?.applyProcess">
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName="processID"
-              default="Quy trình áp dụng"
-            >
-            </codx-label>
-          </div>
-          <div class>
-            <codx-input
-              [formModel]="dialog.formModel"
-              field="processID"
-              [crrValue]="contracts?.processID"
-              (valueChange)="cbxProcessChange($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-6">
-          <div>
-            <codx-label
-              [formModel]="dialog.formModel"
-              fiedName=""
-              default="Người phụ trách"
-            >
-            </codx-label>
-          </div>
-          <div class>
-            <ejs-combobox
-              [dataSource]="listParticipants"
-              (valueChange)="valueChangeOwner($event)"
-              [fields]="fieldCbxParticipants"
-              [allowFiltering]="true"
-              [value]="contracts?.owner"
-            ></ejs-combobox>
           </div>
         </div>
       </div>
@@ -1296,7 +1291,7 @@
             [objectId]="item.recID"
             [objectType]="'DP_Instances_Steps_Fields'"
             [formModel]="dialog.formModel"
-            (valueChangeCustom)="valueChangeCustom($event)"
+            (valueChangeCustom)="changeFields($event)"
           >
           </codx-input-custom-field>
       </div>

@@ -64,7 +64,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     countEmp: 0,
     employees: any[]
   };
-  haveHighLight: boolean = false;
+  haveHighLight: boolean = true;
 
   constructor(
     private api: ApiHttpService,
@@ -187,7 +187,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     this.currentViewPosEmp = { countEmp: 0, employees: [] }
     if (changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
-      this.haveHighLight = false;
+      this.haveHighLight = true;
       this.positionID = changes.positionID.currentValue;
       this.firstLoadDiagram = true;
       this.getDataPositionByID(this.positionID);

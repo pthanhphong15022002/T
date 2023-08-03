@@ -15,6 +15,8 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   @Input() print: boolean = false;
   @Input() param: string = "";
   @Input() labels: string = "";
+  @Input() service: string = "";
+
   private _preArray:any;
   private _user:any;
   urlSafe: any;
@@ -29,7 +31,9 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   }
   ngOnInit(): void {
     this._preArray = this.predicates.split('&&').join(';');
-    this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+    // this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+    
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
   }
@@ -38,24 +42,32 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["param"] &&changes["param"].currentValue){
-      this.src = `${environment.reportUrl}?reportID=${this.funcID}&_param=${changes["param"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      //this.src = `${environment.reportUrl}?reportID=${this.funcID}&_param=${changes["param"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${changes["param"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      
       if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
       this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     }
     else{
       this._preArray = this.predicates.split('&&').join(';');
-      this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+      //this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+      this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+      
       if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
       this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
       }
     if(changes["labels"] &&changes["labels"].currentValue){
-      this.src = `${environment.reportUrl}?reportID=${this.funcID}&_param=${changes["param"].currentValue}&_labels=${changes["labels"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      //this.src = `${environment.reportUrl}?reportID=${this.funcID}&_param=${changes["param"].currentValue}&_labels=${changes["labels"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${changes["param"].currentValue}&_labels=${changes["labels"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      
       if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
       this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     }
     else{
     this._preArray = this.predicates.split('&&').join(';');
-    this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&_param=${this.param}&locale=vi&lvtk=${this._user.token}`;
+    //this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&_param=${this.param}&locale=vi&lvtk=${this._user.token}`;
+    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&_param=${this.param}&locale=vi&lvtk=${this._user.token}`;
+    
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     }

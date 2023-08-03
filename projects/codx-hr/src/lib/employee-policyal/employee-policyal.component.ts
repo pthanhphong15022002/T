@@ -121,6 +121,25 @@ export class EmployeePolicyalComponent extends UIComponent{
         );
   }
 
+  DeletePolicyBeneficiaries(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBeneficiariesBusiness',
+      'DeletePolicyBeneficiariesAsync',
+      policyID
+    );
+  }
+
+  DeletePolicyDetailByPolicyID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'DeletePolicyDetailByPolicyIDAsync',
+      data
+    );
+  }
 
 
   clickMF(event, data){
@@ -131,7 +150,14 @@ export class EmployeePolicyalComponent extends UIComponent{
 
       case 'SYS02': //delete
       this.view.dataService.delete([data]).subscribe((res)=>{
+        debugger
         this.deleteFile(data).subscribe((res) => {
+          debugger
+        })
+        this.DeletePolicyBeneficiaries(data.policyID).subscribe((res) => {
+          debugger
+        })
+        this.DeletePolicyDetailByPolicyID(data.policyID).subscribe((res) => {
           debugger
         })
       });
@@ -169,6 +195,7 @@ export class EmployeePolicyalComponent extends UIComponent{
       option
     );
     dialg.closed.subscribe((res) => {
+      debugger
       if (res.event) {
         if (actionType == this.ActionAdd) {
           this.view.dataService.add(res.event, 0).subscribe();

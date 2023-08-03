@@ -103,6 +103,7 @@ export class PopupPolicyalComponent
   lstSelectedObj: any = [];
   lstSelectedExcludeObj: any = [];
 
+  autoNumField: any;
 
   dataSourceGridView1 : any = [];
   dataSourceGridView2 : any = [];
@@ -129,11 +130,14 @@ export class PopupPolicyalComponent
   actionType: string;
   idField = 'PolicyID';
   isAfterRender = false;
-  autoNumField: string;
   headerText: string;
   alpolicyObj: any;
   grvSetup
   grvSetupPolicyDetail
+
+
+  originPolicyId : any;
+  policyIdEdited = false;
 
   cbxName:any;
   isHidden=true;
@@ -199,6 +203,9 @@ export class PopupPolicyalComponent
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    if(this.alpolicyObj && this.actionType == 'edit'){
+      this.originPolicyId = this.alpolicyObj.policyID;
+    }
   }
 
   openFormUploadFile() {
@@ -349,10 +356,14 @@ export class PopupPolicyalComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            if(res.key){
+              this.autoNumField = res.key;
+            }
             console.log('res ssss', res);
             res.data.status = '1'
-            if (res.activeOn == '0001-01-01T00:00:00') {
-              res.activeOn = null;
+            debugger
+            if (res.data.activeOn == '0001-01-01T00:00:00') {
+              res.data.activeOn = null;
             }
             this.alpolicyObj = res?.data;
             debugger
@@ -710,7 +721,9 @@ export class PopupPolicyalComponent
   }
 
   onInputPolicyID(evt){
-
+    if(this.actionType == 'edit'){
+      this.policyIdEdited = true;
+    }
   }
 
   onClickExpandIsMonth(){
@@ -749,6 +762,7 @@ export class PopupPolicyalComponent
                   debugger
                 })
               }
+            this.dialog && this.dialog.close(this.alpolicyObj);
           }
           else{
             this.notify.notifyCode('SYS023');
@@ -1349,6 +1363,31 @@ export class PopupPolicyalComponent
 
   changeTab(event){
     this.currentTab = event.nextId;
+  }
+
+  replace2ObjPriority(arr, obj1, obj2){
+    let priorTemp = obj1.priority 
+    obj1.priority = obj2.priority 
+    obj2.priority = priorTemp
+  }
+
+  onClickDeleteObject(data){
+    debugger
+    if(this.currentTab == 'applyObj'){
+      let index = this.lstPolicyBeneficiariesApply.indexOf(data);
+      if(index != -1){
+        this.lstPolicyBeneficiariesApply.splice(index, 1);
+        this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
+      }
+    }
+    else if(this.currentTab == 'subtractObj'){
+      let index = this.lstPolicyBeneficiariesExclude.indexOf(data);
+      if(index != -1){
+        this.lstPolicyBeneficiariesExclude.splice(index, 1);
+        this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
+      }
+    }
+    this.df.detectChanges();
   }
 
   onClickHideComboboxPopup(event){

@@ -599,6 +599,7 @@ export class CM_Cases {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  applyProcess:boolean;
 }
 
 export class CM_Partners {
@@ -763,6 +764,7 @@ export class CM_Targets {
   owner: string;
   buid: string;
   createdOn: Date = new Date();
+  exchangeRate: number;
   createdBy: string;
   modifiedOn: Date;
   ModifiedBy: string;
