@@ -351,7 +351,7 @@ export class OkrTargetsComponent implements OnInit {
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.OBDetail:
-        this.showOB(ob, e?.text);
+        this.viewOB(ob, e?.text);
         break;
       case OMCONST.MFUNCID.Edit: {
         if(this.adminRole || this.fullRoleCheck(ob) ){
@@ -425,18 +425,10 @@ export class OkrTargetsComponent implements OnInit {
           this.notificationsService.notifyCode('SYS032');
           return;
         }
-        //this.viewKR(kr, popupTitle, isSKR);
         break;
       }
       case OMCONST.MFUNCID.Copy: {
-        
-        if(true){
-          this.copyKR(kr, popupTitle, isSKR);
-        }
-        else{
-          this.notificationsService.notifyCode('SYS032');
-          return;
-        }
+        this.copyKR(kr, popupTitle, isSKR);
         break;
       }
       case OMCONST.MFUNCID.Delete: {
@@ -452,7 +444,7 @@ export class OkrTargetsComponent implements OnInit {
 
       case OMCONST.MFUNCID.SKRDetail:
       case OMCONST.MFUNCID.KRDetail: {
-        this.showKR(kr, e?.text);
+        this.viewKR(kr, e?.text);
         break;
       }
       case OMCONST.MFUNCID.KRCheckIn:
@@ -542,9 +534,10 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == 'SYS003' ||
           func.functionID == 'SYS004' ||
           func.functionID == 'SYS007' ||
-          func.functionID == 'SYS002' ||
-          func.functionID == OMCONST.MFUNCID.KRDetail ||
-          func.functionID == OMCONST.MFUNCID.SKRDetail
+          func.functionID == 'SYS002' 
+          // ||
+          // func.functionID == OMCONST.MFUNCID.KRDetail ||
+          // func.functionID == OMCONST.MFUNCID.SKRDetail
         ) {
           func.disabled = true;
         }
@@ -638,8 +631,8 @@ export class OkrTargetsComponent implements OnInit {
           func.functionID == 'SYS007' ||
           func.functionID == 'SYS002' ||
           func.functionID == 'OMT105' ||
-          func.functionID == OMCONST.MFUNCID.OBDetail ||
           func.functionID == OMCONST.MFUNCID.OBDistribute
+          //func.functionID == OMCONST.MFUNCID.OBDetail 
         ) {
           func.disabled = true;
         }
@@ -1222,6 +1215,24 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
   }
+  viewOB(ob: any, popupTitle: any, isSubKR = false) {
+    let option = new SidebarModel();
+    option.FormModel = this.okrFM?.obFM;
+
+    let dialogEditOB = this.callfunc.openSide(
+      PopupAddOBComponent,
+      [
+        this.krFuncID,
+        OMCONST.MFUNCID.View,
+        popupTitle,
+        ob,
+        this.dataOKRPlans,
+        this.groupModel,
+      ],
+      option
+    );
+    
+  }
   deleteOB(ob: any) {
     if (true) {
       this.notificationsService.alertCode('SYS030').subscribe((x) => {
@@ -1301,7 +1312,7 @@ export class OkrTargetsComponent implements OnInit {
     let option = new SidebarModel();
     option.FormModel = isSubKR ? this.okrFM?.skrFM : this.okrFM?.krFM;
 
-    let dialogEditKR = this.callfunc.openSide(
+    let dialogviewKR = this.callfunc.openSide(
       PopupAddKRComponent,
       [
         this.krFuncID,
@@ -1316,6 +1327,7 @@ export class OkrTargetsComponent implements OnInit {
     );
     
   }
+  
 
   copyKR(kr: any, popupTitle: any, isSubKR = false) {
     let option = new SidebarModel();
@@ -1399,6 +1411,22 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
+  viewModeKR(kr: any, popupTitle: any) {
+    let dModel = new DialogModel();
+    popupTitle = popupTitle != null ? popupTitle : 'Xem chi tiết';
+    dModel.IsFull = true;
+    dModel.FormModel = this.okrFM?.krFM;
+    let dialogShowKR = this.callfunc.openForm(
+      PopupShowKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr, popupTitle, this.okrFM, this.okrVll, this.okrGrv],
+      '',
+      dModel
+    );
+  }
   distributeOKR(okr: any, title: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
@@ -1454,11 +1482,8 @@ export class OkrTargetsComponent implements OnInit {
   showOKRLink(evt:any,data:any) {
     evt.stopPropagation();
     evt.preventDefault();
-    let height =400;
-    if(data?.hasAssign==null){
-      return;
-    }
-    if(data?.hasAssign?.toString()?.includes('AS')){
+    let height =400;    
+    if(data?.hasAssign?.toString()?.includes('AS') || data?.hasAssign==null){
       height=200;
     }
     if (data != null) {
@@ -1530,5 +1555,20 @@ export class OkrTargetsComponent implements OnInit {
       );
     }
   }
-  
+  showKRTargets(evt: any, data: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    if (data != null) {
+      let popUpHeight = data?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
+      let dialogShowTask = this.callfunc.openForm(
+        PopupChangeTargetComponent,
+        '',
+        650,
+        popUpHeight,
+        null,
+        [data, 'Kế hoạch chỉ tiêu', true],
+      );
+    }
+  }
 }

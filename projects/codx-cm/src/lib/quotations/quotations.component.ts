@@ -93,11 +93,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   isNewVersion = false;
   popupView: DialogRef;
   viewType: any;
-  paramDefault: any;
   currencyIDDefault = 'VND';
   exchangeRateDefault = 1;
   applyApprover = '0';
-  t: any;
 
   constructor(
     private inject: Injector,
@@ -175,15 +173,15 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     //tien te
     this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
       if (dataParam1) {
-        this.paramDefault = JSON.parse(dataParam1.dataValue);
-        this.currencyIDDefault = this.paramDefault['DefaultCurrency'] ?? 'VND';
+        let paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
         this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
         if (this.currencyIDDefault != 'VND') {
           let day = new Date();
           this.codxCmService
             .getExchangeRate(this.currencyIDDefault, day)
             .subscribe((res) => {
-              if (res && res != 0) this.exchangeRateDefault = res;
+              if (res) this.exchangeRateDefault = res?.exchRate;
               else {
                 this.currencyIDDefault = 'VND';
                 this.exchangeRateDefault = 1;
