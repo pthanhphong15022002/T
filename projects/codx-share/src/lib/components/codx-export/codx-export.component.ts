@@ -110,6 +110,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
     this.dataSource = dt.data?.[2];
+    this.refID = dt.data?.[3];
+    this.refType = dt.data?.[4];
   }
   ngOnInit(): void {
     //Tạo formGroup
