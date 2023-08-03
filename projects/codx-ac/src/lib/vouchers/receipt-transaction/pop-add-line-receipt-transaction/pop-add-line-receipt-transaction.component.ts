@@ -185,6 +185,7 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
       switch (this.type) {
         case 'copy':
         case 'add':
+          this.updateFixedDims(this.vouchersLine);
           this.api
             .execAction<any>(
               this.fmVouchersLines.entityName,
@@ -198,6 +199,7 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
             });
           break;
         case 'edit':
+          this.updateFixedDims(this.vouchersLine);
           this.api
             .execAction<any>(
               this.fmVouchersLines.entityName,
@@ -220,6 +222,7 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
       this.validate = 0;
       return;
     } else {
+      this.updateFixedDims(this.vouchersLine);
       this.api
         .execAction<any>(
           this.fmVouchersLines.entityName,
@@ -326,6 +329,16 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
               this.form.formGroup.patchValue(this.vouchersLine);
             }
           });
+  }
+
+  updateFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
   }
   //endregion Function
 }

@@ -68,7 +68,6 @@ export class PurchaseinvoicesComponent
   lines: IPurchaseInvoiceLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
   funcName: any;
-  parentID: string;
   journalNo: string;
   fmPurchaseInvoicesLines: FormModel;
   tabItem: any = [
@@ -81,7 +80,6 @@ export class PurchaseinvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  parent: any;
   columns: TableColumn[];
   fmAcctTrans: FormModel = {
     entityName: 'AC_AcctTrans',
@@ -90,7 +88,6 @@ export class PurchaseinvoicesComponent
     entityPer: 'AC_AcctTrans',
   };
   gvsAcctTrans: any;
-  parentFunc: any;
   journal: IJournal;
 
   constructor(
@@ -103,9 +100,6 @@ export class PurchaseinvoicesComponent
 
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.parentFunc = params.parent;
-      }
     });
 
     this.fmPurchaseInvoicesLines =
@@ -202,10 +196,6 @@ export class PurchaseinvoicesComponent
         },
       },
     ];
-
-    this.cache.functionList(this.parentFunc).subscribe((res) => {
-      if (res) this.view.setRootNode(res.customName);
-    });
   }
 
   ngAfterViewChecked(): void {
@@ -213,9 +203,7 @@ export class PurchaseinvoicesComponent
     this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
-  ngOnDestroy() {
-    this.view.setRootNode('');
-  }
+  ngOnDestroy() {}
   //#endregion
 
   //#region Event

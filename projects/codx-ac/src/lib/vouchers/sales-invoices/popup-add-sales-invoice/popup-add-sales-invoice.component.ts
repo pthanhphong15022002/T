@@ -20,7 +20,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
@@ -233,9 +233,7 @@ export class PopupAddSalesInvoiceComponent
     }
   }
 
-  onCreate(e): void {
-    console.log(this.grid);
-
+  onGridInit(columns: any[]): void {
     if (this.journal.addNewMode === '2') {
       return;
     }
@@ -245,33 +243,33 @@ export class PopupAddSalesInvoiceComponent
       ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
       ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
     ];
-    for (const c of this.grid.columnsGrid) {
+    for (const c of columns) {
       if (toggleFields.includes(c.fieldName)) {
         c.isVisible = true;
-        this.grid.visibleColumns.push(c);
       }
-    }
-    this.grid.hideColumns(this.hiddenFields);
 
-    for (const v of this.grid.visibleColumns) {
-      if (v.fieldName === 'DIM1') {
+      if (this.hiddenFields.includes(c.fieldName)) {
+        c.isVisible = false;
+      }
+
+      if (c.fieldName === 'DIM1') {
         if (['1', '2'].includes(this.journal.diM1Control)) {
-          v.predicate = '@0.Contains(DepartmentID)';
-          v.dataValue = `[${this.journal.diM1}]`;
+          c.predicate = '@0.Contains(DepartmentID)';
+          c.dataValue = `[${this.journal.diM1}]`;
         }
       }
 
-      if (v.fieldName === 'DIM2') {
+      if (c.fieldName === 'DIM2') {
         if (['1', '2'].includes(this.journal.diM2Control)) {
-          v.predicate = '@0.Contains(CostCenterID)';
-          v.dataValue = `[${this.journal.diM2}]`;
+          c.predicate = '@0.Contains(CostCenterID)';
+          c.dataValue = `[${this.journal.diM2}]`;
         }
       }
 
-      if (v.fieldName === 'DIM3') {
+      if (c.fieldName === 'DIM3') {
         if (['1', '2'].includes(this.journal.diM3Control)) {
-          v.predicate = '@0.Contains(CostItemID)';
-          v.dataValue = `[${this.journal.diM3}]`;
+          c.predicate = '@0.Contains(CostItemID)';
+          c.dataValue = `[${this.journal.diM3}]`;
         }
       }
     }
@@ -282,14 +280,6 @@ export class PopupAddSalesInvoiceComponent
 
     if (!e.data[e.field]) {
       return;
-    }
-
-    if (e.field === 'itemID') {
-      this.setPredicatesByItemID(e.data.itemID);
-    }
-
-    if (e.field.toLowerCase() === 'idim4') {
-      this.setPredicateByIDIM4(e.data[e.field]);
     }
 
     const postFields: string[] = [
@@ -393,38 +383,14 @@ export class PopupAddSalesInvoiceComponent
   onActionEvent(e): void {
     console.log('onActionEvent', e);
 
-    if (e.type === 'beginEdit') {
-      // reset predicates
-      for (const v of this.grid.visibleColumns) {
-        if (
-          [
-            'idim0',
-            'idim1',
-            'idim2',
-            'idim3',
-            'idim6',
-            'idim7',
-            'idim5',
-          ].includes(v.fieldName?.toLowerCase())
-        ) {
-          v.predicate = '';
-          v.dataValue = '';
-        }
-      }
-
-      if (e.data.itemID) {
-        this.setPredicatesByItemID(e.data.itemID);
-      }
-
-      if (e.data.idiM4) {
-        this.setPredicateByIDIM4(e.data.idiM4);
-      }
-    }
-
     // add a new row after pressing tab on the last column
-    // if (e.type === "add") {
-    //   this.onClickAddRow();
-    // }
+    if (e.type === 'add' && this.grid.autoAddRow) {
+      this.detailService
+        .addNew(() => this.getDefaultLine())
+        .subscribe((res: ISalesInvoicesLine) => {
+          this.grid.addRow(res, this.lines.length);
+        });
+    }
   }
 
   onChangeMF(e): void {
@@ -530,11 +496,7 @@ export class PopupAddSalesInvoiceComponent
     }
 
     this.detailService
-      .addNew(() =>
-        this.api.exec('AC', 'SalesInvoicesLinesBusiness', 'GetDefaultAsync', [
-          this.master,
-        ])
-      )
+      .addNew(() => this.getDefaultLine())
       .subscribe((res: ISalesInvoicesLine) => {
         console.log(res);
 
@@ -631,27 +593,13 @@ export class PopupAddSalesInvoiceComponent
   //#endregion
 
   //#region Function
-  setPredicatesByItemID(dataValue: string): void {
-    for (const v of this.grid.visibleColumns) {
-      if (
-        ['idim0', 'idim1', 'idim2', 'idim3', 'idim6', 'idim7'].includes(
-          v.fieldName?.toLowerCase()
-        )
-      ) {
-        v.predicate = 'ItemID=@0';
-        v.dataValue = dataValue;
-      }
-    }
-  }
-
-  setPredicateByIDIM4(dataValue: string): void {
-    const idim5 = this.grid.visibleColumns.find(
-      (v) => v.fieldName?.toLowerCase() === 'idim5'
+  getDefaultLine(): Observable<any> {
+    return this.api.exec(
+      'AC',
+      'SalesInvoicesLinesBusiness',
+      'GetDefaultAsync',
+      [this.master]
     );
-    if (idim5) {
-      idim5.predicate = 'WarehouseID=@0';
-      idim5.dataValue = dataValue;
-    }
   }
 
   genFixedDims(line: ISalesInvoicesLine): string {
