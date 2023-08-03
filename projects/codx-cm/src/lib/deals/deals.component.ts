@@ -202,7 +202,7 @@ export class DealsComponent
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res?.exchRate;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
