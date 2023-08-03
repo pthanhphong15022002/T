@@ -1,6 +1,7 @@
 <ng-container *ngIf="dataSelected?.recID">
   <codx-detail-tmp
     class="leads-detail"
+    style="height: 100%"
     [header]="header"
     [formModel]="formModel"
     [body]="body"
@@ -450,6 +451,21 @@
         </div>
       </div>
     </ng-template>
+    <ng-template #tabs let-data>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelected.recID"
+        [funcID]="formModel.funcID"
+        [refType]="formModel.entityName"
+        [refID]="dataSelected.recID"
+        [customerID]="dataSelected.customerID"
+        [salespersonID]="dataSelected.salespersonID"
+        [consultantID]="dataSelected.consultantID"
+        (tabChange)="changeFooter($event)"
+      ></codx-tabs>
+    </ng-template>
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
@@ -814,23 +830,7 @@
     </ejs-tab>
   </div>
 </ng-template>
-<ng-template #tabs let-data>
-  <codx-tabs
-    [entityName]="formModel.entityName"
-    [formModel]="formModel"
-    [TabControl]="tabControl"
-    [objectID]="dataSelected.recID"
-    [funcID]="formModel.funcID"
-    [dataTree]="treeTask"
-    [funcIDQuotations]="'CM0202'"
-    [refType]="formModel.entityName"
-    [refID]="dataSelected.recID"
-    [customerID]="dataSelected.customerID"
-    [salespersonID]="dataSelected.salespersonID"
-    [consultantID]="dataSelected.consultantID"
-    (tabChange)="changeFooter($event)"
-  ></codx-tabs>
-</ng-template>
+
 <ng-template #referencesDeal>
   <div
     *ngIf="tmpDeal; else noData"
