@@ -953,7 +953,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
-      
+
       //Gửi duyệt
       case 'ODT201':
       case 'ODT3001':
@@ -1021,14 +1021,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                 this.cancelAproval(item);
                                 //this.callfunc.openForm();
                               } else if (res2?.eSign == false) {
-                                this.shareService.codxCancel(
-                                  'OD',
-                                  item?.recID, 
-                                  this.formModel.entityName,
-                                  null,
-                                  null,
-                                )
-                                .subscribe((res3) => {
+                                this.shareService
+                                  .codxCancel(
+                                    'OD',
+                                    item?.recID,
+                                    this.formModel.entityName,
+                                    null,
+                                    null
+                                  )
+                                  .subscribe((res3) => {
                                     if (res3) {
                                       this.data.status = '3';
                                       this.data.approveStatus = '1';
@@ -1418,7 +1419,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   getJSONString(data) {
     return JSON.stringify(data);
   }
-  getSubTitle(relationType: any, agencyName: any, shareBy: any , agencies = null) {
+  getSubTitle(
+    relationType: any,
+    agencyName: any,
+    shareBy: any,
+    agencies = null
+  ) {
     if (
       relationType == '1' ||
       (this.formModel.funcID == 'ODT41' && relationType == '2')
@@ -1427,21 +1433,18 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         var text = this.ms020?.customName;
         if (!text) text = '';
 
-       
         return Util.stringFormat(
           text,
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
-      }
-      else
-      {
+      } else {
         var name = agencyName;
 
-        if(agencies && agencies.length > 0) name = agencies.map(u=>u.agencyName).join(" , ");
+        if (agencies && agencies.length > 0)
+          name = agencies.map((u) => u.agencyName).join(' , ');
         return 'Gửi đến ' + name;
       }
-     
     }
 
     return Util.stringFormat(
@@ -1689,10 +1692,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         processID
       )
       .subscribe((res2: any) => {
+        let category = res2;
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true) {
+        if (res2?.eSign == true && false) {
           let signFile = new ES_SignFile();
           signFile.recID = datas.recID;
           signFile.title = datas.title;
@@ -1723,8 +1727,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               files: this.data?.files,
               cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
               disableCateID: true,
-              refType:this.formModel?.entityName,
-              refID:datas.recID,
+              refType: this.formModel?.entityName,
+              refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
             },
             '',
@@ -1752,9 +1756,45 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             }
           });
           //this.callfunc.openForm();
-        } else if (res2?.eSign == false)
-          //xét duyệt
-          this.release(datas, processID);
+        } //if (res2?.eSign == false)
+        //xét duyệt
+        //this.release1(datas, processID);
+        else
+          this.shareService
+            .codxReleaseDynamic(
+              this.view.service,
+              datas,
+              category,
+              this.view.formModel.entityName,
+              this.formModel.funcID,
+              datas?.title ,
+              (res2: any) => {
+                if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+                else {
+                  datas.status = '3';
+                  debugger
+                  this.notifySvr.notifyCode('ES007');
+                  // this.odService
+                  //   .updateDispatch(
+                  //     datas,
+                  //     '',
+                  //     false,
+                  //     this.referType,
+                  //     this.formModel?.entityName
+                  //   )
+                  //   .subscribe((item) => {
+                  //     if (item.status == 0) {
+                  //       this.view.dataService.update(item?.data).subscribe();
+                  //     } else this.notifySvr.notify(item.message);
+                  //   });
+                  //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
+                  if (datas.dispatchType == '3') {
+                    this.addInternalIncoming(datas);
+                  }
+                }
+                //this.notifySvr.notify(res2?.msgCodeError)
+              }
+            )
       });
   }
   handleViewFile(e: any) {

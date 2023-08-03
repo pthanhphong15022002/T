@@ -304,7 +304,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   languages: any;
   toolTipSetting: any = '';
   poper: any;
-  isDefaultStep = true;
   colorDefault = '';
   themeDatas = {
     default: '#005DC7',
@@ -3106,6 +3105,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isReason = false;
 
   customerReason(reason: DP_Steps) {
+    this.isSaveStep = false;
     this.stepNew = JSON.parse(JSON.stringify(reason));
     this.stepEdit = reason;
     this.stepName = this.stepNew['stepName'];
@@ -3113,8 +3113,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.action = 'edit';
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
   }
-
-  editReason() {
+  
+  editReason(){
+    this.isSaveStep = true;
     this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
     this.stepEdit['textColor'] = this.stepNew['textColor'];
     this.stepEdit['icon'] = this.stepNew['icon'];
