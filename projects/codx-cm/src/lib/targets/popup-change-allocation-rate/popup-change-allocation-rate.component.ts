@@ -6,7 +6,9 @@ import {
   NotificationsService,
   ApiHttpService,
   AuthService,
+  CacheService,
 } from 'codx-core';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-change-allocation-rate',
@@ -22,14 +24,18 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   editingItem: any;
   typeChange = '';
   lstMonths = [];
+  lstQuarters = [];
   isSave = false;
   language = 'vn';
+  isTargetQuarter: boolean = false;
+  editingQuarter: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private decimalPipe: DecimalPipe,
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private auth: AuthService,
+    private cache: CacheService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -40,15 +46,115 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     this.lstLinesBySales = data?.data?.lstLinesBySales;
   }
 
-  ngOnInit() {
-    this.setListMonth(); //Set 12 tháng vào 1 list;
-    this.setTargetLineToMonth(); //set giá trị trọng số, mục tiêu vào list 12 tháng.
+  async ngOnInit() {
+    await this.setListQuarters();
+    await this.setListMonth(); //Set 12 tháng vào 1 list;
+    await this.setTargetLineToMonth(); //set giá trị trọng số, mục tiêu vào list 12 tháng.
+  }
+
+  async setListQuarters() {
+    //Đợi vll chị Khanh
+    let lst = [];
+    let data = await firstValueFrom(this.cache.valueList('CRM046'));
+    if (data && data.datas != null) {
+      for (let item of data.datas) {
+        var tmp = {};
+        tmp['quarter'] = item?.value;
+        tmp['text'] = item.text;
+        tmp['weight'] = 0;
+        tmp['target'] = 0;
+        tmp['isExit'] = false;
+        lst.push(Object.assign({}, tmp));
+      }
+    }
+
+    this.lstQuarters = lst;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  async setListMonth() {
+    //Đợi vll chị Khanh
+    let lst = [];
+    let data = await firstValueFrom(this.cache.valueList('CRM048'));
+    if (data && data.datas != null) {
+      for (let item of data.datas) {
+        var tmp = {};
+        tmp['month'] = item?.value;
+        tmp['text'] = item.text;
+        tmp['weight'] = 0;
+        tmp['target'] = 0;
+        tmp['isExit'] = false;
+        tmp['lineID'] = '';
+        lst.push(Object.assign({}, tmp));
+      }
+    }
+
+    this.lstMonths = lst;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  setTargetLineToMonth() {
+    if (this.lstLinesBySales != null && this.lstLinesBySales.length > 0) {
+      this.lstQuarters.forEach((res) => {
+        for (let item of this.lstLinesBySales) {
+          var month = new Date(item.startDate)?.getMonth() + 1;
+          if (this.checkMonthQuarter(parseInt(res.quarter), month)) {
+            res.target += item.target;
+          }
+        }
+      });
+      this.lstQuarters.forEach(
+        (x) => (x.weight = (x.target / this.data.target) * 100)
+      );
+      this.lstMonths.forEach((res) => {
+        for (let item of this.lstLinesBySales) {
+          var month = new Date(item.startDate)?.getMonth() + 1;
+          if (month == res.month) {
+            res.lineID = item.recID;
+            res.target = item.target;
+            if (this.data?.target > 0) {
+              res.weight = (res.target / this.data.target) * 100;
+            } else {
+              res.weight = 0;
+            }
+          }
+        }
+      });
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  checkMonthQuarter(i, month) {
+    if (i == 1) {
+      if (month >= 1 && month < 4) {
+        return true;
+      }
+    } else if (i == 2) {
+      if (month >= 4 && month < 7) {
+        return true;
+      }
+    } else if (i == 3) {
+      if (month >= 7 && month < 10) {
+        return true;
+      }
+    } else if (i == 4) {
+      if (month >= 10 && month < 13) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  valueChange(e) {
+    if (this.isTargetQuarter != e?.data) {
+      this.isTargetQuarter = e.data;
+    }
   }
 
   onSave() {
     if (!this.checkTarget()) {
       this.notiService.notifyCode(
-        'Mục tiêu năm không phù hợp với mục tiêu doanh số'
+        'CM032'
       );
       return;
     }
@@ -140,7 +246,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         }
       }
       this.data.isCollapse = true;
-      lstLinesBySales.forEach(element => {
+      lstLinesBySales.forEach((element) => {
         element.isCollapse = true;
       });
       this.data.targetsLines = lstLinesBySales;
@@ -161,71 +267,119 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     return true;
   }
 
-  setListMonth() {
-    //Đợi vll chị Khanh
-    let lst = [];
-    for (let i = 1; i <= 12; i++) {
-      var tmp = {};
-      tmp['month'] = i;
-      tmp['text'] = 'Tháng ' + i;
-      tmp['weight'] = 0;
-      tmp['target'] = 0;
-      tmp['isExit'] = false;
-      tmp['lineID'] = '';
-      lst.push(Object.assign({}, tmp));
-    }
-    this.lstMonths = lst;
-    this.changeDetectorRef.detectChanges();
-  }
-
-  setTargetLineToMonth() {
-    if (this.lstLinesBySales != null && this.lstLinesBySales.length > 0) {
-      this.lstMonths.forEach((res) => {
-        for (let item of this.lstLinesBySales) {
-          var month = new Date(item.startDate)?.getMonth() + 1;
-          if (month == res.month) {
-            res.lineID = item.recID;
-            res.target = item.target;
-            if (this.data?.target > 0) {
-              res.weight = (res.target / this.data.target) * 100;
-            } else {
-              res.weight = 0;
-            }
-          }
-        }
-      });
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-
-  sumTarget() {
+  sumTarget(lst = []) {
     let target = 0;
-    this.lstMonths.forEach((res) => (target += res.target));
+    lst.forEach((res) => (target += res.target));
     return this.targetToFixed(target);
   }
 
-  sumWeight() {
+  sumWeight(lst = []) {
     let weight = 0;
-    this.lstMonths.forEach((res) => (weight += res.weight));
+    lst.forEach((res) => (weight += res.weight));
     return this.targetToFixed(weight);
   }
 
   formatNumberWithoutTrailingZeros(num) {
-    if (num % 1 === 0) {
-      return num.toString();
-    } else {
-      return num.toFixed(2);
-    }
+    const roundedNum = parseFloat(num.toFixed(2));
+
+    const formattedNum = roundedNum.toString().replace(/(\.\d*?)0+$/, '$1');
+
+    return formattedNum;
   }
 
   targetToFixed(data) {
     return data ? this.decimalPipe.transform(data, '1.0-0') : 0;
   }
 
+  targetTng(data) {
+    return Math.round(data);
+  }
+
   dbClick(data, type) {
     this.editingItem = data;
     this.typeChange = type;
 
+    this.changeDetectorRef.detectChanges();
+  }
+
+  updateTargetQuarter(e, id, type) {
+    var index = -1;
+    if (parseFloat(e) < 0) {
+      this.editingItem = null;
+      this.typeChange = '';
+      return;
+    }
+    let target = parseFloat(e?.trim());
+    index = this.lstQuarters.findIndex((x) => x.quarter == id);
+    if (index != -1) {
+      if (type == 'weight') {
+        if (parseFloat(this.lstQuarters[index].weight.toFixed(2)) != target) {
+          if (
+            this.checkWeight(
+              id,
+              target,
+              100,
+              'weight',
+              'quarter',
+              this.lstQuarters
+            )
+          ) {
+            this.editingItem = null;
+            this.typeChange = '';
+            this.notiService.notifyCode('CM035');
+            return;
+          }
+          this.lstQuarters[index].weight = target;
+          this.lstQuarters[index].target = (this.data.target * target) / 100;
+          this.lstQuarters[index].isExit = true;
+          this.lstQuarters = this.updateWeightList(
+            'quarter',
+            id,
+            this.data.target,
+            this.lstQuarters
+          );
+
+          this.updateTargetListMonth(this.lstQuarters[index].quarter);
+          this.updateListLines();
+
+          this.isSave = true;
+        }
+      } else {
+        if (this.lstQuarters[index].target != target) {
+          if (
+            this.checkWeight(
+              id,
+              target,
+              this.data.target,
+              'target',
+              'quarter',
+              this.lstQuarters
+            )
+          ) {
+            this.editingItem = null;
+            this.typeChange = '';
+            this.notiService.notifyCode('CM035');
+            return;
+          }
+          this.lstQuarters[index].target = target;
+          this.lstQuarters[index].isExit = true;
+          this.lstQuarters[index].weight = (target * 100) / this.data.target;
+
+          this.lstQuarters = this.updateTargetList(
+            'quarter',
+            id,
+            this.data.target,
+            this.lstQuarters
+          );
+          this.updateTargetListMonth(this.lstQuarters[index].quarter);
+          this.updateListLines();
+
+          this.isSave = true;
+        }
+      }
+    }
+    this.editingItem = null;
+    this.typeChange = '';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -236,95 +390,82 @@ export class PopupChangeAllocationRateComponent implements OnInit {
       this.typeChange = '';
       return;
     }
-
     let target = parseFloat(e?.trim());
-
     index = this.lstMonths.findIndex((x) => x.lineID == id);
     if (index != -1) {
+      let main = type == 'weight' ? 100 : this.data.target;
+
+      if (this.isTargetQuarter) {
+        let month = this.lstMonths[index].month;
+        var indexQuarter = this.lstQuarters.findIndex((x) =>
+          this.checkMonthQuarter(parseInt(x.quarter), parseInt(month))
+        );
+        if (indexQuarter != -1) {
+          main =
+            type == 'weight'
+              ? this.lstQuarters[indexQuarter].weight
+              : this.lstQuarters[indexQuarter].target;
+        }
+      }
       if (type == 'weight') {
         if (parseFloat(this.lstMonths[index].weight.toFixed(2)) != target) {
-          if (this.checkWeight(id, target, 100, 'weight')) {
+          if (
+            this.checkWeight(
+              id,
+              target,
+              main,
+              'weight',
+              'lineID',
+              this.lstMonths
+            )
+          ) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
           this.lstMonths[index].weight = target;
           this.lstMonths[index].target = (this.data.target * target) / 100;
           this.lstMonths[index].isExit = true;
-          var weigth = 0;
-          let count = 0;
-          this.lstMonths.forEach((ele) => {
-            if (ele.isExit) {
-              weigth += ele.weight;
-            } else {
-              count++;
-            }
-          });
-          this.lstMonths.forEach((res) => {
-            if (res.lineID != id && !res.isExit) {
-              if (count > 0) {
-                res.weight = (100 - weigth) / count;
-                res.target = (res.weight * this.data.target) / 100;
-              } else {
-                res.weight = 0;
-                res.target = 0;
-              }
-            }
-          });
-
-          for (let item of this.lstLinesBySales) {
-            for (var ow of this.lstMonths) {
-              if (item.recID == ow.lineID) {
-                item.weight = ow.weight;
-                item.target = ow.target;
-              }
-            }
-          }
+          this.lstMonths = this.updateWeightList(
+            'lineID',
+            id,
+            this.data.target,
+            this.lstMonths
+          );
+          this.updateQuarterByMonth();
+          this.updateListLines();
           this.isSave = true;
         }
       } else {
         if (this.lstMonths[index].target != target) {
-          if (this.checkWeight(id, target, this.data.target, 'target')) {
+          if (
+            this.checkWeight(
+              id,
+              target,
+              main,
+              'target',
+              'lineID',
+              this.lstMonths
+            )
+          ) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
           this.lstMonths[index].target = target;
           this.lstMonths[index].isExit = true;
           this.lstMonths[index].weight = (target * 100) / this.data.target;
 
-          let targetExSum = 0;
-          let countEx = 0;
-          this.lstMonths.forEach((ele) => {
-            if (ele.isExit) {
-              targetExSum += ele.target;
-            } else {
-              countEx++;
-            }
-          });
-
-          this.lstMonths.forEach((res) => {
-            if (res.lineID != id && !res.isExit) {
-              if (countEx > 0) {
-                res.target = (this.data.target - targetExSum) / countEx;
-                res.weight = (res.target * 100) / this.data.target;
-              } else {
-                res.target = 0;
-                res.weight = 0;
-              }
-            }
-          });
-
-          for (let item of this.lstLinesBySales) {
-            for (var ow of this.lstMonths) {
-              if (item.recID == ow.lineID) {
-                item.weight = ow.weight;
-                item.target = ow.target;
-              }
-            }
-          }
+          this.lstMonths = this.updateTargetList(
+            'lineID',
+            id,
+            this.data.target,
+            this.lstMonths
+          );
+          this.updateQuarterByMonth();
+          this.updateListLines();
           this.isSave = true;
         }
       }
@@ -337,12 +478,125 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  checkWeight(id, weight, main: number, type) {
+  updateWeightList(field: string, id, targetSum, lst = []) {
+    var weigth = 0;
+    let count = 0;
+    lst.forEach((ele) => {
+      if (ele.isExit) {
+        weigth += ele.weight;
+      } else {
+        count++;
+      }
+    });
+    lst.forEach((res) => {
+      if (res[field] != id && !res.isExit) {
+        if (count > 0) {
+          res.weight = (100 - weigth) / count;
+          res.target = (res.weight * targetSum) / 100;
+        } else {
+          res.weight = 0;
+          res.target = 0;
+        }
+      }
+    });
+    return lst;
+  }
+
+  updateTargetListMonth(quarter) {
+    for (var item of this.lstMonths) {
+      var month = parseInt(item?.month);
+      let targetMonth = 0;
+      for (var qua of this.lstQuarters) {
+        if (qua.quarter == '1') {
+          if (month >= 1 && month < 4) {
+            if (quarter == qua.quarter) item.isExit = true;
+            item.weight = qua.weight / 3;
+            item.target = qua.target / 3;
+          }
+        } else if (qua.quarter == '2') {
+          if (month >= 4 && month < 7) {
+            if (quarter == qua.quarter) item.isExit = true;
+            item.weight = qua.weight / 3;
+            item.target = qua.target / 3;
+          }
+        } else if (qua.quarter == '3') {
+          if (month >= 7 && month < 10) {
+            if (quarter == qua.quarter) item.isExit = true;
+            item.weight = qua.weight / 3;
+            item.target = qua.target / 3;
+          }
+        } else {
+          if (month >= 10 && month < 13) {
+            if (quarter == qua.quarter) item.isExit = true;
+            item.weight = qua.weight / 3;
+            item.target = qua.target / 3;
+          }
+        }
+      }
+    }
+  }
+
+  updateTargetList(field: string, id, targetSum, lst = []) {
+    let targetExSum = 0;
+    let countEx = 0;
+    lst.forEach((ele) => {
+      if (ele.isExit) {
+        targetExSum += ele.target;
+      } else {
+        countEx++;
+      }
+    });
+
+    lst.forEach((res) => {
+      if (res[field] != id && !res.isExit) {
+        if (countEx > 0) {
+          res.target = (targetSum - targetExSum) / countEx;
+          res.weight = (res.target * 100) / targetSum;
+        } else {
+          res.target = 0;
+          res.weight = 0;
+        }
+      }
+    });
+    return lst;
+  }
+
+  updateListLines() {
+    for (let item of this.lstLinesBySales) {
+      for (var ow of this.lstMonths) {
+        if (item.recID == ow.lineID) {
+          item.weight = ow.weight;
+          item.target = ow.target;
+        }
+      }
+    }
+  }
+
+  updateQuarterByMonth(){
+    this.lstQuarters.forEach((res) => {
+      let targetQua = 0;
+      for (let item of this.lstMonths) {
+        var month = parseInt(item.month)
+        if (this.checkMonthQuarter(parseInt(res.quarter), month)) {
+          targetQua += item.target;
+        }
+        res.target = targetQua;
+        res.isExit = true;
+        if (this.data.target > 0) {
+          res.weight = (res.target * 100) / this.data.target;
+        } else {
+          res.weight = 0;
+        }
+      }
+    });
+  }
+
+  checkWeight(id, weight, main: number, type, fieldID, lst = []) {
     let weightExit = 0;
     let isCheck = false;
     if (weight > main) return true;
-    for (var item of this.lstMonths) {
-      if (item.lineID != id && item.isExit) {
+    for (var item of lst) {
+      if (item[fieldID] != id && item.isExit) {
         if (type == 'weight') {
           weightExit += item.weight;
         } else {
@@ -359,8 +613,8 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         return true;
       } else {
         if (
-          this.lstMonths.filter((x) => !x.isExit).length == 1 &&
-          this.lstMonths.some((x) => !x.isExit && x.lineID == id)
+          lst.filter((x) => !x.isExit).length == 1 &&
+          lst.some((x) => !x.isExit && x[fieldID] == id)
         ) {
           isCheck = weightExit + weight !== main ? true : false;
         }
@@ -388,6 +642,22 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         }
       }
     }
+    this.lstQuarters.forEach((res) => {
+      let targetQua = 0;
+      for (let item of this.lstLinesBySales) {
+        var month = new Date(item.startDate)?.getMonth() + 1;
+        if (this.checkMonthQuarter(parseInt(res.quarter), month)) {
+          targetQua += item.target;
+        }
+        res.isExit = false;
+        res.target = targetQua;
+        if (this.data.target > 0) {
+          res.weight = (res.target * 100) / this.data.target;
+        } else {
+          res.weight = 0;
+        }
+      }
+    });
     this.isSave = true;
   }
 }

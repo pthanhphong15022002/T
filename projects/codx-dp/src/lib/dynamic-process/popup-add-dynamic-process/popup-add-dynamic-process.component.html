@@ -1866,7 +1866,7 @@
             </div>
             <!-- Reason fail -->
             <div
-              class="list-stage cursor-pointer drap-drop has-action-menu"
+              class="list-stage cursor-pointer drap-drop has-action-menu d-flex align-items-center"
               [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
               [ngStyle]="{ 'background-color': setColorStep(stepFail)}"
@@ -2260,7 +2260,7 @@
   </div>
 </ng-template>
 <!-- Popup thêm giai đoạn  -->
-<ng-template #addStagePopup>
+<ng-template #popupAddStep>
   <div class="d-flex flex-column p-5 h-100">
     <div>
       <ng-container [ngTemplateOutlet]="addStageHeader"></ng-container>
@@ -2292,7 +2292,6 @@
     ></span>
   </div>
 </ng-template>
-
 <ng-template #addStageBody>
   <div class="form-group mt-5">
     <div class="fw-bold text-dark mb-1">
@@ -2309,7 +2308,7 @@
       type="text"
       [crrValue]="stepName"
       (valueChange)="changeNameStep($event)"
-      [disabled]="isReason"
+      [disabled]="isEditReason"
     >
     </codx-input>
 
@@ -2430,9 +2429,6 @@
       </span>
     </div>
   </div>
-
-  <!-- [crrValue]="field?.rankIcon"
-    (valueChange)="valueChangeIcon($event)" -->
 </ng-template>
 <ng-template #addStageFooter>
   <div class="d-flex justify-content-end">
@@ -2457,7 +2453,6 @@
     </button>
   </div>
 </ng-template>
-
 <!-- End Công Việc -->
 
 <ng-template #reasonSuccess>

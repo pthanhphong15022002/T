@@ -587,11 +587,11 @@ export class DynamicProcessComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS005':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'SYS003':
+          // case 'SYS005':
+          // case 'SYS004':
+          // case 'SYS001':
+          // case 'SYS002':
+          // case 'SYS003':
           //more core - thay doi nhieu dong, bo chon, chon tat ca..
           case 'SYS007':
           case 'SYS006':
@@ -765,7 +765,7 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
-    if(data?.deleted) return;
+    if (data?.deleted) return;
     let isRead = this.checkPermissionRead(data);
     if (isRead) {
       this.viewDetailProcess(data);
