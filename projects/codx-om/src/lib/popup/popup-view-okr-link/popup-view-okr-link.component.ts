@@ -29,6 +29,7 @@ export class PopupViewOKRLinkComponent extends UIComponent {
   okrFM: any;
   isAfterRender=false;
   listLink = [];
+  owner:any;
   constructor(
     private injector: Injector,
     private omService: CodxOmService,
@@ -51,6 +52,16 @@ export class PopupViewOKRLinkComponent extends UIComponent {
           this.listLink = res;          
         }
         this.isAfterRender = true;
+        this.detectorRef.detectChanges();
+      })
+    }
+    else{
+      this.cache.getCompany(this.data?.owner).subscribe(owner=>{
+        if(owner){
+          this.owner =owner;
+        }
+        this.isAfterRender = true;
+        this.detectorRef.detectChanges();
       })
     }
   }

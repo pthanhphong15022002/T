@@ -263,4 +263,20 @@ export class JournalService {
   getUsers(): Observable<any[]> {
     return this.acService.loadComboboxData('Share_Users', 'AD');
   }
+
+  getRoleType(field: string): string {
+    if (field === 'creater') {
+      return '1';
+    } else if (field === 'approver') {
+      return '2';
+    } else if (field === 'poster') {
+      return '3';
+    } else if (field === 'unposter') {
+      return '4';
+    } else if (field === 'sharer') {
+      return '6';
+    }
+
+    return null;
+  }
 }

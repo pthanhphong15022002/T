@@ -130,7 +130,7 @@ export class PopupAddInstanceComponent implements OnInit {
     } else {
       this.lstParticipants = dt?.data?.lstParticipants;
       this.instance.endDate = this.endDate;
-      var check = false;
+      let check = false;
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         check = this.lstParticipants.some((x) => x.userID === this.user.userID);
 
@@ -192,7 +192,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   async getListInstanceStep(recID, processID, status) {
     this.codxDpService
-      .GetStepsByInstanceIDAsync([recID, processID, status,this.applyFor])
+      .GetStepsByInstanceIDAsync([recID, processID, status, this.applyFor])
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));
@@ -201,7 +201,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   async getListInstaceStepCopy() {
-    var datas = [this.oldIdInstance, this.processID, this.instanceNoSetting];
+    let datas = [this.oldIdInstance, this.processID, this.instanceNoSetting];
     this.codxDpService.getInstanceStepsCopy(datas).subscribe((res) => {
       if (res && res.length > 0) {
         this.listStep = res[0];
@@ -230,8 +230,8 @@ export class PopupAddInstanceComponent implements OnInit {
   // em thay roi
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
+      let result = event.e?.data;
+      let field = event.data;
       switch (field.dataType) {
         case 'D':
           result = event.e?.data.fromDate;
@@ -242,7 +242,7 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e;
           break;
       }
-      var index = this.listStep.findIndex((x) => x.recID == field.stepID);
+      let index = this.listStep.findIndex((x) => x.recID == field.stepID);
 
       if (index != -1) {
         if (this.listStep[index].fields?.length > 0) {
@@ -317,7 +317,7 @@ export class PopupAddInstanceComponent implements OnInit {
     //   let checkFormat = true;
     //   this.listStep.forEach((obj) => {
     //     if (obj?.fields?.length > 0 && obj.stepID==this.instance.stepID) {
-    //       var arrField = obj.fields;
+    //       let arrField = obj.fields;
     //       arrField.forEach((f) => {
     //           if (
     //             f.isRequired &&
@@ -368,14 +368,14 @@ export class PopupAddInstanceComponent implements OnInit {
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
-        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (!field.dataValue.toLowerCase().match(validEmail)) {
           this.notificationsService.notifyCode('SYS037');
           return false;
         }
       }
       if (field.dataFormat == 'P') {
-        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+        let validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
         if (!field.dataValue.toLowerCase().match(validPhone)) {
           this.notificationsService.notifyCode('RS030');
           return false;
@@ -385,8 +385,8 @@ export class PopupAddInstanceComponent implements OnInit {
     return true;
   }
   checkEndDayInstance(endDate, endDateCondition) {
-    var date1 = new Date(endDate);
-    var date2 = new Date(endDateCondition);
+    let date1 = new Date(endDate);
+    let date2 = new Date(endDateCondition);
     this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
     date1.setHours(0, 0, 0, 0);
     date2.setHours(0, 0, 0, 0);
@@ -417,7 +417,7 @@ export class PopupAddInstanceComponent implements OnInit {
     if (listStep?.length > 0 && listStep) {
       for (let item of listStep) {
         if (item.fields.length > 0 && item.fields) {
-          var listFieldFiled = item.fields.filter((x) => x.dataType === 'A');
+          let listFieldFiled = item.fields.filter((x) => x.dataType === 'A');
           if (listFieldFiled.length > 0 && listFieldFiled) {
             for (let fieldFile of listFieldFiled) {
               fieldFile.recID = Util.uid();
