@@ -22,6 +22,7 @@ import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
 import { CashTransferService } from './cash-transfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-cash-transfers',
@@ -63,10 +64,10 @@ export class CashTransfersComponent
     entityPer: 'AC_AcctTrans',
   };
   gvsAcctTrans: any;
-
+  fgVatInvoice: any;
   overflowed: boolean = false;
   expanding: boolean = false;
-
+  private destroy$ = new Subject<void>();
   constructor(
     injector: Injector,
     private cashTransferService: CashTransferService,
@@ -87,11 +88,16 @@ export class CashTransfersComponent
 
   //#region Init
   onInit(): void {
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
+    this.fgVatInvoice = this.codxService.buildFormGroup(
+      'VATInvoices',
+      'grvVATInvoices',
+      'AC_VATInvoices'
+    );
+    // this.cache
+    //   .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
+    //   .subscribe((gvs) => {
+    //     this.gvsAcctTrans = gvs;
+    //   });
   }
 
   ngAfterViewInit(): void {
@@ -123,12 +129,18 @@ export class CashTransfersComponent
   }
 
   ngAfterViewChecked(): void {
-    const element: HTMLElement = this.memo?.nativeElement;
-    this.overflowed = element?.scrollWidth > element?.offsetWidth;
+    // const element: HTMLElement = this.memo?.nativeElement;
+    // this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
   ngOnDestroy() {
     this.view.setRootNode('');
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   //#endregion
 
@@ -156,11 +168,11 @@ export class CashTransfersComponent
   }
 
   onChange(e): void {
-    if (e.data.error?.isError) {
+    if (e.data?.error?.isError) {
       return;
     }
 
-    this.master = e.data.data ?? e.data;
+    this.master = e.data?.data ?? e?.data;
     if (!this.master) {
       return;
     }
@@ -175,21 +187,21 @@ export class CashTransfersComponent
 
     this.loading = true;
     this.lines = [];
-    this.api
-      .exec(
-        'AC',
-        'AcctTransBusiness',
-        'LoadDataAsync',
-        'e973e7b7-10a1-11ee-94b4-00155d035517'
-      )
-      .subscribe((res: IAcctTran[]) => {
-        console.log(res);
-        if (res) {
-          this.lines = this.groupBy(res, 'entryID');
-        }
+    // this.api
+    //   .exec(
+    //     'AC',
+    //     'AcctTransBusiness',
+    //     'LoadDataAsync',
+    //     'e973e7b7-10a1-11ee-94b4-00155d035517'
+    //   )
+    //   .subscribe((res: IAcctTran[]) => {
+    //     console.log(res);
+    //     if (res) {
+    //       this.lines = this.groupBy(res, 'entryID');
+    //     }
 
-        this.loading = false;
-      });
+    //     this.loading = false;
+    //   });
   }
 
   onClickAdd(e): void {
@@ -200,29 +212,28 @@ export class CashTransfersComponent
         ])
       )
       .subscribe((res: any) => {
-        console.log({ res });
-
         let options = new SidebarModel();
         options.DataService = this.view.dataService;
         options.FormModel = this.view.formModel;
         options.isFull = true;
-
-        this.cache
-          .gridViewSetup('VATInvoices', 'grvVATInvoices')
-          .subscribe((res) => {
-            if (res) {
-              this.callfc.openSide(
-                PopupAddCashTransferComponent,
-                {
-                  formType: 'add',
-                  journalNo: this.journalNo,
-                  formTitle: `${e.text} ${this.functionName}`,
-                },
-                options,
-                this.view.funcID
-              );
-            }
-          });
+        let dialog = this.callfc.openSide(
+          PopupAddCashTransferComponent,
+          {
+            formType: 'add',
+            journalNo: this.journalNo,
+            formTitle: `${e.text} ${this.functionName}`,
+            fgVatInvoice : this.fgVatInvoice
+          },
+          options,
+          this.view.funcID
+        );
+        // this.cache
+        //   .gridViewSetup('VATInvoices', 'grvVATInvoices')
+        //   .subscribe((res) => {
+        //     if (res) {
+              
+        //     }
+        //   });
       });
   }
   //#endregion
@@ -251,6 +262,7 @@ export class CashTransfersComponent
                 formType: 'edit',
                 formTitle: `${e.text} ${this.functionName}`,
                 journalNo: this.journalNo,
+                fgVatInvoice : this.fgVatInvoice
               },
               options,
               this.view.funcID
