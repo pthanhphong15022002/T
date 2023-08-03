@@ -121,7 +121,7 @@ export class EmployeesComponent extends UIComponent {
         id: '1',
         type: ViewType.grid,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,

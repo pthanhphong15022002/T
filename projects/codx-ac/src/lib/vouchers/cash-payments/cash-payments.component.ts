@@ -827,6 +827,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
+    debugger
     this.api
       .execSv(
         'rptrp',

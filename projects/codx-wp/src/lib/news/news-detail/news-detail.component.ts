@@ -78,7 +78,7 @@ export class NewsDetailComponent extends UIComponent {
   //load data
   loadData(recID: string, category: string) {
     this.getData(recID);
-    this.getSubData(category);
+    this.getSubData(recID,category);
   }
   getData(recID: string) {
     this.api
@@ -93,10 +93,10 @@ export class NewsDetailComponent extends UIComponent {
       });
   }
   //get data order view + created
-  getSubData(category: string) {
+  getSubData(recID:string,category: string) {
     this.api
       .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'GetSubDataAsync', [
-        category,
+        [recID,category],
       ])
       .subscribe((res: any) => {
         if (res) {
