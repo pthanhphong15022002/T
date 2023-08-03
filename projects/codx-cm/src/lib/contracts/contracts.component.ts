@@ -196,6 +196,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   async onInit(): Promise<void> {
+    this.loadParam();
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
@@ -380,6 +381,16 @@ export class ContractsComponent extends UIComponent {
     var disabled = (eventItem, data) => {
       eventItem.disabled = true;
     };
+    var isApprove = (eventItem, data) => {
+      if (
+        (data.closed && data.status != '1') ||
+        ['1', '0'].includes(data.status) ||
+        (this.applyApprover != '1' && !data.processID) ||
+        (data.processID && data?.approveRule != '1')
+      ) {
+        eventItem.disabled = true;
+      }
+    };
 
     this.functionMappings = {
       SYS03: isEdit, // edit
@@ -389,7 +400,7 @@ export class ContractsComponent extends UIComponent {
       SYS02: isDelete, // xóa
       SYS004: isDisabled, // gởi mail
 
-      CM0204_1: isDisabled, //Gửi duyệt
+      CM0204_1: isApprove, //Gửi duyệt
       CM0204_2: isDisabled, // Hủy yêu cầu duyệt
       CM0204_3: isDisabled, //tạo hợp đồng gia hạn
       CM0204_4: isDisabled,
@@ -794,30 +805,58 @@ export class ContractsComponent extends UIComponent {
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.cmService
+            .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.itemSelected = q;
+                this.view.dataService.update(this.itemSelected).subscribe();
+              }
+              this.notiService.notifyCode('ES007');
+            });
+        }
+      });
+
+    //duet moi
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
-    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    else {
-      this.cmService
-        .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
-    }
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    //   this.cmService
+    //     .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.itemSelected = q;
+    //         this.view.dataService.update(this.itemSelected).subscribe();
+    //       }
+    //       this.notiService.notifyCode('ES007');
+    //     });
+    // }
   }
 
   //Huy duyet

@@ -91,18 +91,13 @@ export class MoveComponent implements OnInit {
   @Output() eventShow = new EventEmitter<boolean>();
   checkFolderName: any;
   constructor(
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
     private folderService: FolderService,
     private fileService: FileService,
-    private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
-    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -548,7 +543,8 @@ export class MoveComponent implements OnInit {
             // move
             if (that.selection == 1) {
               // let list = this.dmSV.listFolder.getValue();
-              this.dmSV.nodeDeleted.next(that.id);
+              //this.dmSV.nodeDeleted.next(that.id);
+              this.dmSV.deleteFileView.next(that.id);
               let index = list.findIndex(
                 (d) => d.recID.toString() === that.id.toString()
               ); //find index in your array
@@ -558,8 +554,10 @@ export class MoveComponent implements OnInit {
                 that.changeDetectorRef.detectChanges();
               }
             }
-            this.dmSV.addFolder.next(res.data); // them node con
-            that.dmSV.ChangeData.next(true);
+            else {
+              this.dmSV.addFolder.next(res.data); // them node con
+              that.dmSV.ChangeData.next(true);
+            }
             that.changeDetectorRef.detectChanges();
             that.dialog.close();
           } else {

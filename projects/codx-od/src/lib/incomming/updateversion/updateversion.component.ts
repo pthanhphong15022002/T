@@ -240,10 +240,10 @@ export class UpdateVersionComponent {
     try {      
       var item = await isAllowAddFileAsync();      
       this.dmSV.getToken();      
-      var appName="hps-file-test";// Tam thoi de hard        
+      //var appName="hps-file-test";// Tam thoi de hard        
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;//2*1024;
       var uploadFile = this.fileEditing.item.rawFile;
-      var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
+      var retUpload = await lvFileClientAPI.postAsync(`api/${this.user.tenant}/files/register`, {        
         "Data": {
           "FileName":  uploadFile.name,
           "ChunkSizeInKB": ChunkSizeInKB,
@@ -284,7 +284,7 @@ export class UpdateVersionComponent {
           [ blogPart ],
           uploadFile.name,
           { type: uploadFile.type });//Gói lại thành 1 file chunk để upload
-          var uploadChunk = await lvFileClientAPI.formPostWithToken(`api/${appName}/files/upload`,{      
+          var uploadChunk = await lvFileClientAPI.formPostWithToken(`api/${this.user.tenant}/files/upload`,{      
             FilePart: fileChunk,
             UploadId: retUpload.Data.UploadId,
             Index: i          
@@ -312,7 +312,7 @@ export class UpdateVersionComponent {
     this.fileEditing.data = '';
     this.fileEditing.reWrite = false;
     this.fileEditing.item = file;
-    this.fileEditing.folderID = this.dmSV.folderId.getValue();   
+    //this.fileEditing.folderID = this.dmSV.folderId.getValue();   
     this.updateversion = true;
     this.changeDetectorRef.detectChanges();
     return false;
@@ -418,11 +418,11 @@ export class UpdateVersionComponent {
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
       fileItem.uploadId = '';      
-      var appName = environment.appName; // Tam thoi de hard
+      //var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
-        `api/${appName}/files/register`,
+        `api/${this.user.tenant}/files/register`,
         {
           Data: {
             FileName: uploadFile.name,
@@ -470,17 +470,17 @@ export class UpdateVersionComponent {
       this.fileEditing.createdOn = new Date();
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
-          var files = that.dmSV.listFiles;
-          let index = files.findIndex(d => d.recID.toString() === this.fileEditing.recID);
-          if (index != -1) {
-            files[index] = res.data;
-            files[index].recID = res.data.recID; // thumbmail
-            files[index].fileName = res.data.fileName;
-            files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
-            that.displayThumbnail(res.data);
-            this.dmSV.ChangeOneFolder.next(files[index]);
-          }
-          var appName = environment.appName; // Tam thoi de hard
+          // var files = null;
+          // let index = files.findIndex(d => d.recID.toString() === this.fileEditing.recID);
+          // if (index != -1) {
+          //   files[index] = res.data;
+          //   files[index].recID = res.data.recID; // thumbmail
+          //   files[index].fileName = res.data.fileName;
+          //   files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
+          //   that.displayThumbnail(res.data);
+          //   //this.dmSV.ChangeOneFolder.next(files[index]);
+          // }
+          //var appName = environment.appName; // Tam thoi de hard
           var uploadFile = fileItem.item.rawFile;
           var sizeInBytes = fileItem.fileSize; // uploadFile.size;
           var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
@@ -499,7 +499,7 @@ export class UpdateVersionComponent {
               type: uploadFile.type,
             }); //Gói lại thành 1 file chunk để upload
             var uploadChunk = await lvFileClientAPI.formPostWithToken(
-              `api/${appName}/files/upload`,
+              `api/${this.user.tenant}/files/upload`,
               {
                 FilePart: fileChunk,
                 UploadId: fileItem.uploadId,
@@ -508,9 +508,9 @@ export class UpdateVersionComponent {
             );
           }  
           // thumbmail
-          that.dmSV.listFiles = files;
+          //that.dmSV.listFiles = files;
           that.changeDetectorRef.detectChanges();
-          this.dialog.close();          
+          this.dialog.close(res.data);          
         }
         that.notificationsService.notify(res.message);
       });
@@ -532,5 +532,11 @@ export class UpdateVersionComponent {
   {
     this.selectedItem = i
     this.fileEditing = JSON.parse(JSON.stringify(this.listFile[i]));
+  }
+
+  uploadFile() {
+    var ctrl = this.uploadObj.element as HTMLElement;
+    //var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    if (ctrl != null) ctrl.click();
   }
 }

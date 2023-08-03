@@ -44,7 +44,7 @@ export interface IJournal {
   productionControl: string;
   illegalControl: string;
   noteControl: string;
-  vatControl: string;
+  vatControl: string | boolean;
   useDutyTax: boolean | null;
   useExciseTax: boolean | null;
   otherControl: string;
@@ -73,6 +73,6 @@ export interface IJournal {
   addNewMode: string;
   postingMode: string;
   unbounds: any;
-  postedDateControl: string;
+  // postedDateControl: string;
   entryMode: string;
 }

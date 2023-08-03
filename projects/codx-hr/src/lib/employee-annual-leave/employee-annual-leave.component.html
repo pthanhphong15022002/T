@@ -1,27 +1,27 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
     [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
-    [selectedFirst]="true" (viewChanging)="viewChanging($event)"
-    (viewChanged)="viewChanged($event)" (selectedChange)="selectedChange($event)">
+    [selectedFirst]="true" (selectedChange)="selectedChange($event)" (viewChanging)="viewChanging($event)"
+    (viewChanged)="viewChanged($event)">
 </codx-views>
 
 
 <!-- #region ListView-Mode HRTAL01 -->
 <!-- header -->
 <ng-template #headerTemplateHRTAL01 let-data>
-    <div class="d-flex w-100 ps-2 pe-4">
-        <div class="w-35 text-dark fw-bold p-3 fw-500">
+    <div class="d-flex w-100">
+        <div class="w-35 text-dark fw-bold p-3">
             <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Nhân viên'"></codx-label>
         </div>
-        <div class="w-20 text-dark fw-bold p-3 fw-500">
+        <div class="w-20 text-dark fw-bold p-3">
             <codx-label fiedName="lblAlPreYear" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Tồn năm trước'"></codx-label>
         </div>
-        <div class="w-25 text-dark fw-bold p-3 fw-500">
+        <div class="w-25 text-dark fw-bold p-3">
             <codx-label fiedName="lblAlThisYear" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Tiêu chuẩn năm nay'"></codx-label>
         </div>
-        <div class="w-30 text-dark fw-bold p-3 fw-500">
+        <div class="w-30 text-dark fw-bold p-3">
             <codx-label fiedName="lblSeniority" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Thâm niên phép'"></codx-label>
         </div>
@@ -137,26 +137,26 @@
 <!-- #region ListView HRTAL02 -->
 <!-- headerTemplate -->
 <ng-template #headerTemplateHRTAL02 let-data>
-    <div class="d-flex w-100 ps-2 pe-4">
-        <div class="w-35 text-dark fw-bold p-3 fw-500">
+    <div class="d-flex w-100">
+        <div class="w-35 text-dark fw-bold p-3">
             <codx-label fiedName="lblEmployeeInfo" [setRequire]="false" [formModel]="view.formModel"
                 [default]="'Nhân viên'"></codx-label>
         </div>
-        <div class="w-10 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="lblAlYearMonth" [setRequire]="false" [formModel]="view.formModel"
-                [default]="'Kỳ phép'"></codx-label>
+        <div class="w-10 text-dark fw-bold p-3">
+            <codx-label fiedName="lblAlYear" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Năm'"></codx-label>
         </div>
-        <div class="w-20 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="lblAlYearInfo" [setRequire]="false" [formModel]="view.formModel"
-                [default]="'Thông tin phép'"></codx-label>
+        <div class="w-20 text-dark fw-bold p-3">
+            <codx-label fiedName="lblAlYear" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Tiêu chuẩn phép năm'"></codx-label>
         </div>
-        <div class="w-25 text-dark fw-bold p-3 fw-500">
-            <codx-label fiedName="lblRemainAlYear" [setRequire]="false" [formModel]="view.formModel"
-                [default]="'Phép còn'"></codx-label>
+        <div class="w-25 text-dark fw-bold p-3">
+            <codx-label fiedName="lblALRemain" [setRequire]="false" [formModel]="view.formModel"
+                [default]="'Còn lại'"></codx-label>
         </div>
-        <div class="w-25 text-dark fw-bold p-3 fw-500">
+        <div class="w-25 text-dark fw-bold p-3">
             <codx-label fiedName="lblDaysOff" [setRequire]="false" [formModel]="view.formModel"
-                [default]="'Phép đã dùng'"></codx-label>
+                [default]="'Đã nghỉ'"></codx-label>
         </div>
     </div>
 </ng-template>
@@ -309,8 +309,8 @@
                         </codx-label>
                         <ng-container *ngIf="data.daysOff; else noDaysOff">
                             <div ngbDropdown [container]="'body'">
-                                <div ngbDropdownToggle class="data-text-color cursor-pointer item-active" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer item-active"
+                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" (click)="onShowDaysOff(data)">
                                     {{data.daysOff}}
                                 </div>
@@ -365,8 +365,9 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div class="list-days-off" *ngIf="data?.length > 0 && popupLoading ==false ; else noDataNotification">
-            <div *ngFor="let item of data" class="d-flex flex-column days-off-item">
+        <div #listDataDaysOff class="list-days-off" *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
+            (scroll)="onScrollList(listDataDaysOff)">
+            <div *ngFor="let item of listDaysOff" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
                     <i class="icon-event text-dark icon-16 me-1"> </i>
                     <span *ngIf="item.beginDate" class="data-text-color"
@@ -420,7 +421,8 @@
 
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
-    <lib-employee-annual-leave-by-org [orgUnitID]="" [funcID]="funcID" [gridViewSetup]="grvSetup" [view]="view">
+    <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
+        [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff">
     </lib-employee-annual-leave-by-org>
 </ng-template>
 <!-- #endregion tree-view HRTAL01 -->

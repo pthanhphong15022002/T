@@ -14,6 +14,7 @@
                                   <div class="dropzone-msg-title mb-2"><codx-label name="lblSelect" [formModel]="formModel" default="Chọn một file từ máy của bạn." class="ms-1 fw-bold"></codx-label></div>
                                   <span class="dropzone-msg-desc"><codx-label name="lblDagdrops" [formModel]="formModel" default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc" class="ms-1 fw-bold"></codx-label></span>
                               </div>
+                              <button class="btn btn-primary mt-3"  (click)="uploadFile()"><codx-label [formName]="'btnAttachmentVersion'" fiedName="lblbtnAttachmentVersion" default="Tải lên"></codx-label></button>
                               <div class="dropzone-panel mt-6">
                                     <ejs-uploader #templateupload id='templatefileupload'
                                       [asyncSettings]='path' [dropArea]='dropElement' [multiple]='false'
@@ -146,7 +147,7 @@
                 <div style="width:250px">
                     <ng-container *ngFor="let item of listFile ; let i = index">
                         <div class="p-2 px-3"  [class.bg-active]="selectedItem == i" (click)="toggleClass(i)">
-                            <codx-thumbnail [files]="[item]" hideHover="0"></codx-thumbnail>
+                            <codx-thumbnail [files]="[item]" hideHover="0" [isOpenFile]="true"></codx-thumbnail>
                         </div>
                     </ng-container>
                 </div>
@@ -163,6 +164,7 @@
                                       <div class="dropzone-msg-title mb-2"><codx-label name="lblSelect" [formModel]="formModel" default="Chọn một file từ máy của bạn." class="ms-1 fw-bold"></codx-label></div>
                                       <span class="dropzone-msg-desc"><codx-label name="lblDagdrops" [formModel]="formModel" default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc" class="ms-1 fw-bold"></codx-label></span>
                                   </div>
+                                  <button class="btn btn-primary mt-3"  (click)="uploadFile()"><codx-label [formName]="'btnAttachmentVersion'" fiedName="lblbtnAttachmentVersion" default="Tải lên"></codx-label></button>
                                   <div class="dropzone-panel mt-6">
                                         <ejs-uploader #templateupload id='templatefileupload'
                                           [asyncSettings]='path' [dropArea]='dropElement' [multiple]='false'

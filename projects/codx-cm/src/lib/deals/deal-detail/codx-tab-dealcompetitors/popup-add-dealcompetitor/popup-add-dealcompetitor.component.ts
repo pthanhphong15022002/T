@@ -1,4 +1,10 @@
-import { Component, Optional, OnInit } from '@angular/core';
+import {
+  Component,
+  Optional,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   CacheService,
   DataRequest,
@@ -9,6 +15,7 @@ import {
 } from 'codx-core';
 import { CM_DealsCompetitors } from 'projects/codx-cm/src/lib/models/cm_model';
 import { CodxCmService } from 'projects/codx-cm/src/projects';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -17,6 +24,8 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./popup-add-dealcompetitor.component.css'],
 })
 export class PopupAddDealcompetitorComponent implements OnInit {
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   data = new CM_DealsCompetitors();
   dialog: any;
   action = '';
@@ -26,12 +35,17 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   isAddCompetitor = true;
   lstCbx = [];
   fieldCompetitor = { text: 'competitorName', value: 'recID' };
-
+  showLabelAttachment = false;
+  isHaveFile = false;
   competitorName: any;
+  currentRate = 1;
+  hovered = 0;
+  competitorID: any;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private cmSv: CodxCmService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -40,6 +54,10 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     this.action = dt?.data?.action;
     if (this.action != 'add') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+      this.currentRate = parseInt(this.data.rating);
+    } else {
+      this.data.recID = Util.uid();
+      this.currentRate = 1;
     }
     this.data.dealID = dt?.data?.dealID;
     this.gridViewSetup = dt?.data?.gridViewSetup;
@@ -47,12 +65,16 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   }
   async ngOnInit() {
     if (this.action == 'copy') {
-      this.data.recID = Util.uid();
       this.data.competitorID = null;
+      this.data.recID = Util.uid();
     }
     this.lstCbx = await this.loadCompetitor();
+    if (this.action == 'edit') this.competitorID = this.data?.competitorID;
   }
 
+  ngAfterViewInit(): void {
+    this.changeDetector.detectChanges();
+  }
   //#region load combobox
   async loadCompetitor() {
     var options = new DataRequest();
@@ -76,7 +98,7 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     return lst;
   }
   //#endregion
-  onSave() {
+  async onSave() {
     if (!this.isAddCompetitor) {
       if (this.competitorName == null || this.competitorName.trim() == '') {
         {
@@ -90,7 +112,7 @@ export class PopupAddDealcompetitorComponent implements OnInit {
       }
       this.cmSv.addCompetitorByName(this.competitorName).subscribe((x) => {
         if (x) {
-          this.data.competitorID = x;
+          this.competitorID = x;
           this.addHandle();
         } else {
           this.dialog.close();
@@ -102,7 +124,8 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     }
   }
 
-  addHandle() {
+  async addHandle() {
+    if(this.competitorID != this.data.competitorID) this.data.competitorID = this.competitorID;
     if (
       this.data?.competitorID == null ||
       this.data?.competitorID.trim() == ''
@@ -123,11 +146,19 @@ export class PopupAddDealcompetitorComponent implements OnInit {
       );
       return;
     }
-
-    this.beforeSave();
+    if (this.attachment?.fileUploadList?.length > 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.beforeSave();
+        }
+      });
+    } else {
+      this.beforeSave();
+    }
   }
 
   beforeSave() {
+    this.data.rating = this.currentRate > 0 ? this.currentRate.toString() : '1';
     if (this.action == 'add' || this.action == 'copy') {
       this.cmSv.addDealCompetitor(this.data).subscribe((res) => {
         if (res) {
@@ -181,10 +212,24 @@ export class PopupAddDealcompetitorComponent implements OnInit {
     }
   }
   cbxChange(e) {
-    if (this.data?.competitorID != e) {
-      this.data.competitorID = e;
+    if (this.competitorID != e) {
+      this.competitorID = e;
     }
   }
+
+  //#region file
+
+  addFile(e) {
+    this.attachment.uploadFile();
+  }
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  fileAdded(e) {}
+  //#endregion
 }
 class Guid {
   static newGuid() {

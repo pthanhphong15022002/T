@@ -500,6 +500,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           (x) => x.recID != item
         );
         if(this.data && this.data.length == 0) this.loaded = true;
+
       }
     })
     //Thay đổi tên Folder

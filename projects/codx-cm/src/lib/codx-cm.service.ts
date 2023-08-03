@@ -739,12 +739,30 @@ export class CodxCmService {
       data
     );
   }
+  moveStartFirstLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStartFirstLeadAsync',
+      data
+    );
+  }
   startInstance(data) {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
       'InstancesBusiness',
       'StartInstanceInDealAsync',
+      data
+    );
+  }
+  moveBackStartInstance(data) {
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstanceStepsBusiness',
+      'MoveBackStartByIdInstnaceAsync',
       data
     );
   }
@@ -1315,15 +1333,5 @@ export class CodxCmService {
       [sformName, category]
     );
   }
-
-  getSettingValue(sformName) {
-    return this.api.exec<any>(
-      'SYS',
-      'SettingValuesBusiness',
-      'GetSettingValueAsync',
-      sformName
-    );
-  }
-
   //end
 }

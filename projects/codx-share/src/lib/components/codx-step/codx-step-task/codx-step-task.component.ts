@@ -1661,50 +1661,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.valueChangeProgress.emit({ type: 'D', data: [dataProgress] });
     }
   }
-
-  // checkUpdateProgress(dataUpdate, type) {
-  //   if(type == "G" && this.isMoveStage && (this.isSuccessTaskDefault || this.isSuccessAllTask)){ // trường hợp chuyển giai đoạn khóa thay đổi group
-  //     return false;
-  //   }
-  //   if (this.isMoveStage || (this.isTaskFirst && this.currentStep?.stepStatus == "0")) {
-  //     return true;
-  //   }
-  //   if (this.isOnlyView && this.isStart && !this.isClose && !this.isViewStep) {
-  //     if (type == 'P') {
-  //       return this.isUpdateProgressStep && this.isRoleAll ? true : false;
-  //     } else if (type == 'G') {
-  //       let isGroup = false;
-  //       if (!this.isRoleAll) {
-  //         isGroup = this.checRoleTask(dataUpdate, 'O');
-  //       }
-  //       return this.isUpdateProgressGroup && (this.isRoleAll || isGroup)
-  //         ? true
-  //         : false;
-  //     } else {
-  //       if (dataUpdate.status == '1') {
-  //         return false;
-  //       }
-  //       let isGroup = false;
-  //       let isTask = false;
-  //       if (!this.isRoleAll) {
-  //         let group = this.currentStep?.taskGroups?.find(
-  //           (g) => g.refID == dataUpdate?.taskGroupID
-  //         );
-  //         isGroup = group ? this.checRoleTask(group, 'O') : false;
-  //         if (!isGroup) {
-  //           isTask = this.checRoleTask(dataUpdate, 'O');
-  //         }
-  //       }
-  //       return this.isRoleAll || isGroup || isTask ? true : false;
-  //     }
-  //   }
-  //   return false;
-  // }
   //#endregion
 
   //#region view
   viewTask(data, type) {
-    if (data) {
+    if (data && !this.isViewStep && !this.isMoveStage) {
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
         formName: 'DPInstancesStepsTasks',

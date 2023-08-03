@@ -1148,32 +1148,61 @@ export class CasesComponent
     }
   }
   release(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    // duyet cu
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.dataSelected.recID, 'CasesBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.dataSelected = q;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              }
+              this.notificationsService.notifyCode('ES007');
+            });
+        }
+      });
+    //duyet moi
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
-    //codxshare ko tra gi ve ca nen call api lai
-    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'CasesBusiness')
-        .subscribe((c) => {
-          if (c) {
-            this.dataSelected = c;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
-    }
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.dataSelected.recID, 'CasesBusiness')
+    //     .subscribe((c) => {
+    //       if (c) {
+    //         this.dataSelected = c;
+    //         this.view.dataService.update(this.dataSelected).subscribe();
+    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+    //       }
+    //       this.notificationsService.notifyCode('ES007');
+    //     });
+    // }
   }
 
   //Huy duyet
@@ -1215,10 +1244,7 @@ export class CasesComponent
                 }
               });
           } else {
-            this.notificationsService.notify(
-              'Quy trình không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-              '3'
-            );
+            this.notificationsService.notifyCode('DP040');
           }
         });
       }

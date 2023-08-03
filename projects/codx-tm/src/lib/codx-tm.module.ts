@@ -72,7 +72,6 @@ import {
 } from '@syncfusion/ej2-angular-treemap';
 import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
-import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
 import { MeetingDetailComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/meeting-detail/meeting-detail.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
@@ -219,7 +218,6 @@ const T_Component: Type<any>[] = [
   DashboardComponent,
   PopupTabsViewsDetailsComponent,
   LayoutNoToolbarComponent,
-  DashboardContentComponent,
   SearchingComponent,
 ];
 @NgModule({
