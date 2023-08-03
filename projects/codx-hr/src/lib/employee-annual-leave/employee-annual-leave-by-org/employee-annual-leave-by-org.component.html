@@ -3,7 +3,7 @@
         [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
         [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
         [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true"
-        [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true" ></codx-gridview-v2>
+        [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
 </div>
 
 <!-- #region Header Template HRTAL01 -->
@@ -206,12 +206,16 @@
 </ng-template>
 <ng-template #colALYearMonthHRTAL02 let-data>
     <div class="d-flex flex-column p-3">
-        <div class="d-flex align-items-center justify-content-between mb-1">
+        <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
+            [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
             <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                 {{data.alYearMonth}}
             </span>
             <ng-template #noALYearMonth>
                 <span class="place-holder">{{grvSetup['ALYearMonth'].headerText}}</span>
+            </ng-template>
+            <ng-template #alYearMonthTooltip>
+                <span class="data-text-color">{{data.alYearMonth}}</span>
             </ng-template>
         </div>
     </div>
@@ -359,7 +363,8 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div #listDataDaysOff class="list-days-off" *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification" 
+        <div #listDataDaysOff class="list-days-off"
+            *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
             (scroll)="onScrollList(listDataDaysOff)">
             <div *ngFor="let item of listDaysOff" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
