@@ -50,6 +50,7 @@ export class CodxHrService {
   actionUpdateApproved = 'AU5';
   actionUpdateClosed = 'AU9';
   //#endregion
+  childMenuClick = new BehaviorSubject<any>(null);
 
   constructor(
     private api: ApiHttpService,
@@ -2418,14 +2419,24 @@ export class CodxHrService {
     );
   }
 
-  //Setting value
-  SaveSettingValue(data: any) {
+  //Setting value HR
+  SaveSettingValue(formName: string, category: string, value: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'SaveSettingValueAsync',
-      [data]
+      [formName, category, value]
+    );
+  }
+
+  GetParameterByHRAsync(formName: string, category: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetParameterByHRAsync',
+      [formName, category]
     );
   }
 }

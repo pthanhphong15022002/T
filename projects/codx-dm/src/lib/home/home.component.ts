@@ -500,6 +500,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           (x) => x.recID != item
         );
         if(this.data && this.data.length == 0) this.loaded = true;
+
       }
     })
     //Thay đổi tên Folder
@@ -507,7 +508,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if (res) {
         this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree != null) tree.setNodeTree(res);
+        if (tree != null && this.funcID != "DMT00") tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
         var index  = this.data.findIndex((x) => x.recID == res.recID);
         if(index >= 0)

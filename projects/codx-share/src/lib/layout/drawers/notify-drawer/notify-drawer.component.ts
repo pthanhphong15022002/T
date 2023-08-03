@@ -10,7 +10,7 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
   @HostBinding('class') get class() {
      return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
-  funcID:string = "WPT012";
+  funcID:string = "BGT001";
   function:any = null;
   constructor(
     private api:ApiHttpService,

@@ -167,8 +167,7 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService,
-
+    private codxShareService: CodxShareService
   ) {
     super(inject);
 
@@ -203,7 +202,7 @@ export class DealsComponent
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res?.exchRate;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -367,8 +366,8 @@ export class DealsComponent
     }
   }
   getRoleMoreFunction(type) {
-    var functionMappings;
-    var isDisabled = (eventItem, data) => {
+    let functionMappings;
+    let isDisabled = (eventItem, data) => {
       if (
         (data.closed && data.status != '1') ||
         ['1', '0'].includes(data.status) ||
@@ -377,36 +376,41 @@ export class DealsComponent
         eventItem.disabled = true;
       }
     };
-    var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
-        // eventItem.disabled = false;
-    };
-    var isCopy = (eventItem, data) => {
+    let isDelete = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     };
-    var isEdit = (eventItem, data) => {
+    let isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
     };
-    var isClosed = (eventItem, data) => {
+    let isEdit = (eventItem, data) => {
+      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
+        eventItem.disabled = true;
+      }
+    };
+    let isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed || data.status == '0';
     };
-    var isOpened = (eventItem, data) => {
+    let isOpened = (eventItem, data) => {
       eventItem.disabled = !data.closed || data.status == '0';
     };
-    var isStartDay = (eventItem, data) => {
+    let isStartDay = (eventItem, data) => {
       eventItem.disabled = !['1'].includes(data.status) || data.closed;
     };
-    var isOwner = (eventItem, data) => {
+    let isOwner = (eventItem, data) => {
       eventItem.disabled = !['1', '2'].includes(data.status) || data.closed;
     };
-    var isConfirmOrRefuse = (eventItem, data) => {
+    let isConfirmOrRefuse = (eventItem, data) => {
       eventItem.disabled = data.status != '0';
+    };
+    let isApprovalTrans = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        ['1', '0'].includes(data.status) ||
+        data?.approveRule != '1';
     };
 
     functionMappings = {
@@ -415,7 +419,7 @@ export class DealsComponent
       CM0201_3: isDisabled,
       CM0201_4: isDisabled,
       CM0201_5: isDisabled,
-      CM0201_6: isDisabled,
+      CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
       CM0201_8: isClosed,
       CM0201_9: isOpened,
@@ -1181,40 +1185,6 @@ export class DealsComponent
   //xuất file
   exportFile(dt) {
     this.codxCmService.exportFile(dt, this.titleAction);
-    // this.codxCmService
-    //   .getDataInstance(dt.refID)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       let option = new DialogModel();
-    //       option.zIndex = 1001;
-    //       let formModel = new FormModel() ;
-
-    //       formModel.entityName = 'DP_Instances';
-    //       formModel.formName = 'DPInstances';
-    //       formModel.gridViewName = 'grvDPInstances';
-    //       formModel.funcID = 'DPT04';
-
-    //       let obj = {
-    //         data: res,
-    //         formModel: formModel,
-    //         isFormExport: true,
-    //         refID: dt.processID,
-    //         refType: 'DP_Processes',
-    //         titleAction: this.titleAction,
-    //         loaded: false,
-    //       };
-    //       let dialogTemplate = this.callfc.openForm(
-    //         PopupSelectTempletComponent,
-    //         '',
-    //         600,
-    //         500,
-    //         '',
-    //         obj,
-    //         '',
-    //         option
-    //       );
-    //     }
-    //   });
   }
 
   //------------------------- Ký duyệt  ----------------------------------------//
@@ -1268,32 +1238,62 @@ export class DealsComponent
   // }
 
   release(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    // duyet cu
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.dataSelected = q;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              }
+              this.notificationsService.notifyCode('ES007');
+            });
+        }
+      });
+
+    //duet moi
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
-     //codxshare ko tra gi ve ca nen call api lai
-    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.dataSelected = q;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
-    }
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.dataSelected = q;
+    //         this.view.dataService.update(this.dataSelected).subscribe();
+    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+    //       }
+    //       this.notificationsService.notifyCode('ES007');
+    //     });
+    // }
   }
 
   //Huy duyet
@@ -1684,7 +1684,7 @@ export class DealsComponent
     this.loadViewModel();
   }
 
-  autoStart(event){
+  autoStart(event) {
     if (event) {
       this.startDeal(this.dataSelected);
     }

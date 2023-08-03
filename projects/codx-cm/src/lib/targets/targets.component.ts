@@ -523,6 +523,7 @@ export class TargetsComponent
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
           }
+          this.isShow = false;
 
           this.detectorRef.detectChanges();
         }
@@ -585,6 +586,7 @@ export class TargetsComponent
               }
             }
             // this.lstDataTree.push(Object.assign({}, data));
+            this.isShow = false;
 
             this.detectorRef.detectChanges();
           }
@@ -655,7 +657,7 @@ export class TargetsComponent
       PopupChangeAllocationRateComponent,
       '',
       850,
-      850,
+      1000,
       '',
       obj,
       '',
@@ -664,24 +666,25 @@ export class TargetsComponent
     dialog.closed.subscribe((e) => {
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        let indexTree = this.lstDataTree.findIndex(
+        let index = this.lstDataTree.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
 
-        if (indexTree != -1) {
-          var data = this.lstDataTree[indexTree]?.items;
+        if (index != -1) {
+          var data = this.lstDataTree[index]?.items;
           if (data != null) {
             var indexItem = data.findIndex(
               (x) => x.salespersonID == e?.event.salespersonID
             );
             if (indexItem != -1) {
               data[indexItem] = e.event;
-              this.lstDataTree[indexTree].items = data;
+              this.lstDataTree[index].items = data;
             }
           }
-          if (data[indexItem].targetsLines != null) {
-            const targetLines = this.lstDataTree[indexTree].targetsLines;
+          if (this.lstDataTree[index].targetsLines != null) {
+            const targetLines = this.lstDataTree[index].targetsLines;
             const updatedItems = [];
+
             for (const item of targetLines) {
               let foundLineEv = e.event?.targetsLines.find(
                 (lineEv) =>
@@ -696,13 +699,12 @@ export class TargetsComponent
 
               updatedItems.push(item);
             }
-            this.lstDataTree[indexTree].targetsLines = updatedItems;
-          }
-          if (this.lstDataTree != null && this.viewMode == 9) {
-            this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-          }
-        }
 
+            this.lstDataTree[index].targetsLines = updatedItems;
+          }
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+        }
+        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -717,15 +719,14 @@ export class TargetsComponent
     if (this.lstDataTree != null && this.lstDataTree.length > 0) {
       this.lstDataTree.forEach((res) => {
         res.isCollapse = isShow;
-      });
-
-      this.lstDataTree.forEach((res) => {
-        if (res.items != null) {
+        if (res.items != null && this.viewMode == 9) {
           res?.items.forEach((res) => {
             res.isCollapse = isShow;
           });
         }
       });
+      if (this.viewMode == 9)
+        this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
     }
     this.isShow = isShow;
     this.detectorRef.detectChanges();
@@ -733,12 +734,13 @@ export class TargetsComponent
 
   //#region setting grid
   clickShowGrid(item, isShow: boolean) {
+    item.isCollapse = isShow;
     if (item != null && item?.items != null) {
       item?.items.forEach((res) => {
         res.isCollapse = isShow;
       });
     }
-    item.isCollapse = isShow;
+    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 

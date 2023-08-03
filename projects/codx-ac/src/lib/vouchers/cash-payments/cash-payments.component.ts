@@ -70,10 +70,13 @@ export class CashPaymentsComponent extends UIComponent {
   totaloff: any = 0;
   totalsettledAmt: any = 0;
   totalbalAmt: any = 0;
+  totalVatBase:any = 0;
+  totalVatAtm:any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
   settledInvoices: any;
+  vatInvoices: any;
   acctTrans: any;
   baseCurr: any;
   oCash: any;
@@ -88,6 +91,11 @@ export class CashPaymentsComponent extends UIComponent {
     formName: 'SettledInvoices',
     gridViewName: 'grvSettledInvoices',
     entityName: 'AC_SettledInvoices',
+  };
+  fmVatInvoices: FormModel = {
+    formName: 'VATInvoices',
+    gridViewName: 'grvVATInvoices',
+    entityName: 'AC_VATInvoices',
   };
   //Bo
   tabInfo: TabModel[] = [
@@ -626,7 +634,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.acctTrans = [];
     this.settledInvoices = [];
     switch (data.subType) {
-      case '9':
       case '2':
         this.acService
           .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
@@ -637,6 +644,19 @@ export class CashPaymentsComponent extends UIComponent {
             if (res) {
               this.settledInvoices = res;
               this.loadTotalSet();
+            }
+          });
+        break;
+      case '9':
+        this.acService
+          .execApi('AC', 'VATInvoicesBusiness', 'LoadDataAsync', data.recID)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            if (res) {
+              this.settledInvoices = res.lssetinvoice;
+              this.vatInvoices = res.lsvat;
+              this.loadTotalSet();
+              this.loadTotalVat();
             }
           });
         break;
@@ -768,6 +788,15 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
+  loadTotalVat(){
+    this.totalVatBase = 0;
+    this.totalVatAtm = 0;
+    this.vatInvoices.forEach((item) => {
+      this.totalVatBase += item.vatBase;
+      this.totalVatAtm += item.vatAmt;
+    });
+  }
+
   setStyles(color): any {
     let styles = {
       backgroundColor: color,
@@ -822,6 +851,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
+    debugger
     this.api
       .execSv(
         'rptrp',

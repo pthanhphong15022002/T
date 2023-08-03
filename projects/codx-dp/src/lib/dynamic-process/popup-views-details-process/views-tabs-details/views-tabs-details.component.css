@@ -9,6 +9,6 @@
   }
 
   .tmp-item-kanban {
-    border: 1px solid;
-    border-radius: 3% 3% 3% 3% !important;
+    border: 1px var(--gray-200) solid;
+    border-radius: 3px !important;
   }

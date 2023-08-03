@@ -10,146 +10,143 @@
 >
 </codx-form>
 <ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
     <div class="row">
+      <div class="form-group">
         <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="PeriodID"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    [Group]="form.formGroup"
-                    field="periodID"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                    [disabled]="keyField == 'PeriodID' ? true : false || formType == 'edit' ? true : false"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="PeriodName"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    [Group]="form.formGroup"
-                    field="periodName"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="PeriodName2"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    [Group]="form.formGroup"
-                    field="periodName2"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="PeriodType"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    [Group]="form.formGroup"
-                    field="periodType"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="FiscalYear"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    [Group]="form.formGroup"
-                    field="fiscalYear"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="StartDate"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    id="start-date"
-                    [Group]="form.formGroup"
-                    field="startDate"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="form-group">
-                <codx-label
-                    fiedName="EndDate"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>
-                  <codx-input
-                    id="end-date"
-                    [Group]="form.formGroup"
-                    field="endDate"
-                    [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)"
-                  >
-                </codx-input>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #footer>
-    <div class="d-flex align-items-center justify-content-end">
-      <div class="d-flex justify-content-end">
-        <div class="ms-2">
-          <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-          </button>
+          <codx-label fiedName="PeriodID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="periodID"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+            [disabled]="
+              keyField == 'PeriodID'
+                ? true
+                : false || formType == 'edit'
+                ? true
+                : false
+            "
+          >
+          </codx-input>
         </div>
       </div>
     </div>
-  </ng-template>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="PeriodName" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="periodName"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="PeriodName2" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="periodName2"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="PeriodType" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="periodType"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="FiscalYear" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            field="fiscalYear"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="StartDate" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            id="start-date"
+            [Group]="form.formGroup"
+            field="startDate"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="form-group">
+          <codx-label fiedName="EndDate" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            id="end-date"
+            [Group]="form.formGroup"
+            field="endDate"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end">
+    <div class="d-flex justify-content-end">
+      <div class="ms-2">
+        <button
+          type="button"
+          class="btn btn-primary"
+          style="min-width: 60px"
+          (click)="onSave()"
+        >
+          <codx-label
+            class="fs-6 fw-normal"
+            fiedName="lblSave"
+            [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
