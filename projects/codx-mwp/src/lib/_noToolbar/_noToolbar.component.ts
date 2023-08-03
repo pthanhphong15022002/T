@@ -6,7 +6,7 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+
 @Component({
   selector: 'lib-layoutNoToolbar',
   templateUrl: './_noToolbar.component.html',
@@ -24,10 +24,5 @@ export class LayoutNoToolbarComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void {}
 
-  openFormNoteDrawer() {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe();
-  }
+  
 }

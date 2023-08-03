@@ -63,7 +63,7 @@ import { DataVll } from '../../model/HR_OrgChart.model';
   styleUrls: ['./organization-orgchart.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OrganizationOrgchartComponent implements OnInit {
+export class OrganizationOrgchartComponent {
   console = console;
   PageFitMode = PageFitMode;
   NavigationMode = NavigationMode;
@@ -230,7 +230,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     private hrService: CodxHrService,
     private notify: NotificationsService
   ) {
-    this.isGetManager(this.selectedTeam);
+    //this.isGetManager(this.selectedTeam);
   }
 
   showVal(value) {
@@ -239,67 +239,63 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   //Settings
   changeMode(e) {
-    var target = e.target.id;
-
+    var target = e?.target?.id ?? e;
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
-        //this.dataTree.pagefit = 'pageFitModeNone';
+        this.dataTree.pagefit = 'pageFitModeNone';
         break;
       case 'pageFitModeWidth':
         this.pagefit = this.PageFitMode.PageWidth;
-        //this.dataTree.pagefit = 'pageFitModeWidth';
+        this.dataTree.pagefit = 'pageFitModeWidth';
         break;
       case 'pageFitModeHeight':
         this.pagefit = this.PageFitMode.PageHeight;
-        //this.dataTree.pagefit = 'pageFitModeHeight';
+        this.dataTree.pagefit = 'pageFitModeHeight';
         break;
       case 'pageFitModeFit':
         this.pagefit = this.PageFitMode.FitToPage;
-        //this.dataTree.pagefit = 'pageFitModeFit';
+        this.dataTree.pagefit = 'pageFitModeFit';
         break;
-      case 'pageFitModeSelect':
-        this.pagefit = this.PageFitMode.SelectionOnly;
-        //this.dataTree.pagefit = 'pageFitModeSelect';
-        break;
+
       //Orientation
       case 'orientationTop':
         this.orientationType = this.OrientationType.Top;
-        //this.dataTree.orientationType = 'orientationTop';
+        this.dataTree.orientationType = 'orientationTop';
         break;
       case 'orientationBottom':
         this.orientationType = this.OrientationType.Bottom;
-        //this.dataTree.orientationType = 'orientationBottom';
+        this.dataTree.orientationType = 'orientationBottom';
         break;
       case 'orientationLeft':
         this.orientationType = this.OrientationType.Left;
-        //this.dataTree.orientationType = 'orientationLeft';
+        this.dataTree.orientationType = 'orientationLeft';
         break;
       case 'orientationRight':
         this.orientationType = this.OrientationType.Right;
-        //this.dataTree.orientationType = 'orientationRight';
+        this.dataTree.orientationType = 'orientationRight';
         break;
       case 'orientationNone':
         this.orientationType = this.OrientationType.None;
-        //this.dataTree.orientationType = 'orientationNone';
+        this.dataTree.orientationType = 'orientationNone';
         break;
 
       //PlacementType children
       case 'childrenPlacementAuto':
         this.childrenPlacementType = this.ChildrenPlacementType.Auto;
-        //this.dataTree.childrenPlacementType = 'childrenPlacementAuto';
+        this.dataTree.childrenPlacementType = 'childrenPlacementAuto';
         break;
       case 'childrenPlacementVertical':
         this.childrenPlacementType = this.ChildrenPlacementType.Vertical;
-        //this.dataTree.childrenPlacementType = 'childrenPlacementVertical';
+        this.dataTree.childrenPlacementType = 'childrenPlacementVertical';
         break;
       case 'childrenPlacementHorizontal':
         this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
-        //this.dataTree.childrenPlacementType = 'childrenPlacementHorizontal';
+        this.dataTree.childrenPlacementType = 'childrenPlacementHorizontal';
         break;
       case 'childrenPlacementMatrix':
         this.childrenPlacementType = this.ChildrenPlacementType.Matrix;
-        //this.dataTree.childrenPlacementType = 'childrenPlacementMatrix';
+        this.dataTree.childrenPlacementType = 'childrenPlacementMatrix';
         break;
 
       //Hạng mục căn dọc
@@ -740,12 +736,8 @@ export class OrganizationOrgchartComponent implements OnInit {
         this.frameoutBottom = parseInt(e.target.value);
         break;
       default:
-      // code block
+        break;
     }
-
-    console.log(this.dataTree.name);
-    console.log(this.dataTree.pageFit);
-    console.log(this.dataTree);
   }
 
   // onScale(data: number): void {
@@ -766,8 +758,9 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   clearSetting() {
     this.pagefit = this.PageFitMode.FitToPage;
-    this.orientationType = '';
-    this.childrenPlacementType = '';
+    this.orientationType = this.OrientationType.Top;
+    this.childrenPlacementType = this.ChildrenPlacementType.Horizontal;
+
     this.verticalAlignment = '';
     this.horizontalAlignment = '';
     this.alignBranches = false;
@@ -782,7 +775,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.selectCheckBoxLabel = '';
     this.markerHeight = 1;
     this.minimizedItemOpacity = 1;
-
     this.hightlightBottom = 1;
     this.minimizedItemShapeType = '';
     this.minimizedItemLineType = '';
@@ -792,7 +784,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.dotLevelShift = 30;
     this.lineLevelShift = 1;
     this.normalItemsInterval = 1;
-
     this.dotItemsInterval = 30;
     this.lineItemsInterval = 30;
     this.cousinsIntervalMultiplier = 5;
@@ -800,7 +791,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.paddingIntervalTop = 1;
     this.paddingIntervalRight = 1;
     this.paddingIntervalBottom = 1;
-
     this.arrowsDirection = '';
     this.connectorType = '';
     this.elbowType = '';
@@ -811,7 +801,6 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.lineWidth = 1;
     this.labelOrientation = '';
     this.labelPlacement = '';
-
     this.labelFontSize = '';
     this.labelFontFamily = '';
     this.labelFontWeight = '';
@@ -825,6 +814,65 @@ export class OrganizationOrgchartComponent implements OnInit {
     this.frameoutTop = 1;
     this.frameoutRight = 1;
     this.frameoutBottom = 1;
+
+    //Clear under database
+    this.dataTree.pagefit = 'pageFitModeFit';
+    this.dataTree.orientationType = 'orientationTop';
+    this.dataTree.childrenPlacementType = 'childrenPlacementHorizontal';
+
+    this.dataTree.verticalAlignment = '';
+    this.dataTree.horizontalAlignment = '';
+    this.dataTree.alignBranches = false;
+    this.dataTree.leavesPlacementType = '';
+    this.dataTree.placeAssitantAbove = false;
+    this.dataTree.maximumColumnsInMatrix = 1;
+    this.dataTree.minimalVisibility = '';
+    this.dataTree.minimumVisibleLevels = 1;
+    this.dataTree.selectionPathMode = '';
+    this.dataTree.hasButtons = '';
+    this.dataTree.hasSelectorCheckbox = 'selectionCheckboxFalse';
+    this.dataTree.selectCheckBoxLabel = '';
+    this.dataTree.markerHeight = 1;
+    this.dataTree.minimizedItemOpacity = 1;
+    this.dataTree.hightlightBottom = 1;
+    this.dataTree.minimizedItemShapeType = '';
+    this.dataTree.minimizedItemLineType = '';
+    this.dataTree.minimizedItemCornerRadius = 10;
+    this.dataTree.normalLevelShift = 50;
+    this.dataTree.minimizedItemLineWidth = 2;
+    this.dataTree.dotLevelShift = 30;
+    this.dataTree.lineLevelShift = 1;
+    this.dataTree.normalItemsInterval = 1;
+    this.dataTree.dotItemsInterval = 30;
+    this.dataTree.lineItemsInterval = 30;
+    this.dataTree.cousinsIntervalMultiplier = 5;
+    this.dataTree.paddingIntervalLeft = 1;
+    this.dataTree.paddingIntervalTop = 1;
+    this.dataTree.paddingIntervalRight = 1;
+    this.dataTree.paddingIntervalBottom = 1;
+    this.dataTree.arrowsDirection = '';
+    this.dataTree.connectorType = '';
+    this.dataTree.elbowType = '';
+    this.dataTree.bevelSize = 1;
+    this.dataTree.elbowDotSize = 1;
+    this.dataTree.linesType = '';
+    this.dataTree.linesColor = '#000';
+    this.dataTree.lineWidth = 1;
+    this.dataTree.labelOrientation = '';
+    this.dataTree.labelPlacement = '';
+    this.dataTree.labelFontSize = '';
+    this.dataTree.labelFontFamily = '';
+    this.dataTree.labelFontWeight = '';
+    this.dataTree.navigationMode = '';
+    this.dataTree.showFrame = false;
+    this.dataTree.frameLeft = 1;
+    this.dataTree.frameTop = 1;
+    this.dataTree.frameRight = 1;
+    this.dataTree.frameBottom = 1;
+    this.dataTree.frameoutLeft = 1;
+    this.dataTree.frameoutTop = 1;
+    this.dataTree.frameoutRight = 1;
+    this.dataTree.frameoutBottom = 1;
   }
 
   openSetting() {
@@ -840,7 +888,6 @@ export class OrganizationOrgchartComponent implements OnInit {
       },
       option
     );
-    this.dialogEditStatus.closed.subscribe();
   }
 
   CloseDialog(dialog: DialogRef) {
@@ -911,7 +958,40 @@ export class OrganizationOrgchartComponent implements OnInit {
     //this.dt.detectChanges();
   }
 
+  // getDataInit() {
+  //   this.hrService
+  //     .GetParameterByHRAsync('HRParameters', '1')
+  //     .subscribe((res: any) => {
+  //       this.dataTree = JSON.parse(res);
+  //       console.log(this.dataTree);
+
+  //       this.selectedTeam = this.dataTree.isGetManager;
+  //       console.log(this.selectedTeam);
+  //       for (const [key, value] of Object.entries(this.dataTree)) {
+  //         this.changeMode(value);
+  //       }
+  //     });
+
+  //   this.cacheService.valueList('L0605').subscribe((res) => {
+  //     if (res) {
+  //       this.dataVll = res.datas;
+  //     }
+  //   });
+  // }
   ngOnInit(): void {
+    this.hrService
+      .GetParameterByHRAsync('HRParameters', '1')
+      .subscribe((res: any) => {
+        this.dataTree = JSON.parse(res);
+
+        this.selectedTeam = this.dataTree.isGetManager;
+        this.isGetManager(this.selectedTeam);
+
+        for (const [key, value] of Object.entries(this.dataTree)) {
+          this.changeMode(value);
+        }
+      });
+
     this.cacheService.valueList('L0605').subscribe((res) => {
       if (res) {
         this.dataVll = res.datas;
@@ -921,7 +1001,7 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   //#region Get manager depend combobox
   isGetManager(value) {
-    if (value.includes('Không')) {
+    if (value.includes('No')) {
       this.getDataPositionByID(this.orgUnitID, false);
     } else {
       this.getDataPositionByID(this.orgUnitID, true);
@@ -942,11 +1022,15 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   //#endregion
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes.orgUnitID.currentValue != changes.orgUnitID.previousValue &&
+      !changes.orgUnitID.firstChange
+    ) {
       if (this.orgUnitID) {
         //Function get new orgchart
         this.isGetManager(this.selectedTeam);
+
         //this.dt.detectChanges();
         //Function get olg orgchart
         // this.dataService.setPredicates([], [this.orgUnitID], (res) => {
@@ -1164,7 +1248,7 @@ export class OrganizationOrgchartComponent implements OnInit {
             'ERM.Business.HR',
             'OrganizationUnitsBusiness',
             'GetChildChartAsync',
-            [node.id, this.selectedTeam.includes('Không') ? false : true]
+            [node.id, this.selectedTeam.includes('No') ? false : true]
           )
           .subscribe((res: any) => {
             if (res) {
@@ -1203,5 +1287,21 @@ export class OrganizationOrgchartComponent implements OnInit {
           });
       }
     }
+  }
+
+  onSaveForm() {
+    if (this.selectedTeam.includes('No')) {
+      this.dataTree.isGetManager = 'No';
+    } else {
+      this.dataTree.isGetManager = 'Yes';
+    }
+    this.hrService
+      .SaveSettingValue('HRParameters', '1', this.dataTree)
+      .subscribe((res: any) => {
+        if (res) {
+          this.dialogEditStatus && this.dialogEditStatus.close();
+          // console.log(res.dataValue);
+        }
+      });
   }
 }

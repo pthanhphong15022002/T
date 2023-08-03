@@ -31,6 +31,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-receipt-transaction',
@@ -47,6 +48,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('memoContent', { read: ElementRef })
   memoContent: ElementRef<HTMLElement>;
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   private destroy$ = new Subject<void>();
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
@@ -77,6 +79,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   overflowed: boolean = false;
   expanding: boolean = false;
   isLoadDataAcct: any = true;
+  loading: any = false;
+  loadingAcct: any = false;
   journal: IJournal;
   lockFields: Array<any> = [];
   fmVouchers: FormModel = {
@@ -365,6 +369,8 @@ export class ReceiptTransactionComponent extends UIComponent {
     return true;
   }
   loadDatadetail(data) {
+    this.loading = true;
+    this.loadingAcct = true;
     this.acctTrans = [];
     this.api
       .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
@@ -374,6 +380,8 @@ export class ReceiptTransactionComponent extends UIComponent {
       .subscribe((res: any) => {
         this.vouchersLines = res;
         this.loadTotal();
+        this.loading = false;
+        this.detectorRef.detectChanges();
       });
     this.api
       //.exec('AC', 'AcctTransBusiness', 'LoadDataAsync', 'e973e7b7-10a1-11ee-94b4-00155d035517')
@@ -385,8 +393,9 @@ export class ReceiptTransactionComponent extends UIComponent {
           this.acctTrans = res;
           this.loadAcctTransTotal();
           this.isLoadDataAcct = false;
-          this.detectorRef.detectChanges();
         }
+        this.loadingAcct = false;
+        this.detectorRef.detectChanges();
       });
   }
   changeItemDetail(event) {
@@ -629,8 +638,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   print(data: any, reportID: any, reportType: string = 'V') {
     this.api
       .execSv(
-        'rptsys',
-        'Codx.RptBusiniess.SYS',
+        'rptrp',
+        'Codx.RptBusiniess.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',
         [reportID, reportType]

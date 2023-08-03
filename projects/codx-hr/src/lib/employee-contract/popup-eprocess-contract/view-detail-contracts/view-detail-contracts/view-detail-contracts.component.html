@@ -18,7 +18,12 @@
         </span>
 
         <span
-          *ngIf="itemDetail?.isCurrent && !itemDetail?.isExpire"
+          *ngIf="
+            itemDetail?.status === '5' &&
+            dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
+            (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
+              itemDetail.expiredDate === null)
+          "
           #popOver="ngbPopover"
           [openDelay]="500"
           (mouseenter)="popOver.open()"

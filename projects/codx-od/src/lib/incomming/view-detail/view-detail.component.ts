@@ -859,10 +859,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                 [this.formModel, item]
               );
               this.dialog.closed.subscribe((x) => {
-                if (x.event != null) {
-                  this.data = x.event[0];
-                  this.data.lstUserID = getListImg(x.event[0].relations);
-                  this.data.listInformationRel = x.event[1];
+                if (x.event) {
+                  var index = this.data.files.findIndex(a=>a.recID == x.event.recID);
+                  if(index >=0 ) this.data.files[index] = x.event;
                 }
               });
             }

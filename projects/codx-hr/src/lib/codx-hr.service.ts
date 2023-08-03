@@ -2417,6 +2417,27 @@ export class CodxHrService {
       [formName, category]
     );
   }
+
+  //Setting value HR
+  SaveSettingValue(formName: string, category: string, value: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'SaveSettingValueAsync',
+      [formName, category, value]
+    );
+  }
+
+  GetParameterByHRAsync(formName: string, category: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetParameterByHRAsync',
+      [formName, category]
+    );
+  }
 }
 
 import { Pipe, PipeTransform } from '@angular/core';

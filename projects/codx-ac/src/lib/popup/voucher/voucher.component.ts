@@ -8,6 +8,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   DialogData,
@@ -29,10 +30,13 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'lib-voucher',
   templateUrl: './voucher.component.html',
   styleUrls: ['./voucher.component.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class VoucherComponent extends UIComponent implements OnInit {
   //#region Constructor
+  @ViewChild('grid') public grid: CodxGridviewV2Component;
+  @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   title: string;
   cashpayment: any;
@@ -52,10 +56,6 @@ export class VoucherComponent extends UIComponent implements OnInit {
   predicates: string;
   dataValues: string;
   objectName:any;
-  @ViewChild('grid') public grid: CodxGridviewV2Component;
-  @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
-  @ViewChild('cashRef') cashRef: ElementRef;
   morefunction: any;
   payAmt: number = 0;
   sort:any = Array<SortModel> ;
@@ -65,6 +65,7 @@ export class VoucherComponent extends UIComponent implements OnInit {
     allowEditing: true,
     mode: 'Normal',
   };
+  isInit:any = false;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -87,13 +88,11 @@ export class VoucherComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '80%', '80%');
+    this.acService.setPopupSize(this.dialog, '80%', '90%');
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.dt.detectChanges();
-    }, 500);
+    this.dt.detectChanges();
   }
 
   onDestroy() {
@@ -197,6 +196,11 @@ export class VoucherComponent extends UIComponent implements OnInit {
     if (field === 'accountID' && e.data) {
       this.mapPredicates.set('accountID', 'AccountID = @0');
       this.mapDataValues.set('accountID', e.data);
+    }
+
+    if (field === 'currencyID' && e.data) {
+      this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+      this.mapDataValues.set('currencyID', e.data);
     }
 
     if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {

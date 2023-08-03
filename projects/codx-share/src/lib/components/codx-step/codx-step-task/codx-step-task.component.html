@@ -107,7 +107,6 @@
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <!-- [@fadeInOut] -->
   <div
     class="main-body ms-6"
     *ngIf="listGroupTask?.length > 0 && isShowElement"
@@ -259,7 +258,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose"
+      *ngIf="!isMoveStage && !isClose && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -273,13 +272,6 @@
 
 <ng-template #taskTemplate let-data="value">
   <div class="d-flex justify-content-start align-items-center has-action-menu task-hover">
-    <!-- icon task -->
-    <!-- <div class="icon-container me-3" [ngStyle]="getColor(data?.task)">
-      <span
-        class="icon-18 text-primary-600"
-        [ngClass]="getIconTask(data?.task)"
-      ></span>
-    </div> -->
     <codx-icon-step
       [typeTask]="data?.task?.taskType"
       [listTypeTask]="listTaskType"
@@ -311,7 +303,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose"
+      *ngIf="!isMoveStage && !isClose && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -345,7 +337,7 @@
 <ng-template #buttonTemplate let-data="value">
   <div
     class="d-flex justify-content-center mt-3"
-    *ngIf="isOnlyView && isShowBtnAddTask"
+    *ngIf="isOnlyView && isShowBtnAddTask && !isViewStep && !isMoveStage"
   >
     <button
       type="button"
@@ -367,7 +359,7 @@
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
     <codx-vll
-      *ngIf="data?.group && !isMoveStage"
+      *ngIf="data?.group && !isMoveStage && !isViewStep"
       [name]="'DP048'"
       [field]="'Status'"
       [value]="data?.value?.status"
@@ -455,6 +447,13 @@
       ></codx-label>
     </span>
     <div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light"
+        (click)="dialogGuide.close()"
+      >
+        <span class="icon-open_in_full icon-16"></span>
+      </button>
       <button
         type="button"
         class="btn btn-icon btn-sm btn-light"

@@ -10,46 +10,62 @@
   <ng-template #body>
     <ng-container *ngIf="form?.formGroup">
       <div class="row form-group">
-        <div class="col-2">
-          <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
-          </codx-label>
-          <codx-dropdown-calendar
-            #dropCalendar
-            [disabled]="action == 'edit' || isBusiness"
-            cssPopup="h-500px w-800px"
-            [value]="date"
-            [displayOption]="ops"
-            cssClass="w-100 om-calendar"
-            class="me-2"
-            [selectedType]="selectedType"
-            (change)="changeCalendar($event)"
-          ></codx-dropdown-calendar>
+        <div class="col-6 form-group row">
+          <div class="col-4">
+            <codx-label [formModel]="form.formModel" [fiedName]="'Year'">
+            </codx-label>
+            <codx-dropdown-calendar
+              #dropCalendar
+              [disabled]="action == 'edit' || isBusiness"
+              cssPopup="h-500px w-800px"
+              [value]="date"
+              [displayOption]="ops"
+              cssClass="w-100 om-calendar"
+              class="me-2"
+              [selectedType]="selectedType"
+              (change)="changeCalendar($event)"
+            ></codx-dropdown-calendar>
+          </div>
+          <div class="col-8">
+            <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
+            </codx-label>
+            <codx-input
+              [disabled]="action == 'edit'"
+              [formModel]="form.formModel"
+              [crrValue]="businessLineID"
+              (valueChange)="valueChange($event)"
+              field="businessLineID"
+            >
+            </codx-input>
+          </div>
         </div>
-        <div class="col-5">
-          <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
-          </codx-label>
-          <codx-input
-            [disabled]="action == 'edit'"
-            [formModel]="form.formModel"
-            [crrValue]="data?.businessLineID"
-            (valueChange)="valueChange($event)"
-            field="businessLineID"
-          >
-          </codx-input>
-        </div>
-        <div class="col-5">
-          <codx-label [formModel]="form.formModel" fiedName="Target">
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [crrValue]="data?.target"
-            [min]="0"
-            (valueChange)="valueChangeTarget($event, 'input')"
-            field="target"
-          >
-          </codx-input>
+        <div class="row form-group col-6">
+          <div class="col-8">
+            <codx-label [formModel]="form.formModel" fiedName="Target">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [crrValue]="data?.target"
+              [min]="0"
+              (valueChange)="valueChangeTarget($event, 'input')"
+              field="target"
+            >
+            </codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label [formModel]="form.formModel" fiedName="CurrencyID">
+            </codx-label>
+            <codx-input
+              [formModel]="form.formModel"
+              [crrValue]="data?.currencyID"
+              (valueChange)="valueChange($event)"
+              field="currencyID"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
+
       <ng-container>
         <div
           class="d-flex align-items-center justify-content-between mt-4 mb-2"
@@ -101,7 +117,7 @@
           >
           </codx-input> -->
         </div>
-        <ng-container >
+        <ng-container>
           <ng-container [ngTemplateOutlet]="templateOwners"></ng-container>
         </ng-container>
       </ng-container>
@@ -183,7 +199,10 @@
                 (click)="dbClick(item?.userID, 'weight')"
                 class="d-flex justify-content-end user-nav-item"
               >
-                <span class="me-1">{{ item?.weight.toFixed(2) }} </span>
+                <span
+                  class="me-1"
+                  [innerHTML]="formatNumberWithoutTrailingZeros(item?.weight)"
+                ></span>
                 %
               </div>
               <div
@@ -355,7 +374,7 @@
       <button
         type="button"
         class="btn btn-sm btn-outline-primary"
-        (click)="clickRefered() "
+        (click)="clickRefered()"
       >
         <i class="icon-refresh text-primary icon-20 me-1"></i>
         <codx-label

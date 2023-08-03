@@ -986,6 +986,19 @@ codx-view-list-detail .codx-detail-footer.expand .tab_footer {
   right: 15px;
 }
 
+.e-dlg-content .codx-detail-footer.expand .tab-content {
+  overflow: auto;
+  padding: 0 15px;
+  position: relative;
+  height: 360px;
+  padding-bottom: 0 !important;
+}
+
+.e-dlg-content .codx-detail-footer.expand .tab_footer {
+  bottom: 8px;
+  right: 15px;
+}
+
 codx-view-list-detail
   .codx-detail-footer.expand
   .tab_footer
@@ -3215,18 +3228,6 @@ codx-toolbar-report{
 }
 
 
-
-/////
-.e-gantt-splitter table tr{
-  height: 40px!important;
-}
-.e-gantt-splitter table tr.e-chart-row div{
-  height: 40px!important;
-}
-
-
-///
-/// 
 /// 
 .gridview-sum{
   .sum-label{

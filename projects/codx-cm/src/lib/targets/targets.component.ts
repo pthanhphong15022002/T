@@ -25,7 +25,7 @@ import {
 } from 'codx-core';
 import { PopupAddTargetComponent } from './popup-add-target/popup-add-target.component';
 import { DecimalPipe } from '@angular/common';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { X } from '@angular/cdk/keycodes';
 import { PopupChangeAllocationRateComponent } from './popup-change-allocation-rate/popup-change-allocation-rate.component';
@@ -50,6 +50,8 @@ export class TargetsComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
+
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   //BusinessLine
   @ViewChild('headerBusinessLine', { static: true })
@@ -122,7 +124,7 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = 'GetListTreeTargetLineAsync';
+  method: string = '';
   idField: string = 'recID';
   //#endregion
   titleAction = '';
@@ -141,9 +143,11 @@ export class TargetsComponent
   schedule: any;
   columnGrids = [];
   isShow = false;
+  isShowGrid = false;
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  viewMode = 9;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -270,17 +274,8 @@ export class TargetsComponent
   //#endregion
   //#region event codx-view
   viewChanged(e) {
-    if (e?.view?.type == 8) {
-      if (!this.schedule)
-        this.schedule = (this.view?.currentView as any)?.schedule;
-    } else {
-      this.schedule = null;
-    }
-    var formModel = new FormModel();
-    formModel.formName = 'CMTargetsLines';
-    formModel.gridViewName = 'grvCMTargetsLines';
-    formModel.entityName = 'CM_TargetsLines';
-    this.fmTargetLines = formModel;
+    this.clickShow(false);
+    this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
   onLoading(e) {
@@ -382,19 +377,18 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
         },
       },
       {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
+        type: ViewType.chart,
+        sameData: false,
+        active: false,
         model: {
-          resources: this.columnGrids,
-          hideMoreFunc: true,
+          panelRightRef: this.templateGrid,
         },
       },
       // {
@@ -514,27 +508,23 @@ export class TargetsComponent
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e != null && e?.event != null) {
-          if (e?.event[0] != null && e?.event[0][1] != null) {
-            var data = e?.event[0][1];
-            this.view.dataService.update(data).subscribe();
-            var lstOwners = e?.event[1];
-            var lstTargetLines = e?.event[0][0];
-            if (data.year == this.year) {
-              this.businessLineID = e?.event[2];
-              this.lstTargetLines = lstTargetLines;
-              this.lstOwners = lstOwners;
-              this.data = e?.event[0][2];
-              var index = this.lstDataTree.findIndex(
-                (x) => x.businessLineID == data?.businessLineID
-              );
-              if (index != -1) {
-                this.lstDataTree[index] = data;
-                // this.lstDataTree.splice(index, 1);
-              } else {
-                this.lstDataTree.push(Object.assign({}, data));
-              }
+          var data = e?.event[0];
+          if (data.year == this.year) {
+            var index = this.lstDataTree.findIndex(
+              (x) => x.businessLineID == data?.businessLineID
+            );
+            if (index != -1) {
+              this.lstDataTree[index] = data;
+              // this.lstDataTree.splice(index, 1);
+            } else {
+              this.lstDataTree.push(Object.assign({}, data));
+            }
+            if (this.lstDataTree != null && this.viewMode == 9) {
+              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
           }
+          this.isShow = false;
+
           this.detectorRef.detectChanges();
         }
       });
@@ -579,30 +569,26 @@ export class TargetsComponent
           dialogModel
         );
         dialog.closed.subscribe((e) => {
-          this.businessLineID = null;
           if (!e?.event) this.view.dataService.clear();
           if (e != null && e?.event != null) {
-            if (e?.event[0] != null && e?.event[0][1] != null) {
-              var data = e?.event[0][1];
-              this.view.dataService.update(data).subscribe();
-              if (data.year == this.year) {
-                this.businessLineID = e?.event[2];
-                this.lstTargetLines = e?.event[0][0];
-                this.lstOwners = e?.event[1];
-                this.data = e?.event[0][2];
-                var index = this.lstDataTree.findIndex(
-                  (x) => x.businessLineID == data?.businessLineID
-                );
-                if (index != -1) {
-                  this.lstDataTree[index] = data;
-                } else {
-                  this.lstDataTree.push(Object.assign({}, data));
-                }
+            var data = e?.event[0];
+            if (data.year == this.year) {
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+              } else {
+                this.lstDataTree.push(Object.assign({}, data));
               }
-              // this.lstDataTree.push(Object.assign({}, data));
-
-              this.detectorRef.detectChanges();
+              if (this.lstDataTree != null && this.viewMode == 9) {
+                this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+              }
             }
+            // this.lstDataTree.push(Object.assign({}, data));
+            this.isShow = false;
+
+            this.detectorRef.detectChanges();
           }
         });
       });
@@ -677,7 +663,51 @@ export class TargetsComponent
       '',
       dialogModel
     );
-    dialog.closed.subscribe((e) => {});
+    dialog.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      if (e != null && e?.event != null) {
+        let index = this.lstDataTree.findIndex(
+          (x) => e.event.businessLineID == x.businessLineID
+        );
+
+        if (index != -1) {
+          var data = this.lstDataTree[index]?.items;
+          if (data != null) {
+            var indexItem = data.findIndex(
+              (x) => x.salespersonID == e?.event.salespersonID
+            );
+            if (indexItem != -1) {
+              data[indexItem] = e.event;
+              this.lstDataTree[index].items = data;
+            }
+          }
+          if (this.lstDataTree[index].targetsLines != null) {
+            const targetLines = this.lstDataTree[index].targetsLines;
+            const updatedItems = [];
+
+            for (const item of targetLines) {
+              let foundLineEv = e.event?.targetsLines.find(
+                (lineEv) =>
+                  new Date(item.startDate)?.getMonth() + 1 ===
+                    new Date(lineEv.startDate)?.getMonth() + 1 &&
+                  item.salespersonID == lineEv.salespersonID
+              );
+
+              if (foundLineEv) {
+                Object.assign(item, foundLineEv);
+              }
+
+              updatedItems.push(item);
+            }
+
+            this.lstDataTree[index].targetsLines = updatedItems;
+          }
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+        }
+        this.isShow = false;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   //#endregion
 
@@ -689,13 +719,30 @@ export class TargetsComponent
     if (this.lstDataTree != null && this.lstDataTree.length > 0) {
       this.lstDataTree.forEach((res) => {
         res.isCollapse = isShow;
+        if (res.items != null && this.viewMode == 9) {
+          res?.items.forEach((res) => {
+            res.isCollapse = isShow;
+          });
+        }
       });
+      if (this.viewMode == 9)
+        this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
     }
     this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 
   //#region setting grid
+  clickShowGrid(item, isShow: boolean) {
+    item.isCollapse = isShow;
+    if (item != null && item?.items != null) {
+      item?.items.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
+  }
 
   PopoverDetail(e, p: any, emp) {
     let parent = e.currentTarget.parentElement.offsetWidth;

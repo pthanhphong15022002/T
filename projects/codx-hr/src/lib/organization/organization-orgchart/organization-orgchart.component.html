@@ -282,10 +282,6 @@
 
 <!-- (wheel)="onMouseWheel($event)" -->
 
-<!-- <button class="btn btn-primary" (click)="onScale(0.5)">50%</button>
-<button class="btn btn-primary mx-2" (click)="onScale(1)">100%</button>
-<button class="btn btn-primary" (click)="onScale(1.5)">150%</button> -->
-
 <!-- <org-diagram
   [items]="items"
   [annotations]="annotations"
@@ -317,7 +313,7 @@
 </org-diagram> -->
 
 <div class="me-4 mt-4 d-flex justify-content-end">
-  <div class="showhim">
+  <!-- <div class="showhim">
     <input
       min="1"
       max="100"
@@ -329,7 +325,7 @@
       [style]="stylesObj"
     />
     <div class="showme">{{ scaleNumber * 100 + " %" }}</div>
-  </div>
+  </div> -->
 
   <button class="btn btn-primary btn-sm me-2" (click)="clearSetting()">
     <i class="icon-clear_all icon-16"></i> Cài đặt lại
@@ -365,9 +361,137 @@
       </div>
     </div>
 
+    <div class="card-body scroll-y h-100 pt-4">
+      <div class="text-dark fw-bold mt-5 mb-3">Chế độ phù hợp với trang</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeNone"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeWidth"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeWidth"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeWidth">
+          Vừa chiều rộng
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeHeight"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeHeight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeHeight">
+          Vừa chiều cao
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeFit"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeFit">
+          Vừa cả trang
+        </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.orientationType"
+          value="orientationTop"
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationTop"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationTop"> Từ trên </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.orientationType"
+          value="orientationLeft"
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationLeft"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationLeft">Bên trái </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Vị trí cấp con</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.childrenPlacementType"
+          value="childrenPlacementVertical"
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementVertical"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementVertical">
+          Nằm ngang
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.childrenPlacementType"
+          value="childrenPlacementHorizontal"
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementHorizontal"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementHorizontal">
+          Nằm dọc
+        </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Thông tin thẻ đơn vị</div>
+      <select class="form-select" #teams (change)="onSelected(teams.value)">
+        <option value="Yes" [(ngModel)]="this.dataTree.isGetManager">
+          Hiển thị thông tin Người quản lý
+        </option>
+        <option
+          value="No"
+          [(ngModel)]="this.dataTree.isGetManager"
+          [selected]="this.dataTree.isGetManager === 'No' ? true : false"
+        >
+          Chỉ hiển thị tên đơn vị
+        </option>
+      </select>
+    </div>
+
     <!-- #region Layout -->
-    <div class="card-body px-0 scroll-y h-100 pt-4">
-      <div
+    <!-- <div class="card-body px-0 scroll-y h-100 pt-4"> -->
+    <!-- <div
         class="p-collapse c-first"
         (click)="collapsed[0] = !collapsed[0]"
         [attr.aria-expanded]="!collapsed[0]"
@@ -391,6 +515,8 @@
         <div class="text-dark fw-bold mt-5 mb-3">Chế độ phù hợp với trang</div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeNone"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -403,6 +529,8 @@
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeWidth"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -415,6 +543,8 @@
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeHeight"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -422,11 +552,13 @@
             (change)="changeMode($event)"
           />
           <label class="form-check-label" for="pageFitModeHeight">
-            Vừa chiều ngang
+            Vừa chiều cao
           </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -437,34 +569,38 @@
             Vừa cả trang
           </label>
         </div>
-        <div class="form-check my-2 mx-3">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="flexRadioDefault"
-            id="pageFitModeSelect"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="pageFitModeSelect">
-            Chỉ khi chọn
-          </label>
-        </div>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Định hướng</div>
+        <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.orientationType"
+            value="orientationTop"
             class="form-check-input"
             type="radio"
             name="orientation"
             id="orientationTop"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="orientationTop">
-            Trên cùng
+          <label class="form-check-label" for="orientationTop"> Từ trên </label>
+        </div>
+        <div class="form-check my-2 mx-3">
+          <input
+            [(ngModel)]="this.dataTree.orientationType"
+            value="orientationLeft"
+            class="form-check-input"
+            type="radio"
+            name="orientation"
+            id="orientationLeft"
+            (change)="changeMode($event)"
+          />
+          <label class="form-check-label" for="orientationLeft"
+            >Bên trái
           </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="orientation"
@@ -477,16 +613,8 @@
         </div>
         <div class="form-check my-2 mx-3">
           <input
-            class="form-check-input"
-            type="radio"
-            name="orientation"
-            id="orientationLeft"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="orientationLeft"> Trái </label>
-        </div>
-        <div class="form-check my-2 mx-3">
-          <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="orientation"
@@ -494,17 +622,7 @@
             (change)="changeMode($event)"
           />
           <label class="form-check-label" for="orientationRight"> Phải </label>
-        </div>
-        <div class="form-check my-2 mx-3">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="orientation"
-            id="orientationNone"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="orientationNone"> Không </label>
-        </div>
+        </div> 
 
         <div class="text-dark fw-bold mt-5 mb-3">Hạng mục căn dọc</div>
         <div class="form-check my-2 mx-3">
@@ -582,12 +700,12 @@
           </label>
         </div>
 
-        <!-- <div class="d-flex m-4">
+        <div class="d-flex m-4">
           <input type="checkbox" id="crossBranch" (change)="changeMode($event)" />
           <label class="ms-4 mt-2" for="crossBranch">
             Kích hoạt liên kết chéo nhánh con</label
           >
-        </div> -->
+        </div>
 
         <div class="form-check my-2 mx-3">
           <input
@@ -862,12 +980,12 @@
             Đầy đủ
           </label>
         </div>
-      </div>
+      </div> -->
 
-      <!-- #endregion-->
+    <!-- #endregion-->
 
-      <!-- #region mẫu mặc định -->
-      <div
+    <!-- #region mẫu mặc định -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[1] = !collapsed[1]"
         [attr.aria-expanded]="!collapsed[1]"
@@ -977,29 +1095,12 @@
             (change)="changeMode($event)"
           />
         </div>
-      </div>
-
-      <!-- #endregion-->
-
-      <!-- #region tiêu đề nhóm -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[2] = !collapsed[2]"
-        [attr.aria-expanded]="!collapsed[2]"
-        aria-controls="collapseExample"
-      >
-        <span>Tiêu đề nhóm</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[2] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse2="ngbCollapse" [ngbCollapse]="!collapsed[2]">
-        <span>collapse</span>
       </div> -->
-      <!-- #endregion-->
-      <!-- #region đánh dấu -->
-      <div
+
+    <!-- #endregion-->
+
+    <!-- #region đánh dấu -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[3] = !collapsed[3]"
         [attr.aria-expanded]="!collapsed[3]"
@@ -1382,10 +1483,11 @@
           <option value="0.8">0.8</option>
           <option value="0.9">0.9</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region khoảng cách -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region khoảng cách -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[4] = !collapsed[4]"
         [attr.aria-expanded]="!collapsed[4]"
@@ -1697,10 +1799,11 @@
             </select>
           </div>
         </div>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Kết nối -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Kết nối -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[5] = !collapsed[5]"
         [attr.aria-expanded]="!collapsed[5]"
@@ -1973,10 +2076,11 @@
             </select>
           </div>
         </div>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Tiêu đề -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Tiêu đề -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[6] = !collapsed[6]"
         [attr.aria-expanded]="!collapsed[6]"
@@ -2294,27 +2398,11 @@
           <option value="normal">Bình thường</option>
           <option value="bold">Đậm</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Gọi ra -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[7] = !collapsed[7]"
-        [attr.aria-expanded]="!collapsed[7]"
-        aria-controls="collapseExample"
-      >
-        <span>Gọi ra</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[7] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse7="ngbCollapse" [ngbCollapse]="!collapsed[7]">
-        <span>collapse</span>
       </div> -->
-      <!-- #endregion-->
-      <!-- #region Tương tác -->
-      <div
+    <!-- #endregion-->
+
+    <!-- #region Tương tác -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[8] = !collapsed[8]"
         [attr.aria-expanded]="!collapsed[8]"
@@ -2382,10 +2470,11 @@
             Không kích hoạt
           </label>
         </div>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Hiển thị -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Hiển thị -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[9] = !collapsed[9]"
         [attr.aria-expanded]="!collapsed[9]"
@@ -2402,18 +2491,17 @@
         #collapse9="ngbCollapse"
         [ngbCollapse]="!collapsed[9]"
       >
-        <!-- <p class="text-dark fw-bold mt-5 mb-3">Phóng to thu nhỏ</p> -->
-
         <div class="text-dark mt-3 mb-1">Tùy chọn hiển thị đi kèm</div>
 
         <select class="form-select" #teams (change)="onSelected(teams.value)">
           <option default>Có quản lý</option>
           <option>Không có quản lý</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Khung -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Khung -->
+    <!-- <div
         class="p-collapse c-first"
         (click)="collapsed[10] = !collapsed[10]"
         [attr.aria-expanded]="!collapsed[10]"
@@ -2603,13 +2691,25 @@
             </select>
           </div>
         </div>
-      </div>
-      <!-- #endregion-->
-    </div>
+      </div> -->
+    <!-- #endregion-->
+    <!-- </div> -->
+
+    <button
+      class="ms-auto btn btn-primary w-20 my-4 me-2"
+      (click)="onSaveForm()"
+    >
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 
-<div class="sample">
+<div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
     [cursorItem]="0"
     [navigationMode]="navigationMode"
