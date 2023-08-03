@@ -10,6 +10,9 @@ import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
+import { PrivacyComponent } from '@pages/privacy/privacy.component';
+import { ContactComponent } from '@pages/contact/contact.component';
+import { TermsComponent } from '@pages/terms/terms.component';
 
 var childAuthRoutes: Routes = [
   {
@@ -262,6 +265,18 @@ export const routes: Routes = [
   {
     path: ':tenant',
     children: [...childAuthRoutes, ...childPublicRoutes],
+  },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
+  },
+  {
+    path: 'terms',
+    component: TermsComponent,
+  },
+  {
+    path: 'contact',
+    component: ContactComponent,
   },
   {
     path: '',

@@ -68,7 +68,6 @@ export class SalesInvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  parent: any;
   loading: boolean = false;
   acctLoading: boolean = false;
   overflowed: boolean = false;
@@ -86,7 +85,6 @@ export class SalesInvoicesComponent
   gvsAcctTrans: any;
 
   columns: TableColumn[];
-  parentFunc: string;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -97,9 +95,6 @@ export class SalesInvoicesComponent
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.parentFunc = params.parent;
-      }
     });
 
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
@@ -197,9 +192,6 @@ export class SalesInvoicesComponent
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
-    this.cache.functionList(this.parentFunc).subscribe((res) => {
-      if (res) this.view.setRootNode(res.customName);
-    });
   }
 
   ngAfterViewChecked(): void {
@@ -207,9 +199,7 @@ export class SalesInvoicesComponent
     this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
-  ngOnDestroy() {
-    this.view.setRootNode('');
-  }
+  ngOnDestroy() {}
   //#endregion
 
   //#region Event

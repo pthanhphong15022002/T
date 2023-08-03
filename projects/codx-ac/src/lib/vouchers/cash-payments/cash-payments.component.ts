@@ -40,7 +40,7 @@ import { Subject, interval, takeUntil } from 'rxjs';
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
   styleUrls: ['./cash-payments.component.css'],
-  changeDetection : ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -96,7 +96,6 @@ export class CashPaymentsComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  parent: any;
   authStore: AuthStore;
   fmAccTrans: FormModel = {
     formName: 'AcctTrans',
@@ -188,13 +187,6 @@ export class CashPaymentsComponent extends UIComponent {
     }
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) {
-            this.view.setRootNode(res?.customName);
-          }
-        });
-      }
     });
     //this.detectorRef.detectChanges();
   }
@@ -204,7 +196,6 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
@@ -278,7 +269,7 @@ export class CashPaymentsComponent extends UIComponent {
           headerText: this.headerText,
           journal: { ...this.journal },
           hideFields: [...this.hideFields],
-          baseCurr : this.baseCurr
+          baseCurr: this.baseCurr,
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -310,7 +301,7 @@ export class CashPaymentsComponent extends UIComponent {
               headerText: this.funcName,
               journal: { ...this.journal },
               hideFields: [...this.hideFields],
-              baseCurr : this.baseCurr
+              baseCurr: this.baseCurr,
             };
             let option = new SidebarModel();
             option.DataService = this.view.dataService;
@@ -335,25 +326,23 @@ export class CashPaymentsComponent extends UIComponent {
       if (data && this.journal) {
         clearInterval(ins);
         this.view.dataService.dataSelected = data;
-        this.view.dataService
-          .copy()
-          .subscribe((res: any) => {
-            var obj = {
-              formType: 'copy',
-              headerText: this.funcName,
-              journal: { ...this.journal },
-            };
-            let option = new SidebarModel();
-            option.DataService = this.view.dataService;
-            option.FormModel = this.view.formModel;
-            option.isFull = true;
-            var dialog = this.callfunc.openSide(
-              PopAddCashComponent,
-              obj,
-              option,
-              this.view.funcID
-            );
-          });
+        this.view.dataService.copy().subscribe((res: any) => {
+          var obj = {
+            formType: 'copy',
+            headerText: this.funcName,
+            journal: { ...this.journal },
+          };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.isFull = true;
+          var dialog = this.callfunc.openSide(
+            PopAddCashComponent,
+            obj,
+            option,
+            this.view.funcID
+          );
+        });
       }
       setTimeout(() => {
         if (ins) clearInterval(ins);
@@ -648,7 +637,7 @@ export class CashPaymentsComponent extends UIComponent {
             if (res) {
               this.settledInvoices = res;
               this.loadTotalSet();
-            }       
+            }
           });
         break;
     }
@@ -661,7 +650,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.loadTotal();
           this.isLoadDataAcct = false;
           this.detectorRef.detectChanges();
-        }    
+        }
       });
     this.changeTab(data.subType);
   }
@@ -704,18 +693,22 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          this.acService.loadData('AC','CashPaymentsBusiness','UpdateStatusAsync',[data,'1'])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res => {
-            if (res) {
-              this.itemSelected = res;
-              this.loadDatadetail(this.itemSelected);
-              this.view.dataService
-                .update(this.itemSelected)
-                .subscribe((res) => {});
-              this.detectorRef.detectChanges();
-            }
-          }))
+          this.acService
+            .loadData('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
+              data,
+              '1',
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                this.itemSelected = res;
+                this.loadDatadetail(this.itemSelected);
+                this.view.dataService
+                  .update(this.itemSelected)
+                  .subscribe((res) => {});
+                this.detectorRef.detectChanges();
+              }
+            });
         } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
@@ -729,9 +722,7 @@ export class CashPaymentsComponent extends UIComponent {
           data.status = '1';
           this.itemSelected = data;
           this.loadDatadetail(this.itemSelected);
-          this.view.dataService
-            .update(this.itemSelected)
-            .subscribe();
+          this.view.dataService.update(this.itemSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -739,7 +730,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   post(data: any) {
     // this.acService.postVourcher(data).subscribe((res =>{
-
     // }))
   }
 
@@ -752,7 +742,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.journal = res[0];
           this.oCash = res[1].data;
           this.hideFields = res[2];
-        }     
+        }
       });
   }
 
@@ -789,8 +779,13 @@ export class CashPaymentsComponent extends UIComponent {
   createLine(item) {
     if (item.crediting) {
       var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-      let index = data.filter((x) => x.crediting == item.crediting).findIndex((x) => x.recID == item.recID);
-      if (index == data.filter((x) => x.crediting == item.crediting).length - 1) {
+      let index = data
+        .filter((x) => x.crediting == item.crediting)
+        .findIndex((x) => x.recID == item.recID);
+      if (
+        index ==
+        data.filter((x) => x.crediting == item.crediting).length - 1
+      ) {
         return true;
       } else {
         return false;

@@ -45,7 +45,6 @@ export class CashTransfersComponent
   master: ICashTransfer;
   functionName: string;
   journalNo: string;
-  parent: any;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -76,11 +75,6 @@ export class CashTransfersComponent
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
-        });
-      }
     });
   }
   //#endregion
@@ -119,7 +113,6 @@ export class CashTransfersComponent
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
-    this.view.setRootNode(this.parent?.customName);
   }
 
   ngAfterViewChecked(): void {
@@ -127,9 +120,7 @@ export class CashTransfersComponent
     this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
-  ngOnDestroy() {
-    this.view.setRootNode('');
-  }
+  ngOnDestroy() {}
   //#endregion
 
   //#region Event
