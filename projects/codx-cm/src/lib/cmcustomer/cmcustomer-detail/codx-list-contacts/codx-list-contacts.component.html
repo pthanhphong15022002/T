@@ -1,7 +1,7 @@
 <ng-container *ngIf="loaded">
 
   <div
-    class="codx-listcontact pb-6"
+    class="codx-listcontact pb-3"
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
   >
     <div class="d-flex mb-1" *ngIf="selectAll">
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div [class]="'mb-1'">
-    <div class="d-flex justify-content-center" *ngIf="!hidenMF && objectID">
+    <div class="d-flex" *ngIf="!hidenMF && objectID">
       <button
         type="button"
         class="btn btn-sm btn-primary"
