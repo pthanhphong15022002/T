@@ -182,7 +182,8 @@ export class CodxShareService {
     afterSave?: Function,
     formModel?: any,
     dataService?: any,
-    that: any = null
+    that: any = null,
+    customData = null
   ) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
@@ -329,7 +330,7 @@ export class CodxShareService {
           900,
           700,
           '',
-          [gridModel, data.recID],
+          [gridModel, data.recID , null , customData?.refID , customData?.refType],
           null
         );
         break;

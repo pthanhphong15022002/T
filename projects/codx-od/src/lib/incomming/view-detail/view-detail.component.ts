@@ -1251,13 +1251,21 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       default: {
+
+        //Biến động tự custom
+        var customData = 
+        {
+          refID : "",
+          refType : "",
+        }
         this.shareService.defaultMoreFunc(
           val,
           datas,
           this.afterSave,
           this.formModel,
           this.view.dataService,
-          this
+          this,
+          customData
         );
         // this.shareService.defaultMoreFunc(
         //   val,
@@ -1344,32 +1352,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Duyệt công văn
   documentApproval(datas: any) {
-    if (datas.bsCategory) {
-      //Có thiết lập bước duyệt
-      if (datas.bsCategory.approval) {
-        this.api
-          .execSv(
-            'ES',
-            'ES',
-            'CategoriesBusiness',
-            'GetByCategoryIDAsync',
-            datas.bsCategory.categoryID
-          )
-          .subscribe((item: any) => {
-            if (item) {
-              this.approvalTrans(item?.processID, datas);
-            } else {
-            }
-          });
-      }
-      //Chưa thiết lập bước duyệt
-      else {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        this.notifySvr.alertCode('OD024', config).subscribe((item) => {
-          if (item.event.status == 'Y') {
-            //Lấy processID mặc định theo entity
-            this.api
+    this.api
               .execSv(
                 'ES',
                 'ES',
@@ -1382,10 +1365,48 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                   this.approvalTrans(item?.processID, datas);
                 }
               });
-          }
-        });
-      }
-    }
+    // if (datas.bsCategory) {
+    //   //Có thiết lập bước duyệt
+    //   if (datas.bsCategory.approval) {
+    //     this.api
+    //       .execSv(
+    //         'ES',
+    //         'ES',
+    //         'CategoriesBusiness',
+    //         'GetByCategoryIDAsync',
+    //         datas.bsCategory.categoryID
+    //       )
+    //       .subscribe((item: any) => {
+    //         if (item) {
+    //           this.approvalTrans(item?.processID, datas);
+    //         } else {
+    //         }
+    //       });
+    //   }
+    //   //Chưa thiết lập bước duyệt
+    //   else {
+    //     var config = new AlertConfirmInputConfig();
+    //     config.type = 'YesNo';
+    //     this.notifySvr.alertCode('OD024', config).subscribe((item) => {
+    //       if (item.event.status == 'Y') {
+    //         //Lấy processID mặc định theo entity
+    //         this.api
+    //           .execSv(
+    //             'ES',
+    //             'ES',
+    //             'CategoriesBusiness',
+    //             'GetDefaulProcessIDAsync',
+    //             this.formModel.entityName
+    //           )
+    //           .subscribe((item: any) => {
+    //             if (item) {
+    //               this.approvalTrans(item?.processID, datas);
+    //             }
+    //           });
+    //       }
+    //     });
+    //   }
+    // }
   }
 
   afterSave(e?: any, that: any = null) {
