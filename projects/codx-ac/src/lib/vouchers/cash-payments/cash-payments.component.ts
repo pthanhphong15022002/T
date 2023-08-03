@@ -74,6 +74,7 @@ export class CashPaymentsComponent extends UIComponent {
   classNameLine: any;
   entityName: any;
   settledInvoices: any;
+  vatInvoices: any;
   acctTrans: any;
   baseCurr: any;
   oCash: any;
@@ -88,6 +89,11 @@ export class CashPaymentsComponent extends UIComponent {
     formName: 'SettledInvoices',
     gridViewName: 'grvSettledInvoices',
     entityName: 'AC_SettledInvoices',
+  };
+  fmVatInvoices: FormModel = {
+    formName: 'VATInvoices',
+    gridViewName: 'grvVATInvoices',
+    entityName: 'AC_VATInvoices',
   };
   //Bo
   tabInfo: TabModel[] = [
@@ -637,7 +643,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.acctTrans = [];
     this.settledInvoices = [];
     switch (data.subType) {
-      case '9':
       case '2':
         this.acService
           .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
@@ -649,6 +654,17 @@ export class CashPaymentsComponent extends UIComponent {
               this.settledInvoices = res;
               this.loadTotalSet();
             }       
+          });
+        break;
+      case '9':
+        this.acService
+          .execApi('AC', 'VATInvoicesBusiness', 'LoadDataAsync', data.recID)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            if (res) {
+              this.settledInvoices = res.lssetinvoice;
+              this.vatInvoices = res.lsvat;
+            }
           });
         break;
     }

@@ -638,7 +638,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   print(data: any, reportID: any, reportType: string = 'V') {
     this.api
       .execSv(
-        'rptsys',
+        'rptrp',
         'Codx.RptBusiniess.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',

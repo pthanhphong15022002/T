@@ -1,9 +1,6 @@
-import { concat } from 'rxjs';
-import { change } from '@syncfusion/ej2-grids';
-import { Component, Injector, TemplateRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ButtonModel, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { ButtonModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'lib-employee-annual-leave',
@@ -25,7 +22,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   grvSetup: any;
   grvEDaysOff: any;
   popupLoading: boolean = false;
-  request: any;
+  request: ResourceModel;
 
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
@@ -37,26 +34,27 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   @ViewChild('rightTemplateHRTAL01') rightTemplateHRTAL01: TemplateRef<any>;
 
   itemSelected: any;
-  console = console;
-  currentView: any;
-
+  currentViewModel: any;
   constructor(
-    inject: Injector,
+    private injector: Injector,
     //private notiService: NotificationsService,
     //private shareService: CodxShareService,
     private routerActive: ActivatedRoute,
   ) {
-    super(inject);
+    super(injector);
 
     this.routerActive.params.subscribe((params: Params) => {
       this.funcID = params['funcID'];
       this.initViewSetting();
-      this.onInit();
-      this.currentView = this.view.dataService.currentView;
+      if (this.view) {
+        this.view.dataService.parentIdField = '';
+        this.view.dataService.idField = 'recID';
+        this.view.idField = 'recID';
+      }
     })
   }
   onInit(): void {
-    // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeaveBusiness', 'AddAsync')
+    // this.api.execSv<any>("HR", "ERM.Business.HR", 'ScheduleBusiness', 'ScheduleUpdateExpiredContractsAsync')
     //   .subscribe((res) => {
     //     if (res) {
     //     }
@@ -64,16 +62,12 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    this.initRequest();
     this.initViewSetting();
     this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
   }
-  initViewSetting() {
-    if(this.view){
-      this.view.dataService.parentIdField = '';
-      this.view.dataService.idField = 'recID';
-      this.view.idField = 'recID';
-    }
+  initRequest(): void {
     this.request = new ResourceModel();
     this.request.service = 'HR';
     this.request.assemblyName = 'ERM.Business.HR';
@@ -82,7 +76,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
     this.request.idField = 'orgUnitID';
-
+  }
+  initViewSetting() {
     switch (this.funcID) {
       case 'HRTAL01':
         this.views = [
@@ -98,7 +93,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           },
           {
             id: '2',
-            type: ViewType.tree_masterdetail,
+            type: ViewType.tree_list,
             request: this.request,
             sameData: false,
             model: {
@@ -114,18 +109,18 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL02':
         this.views = [
           {
-            id: '1',
+            id: '3',
             type: ViewType.list,
             sameData: true,
             //active: true,
             model: {
               template: this.templateListHRTAL02,
-              //headerTemplate: this.headerTemplateHRTAL02,
+              headerTemplate: this.headerTemplateHRTAL02,
             },
           },
           {
-            id: '2',
-            type: ViewType.tree_masterdetail,
+            id: '4',
+            type: ViewType.tree_list,
             request: this.request,
             sameData: false,
             model: {
@@ -141,16 +136,11 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     }
   }
   selectedChange(val: any) {
+    console.log(val);
     this.itemSelected = val.data;
-    //this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
   viewChanging(event: any) {
-    if(this.view.currentView.viewModel){
-      this.currentView = this.view.dataService.currentView.ViewModel;
-    }
-    if(this.currentView)
-    this.view.dataService.currentView['ViewModel'] = this.currentView; //test
-
     if (event?.view?.id === '2' || event?.id === '2') {
       this.view.dataService.parentIdField = 'ParentID';
       this.view.dataService.idField = 'orgUnitID';
@@ -160,17 +150,11 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       this.view.dataService.idField = 'recID';
       this.view.idField = 'recID';
     }
+    // if (event?.view?.id === '1' || event?.id === '1'){
+    //   this.currentViewModel = event?.view || event;
+    // }
   }
   viewChanged(event: any) {
-    if (event?.view?.id === '2' || event?.id === '2') {
-      this.view.dataService.parentIdField = 'ParentID';
-      this.view.dataService.idField = 'orgUnitID';
-      this.view.idField = 'orgUnitID';
-    } else if (event?.view?.id === '1' || event?.id === '1') {
-      this.view.dataService.parentIdField = '';
-      this.view.dataService.idField = 'recID';
-      this.view.idField = 'recID';
-    }
   }
   getFunction(funcID: string) {
     if (funcID) {
@@ -203,7 +187,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   onShowDaysOff(data: any) {
     this.popupLoading = true;
     var item = this.view.dataService.data.findIndex(x => x.recID == data.recID);
-    this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeaveBusiness', 'GetDaysOffByEAnnualLeaveAsync',
+    this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness', 'GetDaysOffByEAnnualLeaveAsync',
       [data.employeeID, data.alYear, data.alYearMonth, data.isMonth]).subscribe((res: any) => {
         if (res) {
           this.view.dataService.data[item].listDaysOff = res;
