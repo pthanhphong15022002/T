@@ -1257,6 +1257,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         {
           refID : "",
           refType : "",
+          dataSource: "",
         }
         this.shareService.defaultMoreFunc(
           val,
