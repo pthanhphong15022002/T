@@ -70,6 +70,8 @@ export class CashPaymentsComponent extends UIComponent {
   totaloff: any = 0;
   totalsettledAmt: any = 0;
   totalbalAmt: any = 0;
+  totalVatBase:any = 0;
+  totalVatAtm:any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -664,6 +666,8 @@ export class CashPaymentsComponent extends UIComponent {
             if (res) {
               this.settledInvoices = res.lssetinvoice;
               this.vatInvoices = res.lsvat;
+              this.loadTotalSet();
+              this.loadTotalVat();
             }
           });
         break;
@@ -792,6 +796,15 @@ export class CashPaymentsComponent extends UIComponent {
       this.totalsettledAmt =
         this.totalsettledAmt + this.settledInvoices[index].settledAmt;
     }
+  }
+
+  loadTotalVat(){
+    this.totalVatBase = 0;
+    this.totalVatAtm = 0;
+    this.vatInvoices.forEach((item) => {
+      this.totalVatBase += item.vatBase;
+      this.totalVatAtm += item.vatAmt;
+    });
   }
 
   setStyles(color): any {

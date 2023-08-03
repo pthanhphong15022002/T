@@ -1393,6 +1393,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }   
     this.oriVatInvoices.push(data);
+    this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.acService
         .execApi('AC', 'VATInvoicesBusiness', 'AddListVATAsync', [
           this.cashpayment,
@@ -1418,6 +1420,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.oriVatInvoices[idx] = data;
     }
     this.updateAccounting(data);
+    this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.gridCash.refresh();
     this.dt.detectChanges();
     this.acService
