@@ -119,8 +119,9 @@
               | async
           "
         ></div>
-        <span class="mx-1">-</span>
+        <span *ngIf="itemDetail?.expiredDate" class="mx-1">-</span>
         <div
+          *ngIf="itemDetail?.expiredDate"
           class="fw-bold me-4"
           [innerHTML]="
             itemDetail?.expiredDate

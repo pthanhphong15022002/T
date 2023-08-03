@@ -19,7 +19,7 @@ export class EmployeeListByOrgComponent {
   @Input() editable: boolean = false;
   @Input() modeView: string = 'employee';
   @Input() rowHeight: string = '50';
-  @Input() showRowNumber: boolean = false;
+  @Input() showRowNumber: boolean = true;
   @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
   @Output() gridViewDataService: EventEmitter<any> = new EventEmitter();
@@ -171,7 +171,7 @@ export class EmployeeListByOrgComponent {
           this.gridViewDataService.emit(this.grid.dataService);
         }
       }
-    }, 50);
+    }, 200);
   }
 
   getManager(orgUnitID: string) {

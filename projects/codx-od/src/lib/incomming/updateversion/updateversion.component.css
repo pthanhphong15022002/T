@@ -5,6 +5,7 @@ ul.navi li {
 .e-file-select-wrap {
     width: 250px;
     margin: 0 auto;
+    display: none;
 }
 
 .file-item input.form-control {

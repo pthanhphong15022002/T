@@ -51,6 +51,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() permissions: any;
   @Input() objectID = '';
   @Input() isReferType: boolean = false;
+  @Input() isOpenFile: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
@@ -263,6 +264,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(file: any) {
+    if(this.isOpenFile) return ;
     this.fileService.getFile(file.recID,true,true ).subscribe((item) => {
       if (item && item.read) {
         this.cache

@@ -96,7 +96,7 @@
               <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-1">
             <div class="form-group">
               <codx-label style="white-space: nowrap !important;" fiedName="AccountID"
                 [formModel]="dialog.formModel">
@@ -125,7 +125,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-3">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important;" fiedName="lblDate" default="Xét trong khoảng">
                 </codx-label>
@@ -169,9 +169,9 @@
 
 <!-- Start: Template input -->
 <ng-template #tempAutpay>
-  <div class="col-1">
+  <div class="col-2">
     <div class="form-group">
-      <codx-label fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
+      <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
       </codx-label>
       <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)"
         (keyUpEnter)="payAmtEnter($event)">
@@ -180,14 +180,14 @@
   </div>
   <div class="col-1">
     <div class="form-group">
-      <codx-label fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
+      <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
       </codx-label>
-      <codx-input type="text" [crrValue]="cashpayment.currencyID" [disabled]="true"></codx-input>
+      <codx-input field="currencyID" (valueChange)="valueChange($event)" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
     </div>
   </div>
   <div class="col-2">
     <div class="form-group">
-      <codx-label fiedName="lblType" [formModel]="dialog.formModel" default="Cấn trừ hóa đơn">
+      <codx-label style="white-space: nowrap !important;" fiedName="lblType" [formModel]="dialog.formModel" default="Cấn trừ hóa đơn">
       </codx-label>
       <codx-input type="valuelist" [crrValue]="'2'" refValue="AC083" field="payType"
         (valueChange)="valueChange($event)"></codx-input>
