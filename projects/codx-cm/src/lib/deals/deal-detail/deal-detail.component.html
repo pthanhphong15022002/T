@@ -999,7 +999,7 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
-          <div [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
+          <div class="d-flex align-items-center" [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp-menu"
@@ -1014,10 +1014,10 @@
             ></span>
           </div>
         </div>
-        <div class="last-div">
+        <div class="last-div h-20px">
           <codx-imgs
             [isToolTip]="true"
-            [width]="25"
+            [width]="20"
             [objectId]="item?.createdBy"
             objectType="AD_Users"
             [numberImages]="1"

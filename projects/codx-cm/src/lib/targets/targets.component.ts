@@ -377,7 +377,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: true,
+        active: false,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -386,7 +386,7 @@ export class TargetsComponent
       {
         type: ViewType.chart,
         sameData: false,
-        active: false,
+        active: true,
         model: {
           panelRightRef: this.templateGrid,
         },
@@ -657,7 +657,7 @@ export class TargetsComponent
       PopupChangeAllocationRateComponent,
       '',
       850,
-      850,
+      1000,
       '',
       obj,
       '',
