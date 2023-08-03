@@ -228,7 +228,10 @@
 .okr-treeview{
   .content-tree{
       padding: 0;
-
+      .menu-item div{
+        display: flex;
+        justify-content: start;
+      }
       .nochild {
           width: 22px;
       }

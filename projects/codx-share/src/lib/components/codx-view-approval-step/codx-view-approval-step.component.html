@@ -16,9 +16,7 @@
           *ngIf="eSign"
           class="step-title text-gray-700 fw-bold fs-6 me-2"
           [innerHTML]="
-            item?.signatureType
-              | formatvalue : fmApprovalStep : 'signatureType'
-              | async
+            item?.signatureType| vll : 'ES001' : 'text' | async
           "
         ></div>
         <div class="text-gray-500 fs-6 me-2"> - </div>
@@ -236,11 +234,9 @@
             *ngIf="eSign"
             class="step-title text-gray-700 fw-bold fs-6 me-2"
             [innerHTML]="
-              item?.signatureType
-                | formatvalue : fmApprovalTrans : 'signatureType'
-                | async
+              item?.signatureType | vll : 'ES001' : 'text' | async
             "
-          ></div>
+          ></div> 
         </ng-container>
         
         <div class="text-gray-400 fs-6 me-2"> - </div>
@@ -464,9 +460,7 @@
               *ngIf="eSign"
               class="step-title text-gray-700 fw-bold fs-6 me-2"
               [innerHTML]="
-                item?.signatureType
-                  | formatvalue : fmApprovalTrans : 'signatureType'
-                  | async
+                item?.signatureType| vll : 'ES001' : 'text' | async
               "
             ></div>
           </ng-container>

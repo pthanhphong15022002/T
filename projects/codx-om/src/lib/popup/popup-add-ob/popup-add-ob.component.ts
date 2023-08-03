@@ -60,6 +60,9 @@ export class PopupAddOBComponent extends UIComponent {
   shareModel: any;
   curUser: any;
   groupModel: any;
+  
+  viewMFunc=OMCONST.MFUNCID.View;
+  viewMode= false;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -81,6 +84,9 @@ export class PopupAddOBComponent extends UIComponent {
     this.formModel = dialogRef.formModel;
 
     this.curUser = authStore.get();
+    if(this.funcType == OMCONST.MFUNCID.View){
+      this.viewMode=true;
+    }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -107,7 +113,7 @@ export class PopupAddOBComponent extends UIComponent {
     } else {
       this.codxOmService.getOKRByID(this.oldOB.recID).subscribe((obModel) => {
         if (obModel) {
-          if (this.funcType == OMCONST.MFUNCID.Edit) {
+          if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.View ) {
             this.afterOpenEditForm(obModel);
           } else if (this.funcType == OMCONST.MFUNCID.Copy) {
             this.afterOpenCopyForm(obModel);
