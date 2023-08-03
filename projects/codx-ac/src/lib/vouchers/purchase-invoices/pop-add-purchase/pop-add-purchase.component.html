@@ -69,8 +69,9 @@
                 [autoLoad]="false"
                 [rowHeight]="35"
                 [dataSource]="lines"
+                [showRowNumber]="true"
                 (cellChanged)="onCellChange($event)"
-                (created)="onGridCreated($event, gridPurchaseInvoiceLines)"
+                (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -119,9 +120,11 @@
                 [allowSorting]="true"
                 [dataSource]="vatInvoices"
                 [rowHeight]="35"
-                (created)="onGridCreated($event, gridVatInvoices)"
+                [showRowNumber]="true"
+                (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew2($event)"
                 (onEdit)="onEndEdit2($event)"
+                (eventAction)="onActionEvent2($event)"
               ></codx-gridview-v2>
 
               <button
@@ -468,6 +471,19 @@
       style="top: 4px"
     >
       <button
+        class="btn btn-md btn-danger"
+        (click)="onDiscard()"
+        *ngIf="masterService.hasSaved && master.status == '0'"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+
+      <button
         *ngIf="!isEdit"
         type="button"
         class="btn btn-md btn-light-primary"
@@ -492,19 +508,6 @@
           fiedName="lblSave"
           [formModel]="form.formModel"
           default="Lưu"
-        ></codx-label>
-      </button>
-
-      <button
-        class="btn btn-md btn-danger"
-        (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && master.status == '0'"
-      >
-        <codx-label
-          class="fs-6 fw-normal"
-          fiedName="lblDiscard"
-          [formModel]="form.formModel"
-          default="Hủy bỏ"
         ></codx-label>
       </button>
     </div>
