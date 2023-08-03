@@ -1,6 +1,8 @@
 import { Component, Injector, Optional } from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
+import { JournalService } from '../journals.service';
+import { JournalPermission } from '../models/JournalPermission.model';
 
 @Component({
   selector: 'lib-popup-permission',
@@ -14,13 +16,14 @@ export class PopupPermissionComponent extends UIComponent {
 
   constructor(
     injector: Injector,
+    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
 
-    this.permissions = dialogData.data?.journalPermissions;
-    this.permissions.map((p) => {
+    this.permissions = [...dialogData.data?.permissions];
+    this.permissions?.map((p) => {
       p.add = p.add == '1';
       p.post = p.post == '1';
     });
@@ -37,18 +40,13 @@ export class PopupPermissionComponent extends UIComponent {
     console.log(e);
 
     this.permissions = e.data.map(
-      (d) =>
-        ({
-          journalNo: this.dialogData.data?.journalNo,
-          objectType: d.objectType,
-          objectName: d.text,
-          objectID: d.id,
-          add: true,
-          read: '1',
-          edit: '1',
-          delete: '1',
-          post: true,
-        } as IJournalPermission)
+      (m) =>
+        new JournalPermission(
+          this.journalService.getRoleType(e.field),
+          m.objectType,
+          m.id,
+          m.text
+        )
     );
     this.selectedIndex = this.permissions.length > 0 ? 0 : -1;
   }
@@ -64,7 +62,13 @@ export class PopupPermissionComponent extends UIComponent {
   }
 
   onClickSave(): void {
-    this.dialogRef.close()
+    this.dialogRef.close(
+      this.permissions.map((p) => ({
+        ...p,
+        add: p.add === true ? '1' : '0',
+        post: p.post === true ? '1' : '0',
+      }))
+    );
   }
   //#endregion
 
