@@ -1300,7 +1300,6 @@ export class OrganizationOrgchartComponent {
       .subscribe((res: any) => {
         if (res) {
           this.dialogEditStatus && this.dialogEditStatus.close();
-          // console.log(res.dataValue);
         }
       });
   }
