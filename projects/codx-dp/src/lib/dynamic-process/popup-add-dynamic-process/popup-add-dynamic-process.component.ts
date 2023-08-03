@@ -1979,8 +1979,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   loadEx() {
-    this.request.predicates = 'RefID=@0 && RefType=@1';
-    this.request.dataValues = this.process.recID + ';DP_Processes';
+    this.request.predicate = 'RefID=@0 && RefType=@1';
+    this.request.dataValue = this.process.recID + ';DP_Processes';
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1988,8 +1988,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   loadWord() {
-    this.request.predicates = 'RefID=@0 && RefType=@1';
-    this.request.dataValues = this.process.recID + ';DP_Processes';
+    this.request.predicate = 'RefID=@0 && RefType=@1';
+    this.request.dataValue = this.process.recID + ';DP_Processes';
     this.request.entityName = 'AD_WordTemplates';
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -3113,8 +3113,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.action = 'edit';
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
   }
-  
-  editReason(){
+
+  editReason() {
     this.isSaveStep = true;
     this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
     this.stepEdit['textColor'] = this.stepNew['textColor'];
