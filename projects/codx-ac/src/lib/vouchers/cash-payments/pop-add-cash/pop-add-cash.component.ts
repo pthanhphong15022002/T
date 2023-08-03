@@ -571,17 +571,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFormat(columnsGrid);
     this.predicateControl(columnsGrid);
     this.hideGrid(columnsGrid, this.hideFields);
-    if (this.action == 'add') {
-      setTimeout(() => {
-        this.loadingform = false;
-        this.dt.detectChanges();
-      }, 500);
-    } else {
-      setTimeout(() => {
-        this.loadingform = false;
-        this.dt.detectChanges();
-      }, 1000);
-    }
+    // if (this.action == 'add') {
+      
+    // } else {
+    //   setTimeout(() => {
+    //     this.loadingform = false;
+    //     this.dt.detectChanges();
+    //   }, 1000);
+    // }
+    setTimeout(() => {
+      this.loadingform = false;
+      this.dt.detectChanges();
+    }, 500);
   }
 
   gridRefresh() {
@@ -2088,6 +2089,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadFormSubType('1');
         break;
     }
+    ele.select(0);
   }
 
   loadAccountControl(columnsGrid) {
