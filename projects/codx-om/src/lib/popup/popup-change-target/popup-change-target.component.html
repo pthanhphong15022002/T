@@ -25,7 +25,7 @@
         *ngFor="let item of kr?.targets;let i=index">
         <span class="col-3 text-dark fw-bold">{{ item?.period | vll: "OM021":"text" | async }}</span>
         <div class="col-7 ">
-          <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="w-100 border-1 border text-right" [disabled]="item?.comment!=null"
+          <codx-inplace type="number" [value]="item?.target" locale="en" format="0.00" cssClass="w-100 border-1 border text-right" [disabled]="item?.comment!=null || viewMode"
             (valueChange)="valuePlanTargetChange($event,i)"></codx-inplace>
         </div>
         <div class="col-2 ps-2">
@@ -39,7 +39,7 @@
   <div class="modal-footer">
     <div class="w-100 d-flex justify-content-between">
       <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
-        (click)="refreshPlanTargets()">
+        (click)="refreshPlanTargets()" [disabled]="viewMode">
         <span class="icon-airplay btn-text-primary me-2"></span>
         <codx-label name="lbl" class="fw-normal" default="Khôi phục lại"></codx-label>
       </button>
@@ -47,7 +47,7 @@
         <codx-label class="pb-2" name="lblTarget" default="Chỉ tiêu mới"></codx-label>
         <codx-input class="" [crrValue]="newTarget" type="number" field="newTarget" (valueChange)="changeTarget($event)"></codx-input>
       </div> -->
-      <button class="btn btn-primary" (click)="onSaveTarget()">
+      <button class="btn btn-primary" [disabled]="viewMode" (click)="onSaveTarget()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
     </div>

@@ -175,8 +175,21 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
                 this.attachment.objectId = item[1].recID;
-                this.attachment.saveFiles();
-                this.dialog.close([item[1], this.type]);
+                //this.attachment.saveFiles();
+                //Upload file
+                this.attachment.saveFilesObservable().then(saveFile=>{
+                  if(saveFile){
+                    saveFile.subscribe(saved=>{
+                      if(saved){
+                        //Trả về thông tin khi upload file thành công
+                        this.dialog.close([item[1], this.type]);
+                      }
+                      else{
+                        this.notifySvr.notify('SYS023');
+                      }
+                    })
+                  }                
+                })
               } else this.notifySvr.notifyCode('SYS023');
             });
         } else this.notifySvr.notifyCode('OD022');
@@ -193,7 +206,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             'UpdateAsync'
           )
           .subscribe((item) => {
-            debugger;
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment.objectId = item[1][0].recID;
@@ -205,9 +217,25 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe();
                 this.attachment.objectId = item[1][0].recID;
-                this.attachment.saveFiles();
+                //this.attachment.saveFiles();
+                //Upload file mới
+                this.attachment.saveFilesObservable().then(saveFile=>{
+                  if(saveFile){
+                    saveFile.subscribe(saved=>{
+                      if(saved){
+                        //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
+                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
+                      }
+                      else{
+                        this.notifySvr.notify('SYS021');
+                      }
+                    })
+                  }
+                })
               }
-              this.dialog.close([item[1][0], this.type]);
+              else{
+                this.dialog.close([item[1][0], this.type]);
+              }
             } else this.notifySvr.notify('SYS021');
           });
       }
@@ -223,8 +251,21 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
               this.attachment.objectId = item[1][0].recID;
-              this.attachment.saveFiles();
-              this.dialog.close([item[1][0], this.type]);
+              //this.attachment.saveFiles();
+              //Upload file
+              this.attachment.saveFilesObservable().then(saveFile=>{
+                if(saveFile){
+                  saveFile.subscribe(saved=>{
+                    if(saved){
+                      //Trả về thông tin khi upload file thành công
+                      this.dialog.close([item[1][0], this.type]);
+                    }
+                    else{
+                      this.notifySvr.notify('SYS023');
+                    }
+                  })
+                }                
+              })
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
@@ -250,6 +291,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment.objectId = item[1][0].recID;
+              //Nếu upload lại file
               if (this.fileCount > 0) {
                 /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                   console.log(item);
@@ -258,9 +300,26 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe();
                 this.attachment.objectId = item[1][0].recID;
-                this.attachment.saveFiles();
+
+                //this.attachment.saveFiles();
+                //Upload file mới
+                this.attachment.saveFilesObservable().then(saveFile=>{
+                  if(saveFile){
+                    saveFile.subscribe(saved=>{
+                      if(saved){
+                        //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
+                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
+                      }
+                      else{
+                        this.notifySvr.notify('SYS021');
+                      }
+                    })
+                  }
+                })
               }
-              this.dialog.close([item[1][0], this.type]);
+              else{
+                this.dialog.close([item[1][0], this.type]);
+              }
             } else this.notifySvr.notify('SYS021');
           });
       }
