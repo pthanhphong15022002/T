@@ -1033,6 +1033,15 @@ export class CodxShareService {
 
   getMoreFunction(funcID: any) {
     var listApproveMF = [];
+    if (funcID == 'SYS201') {
+      var consensus = {
+        functionID: 'SYS201',
+        text: 'Duyệt',
+        color: '#666666',
+      };
+
+      listApproveMF.push(consensus);
+    }
 
     if (funcID == 'SYS202') {
       var consensus = {
@@ -1156,6 +1165,7 @@ export class CodxShareService {
     approveProcess.customEntityName = customEntityName;
     approveProcess.approvers = approvers;
     approveProcess.category = category;
+    approveProcess.data = data;
 
     //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
     if (releaseOnly) {
@@ -1286,22 +1296,28 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
-    if (template?.templateID == null && !releaseBackground) {
+    if (template?.templateID == null && !releaseBackground ) {
       //TemplateID null -> bật form kí số nhưng ko có file
       this.releaseWithEmptySignFile(approveProcess, releaseCallback);
     } else {
-      //Gọi hàm xuất file báo cáo
-      //wait
-      let listFiles = [];
-      let signFile = this.createSignFile(approveProcess, listFiles, template);
-      //Mở form trình kí và gửi duyệt
-      if (!releaseBackground) {
-        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
-      }
-      //Tự tạo file trình kí và gửi duyêt ngầm
-      else {
-        //wait
-      }
+      let dataJson =JSON.stringify(approveProcess?.data);
+      this.getReportList(template?.templateID,dataJson).subscribe((rpList:any)=>{
+        //Lấy đc Report List xuất file qua Report
+        if(rpList && false){//test
+          debugger
+          let x = rpList;
+        }
+        //Ko có Report List xuất file qua Export Data
+        else{
+          this.exportTemplateData(approveProcess,template?.templateID,template?.templateType,true).subscribe((fileExport:any)=>{
+            if(fileExport){
+              debugger
+            }
+          })
+          
+        }
+      })
+      
     }
   }
 
@@ -1318,7 +1334,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel) => void
   ) {
     this.getFileByObjectID(approveProcess.recID).subscribe((listFiles: any) => {
-      if (listFiles?.length > 0) {
+      if (listFiles?.length > 0 ) {
         let signFile = this.createSignFile(approveProcess, listFiles);
         this.openPopupSignFile(
           approveProcess,
@@ -1327,6 +1343,7 @@ export class CodxShareService {
           listFiles
         );
       } else {
+        debugger
         this.getSignFileTemplateByRefType(approveProcess?.entityName).subscribe(
           (sfTemplates: any) => {
             if (sfTemplates?.length >= 1) {
@@ -1382,8 +1399,8 @@ export class CodxShareService {
     dialogSF.closed.subscribe((res) => {
       if (res?.event && res?.event?.approved == true) {
         let respone = new ResponseModel();
-        respone.msgCodeError = res?.event?.msgCodeError;
-        respone.rowCount = res?.event?.rowCount;
+        respone.msgCodeError = res?.event?.responseModel?.msgCodeError;
+        respone.rowCount = res?.event?.responseModel?.rowCount;
         releaseCallback && releaseCallback(respone);
       } else {
         //Lưu - Tắt form kí số khi chưa gửi duyệt
@@ -1460,6 +1477,54 @@ export class CodxShareService {
     }
   }
 
+  exportTemplateData(approveProcess: ApproveProcess, templateRecID:string,templateType:string, convertToPDF = true){
+    
+    let uploadExport = new ExportUpload();
+    uploadExport.templateRecID =templateRecID;
+    uploadExport.templateType =templateType;
+    uploadExport.convertToPDF =convertToPDF;
+    uploadExport.title =approveProcess.title;
+    uploadExport.dataJson = JSON.stringify([approveProcess?.data]);
+    uploadExport.entityName =approveProcess.entityName;
+    return this.api.execSv(
+      approveProcess.module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportUploadAsync',
+      [uploadExport]
+    );
+  }
+
+  exportExcelData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+    let dataJson = JSON.stringify([approveProcess?.data]);
+    return this.api.execSv(
+      approveProcess.module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportExcelDataAsync',
+      [dataJson, templateRecID,convertToPDF]
+    );
+  }
+  exportWordData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+    let dataJson = JSON.stringify([approveProcess?.data]);
+    return this.api.execSv(
+      approveProcess.module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportWordTemplateAsync',
+      [dataJson, templateRecID,convertToPDF]
+    );
+  }
+
+  getReportList(recID:any,dataJson:string){
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.CM',
+      'ReportBusiness',
+      'ExportTemplateAsync2',
+      [recID,dataJson]
+    );
+  }
   //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
   codxCancel(
     module: string, //Tên service
@@ -1599,5 +1664,14 @@ export class Approvers {
   createdOn: any = new Date();
   delete: boolean = true;
   write: boolean = false;
+}
+export class ExportUpload {  
+  templateRecID: string ;
+  templateType: string ;
+  title: string ;
+  dataJson: string;
+  convertToPDF: boolean ;
+  entityName: string ;
+  language:string;
 }
 //#endregion

@@ -1930,7 +1930,7 @@ export class CodxDMService {
       .subscribe(async (res) => {
         if (res.status == 0) {
           let list = this.listFolder;
-          this.nodeDeleted.next(id);
+          //this.nodeDeleted.next(id);
           //list = list.filter(item => item.recID != id);
           let index = list.findIndex(
             (d) => d.recID.toString() === id.toString()
@@ -1940,6 +1940,9 @@ export class CodxDMService {
             this.listFolder = list;
             this.ChangeData.next(true);
           }
+
+          this.addFolder.next(res.data); // them node con
+          this.ChangeData.next(true);
         }
 
         if (res.status == 2) {

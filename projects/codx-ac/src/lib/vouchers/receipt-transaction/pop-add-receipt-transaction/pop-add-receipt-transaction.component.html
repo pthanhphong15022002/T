@@ -187,10 +187,7 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <codx-label
-                fiedName="WarehouseID"
-                [formModel]="form.formModel"
-                >
+                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
@@ -218,14 +215,12 @@
           <div class="row">
             <div class="col-4">
               <div class="form-group">
-                <codx-label
-                    fiedName="RefNo"
-                    [formModel]="form.formModel"
-                  >
-                  </codx-label>:&nbsp;
-                  <span *ngIf="vouchers.refNo">
-                    {{vouchers.refNo}}
-                  </span>
+                <codx-label fiedName="RefNo" [formModel]="form.formModel">
+                </codx-label
+                >:&nbsp;
+                <span *ngIf="vouchers.refNo">
+                  {{ vouchers.refNo }}
+                </span>
               </div>
             </div>
           </div>
@@ -371,6 +366,7 @@
         [autoFitColumns]="false"
         [autoAddRow]="false"
         [showEmptyRecord]="false"
+        [showRowNumber]="true"
         (eventAction)="autoAddRow($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
@@ -777,9 +773,66 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="codx-detail-footer dialog-footer" *ngIf="vouchers">
-    <div class="btn btn-white btn-icon tab-action">
-      <span class="icon-unfold_more icon-20"></span>
+  <div
+    style="display: grid !important"
+    ngClass="collape"
+    class="codx-detail-footer dialog-footer align-items-center collape"
+    *ngIf="vouchers"
+  >
+    <!-- <div class="btn btn-white btn-icon tab-action">
+        <span (click)="expand()" class="icon-unfold_more icon-20"></span>
+        
+      </div> -->
+    <div
+      class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
+    >
+      <button
+        style="border: 1px solid"
+        id="discard"
+        type="button"
+        class="btn btn-md btn-light-danger me-2"
+        (click)="onDiscard()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-delete_outline icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblDiscard"
+            default="Hủy bỏ"
+          ></codx-label>
+        </div>
+      </button>
+      <button
+        style="border: 1px solid var(--primary-dark) !important"
+        type="button"
+        class="btn btn-md btn-light-primary me-2"
+        (click)="onSaveAdd()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-add_to_photos icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblSaveAndClear"
+            default="Lưu & Thêm"
+          ></codx-label>
+        </div>
+      </button>
+      <button
+        id="save"
+        type="button"
+        class="btn btn-md btn-primary"
+        style="min-width: 60px"
+        (click)="onSave()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-save_alt icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </div>
+      </button>
     </div>
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
@@ -829,7 +882,7 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <div class="d-flex align-items-center justify-content-end">
+        <!-- <div class="d-flex align-items-center justify-content-end">
           <div *ngIf="formType != 'edit'" class="ms-2">
             <button
               type="button"
@@ -879,7 +932,7 @@
               </div>
             </button>
           </div>
-        </div>
+        </div> -->
         <div class="ms-2">
           <div
             class="btn btn-icon btn-light-danger btn-circle bg"
