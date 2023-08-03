@@ -299,27 +299,29 @@
     </span>
     <div>
       <button
+      *ngIf="isZoomOut"
         type="button"
         class="btn btn-icon background-gray"
         (click)="showGuide()"
       >
-        <span class="icon-photo_size_select_small icon-16"></span>
+        <span class="icon-filter_none icon-16"></span>
       </button>
 
       <button
+      *ngIf="isZoomIn"
         type="button"
         class="btn btn-icon background-gray"
         (click)="zoomGuide()"
       >
-        <span class="icon-picture_in_picture_alt icon-16"></span>
+        <span class="icon-crop_square icon-18"></span>
       </button>
-            
+
       <button
         type="button"
         class="btn btn-icon background-red"
         (click)="closeGuide()"
       >
-        <span class="icon-close icon-16"></span>
+        <span class="icon-close icon-18"></span>
       </button>
     </div>
   </div>
@@ -353,14 +355,12 @@
       </span>
     </div>
     <ng-container *ngFor="let item of stepViews">
-      <div class="text-dark fw-bold fs-5 me-6">
+      <div class="text-dark fw-bold fs-6 me-6">
         <span>{{ item.stepName }}</span>
       </div>
       <div
         *ngIf="item?.memo"
-        [innerHTML]="
-        item?.memo | formatvalue : formModel : 'Memo' | async
-      "
+        [innerHTML]="item?.memo | formatvalue : formModel : 'Memo' | async"
       ></div>
     </ng-container>
   </div>

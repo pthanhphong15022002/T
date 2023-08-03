@@ -258,15 +258,7 @@ export class InstanceDashboardComponent implements OnInit {
   dataDashBoard: any;
   isLoaded: boolean = false;
   arrVllStatus = [];
-  content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
-  public annotations: ChartAnnotationSettingsModel[] = [
-    {
-      content: this.content,
-      region: 'Series',
-      x: '51%',
-      y: '50%',
-    },
-  ];
+  annotations: ChartAnnotationSettingsModel[] = [];
 
   //Initializing Legend
   public innerRadius: string = '85%';
@@ -339,7 +331,11 @@ public marker1: Object = {
   border: { color: 'black', width: 0 }
 };
 tooltip = {};
- 
+tooltipCountStep = {
+  enable: true,
+  format: '<b>${point.x}</b><br>Số lượng: <b>${point.y}%</b><br> tỷ lệ: <b>${point.y}%</b>',
+  header:""
+};
 
   constructor(
     private api: ApiHttpService,
@@ -376,9 +372,6 @@ tooltip = {};
   }
 
   setting() {
-    // this.panels = JSON.parse(
-    //   '[{"id":"10.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"20.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"30.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"40.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"50.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Cơ hội theo giai đoạn"},{"id":"60.4592017601751599_layout","row":3,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên có nhiều cơ hội thành công nhất"},{"id":"70.14683256767762543_layout","row":3,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê năng suất nhân viên"},{"id":"80.36639064171709834_layout","row":11,"col":0,"sizeX":16,"sizeY":5,"minSizeX":16,"minSizeY":5,"maxSizeX":null,"maxSizeY":null,"header":"Lý do thành công"},{"id":"90.06496875406606994_layout","row":16,"col":0,"sizeX":16,"sizeY":5,"minSizeX":16,"minSizeY":5,"maxSizeX":null,"maxSizeY":null,"header":"Lý do thất bại"},{"id":"100.21519762020962552_layout","row":11,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê hiệu suất trong năm"}]'
-    // );
     this.datas = JSON.parse(
       '[{"panelId":"10.1636284528927885_layout","data":"1"},{"panelId":"20.5801149283702021_layout","data":"2"},{"panelId":"30.6937258303982936_layout","data":"3"},{"panelId":"40.5667390469747078_layout","data":"4"},{"panelId":"50.4199281088325755_layout","data":"5"},{"panelId":"60.4592017601751599_layout","data":"6"},{"panelId":"70.14683256767762543_layout","data":"7"},{"panelId":"80.36639064171709834_layout","data":"8"},{"panelId":"90.06496875406606994_layout","data":"9"},{"panelId":"100.21519762020962552_layout","data":"10"}]'
     );
@@ -413,14 +406,20 @@ tooltip = {};
       this.countInstances = this.dataDashBoard?.countsInstance;
       this.productivityOwner = this.dataDashBoard?.productivity;
 
-      let counts = this.dataDashBoard?.counts;
-      for (var prop in counts) {
-        if (counts.hasOwnProperty(prop)) {
-          this.sumStep += counts[prop];
-        }
+      let counts = this.countStep;
+      for (var prop of counts) { 
+        this.sumStep += prop?.count || 0;
       }
       this.setDataProductivityYear(this.dataDashBoard?.revenue);
-      this.content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
+      let content = `<div style='font-Weight:600;font-size:14px;text-align: center;'>Cơ hội<br>${this.sumStep}</div>`;
+      this.annotations = [
+        {
+          content: content,
+          region: 'Series',
+          x: '51%',
+          y: '50%',
+        },
+      ];
       console.log(this.dataDashBoard);
       this.isLoaded = true;
       this.changeDetectorRef.detectChanges();
