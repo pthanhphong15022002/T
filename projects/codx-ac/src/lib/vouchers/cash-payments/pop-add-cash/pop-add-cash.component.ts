@@ -571,17 +571,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.loadFormat(columnsGrid);
     this.predicateControl(columnsGrid);
     this.hideGrid(columnsGrid, this.hideFields);
-    if (this.action == 'add') {
-      setTimeout(() => {
-        this.loadingform = false;
-        this.dt.detectChanges();
-      }, 500);
-    } else {
-      setTimeout(() => {
-        this.loadingform = false;
-        this.dt.detectChanges();
-      }, 1000);
-    }
+    // if (this.action == 'add') {
+      
+    // } else {
+    //   setTimeout(() => {
+    //     this.loadingform = false;
+    //     this.dt.detectChanges();
+    //   }, 1000);
+    // }
+    setTimeout(() => {
+      this.loadingform = false;
+      this.dt.detectChanges();
+    }, 500);
   }
 
   gridRefresh() {
@@ -1393,6 +1394,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }   
     this.oriVatInvoices.push(data);
+    this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.acService
         .execApi('AC', 'VATInvoicesBusiness', 'AddListVATAsync', [
           this.cashpayment,
@@ -1418,6 +1421,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.oriVatInvoices[idx] = data;
     }
     this.updateAccounting(data);
+    this.loadTotal();
+    this.dialog.dataService.update(this.cashpayment).subscribe();
     this.gridCash.refresh();
     this.dt.detectChanges();
     this.acService
@@ -1793,30 +1798,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     switch (this.action) {
       case 'add':
         this.cashpayment.recID = Util.uid();
-        if (this.journal.assignRule == '1') {
-          this.acService
-            .execApi(
-              'ERM.Business.AC',
-              'CommonBusiness',
-              'GenerateAutoNumberAsync',
-              this.journal.voucherFormat
-            )
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.cashpayment.voucherNo = res;
-                this.form.formGroup.patchValue(
-                  {
-                    voucherNo: this.cashpayment.voucherNo,
-                  },
-                  {
-                    onlySelf: true,
-                    emitEvent: false,
-                  }
-                );
-              }
-            });
-        }
+        this.generateAutoNumber();
+        break;
+      case 'copy':
+        this.cashpayment.status = '0';
+        this.generateAutoNumber();
         break;
       case 'edit':
         this.hasSaved = true;
@@ -2084,6 +2070,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadFormSubType('1');
         break;
     }
+    ele.select(0);
   }
 
   loadAccountControl(columnsGrid) {
@@ -2824,12 +2811,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   formAction() {
     switch (this.action) {
       case 'add':
+      case 'copy':
         if (this.hasSaved) {
           if (this.cashpayment.updateColumn) {
             this.cashpayment.updateColumn = null;
             this.dialog.dataService.update(this.cashpayment).subscribe();
             this.acService
-              .execApi('AC', this.className, 'UpdateMasterAsync', [
+              .execApi('AC', this.className, 'UpdateVoucherAsync', [
                 this.cashpayment,
                 this.cashpaymentline,
               ])
@@ -2873,7 +2861,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (this.cashpayment.updateColumn) {
           this.dialog.dataService.update(this.cashpayment).subscribe();
           this.acService
-            .execApi('AC', this.className, 'UpdateMasterAsync', [
+            .execApi('AC', this.className, 'UpdateVoucherAsync', [
               this.cashpayment,
               this.cashpaymentline,
             ])
@@ -2881,6 +2869,33 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             .subscribe();
         }
         break;
+    }
+  }
+
+  generateAutoNumber(){
+    if (this.journal.assignRule == '1') {
+      this.acService
+        .execApi(
+          'ERM.Business.AC',
+          'CommonBusiness',
+          'GenerateAutoNumberAsync',
+          this.journal.voucherFormat
+        )
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) {
+            this.cashpayment.voucherNo = res;
+            this.form.formGroup.patchValue(
+              {
+                voucherNo: this.cashpayment.voucherNo,
+              },
+              {
+                onlySelf: true,
+                emitEvent: false,
+              }
+            );
+          }
+        });
     }
   }
 
