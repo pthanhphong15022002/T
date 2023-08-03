@@ -44,7 +44,7 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
       appConfig.load().subscribe((res) => {
-        authService.checkTenant().subscribe((v) => {
+        (authService.checkTenant() as any).subscribe((v) => {
           resolve(v);
         });
       });
