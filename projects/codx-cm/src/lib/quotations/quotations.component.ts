@@ -161,41 +161,34 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   loadParam() {
-    this.codxCmService.getSettingValue('CMParameters').subscribe((res) => {
-      if (res?.length > 0) {
-        //approver
-        let dataParam4 = res.filter(
-          (x) => x.category == '4' && !x.transType
-        )[0];
-        if (dataParam4) {
-          let dataValue = JSON.parse(dataParam4.dataValue);
-          if (Array.isArray(dataValue)) {
-            let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
-            if (setting) this.applyApprover = setting['ApprovalRule'];
-          }
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
         }
+      }
+    });
 
-        //tien te
-        let dataParam1 = res.filter(
-          (x) => x.category == '1' && !x.transType
-        )[0];
-        if (dataParam1) {
-          this.paramDefault = JSON.parse(dataParam1.dataValue);
-          this.currencyIDDefault =
-            this.paramDefault['DefaultCurrency'] ?? 'VND';
-          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
-          if (this.currencyIDDefault != 'VND') {
-            let day = new Date();
-            this.codxCmService
-              .getExchangeRate(this.currencyIDDefault, day)
-              .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
-                else {
-                  this.currencyIDDefault = 'VND';
-                  this.exchangeRateDefault = 1;
-                }
-              });
-          }
+    //tien te
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        this.paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = this.paramDefault['DefaultCurrency'] ?? 'VND';
+        this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+        if (this.currencyIDDefault != 'VND') {
+          let day = new Date();
+          this.codxCmService
+            .getExchangeRate(this.currencyIDDefault, day)
+            .subscribe((res) => {
+              if (res && res != 0) this.exchangeRateDefault = res;
+              else {
+                this.currencyIDDefault = 'VND';
+                this.exchangeRateDefault = 1;
+              }
+            });
         }
       }
     });
@@ -656,43 +649,44 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCM
-    //         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.itemSelected = q;
-    //             this.view.dataService.update(this.itemSelected).subscribe();
-    //           }
-    //           this.notiService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.itemSelected = q;
+                this.view.dataService.update(this.itemSelected).subscribe();
+              }
+              this.notiService.notifyCode('ES007');
+            });
+        }
+      });
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
+    console.log(this);
     // lỗi call back cần tra this
     // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     // else {
@@ -707,8 +701,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     //   });
     //}
   }
-
-  loadChange() {}
 
   //Huy duyet
   cancelApprover(dt) {
