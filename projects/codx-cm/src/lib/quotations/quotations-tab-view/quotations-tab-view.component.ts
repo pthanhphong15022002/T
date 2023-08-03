@@ -621,7 +621,7 @@ export class QuotationsTabViewComponent
           this.codxCmService
             .getExchangeRate(this.currencyIDDefault, day)
             .subscribe((res) => {
-              if (res && res != 0) this.exchangeRateDefault = res;
+              if (res) this.exchangeRateDefault = res?.exchRate;
               else {
                 this.currencyIDDefault = 'VND';
                 this.exchangeRateDefault = 1;
