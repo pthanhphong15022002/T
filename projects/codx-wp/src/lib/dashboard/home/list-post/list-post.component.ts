@@ -34,6 +34,27 @@ import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
+
+const SHARECONTROLS = {
+  OWNER: '1',
+  MYGROUP: '2',
+  MYTEAM: '3',
+  MYDEPARMENTS: '4',
+  MYDIVISION: '5',
+  MYCOMPANY: '6',
+  EVERYONE: '9',
+  OGRHIERACHY: 'O',
+  DEPARMENTS: 'D',
+  POSITIONS: 'P',
+  ROLES: 'R',
+  GROUPS: 'G',
+  USER: 'U',
+};
+const MEMBERTYPE = {
+  CREATED: '1',
+  SHARE: '2',
+  TAGS: '3',
+};
 @Component({
   selector: 'app-list-post',
   templateUrl: './list-post.component.html',
@@ -137,14 +158,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         .subscribe((grd: any) => {
           this.gridViewSetup = grd;
         });
+        // get more funtion hệ thống
+        this.cache.moreFunction(func.formName,func.gridViewName)
+        .subscribe((mFuc:any) => {
+          this.sysMoreFunc = mFuc;
+        });
       }
     });
 
-    // get more funtion hệ thống
-    this.cache.moreFunction("CoDXSystem","")
-    .subscribe((mFuc:any) => {
-      this.sysMoreFunc = mFuc;
-    });
+    
   }
   // click moreFC
   clickMF(event: any, post: any) {
@@ -170,10 +192,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   // tạo bài viết
   addPost() {
-    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS01");
+    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP000");
     var obj = {
       status: 'create',
-      headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
+      headerText: `${moreFuc.customName} ${this.function.customName}`,
       data: new Post()
     };
     let option = new DialogModel();
@@ -217,10 +239,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   // edit bài viết
   editPost(post: any) {
-    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS03");
+    let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP001");
     let obj = {
       status: 'edit',
-      headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
+      headerText: `${moreFuc.customName} ${this.function.customName}`,
       data: JSON.parse(JSON.stringify(post))
     };
     let option = new DialogModel();
@@ -246,17 +268,28 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   
   // share bài viết
   sharePost(post: any) {
-    if (post) {
-      let moreFuc = this.sysMoreFunc.find(x => x.functionID === "SYS01");
+    debugger
+    if (post) 
+    {
       let data = new WP_Comments();
-      data.refID = post.recID;
-      data.shares = JSON.parse(JSON.stringify(post));
-      var obj = {
-        status: 'share',
-        headerText: `${moreFuc.defaultName} ${this.function.defaultName}`,
-        refType:'WP_Comments',
-        data: data
+      let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP003");
+      let obj = {
+        status: "share",
+        headerText: `${moreFuc.customName} ${this.function.customName}`,
+        refType:"",
+        data : null
       };
+      if(post.category == this.CATEGORY.POST)
+      {
+        data.refID = post.recID;
+        obj.refType = 'WP_Comments';
+      }
+      else
+      {
+        data.refID = post.refID;
+        obj.refType = post.refType;
+      }
+      obj.data = data;
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.formModel;
@@ -281,7 +314,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   savePost(post: any) {
     if (post) {
       let data = JSON.parse(JSON.stringify(post));
-      let headerText = 'Thêm vào kho lưu trữ';
+      let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP003");
+      let headerText = `${moreFuc.customName}`;
       var obj = {
         data: data,
         headerText: headerText,
@@ -415,7 +449,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
               if (arrPermisison.length == 1) {
                 // chia sẻ 1 người
                 this.dataSelected.shareName = Util.stringFormat(
-                  mssg.defaultName,
+                  mssg.customName,
                   `<b>${fisrtPermission.text}</b>`
                 );
               } else {
@@ -423,7 +457,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
                 let count = arrPermisison.length - 1;
                 let type = fisrtPermission.objectName;
                 this.dataSelected.shareName = Util.stringFormat(
-                  mssg.defaultName,
+                  mssg.customName,
                   `<b>${fisrtPermission.text}</b>`,
                   count,
                   type
@@ -443,23 +477,3 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 }
 
 
-const SHARECONTROLS = {
-  OWNER: '1',
-  MYGROUP: '2',
-  MYTEAM: '3',
-  MYDEPARMENTS: '4',
-  MYDIVISION: '5',
-  MYCOMPANY: '6',
-  EVERYONE: '9',
-  OGRHIERACHY: 'O',
-  DEPARMENTS: 'D',
-  POSITIONS: 'P',
-  ROLES: 'R',
-  GROUPS: 'G',
-  USER: 'U',
-};
-const MEMBERTYPE = {
-  CREATED: '1',
-  SHARE: '2',
-  TAGS: '3',
-};

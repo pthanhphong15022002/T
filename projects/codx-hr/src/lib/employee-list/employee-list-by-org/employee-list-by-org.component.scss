@@ -1,7 +1,10 @@
 .manager-gridview {
     .e-content {
         height: calc(100vh - 320px) !important;
-    }
+        .e-rowcell{
+            white-space: unset;
+        }
+    }    
 }
 .hover-active:hover{
     .item-active{
