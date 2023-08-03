@@ -48,7 +48,6 @@ export class LeadDetailComponent implements OnInit {
   tabControl = [];
   listRoles = [];
   listSteps = [];
-  treeTask = [];
   listStepsProcess = [];
 
   tmpDeal: any;

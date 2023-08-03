@@ -638,10 +638,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         });
     }
 
-    if(this.vouchers.warehouseID)
-    {
-      this.getWarehouseName(this.vouchers.warehouseID);
-    }
+    // if(this.vouchers.warehouseID)
+    // {
+    //   this.getWarehouseName(this.vouchers.warehouseID);
+    // }
 
     // if (
     //   this.vouchers &&
@@ -1091,18 +1091,18 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  getWarehouseName(warehouseID: any){
-    this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
-    .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res.length > 0) {
-          this.vouchers.warehouseName = res;
-          this.form.formGroup.patchValue({
-            warehouseName: this.vouchers.warehouseName,
-          });
-        }
-      });
-  }
+  // getWarehouseName(warehouseID: any){
+  //   this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
+  //   .pipe(takeUntil(this.destroy$))
+  //     .subscribe((res: any) => {
+  //       if (res.length > 0) {
+  //         this.vouchers.warehouseName = res;
+  //         this.form.formGroup.patchValue({
+  //           warehouseName: this.vouchers.warehouseName,
+  //         });
+  //       }
+  //     });
+  // }
 
   costPrice_Change(line: any)
   {

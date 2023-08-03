@@ -15,7 +15,7 @@ import {
   DialogRef,
   ImageViewerComponent,
   NotificationsService,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
@@ -26,7 +26,6 @@ import { IJournal } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
 import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
-import { PopupPermissionComponent } from '../popup-permission/popup-permission.component';
 
 const irrPropNames: string[] = [
   'drAcctControl',
@@ -106,17 +105,11 @@ export class PopupAddJournalComponent
   vllDateFormat: any;
   vll067: any[] = [];
 
-  journalPermissions: IJournalPermission[] = [];
-  creater: string;
-  createrObjectType: string;
-  approver: string;
-  approverObjectType: string;
-  poster: string;
-  posterObjectType: string;
-  unposter: string;
-  unposterObjectType: string;
-  sharer: string;
-  sharerObjectType: string;
+  createrPermissions: IJournalPermission[] = [];
+  approverPermissions: IJournalPermission[] = [];
+  posterPermissions: IJournalPermission[] = [];
+  unposterPermissions: IJournalPermission[] = [];
+  sharerPermissions: IJournalPermission[] = [];
 
   constructor(
     injector: Injector,
@@ -130,18 +123,25 @@ export class PopupAddJournalComponent
 
     this.dataService = dialogRef.dataService;
     this.journal = { ...this.journal, ...this.dataService?.dataSelected };
+
+    this.journal.vatControl = this.journal.vatControl === '1';
+
     this.oldJournal = { ...this.journal };
-    // this.journal.multiCurrency =
-    //   this.journal.multiCurrency == '1' ? true : false;
-    // this.journal.autoPost = ['1', '2'].includes(this.journal.autoPost)
-    //   ? true
-    //   : false;
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
 
   //#region Init
   onInit(): void {
+    this.cache
+      .gridViewSetup(
+        this.dialogRef.formModel.formName,
+        this.dialogRef.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        this.gvs = res;
+      });
+
     if (this.isEdit) {
       this.assignVllToProp2('AC087', 'notAllowEditingFields087');
 
@@ -157,51 +157,61 @@ export class PopupAddJournalComponent
       this.acService
         .loadDataAsync('AC', options)
         .subscribe(async (journalPermissions: IJournalPermission[]) => {
-          this.journalPermissions = journalPermissions;
-
-          let creater: string[] = [];
-          let approver: string[] = [];
-          let poster: string[] = [];
-          let unposter: string[] = [];
-          let sharer: string[] = [];
-
-          for (const permission of journalPermissions) {
-            permission.objectName = await this.getObjectNameAsync(
-              permission.objectType,
-              permission.objectID
-            );
-
-            if (permission.add === '1') {
-              this.createrObjectType = permission.objectType;
-              creater.push(permission.objectID);
-            }
-
-            if (permission.approval === '1') {
-              this.approverObjectType = permission.objectType;
-              approver.push(permission.objectID);
-            }
-
-            if (permission.post === '1') {
-              this.posterObjectType = permission.objectType;
-              poster.push(permission.objectID);
-            }
-
-            if (permission.unPost === '1') {
-              this.unposterObjectType = permission.objectType;
-              unposter.push(permission.objectID);
-            }
-
-            if (permission.share === '1') {
-              this.sharerObjectType = permission.objectType;
-              sharer.push(permission.objectID);
-            }
-          }
-
-          this.creater = creater.join(';');
-          this.approver = approver.join(';');
-          this.poster = poster.join(';');
-          this.unposter = unposter.join(';');
-          this.sharer = sharer.join(';');
+          this.createrPermissions = await Promise.all(
+            journalPermissions
+              .filter((p) => p.roleType === '1')
+              .map(async (p) => ({
+                ...p,
+                objectName: await this.getObjectNameAsync(
+                  p.objectType,
+                  p.objectID
+                ),
+              }))
+          );
+          this.approverPermissions = await Promise.all(
+            journalPermissions
+              .filter((p) => p.roleType === '2')
+              .map(async (p) => ({
+                ...p,
+                objectName: await this.getObjectNameAsync(
+                  p.objectType,
+                  p.objectID
+                ),
+              }))
+          );
+          this.posterPermissions = await Promise.all(
+            journalPermissions
+              .filter((p) => p.roleType === '3')
+              .map(async (p) => ({
+                ...p,
+                objectName: await this.getObjectNameAsync(
+                  p.objectType,
+                  p.objectID
+                ),
+              }))
+          );
+          this.unposterPermissions = await Promise.all(
+            journalPermissions
+              .filter((p) => p.roleType === '4')
+              .map(async (p) => ({
+                ...p,
+                objectName: await this.getObjectNameAsync(
+                  p.objectType,
+                  p.objectID
+                ),
+              }))
+          );
+          this.sharerPermissions = await Promise.all(
+            journalPermissions
+              .filter((p) => p.roleType === '6')
+              .map(async (p) => ({
+                ...p,
+                objectName: await this.getObjectNameAsync(
+                  p.objectType,
+                  p.objectID
+                ),
+              }))
+          );
         });
     } else {
       // assign default idimControl in SYS_SettingValues to journal.idimControl
@@ -226,16 +236,6 @@ export class PopupAddJournalComponent
         this.journal.idimControl?.split(';').includes(d.value)
       );
     });
-
-    this.cache
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        console.log('gvs', res);
-        this.gvs = res;
-      });
 
     this.cache
       .valueList('AC088')
@@ -273,25 +273,25 @@ export class PopupAddJournalComponent
       }
     });
 
-    this.cache
-      .gridViewSetup('ESCategories', 'grvESCategories')
-      .subscribe((gv) => {
-        if (gv) {
-          this.cache
-            .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
-            .subscribe((vllDFormat) => {
-              this.vllDateFormat = vllDFormat.datas;
+    // this.cache
+    //   .gridViewSetup('ESCategories', 'grvESCategories')
+    //   .subscribe((gv) => {
+    //     if (gv) {
+    //       this.cache
+    //         .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
+    //         .subscribe((vllDFormat) => {
+    //           this.vllDateFormat = vllDFormat.datas;
 
-              // this.getAutoNumber(this.journal.voucherFormat).subscribe(
-              //   (autoNumber) => {
-              //     this.form.formGroup.patchValue({
-              //       voucherFormat: this.getAutoNumberFormat(autoNumber),
-              //     });
-              //   }
-              // );
-            });
-        }
-      });
+    //           this.getAutoNumber(this.journal.voucherFormat).subscribe(
+    //             (autoNumber) => {
+    //               this.form.formGroup.patchValue({
+    //                 voucherFormat: this.getAutoNumberFormat(autoNumber),
+    //               });
+    //             }
+    //           );
+    //         });
+    //     }
+    //   });
 
     this.assignVllToProp1('AC067', 'vll067');
     this.assignVllToProp1('AC064', 'vllJournalTypes064');
@@ -304,7 +304,7 @@ export class PopupAddJournalComponent
     this.assignVllToProp2('AC109', 'journalTypes109');
     this.assignVllToProp2('AC110', 'journalTypes110');
     this.assignVllToProp2('AC111', 'journalTypes111');
-    this.assignVllToProp2("AC122", "journalTypes122");
+    this.assignVllToProp2('AC122', 'journalTypes122');
   }
 
   ngAfterViewInit(): void {
@@ -322,8 +322,7 @@ export class PopupAddJournalComponent
   onShareInputChange(e): void {
     console.log('onShareInputChange', e);
 
-    this[e.field + 'ObjectType'] = e.data[0]?.objectType;
-    this[e.field] = e.data?.map((d) => d.id).join(';');
+    this[e.field + 'Permissions'] = e.data;
   }
 
   onInputChange(e): void {
@@ -440,27 +439,19 @@ export class PopupAddJournalComponent
       this.journal.idimControl = null;
     }
 
-    let tempJournal: IJournal = { ...this.journal };
-
-    // ghi so tu dong khi luu
-    // if (this.journal.approvalControl === '0') {
-    //   tempJournal.autoPost = this.journal.autoPost ? '2' : '0';
-    // } else {
-    //   tempJournal.autoPost = this.journal.autoPost ? '1' : '0';
-    // }
-    // tempJournal.multiCurrency = tempJournal.multiCurrency ? '1' : '0';
+    this.journal.vatControl = this.journal.vatControl ? '1' : '0';
 
     const dataValueObj = {};
     for (const prop of this.dataValueProps088) {
-      dataValueObj[prop] = tempJournal[prop];
+      dataValueObj[prop] = this.journal[prop];
     }
-    tempJournal.extras = JSON.stringify(dataValueObj);
+    this.journal.extras = JSON.stringify(dataValueObj);
 
     // don't allow editing some fields if this journal has any vouchers.
     if (this.isEdit && this.hasVouchers) {
       const changedProps: string[] = this.findChangedProps(
         this.oldJournal,
-        tempJournal
+        this.journal
       ).map((f) => f.toLowerCase());
 
       const changedFields: string[] = this.notAllowEditingFields087
@@ -471,7 +462,7 @@ export class PopupAddJournalComponent
         this.notiService.notifyCode(
           'AC0008',
           0,
-          `"${tempJournal.journalDesc}"`,
+          `"${this.journal.journalDesc}"`,
           `"${changedFields.join(', ')}"`
         );
 
@@ -479,40 +470,32 @@ export class PopupAddJournalComponent
       }
     }
 
-    console.log(tempJournal);
-
     if (this.thumbnail?.imageUpload?.item) {
       const uploaded$ = this.thumbnail.updateFileDirectReload(
         this.journal.recID
       );
       const uploaded = await lastValueFrom(uploaded$);
       if (uploaded) {
-        this.journal.hasImage = tempJournal.hasImage = 1;
+        this.journal.hasImage = 1;
       }
     }
 
     if (this.isEdit) {
-      this.dataService.updateDatas.set(tempJournal.recID, tempJournal);
+      this.dataService.updateDatas.set(this.journal.recID, this.journal);
     } else {
-      this.dataService.addDatas.set(tempJournal.recID, tempJournal);
+      this.dataService.addDatas.set(this.journal.recID, this.journal);
     }
     this.dataService.save().subscribe((res: any) => {
       console.log(res);
       if (res.save.data || res.update.data) {
         this.api
           .exec('AC', 'JournalsPermissionBusiness', 'AddOrUpdateAsync', [
-            this.journal.journalNo,
-            this.creater,
-            this.createrObjectType,
-            this.approver,
-            this.approverObjectType,
-            this.poster,
-            this.posterObjectType,
-            this.unposter,
-            this.unposterObjectType,
-            this.sharer,
-            this.sharerObjectType,
-            this.isEdit,
+            res.save.data?.journalNo || res.update.data?.journalNo,
+            this.createrPermissions,
+            this.approverPermissions,
+            this.posterPermissions,
+            this.unposterPermissions,
+            this.sharerPermissions,
           ])
           .subscribe((res) => {
             console.log(res);
@@ -540,21 +523,6 @@ export class PopupAddJournalComponent
     this.comboboxValue = comboboxValue;
     this.propName = propName;
     this.isHidden = false;
-  }
-
-  onClickOpenPermissionPopup(): void {
-    // return;
-    this.callfc.openForm(
-      PopupPermissionComponent,
-      'This param is not working',
-      950,
-      650,
-      '',
-      {
-        journalPermissions: this.journalPermissions,
-        journalNo: this.journal.journalNo,
-      }
-    );
   }
 
   onClickHideComboboxPopup(e): void {
