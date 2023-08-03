@@ -1,6 +1,8 @@
-import { Component, Injector, TemplateRef, ViewChild} from '@angular/core';
+import { concat } from 'rxjs';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ButtonModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxHrService } from '../codx-hr.service';
 
 @Component({
   selector: 'lib-employee-annual-leave',
@@ -33,12 +35,23 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   @ViewChild('treeTemplate') treeTemplate: TemplateRef<any>;
   @ViewChild('rightTemplateHRTAL01') rightTemplateHRTAL01: TemplateRef<any>;
 
-  itemSelected: any;
+  itemSelected: any = null;
+  itemListDaysOff: any = null;
   currentViewModel: any;
+  pageIndex = 0;
+  pageSize = 5;
+  listDaysOff: any = [];
+  currentItem: any;
+  scrolling: boolean = true;
+
+  viewsDefault: any;
+  viewCrr: any;
+  crrFuncID: any;
   constructor(
     private injector: Injector,
     //private notiService: NotificationsService,
     //private shareService: CodxShareService,
+    private hrService: CodxHrService,
     private routerActive: ActivatedRoute,
   ) {
     super(injector);
@@ -46,14 +59,10 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.routerActive.params.subscribe((params: Params) => {
       this.funcID = params['funcID'];
       this.initViewSetting();
-      if (this.view) {
-        this.view.dataService.parentIdField = '';
-        this.view.dataService.idField = 'recID';
-        this.view.idField = 'recID';
-      }
     })
   }
   onInit(): void {
+    this.crrFuncID = this.funcID;
     // this.api.execSv<any>("HR", "ERM.Business.HR", 'ScheduleBusiness', 'ScheduleUpdateExpiredContractsAsync')
     //   .subscribe((res) => {
     //     if (res) {
@@ -66,6 +75,16 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.initViewSetting();
     this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
+    this.viewsDefault = this.views;
+  }
+  changeFunction() {
+    this.hrService.childMenuClick.subscribe((res) => {
+      if (res && res.func) {
+        if (this.funcID != res.func.functionID)
+          this.funcID = res.func.functionID;
+        this.hrService.childMenuClick.next(null);
+      }
+    });
   }
   initRequest(): void {
     this.request = new ResourceModel();
@@ -82,7 +101,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL01':
         this.views = [
           {
-            id: '1',
+            //id: '1',
             type: ViewType.list,
             sameData: true,
             //active: true,
@@ -92,7 +111,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             },
           },
           {
-            id: '2',
+            //id: '2',
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
@@ -109,7 +128,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL02':
         this.views = [
           {
-            id: '3',
+            //id: '1',
             type: ViewType.list,
             sameData: true,
             //active: true,
@@ -119,7 +138,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             },
           },
           {
-            id: '4',
+            //id: '2',
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
@@ -136,7 +155,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     }
   }
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.detectorRef.detectChanges();
   }
@@ -155,6 +173,46 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     // }
   }
   viewChanged(event: any) {
+    this.viewCrr = event?.view?.type;
+    this.initViewSetting();
+    if (this.crrFuncID != this.funcID) {
+      this.cache.viewSettings(this.funcID).subscribe(views => {
+        if (views) {
+          this.crrFuncID = this.funcID;
+          this.views = [];
+          let idxActive = -1;
+          let viewOut = false;
+          this.viewsDefault.forEach((v, index) => {
+            let idx = views.findIndex(x => x.view == v.type);
+            if (idx != -1) {
+              v.hide = false;
+              if (v.type != this.viewCrr) views.active = false;
+              else views.active = true;
+              if (views[idx].isDefault) idxActive = index;
+            } else {
+              v.hide = true;
+              v.active = false;
+              if (this.viewCrr == v.type) viewOut = true;
+            }
+            this.views.push(v);
+          });
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
+
+            let viewModel =
+              idxActive != -1 ? this.views[idxActive] : this.views[0];
+            this.view.viewActiveType = viewModel.type;
+            this.view.viewChange(viewModel);
+            if (viewOut) this.view.load();
+          }
+          this.detectorRef.detectChanges();
+        }
+      })
+      //this.view.viewChange(this.view[0]);
+      //this.view.load();
+    }
+    return;
   }
   getFunction(funcID: string) {
     if (funcID) {
@@ -185,15 +243,36 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     })
   }
   onShowDaysOff(data: any) {
-    this.popupLoading = true;
-    var item = this.view.dataService.data.findIndex(x => x.recID == data.recID);
+    if (this.itemListDaysOff?.recID != data?.recID) {
+      this.itemListDaysOff = data;
+      this.resetPage();
+    }
+    if (this.listDaysOff?.length <= 0)
+      this.popupLoading = true;
+    //var item = this.view.dataService.data.findIndex(x => x.recID == data.recID);
     this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness', 'GetDaysOffByEAnnualLeaveAsync',
-      [data.employeeID, data.alYear, data.alYearMonth, data.isMonth]).subscribe((res: any) => {
-        if (res) {
-          this.view.dataService.data[item].listDaysOff = res;
+      [data.employeeID, data.alYear, data.alYearMonth, data.isMonth, this.pageIndex, this.pageSize]).subscribe((res: any) => {
+        if (res && res.length > 0) {
+          //this.view.dataService.data[item].listDaysOff = res;
+          this.listDaysOff = this.listDaysOff.concat(res);
+          this.pageIndex = this.pageIndex + 1;
+        } else {
+          this.scrolling = false;
         }
         this.popupLoading = false;
       });
+  }
+  onScrollList(ele: HTMLDivElement) {
+    var totalScroll = ele.clientHeight + ele.scrollTop;
+    if (this.scrolling && (totalScroll == ele.scrollHeight)) {
+      this.onShowDaysOff(this.itemListDaysOff);
+    }
+  }
+  resetPage() {
+    this.pageIndex = 0;
+    this.pageSize = 5;
+    this.listDaysOff = [];
+    this.scrolling = true;
   }
 
 }

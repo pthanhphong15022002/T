@@ -137,7 +137,7 @@
                   [ngbTooltip]="gridViewSetup['Probability']?.headerText"
                 >
                   <span
-                    class="icon-check_circle text-green icon-14 mt-1 pe-1"
+                    class="icon-check_circle text-green icon-14 me-1"
                   ></span>
                   <span
                     *ngIf="dataSelected?.probability; else defaultNull"
@@ -316,7 +316,7 @@
                         'background-color':
                           dataSelected?.steps['backgroundColor']
                       }"
-                      class="badge badge-sm d-flex align-items-center"
+                      class="badge badge-sm d-flex align-items-center me-0"
                     >
                       <span
                         [ngClass]="dataSelected?.steps['icon']"
@@ -337,7 +337,7 @@
                         [value]="dataSelected?.status"
                         [showText]="true"
                         [showBgColor]="true"
-                        class="badge badge-light badge-sm"
+                        class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
                     </ng-template>
@@ -996,10 +996,10 @@
             [value]="item?.status"
             [showText]="true"
             [showBgColor]="true"
-            class="badge badge-light badge-sm"
+            class="badge badge-light badge-sm me-0"
           >
           </codx-vll>
-          <div [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
+          <div class="d-flex align-items-center" [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp-menu"
@@ -1014,10 +1014,10 @@
             ></span>
           </div>
         </div>
-        <div class="last-div">
+        <div class="last-div h-20px">
           <codx-imgs
             [isToolTip]="true"
-            [width]="25"
+            [width]="20"
             [objectId]="item?.createdBy"
             objectType="AD_Users"
             [numberImages]="1"

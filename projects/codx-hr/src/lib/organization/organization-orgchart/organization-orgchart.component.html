@@ -365,13 +365,14 @@
       <div class="text-dark fw-bold mt-5 mb-3">Chế độ phù hợp với trang</div>
       <div class="form-check my-2 mx-3">
         <input
+          ngDefaultControl
           [(ngModel)]="this.dataTree.pagefit"
           value="pageFitModeNone"
           class="form-check-input"
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeNone"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
       </div>
@@ -383,7 +384,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeWidth"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="pageFitModeWidth">
           Vừa chiều rộng
@@ -397,7 +398,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeHeight"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="pageFitModeHeight">
           Vừa chiều cao
@@ -411,7 +412,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeFit"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="pageFitModeFit">
           Vừa cả trang
@@ -421,13 +422,14 @@
       <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
       <div class="form-check my-2 mx-3">
         <input
+          ngDefaultControl
           [(ngModel)]="this.dataTree.orientationType"
           value="orientationTop"
           class="form-check-input"
           type="radio"
           name="orientation"
           id="orientationTop"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="orientationTop"> Từ trên </label>
       </div>
@@ -439,7 +441,7 @@
           type="radio"
           name="orientation"
           id="orientationLeft"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="orientationLeft">Bên trái </label>
       </div>
@@ -447,13 +449,14 @@
       <div class="text-dark fw-bold mt-5 mb-3">Vị trí cấp con</div>
       <div class="form-check my-2 mx-3">
         <input
+          ngDefaultControl
           [(ngModel)]="this.dataTree.childrenPlacementType"
           value="childrenPlacementVertical"
           class="form-check-input"
           type="radio"
           id="childrenPlacementVertical"
           name="placement"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="childrenPlacementVertical">
           Nằm ngang
@@ -467,7 +470,7 @@
           type="radio"
           id="childrenPlacementHorizontal"
           name="placement"
-          (change)="changeMode($event)"
+          (change)="changeMode($event, true)"
         />
         <label class="form-check-label" for="childrenPlacementHorizontal">
           Nằm dọc
@@ -476,12 +479,14 @@
 
       <div class="text-dark fw-bold mt-5 mb-3">Thông tin thẻ đơn vị</div>
       <select class="form-select" #teams (change)="onSelected(teams.value)">
-        <option value="Yes" [(ngModel)]="this.dataTree.isGetManager">
+        <option
+          value="Yes"
+          [selected]="this.dataTree.isGetManager === 'Yes' ? true : false"
+        >
           Hiển thị thông tin Người quản lý
         </option>
         <option
           value="No"
-          [(ngModel)]="this.dataTree.isGetManager"
           [selected]="this.dataTree.isGetManager === 'No' ? true : false"
         >
           Chỉ hiển thị tên đơn vị
@@ -2694,10 +2699,10 @@
       </div> -->
     <!-- #endregion-->
     <!-- </div> -->
-
     <button
       class="ms-auto btn btn-primary w-20 my-4 me-2"
       (click)="onSaveForm()"
+      [disabled]="disableEdit"
     >
       <i class="icon-save"></i>
       <codx-label

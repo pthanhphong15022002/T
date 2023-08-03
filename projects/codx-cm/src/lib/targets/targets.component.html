@@ -85,19 +85,81 @@
 <!--Tree-->
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
-    <div class="d-flex align-items-center justify-content-end mb-1">
-      <codx-dropdown-calendar
-        cssPopup="h-500px w-800px"
-        [value]="date"
-        [selectedType]="'y'"
-        [displayOption]="ops"
-        cssClass="w-100 om-calendar"
-        class="me-2"
-        (valueChange)="changeCalendar($event)"
-        (change)="changeCalendar($event)"
-      ></codx-dropdown-calendar>
+    <div class="d-flex px-5 justify-content-between align-items-center">
+      <div class="d-flex align-items-center justify-content-start">
+        <div class="d-flex flex-row">
+          <!-- Lặp qua các item (ví dụ: item1 và item2) -->
+          <div
+            *ngFor="let item of lstCurrentView"
+            class="w-130px text-center"
+            [ngClass]="
+              item.value == '1'
+                ? 'cm-rounded-pill-left'
+                : 'cm-rounded-pill-right'
+            "
+            (click)="viewBusinessLines(item.value)"
+          >
+            <div
+              [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
+            >
+              <button
+                class="btn btn-sm min-w-60px rounded-4 d-flex align-items-center"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="text-light"> {{ item.text }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="me-5">
+          <div class="ms-2 me-2" ngbDropdown [container]="'body'">
+            <div
+              role="button"
+              class="d-flex border rounded p-2 w-90px"
+              (click)="clickShow(!isShow)"
+              *ngIf="isShow == true"
+            >
+              <i class="icon-i-arrows-collapse me-2"></i>
+              <codx-label
+                default="Thu gọn"
+                [formModel]="view.formModel"
+                fiedName="lblCollapse"
+              ></codx-label>
+            </div>
+            <div
+              role="button"
+              class="d-flex border rounded p-2 w-90px"
+              (click)="clickShow(!isShow)"
+              *ngIf="isShow == false"
+            >
+              <i class="icon-i-arrows-expand me-2"></i>
+              <codx-label
+                default="Mở rộng"
+                [formModel]="view.formModel"
+                fiedName="lblExpand"
+              ></codx-label>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <codx-dropdown-calendar
+            cssPopup="h-500px w-800px"
+            [value]="date"
+            [selectedType]="'y'"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-2"
+            (valueChange)="changeCalendar($event)"
+            (change)="changeCalendar($event)"
+          ></codx-dropdown-calendar>
+        </div>
+      </div>
     </div>
-    <div
+
+    <!-- <div
       class="d-flex justify-content-end container treeview"
       style="padding-right: 70px; padding-left: 70px"
     >
@@ -125,8 +187,8 @@
           ></codx-label>
         </div>
       </div>
-    </div>
-    <div class="mt-2 scroll-tree">
+    </div> -->
+    <div class="mt-2 scroll-tree" *ngIf="viewMode === 16">
       <ng-container *ngIf="loadedTree">
         <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
           <div
@@ -138,12 +200,35 @@
               [dataTree]="lstDataTree"
               [fmTargetLines]="fmTargetLines"
               [formModel]="view.formModel"
+              [viewCurrent]="viewCurrent"
               (clickMoreFunc)="clickMoreFunc($event)"
               (changeMoreMF)="changeMoreMF($event)"
             ></codx-view-tree-targets>
           </div>
         </div>
       </ng-container>
+    </div>
+    <div class="mt-2 h-100" *ngIf="viewMode === 9">
+      <codx-gridview-v2
+        #gridBusiness
+        [formName]="view.formModel?.formName"
+        [gridViewName]="view.formModel?.gridViewName"
+        [entityName]="view.formModel?.entityName"
+        [columnsGrid]="columnGrids"
+        rowHeight="35"
+        [allowFiltering]="true"
+        [autoAddRow]="true"
+        [allowSorting]="true"
+        [hideMoreFunc]="true"
+        [showRowNumber]="false"
+        [loaded]="loadedTree"
+        service="CM"
+        [autoLoad]="false"
+        [autoFitColumns]="false"
+        [dataSource]="lstDataTree"
+        [height]="'100%'"
+      >
+      </codx-gridview-v2>
     </div>
   </div>
 </ng-template>
@@ -168,79 +253,23 @@
 <!--end-->
 
 <!--Grid-->
-<ng-template #templateGrid>
-  <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
-    <div class="d-flex justify-content-end">
-      <div class="me-5">
-        <div class="ms-2 me-2" ngbDropdown [container]="'body'">
-          <div
-            role="button"
-            class="d-flex border rounded p-2 w-90px"
-            (click)="clickShow(!isShow)"
-            *ngIf="isShow == true"
-          >
-            <i class="icon-i-arrows-collapse me-2"></i>
-            <codx-label default="Thu gọn" [formModel]="view.formModel" fiedName="lblCollapse"></codx-label>
-          </div>
-          <div
-            role="button"
-            class="d-flex border rounded p-2 w-90px"
-            (click)="clickShow(!isShow)"
-            *ngIf="isShow == false"
-          >
-            <i class="icon-i-arrows-expand me-2"></i>
-            <codx-label
-              default="Mở rộng"
-              [formModel]="view.formModel"
-              fiedName="lblExpand"
-            ></codx-label>
-          </div>
-        </div>
-      </div>
-      <div class="">
-        <codx-dropdown-calendar
-          cssPopup="h-500px w-800px"
-          [value]="date"
-          [selectedType]="'y'"
-          [displayOption]="ops"
-          cssClass="w-100 om-calendar"
-          class="me-2"
-          (valueChange)="changeCalendar($event)"
-          (change)="changeCalendar($event)"
-        ></codx-dropdown-calendar>
-      </div>
-
-    </div>
-    <div class="mt-2 h-100">
-      <codx-gridview-v2
-        #gridBusiness
-        [formName]="view.formModel?.formName"
-        [gridViewName]="view.formModel?.gridViewName"
-        [entityName]="view.formModel?.entityName"
-        [columnsGrid]="columnGrids"
-        rowHeight="35"
-        [allowFiltering]="true"
-        [autoAddRow]="true"
-        [allowSorting]="true"
-        [hideMoreFunc]="true"
-        [showRowNumber]="false"
-        service="CM"
-        [autoLoad]="false"
-        [autoFitColumns]="false"
-        [dataSource]="lstDataTree"
-        [height]="'100%'"
-      >
-      </codx-gridview-v2>
-    </div>
-  </div>
-</ng-template>
 <!--Headerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ---------------------------- -->
 <ng-template #headerBusinessLine>
   <codx-label
+    *ngIf="viewCurrent == '1'"
     class="container"
     [formModel]="view.formModel"
     fiedName="BusinessLineID"
     default="Dòng sản phẩm"
+    [setRequire]="false"
+  >
+  </codx-label>
+  <codx-label
+    *ngIf="viewCurrent == '2'"
+    class="container"
+    [formModel]="view.formModel"
+    name="lblSalepersons"
+    default="Nhân viên bán hàng"
     [setRequire]="false"
   >
   </codx-label>
@@ -318,8 +347,12 @@
 <!-- BODYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY -->
 <ng-template #templateBusinessLine let-item>
   <div class="container">
-    <div class="d-flex height-parent">
+    <div
+      class="d-flex"
+      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    >
       <codx-mfunc
+        *ngIf="viewCurrent == '1'"
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
         (changeDataMF)="changeDataMF($event, item)"
@@ -328,7 +361,7 @@
         type="view"
       >
       </codx-mfunc>
-      <div class="ms-2 me-2 w-30px">
+      <div class="me-1 w-30px">
         <span
           (click)="clickShowGrid(item, !item.isCollapse)"
           *ngIf="item.isCollapse == true"
@@ -343,6 +376,7 @@
       </div>
       <div class="d-flex flex-column w-240px">
         <div
+          *ngIf="viewCurrent == '1'"
           class="fw-bold mb-1 mt-1 line-clamp line-clamp-1 overflow-ellipsis"
           [ngbPopover]="item?.title"
           #p="ngbPopover"
@@ -353,6 +387,32 @@
           [popoverClass]="item.recID"
         >
           {{ item?.title }}
+        </div>
+        <div class="d-flex mb-1 mt-1 flex-row" *ngIf="viewCurrent == '2'">
+          <codx-img
+            [objectId]="item?.salespersonID"
+            imageType="circle"
+            width="30"
+            [objectType]="'AD_Users'"
+            [objectName]="item?.title"
+          ></codx-img>
+          <div [ngClass]="'ms-2 d-flex flex-column'">
+            <span class="text-dark fw-bold">
+              {{ item?.title }}
+            </span>
+            <div
+              class="line-clamp line-clamp-1"
+              [ngbPopover]="item?.positionName"
+              #p="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="PopoverDetail($event, p, item)"
+              (mouseleave)="p.close()"
+              placement="bottom right top"
+              [popoverClass]="item.recID"
+            >
+              {{ item?.positionName }}
+            </div>
+          </div>
         </div>
         <span
           class="fw-bold text-gray-600"
@@ -384,7 +444,11 @@
       <ng-container *ngFor="let busi of item?.items">
         <div
           class="d-flex container treeview height-child"
-          *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
+          *ngIf="
+            item.businessLineID == busi.businessLineID &&
+            busi.isCollapse &&
+            viewCurrent == '1'
+          "
         >
           <codx-mfunc
             [formModel]="view.formModel"
@@ -422,13 +486,28 @@
             </div>
           </div>
         </div>
+        <div
+          *ngIf="viewCurrent == '2'"
+          class="container treeview height-child-user"
+          [ngbPopover]="busi?.title"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, p, busi)"
+          (mouseleave)="p.close()"
+          placement="bottom right top"
+          [popoverClass]="busi.recID"
+        >
+          <span class="text-dark fw-bold">
+            {{ busi?.title }}
+          </span>
+        </div>
       </ng-container>
     </div>
   </div>
 </ng-template>
 
 <ng-template #templateYear let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div class="mt-1 mb-1 d-flex align-items-start" [ngClass]="viewCurrent == '1' ? 'height-parent': 'height-parent-user'">
     <span
       *ngIf="item?.target > 0"
       [innerHTML]="

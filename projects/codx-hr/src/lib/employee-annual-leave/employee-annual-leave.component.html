@@ -202,12 +202,16 @@
         <!-- Kỳ phép -->
         <div class="w-10 p-3">
             <div class="d-flex flex-column">
-                <div class="d-flex align-items-center justify-content-between mb-1">
+                <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
+                [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
                     <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                         {{data.alYearMonth}}
                     </span>
                     <ng-template #noALYearMonth>
                         <span class="place-holder">{{grvSetup['ALYearMonth'].headerText}}</span>
+                    </ng-template>
+                    <ng-template #alYearMonthTooltip>
+                        <span class="data-text-color">{{data.alYearMonth}}</span>
                     </ng-template>
                 </div>
             </div>
@@ -309,8 +313,8 @@
                         </codx-label>
                         <ng-container *ngIf="data.daysOff; else noDaysOff">
                             <div ngbDropdown [container]="'body'">
-                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer item-active" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer item-active"
+                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false" (click)="onShowDaysOff(data)">
                                     {{data.daysOff}}
                                 </div>
@@ -365,8 +369,9 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div class="list-days-off" *ngIf="data?.length > 0 && popupLoading ==false ; else noDataNotification">
-            <div *ngFor="let item of data" class="d-flex flex-column days-off-item">
+        <div #listDataDaysOff class="list-days-off" *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
+            (scroll)="onScrollList(listDataDaysOff)">
+            <div *ngFor="let item of listDaysOff" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
                     <i class="icon-event text-dark icon-16 me-1"> </i>
                     <span *ngIf="item.beginDate" class="data-text-color"
@@ -421,7 +426,7 @@
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
     <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
-        [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff">
+        [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff" [rowHeight]="70">
     </lib-employee-annual-leave-by-org>
 </ng-template>
 <!-- #endregion tree-view HRTAL01 -->

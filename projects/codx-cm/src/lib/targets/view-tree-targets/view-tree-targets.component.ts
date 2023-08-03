@@ -12,6 +12,7 @@ export class ViewTreeTargetsComponent implements OnInit {
   @Input() dataTree: any;
   @Input() fmTargetLines: any;
   @Input() formModel: FormModel;
+  @Input() viewCurrent: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
   constructor(private decimalPipe: DecimalPipe) {}

@@ -25,3 +25,12 @@
     width: 35% !important;
     height: auto !important;
 }
+.codx-detail-footer .btn-ac-footer{
+    position: absolute !important;
+    top: 5px !important;
+    right: 10px !important;
+    z-index: 9999;
+}
+.codx-detail-footer .tab-footer ul{
+    border-bottom: none !important;
+} 

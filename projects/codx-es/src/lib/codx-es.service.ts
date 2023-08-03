@@ -25,6 +25,7 @@ import { highLightTextArea } from 'projects/codx-share/src/lib/components/pdf/mo
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
+import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
 
 //export const UrlUpload: string = 'http://172.16.1.210:8011';
 export class GridModels {
@@ -796,13 +797,13 @@ export class CodxEsService {
       [objectID, objectType, delForever]
     );
   }
-  copyFileByObjectID(oldRecID:string, newRecID:string): Observable<any> {
+  copyFileByObjectID(oldRecID:string, newRecID:string,objectType:string,referType:string='',copyFileInfo:tmpCopyFileInfo = null): Observable<any> {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
       'CopyFileByObjectIDAsync',
-      [oldRecID, newRecID, "ES_SignFiles", "sign"]
+      [oldRecID, newRecID,objectType , referType,copyFileInfo]
     );
   }
   

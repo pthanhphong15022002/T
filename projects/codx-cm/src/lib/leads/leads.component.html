@@ -280,7 +280,7 @@
     </div>
   </div> -->
 
-  <div class="d-flex justify-content-end">
+  <div class="d-flex align-items-center justify-content-end">
     <div class="me-auto">
       <div class="d-flex align-items-end codx-badge">
         <div
@@ -335,20 +335,20 @@
         </ng-template>
       </div>
     </div>
-    <div class="pe-1">
-      <span class="icon-16 icon-av_timer me-1"></span>
+    <div class="pe-1 d-flex align-items-center">
+      <span class="icon-16 icon-av_timer me-1 pt-1"></span>
       <span
-        class="text-gray-700"
+        class="text-gray-700 pt-1"
         #modifiedOn
         [innerHTML]="
           data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
         "
       ></span>
     </div>
-    <div>
+    <div class="h-20px">
       <codx-imgs
         [isToolTip]="true"
-        [width]="25"
+        [width]="20"
         [objectId]="data?.owner"
         objectType="AD_Users"
         [numberImages]="1"

@@ -2810,6 +2810,7 @@ codx-toolbar {
     }
    
   }
+  
   .card-footer {
     padding: 5px !important;
     padding-bottom: 0 !important;
@@ -2822,6 +2823,7 @@ codx-toolbar {
   }
   
 }
+
 .aside.aside-extended{
   padding-left: 0px!important;
 }
@@ -3492,5 +3494,52 @@ codx-view-list-tree{
   }
   .menu-nav .menu-item .item-selected{
     color: var(--primary-dark);
+  }
+}
+.e-tab .e-tab-header .e-scroll-nav .e-nav-left-arrow::before, .e-tab .e-tab-header .e-scroll-nav .e-nav-right-arrow::before {
+  font-size: 16px;
+}
+.e-hscroll .e-scroll-nav {
+  background: var(--gray-150)!important;
+}
+
+.e-dlg-content { 
+  .codx-detail-footer{
+    border-top: 1px var(--gray-150) solid;
+    .tab-action {
+      position: absolute;
+      top: 2px;
+      right: 15px;
+    }
+    .py-5.tab-content {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
+      padding-left: 25px;
+      padding-right: 15px;
+    }
+    codx-tabs .nav-link {
+      padding: 8px;
+    }
+  }
+  position: relative;
+
+  .codx-detail-main{
+    height: calc(100vh - 60px);
+    overflow: auto;
+    padding-bottom: 60px;
+  }
+  .codx-detail-footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 99;
+  }
+  .codx-detail-toolbar{
+    background-color: white;
+  }
+  .codx-detail-header.mt-3{
+    margin-top: 0!important;
   }
 }

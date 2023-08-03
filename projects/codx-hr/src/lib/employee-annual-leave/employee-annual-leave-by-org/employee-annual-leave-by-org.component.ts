@@ -166,11 +166,9 @@ export class EmployeeAnnualLeaveByOrgComponent {
     }
   }
   onShowDaysOff(data: any) {
-    if (data) {
-      if (data?.recID != this.currentItem?.recID) {
-        this.resetPage();
-        this.currentItem = data;
-      }
+    if (data?.recID != this.currentItem?.recID) {
+      this.resetPage();
+      this.currentItem = data;
     }
     if (this.listDaysOff?.length <= 0)
       this.popupLoading = true;
