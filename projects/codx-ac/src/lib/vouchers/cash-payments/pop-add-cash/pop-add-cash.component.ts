@@ -2817,7 +2817,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             this.cashpayment.updateColumn = null;
             this.dialog.dataService.update(this.cashpayment).subscribe();
             this.acService
-              .execApi('AC', this.className, 'UpdateMasterAsync', [
+              .execApi('AC', this.className, 'UpdateVoucherAsync', [
                 this.cashpayment,
                 this.cashpaymentline,
               ])
@@ -2861,7 +2861,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if (this.cashpayment.updateColumn) {
           this.dialog.dataService.update(this.cashpayment).subscribe();
           this.acService
-            .execApi('AC', this.className, 'UpdateMasterAsync', [
+            .execApi('AC', this.className, 'UpdateVoucherAsync', [
               this.cashpayment,
               this.cashpaymentline,
             ])
