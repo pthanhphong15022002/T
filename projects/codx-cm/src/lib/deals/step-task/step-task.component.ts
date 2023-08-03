@@ -70,7 +70,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   dialogGuideZoomIn: DialogRef;
   dialogGuideZoomOut: DialogRef;
   stepViews = [];
-  isZoom = false;
+  isZoomIn = false;
+  isZoomOut = false;
 
   formModel: FormModel = {
     entityName: 'DP_Instances_Steps_Reasons',
@@ -377,14 +378,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.changeProgress.emit(event);
   }
 
-  showGuide(p) {
-    p.close();
-    if(this.isZoom){
-      this.dialogGuideZoomOut?.close();
-    }else{
+  showGuide() {
+    if(this.isZoomIn){
       return;
     }
-    this.isZoom = false;
+    if(this.isZoomOut){
+      this.dialogGuideZoomOut?.close();
+      this.isZoomOut = false;
+    }
+    this.isZoomIn = true;
     let option = new DialogModel();
     option.zIndex = 1001;
     if (this.popupGuide) {
@@ -402,12 +404,14 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   zoomGuide(){
-    if(!this.isZoom){
-      this.dialogGuideZoomIn?.close();
-    }else{
+    if(this.isZoomOut){
       return;
     }
-    this.isZoom = true;
+    if(this.isZoomIn){
+      this.dialogGuideZoomIn?.close();
+    }
+    this.isZoomOut = true;
+    this.isZoomIn = false;
     let option = new DialogModel();
     option.zIndex = 1001;
     option.IsFull = true;
@@ -425,10 +429,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
   closeGuide(){
-    if(this.isZoom){
+    if(this.isZoomOut){
       this.dialogGuideZoomOut?.close();
-    }else{
+    }
+    if(this.isZoomIn){
       this.dialogGuideZoomIn?.close();
     }
+    this.isZoomOut = false;
+    this.isZoomIn = false;
   }
 }

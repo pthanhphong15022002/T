@@ -137,7 +137,6 @@ export class PopupAddLeadComponent
   leadNoSetting: any;
   leadNoSystem: any;
 
-
   // model of DP
   instance: tmpInstances = new tmpInstances();
 
@@ -188,7 +187,6 @@ export class PopupAddLeadComponent
     }
     else {
       this.lead.applyProcess =  dt?.data?.applyProcessSetting;
-
       this.checkApplyProcess(this.lead.applyProcess);
       this.lead.currencyID = this.currencyIDDefault;
       this.leadId = this.lead.recID;
@@ -208,6 +206,7 @@ export class PopupAddLeadComponent
       }
     }
   }
+
   loadExchangeRate() {
     let day = this.lead.createdOn ?? new Date();
     if (this.lead.currencyID) {
@@ -288,25 +287,12 @@ export class PopupAddLeadComponent
       this.listIndustries.push($event.data);
     }
   }
-  // valueChangeIsProcess($event) {
-  //   if ($event) {
-  //     if ($event.data) {
-  //       this.lead.leadID = this.leadNoProcess;
-  //       this.planceHolderAutoNumber = this.leadNoProcess;
-  //       this.disabledShowInput = true;
-  //       this.removeItemInTab(true);
-  //     } else {
-  //       this.getAutoNumber();
-  //       this.removeItemInTab(false);
-  //     }
-  //     this.lead.applyProcess = $event.data;
-  //   }
-  // }
+
   checkApplyProcess(check: boolean) {
       if (check) {
         this.lead.leadID = this.leadNoProcess;
         this.planceHolderAutoNumber = this.leadNoProcess;
-        this.disabledShowInput = true; 
+        this.disabledShowInput = true;
         this.removeItemInTab(true);
       } else {
         this.getAutoNumber();
@@ -420,7 +406,6 @@ export class PopupAddLeadComponent
       if (this.avatarChangeContact) {
         await this.saveFileContact(this.contactId);
       }
-
       if (this.isLoading) {
       } else {
         if (this.action !== this.actionEdit) {
@@ -432,11 +417,11 @@ export class PopupAddLeadComponent
         }
       }
     } catch (error) {
-      if (this.action !== this.actionEdit) {
-        this.onAdd();
-      } else {
-        this.onEdit();
-      }
+      // if (this.action !== this.actionEdit) {
+      //   this.onAdd();
+      // } else {
+      //   this.onEdit();
+      // }
     }
   }
 
