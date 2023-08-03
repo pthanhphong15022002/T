@@ -1,6 +1,6 @@
 <ng-container *ngIf="objectType === 'U'; else elseBlock">
   <codx-imgs
-    *ngIf="objectId"
+    *ngIf="permissions.length > 0"
     [width]="30"
     [objectId]="objectId"
     objectType="AD_Users"
@@ -10,28 +10,56 @@
   </codx-imgs>
 </ng-container>
 <ng-template #elseBlock>
-  <div ngbDropdown>
-    <div class="text-truncate hover-effect" role="button" ngbDropdownToggle>
+  <div class="d-flex align-items-center" *ngIf="shareModels?.length > 0">
+    <span class="text-truncate" #content>
       <span
-        *ngFor="let c of shareModels"
+        *ngFor="let m of shareModels"
         class="badge badge-pill badge-secondary me-2"
+        role="button"
+        (click)="onClick(m)"
       >
-        {{ c.text }}
+        {{ m.text }}
       </span>
-    </div>
+    </span>
 
-    <div ngbDropdownMenu class="p-3">
-      <div class="mb-2">
-        <codx-label
-          field="lblUserGroups"
-          [formModel]="formModel"
-          default="Danh sách nhóm người dùng"
-        ></codx-label>
-        <span class="fw-bold"> ({{ shareModels?.length }})</span>
-      </div>
-      <codx-searchbar class="mb-2"></codx-searchbar>
-      <div class="list-view">
-        <ejs-listview id="listview" [dataSource]="shareModels"> </ejs-listview>
+    <div ngbDropdown>
+      <button
+        *ngIf="overflowed"
+        ngbDropdownToggle
+        type="button"
+        class="btn btn-sm btn-icon btn-outline-light"
+      >
+        <i class="bi bi-caret-down-fill text-dark"></i>
+      </button>
+
+      <div ngbDropdownMenu class="p-5">
+        <div class="mb-1">
+          <codx-label
+            *ngIf="objectType === 'UG'"
+            field="lblUserGroups"
+            [formModel]="formModel"
+            default="Danh sách nhóm người dùng"
+          ></codx-label>
+          <codx-label
+            *ngIf="objectType === 'R'"
+            field="lblUserGroups"
+            [formModel]="formModel"
+            default="Danh sách vai trò"
+          ></codx-label>
+          <span class="fw-bold"> ({{ shareModels?.length }})</span>
+        </div>
+        <codx-searchbar class="mb-2"></codx-searchbar>
+        <div
+          style="min-width: 225px; max-width: 350px; max-height: 300px"
+          class="overflow-auto border rounded"
+        >
+          <ejs-listview
+            id="listview"
+            [dataSource]="shareModels"
+            (select)="onSelect($event)"
+          >
+          </ejs-listview>
+        </div>
       </div>
     </div>
   </div>

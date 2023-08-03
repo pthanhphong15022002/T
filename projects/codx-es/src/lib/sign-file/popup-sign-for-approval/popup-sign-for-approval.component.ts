@@ -429,7 +429,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     this.esService.statusChange.next(3);
                     this.notify.notifyCode('ES017');
                   });
-                this.notify.notifyCode('SYS021');
                 this.dialog && this.dialog.close(result);
               }
             });

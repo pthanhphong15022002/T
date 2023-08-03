@@ -745,13 +745,16 @@ export class OrganizationOrgchartComponent {
   // }
 
   onMouseWheel(evt) {
-    if (evt.deltaY > 0) {
-      if (this.scaleNumber > 0.3) {
-        this.scaleNumber = this.scaleNumber - 0.1;
-      }
-    } else {
-      if (this.scaleNumber < 1) {
-        this.scaleNumber = this.scaleNumber + 0.1;
+    if (evt.ctrlKey) {
+      evt.preventDefault();
+      if (evt.deltaY > 0) {
+        if (this.scaleNumber > 0.3) {
+          this.scaleNumber = this.scaleNumber - 0.1;
+        }
+      } else {
+        if (this.scaleNumber < 1) {
+          this.scaleNumber = this.scaleNumber + 0.1;
+        }
       }
     }
   }
@@ -1300,7 +1303,6 @@ export class OrganizationOrgchartComponent {
       .subscribe((res: any) => {
         if (res) {
           this.dialogEditStatus && this.dialogEditStatus.close();
-          // console.log(res.dataValue);
         }
       });
   }

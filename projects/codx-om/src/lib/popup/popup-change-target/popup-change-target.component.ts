@@ -45,6 +45,7 @@ export class PopupChangeTargetComponent extends UIComponent {
   backupTar=[];
   planVLL: any[];
   kr:any;
+  viewMode=false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -55,6 +56,7 @@ export class PopupChangeTargetComponent extends UIComponent {
     super(injector);
     this.dataKR = dialogData?.data[0];
     this.headerText = dialogData?.data[1];
+    this.viewMode = dialogData?.data[2]
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
 

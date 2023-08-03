@@ -19,6 +19,7 @@ import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.co
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { PopupViewOKRLinkComponent } from '../../popup/popup-view-okr-link/popup-view-okr-link.component';
 import { PopupCheckInHistoryComponent } from '../../popup/popup-check-in-history/popup-check-in-history.component';
+import { PopupChangeTargetComponent } from '../../popup/popup-change-target/popup-change-target.component';
 
 @Component({
   selector: 'view-okr',
@@ -194,14 +195,21 @@ export class ViewOKRComponent extends UIComponent implements AfterViewInit {
     evt.stopPropagation();
     evt.preventDefault();
   }
-  newGuid(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
+  showKRTargets(evt: any, data: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    if (data != null) {
+      let popUpHeight = data?.plan == OMCONST.VLL.Plan.Month ? 500 : 240;
+      let dialogShowTask = this.callfc.openForm(
+        PopupChangeTargetComponent,
+        '',
+        650,
+        popUpHeight,
+        null,
+        [data, 'Kế hoạch chỉ tiêu', true],
+      );
+    }
   }
+  
 }

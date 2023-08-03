@@ -202,7 +202,7 @@ export class DealsComponent
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res?.exchRate;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -380,7 +380,6 @@ export class DealsComponent
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
         eventItem.disabled = true;
       }
-      // eventItem.disabled = false;
     };
     let isCopy = (eventItem, data) => {
       if (data.closed || this.checkMoreReason(data) || data.status == '0') {
@@ -1239,15 +1238,45 @@ export class DealsComponent
   // }
 
   release(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    // duyet cu
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError)
+          this.notificationsService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.dataSelected = q;
+                this.view.dataService.update(this.dataSelected).subscribe();
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              }
+              this.notificationsService.notifyCode('ES007');
+            });
+        }
+      });
+
+    //duet moi
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {

@@ -50,6 +50,7 @@ export class CodxHrService {
   actionUpdateApproved = 'AU5';
   actionUpdateClosed = 'AU9';
   //#endregion
+  childMenuClick = new BehaviorSubject<any>(null);
 
   constructor(
     private api: ApiHttpService,
