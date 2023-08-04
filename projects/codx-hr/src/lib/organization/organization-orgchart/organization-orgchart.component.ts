@@ -221,7 +221,7 @@ export class OrganizationOrgchartComponent {
     height: '100%',
     background: '#fff',
   };
-  stylesObjChartNone1 = {
+  stylesObjChartNoneIsManager = {
     border: '1px ridge gray',
     position: 'relative',
     height: 'max-content',
