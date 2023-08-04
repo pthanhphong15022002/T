@@ -11,6 +11,7 @@ import {
   NotificationsService,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 
@@ -55,18 +56,16 @@ export class PopupExtendModuleComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.dialog.formModel = new FormModel();
     this.lstModule = dt.data.lstModule;
     this.extendMode = dt.data.extendMode;
     this.grvTNOrders = dt?.data?.grvView;
-
-    console.log('module', this.lstModule);
   }
 
   onInit() {
     this.adService.getTenantDefaultSetting().subscribe((setting) => {
       this.defaultSettings = JSON.parse(setting.dataValue);
       this.months = Number(this.defaultSettings?.HireInervalNum);
-      console.log('settings', this.defaultSettings);
       this.detectorRef.detectChanges();
     });
     this.clmnGrid = [
@@ -119,8 +118,6 @@ export class PopupExtendModuleComponent extends UIComponent {
       if (curMD) {
         curMD.quantity = Number(e.data);
       }
-      console.log('curMD', curMD);
-      console.log('isChildMD', isChildMD);
     }
   }
 }

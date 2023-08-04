@@ -72,8 +72,8 @@ export class PopupSelectTempletComponent implements OnInit {
 
   //load Data
   loadEx() {
-    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
-    this.requestTemp.dataValues = this.refID + ';' + this.refType;
+    this.requestTemp.predicate = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValue = this.refID + ';' + this.refType;
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -82,8 +82,8 @@ export class PopupSelectTempletComponent implements OnInit {
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
-    this.requestTemp.dataValues = this.refID + ';' + this.refType;
+    this.requestTemp.predicate = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValue = this.refID + ';' + this.refType;
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -120,6 +120,7 @@ export class PopupSelectTempletComponent implements OnInit {
   }
   exportFileDynamic() {
     if (!this.data.datas) return;
+    debugger;
     this.api
       .execSv<any>(
         'SYS',

@@ -18,9 +18,12 @@
 
 <ng-template #templateTree let-item>
   <div class="mb-1" (click)="clickTreeNode($event)">
-    <div class="d-flex justify-content-between align-items-center">
+    <div
+      class="d-flex justify-content-between align-items-center"
+      *ngIf="viewCurrent == '1'"
+    >
       <div class="w-250px min-w-250px d-flex justify-content-between">
-        <div class="d-flex flex-row ms-5" *ngIf="item.parentID != null">
+        <div class="d-flex flex-row ms-3" *ngIf="item.parentID != null">
           <codx-img
             [objectId]="item?.salespersonID"
             imageType="circle"
@@ -110,7 +113,7 @@
             0
           </span>
         </div>
-        <div class="w-100px min-w-100px ms-2">
+        <div class="w-60px min-w-60px ms-2">
           <span
             *ngIf="item?.parentID == null"
             class="fw-bold me-2"
@@ -149,6 +152,82 @@
           >
           </codx-mfunc>
         </div>
+      </div>
+    </div>
+    <div
+      class="d-flex justify-content-between align-items-center"
+      *ngIf="viewCurrent == '2'"
+    >
+      <div class="w-350px min-w-350px d-flex justify-content-between">
+        <div class="d-flex flex-row" *ngIf="item.parentID == null">
+          <codx-img
+            [objectId]="item?.salespersonID"
+            imageType="circle"
+            width="30"
+            [objectType]="'AD_Users'"
+            [objectName]="item?.title"
+          ></codx-img>
+          <div
+            [ngClass]="'ms-4 d-flex flex-column'"
+          >
+            <span
+              class="text-dark"
+              [ngClass]="
+                item?.fontSize != null && item?.fontSize?.trim() != ''
+                  ? item?.fontSize
+                  : ''
+              "
+            >
+              {{ item?.title }}
+            </span>
+            <div class="">
+              {{ item?.positionName }}
+            </div>
+          </div>
+        </div>
+
+        <span
+          class="text-dark ms-3"
+          [ngClass]="
+            item?.fontSize != null && item?.fontSize?.trim() != ''
+              ? item?.fontSize
+              : ''
+          "
+          *ngIf="item.parentID != null"
+        >
+          {{ item?.title }}
+        </span>
+      </div>
+      <div class="w-250px min-w-250px d-flex justify-content-end">
+        <div
+          class="ms-3 fw-bold d-flex justify-content-end"
+          style="min-width: 200px"
+        >
+          <span
+            *ngIf="item?.target > 0"
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+            [innerHTML]="
+              targetToFixed(item?.target)
+                | formatvalue : formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span
+            *ngIf="item?.target == 0"
+            [ngStyle]="
+              item?.color != null && item?.color?.trim() != ''
+                ? { color: item?.color }
+                : { color: '#1d1f1f' }
+            "
+          >
+            0
+          </span>
+        </div>
+
       </div>
     </div>
   </div>

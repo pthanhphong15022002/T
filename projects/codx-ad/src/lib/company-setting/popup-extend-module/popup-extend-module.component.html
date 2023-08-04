@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="dialog.formModel"
+  [formModel]="dialog?.formModel"
 >
 </codx-form>
 <ng-template #header>
@@ -67,7 +67,6 @@
             [showText]="true"
             [showBgColor]="false"
           >
-            <!-- class="badge badge-light badge-square badge-md fs-7 p-2" -->
           </codx-vll>
         </div>
       </div>

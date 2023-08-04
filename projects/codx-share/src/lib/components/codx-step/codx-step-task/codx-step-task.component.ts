@@ -747,7 +747,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP08': // Thêm nhóm công việc
             res.isbookmark = false;
-            if (!(this.isRoleAll && this.isOnlyView)) {
+            if (!(this.isRoleAll)) {
               res.disabled = true;
             }
             break;
