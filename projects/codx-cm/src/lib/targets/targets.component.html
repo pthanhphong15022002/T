@@ -7,7 +7,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="button"
+  [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
@@ -85,7 +85,7 @@
 <!--Tree-->
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
-    <div class="d-flex px-5 justify-content-between align-items-center">
+    <div class="d-flex px-5 justify-content-between align-items-center mb-5">
       <div class="d-flex align-items-center justify-content-start">
         <div class="d-flex flex-row">
           <!-- Lặp qua các item (ví dụ: item1 và item2) -->
@@ -144,7 +144,7 @@
             </div>
           </div>
         </div>
-        <div class="">
+        <div class="me-5">
           <codx-dropdown-calendar
             cssPopup="h-500px w-800px"
             [value]="date"
@@ -156,38 +156,18 @@
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
         </div>
+        <div class="w-75px">
+          <codx-input
+            [formModel]="view.formModel"
+            [crrValue]="currencyID"
+            (valueChange)="valueChange($event)"
+            field="currencyID"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
 
-    <!-- <div
-      class="d-flex justify-content-end container treeview"
-      style="padding-right: 70px; padding-left: 70px"
-    >
-      <div class="ms-2 me-2" ngbDropdown [container]="'body'">
-        <div
-          role="button"
-          class="d-flex border rounded p-2 w-90px"
-          (click)="clickShow(!isShow)"
-          *ngIf="isShow == true"
-        >
-          <i class="icon-i-arrows-collapse me-2"></i>
-          <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
-        </div>
-        <div
-          role="button"
-          class="d-flex border rounded p-2 w-90px"
-          (click)="clickShow(!isShow)"
-          *ngIf="isShow == false"
-        >
-          <i class="icon-i-arrows-expand me-2"></i>
-          <codx-label
-            default="Mở rộng"
-            [formModel]="view.formModel"
-            fiedName="lblExpand"
-          ></codx-label>
-        </div>
-      </div>
-    </div> -->
     <div class="mt-2 scroll-tree" *ngIf="viewMode === 16">
       <ng-container *ngIf="loadedTree">
         <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
@@ -275,72 +255,118 @@
   </codx-label>
 </ng-template>
 <ng-template #headerYear>
-  <codx-label [formModel]="view.formModel" name="lblYear" default="Năm">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblYear" default="Năm">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerQuarter1>
-  <codx-label [formModel]="view.formModel" name="lblQuarter1" default="Quý 1">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblQuarter1" default="Quý 1">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerQuarter2>
-  <codx-label [formModel]="view.formModel" name="lblQuarter2" default="Quý 2">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblQuarter2" default="Quý 2">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerQuarter3>
-  <codx-label [formModel]="view.formModel" name="lblQuarter3" default="Quý 3">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblQuarter3" default="Quý 3">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerQuarter4>
-  <codx-label [formModel]="view.formModel" name="lblQuarter4" default="Quý 4">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblQuarter4" default="Quý 4">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth1>
-  <codx-label [formModel]="view.formModel" name="lblMonth1" default="Tháng 1">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth1" default="Tháng 1">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth2>
-  <codx-label [formModel]="view.formModel" name="lblMonth2" default="Tháng 2">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth2" default="Tháng 2">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth3>
-  <codx-label [formModel]="view.formModel" name="lblMonth3" default="Tháng 3">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth3" default="Tháng 3">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth4>
-  <codx-label [formModel]="view.formModel" name="lblMonth4" default="Tháng 4">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth4" default="Tháng 4">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth5>
-  <codx-label [formModel]="view.formModel" name="lblMonth5" default="Tháng 5">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth5" default="Tháng 5">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth6>
-  <codx-label [formModel]="view.formModel" name="lblMonth6" default="Tháng 6">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth6" default="Tháng 6">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth7>
-  <codx-label [formModel]="view.formModel" name="lblMonth7" default="Tháng 7">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth7" default="Tháng 7">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth8>
-  <codx-label [formModel]="view.formModel" name="lblMonth8" default="Tháng 8">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth8" default="Tháng 8">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth9>
-  <codx-label [formModel]="view.formModel" name="lblMonth9" default="Tháng 9">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label [formModel]="view.formModel" name="lblMonth9" default="Tháng 9">
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth10>
-  <codx-label [formModel]="view.formModel" name="lblMonth10" default="Tháng 10">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label
+      [formModel]="view.formModel"
+      name="lblMonth10"
+      default="Tháng 10"
+    >
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth11>
-  <codx-label [formModel]="view.formModel" name="lblMonth11" default="Tháng 11">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label
+      [formModel]="view.formModel"
+      name="lblMonth11"
+      default="Tháng 11"
+    >
+    </codx-label>
+  </div>
 </ng-template>
 <ng-template #headerMonth12>
-  <codx-label [formModel]="view.formModel" name="lblMonth12" default="Tháng 12">
-  </codx-label>
+  <div class="d-flex justify-content-end">
+    <codx-label
+      [formModel]="view.formModel"
+      name="lblMonth12"
+      default="Tháng 12"
+    >
+    </codx-label>
+  </div>
 </ng-template>
 <!--Headerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr ---------------------------- -->
 
@@ -349,7 +375,7 @@
   <div class="container">
     <div
       class="d-flex"
-      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
     >
       <codx-mfunc
         *ngIf="viewCurrent == '1'"
@@ -414,92 +440,72 @@
             </div>
           </div>
         </div>
-        <span
-          class="fw-bold text-gray-600"
-          [innerHTML]="
-            item?.currencyID
-              | formatvalue : view.formModel : 'CurrencyID'
-              | async
-          "
-          [ngbPopover]="tooltipCurrency"
-          #p1="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="p1.open()"
-          (mouseleave)="p1.close()"
-          placement="bottom right top"
-        >
-          <ng-template #tooltipCurrency>
-            <codx-label
-              [formModel]="view.formModel"
-              fiedName="CurrencyID"
-              default="Tiền tệ"
-            >
-            </codx-label>
-          </ng-template>
-        </span>
       </div>
     </div>
 
     <div *ngIf="item?.items != null && item?.items.length > 0">
       <ng-container *ngFor="let busi of item?.items">
-        <div
-          class="d-flex container treeview height-child"
-          *ngIf="
-            item.businessLineID == busi.businessLineID &&
-            busi.isCollapse &&
-            viewCurrent == '1'
-          "
-        >
-          <codx-mfunc
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event, busi)"
-            (changeDataMF)="changeDataMF($event, busi)"
-            [isBookMark]="false"
-            [dataItem]="busi"
-            type="view"
+        <div *ngIf="busi.isCollapse">
+          <div
+            class="d-flex container treeview height-child"
+            *ngIf="
+              item.businessLineID == busi.businessLineID && viewCurrent == '1'
+            "
           >
-          </codx-mfunc>
-          <div class="d-flex flex-row ms-5">
-            <codx-img
-              [objectId]="busi?.salespersonID"
-              imageType="circle"
-              width="30"
-              [objectType]="'AD_Users'"
-              [objectName]="busi?.title"
-            ></codx-img>
-            <div [ngClass]="'ms-4 d-flex flex-column'">
-              <span class="text-dark fw-bold">
-                {{ busi?.title }}
-              </span>
-              <div
-                class="line-clamp line-clamp-1"
-                [ngbPopover]="busi?.positionName"
-                #p="ngbPopover"
-                [openDelay]="500"
-                (mouseenter)="PopoverDetail($event, p, busi)"
-                (mouseleave)="p.close()"
-                placement="bottom right top"
-                [popoverClass]="busi.recID"
-              >
-                {{ busi?.positionName }}
+            <codx-mfunc
+              [formModel]="view.formModel"
+              (clickMF)="clickMF($event, busi)"
+              (changeDataMF)="changeDataMF($event, busi)"
+              [isBookMark]="false"
+              [dataItem]="busi"
+              type="view"
+            >
+            </codx-mfunc>
+            <div class="d-flex flex-row ms-5">
+              <codx-img
+                [objectId]="busi?.salespersonID"
+                imageType="circle"
+                width="30"
+                [objectType]="'AD_Users'"
+                [objectName]="busi?.title"
+              ></codx-img>
+              <div [ngClass]="'ms-4 d-flex flex-column'">
+                <span class="text-dark fw-bold">
+                  {{ busi?.title }}
+                </span>
+                <div
+                  class="line-clamp line-clamp-1"
+                  [ngbPopover]="busi?.positionName"
+                  #p="ngbPopover"
+                  [openDelay]="500"
+                  (mouseenter)="PopoverDetail($event, p, busi)"
+                  (mouseleave)="p.close()"
+                  placement="bottom right top"
+                  [popoverClass]="busi.recID"
+                >
+                  {{ busi?.positionName }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          *ngIf="viewCurrent == '2'"
-          class="container treeview height-child-user"
-          [ngbPopover]="busi?.title"
-          #p="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, p, busi)"
-          (mouseleave)="p.close()"
-          placement="bottom right top"
-          [popoverClass]="busi.recID"
-        >
-          <span class="text-dark fw-bold">
-            {{ busi?.title }}
-          </span>
+          <div
+            *ngIf="
+              item.salespersonID == busi.salespersonID && viewCurrent == '2'
+            "
+            class="container treeview height-child-user"
+            style="margin-left: 30px"
+            [ngbPopover]="busi?.title"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="PopoverDetail($event, p, busi)"
+            (mouseleave)="p.close()"
+            placement="bottom right top"
+            [popoverClass]="busi.recID"
+          >
+            <span class="text-dark fw-bold">
+              {{ busi?.title }}
+            </span>
+          </div>
         </div>
       </ng-container>
     </div>
@@ -507,7 +513,10 @@
 </ng-template>
 
 <ng-template #templateYear let-item>
-  <div class="mt-1 mb-1 d-flex align-items-start" [ngClass]="viewCurrent == '1' ? 'height-parent': 'height-parent-user'">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="item?.target > 0"
       [innerHTML]="
@@ -520,27 +529,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="busi?.target > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            targetToFixed(busi?.target)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="busi?.target === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="busi?.target > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              targetToFixed(busi?.target)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="busi?.target === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateQuarter1 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="sumQuarter(item.targetsLines, 1) > 0"
       class="text-gray-800"
@@ -554,27 +568,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="sumQuarter(busi.targetsLines, 1) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            sumQuarter(busi.targetsLines, 1)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="sumQuarter(busi.targetsLines, 1) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="sumQuarter(busi.targetsLines, 1) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              sumQuarter(busi.targetsLines, 1)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="sumQuarter(busi.targetsLines, 1) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateQuarter2 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="sumQuarter(item.targetsLines, 2) > 0"
       class="text-gray-800"
@@ -588,27 +607,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="sumQuarter(busi.targetsLines, 2) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            sumQuarter(busi.targetsLines, 2)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="sumQuarter(busi.targetsLines, 2) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="sumQuarter(busi.targetsLines, 2) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              sumQuarter(busi.targetsLines, 2)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="sumQuarter(busi.targetsLines, 2) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateQuarter3 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="sumQuarter(item.targetsLines, 3) > 0"
       class="text-gray-800"
@@ -622,27 +646,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="sumQuarter(busi.targetsLines, 3) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            sumQuarter(busi.targetsLines, 3)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="sumQuarter(busi.targetsLines, 3) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="sumQuarter(busi.targetsLines, 3) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              sumQuarter(busi.targetsLines, 3)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="sumQuarter(busi.targetsLines, 3) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateQuarter4 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="sumQuarter(item.targetsLines, 4) > 0"
       class="text-gray-800"
@@ -656,27 +685,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="sumQuarter(busi.targetsLines, 4) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            sumQuarter(busi.targetsLines, 4)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="sumQuarter(busi.targetsLines, 4) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="sumQuarter(busi.targetsLines, 4) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              sumQuarter(busi.targetsLines, 4)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="sumQuarter(busi.targetsLines, 4) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth1 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 1) > 0"
       class="text-gray-800"
@@ -690,27 +724,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 1) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 1)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 1) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 1) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 1)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 1) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth2 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 2) > 0"
       class="text-gray-800"
@@ -724,27 +763,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 2) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 2)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 2) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 2) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 2)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 2) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth3 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 3) > 0"
       class="text-gray-800"
@@ -758,27 +802,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 3) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 3)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 3) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 3) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 3)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 3) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth4 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 4) > 0"
       class="text-gray-800"
@@ -792,27 +841,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 4) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 4)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 4) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 4) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 4)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 4) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth5 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 5) > 0"
       class="text-gray-800"
@@ -826,26 +880,31 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 5) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 5)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 5) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 5) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 5)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 5) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #templateMonth6 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 6) > 0"
       class="text-gray-800"
@@ -859,26 +918,31 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 6) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 6)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 6) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 6) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 6)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 6) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #templateMonth7 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 7) > 0"
       class="text-gray-800"
@@ -892,27 +956,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 7) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 7)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 7) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 7) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 7)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 7) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth8 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 8) > 0"
       class="text-gray-800"
@@ -926,27 +995,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 8) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 8)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 8) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 8) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 8)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 8) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth9 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 9) > 0"
       class="text-gray-800"
@@ -960,27 +1034,32 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 9) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 9)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 9) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 9) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 9)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 9) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateMonth10 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 10) > 0"
       class="text-gray-800"
@@ -994,26 +1073,31 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 10) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 10)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 10) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 10) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 10)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 10) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #templateMonth11 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 11) > 0"
       class="text-gray-800"
@@ -1027,26 +1111,31 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 11) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 11)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 11) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 11) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 11)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 11) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #templateMonth12 let-item>
-  <div class="mt-1 mb-1 height-parent d-flex align-items-start">
+  <div
+    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+  >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 12) > 0"
       class="text-gray-800"
@@ -1060,20 +1149,22 @@
   </div>
   <div *ngIf="item?.items != null && item?.items.length > 0">
     <ng-container *ngFor="let busi of item?.items">
-      <div
-        class="d-flex align-items-start height-child"
-        *ngIf="item.businessLineID == busi.businessLineID && busi.isCollapse"
-      >
-        <span
-          *ngIf="getTargetMonth(busi.targetsLines, 12) > 0"
-          class="text-gray-800"
-          [innerHTML]="
-            getTargetMonth(busi.targetsLines, 12)
-              | formatvalue : view.formModel : 'Target'
-              | async
-          "
-        ></span>
-        <span *ngIf="getTargetMonth(busi.targetsLines, 12) === 0">0</span>
+      <div *ngIf="busi.isCollapse">
+        <div
+          class="d-flex align-items-start justify-content-end"
+          [ngClass]="viewCurrent == '1' ? 'height-child' : 'height-child-user'"
+        >
+          <span
+            *ngIf="getTargetMonth(busi.targetsLines, 12) > 0"
+            class="text-gray-800"
+            [innerHTML]="
+              getTargetMonth(busi.targetsLines, 12)
+                | formatvalue : view.formModel : 'Target'
+                | async
+            "
+          ></span>
+          <span *ngIf="getTargetMonth(busi.targetsLines, 12) === 0">0</span>
+        </div>
       </div>
     </ng-container>
   </div>

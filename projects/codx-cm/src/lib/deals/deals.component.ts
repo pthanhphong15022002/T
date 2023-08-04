@@ -43,6 +43,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
+import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -153,6 +154,7 @@ export class DealsComponent
   pinnedItem: any;
   processIDKanban: string;
   processIDDefault: string;
+  funcIDCrr: any;
   crrProcessID = '';
   returnedCmt = '';
   dataColums: any = [];
@@ -173,6 +175,7 @@ export class DealsComponent
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((f) => {
+      this.funcIDCrr = f;
       this.functionModule = f.module;
       this.nameModule = f.customName;
       this.executeApiCallFunctionID(f.formName, f.gridViewName);
@@ -412,6 +415,12 @@ export class DealsComponent
         ['1', '0'].includes(data.status) ||
         data?.approveRule != '1';
     };
+    let isUpdateBANT = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        this.checkMoreReason(data);
+    };
 
     functionMappings = {
       CM0201_1: isDisabled,
@@ -432,6 +441,7 @@ export class DealsComponent
       SYS04: isCopy,
       SYS102: isDelete,
       SYS02: isDelete,
+      CM0201_14: isUpdateBANT,
     };
 
     return functionMappings[type];
@@ -491,70 +501,86 @@ export class DealsComponent
     );
   }
   clickMF(e, data) {
-    const actions = {
-      SYS03: (data) => {
-        this.edit(data);
-      },
-      SYS04: (data) => {
-        this.copy(data);
-      },
-      SYS02: (data) => {
-        this.delete(data);
-      },
-      CM0201_1: (data) => {
-        this.moveStage(data);
-      },
-      CM0201_2: (data) => {
-        this.handelStartDay(data);
-      },
-      CM0201_3: (data) => {
-        this.moveReason(data, true);
-      },
-      CM0201_4: (data) => {
-        this.moveReason(data, false);
-      },
-      CM0201_8: (data) => {
-        this.openOrCloseDeal(data, true);
-      },
-      CM0201_7: (data) => {
-        this.popupOwnerRoles(data);
-      },
-      CM0201_9: (data) => {
-        this.openOrCloseDeal(data, false);
-      },
-      CM0201_5: (data) => {
-        this.exportFile(data);
-      },
-      CM0201_6: (data) => {
-        this.approvalTrans(data);
-      },
-      CM0201_12: (data) => {
-        this.confirmOrRefuse(true, data);
-      },
-      CM0201_13: (data) => {
-        this.confirmOrRefuse(false, data);
-      },
-    };
+    this.dataSelected = data;
     this.titleAction = e.text;
-    if (actions.hasOwnProperty(e.functionID)) {
-      actions[e.functionID](data);
-    } else {
-      //Biến động tự custom
-      var customData = {
-        refID: data.processID,
-        refType: 'DP_Processes',
-        dataSource: '', // truyen sau
-      };
-      this.codxShareService.defaultMoreFunc(
-        e,
-        data,
-        this.afterSave,
-        this.view.formModel,
-        this.view.dataService,
-        this,
-        customData
-      );
-      this.detectorRef.detectChanges();
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+
+      case 'SYS04':
+        this.copy(data);
+        break;
+
+      case 'SYS02':
+        this.delete(data);
+        break;
+
+      case 'CM0201_1':
+        this.moveStage(data);
+        break;
+
+      case 'CM0201_2':
+        this.handelStartDay(data);
+        break;
+
+      case 'CM0201_3':
+        this.moveReason(data, true);
+        break;
+
+      case 'CM0201_4':
+        this.moveReason(data, false);
+        break;
+
+      case 'CM0201_8':
+        this.openOrCloseDeal(data, true);
+        break;
+
+      case 'CM0201_7':
+        this.popupOwnerRoles(data);
+        break;
+
+      case 'CM0201_9':
+        this.openOrCloseDeal(data, false);
+        break;
+
+      case 'CM0201_5':
+        this.exportFile(data);
+        break;
+
+      case 'CM0201_6':
+        this.approvalTrans(data);
+        break;
+
+      case 'CM0201_12':
+        this.confirmOrRefuse(true, data);
+        break;
+
+      case 'CM0201_13':
+        this.confirmOrRefuse(false, data);
+        break;
+
+      case 'CM0201_14':
+        this.openFormBANT(data);
+        break;
+
+      default:
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+        break;
     }
   }
   afterSave(e?: any, that: any = null) {
@@ -841,6 +867,38 @@ export class DealsComponent
           });
         }
       });
+  }
+  openFormBANT(data) {
+    var formMD = new FormModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    var obj = {
+      headerTitle: this.titleAction,
+      formModel: formMD,
+      gridViewSetup: this.gridViewSetup,
+      data: data,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupBantDealComponent,
+      '',
+      650,
+      750,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        this.view.dataService.update(e.event).subscribe();
+        this.detailViewDeal.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+        this.detailViewDeal.getContactByDeaID(this.dataSelected.recID);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   openFormReason(data, fun, isMoveSuccess) {
@@ -1707,6 +1765,40 @@ export class DealsComponent
   autoStart(event) {
     if (event) {
       this.startDeal(this.dataSelected);
+    }
+  }
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    if (data.refID) {
+      this.codxCmService.getDatasExport(data.refID).subscribe((dts) => {
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        if (dts) customData.dataSource = dts;
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
     }
   }
 }

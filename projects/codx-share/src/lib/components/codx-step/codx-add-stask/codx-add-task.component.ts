@@ -69,6 +69,7 @@ export class CodxAddTaskComponent implements OnInit {
   isTaskDefault = false;
   isSaveTimeGroup = true;
   showLabelAttachment = false;
+  isStatusNew = true;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -130,6 +131,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.setRole(role);
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
+      this.stepsTasks.status = "1";
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }
@@ -440,5 +442,9 @@ export class CodxAddTaskComponent implements OnInit {
   }
   getfileDelete(event) {
     event.data.length;
+  }
+  valueChangeRadio(event){
+    this.stepsTasks.status = event?.field ;
+    this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
   }
 }

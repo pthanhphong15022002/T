@@ -124,7 +124,7 @@ export class PopAddDimensionGroupsComponent
     let dataModel = new FormModel();
     dataModel.formName = 'DimensionSetup';
     dataModel.gridViewName = 'grvDimensionSetup';
-    dataModel.entityName = 'IV_DimensionSetup';
+    dataModel.entityName = 'IV_DimSetup';
     opt.FormModel = dataModel;
     this.cache
       .gridViewSetup('DimensionSetup', 'grvDimensionSetup')
@@ -149,6 +149,23 @@ export class PopAddDimensionGroupsComponent
             );
             var type = JSON.parse(localStorage.getItem('type'));
             if (datadimensionSetup != null) {
+              switch(type)
+              {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                  datadimensionSetup.dimCategory = '1';
+                  break;
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                  datadimensionSetup.dimCategory = '2';
+                  break;
+              }
               let index = this.objectDimensionSetup.findIndex(
                 (x) => x.dimType == datadimensionSetup.dimType
               );
@@ -240,7 +257,48 @@ export class PopAddDimensionGroupsComponent
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.updateDimGroupIDBeforeSave();
+        this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'AddAsync';
+          opt.className = 'DimensionGroupsBusiness';
+          opt.assemblyName = 'IV';
+          opt.service = 'IV';
+          opt.data = [this.dimensionGroups];
+          return true;
+        })
+        .subscribe((res) => {
+          if (res.save) {
+            if(this.keyField == 'DimGroupID')
+            {
+              this.dimensionGroups.dimGroupID = res.save.dimGroupID;
+            }
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionSetupBusiness',
+                'AddAsync',
+                [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
+              )
+              .subscribe(() => {});
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionControlBusiness',
+                'AddAsync',
+                [this.dimensionGroups.dimGroupID, this.objectDimensionControl]
+              )
+              .subscribe(() => {});
+            this.dialog.close();
+            this.dt.detectChanges();
+          } else {
+            this.notification.notifyCode(
+              'SYS031',
+              0,
+              '"' + this.dimensionGroups.dimGroupID + '"'
+            );
+            return;
+          }
+        });
       }
       if (this.formType == 'edit') {
         this.dialog.dataService
@@ -290,139 +348,55 @@ export class PopAddDimensionGroupsComponent
       this.validate = 0;
       return;
     } else {
-      if(this.keyField == 'CurrencyID')
-      {
-        this.api.exec(
-          'ERM.Business.AC',
-          'CommonBusiness',
-          'GenerateAutoNumberAsync',
-        )
-        .subscribe((autoNumber: string) => {
-          if(autoNumber)
+      this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'DimensionGroupsBusiness';
+        opt.assemblyName = 'IV';
+        opt.service = 'IV';
+        opt.data = [this.dimensionGroups];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {
+          if(this.keyField == 'DimGroupID')
           {
-            this.dimensionGroups.dimGroupID = autoNumber;
-            this.saveAdd();
+            this.dimensionGroups.dimGroupID = res.save.dimGroupID;
           }
-        });
-      }
-      else
-      {
-        this.saveAdd();
-      }
+          this.acService
+            .addData(
+              'ERM.Business.IV',
+              'DimensionSetupBusiness',
+              'AddAsync',
+              [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.acService
+                  .addData(
+                    'ERM.Business.IV',
+                    'DimensionControlBusiness',
+                    'AddAsync',
+                    [
+                      this.dimensionGroups.dimGroupID,
+                      this.objectDimensionControl,
+                    ]
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      this.clearDimensionGroups();
+                      this.dialog.dataService.clear();
+                      this.dialog.dataService.addNew().subscribe(() => {
+                        this.dimensionGroups =
+                          this.dialog.dataService!.dataSelected;
+                      });
+                    }
+                  });
+              }
+            });
+        }
+      });
     }
-  }
-
-  updateDimGroupIDBeforeSave()
-  {
-    if(this.keyField == 'CurrencyID')
-      {
-        this.api.exec(
-          'ERM.Business.AC',
-          'CommonBusiness',
-          'GenerateAutoNumberAsync',
-        )
-        .subscribe((autoNumber: string) => {
-          if(autoNumber)
-          {
-            this.dimensionGroups.dimGroupID = autoNumber;
-            this.save();
-          }
-        });
-      }
-      else
-      {
-        this.save();
-      }
-  }
-
-  save()
-  {
-    this.dialog.dataService
-    .save((opt: RequestOption) => {
-      opt.methodName = 'AddAsync';
-      opt.className = 'DimensionGroupsBusiness';
-      opt.assemblyName = 'IV';
-      opt.service = 'IV';
-      opt.data = [this.dimensionGroups];
-      return true;
-    })
-    .subscribe((res) => {
-      if (res.save) {
-        this.acService
-          .addData(
-            'ERM.Business.IV',
-            'DimensionSetupBusiness',
-            'AddAsync',
-            [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
-          )
-          .subscribe(() => {});
-        this.acService
-          .addData(
-            'ERM.Business.IV',
-            'DimensionControlBusiness',
-            'AddAsync',
-            [this.dimensionGroups.dimGroupID, this.objectDimensionControl]
-          )
-          .subscribe(() => {});
-        this.dialog.close();
-        this.dt.detectChanges();
-      } else {
-        this.notification.notifyCode(
-          'SYS031',
-          0,
-          '"' + this.dimensionGroups.dimGroupID + '"'
-        );
-        return;
-      }
-    });
-  }
-
-  saveAdd()
-  {
-    this.dialog.dataService
-    .save((opt: RequestOption) => {
-      opt.methodName = 'AddAsync';
-      opt.className = 'DimensionGroupsBusiness';
-      opt.assemblyName = 'IV';
-      opt.service = 'IV';
-      opt.data = [this.dimensionGroups];
-      return true;
-    })
-    .subscribe((res) => {
-      if (res.save) {
-        this.acService
-          .addData(
-            'ERM.Business.IV',
-            'DimensionSetupBusiness',
-            'AddAsync',
-            [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.acService
-                .addData(
-                  'ERM.Business.IV',
-                  'DimensionControlBusiness',
-                  'AddAsync',
-                  [
-                    this.dimensionGroups.dimGroupID,
-                    this.objectDimensionControl,
-                  ]
-                )
-                .subscribe((res) => {
-                  if (res) {
-                    this.clearDimensionGroups();
-                    this.dialog.dataService.clear();
-                    this.dialog.dataService.addNew().subscribe(() => {
-                      this.dimensionGroups =
-                        this.dialog.dataService!.dataSelected;
-                    });
-                  }
-                });
-            }
-          });
-      }
-    });
   }
   //#endregion
 }

@@ -581,7 +581,6 @@ export class PopupChangeAllocationRateComponent implements OnInit {
           targetQua += item.target;
         }
         res.target = targetQua;
-        res.isExit = true;
         if (this.data.target > 0) {
           res.weight = (res.target * 100) / this.data.target;
         } else {

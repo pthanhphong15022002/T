@@ -322,7 +322,7 @@ export class PdfComponent
                   fileIdx: index,
                 });
               }
-              
+
             });
             this.lstSigners = res.approvers;
             this.lstSigners.forEach((signer) => {
