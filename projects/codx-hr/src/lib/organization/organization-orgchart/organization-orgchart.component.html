@@ -2784,7 +2784,7 @@
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: 50 },
+        itemSize: { width: 170, height: selectedTeam.includes('No') ? 48 : 154 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2811,6 +2811,8 @@
           ? stylesObjChart
           : itemConfig.id === orgUnitID && !isCursor && !disableActive
           ? stylesObjChart
+          : selectedTeam.includes('No')
+          ? stylesObjChartNone1
           : stylesObjChartNone
       "
       (click)="clickActive(itemConfig.id)"

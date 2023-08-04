@@ -203,19 +203,25 @@ export class OrganizationOrgchartComponent {
   selectedTeam = '';
 
   //style slider
-  stylesObj = {
-    width: '100%',
-    display: 'flex',
-    margin: '5px 14px',
-    cursor: 'pointer',
-  };
+  // stylesObj = {
+  //   width: '100%',
+  //   display: 'flex',
+  //   margin: '5px 14px',
+  //   cursor: 'pointer',
+  // };
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
-    height: 'max-content',
+    height: '100%',
     background: '#fff',
   };
   stylesObjChartNone = {
+    border: '1px ridge gray',
+    position: 'relative',
+    height: '100%',
+    background: '#fff',
+  };
+  stylesObjChartNone1 = {
     border: '1px ridge gray',
     position: 'relative',
     height: 'max-content',
@@ -230,9 +236,7 @@ export class OrganizationOrgchartComponent {
     private cacheService: CacheService,
     private hrService: CodxHrService,
     private notify: NotificationsService
-  ) {
-    //this.isGetManager(this.selectedTeam);
-  }
+  ) {}
 
   showVal(value) {
     this.scaleNumber = parseInt(value) / 100;
@@ -906,7 +910,6 @@ export class OrganizationOrgchartComponent {
 
   //Disable active chart
   clickActive(data) {
-    console.log(data);
     //Patch id to parent chart
     this.newIdItem.emit(data);
     this.disableActive = true;
