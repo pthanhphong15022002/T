@@ -768,6 +768,7 @@ export class CM_Targets {
   owner: string;
   buid: string;
   createdOn: Date = new Date();
+  exchangeRate: number;
   createdBy: string;
   modifiedOn: Date;
   ModifiedBy: string;

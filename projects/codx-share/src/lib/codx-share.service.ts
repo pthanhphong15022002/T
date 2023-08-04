@@ -182,7 +182,8 @@ export class CodxShareService {
     afterSave?: Function,
     formModel?: any,
     dataService?: any,
-    that: any = null
+    that: any = null,
+    customData = null
   ) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
@@ -329,7 +330,7 @@ export class CodxShareService {
           900,
           700,
           '',
-          [gridModel, data.recID],
+          [gridModel, data.recID , customData?.dataSource , customData?.refID , customData?.refType],
           null
         );
         break;
@@ -1033,6 +1034,15 @@ export class CodxShareService {
 
   getMoreFunction(funcID: any) {
     var listApproveMF = [];
+    if (funcID == 'SYS201') {
+      var consensus = {
+        functionID: 'SYS201',
+        text: 'Duyệt',
+        color: '#666666',
+      };
+
+      listApproveMF.push(consensus);
+    }
 
     if (funcID == 'SYS202') {
       var consensus = {
@@ -1156,6 +1166,7 @@ export class CodxShareService {
     approveProcess.customEntityName = customEntityName;
     approveProcess.approvers = approvers;
     approveProcess.category = category;
+    approveProcess.data = data;
 
     //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
     if (releaseOnly) {
@@ -1286,23 +1297,48 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
-    if (template?.templateID == null && !releaseBackground) {
+    if (template?.templateID == null && !releaseBackground ) {
       //TemplateID null -> bật form kí số nhưng ko có file
       this.releaseWithEmptySignFile(approveProcess, releaseCallback);
-    } else {
-      //Gọi hàm xuất file báo cáo
-      //wait
-      let listFiles = [];
-      let signFile = this.createSignFile(approveProcess, listFiles, template);
-      //Mở form trình kí và gửi duyệt
-      if (!releaseBackground) {
+    } else {   
+      let exportUpload = new ExportUpload();
+      exportUpload.templateRecID = template?.templateID;
+      exportUpload.templateType = template?.templateType;
+      exportUpload.convertToPDF = true;
+      exportUpload.title =approveProcess.title;
+      exportUpload.entityName =approveProcess.entityName;
+      exportUpload.module =approveProcess.module;
+
+      this.getRpListByTemplateID(template?.templateID).subscribe((rpList:any)=>{
+        if(rpList){
+          exportUpload.reportRecID = rpList?.recID;          
+          exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+          this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
+        }
+        else{
+          template?.templateType =="AD_ExcelTemplates" ? JSON.stringify([approveProcess?.data]) : JSON.stringify(approveProcess?.data);
+          this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
+        }
+      })     
+      
+    }
+  }
+  exportFileRelease(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    exportUpload:ExportUpload,
+  ) {
+    let signFile = this.createSignFile(approveProcess);
+    this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exported:any)=>{
+      if(exported){      
+        //debugger        
         this.openPopupSignFile(approveProcess, releaseCallback, signFile);
       }
-      //Tự tạo file trình kí và gửi duyêt ngầm
-      else {
-        //wait
+      else{
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+        //this.notificationsService.notify('Xuất file thất bại!','2');
       }
-    }
+    })
   }
 
   releaseWithEmptySignFile(
@@ -1318,7 +1354,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel) => void
   ) {
     this.getFileByObjectID(approveProcess.recID).subscribe((listFiles: any) => {
-      if (listFiles?.length > 0) {
+      if (listFiles?.length > 0 ) {
         let signFile = this.createSignFile(approveProcess, listFiles);
         this.openPopupSignFile(
           approveProcess,
@@ -1327,6 +1363,7 @@ export class CodxShareService {
           listFiles
         );
       } else {
+        debugger
         this.getSignFileTemplateByRefType(approveProcess?.entityName).subscribe(
           (sfTemplates: any) => {
             if (sfTemplates?.length >= 1) {
@@ -1382,8 +1419,8 @@ export class CodxShareService {
     dialogSF.closed.subscribe((res) => {
       if (res?.event && res?.event?.approved == true) {
         let respone = new ResponseModel();
-        respone.msgCodeError = res?.event?.msgCodeError;
-        respone.rowCount = res?.event?.rowCount;
+        respone.msgCodeError = res?.event?.responseModel?.msgCodeError;
+        respone.rowCount = res?.event?.responseModel?.rowCount;
         releaseCallback && releaseCallback(respone);
       } else {
         //Lưu - Tắt form kí số khi chưa gửi duyệt
@@ -1460,6 +1497,47 @@ export class CodxShareService {
     }
   }
 
+  exportTemplateData(module:string,exportUpload :ExportUpload){
+    
+    return this.api.execSv(
+      module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportUploadAsync',
+      [exportUpload]
+    );
+  }
+
+  exportExcelData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+    let dataJson = JSON.stringify([approveProcess?.data]);
+    return this.api.execSv(
+      approveProcess.module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportExcelDataAsync',
+      [dataJson, templateRecID,convertToPDF]
+    );
+  }
+  exportWordData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+    let dataJson = JSON.stringify([approveProcess?.data]);
+    return this.api.execSv(
+      approveProcess.module,
+      'ERM.Business.Core',
+      'CMBusiness',
+      'ExportWordTemplateAsync',
+      [dataJson, templateRecID,convertToPDF]
+    );
+  }
+
+  getRpListByTemplateID(recID:any){
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetByTemplateIDAsync',
+      [recID]
+    );
+  }
   //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
   codxCancel(
     module: string, //Tên service
@@ -1599,5 +1677,16 @@ export class Approvers {
   createdOn: any = new Date();
   delete: boolean = true;
   write: boolean = false;
+}
+export class ExportUpload {  
+  templateRecID: string ;
+  templateType: string ;
+  title: string ;
+  dataJson: string;
+  convertToPDF: boolean ;
+  entityName: string ;
+  language:string;
+  reportRecID:string;
+  module:string;
 }
 //#endregion

@@ -277,16 +277,7 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS04':
-            res.disabled = false;
-            break;
-          case 'SYS003':
-          case 'SYS004':
-          case 'SYS002':
-          case 'CM0102_4':
-          case 'CM0102_1':
-            res.disabled = true;
-            break;
+
           case 'CM0101_1':
             if (data.isBlackList) res.disabled = true;
             break;
@@ -314,6 +305,8 @@ export class CmCustomerComponent
             break;
           case 'CM0101_5':
             if (data.status !== '99') res.disabled = true;
+            break;
+          default:
             break;
         }
       });

@@ -42,6 +42,7 @@ export class PopupCheckInHistoryComponent
   checkIns= [];
   dataChange: boolean=false;
   okrTarget:any;
+  obType=OMCONST.VLL.OKRType.Obj;
   constructor(
     private injector: Injector,
     private authService: AuthService,

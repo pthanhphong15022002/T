@@ -26,6 +26,15 @@
   height: 50px !important
 }
 
+.height-parent-user{
+  height: 65px !important
+}
+
+.height-child-user{
+  height: 25px !important;
+  margin-left: 30px !important;
+}
+
 .height-child{
   height: 50px !important
 }
@@ -38,4 +47,21 @@
 .overflow-ellipsis:hover {
   white-space: normal;
   overflow: visible;
+}
+
+.view-switch {
+  background-color: #a19999 !important;
+}
+
+.cm-bg-primary{
+  background-color: var(--primary) !important;
+}
+.cm-rounded-pill-left {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
+
+.cm-rounded-pill-right {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
 }

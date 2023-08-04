@@ -205,7 +205,7 @@ export class DealsComponent
             this.codxCmService
               .getExchangeRate(this.currencyIDDefault, day)
               .subscribe((res) => {
-                if (res) this.exchangeRateDefault = res;
+                if (res) this.exchangeRateDefault = res?.exchRate;
                 else {
                   this.currencyIDDefault = 'VND';
                   this.exchangeRateDefault = 1;
@@ -546,7 +546,27 @@ export class DealsComponent
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
       actions[e.functionID](data);
+    } else {
+      //Biến động tự custom
+      var customData = {
+        refID: data.processID,
+        refType: 'DP_Processes',
+        dataSource: '', // truyen sau
+      };
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
+      this.detectorRef.detectChanges();
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);

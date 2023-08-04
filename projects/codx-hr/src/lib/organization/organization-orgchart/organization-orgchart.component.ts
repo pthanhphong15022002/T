@@ -158,6 +158,7 @@ export class OrganizationOrgchartComponent {
   labelColor: string;
   labelFontWeight: string;
   disableActive: boolean = false;
+  disableEdit: boolean = true;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
   @Output() newIdItem = new EventEmitter<string>();
 
@@ -238,8 +239,12 @@ export class OrganizationOrgchartComponent {
   }
 
   //Settings
-  changeMode(e) {
+  changeMode(e, checked: boolean) {
     var target = e?.target?.id ?? e;
+    if (checked === true) {
+      this.disableEdit = false;
+    }
+
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
@@ -745,13 +750,16 @@ export class OrganizationOrgchartComponent {
   // }
 
   onMouseWheel(evt) {
-    if (evt.deltaY > 0) {
-      if (this.scaleNumber > 0.3) {
-        this.scaleNumber = this.scaleNumber - 0.1;
-      }
-    } else {
-      if (this.scaleNumber < 1) {
-        this.scaleNumber = this.scaleNumber + 0.1;
+    if (evt.ctrlKey) {
+      evt.preventDefault();
+      if (evt.deltaY > 0) {
+        if (this.scaleNumber > 0.3) {
+          this.scaleNumber = this.scaleNumber - 0.1;
+        }
+      } else {
+        if (this.scaleNumber < 1) {
+          this.scaleNumber = this.scaleNumber + 0.1;
+        }
       }
     }
   }
@@ -892,6 +900,7 @@ export class OrganizationOrgchartComponent {
 
   CloseDialog(dialog: DialogRef) {
     dialog.close();
+    this.disableEdit = true;
   }
 
   //Disable active chart
@@ -958,26 +967,6 @@ export class OrganizationOrgchartComponent {
     //this.dt.detectChanges();
   }
 
-  // getDataInit() {
-  //   this.hrService
-  //     .GetParameterByHRAsync('HRParameters', '1')
-  //     .subscribe((res: any) => {
-  //       this.dataTree = JSON.parse(res);
-  //       console.log(this.dataTree);
-
-  //       this.selectedTeam = this.dataTree.isGetManager;
-  //       console.log(this.selectedTeam);
-  //       for (const [key, value] of Object.entries(this.dataTree)) {
-  //         this.changeMode(value);
-  //       }
-  //     });
-
-  //   this.cacheService.valueList('L0605').subscribe((res) => {
-  //     if (res) {
-  //       this.dataVll = res.datas;
-  //     }
-  //   });
-  // }
   ngOnInit(): void {
     this.hrService
       .GetParameterByHRAsync('HRParameters', '1')
@@ -988,7 +977,7 @@ export class OrganizationOrgchartComponent {
         this.isGetManager(this.selectedTeam);
 
         for (const [key, value] of Object.entries(this.dataTree)) {
-          this.changeMode(value);
+          this.changeMode(value, false);
         }
       });
 
@@ -1011,6 +1000,7 @@ export class OrganizationOrgchartComponent {
   }
 
   onSelected(value): void {
+    this.disableEdit = false;
     this.selectedTeam = value;
     this.isGetManager(value);
   }
@@ -1192,20 +1182,6 @@ export class OrganizationOrgchartComponent {
           this.notify.notifyCode('SYS022');
         }
       });
-    // if (data) {
-    //   this.journalService.deleteAutoNumber(data.autoNumber);
-    //   this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-    //   this.api
-    //     .exec(
-    //       'AC',
-    //       'JournalsPermissionBusiness',
-    //       'DeleteByJournalNoAsync',
-    //       data.journalNo
-    //     )
-    //     .subscribe((res) => {
-    //       console.log('DeleteByJournalNoAsync', res);
-    //     });
-    // }
   }
 
   removeNode(id: string) {
@@ -1300,7 +1276,8 @@ export class OrganizationOrgchartComponent {
       .subscribe((res: any) => {
         if (res) {
           this.dialogEditStatus && this.dialogEditStatus.close();
-          // console.log(res.dataValue);
+          this.notify.notifyCode('SYS007');
+          this.disableEdit = true;
         }
       });
   }

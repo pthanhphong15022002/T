@@ -10,10 +10,16 @@ export class ApproveProcess {
   recID :string ;     //RecID nghiệp vụ gốc
   tranRecID :string ;     //RecID của ES_ApprovalTran hiện hành
   processID :string ;     //ProcessID của quy trình hiện hành
-  data :string ;     //Data của nghiệp vụ gốc
+  data :any ;     //Data của nghiệp vụ gốc
   tenant :string ;     //ProcessID của quy trình hiện hành
   comment :string ;     //Ghi chú
   approvers : Array<string> ;     //Danh sách userID của Approver
   category : any ;     //ES_Category của nghiệp vụ
   title : any ;     //Tiêu đề
+}
+
+export class ResponseModel {
+  rowCount: number;
+  msgCodeError: string;
+  approveStatus: string;
 }

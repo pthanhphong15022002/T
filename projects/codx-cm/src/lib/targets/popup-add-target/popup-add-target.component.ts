@@ -116,6 +116,7 @@ export class PopupAddTargetComponent {
             this.cmSv.getExchangeRate(this.currencyID, new Date())
           );
           this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+          this.data.exchangeRate = this.exchangeRate
         }
       }
     } else {
@@ -124,10 +125,8 @@ export class PopupAddTargetComponent {
           element.weight = (element.target * 100) / this.data.target;
         }
       });
-      let exchangeRateCurrent = await firstValueFrom(
-        this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
-      );
-      this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+
+      this.exchangeRate = this.data.exchangeRate ?? 0;
     }
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -176,6 +175,7 @@ export class PopupAddTargetComponent {
   //#region  save
   beforeSave(op) {
     var data = [];
+    this.data.exchangeRate = this.exchangeRate ?? 0;
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
@@ -228,7 +228,7 @@ export class PopupAddTargetComponent {
 
     if (!this.checkTarget()) {
       this.notiService.notifyCode(
-        'Mục tiêu năm không phù hợp với mục tiêu doanh số'
+        'CM032'
       );
       return;
     }
@@ -709,6 +709,7 @@ export class PopupAddTargetComponent {
             this.isAllocation = this.data?.allocation == '1' ? true : false;
             this.isExitTarget = true;
             this.isBusiness = true;
+            this.exchangeRate = this.data.exchangeRate ?? 0;
           }
           this.lstOwners = res[2] ?? [];
           this.lstOwners.forEach((element) => {
@@ -718,10 +719,7 @@ export class PopupAddTargetComponent {
           });
           this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
           this.lstTargetLines = res[1] ?? [];
-          let exchangeRateCurrent = await firstValueFrom(
-            this.cmSv.getExchangeRate(this.data.currencyID, this.data.createdOn??new Date())
-          );
-          this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+
         } else {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
@@ -850,7 +848,7 @@ export class PopupAddTargetComponent {
     if (type == 'target') {
       if (this.data.target == 0) {
         this.notiService.notifyCode(
-          'Phải có chỉ tiêu doanh số cả năm lớn hơn 0 mới được sửa'
+          'CM033'
         );
         return;
       }
@@ -862,7 +860,7 @@ export class PopupAddTargetComponent {
         this.countClick = 0;
       } else {
         this.countClick += 1;
-        this.notiService.notifyCode('Cần có 2 nhân viên trở lên mới được sửa');
+        this.notiService.notifyCode('CM034');
         return;
       }
     }
@@ -895,7 +893,7 @@ export class PopupAddTargetComponent {
           if (this.checkWeight(id, target, 100, 'weight')) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
 
@@ -932,7 +930,7 @@ export class PopupAddTargetComponent {
           if (this.checkWeight(id, target, this.data.target, 'target')) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
           this.lstOwners[index].target = target;

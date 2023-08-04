@@ -231,19 +231,6 @@
                     </span>
                   </button> 
                 </div>
-
-                <div class="" id="ADTemplate" *ngIf="data?.templateType!=null && data?.templateID!=null">
-                  <codx-attachment #attachmentADTemplate [objectType]="data?.templateType" hideImageUpload="0" [objectId]="data?.templateID"
-                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'1'" [functionID]="formModelCustom.funcID" type="inline"
-                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
-                  </codx-attachment>  
-                </div>
-                <div class="" id="fileTemplate" *ngIf="data?.templateType==null && data?.templateID==null">
-                  <codx-attachment #attachmentFileTemplate objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
-                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'1'" [functionID]="formModelCustom.funcID" type="inline"
-                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
-                  </codx-attachment>  
-                </div>
               </div> -->
 
               <div class="text-center sign-attachment">
@@ -251,8 +238,8 @@
                   <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>              
                 </div>
                 <div class="text-center sign-attachment" *ngIf="oSignFile==null">
-                  <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
-                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
+                  <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data?.recID"
+                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="isTemplate? '0':'0'" [functionID]="formModelCustom.funcID" type="inline"
                     (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
                   </codx-attachment>                
                 </div>
@@ -383,7 +370,7 @@
           <div *ngIf="currentTab == 0"></div>
           <button *ngIf="!(currentTab == 1 && eSign == false)" type="button" class="btn btn-primary"
             (click)="continue(currentTab)" [ngClass]="
-              ((attachment?.fileUploadList?.length <= 0 || attachmentFileTemplate?.fileUploadList?.length <= 0 || attachmentADTemplate?.fileUploadList?.length <= 0) &&
+              (attachment?.fileUploadList?.length <= 0  &&
                 currentTab == 0 &&
                 data.files?.length <= 0) ||
               disableContinue == true || data?.title == null || data?.categoryID==null
