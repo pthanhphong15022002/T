@@ -86,7 +86,7 @@ export class PopAddDimensionGroupsComponent
       }
     }
     this.cache
-      .gridViewSetup('DimensionGroups', 'grvDimensionGroups')
+      .gridViewSetup('DimGroups', 'grvDimGroups')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
@@ -122,12 +122,12 @@ export class PopAddDimensionGroupsComponent
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'DimensionSetup';
-    dataModel.gridViewName = 'grvDimensionSetup';
+    dataModel.formName = 'DimSetup';
+    dataModel.gridViewName = 'grvDimSetup';
     dataModel.entityName = 'IV_DimSetup';
     opt.FormModel = dataModel;
     this.cache
-      .gridViewSetup('DimensionSetup', 'grvDimensionSetup')
+      .gridViewSetup('DimSetup', 'grvDimSetup')
       .subscribe((res) => {
         if (res) {
           var dialog = this.callfc.openForm(

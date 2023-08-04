@@ -242,6 +242,16 @@ export class PopupEBasicSalariesComponent
         this.actionType === 'copy' ||
         this.actionType === 'view'
       ) {
+        this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null}
+        })
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
             this.EBasicSalaryObj.effectedDate = null;

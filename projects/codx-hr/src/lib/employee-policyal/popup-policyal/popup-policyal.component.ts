@@ -66,6 +66,8 @@ export class PopupPolicyalComponent
     mode: 'Normal',
   };
 
+  monthDateValid = true;
+
   lstOrgUnitID: any = []
   lstJobLevel: any = []
   lstPositionID: any = []
@@ -136,7 +138,7 @@ export class PopupPolicyalComponent
   grvSetupPolicyDetail
 
 
-  originPolicyId : any;
+  originPolicyId = '';
   policyIdEdited = false;
 
   cbxName:any;
@@ -230,6 +232,16 @@ export class PopupPolicyalComponent
       'GetApplyObjsAsync',
       ['AL', this.alpolicyObj.policyID, 0]
     );
+  }
+
+  loadEmpFullInfo(empID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmpFullInfoAsync',
+      empID
+    )
   }
 
   onInit(): void {
@@ -492,9 +504,13 @@ export class PopupPolicyalComponent
       if(lstData[i].employeeID){
         lstTemp =lstData[i].employeeID.split(';')
         for(let j = 0; j < lstTemp.length; j++){
-          this.lstEmployeeID.push({
-            rec:lstData[i].recID,
-            id:lstTemp[j]
+          this.loadEmpFullInfo(lstTemp[j]).subscribe((res) => {
+            this.lstEmployeeID.push({
+              rec:lstData[i].recID,
+              id:lstTemp[j],
+              info: res[0],
+              positionName: res[1]
+            })
           })
         }
       }
@@ -596,20 +612,25 @@ export class PopupPolicyalComponent
   }
 
   validateMonthDate(month, day){
-    
+    this.monthDateValid = true;
     if(month == 4 || month == 6 || month == 9 || month == 11){
       if(day > 30){
         this.notify.notifyCode('HR016');
+    this.monthDateValid = false;
+
       }
     }
     else if(month == 2){
       if(day > 28){
         this.notify.notifyCode('HR016');
+    this.monthDateValid = false;
+
       }
     }
     else{
       if(day > 31){
         this.notify.notifyCode('HR016');
+    this.monthDateValid = false;
       }
     }
   }
@@ -674,6 +695,16 @@ export class PopupPolicyalComponent
     }
   }
 
+  CheckIfPolicyIDExist(id){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'CheckPolicyALIDExisted',
+      id
+    );
+  }
+
   GetPolicyDetailByFirstMonthType(data){
     return this.api.execSv<any>(
       'HR',
@@ -691,6 +722,16 @@ export class PopupPolicyalComponent
       'PolicyALBusiness',
       'GetPolicyDetailBySeniorityTypeAsync',
       ['AL', this.alpolicyObj.policyID, 'ALSeniorityType', '1']
+    );
+  }
+
+  EditPolicyALPolicyIDChanged(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'UpdatePolicyALPolicyIDChangedAsync',
+      [this.alpolicyObj, this.originPolicyId]
     );
   }
 
@@ -796,6 +837,27 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if(this.alpolicyObj.activeOn && this.alpolicyObj.expiredOn){
+      if (this.alpolicyObj.expiredOn < this.alpolicyObj.activeOn) {
+        this.hrSevice.notifyInvalidFromTo(
+          'ActiveOn',
+          'ExpiredOn',
+          this.formModel
+          )
+          return;
+        }
+    }
+
+    if(this.monthDateValid == false){
+      this.notify.notifyCode('HR016');
+      return;
+    }
+
     if(
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
@@ -830,36 +892,77 @@ export class PopupPolicyalComponent
             this.dialog && this.dialog.close(this.alpolicyObj);
           }
           else{
-            this.notify.notifyCode('SYS023');
+            // this.notify.notifyCode('SYS023');
           }
         })
       }
       else if(this.actionType === 'edit'){
-        this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {
-          if(res){
-            this.notify.notifyCode('SYS007');
-            this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
-              for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                  debugger
-                })
-              }
-              for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                  debugger
-                })
-              }
-              this.dialog && this.dialog.close(this.alpolicyObj);
-            })
-          }
-          else{
-            this.notify.notifyCode('SYS023');
-          }
-        })
+        if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
+          this.EditPolicyALPolicyIDChanged().subscribe((res) => {
+            if(res){
+              this.notify.notifyCode('SYS007');
+              this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+                    debugger
+                  })
+                }
+                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                    debugger
+                  })
+                }
+                this.dialog && this.dialog.close(this.alpolicyObj);
+              })
+            }
+            else{
+              this.notify.notifyCode('SYS023');
+            }
+          })
+        }
+        else{
+          this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {
+            if(res){
+              this.notify.notifyCode('SYS007');
+              this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+                    debugger
+                  })
+                }
+                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                    debugger
+                  })
+                }
+                this.dialog && this.dialog.close(this.alpolicyObj);
+              })
+            }
+            else{
+              this.notify.notifyCode('SYS023');
+            }
+          })
+        }
       }
 }
 
   addRowGrid1(){
+    debugger
+    if(this.alpolicyObj.policyID){
+      this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
+        if(res == true){
+          this.originPolicyId = this.alpolicyObj.policyID;
+
+        }
+        else{
+          this.notify.notifyCode('');
+        }
+      })
+    }
+    else{
+      this.notify.notifyCode('');
+    }
+
     let idx = this.gridView1.dataSource.length;
     // if(idx > 1){
     //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
@@ -875,6 +978,21 @@ export class PopupPolicyalComponent
   }
 
   addRowGrid2(){
+    debugger
+    if(this.alpolicyObj.policyID){
+      this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
+        if(res == true){
+          this.originPolicyId = this.alpolicyObj.policyID;
+        }
+        else{
+          this.notify.notifyCode('');
+        }
+      })
+    }
+    else{
+      this.notify.notifyCode('');
+    }
+
     let idx = this.gridView2.dataSource.length;
     // if(idx > 1){
     //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
@@ -1586,13 +1704,52 @@ export class PopupPolicyalComponent
           // this.lstPolicyBeneficiariesApply[index].employeeID = event.id;
           this.lstEmployeeID = this.lstEmployeeID.filter((obj) => obj.rec != this.currentRec);
           for(let i = 0; i < lstId.length; i++){
-            this.lstEmployeeID.push({
-              rec:this.currentRec,
-              id:lstId[i]
-            });
+              this.loadEmpFullInfo(lstId[i]).subscribe((res) => {
+                this.lstEmployeeID.push({
+                  rec:this.currentRec,
+                  id:lstId[i],
+                  info: res[0],
+                  positionName: res[1]
+                })
+              })
           }
           break;
     }
   }
 }
 }
+
+
+// this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
+//   if(res){
+//     console.log('info nv',  res[0]);
+//     this.infoPersonal = res[0];
+//     this.infoPersonal.PositionName = res[1]
+//     // this.lstOrg = res[2]
+//     this.orgUnitStr = res[2]
+//     this.DepartmentStr = res[3]
+//     this.LoadedEInfo = true;
+//     this.df.detectChanges();
+//   }
+// }
+
+// <div class="d-flex align-items-centerp py-1 h-50px">
+//                         <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+//                             [objectName]="emp.employeeName" [width]="30">
+//                         </codx-img>
+//                         <div class="d-flex flex-column w-350px">
+//                             <span #employeeName class="fs-6 line-clamp line-clamp-1"
+//                                 [ngbTooltip]="employeeName.scrollHeight > employeeName.clientHeight? positionTooltip: null">
+//                                 {{emp.employeeName}}</span>
+//                             <span #positionName class="text-gray-600 line-clamp line-lamp-1"
+//                                 [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionTooltip: null">
+//                                 {{emp.positionName}}
+//                             </span>
+//                             <ng-template #positionTooltip>
+//                                 {{emp.positionName}}
+//                             </ng-template>
+//                             <ng-template #employeeNameTooltip>
+//                                 {{emp.positionName}}
+//                             </ng-template>
+//                         </div>
+//                     </div>
