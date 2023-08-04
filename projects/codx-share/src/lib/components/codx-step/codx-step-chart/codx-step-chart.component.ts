@@ -308,7 +308,7 @@ export class CodxStepChartComponent
         let value = data?.event;
         if(value?.group || value?.task){
           this.getDataGanttChart(
-            this.instance?.refID,
+            this.instance?.refID || this.instance?.recID,
             this.instance?.processID
             );
         }

@@ -48,7 +48,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   sizespan = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.progress){
+    if(changes?.progress){
       this.progressChange = JSON.parse(JSON.stringify(this.progress));
       setTimeout(() => {
         this.onLoad();
