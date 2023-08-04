@@ -96,7 +96,8 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
           let fileName = this.dataSelected.reportName;
           if(fileName)
             fileName = this.dataSelected.reportName.split(".")[0];
-          this.downloadFile(res,fileName); 
+          this.downloadFile(res,fileName);
+          this.dialog.close(); 
         };
         this.loading = false; 
       });

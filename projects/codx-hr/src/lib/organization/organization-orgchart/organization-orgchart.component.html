@@ -2784,7 +2784,7 @@
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: 50 },
+        itemSize: { width: 170, height: selectedTeam.includes('No') ? 48 : 154 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2811,6 +2811,8 @@
           ? stylesObjChart
           : itemConfig.id === orgUnitID && !isCursor && !disableActive
           ? stylesObjChart
+          : selectedTeam.includes('No')
+          ? stylesObjChartNoneIsManager
           : stylesObjChartNone
       "
       (click)="clickActive(itemConfig.id)"
@@ -2846,7 +2848,7 @@
           </codx-mfunc>
         </div>
       </div>
-      <ng-container class="p-1 mb-1" *ngIf="itemConfig.context.employeeManager">
+      <ng-container class="p-1 mb-1" *ngIf="!selectedTeam.includes('No')">
         <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
           <codx-img
             class="symbol symbol-60 symbol-circle me-2"
