@@ -882,13 +882,31 @@
     </div>
     <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
       <span *ngFor="let emp of lstEmployeeID">
-        <span *ngIf="emp.rec == obj.recID"
+        <!-- <span *ngIf="emp.rec == obj.recID"
         class="badge badge-success border-0 ms-2"
         [innerHTML]="emp.id
             | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
             | async"
         >
-        </span>
+        </span> -->
+        <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+            <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                  [objectName]="emp.info?.employeeName" [width]="30">
+            </codx-img>
+              <div class="d-flex flex-column w-350px">
+                  <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                      {{emp.info?.employeeName}}</span>
+                  <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                      {{emp.positionName}}
+                  </span>
+                    <!-- <ng-template #positionTooltip>
+                      {{emp.positionName}}
+                  </ng-template>
+                    <ng-template #employeeNameTooltip>
+                      {{emp.positionName}}
+              </ng-template> -->
+          </div>
+        </div>
       </span>
     </div>
     <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
@@ -1168,13 +1186,31 @@
     </div>
     <div class="mb-3"  *ngIf="obj.employeeID && detail == '7'">
       <span *ngFor="let emp of lstEmployeeID">
-        <span *ngIf="emp.rec == obj.recID"
+        <!-- <span *ngIf="emp.rec == obj.recID"
         class="badge badge-success border-0 ms-2"
         [innerHTML]="emp.id
             | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
             | async"
         >
-        </span>
+        </span> -->
+        <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+          <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                [objectName]="emp.info?.employeeName" [width]="30">
+          </codx-img>
+            <div class="d-flex flex-column w-350px">
+                <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                    {{emp.info?.employeeName}}</span>
+                <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                    {{emp.positionName}}
+                </span>
+                  <!-- <ng-template #positionTooltip>
+                    {{emp.positionName}}
+                </ng-template>
+                  <ng-template #employeeNameTooltip>
+                    {{emp.positionName}}
+            </ng-template> -->
+        </div>
+      </div>
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">

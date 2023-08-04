@@ -74,7 +74,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   renderTrainLevel(event){
-    debugger
+    this.trainLevelStr = event.itemsSelected[0].text;
   }
 
   valChangeTrainLevel(event){

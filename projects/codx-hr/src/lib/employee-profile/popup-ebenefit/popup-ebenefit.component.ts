@@ -130,6 +130,16 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         this.actionType === 'copy' ||
         this.actionType === 'view'
       ) {
+        this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null}
+        })
         this.formGroup.patchValue(this.benefitObj);
         this.formModel.currentData = this.benefitObj;
         this.isAfterRender = true;
