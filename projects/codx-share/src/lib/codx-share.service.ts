@@ -182,7 +182,8 @@ export class CodxShareService {
     afterSave?: Function,
     formModel?: any,
     dataService?: any,
-    that: any = null
+    that: any = null,
+    customData = null
   ) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
@@ -329,7 +330,7 @@ export class CodxShareService {
           900,
           700,
           '',
-          [gridModel, data.recID],
+          [gridModel, data.recID , customData?.dataSource , customData?.refID , customData?.refType],
           null
         );
         break;
@@ -1299,26 +1300,45 @@ export class CodxShareService {
     if (template?.templateID == null && !releaseBackground ) {
       //TemplateID null -> bật form kí số nhưng ko có file
       this.releaseWithEmptySignFile(approveProcess, releaseCallback);
-    } else {
-      let dataJson =JSON.stringify(approveProcess?.data);
-      this.getReportList(template?.templateID,dataJson).subscribe((rpList:any)=>{
-        //Lấy đc Report List xuất file qua Report
-        if(rpList && false){//test
-          debugger
-          let x = rpList;
+    } else {   
+      let exportUpload = new ExportUpload();
+      exportUpload.templateRecID = template?.templateID;
+      exportUpload.templateType = template?.templateType;
+      exportUpload.convertToPDF = true;
+      exportUpload.title =approveProcess.title;
+      exportUpload.entityName =approveProcess.entityName;
+      exportUpload.module =approveProcess.module;
+
+      this.getRpListByTemplateID(template?.templateID).subscribe((rpList:any)=>{
+        if(rpList){
+          exportUpload.reportRecID = rpList?.recID;          
+          exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+          this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
         }
-        //Ko có Report List xuất file qua Export Data
         else{
-          this.exportTemplateData(approveProcess,template?.templateID,template?.templateType,true).subscribe((fileExport:any)=>{
-            if(fileExport){
-              debugger
-            }
-          })
-          
+          template?.templateType =="AD_ExcelTemplates" ? JSON.stringify([approveProcess?.data]) : JSON.stringify(approveProcess?.data);
+          this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
         }
-      })
+      })     
       
     }
+  }
+  exportFileRelease(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel) => void,
+    exportUpload:ExportUpload,
+  ) {
+    let signFile = this.createSignFile(approveProcess);
+    this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exported:any)=>{
+      if(exported){      
+        //debugger        
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+      }
+      else{
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+        //this.notificationsService.notify('Xuất file thất bại!','2');
+      }
+    })
   }
 
   releaseWithEmptySignFile(
@@ -1477,21 +1497,14 @@ export class CodxShareService {
     }
   }
 
-  exportTemplateData(approveProcess: ApproveProcess, templateRecID:string,templateType:string, convertToPDF = true){
+  exportTemplateData(module:string,exportUpload :ExportUpload){
     
-    let uploadExport = new ExportUpload();
-    uploadExport.templateRecID =templateRecID;
-    uploadExport.templateType =templateType;
-    uploadExport.convertToPDF =convertToPDF;
-    uploadExport.title =approveProcess.title;
-    uploadExport.dataJson = JSON.stringify([approveProcess?.data]);
-    uploadExport.entityName =approveProcess.entityName;
     return this.api.execSv(
-      approveProcess.module,
+      module,
       'ERM.Business.Core',
       'CMBusiness',
       'ExportUploadAsync',
-      [uploadExport]
+      [exportUpload]
     );
   }
 
@@ -1516,13 +1529,13 @@ export class CodxShareService {
     );
   }
 
-  getReportList(recID:any,dataJson:string){
+  getRpListByTemplateID(recID:any){
     return this.api.execSv(
       'rptrp',
-      'Codx.RptBusiness.CM',
-      'ReportBusiness',
-      'ExportTemplateAsync2',
-      [recID,dataJson]
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetByTemplateIDAsync',
+      [recID]
     );
   }
   //-------------------------------------------Hủy yêu cầu duyệt--------------------------------------------//
@@ -1673,5 +1686,7 @@ export class ExportUpload {
   convertToPDF: boolean ;
   entityName: string ;
   language:string;
+  reportRecID:string;
+  module:string;
 }
 //#endregion

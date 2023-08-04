@@ -89,6 +89,13 @@
   cursor: pointer;
 }
 
+.p-node__manager {
+  position: absolute;
+  left: 45%;
+  bottom: -6px;
+  cursor: pointer;
+}
+
 .p-collapse {
   display: flex;
   justify-content: space-between;

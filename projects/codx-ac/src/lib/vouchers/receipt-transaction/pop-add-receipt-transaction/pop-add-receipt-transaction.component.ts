@@ -327,6 +327,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.notification.notifyCode('SYS023', 0, '');
       return;
     } else {
+      this.updateFixedDims(e);
       this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
         .pipe(takeUntil(this.destroy$))
@@ -348,6 +349,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.notification.notifyCode('SYS021', 0, '');
       return;
     } else {
+      this.updateFixedDims(e);
       this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
         .pipe(takeUntil(this.destroy$))
@@ -771,7 +773,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          res.lineType = 1;
           switch (this.modeGrid) {
             case '1':
               idx = this.gridVouchersLine.dataSource.length;
@@ -1200,6 +1201,16 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         columnsGrid[i].isVisible = false;
       }
     });
+  }
+
+  updateFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
   }
   //#endregion
 }

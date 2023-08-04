@@ -373,51 +373,60 @@ export class LeadsComponent
   }
 
   getRoleMoreFunction(type) {
-    var functionMappings;
-    var isDisabled = (eventItem, data) => {
+    let functionMappings;
+    let isDisabled = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         this.checkMoreReason(data) || !data.applyProcess;
     };
-    var isCRD = (eventItem, data) => {
+    let isCRD = (eventItem, data) => {
       eventItem.disabled = data.closed || this.checkMoreReason(data);
     // eventItem.disabled  = false;
     };
-    var isEdit = (eventItem, data) => {
+    let isEdit = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
         data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
-    var isClosed = (eventItem, data) => {
+    let isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed;
     };
-    var isOpened = (eventItem, data) => {
+    let isOpened = (eventItem, data) => {
       eventItem.disabled = !data.closed;
     };
-    var isStartDay = (eventItem, data) => {
+    let isStartDay = (eventItem, data) => {
       eventItem.disabled =
         !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
     };
-    var isConvertLead = (eventItem, data) => {
+    let isConvertLead = (eventItem, data) => {
       eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
     };
-    var isOwner = (eventItem, data) => {
+    let isOwner = (eventItem, data) => {
       eventItem.disabled =
         !['0', '1', '2'].includes(data.status) || data.closed;
     };
-    var isFailReason = (eventItem, data) => {
+    let isFailReason = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         (data.status != '13' && this.checkMoreReason(data)) || !data.applyProcess;
     };
-    var isDisabledDefault = (eventItem, data) => {
+    let isDisabledDefault = (eventItem, data) => {
       eventItem.disabled = true;
     };
-    var isStartFirst = (eventItem, data) => {
+    let isStartFirst = (eventItem, data) => {
       eventItem.disabled = ![ '3', '5'].includes(data.status);
     };
+    let isChangeStatus = (eventItem, data) => {
+      eventItem.disabled = this.checkApplyProcess(data);
+    };
 
+    let isUpdateProcess = (eventItem, data) => {
+      eventItem.disabled = data.applyProcess;
+    };
+    let isDeleteProcess = (eventItem, data) => {
+      eventItem.disabled = !data.applyProcess;
+    };
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isStartDay, // mergeLead
@@ -437,9 +446,10 @@ export class LeadsComponent
       SYS04: isCRD,
       SYS102: isDisabledDefault,
       SYS02: isCRD,
-      CM0205_13:isStartFirst // tiep tup van
-      // CM0205_14 // co su dung quy trinh
-      // CM0205_15 // khong su dung quy trinh
+      CM0205_13:isStartFirst ,// tiep tup van,
+      CM0205_12:isChangeStatus,
+      CM0205_14: isUpdateProcess,// co su dung quy trinh
+      CM0205_15: isDeleteProcess // khong su dung quy trinh
     };
     return functionMappings[type];
   }
@@ -600,10 +610,16 @@ export class LeadsComponent
         this.popupOwnerRoles(data);
       },
       CM0205_12: (data) => {
-        this.OpenFormCopy(data);
+        this.openFormChangeStatus(data);
       },
       CM0205_13: (data) => {
         this.startFirst(data)
+      },
+      CM0205_14: (data) => {
+        this.updateProcess(data,true);
+      },
+      CM0205_15: (data) => {
+        this.updateProcess(data,false);
       },
       default: () => {
          console.log("default");
@@ -986,6 +1002,30 @@ export class LeadsComponent
         }
       });
   }
+  updateProcess(data,isCheck) {
+    this.notificationsService
+      .alertCode('DP033', null, ['"' + data?.leadName + ' bạn có muốn thêm quy trình xử lý"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+              var datas = [data.recID,this.applyForLead,isCheck ];
+              if(!isCheck) {
+                this.codxCmService.updateProcess(datas).subscribe((res) => {
+                  if (res) {
+                    this.dataSelected = res[0];
+                    this.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
+
+                    this.notificationsService.notifyCode('SYS007');
+                    this.view.dataService.update(this.dataSelected).subscribe();
+                  }
+                  this.detectorRef.detectChanges();
+                });
+              }
+        }
+      });
+  }
+
   openOrCloseLead(data, check) {
     var datas = [data.recID, data.processID, check];
     this.notificationsService
@@ -1277,7 +1317,7 @@ export class LeadsComponent
 
 
   }
-  OpenFormCopy(data) {
+  openFormChangeStatus(data) {
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,

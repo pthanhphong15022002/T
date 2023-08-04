@@ -2699,10 +2699,10 @@
       </div> -->
     <!-- #endregion-->
     <!-- </div> -->
-
     <button
       class="ms-auto btn btn-primary w-20 my-4 me-2"
       (click)="onSaveForm()"
+      [disabled]="disableEdit"
     >
       <i class="icon-save"></i>
       <codx-label
@@ -2784,7 +2784,7 @@
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: 150 },
+        itemSize: { width: 170, height: 50 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2846,7 +2846,7 @@
           </codx-mfunc>
         </div>
       </div>
-      <div class="p-1 mb-1">
+      <ng-container class="p-1 mb-1" *ngIf="itemConfig.context.employeeManager">
         <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
           <codx-img
             class="symbol symbol-60 symbol-circle me-2"
@@ -2970,8 +2970,13 @@
           ></codx-label>
         </div>
       </div> -->
-      </div>
-      <div *ngIf="itemConfig.context.isChildren" class="p-node">
+      </ng-container>
+      <div
+        *ngIf="itemConfig.context.isChildren"
+        [class]="
+          itemConfig.context.employeeManager ? 'p-node' : 'p-node__manager'
+        "
+      >
         <span
           #icon
           class="icon-20"

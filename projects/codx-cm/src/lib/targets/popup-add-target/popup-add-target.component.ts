@@ -228,7 +228,7 @@ export class PopupAddTargetComponent {
 
     if (!this.checkTarget()) {
       this.notiService.notifyCode(
-        'Mục tiêu năm không phù hợp với mục tiêu doanh số'
+        'CM032'
       );
       return;
     }
@@ -848,7 +848,7 @@ export class PopupAddTargetComponent {
     if (type == 'target') {
       if (this.data.target == 0) {
         this.notiService.notifyCode(
-          'Phải có chỉ tiêu doanh số cả năm lớn hơn 0 mới được sửa'
+          'CM033'
         );
         return;
       }
@@ -860,7 +860,7 @@ export class PopupAddTargetComponent {
         this.countClick = 0;
       } else {
         this.countClick += 1;
-        this.notiService.notifyCode('Cần có 2 nhân viên trở lên mới được sửa');
+        this.notiService.notifyCode('CM034');
         return;
       }
     }
@@ -893,7 +893,7 @@ export class PopupAddTargetComponent {
           if (this.checkWeight(id, target, 100, 'weight')) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
 
@@ -930,7 +930,7 @@ export class PopupAddTargetComponent {
           if (this.checkWeight(id, target, this.data.target, 'target')) {
             this.editingItem = null;
             this.typeChange = '';
-            this.notiService.notifyCode('Giá trị không hợp lệ');
+            this.notiService.notifyCode('CM035');
             return;
           }
           this.lstOwners[index].target = target;

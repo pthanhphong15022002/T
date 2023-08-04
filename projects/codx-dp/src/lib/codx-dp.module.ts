@@ -52,10 +52,11 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '@core/core.module';
 import { environment } from 'src/environments/environment';
 import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details-process/views-tabs-details/views-tabs-details.component';
-import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
+
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
 import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
+import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 
 export const routes: Routes = [
   {

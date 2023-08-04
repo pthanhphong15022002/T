@@ -44,6 +44,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   currentItem: any;
   scrolling: boolean = true;
 
+  viewsDefault: any;
   viewCrr: any;
   crrFuncID: any;
   constructor(
@@ -74,6 +75,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.initViewSetting();
     this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
+    this.viewsDefault = this.views;
   }
   changeFunction() {
     this.hrService.childMenuClick.subscribe((res) => {
@@ -99,7 +101,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL01':
         this.views = [
           {
-            id: '1',
+            //id: '1',
             type: ViewType.list,
             sameData: true,
             //active: true,
@@ -109,7 +111,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             },
           },
           {
-            id: '2',
+            //id: '2',
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
@@ -126,7 +128,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL02':
         this.views = [
           {
-            id: '3',
+            //id: '1',
             type: ViewType.list,
             sameData: true,
             //active: true,
@@ -136,7 +138,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             },
           },
           {
-            id: '4',
+            //id: '2',
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
@@ -171,42 +173,46 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     // }
   }
   viewChanged(event: any) {
-    // this.viewCrr = event?.view?.type;
-    // if (this.crrFuncID != this.funcID) {
-    //   this.cache.viewSettings(this.funcID).subscribe(views => {
-    //     if (views) {
-    //       this.crrFuncID = this.funcID;
-    //       this.views = [];
-    //       let idxActive = -1;
-    //       let viewOut = false;
-    //       this.views.forEach((v, index) => {
-    //         let idx = views.findIndex(x => x.view == v.type);
-    //         if (idx != -1) {
-    //           v.hide = false;
-    //           if (v.type != this.viewCrr) views.active = false;
-    //           else views.active = true;
-    //           if (views[idx].isDefault) idxActive = index;
-    //         } else {
-    //           v.hide = true;
-    //           v.active = false;
-    //           if (this.viewCrr == v.type) viewOut = true;
-    //         }
-    //         this.views.push(v);
-    //       });
-    //       if (!this.views.some((x) => x.active)) {
-    //         if (idxActive != -1) this.views[idxActive].active = true;
-    //         else this.views[0].active = true;
+    this.viewCrr = event?.view?.type;
+    this.initViewSetting();
+    if (this.crrFuncID != this.funcID) {
+      this.cache.viewSettings(this.funcID).subscribe(views => {
+        if (views) {
+          this.crrFuncID = this.funcID;
+          this.views = [];
+          let idxActive = -1;
+          let viewOut = false;
+          this.viewsDefault.forEach((v, index) => {
+            let idx = views.findIndex(x => x.view == v.type);
+            if (idx != -1) {
+              v.hide = false;
+              if (v.type != this.viewCrr) views.active = false;
+              else views.active = true;
+              if (views[idx].isDefault) idxActive = index;
+            } else {
+              v.hide = true;
+              v.active = false;
+              if (this.viewCrr == v.type) viewOut = true;
+            }
+            this.views.push(v);
+          });
+          if (!this.views.some((x) => x.active)) {
+            if (idxActive != -1) this.views[idxActive].active = true;
+            else this.views[0].active = true;
 
-    //         let viewModel =
-    //           idxActive != -1 ? this.views[idxActive] : this.views[0];
-    //         this.view.viewActiveType = viewModel.type;
-    //         this.view.viewChange(viewModel);
-    //         if (viewOut) this.view.load();
-    //       }
-    //       this.detectorRef.detectChanges();
-    //     }
-    //   })
-    // }
+            let viewModel =
+              idxActive != -1 ? this.views[idxActive] : this.views[0];
+            this.view.viewActiveType = viewModel.type;
+            this.view.viewChange(viewModel);
+            if (viewOut) this.view.load();
+          }
+          this.detectorRef.detectChanges();
+        }
+      })
+      //this.view.viewChange(this.view[0]);
+      //this.view.load();
+    }
+    return;
   }
   getFunction(funcID: string) {
     if (funcID) {

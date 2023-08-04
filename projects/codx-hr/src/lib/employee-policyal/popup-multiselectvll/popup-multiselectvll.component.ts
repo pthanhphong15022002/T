@@ -33,6 +33,11 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   onInit(): void {
     this.cache.valueList(this.vllName).subscribe((res)=>{
       this.lstData=res.datas
+
+      for(let i = 0; i < this.lstData.length; i++){
+          this.lstData[i].checked = false;
+      }
+
       if(this.lstDataSelected.length > 0){
         for(let i = 0; i< this.lstData.length; i++){
           for(let j = 0; j < this.lstDataSelected.length; j++){

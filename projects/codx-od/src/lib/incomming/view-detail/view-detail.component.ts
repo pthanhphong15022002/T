@@ -1251,13 +1251,22 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       default: {
+
+        //Biến động tự custom
+        var customData = 
+        {
+          refID : "",
+          refType : "",
+          dataSource: "",
+        }
         this.shareService.defaultMoreFunc(
           val,
           datas,
           this.afterSave,
           this.formModel,
           this.view.dataService,
-          this
+          this,
+          customData
         );
         // this.shareService.defaultMoreFunc(
         //   val,
@@ -1696,7 +1705,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
-        if (res2?.eSign == true && false) {
+        if (res2?.eSign == true) {
           let signFile = new ES_SignFile();
           signFile.recID = datas.recID;
           signFile.title = datas.title;
@@ -1756,45 +1765,46 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             }
           });
           //this.callfunc.openForm();
-        } //if (res2?.eSign == false)
+        } 
+        if (res2?.eSign == false)
         //xét duyệt
-        //this.release1(datas, processID);
-        else
-          this.shareService
-            .codxReleaseDynamic(
-              this.view.service,
-              datas,
-              category,
-              this.view.formModel.entityName,
-              this.formModel.funcID,
-              datas?.title ,
-              (res2: any) => {
-                if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
-                else {
-                  datas.status = '3';
-                  debugger
-                  this.notifySvr.notifyCode('ES007');
-                  // this.odService
-                  //   .updateDispatch(
-                  //     datas,
-                  //     '',
-                  //     false,
-                  //     this.referType,
-                  //     this.formModel?.entityName
-                  //   )
-                  //   .subscribe((item) => {
-                  //     if (item.status == 0) {
-                  //       this.view.dataService.update(item?.data).subscribe();
-                  //     } else this.notifySvr.notify(item.message);
-                  //   });
-                  //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
-                  if (datas.dispatchType == '3') {
-                    this.addInternalIncoming(datas);
-                  }
-                }
-                //this.notifySvr.notify(res2?.msgCodeError)
-              }
-            )
+        this.release(datas, processID);
+        // else
+        //   this.shareService
+        //     .codxReleaseDynamic(
+        //       this.view.service,
+        //       datas,
+        //       category,
+        //       this.view.formModel.entityName,
+        //       this.formModel.funcID,
+        //       datas?.title ,
+        //       (res2: any) => {
+        //         if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+        //         else {
+        //           datas.status = '3';
+        //           debugger
+        //           this.notifySvr.notifyCode('ES007');
+        //           // this.odService
+        //           //   .updateDispatch(
+        //           //     datas,
+        //           //     '',
+        //           //     false,
+        //           //     this.referType,
+        //           //     this.formModel?.entityName
+        //           //   )
+        //           //   .subscribe((item) => {
+        //           //     if (item.status == 0) {
+        //           //       this.view.dataService.update(item?.data).subscribe();
+        //           //     } else this.notifySvr.notify(item.message);
+        //           //   });
+        //           //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
+        //           if (datas.dispatchType == '3') {
+        //             this.addInternalIncoming(datas);
+        //           }
+        //         }
+        //         //this.notifySvr.notify(res2?.msgCodeError)
+        //       }
+        //     )
       });
   }
   handleViewFile(e: any) {
