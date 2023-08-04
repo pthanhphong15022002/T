@@ -95,7 +95,7 @@
           </ng-template>
         </e-tabitem>
 
-        <e-tabitem *ngIf="vatType == '2'">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
@@ -194,6 +194,20 @@
     >
       <i class="icon-close icon-18"></i>
     </button>
+  </div>
+
+  <div class="mb-1" style="margin-left: 30px">
+    <codx-dropdown-select
+      cssClass="border-0 fw-bold w-350px"
+      cssPopup="h-350px w-550px"
+      [isMulti]="false"
+      type="valuelist"
+      field="subType"
+      [refValue]="grvPurchaseInvoices['SubType'].referedValue"
+      [emptyText]="grvPurchaseInvoices.SubType?.headerText"
+      [value]="master.subType"
+      (valueChange)="onSelectChange($event)"
+    ></codx-dropdown-select>
   </div>
 </ng-template>
 

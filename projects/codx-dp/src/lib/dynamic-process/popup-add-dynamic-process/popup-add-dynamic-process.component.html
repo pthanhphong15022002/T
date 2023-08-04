@@ -532,7 +532,8 @@
             <div class="me-2">
               <codx-img
                 [width]="20"
-                [objectId]="perm.objectName"
+                [objectId]="perm.objectID"
+                [objectName]="perm.objectName"
                 objectType="AD_Users"
               >
               </codx-img>
@@ -596,7 +597,8 @@
             <div class="me-2">
               <codx-img
                 [width]="20"
-                [objectId]="perm.objectName"
+                [objectId]="perm.objectID"
+                [objectName]="perm.objectName"
                 objectType="AD_Users"
               >
               </codx-img>
@@ -659,7 +661,8 @@
             <div class="me-2">
               <codx-img
                 [width]="20"
-                [objectId]="perm.objectName"
+                [objectId]="perm.objectID"
+                [objectName]="perm.objectName"
                 objectType="AD_Users"
               >
               </codx-img>
@@ -1366,7 +1369,7 @@
                       <codx-mfunc
                         [formModel]="formModelField"
                         (clickMF)="clickMFFields($event, item1, !haveTitle)"
-                        [dataItem]="action != 'edit' ? moreDefaut : item"
+                        [dataItem]="moreDefaut"
                         [type]="'hover'"
                       >
                       </codx-mfunc>
@@ -1742,7 +1745,7 @@
               (click)="
                 clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
               "
-              [ngStyle]="{ 'background-color': setColorStep(itemStep)}"
+              [ngStyle]="{ 'background-color': setColorStep(itemStep) }"
               [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             >
               <ng-container
@@ -1750,7 +1753,7 @@
               >
                 <div
                   class="d-flex flex-column"
-                  [ngStyle]="{color: setColorTestStep(itemStep)}"
+                  [ngStyle]="{ color: setColorTestStep(itemStep) }"
                 >
                   <div class="d-flex">
                     <span
@@ -1758,7 +1761,9 @@
                       class="me-2 d-flex align-items-center"
                       [ngClass]="itemStep?.icon"
                       [ngStyle]="
-                      process?.stepsColorMode ? {} : { color: itemStep?.iconColor }
+                        process?.stepsColorMode
+                          ? {}
+                          : { color: itemStep?.iconColor }
                       "
                     ></span>
 
@@ -1829,7 +1834,7 @@
               class="list-stage cursor-pointer drap-drop cursor-pointer border-bottom has-action-menu"
               [ngClass]="viewStepCrr === viewStepReasonSuccess ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
-              [ngStyle]="{ 'background-color': setColorStep(stepSuccess)}"
+              [ngStyle]="{ 'background-color': setColorStep(stepSuccess) }"
             >
               <div
                 class="order"
@@ -1837,15 +1842,17 @@
               >
                 <i
                   [class]="stepSuccess?.icon"
-
-                  [ngStyle]="process?.stepsColorMode ? {} : { color: stepSuccess?.iconColor }
-                "
+                  [ngStyle]="
+                    process?.stepsColorMode
+                      ? {}
+                      : { color: stepSuccess?.iconColor }
+                  "
                 >
                 </i>
               </div>
               <div
                 class="d-flex flex-column"
-                [ngStyle]="{color: setColorTestStep(stepSuccess)}"
+                [ngStyle]="{ color: setColorTestStep(stepSuccess) }"
               >
                 <div class="fw-bold">
                   {{ stepSuccess?.stepName }}
@@ -1869,7 +1876,7 @@
               class="list-stage cursor-pointer drap-drop has-action-menu d-flex align-items-center"
               [ngClass]="viewStepCrr === viewStepReasonFail ? 'click' : ''"
               (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
-              [ngStyle]="{ 'background-color': setColorStep(stepFail)}"
+              [ngStyle]="{ 'background-color': setColorStep(stepFail) }"
             >
               <div
                 class="order"
@@ -1877,13 +1884,17 @@
               >
                 <i
                   [class]="stepFail?.icon"
-                  [ngStyle]="process?.stepsColorMode ? {} : { color: iconReasonFail?.iconColor }"
+                  [ngStyle]="
+                    process?.stepsColorMode
+                      ? {}
+                      : { color: iconReasonFail?.iconColor }
+                  "
                 >
                 </i>
               </div>
               <div
                 class="d-flex flex-column"
-                [ngStyle]="{color: setColorTestStep(stepFail)}"
+                [ngStyle]="{ color: setColorTestStep(stepFail) }"
               >
                 <div class="fw-bold">
                   {{ stepFail?.stepName }}
@@ -2443,7 +2454,7 @@
       type="button"
       class="btn btn-primary"
       [disabled]="isSaveStep"
-      (click)="isEditReason ? editReason() :saveStep()"
+      (click)="isEditReason ? editReason() : saveStep()"
     >
       <codx-label
         name="lblSuscess"
@@ -2965,9 +2976,9 @@
             >
               <div class="me-2">
                 <codx-img
-                  class
                   [width]="20"
-                  [objectId]="perm.objectName"
+                  [objectId]="perm.objectID"
+                  [objectName]="perm.objectName"
                   objectType="AD_Users"
                 >
                 </codx-img>
@@ -3026,7 +3037,8 @@
                   <codx-img
                     class="me-2"
                     [width]="25"
-                    [objectId]="role.objectName"
+                    [objectId]="role.objectID"
+                    [objectName]="role.objectName"
                     objectType="AD_Users"
                   >
                   </codx-img>
