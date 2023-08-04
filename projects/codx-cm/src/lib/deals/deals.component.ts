@@ -442,6 +442,7 @@ export class DealsComponent
       SYS102: isDelete,
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
+      CM0201_14: isUpdateBANT,
     };
 
     return functionMappings[type];
@@ -501,76 +502,86 @@ export class DealsComponent
     );
   }
   clickMF(e, data) {
-    const actions = {
-      SYS03: (data) => {
-        this.edit(data);
-      },
-      SYS04: (data) => {
-        this.copy(data);
-      },
-      SYS02: (data) => {
-        this.delete(data);
-      },
-      CM0201_1: (data) => {
-        this.moveStage(data);
-      },
-      CM0201_2: (data) => {
-        this.handelStartDay(data);
-      },
-      CM0201_3: (data) => {
-        this.moveReason(data, true);
-      },
-      CM0201_4: (data) => {
-        this.moveReason(data, false);
-      },
-      CM0201_8: (data) => {
-        this.openOrCloseDeal(data, true);
-      },
-      CM0201_7: (data) => {
-        this.popupOwnerRoles(data);
-      },
-      CM0201_9: (data) => {
-        this.openOrCloseDeal(data, false);
-      },
-      CM0201_5: (data) => {
-        this.exportFile(data);
-      },
-      CM0201_6: (data) => {
-        this.approvalTrans(data);
-      },
-      CM0201_12: (data) => {
-        this.confirmOrRefuse(true, data);
-      },
-      CM0201_13: (data) => {
-        this.confirmOrRefuse(false, data);
-      },
-      CM0201_14: (data) => {
-        this.openFormBANT(data);
-      },
-      SYS304: (data) => {
-        this.exportFiles(e, data);
-      },
-    };
+    this.dataSelected = data;
     this.titleAction = e.text;
-    if (actions.hasOwnProperty(e.functionID)) {
-      actions[e.functionID](data);
-    } else {
-      //Biến động tự custom
-      var customData = {
-        refID: data.processID,
-        refType: 'DP_Processes',
-        dataSource: '', // truyen sau
-      };
-      this.codxShareService.defaultMoreFunc(
-        e,
-        data,
-        this.afterSave,
-        this.view.formModel,
-        this.view.dataService,
-        this,
-        customData
-      );
-      this.detectorRef.detectChanges();
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+
+      case 'SYS04':
+        this.copy(data);
+        break;
+
+      case 'SYS02':
+        this.delete(data);
+        break;
+
+      case 'CM0201_1':
+        this.moveStage(data);
+        break;
+
+      case 'CM0201_2':
+        this.handelStartDay(data);
+        break;
+
+      case 'CM0201_3':
+        this.moveReason(data, true);
+        break;
+
+      case 'CM0201_4':
+        this.moveReason(data, false);
+        break;
+
+      case 'CM0201_8':
+        this.openOrCloseDeal(data, true);
+        break;
+
+      case 'CM0201_7':
+        this.popupOwnerRoles(data);
+        break;
+
+      case 'CM0201_9':
+        this.openOrCloseDeal(data, false);
+        break;
+
+      case 'CM0201_5':
+        this.exportFile(data);
+        break;
+
+      case 'CM0201_6':
+        this.approvalTrans(data);
+        break;
+
+      case 'CM0201_12':
+        this.confirmOrRefuse(true, data);
+        break;
+
+      case 'CM0201_13':
+        this.confirmOrRefuse(false, data);
+        break;
+
+      case 'CM0201_14':
+        this.openFormBANT(data);
+        break;
+
+      default:
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+        break;
     }
   }
   afterSave(e?: any, that: any = null) {
