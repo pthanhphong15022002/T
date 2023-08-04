@@ -1,4 +1,4 @@
-span<codx-views
+<codx-views
   #view
   [funcID]="funcID"
   [service]="service"
@@ -7,7 +7,7 @@ span<codx-views
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="button"
+  [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
