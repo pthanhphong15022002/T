@@ -402,7 +402,7 @@ export class PopupAddItemComponent
 
   onDimGroupIDChange(e): void {
     const options = new DataRequest();
-    options.entityName = 'IV_DimensionGroups';
+    options.entityName = 'IV_DimGroups';
     options.pageLoading = false;
     this.acService.loadDataAsync('IV', options).subscribe((dimGroups) => {
       this.selectedDimGroup = dimGroups.find((d) => d.dimGroupID === e.data);

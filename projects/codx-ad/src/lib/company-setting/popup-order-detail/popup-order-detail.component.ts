@@ -33,9 +33,7 @@ export class PopupOrderDetailComponent extends UIComponent {
   ) {
     super(inJector);
     this.grvTNOrders = dt?.data?.grvView;
-    this.cache.gridViewSetup('TNOrders', 'grvTNOrders').subscribe((res) => {
-      this.orderFormodel = res;
-    });
+
     this.orderRecID = dt?.data?.orderRecID;
     this.canExtend = dt?.data?.canExtend ?? true;
     this.dialog = dialog;
@@ -64,6 +62,9 @@ export class PopupOrderDetailComponent extends UIComponent {
   @ViewChild('moduleTmp', { static: true }) moduleTmp: TemplateRef<any>;
 
   onInit(): void {
+    this.cache.gridViewSetup('TNOrders', 'grvTNOrders').subscribe((res) => {
+      this.orderFormodel = res;
+    });
     this.adServices.getOrderDetail(this.orderRecID).subscribe((orderDetail) => {
       if (orderDetail) {
         this.order = orderDetail[0];
@@ -75,26 +76,26 @@ export class PopupOrderDetailComponent extends UIComponent {
     });
     this.clmnGrid = [
       {
+        field: '',
         headerTemplate: this.moduleHT,
-        width: 90,
         template: this.moduleTmp,
         textAlign: 'center',
       },
       {
+        field: '',
         headerTemplate: this.operatorHT,
-        width: 30,
         template: this.operatorTmp,
         textAlign: 'center',
       },
       {
+        field: '',
         headerTemplate: this.employeeHT,
-        width: 30,
         template: this.emplTmp,
         textAlign: 'center',
       },
       {
+        field: '',
         headerTemplate: this.totalHT,
-        width: 30,
         template: this.totalTmp,
         textAlign: 'center',
       },
