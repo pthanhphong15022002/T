@@ -372,7 +372,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeNone"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
       </div>
@@ -384,7 +384,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeWidth"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="pageFitModeWidth">
           Vừa chiều rộng
@@ -398,7 +398,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeHeight"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="pageFitModeHeight">
           Vừa chiều cao
@@ -412,7 +412,7 @@
           type="radio"
           name="flexRadioDefault"
           id="pageFitModeFit"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="pageFitModeFit">
           Vừa cả trang
@@ -429,7 +429,7 @@
           type="radio"
           name="orientation"
           id="orientationTop"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="orientationTop"> Từ trên </label>
       </div>
@@ -441,7 +441,7 @@
           type="radio"
           name="orientation"
           id="orientationLeft"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="orientationLeft">Bên trái </label>
       </div>
@@ -456,7 +456,7 @@
           type="radio"
           id="childrenPlacementVertical"
           name="placement"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="childrenPlacementVertical">
           Nằm ngang
@@ -470,7 +470,7 @@
           type="radio"
           id="childrenPlacementHorizontal"
           name="placement"
-          (change)="changeMode($event, true)"
+          (change)="changeMode($event)"
         />
         <label class="form-check-label" for="childrenPlacementHorizontal">
           Nằm dọc
@@ -2784,7 +2784,7 @@
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: 150 },
+        itemSize: { width: 170, height: 50 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2846,7 +2846,7 @@
           </codx-mfunc>
         </div>
       </div>
-      <div class="p-1 mb-1">
+      <ng-container class="p-1 mb-1" *ngIf="itemConfig.context.employeeManager">
         <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
           <codx-img
             class="symbol symbol-60 symbol-circle me-2"
@@ -2970,8 +2970,13 @@
           ></codx-label>
         </div>
       </div> -->
-      </div>
-      <div *ngIf="itemConfig.context.isChildren" class="p-node">
+      </ng-container>
+      <div
+        *ngIf="itemConfig.context.isChildren"
+        [class]="
+          itemConfig.context.employeeManager ? 'p-node' : 'p-node__manager'
+        "
+      >
         <span
           #icon
           class="icon-20"
