@@ -212,13 +212,13 @@ export class OrganizationOrgchartComponent {
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
-    height: '100%',
+    height: 'max-content',
     background: '#fff',
   };
   stylesObjChartNone = {
     border: '1px ridge gray',
     position: 'relative',
-    height: '100%',
+    height: 'max-content',
     background: '#fff',
   };
 
@@ -239,9 +239,9 @@ export class OrganizationOrgchartComponent {
   }
 
   //Settings
-  changeMode(e, checked: boolean) {
+  changeMode(e) {
     var target = e?.target?.id ?? e;
-    if (checked === true) {
+    if (e?.target?.id) {
       this.disableEdit = false;
     }
 
@@ -405,6 +405,7 @@ export class OrganizationOrgchartComponent {
       case 'buttonUserFalse':
         this.hasButtons = this.HasButtons.False;
         break;
+      // itemSize: { width: 170, height: 150 },
 
       //Nút chọn
       case 'selectionCheckboxAuto':
@@ -977,7 +978,7 @@ export class OrganizationOrgchartComponent {
         this.isGetManager(this.selectedTeam);
 
         for (const [key, value] of Object.entries(this.dataTree)) {
-          this.changeMode(value, false);
+          this.changeMode(value);
         }
       });
 
@@ -1142,7 +1143,8 @@ export class OrganizationOrgchartComponent {
         if (res.event) {
           this.dataService.update(res.event).subscribe(() => {
             // this.dataSource = this.newDataManager(this.dataService.data);
-            this.getDataPositionByID(this.orgUnitID, true);
+            this.isGetManager(this.selectedTeam);
+            //this.getDataPositionByID(this.orgUnitID, true);
             this.dt.detectChanges();
           });
           //this.view.dataService.add(res.event).subscribe();
@@ -1176,7 +1178,8 @@ export class OrganizationOrgchartComponent {
       .subscribe((res) => {
         if (res === true) {
           this.notify.notifyCode('SYS008');
-          this.getDataPositionByID(this.orgUnitID, true);
+          this.isGetManager(this.selectedTeam);
+          //this.getDataPositionByID(this.orgUnitID, true);
           this.dt.detectChanges();
         } else {
           this.notify.notifyCode('SYS022');

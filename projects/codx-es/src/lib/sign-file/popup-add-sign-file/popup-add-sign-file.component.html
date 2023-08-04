@@ -239,7 +239,7 @@
                 </div>
                 <div class="text-center sign-attachment" *ngIf="oSignFile==null">
                   <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data?.recID"
-                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="isTemplate? '1':'0'" [functionID]="formModelCustom.funcID" type="inline"
+                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="isTemplate? '0':'0'" [functionID]="formModelCustom.funcID" type="inline"
                     (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
                   </codx-attachment>                
                 </div>

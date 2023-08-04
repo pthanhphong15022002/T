@@ -703,6 +703,15 @@ export class CodxCmService {
       data
     );
   }
+  updateContentBANT(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'EditDealAsync',
+      data
+    );
+  }
   isExistLeadId(data) {
     return this.api.execSv<any>(
       'CM',
@@ -776,6 +785,16 @@ export class CodxCmService {
       data
     );
   }
+  updateProcess(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'UpdateProcessLeadAsync',
+      data
+    );
+  }
+
 
   moveStageCases(data) {
     return this.api.execSv<any>(
@@ -1319,11 +1338,11 @@ export class CodxCmService {
       [bussinessID, year]
     );
   }
+  //#region
 
   getOneObject(recID, className) {
     return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
   }
-
   //#region getParamModule
   getParam(sformName, category) {
     return this.api.exec<any>(
