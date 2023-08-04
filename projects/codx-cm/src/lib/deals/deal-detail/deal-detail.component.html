@@ -137,7 +137,7 @@
                   [ngbTooltip]="gridViewSetup['Probability']?.headerText"
                 >
                   <span
-                    class="icon-check_circle text-green icon-14 mt-1 pe-1"
+                    class="icon-check_circle text-green icon-14 me-1"
                   ></span>
                   <span
                     *ngIf="dataSelected?.probability; else defaultNull"
@@ -316,7 +316,7 @@
                         'background-color':
                           dataSelected?.steps['backgroundColor']
                       }"
-                      class="badge badge-sm d-flex align-items-center"
+                      class="badge badge-sm d-flex align-items-center me-0"
                     >
                       <span
                         [ngClass]="dataSelected?.steps['icon']"
@@ -337,7 +337,7 @@
                         [value]="dataSelected?.status"
                         [showText]="true"
                         [showBgColor]="true"
-                        class="badge badge-light badge-sm"
+                        class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
                     </ng-template>
@@ -578,21 +578,18 @@
                           class="me-2 label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
-                          fiedName="DealValue"
+                          fiedName="ExpectedClosed"
                         ></codx-label>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
-                          #dealValue
-                          *ngIf="dataSelected?.dealValue; else defaultNull"
+                          #expectedClosed
                           [innerHTML]="
-                            dataSelected?.dealValue
+                            dataSelected?.expectedClosed
                               | formatvalue
                                 : formModel
-                                : 'dealValue'
-                                : dealValue
-                                : 'CMDeals'
-                                : 'grvCMDeals'
+                                : 'expectedClosed'
+                                : expectedClosed
                               | async
                           "
                         ></span>
@@ -692,6 +689,10 @@
                     </div>
                   </div>
                 </div>
+<!--
+                <div class="row">
+
+                </div> -->
 
                 <div class="row">
                   <div class="col-6">
@@ -703,18 +704,50 @@
                           class="me-2 label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
-                          fiedName="ExpectedClosed"
+                          fiedName="DealValue"
                         ></codx-label>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
-                          #expectedClosed
+                          #dealValue
+                          *ngIf="dataSelected?.dealValue; else defaultNull"
                           [innerHTML]="
-                            dataSelected?.expectedClosed
+                            dataSelected?.dealValue
                               | formatvalue
                                 : formModel
-                                : 'expectedClosed'
-                                : expectedClosed
+                                : 'dealValue'
+                                : dealValue
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="DealValueTo"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #dealValueTo
+                          [innerHTML]="
+                            dataSelected?.dealValueTo
+                              | formatvalue
+                                : formModel
+                                : 'dealValueTo'
+                                : dealValueTo
+                                : 'CMDeals'
+                                : 'grvCMDeals'
                               | async
                           "
                         ></span>
@@ -722,6 +755,69 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ExpectedFrom"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #expectedFrom
+                          *ngIf="dataSelected?.expectedFrom"
+                          [innerHTML]="
+                            dataSelected?.expectedFrom
+                              | formatvalue
+                                : formModel
+                                : 'expectedFrom'
+                                : expectedFrom
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ExpectedTo"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #expectedTo
+                          [innerHTML]="
+                            dataSelected?.expectedTo
+                              | formatvalue
+                                : formModel
+                                : 'expectedTo'
+                                : expectedTo
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <div class="mt-5">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
@@ -996,7 +1092,7 @@
             [value]="item?.status"
             [showText]="true"
             [showBgColor]="true"
-            class="badge badge-light badge-sm"
+            class="badge badge-light badge-sm me-0"
           >
           </codx-vll>
           <div class="d-flex align-items-center" [ngbTooltip]="getSettingValue(item?.type, 'createOn')">

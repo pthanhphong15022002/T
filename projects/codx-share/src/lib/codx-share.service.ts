@@ -330,7 +330,7 @@ export class CodxShareService {
           900,
           700,
           '',
-          [gridModel, data.recID , null , customData?.refID , customData?.refType],
+          [gridModel, data.recID , customData?.dataSource , customData?.refID , customData?.refType],
           null
         );
         break;
@@ -1330,12 +1330,13 @@ export class CodxShareService {
   ) {
     let signFile = this.createSignFile(approveProcess);
     this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exported:any)=>{
-      if(exported){
-        debugger        
-        //this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+      if(exported){      
+        //debugger        
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
       }
       else{
-        this.notificationsService.notify('Xuất file thất bại!','2');
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+        //this.notificationsService.notify('Xuất file thất bại!','2');
       }
     })
   }

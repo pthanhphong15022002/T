@@ -418,6 +418,40 @@
       >
       </codx-label>
     </div>
+
+    <div *ngIf="this.action == 'add'" class="form-group d-flex align-item-center">
+      <codx-label
+        class="label-colon"
+        fiedName="status"
+        [formModel]="dialog?.formModel"
+        default="Trạng thái"
+      ></codx-label>
+
+      <div class="mx-5">
+        <codx-input
+          [name]="'status'"
+          type="radio"
+          style="width: 100%"
+          field="1"
+          [label]="'Mới'"
+          [checked]="isStatusNew"
+          (valueChange)="valueChangeRadio($event)"
+        >
+        </codx-input>
+      </div>
+
+      <div class="ms-5">
+        <codx-input
+          type="radio"
+          [name]="'status'"
+          field="3"
+          [checked]="!isStatusNew"
+          [label]="'Hoàn thành'"
+          (valueChange)="valueChangeRadio($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
   </div>
 
   <ng-container>

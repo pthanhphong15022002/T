@@ -95,6 +95,7 @@ import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-
 import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin-deal.component';
 import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-dashboard.component';
 import { PopupChangeAllocationRateComponent } from './targets/popup-change-allocation-rate/popup-change-allocation-rate.component';
+import { PopupBantDealComponent } from './deals/popup-bant-deal/popup-bant-deal.component';
 
 export const routes: Routes = [
   {
@@ -226,6 +227,8 @@ const T_Component: Type<any>[] = [
   PopupAssginDealComponent,
   InstanceDashboardComponent,
   PopupChangeAllocationRateComponent,
+  PopupBantDealComponent
+
 ];
 
 @NgModule({

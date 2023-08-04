@@ -1759,12 +1759,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   loadAccountControl(columnsGrid) {
-    if (!this.journal.multiCurrency) {
-      this.hideFields.push('DR2');
-    }
     if (this.journal.entryMode == '1') {
       this.hideFields.push('CR2');
       this.hideFields.push('CR');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        //this.hideFields.push('VATAmt2');
+      }
       let i = columnsGrid.findIndex((x) => x.fieldName == 'AccountID');
       if (i > -1) {
         columnsGrid[i].headerText = 'TK nợ';
@@ -1799,6 +1800,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         columnsGrid[idx].isRequire = false;
       }
       this.hideFields.push('OffsetAcctID');
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        this.hideFields.push('DR2');
+        //this.hideFields.push('TaxAmt2');
+        this.hideFields.push('CR2');
+      }
     }
   }
 
@@ -2336,6 +2342,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         });
     }
+    this.gridRefresh();
   }
 
   setMemo() {
@@ -2621,6 +2628,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.loadingform = false;
       this.dt.detectChanges();
     }, 500);
+  }
+
+  gridRefresh() {
+    this.hideFields = [];
+    if (
+      this.dialogData?.data.hideFields &&
+      this.dialogData?.data.hideFields.length > 0
+    ) {
+      this.hideFields = [...this.dialogData?.data.hideFields];
+    }
+    this.loadVisibleColumn(this.gridCash.columnsGrid);
+    this.loadAccountControl(this.gridCash.columnsGrid);
+    this.hideGrid(this.gridCash.columnsGrid, this.hideFields);
+    setTimeout(() => {
+      this.gridCash.refresh();
+    });
   }
 
   gridInitSet(columnsGrid) {

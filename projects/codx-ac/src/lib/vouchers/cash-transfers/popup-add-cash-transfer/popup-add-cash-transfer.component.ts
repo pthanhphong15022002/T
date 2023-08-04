@@ -1,4 +1,4 @@
-import { Component, Injector, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SwitchComponent } from '@syncfusion/ej2-angular-buttons';
 import {
@@ -19,11 +19,14 @@ import { JournalService } from '../../../journals/journals.service';
 import { CashTransferService } from '../cash-transfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
+import { dateToInt } from '@syncfusion/ej2-angular-spreadsheet';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
   templateUrl: './popup-add-cash-transfer.component.html',
   styleUrls: ['./popup-add-cash-transfer.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddCashTransferComponent extends UIComponent {
   //#region Constructor
@@ -55,7 +58,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
     gridViewName: 'grvVATInvoices',
     entityPer: 'AC_VATInvoices',
   };
-  fgVatInvoice: FormGroup;
+  fgVatInvoice: any;
   cashBooks: any[];
   gvsCashTransfers: any;
   gvsVATInvoices: any;
@@ -64,7 +67,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
-
   constructor(
     injector: Injector,
     private acService: CodxAcService,
@@ -83,17 +85,11 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
     );
-
+    this.fgVatInvoice = dialogData.data.fgVatInvoice;
     this.invoiceService = acService.createCrudService(
       injector,
       this.fmVATInvoice,
       'AC'
-    );
-
-    this.fgVatInvoice = this.codxService.buildFormGroup(
-      this.fmVATInvoice.formName,
-      this.fmVATInvoice.gridViewName,
-      this.fmVATInvoice.entityName
     );
   }
   //#endregion
@@ -143,7 +139,6 @@ export class PopupAddCashTransferComponent extends UIComponent {
     this.cache
       .gridViewSetup(this.fmVATInvoice.formName, this.fmVATInvoice.gridViewName)
       .subscribe((res) => {
-        console.log(res);
         this.gvsVATInvoices = res;
       });
 
@@ -155,22 +150,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
       .subscribe((res) => {
         this.journal = res;
 
-        // co dinh, danh sach
-        // if (['1', '2'].includes(this.journal.drAcctControl)) {
-        //   (
-        //     this.cbxCashAcctID.ComponentCurrent as CodxComboboxComponent
-        //   ).dataService.setPredicates(
-        //     [`@0.Contains(AccountID)`],
-        //     [`[${this.journal.drAcctID}]`]
-        //   );
-        // }
-
-        // mac dinh, co dinh
-        // if (['0', '1'].includes(this.journal.drAcctControl) && !this.isEdit) {
-        //   this.form.formGroup?.patchValue({
-        //     cashAcctID: this.journal.drAcctID,
-        //   });
-        // }
+        
 
         this.journalService.loadComboboxBy067(
           this.journal,
@@ -241,16 +221,13 @@ export class PopupAddCashTransferComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.form.formGroup);
-    console.log(this.form.formModel);
-    console.log(this.fgVatInvoice);
-    console.log(this.fmVATInvoice);
+    this.detectorRef.detectChanges(); 
   }
   //#endregion
 
   //#region Event
   onInputChange(e): void {
-    console.log('onInputChange', e);
+    // console.log('onInputChange', e);
 
     // e.data for valueChange and e.crrValue for controlBlur
     if (!e.data && !e.crrValue) {
