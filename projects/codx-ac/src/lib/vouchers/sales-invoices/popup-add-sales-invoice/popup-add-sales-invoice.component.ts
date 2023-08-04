@@ -290,7 +290,6 @@ export class PopupAddSalesInvoiceComponent
       'netAmt',
       'vatid',
       'vatAmt',
-      'lineType',
       'umid',
       'idiM1',
       'discAmt',
