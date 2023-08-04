@@ -350,6 +350,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   approve(mode, title: string, subTitle: string, comment: any) {
+    debugger
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
         if (this.pdfView.isAwait) {
@@ -379,10 +380,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
             .updateTransAwaitingStatus(this.transRecID, false)
             .subscribe((updateTransStatus) => {
               if (updateTransStatus) {
-                let result = {
-                  result: true,
-                  mode: mode.toString() == '5' ? 9 : mode, //dang ky
-                };
+                // let result = {
+                //   result: true,
+                //   mode: mode.toString() == '5' ? 9 : mode, //dang ky
+                // };
                 this.pdfView
                   .signPDF(mode, this.dialogSignFile.value.comment)
                   .then((value) => {
@@ -395,6 +396,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       this.esService.setupChange.next(true);
                       this.notify.notifyCode('SYS034');
                       this.canOpenSubPopup = false;
+                      this.dialog && this.dialog.close(result);
                     } else {
                       this.esService.setupChange.next(true);
                       this.canOpenSubPopup = false;
@@ -411,10 +413,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
                           this.notify.notifyCode('ES017');
                         });
                       this.notify.notifyCode('SYS021');
+                      this.dialog && this.dialog.close(result);
                     }
                   });
                 this.canOpenSubPopup = false;
-                this.dialog && this.dialog.close(result);
+                
               } else {
                 this.canOpenSubPopup = false;
                 let result = {
