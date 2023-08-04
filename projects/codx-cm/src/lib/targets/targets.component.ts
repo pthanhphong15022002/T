@@ -265,6 +265,7 @@ export class TargetsComponent
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? true : false;
       this.viewCurrent = valueView;
       this.loadTreeData(this.year?.toString());
@@ -404,7 +405,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -413,34 +414,12 @@ export class TargetsComponent
       {
         type: ViewType.chart,
         sameData: false,
-        active: true,
+        active: false,
         model: {
           panelRightRef: this.panelRight,
         },
       },
-      // {
-      //   sameData: false,
-      //   type: ViewType.schedule,
-      //   active: false,
-      //   request2: this.scheduleHeader,
-      //   request: this.schedules,
-      //   toolbarTemplate: this.footerButton,
-      //   showSearchBar: false,
-      //   showFilter: false,
-      //   model: {
-      //     eventModel: this.scheduleModel,
-      //     resourceModel: this.scheduleHeaderModel, //resource
-      //     template: this.cardTemplate,
-      //     template4: this.resourceHeader,
-      //     // template5: this.resourceTootip, //tooltip
-      //     template6: this.mfButton, //header
-      //     template8: this.contentTmp, //content
-      //     //template7: this.footerButton,//footer
-      //     // statusColorRef: 'EP022',
-      //   },
-      // },
     ];
-    this.detectorRef.detectChanges();
   }
   searchChanged(e) {}
   selectedChange(e) {}
