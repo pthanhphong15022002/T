@@ -379,57 +379,13 @@ export class CodxCalendarComponent
       if (value === false) value = '0';
       else value = '1';
 
-      // this.api
-      //   .exec<any>(
-      //     'ERM.Business.SYS',
-      //     'SettingValuesBusiness',
-      //     'AddUpdateByUserIDAsync',
-      //     ['WPCalendars', transType, value]
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       if (value === '0') {
-      //         this.calendarTempData = this.calendarTempData.filter((x) => {
-      //           return x.transType !== transType;
-      //         });
-      //       }
-      //       if (value === '1') {
-      //         this.calendarTempData.push(
-      //           ...this.calendarData.filter((x) => {
-      //             return x.transType === transType;
-      //           })
-      //         );
-      //       }
-
-      //       if (this.ejCalendar) {
-      //         this.ejCalendar.refresh();
-      //         this.ejCalendar.value = this.FDdate;
-      //       }
-
-      //       this.calendarService.calendarData$.next(this.calendarTempData);
-
-      //       this.api
-      //         .execSv(
-      //           'SYS',
-      //           'ERM.Business.SYS',
-      //           'SettingValuesBusiness',
-      //           'GetParamMyCalendarAsync',
-      //           'WPCalendars'
-      //         )
-      //         .subscribe((res: any) => {
-      //           if (res) {
-      //             for (const prop in res) {
-      //               if (res.hasOwnProperty(prop)) {
-      //                 this.calendarParams[prop] = JSON.parse(res[prop]);
-      //               }
-      //             }
-      //           }
-      //         });
-      //     }
-      //   });
       this.calendarParams[transType].ShowEvent = value;
+      let isRoomShow = this.calendarParams["EP_BookingRooms"].ShowEvent == '1';
       if (value === '0') {
         this.calendarTempData = this.calendarTempData.filter((x) => {
+          if (transType == 'CO_Meetings' && !isRoomShow && x.isRef){
+            return false;
+          }
           return x.transType !== transType;
         });
       }
