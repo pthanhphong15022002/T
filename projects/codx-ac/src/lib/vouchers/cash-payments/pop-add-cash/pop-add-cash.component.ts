@@ -87,30 +87,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cbxObjectID') cbxObjectID: any;
   @ViewChild('cbxPayee') cbxPayee: any;
   @ViewChild('cbxCashBook') cbxCashBook: any;
-  @ViewChild('tExchange')
-  set tExchange(eleExchange: any) {
-    setTimeout(() => {
-      if (eleExchange) {
-        let ele = eleExchange.elRef.nativeElement.firstElementChild
-          .firstElementChild.firstElementChild as any;
-        if (ele && ele.readOnly) {
-          ele.setAttribute('tabindex', '-1');
-        }
-      }
-    }, 1000);
-  }
-  @ViewChild('tVourcherNo')
-  set tVourcherNo(eleVourcherNo: any) {
-    setTimeout(() => {
-      if (eleVourcherNo) {
-        let ele = eleVourcherNo.elRef.nativeElement.firstElementChild
-          .firstElementChild as any;
-        if (ele && ele.readOnly) {
-          ele.setAttribute('tabindex', '-1');
-        }
-      }
-    }, 1000);
-  }
+  @ViewChild('cbxRefdoc') cbxRefdoc: any;
   headerText: string;
   dialog!: DialogRef;
   dialogData?: any;
@@ -215,6 +192,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       onlySelf: true,
       emitEvent: false,
     });
+    this.setTabindex();
   }
   //#endregion
 
@@ -2673,6 +2651,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  //bùa tabindex
+  setTabindex(){
+    let ins = setInterval(() => {
+      let v  = document?.querySelector('.ac-form-master')?.querySelectorAll('input')
+      if (v) {
+        clearInterval(ins);
+        console.log(this.cbxRefdoc);
+        for (let index = 0; index < v.length; index++) {
+          if ((v[index]as HTMLInputElement).readOnly) {
+            (v[index] as HTMLElement).setAttribute('tabindex','-1');
+          }else{
+            (v[index] as HTMLElement).setAttribute('tabindex',(index + 1).toString());
+          }       
+        }
+        // input refdoc
+        let ref = document.querySelector('.ac-refdoc').querySelectorAll('input');
+        (ref[0] as HTMLElement).setAttribute('tabindex','18')
+      }
+    })
+  }
+
   // onFocus() {
   //   let ins = setInterval(() => {
   //     if (this.cbxCashBook) {
@@ -2695,23 +2694,23 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
-    if (e.key == 'Tab') {
-      let element;
-      if (document.activeElement.className == 'e-tab-wrap') {
-        switch (this.cashpayment.subType) {
-          case '1':
-          case '3':
-          case '4':
-            element = document.getElementById('btnadd');
-            element.focus();
-            break;
-          case '2':
-            element = document.getElementById('btnset');
-            element.focus();
-            break;
-        }
-      }
-    }
+    // if (e.key == 'Tab') {
+    //   let element;
+    //   if (document.activeElement.className == 'e-tab-wrap') {
+    //     switch (this.cashpayment.subType) {
+    //       case '1':
+    //       case '3':
+    //       case '4':
+    //         element = document.getElementById('btnadd');
+    //         element.focus();
+    //         break;
+    //       case '2':
+    //         element = document.getElementById('btnset');
+    //         element.focus();
+    //         break;
+    //     }
+    //   }
+    // }
   }
   @HostListener('click', ['$event'])
   onClick(e) {

@@ -270,7 +270,7 @@
               </div>
             </div>
             <div class="row">
-              <div tabindex="8" class="col-12">
+              <div class="col-12">
                 <div class="form-group mb-0">
                   <codx-label style="white-space: nowrap !important;" fiedName="Memo" [formModel]="form.formModel">
                   </codx-label>
@@ -768,7 +768,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
-            <button tabindex="-1" id="btnadd" class="btn btn-sm btn-light-primary"
+            <button tabindex="17" id="btnadd" class="btn btn-sm btn-light-primary"
               (keydown.enter)="addRow('1'); $event.preventDefault();" (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
@@ -1197,7 +1197,7 @@
 <ng-template #addLine let-data>
   <ng-container *ngIf="form.formGroup">
     <div class="flex-column d-flex justify-content-start">
-      <div id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
+      <div id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
         <codx-input placeholder="Nhập kèm chứng từ gốc" style="width: 100%" class="fw-bold" [Group]="form.formGroup"
           field="refDocs" [formModel]="form.formModel" (valueChange)="valueChange($event)">
