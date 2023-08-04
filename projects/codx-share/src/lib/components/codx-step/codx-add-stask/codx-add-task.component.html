@@ -60,6 +60,39 @@
       </div>
     </div>
     <!--End Link group -->
+    <div *ngIf="this.action == 'add' && isStart" class="form-group d-flex align-item-center">
+      <codx-label
+        class="label-colon"
+        fiedName="status"
+        [formModel]="dialog?.formModel"
+        default="Trạng thái"
+      ></codx-label>
+
+      <div class="mx-5">
+        <codx-input
+          [name]="'status'"
+          type="radio"
+          style="width: 100%"
+          field="1"
+          [label]="'Mới'"
+          [checked]="isStatusNew"
+          (valueChange)="valueChangeRadio($event)"
+        >
+        </codx-input>
+      </div>
+
+      <div class="ms-5">
+        <codx-input
+          type="radio"
+          [name]="'status'"
+          field="3"
+          [checked]="!isStatusNew"
+          [label]="'Hoàn thành'"
+          (valueChange)="valueChangeRadio($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
     <div
       *ngIf="step"
       class="form-group d-flex justify-content-between align-item-center w-100"
@@ -193,7 +226,7 @@
     </div>
     <!--End ten Cong Viec -->
 
-    <div class="form-group d-flex justify-content-between">
+    <div class="form-group d-flex justify-content-between" *ngIf="isStart">
       <div class="me-2">
         <codx-label
           fiedName="startDate"
@@ -262,28 +295,47 @@
           >
           </codx-label>
           <div class="d-flex justify-content-between row">
-            <div class="col-6">
+            <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
                 [formModel]="dialog?.formModel"
                 [crrValue]="stepsTasks?.durationDay"
-                type="text"
                 (valueChange)="valueChangeText($event)"
-                [disabled]="true"
+                [disabled]="isStart"
+                type="number"
+                min="0"
               >
               </codx-input>
+              <div class="position-absolute text-gray-400" style="top:8px; right: 14px;">
+                <codx-label
+                name="titleDate"
+                [formModel]="form?.formModel"
+                default="Ngày"
+              >
+              </codx-label>
+              </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-6 position-relative ">
               <codx-input
                 field="durationHour"
                 [formModel]="dialog?.formModel"
-                type="text"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
-                [disabled]="true"
+                type="number"
+                min="0"
+                [disabled]="isStart"
               >
               </codx-input>
+              <div class="position-absolute text-gray-400" style="top:8px; right: 14px;">
+                <codx-label
+                name="titleHour"
+                [formModel]="form?.formModel"
+                default="Giờ"
+              >
+              </codx-label>
+              </div>
+             
             </div>
           </div>
         </div>
@@ -476,7 +528,7 @@
       ></codx-label>
     </span>
   </button>
-  <button type="button" class="btn btn-primary" (click)="saveData()">
+  <button type="button" class="btn btn-primary" (click)="beforeSave()">
     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
   </button>
 </ng-template>

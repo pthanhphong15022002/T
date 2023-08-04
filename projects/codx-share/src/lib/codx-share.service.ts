@@ -226,7 +226,7 @@ export class CodxShareService {
           );
           dialogApprove.closed.subscribe((x) => {
             if (x.event?.result) {
-              data.statusApproval = x.event?.mode;
+              data.unbounds.statusApproval = x.event?.mode;
               dataService.update(data).subscribe();
             }
           });
@@ -1304,10 +1304,14 @@ export class CodxShareService {
       let exportUpload = new ExportUpload();
       exportUpload.templateRecID = template?.templateID;
       exportUpload.templateType = template?.templateType;
-      exportUpload.convertToPDF = true;
+      exportUpload.convertToPDF = false;
       exportUpload.title =approveProcess.title;
       exportUpload.entityName =approveProcess.entityName;
       exportUpload.module =approveProcess.module;
+      exportUpload.objectID=approveProcess.recID;
+      exportUpload.objectType=approveProcess.entityName;
+      exportUpload.referType =  'source';
+      exportUpload.functionID=approveProcess.funcID;
 
       this.getRpListByTemplateID(template?.templateID).subscribe((rpList:any)=>{
         if(rpList){
@@ -1330,12 +1334,13 @@ export class CodxShareService {
   ) {
     let signFile = this.createSignFile(approveProcess);
     this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exported:any)=>{
-      if(exported){
-        debugger        
-        //this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+      if(exported){      
+        //debugger        
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
       }
       else{
-        this.notificationsService.notify('Xuất file thất bại!','2');
+        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+        //this.notificationsService.notify('Xuất file thất bại!','2');
       }
     })
   }
@@ -1507,7 +1512,7 @@ export class CodxShareService {
     );
   }
 
-  exportExcelData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+  exportExcelData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = false){
     let dataJson = JSON.stringify([approveProcess?.data]);
     return this.api.execSv(
       approveProcess.module,
@@ -1517,7 +1522,7 @@ export class CodxShareService {
       [dataJson, templateRecID,convertToPDF]
     );
   }
-  exportWordData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = true){
+  exportWordData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = false){
     let dataJson = JSON.stringify([approveProcess?.data]);
     return this.api.execSv(
       approveProcess.module,
@@ -1687,5 +1692,9 @@ export class ExportUpload {
   language:string;
   reportRecID:string;
   module:string;
+  objectID:string;
+  objectType:string;
+  referType:string;
+  functionID:string;
 }
 //#endregion

@@ -28,7 +28,7 @@
       </div>
     </ng-template>
     <ng-template #header let-data>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between mb-2">
         <div
           class="text-info d-flex align-items-center"
           [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
@@ -49,8 +49,7 @@
             "
           ></span>
         </div>
-        <div></div>
-        <div>
+        <div class="toolbar-detail">
           <codx-mfunc
             [hideMF]="false"
             [dataItem]="dataSelected"
@@ -64,7 +63,7 @@
       </div>
 
       <div class="container_detail mt-1">
-        <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex justify-content-between mb-3">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-start">
               <div class="me-4">
@@ -578,21 +577,18 @@
                           class="me-2 label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
-                          fiedName="DealValue"
+                          fiedName="ExpectedClosed"
                         ></codx-label>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
-                          #dealValue
-                          *ngIf="dataSelected?.dealValue; else defaultNull"
+                          #expectedClosed
                           [innerHTML]="
-                            dataSelected?.dealValue
+                            dataSelected?.expectedClosed
                               | formatvalue
                                 : formModel
-                                : 'dealValue'
-                                : dealValue
-                                : 'CMDeals'
-                                : 'grvCMDeals'
+                                : 'expectedClosed'
+                                : expectedClosed
                               | async
                           "
                         ></span>
@@ -692,6 +688,10 @@
                     </div>
                   </div>
                 </div>
+<!--
+                <div class="row">
+
+                </div> -->
 
                 <div class="row">
                   <div class="col-6">
@@ -703,18 +703,50 @@
                           class="me-2 label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
-                          fiedName="ExpectedClosed"
+                          fiedName="DealValue"
                         ></codx-label>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
-                          #expectedClosed
+                          #dealValue
+                          *ngIf="dataSelected?.dealValue; else defaultNull"
                           [innerHTML]="
-                            dataSelected?.expectedClosed
+                            dataSelected?.dealValue
                               | formatvalue
                                 : formModel
-                                : 'expectedClosed'
-                                : expectedClosed
+                                : 'dealValue'
+                                : dealValue
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="DealValueTo"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #dealValueTo
+                          [innerHTML]="
+                            dataSelected?.dealValueTo
+                              | formatvalue
+                                : formModel
+                                : 'dealValueTo'
+                                : dealValueTo
+                                : 'CMDeals'
+                                : 'grvCMDeals'
                               | async
                           "
                         ></span>
@@ -722,6 +754,69 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ExpectedFrom"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #expectedFrom
+                          *ngIf="dataSelected?.expectedFrom"
+                          [innerHTML]="
+                            dataSelected?.expectedFrom
+                              | formatvalue
+                                : formModel
+                                : 'expectedFrom'
+                                : expectedFrom
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="mb-1 d-flex align-items-top">
+                      <div
+                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                      >
+                        <codx-label
+                          class="me-2 label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="ExpectedTo"
+                        ></codx-label>
+                      </div>
+                      <div class="text-dark fw-bold codx-textcontent">
+                        <span
+                          #expectedTo
+                          [innerHTML]="
+                            dataSelected?.expectedTo
+                              | formatvalue
+                                : formModel
+                                : 'expectedTo'
+                                : expectedTo
+                                : 'CMDeals'
+                                : 'grvCMDeals'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <div class="mt-5">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">

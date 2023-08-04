@@ -15,6 +15,8 @@ export class ViewTreeTargetsComponent implements OnInit {
   @Input() viewCurrent: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
+  @Output() eventClickShow = new EventEmitter<any>();
+
   constructor(private decimalPipe: DecimalPipe) {}
 
   ngOnInit(): void {
@@ -36,6 +38,7 @@ export class ViewTreeTargetsComponent implements OnInit {
     if (!parent.isItem) {
       parent.data.items = parent.data.items;
     }
+    console.log(this.dataTree);
   }
 
   clickMF(e, data) {
