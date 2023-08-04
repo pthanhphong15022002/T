@@ -563,7 +563,9 @@ export class DealsComponent
       case 'CM0201_14':
         this.openFormBANT(data);
         break;
-
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
       default:
         var customData = {
           refID: data.processID,
@@ -1770,13 +1772,13 @@ export class DealsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    if (data.refID) {
-      this.codxCmService.getDatasExport(data.refID).subscribe((dts) => {
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
+    let customData = {
+      refID: data.processID,
+      refType: 'DP_Processes',
+      dataSource: '', // truyen sau
+    };
+    if (data?.refID) {
+      this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) customData.dataSource = dts;
         this.codxShareService.defaultMoreFunc(
           e,
