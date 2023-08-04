@@ -2038,16 +2038,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //add trường tùy chỉnh
-  setMoreDefault(item) {
-    if (this.action != 'edit') return this.moreDefaut;
-    return {
-      share: item?.share,
-      write: item?.write,
-      read: item?.read,
-      download: item?.download,
-      delete: item?.delete,
-    };
-  }
+  // setMoreDefault(item) {
+  //   if (this.action != 'edit') return this.moreDefaut;
+  //   return {
+  //     share: item?.share,
+  //     write: item?.write,
+  //     read: item?.read,
+  //     download: item?.download,
+  //     delete: item?.delete,
+  //   };
+  // }
 
   clickMFFields(e, data, enabled) {
     console.log(e.functionID);
