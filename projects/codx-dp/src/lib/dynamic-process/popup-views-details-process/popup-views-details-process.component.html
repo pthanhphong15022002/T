@@ -69,7 +69,7 @@
         <a
           (click)="clickMenu(item)"
           [class]="
-            'tab-item text-dark fw-bold d-flex align-items-center justify-content-center' +
+            'tab-item text-dark fw-bold d-flex align-items-center justify-content-center  text-hover-primary' +
             ' ' +
             (item.isActive ? 'tab-active' : '')
           "
@@ -244,7 +244,7 @@
       </div>
       <ng-container
         [ngTemplateOutlet]="dayTem"
-        [ngTemplateOutletContext]="{data:{data, roleType: 'S'}}"
+        [ngTemplateOutletContext]="{ data: { data, roleType: 'S' } }"
       ></ng-container>
     </div>
   </ng-template>
@@ -287,12 +287,11 @@
       <div class="mt-3">
         <ng-container
           [ngTemplateOutlet]="dayTem"
-          [ngTemplateOutletContext]="{data:{data, roleType:'O'}}"
+          [ngTemplateOutletContext]="{ data: { data, roleType: 'O' } }"
         ></ng-container>
       </div>
     </div>
   </ng-template>
-
 </ng-template>
 
 <ng-template #viewTask let-data="task">
@@ -309,27 +308,27 @@
       <div class="mt-3">
         <ng-container
           [ngTemplateOutlet]="dayTem"
-          [ngTemplateOutletContext]="{data:{data, roleType:'O'}}"
+          [ngTemplateOutletContext]="{ data: { data, roleType: 'O' } }"
         ></ng-container>
       </div>
     </div>
-    <div style="margin-left: 35px;">
+    <div style="margin-left: 35px">
       <codx-attachment
-      #attachment
-      [objectType]="'DP_Steps_Tasks'"
-      [objectId]="data?.recID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      [showMessage]="0"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      referType="source"
-      displayThumb="full"
-    >
-    </codx-attachment>
+        #attachment
+        [objectType]="'DP_Steps_Tasks'"
+        [objectId]="data?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        displayThumb="full"
+      >
+      </codx-attachment>
     </div>
   </div>
 </ng-template>
@@ -461,9 +460,15 @@
         default="giờ"
       ></codx-label>
     </div>
-    <div class="d-flex align-items-center ms-2" *ngIf="data?.data.roles?.length > 0">
+    <div
+      class="d-flex align-items-center ms-2"
+      *ngIf="data?.data.roles?.length > 0"
+    >
       <ng-container *ngFor="let perm of data?.data.roles; index as i">
-        <div *ngIf="perm.roleType == data?.roleType" class="d-flex align-items-center">
+        <div
+          *ngIf="perm.roleType == data?.roleType"
+          class="d-flex align-items-center"
+        >
           <codx-imgs
             class="me-2 d-flex align-items-center"
             [width]="25"

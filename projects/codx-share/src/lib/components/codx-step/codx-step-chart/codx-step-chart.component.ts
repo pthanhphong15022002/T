@@ -13,11 +13,10 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
 import { DP_Instances_Steps } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
 
-
 @Component({
   selector: 'codx-step-chart',
   templateUrl: './codx-step-chart.component.html',
-  styleUrls: ['./codx-step-chart.component.scss']
+  styleUrls: ['./codx-step-chart.component.scss'],
 })
 export class CodxStepChartComponent
   extends UIComponent
@@ -30,7 +29,7 @@ export class CodxStepChartComponent
   @Input() isShowTypeTime = true;
   @Input() isRoleAll = true;
   @Input() listSteps: DP_Instances_Steps[] = [];
-  @Input() type = 'DP' || 'CM'
+  @Input() type = 'DP' || 'CM';
 
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
@@ -53,11 +52,11 @@ export class CodxStepChartComponent
     color: 'color',
   };
   formModelInstances = {
-    functionID: "DP21",
-    formName: "DPInstances",
-    entityName: "DP_Instances",
-    gridViewName: "grvDPInstances",
-  }
+    functionID: 'DP21',
+    formName: 'DPInstances',
+    entityName: 'DP_Instances',
+    gridViewName: 'grvDPInstances',
+  };
 
   tags = '';
   //#region timelineSettingsHour
@@ -185,7 +184,7 @@ export class CodxStepChartComponent
 
   constructor(
     private inject: Injector,
-    private changeDetec: ChangeDetectorRef,
+    private changeDetec: ChangeDetectorRef
   ) {
     super(inject);
   }
@@ -200,13 +199,11 @@ export class CodxStepChartComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.instance) {
-      let instanceID = this.type == "DP" ? this.instance?.recID : this.instance?.refID;
-      this.getDataGanttChart(
-        instanceID,
-      this.instance?.processID
-      );
+      let instanceID =
+        this.type == 'DP' ? this.instance?.recID : this.instance?.refID;
+      this.getDataGanttChart(instanceID, this.instance?.processID);
     }
-    if(changes.typeTime){
+    if (changes.typeTime) {
       this.changeViewTimeGant(this.typeTime);
     }
   }
@@ -219,23 +216,23 @@ export class CodxStepChartComponent
   //ganttchar
   getDataGanttChart(instanceID, processID) {
     this.api
-    .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
-      instanceID,
-      processID,
-    ])
-    .subscribe((res) => {
-      if (res && res?.length > 0) {
-        this.ganttDs = res;
-        this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
-        let test = this.ganttDsClone.map((i) => {
-          return {
-            name: i.name,
-            start: i.startDate,
-            end: i.endDate,
-          };
-        });
-      }
-    });
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+        instanceID,
+        processID,
+      ])
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.ganttDs = res;
+          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
+          let test = this.ganttDsClone.map((i) => {
+            return {
+              name: i.name,
+              start: i.startDate,
+              end: i.endDate,
+            };
+          });
+        }
+      });
   }
 
   clickDetailGanchart(recID) {
@@ -249,39 +246,38 @@ export class CodxStepChartComponent
       };
       let listRefIDAssign = '';
       //a thao viết lấy ref listRefIDAssign
-      switch (data?.type) {
-        case 'T':
-          listRefIDAssign = data.recID;
-          break;
-        case 'G':
-          for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
-            if (this.ganttDsClone[i]?.type == 'T') {
-              if (listRefIDAssign && listRefIDAssign.trim() != '')
-                listRefIDAssign += ';' + this.ganttDsClone[i].recID;
-              else listRefIDAssign = this.ganttDsClone[i].recID;
-            } else break;
-          }
-          break;
-        case 'P':
-          for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
-           
-            if (this.ganttDsClone[i]?.type == 'G') {
-              continue;
-            } else if (this.ganttDsClone[i]?.type == 'T') {
-              if (listRefIDAssign && listRefIDAssign.trim() != '')
-                listRefIDAssign += ';' + this.ganttDsClone[i].recID;
-              else listRefIDAssign = this.ganttDsClone[i].recID;
-            } else break;
-          }
-            //thieu cong task ngooai mai hoir thuan de xets
-          break;
+      if (data?.type == 'P') {
+        for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
+          if (this.ganttDsClone[i]?.type == 'G') {
+            continue;
+          } else if (this.ganttDsClone[i]?.type == 'T') {
+            if (listRefIDAssign && listRefIDAssign.trim() != '')
+              listRefIDAssign += ';' + this.ganttDsClone[i].recID;
+            else listRefIDAssign = this.ganttDsClone[i].recID;
+          } else break;
+        }
+        //thieu cong task ngooai mai hoir thuan de xets
+      } else if (data?.type == 'G') {
+        for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
+          if (this.ganttDsClone[i]?.type == 'T') {
+            if (listRefIDAssign && listRefIDAssign.trim() != '')
+              listRefIDAssign += ';' + this.ganttDsClone[i].recID;
+            else listRefIDAssign = this.ganttDsClone[i].recID;
+          } else break;
+        }
+      } else {
+        listRefIDAssign = data.recID;
       }
       //end
       let instanceStep: DP_Instances_Steps;
-      if(data?.type == 'P'){
-        instanceStep = this.listInstanceStep?.find(step => step.recID = data.recID)
-      }else{
-        instanceStep = this.listInstanceStep?.find(step => step.recID = data.stepID)
+      if (data?.type == 'P') {
+        instanceStep = this.listInstanceStep?.find(
+          (step) => (step.recID = data.recID)
+        );
+      } else {
+        instanceStep = this.listInstanceStep?.find(
+          (step) => (step.recID = data.stepID)
+        );
       }
 
       let listData = {
@@ -306,11 +302,11 @@ export class CodxStepChartComponent
       );
       dialog.closed.subscribe((data) => {
         let value = data?.event;
-        if(value?.group || value?.task){
+        if (value?.group || value?.task) {
           this.getDataGanttChart(
             this.instance?.refID || this.instance?.recID,
             this.instance?.processID
-            );
+          );
         }
       });
     }
