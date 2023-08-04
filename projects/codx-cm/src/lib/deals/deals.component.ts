@@ -538,7 +538,27 @@ export class DealsComponent
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
       actions[e.functionID](data);
+    } else {
+      //Biến động tự custom
+      var customData = {
+        refID: data.processID,
+        refType: 'DP_Processes',
+        dataSource: '', // truyen sau
+      };
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
+      this.detectorRef.detectChanges();
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //đợi xem chung sửa sao rồi làm tiếp
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);

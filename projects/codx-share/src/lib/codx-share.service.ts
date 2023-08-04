@@ -330,7 +330,7 @@ export class CodxShareService {
           900,
           700,
           '',
-          [gridModel, data.recID , null , customData?.refID , customData?.refType],
+          [gridModel, data.recID , customData?.dataSource , customData?.refID , customData?.refType],
           null
         );
         break;
