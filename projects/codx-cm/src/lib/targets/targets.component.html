@@ -349,7 +349,7 @@
   <div class="container">
     <div
       class="d-flex"
-      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
     >
       <codx-mfunc
         *ngIf="viewCurrent == '1'"
@@ -415,6 +415,7 @@
           </div>
         </div>
         <span
+          *ngIf="viewCurrent == '1'"
           class="fw-bold text-gray-600 w-30px"
           [innerHTML]="
             item?.currencyID
@@ -512,7 +513,7 @@
 <ng-template #templateYear let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="item?.target > 0"
@@ -550,7 +551,7 @@
 <ng-template #templateQuarter1 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="sumQuarter(item.targetsLines, 1) > 0"
@@ -589,7 +590,7 @@
 <ng-template #templateQuarter2 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="sumQuarter(item.targetsLines, 2) > 0"
@@ -628,7 +629,7 @@
 <ng-template #templateQuarter3 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="sumQuarter(item.targetsLines, 3) > 0"
@@ -667,7 +668,7 @@
 <ng-template #templateQuarter4 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="sumQuarter(item.targetsLines, 4) > 0"
@@ -706,7 +707,7 @@
 <ng-template #templateMonth1 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 1) > 0"
@@ -745,7 +746,7 @@
 <ng-template #templateMonth2 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 2) > 0"
@@ -784,7 +785,7 @@
 <ng-template #templateMonth3 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 3) > 0"
@@ -823,7 +824,7 @@
 <ng-template #templateMonth4 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 4) > 0"
@@ -862,7 +863,7 @@
 <ng-template #templateMonth5 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 5) > 0"
@@ -900,7 +901,7 @@
 <ng-template #templateMonth6 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 6) > 0"
@@ -938,7 +939,7 @@
 <ng-template #templateMonth7 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 7) > 0"
@@ -977,7 +978,7 @@
 <ng-template #templateMonth8 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 8) > 0"
@@ -1016,7 +1017,7 @@
 <ng-template #templateMonth9 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 9) > 0"
@@ -1055,7 +1056,7 @@
 <ng-template #templateMonth10 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 10) > 0"
@@ -1093,7 +1094,7 @@
 <ng-template #templateMonth11 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 11) > 0"
@@ -1131,7 +1132,7 @@
 <ng-template #templateMonth12 let-item>
   <div
     class="mt-1 mb-1 d-flex align-items-start"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent-user'"
+    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
       *ngIf="getTargetMonth(item.targetsLines, 12) > 0"
