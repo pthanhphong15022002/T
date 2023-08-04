@@ -410,10 +410,10 @@ export class DealsComponent
       eventItem.disabled = data.status != '0';
     };
     let isApprovalTrans = (eventItem, data) => {
-      eventItem.disabled =
-        (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        data?.approveRule != '1';
+      eventItem.disabled =  (data.closed && data.status != '1') ||['1', '0'].includes(data.status) ||  data?.approveRule != '1';
+    };
+    let isUpdateBANT = (eventItem, data) => {
+        eventItem.disabled =   (data.closed && data.status != '1') || data.status == '0' || this.checkMoreReason(data);
     };
 
     functionMappings = {
@@ -435,7 +435,7 @@ export class DealsComponent
       SYS04: isCopy,
       SYS102: isDelete,
       SYS02: isDelete,
-      CM0201_14:isDisabled,
+      CM0201_14:isUpdateBANT,
     };
 
     return functionMappings[type];
