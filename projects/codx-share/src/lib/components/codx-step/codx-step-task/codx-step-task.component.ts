@@ -69,7 +69,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isDeepCopy = true; // copy sâu
   @Input() isAddTask = false;
   @Input() isShowStep = false;
-  @Input() isShowElement = true;
+  @Input() isShowElement = true;       
   @Input() isShowComment = true;
   @Input() isShowBtnAddTask = true;
   @Input() isSaveProgress = true; // lưu progress vào db
@@ -1189,6 +1189,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       listTask: this.listTask,
       isEditTimeDefault: this.currentStep?.leadtimeControl,
       groupTaskID, // trường hợp chọn thêm từ nhóm
+      isStart: this.isStart,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

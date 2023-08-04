@@ -688,7 +688,7 @@
                     </div>
                   </div>
                 </div>
-<!--
+                <!--
                 <div class="row">
 
                 </div> -->
@@ -816,7 +816,6 @@
                     </div>
                   </div>
                 </div>
-
               </div>
               <div class="mt-5">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
@@ -1017,11 +1016,9 @@
     [dataValues]="formModel.entityName + ';' + dataSelected.recID"
     [refType]="formModel.entityName"
     [refID]="dataSelected.recID"
-    [customerID]="dataSelected.customerID"
-    [salespersonID]="dataSelected.salespersonID"
-    [consultantID]="dataSelected.consultantID"
+    [transID]="dataSelected?.recID"
+    [approveStatus]="dataSelected.approveStatus"
     (tabChange)="changeFooter($event)"
-    [disableRefID]="true"
   ></codx-tabs>
 </ng-template>
 
@@ -1094,7 +1091,10 @@
             class="badge badge-light badge-sm me-0"
           >
           </codx-vll>
-          <div class="d-flex align-items-center" [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
+          <div
+            class="d-flex align-items-center"
+            [ngbTooltip]="getSettingValue(item?.type, 'createOn')"
+          >
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp-menu"

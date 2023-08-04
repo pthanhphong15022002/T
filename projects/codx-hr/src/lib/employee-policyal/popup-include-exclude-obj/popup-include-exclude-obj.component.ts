@@ -78,6 +78,16 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
         });
   }
 
+  loadEmpFullInfo(empID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmpFullInfoAsync',
+      empID
+    )
+  }
+
   GetApplyObjs(){
     return this.api.execSv<any>(
       'HR',
@@ -158,9 +168,13 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
       if(lstData[i].employeeID){
         lstTemp =lstData[i].employeeID.split(';')
         for(let j = 0; j < lstTemp.length; j++){
-          this.lstEmployeeID.push({
-            rec:lstData[i].recID,
-            id:lstTemp[j]
+          this.loadEmpFullInfo(lstTemp[j]).subscribe((res) => {
+            this.lstEmployeeID.push({
+              rec:lstData[i].recID,
+              id:lstTemp[j],
+              info: res[0],
+              positionName: res[1]
+            })
           })
         }
       }

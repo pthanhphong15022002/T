@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   HostListener,
   Injector,
@@ -36,6 +37,7 @@ import { PurchaseInvoiceService } from '../purchase-invoices.service';
   selector: 'lib-pop-add-purchase',
   templateUrl: './pop-add-purchase.component.html',
   styleUrls: ['./pop-add-purchase.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Constructor
@@ -170,7 +172,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.tab.hideTab(1, this.master.subType !== "2");
+    this.tab.hideTab(1, this.master.subType !== '2');
   }
   //#endregion
 
@@ -438,7 +440,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onSelectChange(e: any): void {
     this.master.subType = e.data[0];
-    this.tab.hideTab(1, this.master.subType !== "2");
+    this.tab.hideTab(1, this.master.subType !== '2');
   }
   //#endregion
 
@@ -486,7 +488,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onCellChange(e: any) {
     console.log('onCellChange', e);
-    if (!e.data[e.field]) {
+    if (!e.data[e.field] || !this.master) {
       return;
     }
 
@@ -495,10 +497,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
+          this.master,
           e.data,
         ])
         .subscribe((line) => {
+          console.log(line);
           Object.assign(this.lines[e.idx], line);
+          this.detectorRef.markForCheck();
         });
     }
   }

@@ -50,6 +50,7 @@ export class CodxTabsComponent implements OnInit {
   //ApprovalProcess
   @Input() transID: string;
   @Input() approveStatus: string;
+
   @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
 
   private all: TabModel[] = [
@@ -83,7 +84,12 @@ export class CodxTabsComponent implements OnInit {
       isActive: false,
       icon: 'icon-i-link',
     },
-    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false, icon: '' },
+    {
+      name: 'Approve',
+      textDefault: 'Xét duyệt',
+      isActive: false,
+      icon: 'icon-edit-one', // VTHAO thêm tạm icon để view đỡ xấu
+    },
   ];
 
   oCountFooter: any = {};
