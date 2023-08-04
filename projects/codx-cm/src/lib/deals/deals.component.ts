@@ -154,7 +154,7 @@ export class DealsComponent
   pinnedItem: any;
   processIDKanban: string;
   processIDDefault: string;
-  funcIDCrr:any;
+  funcIDCrr: any;
   crrProcessID = '';
   returnedCmt = '';
   dataColums: any = [];
@@ -410,10 +410,16 @@ export class DealsComponent
       eventItem.disabled = data.status != '0';
     };
     let isApprovalTrans = (eventItem, data) => {
-      eventItem.disabled =  (data.closed && data.status != '1') ||['1', '0'].includes(data.status) ||  data?.approveRule != '1';
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        ['1', '0'].includes(data.status) ||
+        data?.approveRule != '1';
     };
     let isUpdateBANT = (eventItem, data) => {
-        eventItem.disabled =   (data.closed && data.status != '1') || data.status == '0' || this.checkMoreReason(data);
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        this.checkMoreReason(data);
     };
 
     functionMappings = {
@@ -435,7 +441,7 @@ export class DealsComponent
       SYS04: isCopy,
       SYS102: isDelete,
       SYS02: isDelete,
-      CM0201_14:isUpdateBANT,
+      CM0201_14: isUpdateBANT,
     };
 
     return functionMappings[type];
@@ -510,7 +516,6 @@ export class DealsComponent
       },
       CM0201_2: (data) => {
         this.handelStartDay(data);
-
       },
       CM0201_3: (data) => {
         this.moveReason(data, true);
@@ -541,7 +546,10 @@ export class DealsComponent
       },
       CM0201_14: (data) => {
         this.openFormBANT(data);
-      }
+      },
+      SYS304: (data) => {
+        this.exportFiles(e, data);
+      },
     };
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
@@ -572,8 +580,7 @@ export class DealsComponent
     this.changeDataMF(e.e, e.data);
   }
   handelStartDay(data) {
-
-      this.notificationsService
+    this.notificationsService
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
@@ -860,7 +867,7 @@ export class DealsComponent
     var obj = {
       headerTitle: this.titleAction,
       formModel: formMD,
-      gridViewSetup :this.gridViewSetup,
+      gridViewSetup: this.gridViewSetup,
       data: data,
     };
 
@@ -881,7 +888,6 @@ export class DealsComponent
         this.detailViewDeal.getContactByDeaID(this.dataSelected.recID);
         this.changeDetectorRef.detectChanges();
       }
-
     });
   }
 
@@ -1749,6 +1755,40 @@ export class DealsComponent
   autoStart(event) {
     if (event) {
       this.startDeal(this.dataSelected);
+    }
+  }
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    if (data.refID) {
+      this.codxCmService.getDatasExport(data.refID).subscribe((dts) => {
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        if (dts) customData.dataSource = dts;
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
     }
   }
 }
