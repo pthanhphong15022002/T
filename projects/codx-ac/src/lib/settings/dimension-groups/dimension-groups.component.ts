@@ -46,7 +46,7 @@ export class DimensionGroupsComponent extends UIComponent {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache.moreFunction('DimensionGroups', 'grvDimensionGroups').subscribe((res) => {
+    this.cache.moreFunction('DimGroups', 'grvDimGroups').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20900');
         if (m) this.funcName = m.defaultName;

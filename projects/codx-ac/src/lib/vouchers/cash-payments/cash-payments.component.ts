@@ -20,6 +20,7 @@ import {
   RequestOption,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -55,10 +56,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
-  button?: ButtonModel = {
-    id: 'btnAdd',
-    icon: 'icon-i-file-earmark-plus',
-  };
+  button?: ButtonModel;
   headerText: any;
   funcName: any;
   journalNo: string;
@@ -70,8 +68,8 @@ export class CashPaymentsComponent extends UIComponent {
   totaloff: any = 0;
   totalsettledAmt: any = 0;
   totalbalAmt: any = 0;
-  totalVatBase:any = 0;
-  totalVatAtm:any = 0;
+  totalVatBase: any = 0;
+  totalVatAtm: any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -135,12 +133,14 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((params) => {
         this.journalNo = params?.journalNo;
       });
-    this.loadjounal();
+    this.loadDataDefault();
   }
   //#endregion
   //#region Init
 
-  onInit(): void {}
+  onInit(): void {
+    //this.cashService.init();
+  }
 
   ngAfterViewInit() {
     this.acService
@@ -262,38 +262,26 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
-    let ins = setInterval(() => {
-      if (this.journal) {
-        clearInterval(ins);
-        this.headerText = this.funcName;
-        this.view.dataService.dataSelected = { ...this.oCash };
-        // this.view.dataService
-        //   .addNew((o) => this.setDefault(o))
-        //   .subscribe((res: any) => {
-
-        //   });
-        let obj = {
-          formType: 'add',
-          headerText: this.headerText,
-          journal: { ...this.journal },
-          hideFields: [...this.hideFields],
-          baseCurr: this.baseCurr,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.isFull = true;
-        let dialog = this.callfunc.openSide(
-          PopAddCashComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      }
-      setTimeout(() => {
-        if (ins) clearInterval(ins);
-      }, 10000);
-    });
+    this.headerText = this.funcName;
+    this.oCash.data.recID = Util.uid();
+    if (this.journal.assignRule == '1') {
+      this.acService
+        .execApi(
+          'ERM.Business.AC',
+          'CommonBusiness',
+          'GenerateAutoNumberAsync',
+          this.journal.voucherFormat
+        )
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) {
+            this.oCash.data.voucherNo = res;
+            this.openVoucher();
+          }
+        });
+    } else {
+      this.openVoucher();
+    }
   }
 
   edit(e, data) {
@@ -498,6 +486,7 @@ export class CashPaymentsComponent extends UIComponent {
           break;
       }
     }
+    return;
   }
 
   changeMF(e: any, data: any) {
@@ -753,15 +742,22 @@ export class CashPaymentsComponent extends UIComponent {
     // }))
   }
 
-  loadjounal() {
+  loadDataDefault() {
     this.acService
-      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .execApi('AC', 'CommonBusiness', 'GetDataVoucherDefaultAsync', [
+        this.journalNo,
+      ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         if (res) {
-          this.journal = res[0];
-          this.oCash = res[1].data;
-          this.hideFields = res[2];
+          this.journal = res.journal;
+          this.oCash = res.data;
+          this.hideFields = res.hideFields;
+          this.button = {
+            id: 'btnAdd',
+            icon: 'icon-i-file-earmark-plus',
+          };
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -788,7 +784,7 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  loadTotalVat(){
+  loadTotalVat() {
     this.totalVatBase = 0;
     this.totalVatAtm = 0;
     this.vatInvoices.forEach((item) => {
@@ -851,7 +847,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
-    debugger
+    debugger;
     this.api
       .execSv(
         'rptrp',
@@ -890,6 +886,27 @@ export class CashPaymentsComponent extends UIComponent {
       obj,
       '',
       opt
+    );
+  }
+  openVoucher() {
+    this.headerText = this.funcName;
+    this.view.dataService.dataSelected = { ...this.oCash.data };
+    let obj = {
+      formType: 'add',
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+    };
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.isFull = true;
+    let dialog = this.callfunc.openSide(
+      PopAddCashComponent,
+      obj,
+      option,
+      this.view.funcID
     );
   }
   //#endregion

@@ -795,7 +795,6 @@ export class CodxCmService {
     );
   }
 
-
   moveStageCases(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1350,6 +1349,17 @@ export class CodxCmService {
       'SettingValuesBusiness',
       'GetByModuleWithCategoryAsync',
       [sformName, category]
+    );
+  }
+  //end
+
+  // load data Export
+  getDatasExport(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetDatasExportAsync',
+      recID
     );
   }
   //end

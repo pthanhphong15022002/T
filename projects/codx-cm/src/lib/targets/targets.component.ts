@@ -151,6 +151,10 @@ export class TargetsComponent
   viewMode = 9;
   viewCurrent = '1';
   lstCurrentView = [];
+  currencyID: any;
+  exchangeRate: number;
+  currencyIDSys: any;
+  exchangeRateSys: number;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -167,7 +171,7 @@ export class TargetsComponent
     this.widthWin = Util.getViewPort().width - 100;
   }
 
-  onInit(): void {
+  async onInit() {
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
@@ -180,6 +184,23 @@ export class TargetsComponent
         this.lstCurrentView = res.datas;
       }
     });
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.currencyIDSys = this.currencyID;
+        let exchangeRateCurrent = await firstValueFrom(
+          this.cmSv.getExchangeRate(this.currencyID, new Date())
+        );
+        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+        this.exchangeRateSys = this.exchangeRate;
+
+      }
+    }
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -265,6 +286,11 @@ export class TargetsComponent
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.isShow = false;
+      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
+      this.view.button = this.showButtonAdd ? this.button : null;
+      this.currencyID = this.currencyIDSys;
+      this.exchangeRate = this.exchangeRateSys;
       this.viewCurrent = valueView;
       this.loadTreeData(this.year?.toString());
     }
@@ -297,6 +323,60 @@ export class TargetsComponent
 
     this.detectorRef.detectChanges();
   }
+
+  async valueChange(e) {
+    if (e?.data != this.currencyID) {
+      this.exChangeRate(this.currencyID, e?.data);
+      this.currencyID = e.data;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  async exChangeRate(currencyIDOld, currencyID) {
+    if (currencyIDOld !== currencyID) {
+      let day =  new Date();
+
+      let exchangeRate = await firstValueFrom(
+        this.cmSv.getExchangeRate(currencyID, day)
+      );
+
+      if (this.exchangeRate > 0) {
+        this.lstDataTree.forEach((element) => {
+          element.target =
+            (element.target / exchangeRate?.exchRate) * element.exchangeRate;
+          element.currencyID = currencyID;
+          element.exchangeRate = exchangeRate?.exchRate ?? 0;
+          if (element?.targetsLines != null) {
+            element?.targetsLines.forEach((line) => {
+              line.target =
+                (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+              line.currencyID = currencyID;
+              line.exchangeRate = exchangeRate?.exchRate ?? 0;
+            });
+          }
+          if (element?.items != null) {
+            element?.items.forEach((item) => {
+              item.target =
+                (item.target / exchangeRate?.exchRate) * item.exchangeRate;
+              if (item?.targetsLines != null) {
+                item?.targetsLines.forEach((line) => {
+                  line.target =
+                    (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+                });
+              }
+              item.currencyID = currencyID;
+              item.exchangeRate = exchangeRate?.exchRate ?? 0;
+            });
+          }
+        });
+        if(this.lstDataTree != null && this.viewMode == 9){
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+        }
+      }
+      this.exchangeRate = exchangeRate?.exchRate ?? 0;
+    }
+  }
+
   //#endregion
   //#region event codx-view
   viewChanged(e) {
@@ -403,7 +483,7 @@ export class TargetsComponent
     this.views = [
       {
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelRightRef: this.panelRight,
@@ -412,34 +492,12 @@ export class TargetsComponent
       {
         type: ViewType.chart,
         sameData: false,
-        active: true,
+        active: false,
         model: {
           panelRightRef: this.panelRight,
         },
       },
-      // {
-      //   sameData: false,
-      //   type: ViewType.schedule,
-      //   active: false,
-      //   request2: this.scheduleHeader,
-      //   request: this.schedules,
-      //   toolbarTemplate: this.footerButton,
-      //   showSearchBar: false,
-      //   showFilter: false,
-      //   model: {
-      //     eventModel: this.scheduleModel,
-      //     resourceModel: this.scheduleHeaderModel, //resource
-      //     template: this.cardTemplate,
-      //     template4: this.resourceHeader,
-      //     // template5: this.resourceTootip, //tooltip
-      //     template6: this.mfButton, //header
-      //     template8: this.contentTmp, //content
-      //     //template7: this.footerButton,//footer
-      //     // statusColorRef: 'EP022',
-      //   },
-      // },
     ];
-    this.detectorRef.detectChanges();
   }
   searchChanged(e) {}
   selectedChange(e) {}
@@ -531,6 +589,8 @@ export class TargetsComponent
       var obj = {
         action: 'add',
         title: this.titleAction,
+        currencyID: this.currencyID,
+        exchangeRate: this.exchangeRate,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,

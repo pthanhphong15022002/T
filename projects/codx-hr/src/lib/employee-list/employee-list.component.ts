@@ -348,29 +348,20 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   viewChanged(event: any) {
-    // if (event?.view?.id === '2' || event?.id === '2') {
-    //   this.view.dataService.parentIdField = 'ParentID';
-    //   this.view.dataService.idField = 'orgUnitID';
-    //   this.view.idField = 'orgUnitID';
-    // } else if (event?.view?.id === '1' || event?.id === '1') {
-    //   this.view.dataService.parentIdField = '';
-    //   this.view.dataService.idField = 'employeeID';
-    //   this.view.idField = 'employeeID';
-    // }
-    if (this.grv2DataChanged || this.hasChangedData) {
-      if (event?.view?.id == '1' || event?.id == '1') {
-        this.view.dataService.data = [];
-        this.view.dataService.page = 0;
-        this.view.dataService.load().subscribe();
-      }
-      if (event?.view?.id == '2' || event?.id == '2') {
-        this.view.currentView.dataService.load().subscribe();
-      }
 
-      //Prevent load data when click same id
-      this.viewActive = event.view.id;
-      //this.view.currentView.dataService.load().subscribe();
+    if (event?.view?.id == '1' || event?.id == '1') {
+      this.view.dataService.data = [];
+      this.view.dataService.page = 0;
+      this.view.loadData();
     }
+    if (event?.view?.id == '2' || event?.id == '2') {
+      this.view.currentView.dataService.load().subscribe();
+    }
+
+    //Prevent load data when click same id
+    this.viewActive = event.view.id;
+    //this.view.currentView.dataService.load().subscribe();
+
     this.grv2DataChanged = false;
     this.hasChangedData = false;
   }
