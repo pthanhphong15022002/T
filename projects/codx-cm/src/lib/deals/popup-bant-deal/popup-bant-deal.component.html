@@ -1,0 +1,158 @@
+<codx-form
+  #form
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [headerText]="title"
+  [showHeader]="true"
+  [headerText]="title"
+>
+  <ng-template #body>
+    <div class="container pt-2">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              fiedName="DealValue"
+              [formModel]="formModel"
+              class="me-2 text-dark fw-bold"
+              [default]="gridViewSetup?.DealValue?.headerText"
+            >
+            </codx-label>
+
+            <codx-input
+              type="number"
+              field="dealValue"
+              [min]="0"
+              [placeholder]="gridViewSetup?.DealValue?.description"
+              [crrValue]="data?.dealValue"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label fiedName="" class="me-2 text-dark fw-bold" [default]="">
+            </codx-label>
+            <codx-input
+              type="number"
+              field="dealValueTo"
+              [min]="data?.dealValue"
+              [crrValue]="data?.dealValueTo"
+              [placeholder]="gridViewSetup?.DealValueTo?.description"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              fiedName="ExpectedFrom"
+              [formModel]="formModel"
+              class="me-2 text-dark fw-bold"
+              [default]="gridViewSetup?.ExpectedFrom?.headerText"
+            >
+            </codx-label>
+
+            <codx-input
+              type="datetime"
+              field="expectedFrom"
+              [crrValue]="data?.expectedFrom"
+              [placeholder]="gridViewSetup?.ExpectedFrom?.description"
+              (valueChange)="valueChangeDate($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              fiedName=""
+              [formModel]="formModel"
+              class="me-2 text-dark fw-bold"
+              [default]=""
+            >
+            </codx-label>
+            <codx-input
+              type="datetime"
+              field="expectedTo"
+              [placeholder]="gridViewSetup?.ExpectedTo?.description"
+              [crrValue]="data?.expectedTo"
+              (valueChange)="valueChangeDate($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <codx-label
+            fiedName="Note"
+            [formModel]="formModel"
+            [default]="gridViewSetup?.Note?.headerText"
+          >
+          </codx-label>
+          <codx-input
+            [formModel]="formModel"
+            field="note"
+            [placeholder]="gridViewSetup?.Note?.description"
+            [crrValue]="data?.note"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <div class="">
+
+
+        <div class="form-group">
+          <codx-label
+          name="lblContacts"
+          class="me-2 text-dark fw-bold pb-2"
+          [formModel]="formModel"
+          [default]="'Người tham gia'"
+        >
+        </codx-label>
+
+        <ng-container>
+          <codx-list-contacts
+            #loadContactDeal
+            [selectAll]="false"
+            [funcID]="'CM0201'"
+            [objectID]="data?.recID"
+            [listContacts]="lstContactDeal"
+            [customerID]="customerID"
+            (lstContactEmit)="lstContactEmit($event)"
+            (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+            [objectType]="'4'"
+            [objectName]="data?.dealName"
+            [hidenMF]="false"
+            [type]="'formAdd'"
+          ></codx-list-contacts>
+        </ng-container>
+        </div>
+
+
+      </div>
+    </div>
+  </ng-template>
+</codx-form>
+
+<ng-template #footer>
+  <!--Footer-->
+  <div class="d-flex justify-content-end">
+    <div class="my-3 d-flex align-items-center">
+      <button type="button" (click)="onSaveForm()" class="btn btn-primary ms-2">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

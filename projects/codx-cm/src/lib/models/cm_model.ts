@@ -190,6 +190,10 @@ export class CM_Deals {
   note: string;
   currencyID: string;
   exchangeRate: number;
+  dealValueTo: number = 0;
+  expectedFrom:Date;
+  expectedTo:Date;
+
 }
 
 export class CM_Permissions {

@@ -43,6 +43,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
+import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -153,6 +154,7 @@ export class DealsComponent
   pinnedItem: any;
   processIDKanban: string;
   processIDDefault: string;
+  funcIDCrr:any;
   crrProcessID = '';
   returnedCmt = '';
   dataColums: any = [];
@@ -173,6 +175,7 @@ export class DealsComponent
 
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((f) => {
+      this.funcIDCrr = f;
       this.functionModule = f.module;
       this.nameModule = f.customName;
       this.executeApiCallFunctionID(f.formName, f.gridViewName);
@@ -432,6 +435,7 @@ export class DealsComponent
       SYS04: isCopy,
       SYS102: isDelete,
       SYS02: isDelete,
+      CM0201_14:isDisabled,
     };
 
     return functionMappings[type];
@@ -506,6 +510,7 @@ export class DealsComponent
       },
       CM0201_2: (data) => {
         this.handelStartDay(data);
+
       },
       CM0201_3: (data) => {
         this.moveReason(data, true);
@@ -534,6 +539,9 @@ export class DealsComponent
       CM0201_13: (data) => {
         this.confirmOrRefuse(false, data);
       },
+      CM0201_14: (data) => {
+        this.openFormBANT(data);
+      }
     };
     this.titleAction = e.text;
     if (actions.hasOwnProperty(e.functionID)) {
@@ -544,7 +552,8 @@ export class DealsComponent
     this.changeDataMF(e.e, e.data);
   }
   handelStartDay(data) {
-    this.notificationsService
+
+      this.notificationsService
       .alertCode('DP033', null, ['"' + data?.dealName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
@@ -821,6 +830,39 @@ export class DealsComponent
           });
         }
       });
+  }
+  openFormBANT(data) {
+    var formMD = new FormModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    var obj = {
+      headerTitle: this.titleAction,
+      formModel: formMD,
+      gridViewSetup :this.gridViewSetup,
+      data: data,
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupBantDealComponent,
+      '',
+      650,
+      750,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        this.view.dataService.update(e.event).subscribe();
+        this.detailViewDeal.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+        this.detailViewDeal.getContactByDeaID(this.dataSelected.recID);
+        this.changeDetectorRef.detectChanges();
+      }
+
+    });
   }
 
   openFormReason(data, fun, isMoveSuccess) {
