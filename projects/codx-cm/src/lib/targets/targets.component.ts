@@ -265,6 +265,7 @@ export class TargetsComponent
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.showButtonAdd = this.viewCurrent == '1' ? true : false;
       this.viewCurrent = valueView;
       this.loadTreeData(this.year?.toString());
     }
