@@ -1310,7 +1310,7 @@ export class CodxShareService {
       exportUpload.module =approveProcess.module;
       exportUpload.objectID=approveProcess.recID;
       exportUpload.objectType=approveProcess.entityName;
-      exportUpload.referType = 'source';
+      exportUpload.referType =  'source';
       exportUpload.functionID=approveProcess.funcID;
 
       this.getRpListByTemplateID(template?.templateID).subscribe((rpList:any)=>{
