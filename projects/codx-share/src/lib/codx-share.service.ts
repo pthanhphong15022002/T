@@ -226,7 +226,7 @@ export class CodxShareService {
           );
           dialogApprove.closed.subscribe((x) => {
             if (x.event?.result) {
-              data.statusApproval = x.event?.mode;
+              data.unbounds.statusApproval = x.event?.mode;
               dataService.update(data).subscribe();
             }
           });
