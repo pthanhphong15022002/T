@@ -1,12 +1,12 @@
 <codx-views
   #view
+  [funcID]="funcID"
+  idField="recID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
   [method]="methodLoadData"
-  idField="recID"
-  [funcID]="'CM0204'"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
@@ -20,13 +20,12 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
-    [titleCss]="'fw-bold fs-6 mb-2'"
+    [titleCss]="'fw-bold fs-6 mb-1'"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
     [title]="data.contractName"
     [descTmp]="descTmp"
-    [footer]="footerTmp"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imageId]="data?.customerID"
@@ -40,26 +39,23 @@
 </ng-template>
 
 <ng-template #descTmp let-data>
-  <div class="d-flex align-items-top mb-1">
-    <span class="icon-corporate_fare me-1"></span>
-    <span
-      class="text-dark codx-textcontent line-clamp line-clamp-1"
-      [innerHTML]="
-        data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
-      "
-    ></span>
-  </div>
-</ng-template>
-
-<ng-template #footerTmp let-data>
-  <div style="margin-left: 45px">
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center text-gray-700 mb-1">
+      <span class="icon-corporate_fare icon-16 me-1"></span>
+      <span
+        class="codx-textcontent line-clamp line-clamp-1"
+        [innerHTML]="
+          data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
+        "
+      ></span>
+    </div>
     <div class="d-flex justify-content-between align-items-center mb-1">
       <div class="d-flex justify-content-end align-items-center">
         <span
-          class="icon-monetization_on icon-18 me-1 text-warning mb-1"
+          class="icon-monetization_on icon-16 me-1 text-warning"
         ></span>
         <span
-          class="fs-5 fw-bold"
+          class="text-dark me-1"
           [innerHTML]="
             data?.contractAmt
               | formatvalue : view.formModel : 'ContractAmt'
@@ -67,7 +63,7 @@
           "
         ></span>
         <span
-          class="fs-5 fw-bold ms-1"
+          class="text-dark"
           [innerHTML]="
             data?.currencyID
               | formatvalue : view.formModel : 'CurrencyID'
@@ -123,9 +119,9 @@
       </div>
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center me-2">
-          <span class="icon-16 icon-av_timer me-1 text-gray-600"></span>
+          <span class="icon-16 icon-av_timer me-1 text-gray-700"></span>
           <span
-            class="text-gray-700"
+            class="text-gray-700 line-clamp line-clamp-1"
             [innerHTML]="
               data?.createdOn
                 | formatvalue : view.formModel : 'CreatedOn'
@@ -146,6 +142,7 @@
     </div>
   </div>
 </ng-template>
+
 
 <!-- temp right -->
 <ng-template #templateDetail>

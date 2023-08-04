@@ -24,6 +24,17 @@ import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from './models/TableColumn.model';
 import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
 import { SalesInvoiceService } from './sales-invoices.service';
+import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../journals/journals.service';
+
+enum MF {
+  GuiDuyet = 'ACT060504',
+  GhiSo = 'ACT060506',
+  HuyYeuCauDuyet = 'ACT060505',
+  KhoiPhuc = 'ACT060507',
+  KiemTraTinhHopLe = 'ACT060503',
+  In = 'ACT060508',
+}
 
 @Component({
   selector: 'lib-sales-invoices',
@@ -57,11 +68,11 @@ export class SalesInvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  parent: any;
   loading: boolean = false;
   acctLoading: boolean = false;
   overflowed: boolean = false;
   expanding: boolean = false;
+  journal: IJournal;
   isFirstChange: boolean = true;
 
   fmSalesInvoicesLines: FormModel;
@@ -74,21 +85,16 @@ export class SalesInvoicesComponent
   gvsAcctTrans: any;
 
   columns: TableColumn[];
-
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private salesInvoiceService: SalesInvoiceService
+    private salesInvoiceService: SalesInvoiceService,
+    private journalService: JournalService
   ) {
     super(inject);
 
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent).subscribe((res) => {
-          if (res) this.parent = res;
-        });
-      }
     });
 
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
@@ -153,6 +159,10 @@ export class SalesInvoicesComponent
       .subscribe((gvs) => {
         this.gvsAcctTrans = gvs;
       });
+
+    this.journalService.getJournal(this.journalNo).subscribe((journal) => {
+      this.salesInvoiceService.journal = this.journal = journal;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -182,7 +192,6 @@ export class SalesInvoicesComponent
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = this.acService.toCamelCase(res.defaultName);
     });
-    this.view.setRootNode(this.parent?.customName);
   }
 
   ngAfterViewChecked(): void {
@@ -190,9 +199,7 @@ export class SalesInvoicesComponent
     this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
-  ngOnDestroy() {
-    this.view.setRootNode('');
-  }
+  ngOnDestroy() {}
   //#endregion
 
   //#region Event
@@ -290,6 +297,60 @@ export class SalesInvoicesComponent
       case 'SYS002':
         this.export(data);
         break;
+    }
+  }
+
+  onChangeMF(mfs: any, data: ISalesInvoice): void {
+    // console.log(mfs.filter((f) => !f.disabled));
+    let disabledFuncs: MF[] = [
+      MF.GuiDuyet,
+      MF.GhiSo,
+      MF.HuyYeuCauDuyet,
+      MF.In,
+      MF.KhoiPhuc,
+      MF.KiemTraTinhHopLe,
+    ];
+    switch (data.status) {
+      case '0': // phac thao
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
+        );
+        break;
+      case '1': // da hop le
+        if (['1', '2'].includes(this.journal.approvalControl)) {
+          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
+        } else {
+          disabledFuncs = disabledFuncs.filter(
+            (f) => f !== MF.GhiSo && f !== MF.In
+          );
+        }
+        break;
+      case '3': // cho duyet
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
+        );
+        break;
+      case '5': // da duyet
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.GhiSo && f !== MF.In
+        );
+        break;
+      case '6': // da ghi so
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.KhoiPhuc && f !== MF.In
+        );
+        break;
+      case '9': // khoi phuc
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.GhiSo && f !== MF.In
+        );
+        break;
+    }
+
+    for (const mf of mfs) {
+      if (disabledFuncs.includes(mf.functionID)) {
+        mf.disabled = true;
+      }
     }
   }
 

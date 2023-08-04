@@ -52,7 +52,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   getReportList(reportID:string){
     if(reportID)
     {
-      this.api.execSv("rptsys","Codx.RptBusiness.CM","ReportBusiness","GetByReportIDAsync",[reportID])
+      this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
         if(res)
           this.lstReport = res;
@@ -88,6 +88,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     if(!this.loading)
     {
       this.loading = true;
+      
       this.api.execSv(this.dataSelected.service,"Codx.RptBusiness.CM","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
       .subscribe((res:any) => {
         if (res)
@@ -95,7 +96,8 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
           let fileName = this.dataSelected.reportName;
           if(fileName)
             fileName = this.dataSelected.reportName.split(".")[0];
-          this.downloadFile(res,fileName); 
+          this.downloadFile(res,fileName);
+          this.dialog.close(); 
         };
         this.loading = false; 
       });

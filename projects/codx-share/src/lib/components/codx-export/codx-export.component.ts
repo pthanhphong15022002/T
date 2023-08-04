@@ -110,6 +110,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
     this.dataSource = dt.data?.[2];
+    this.refID = dt.data?.[3];
+    this.refType = dt.data?.[4];
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -163,6 +165,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadEx() {
     this.request.entityName = 'AD_ExcelTemplates';
+    this.request.dataValue =   this.refID + ";" + this.refType || this.formModel.entityName;
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
@@ -170,6 +173,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadWord() {
     this.request.entityName = 'AD_WordTemplates';
+    this.request.dataValue = this.refID + ";" +this.refType || this.formModel.entityName;
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
@@ -206,14 +210,15 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .openForm(
             CodxExportAddComponent,
             null,
-            900,
-            700,
+            1100,
+            800,
             null,
             {
               action: val,
               type: this.type,
               refType: this.refType,
               refID: this.refID,
+              formModel: this.formModel
             },
             '',
             option

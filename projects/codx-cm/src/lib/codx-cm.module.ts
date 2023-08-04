@@ -94,6 +94,8 @@ import {
 import { ViewTreeTargetsComponent } from './targets/view-tree-targets/view-tree-targets.component';
 import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin-deal.component';
 import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-dashboard.component';
+import { PopupChangeAllocationRateComponent } from './targets/popup-change-allocation-rate/popup-change-allocation-rate.component';
+import { PopupBantDealComponent } from './deals/popup-bant-deal/popup-bant-deal.component';
 
 export const routes: Routes = [
   {
@@ -108,6 +110,7 @@ export const routes: Routes = [
       {
         path: 'deals/:funcID',
         component: DealsComponent,
+        // data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
@@ -121,14 +124,17 @@ export const routes: Routes = [
       {
         path: 'contracts/:funcID',
         component: ContractsComponent,
+        // data: { noReuse: true },
       },
       {
         path: 'cases/:funcID',
         component: CasesComponent,
+        // data: { noReuse: true },
       },
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
+        // data: { noReuse: true },
       },
       {
         path: 'dashboard/:funcID',
@@ -220,6 +226,9 @@ const T_Component: Type<any>[] = [
   ViewTreeTargetsComponent,
   PopupAssginDealComponent,
   InstanceDashboardComponent,
+  PopupChangeAllocationRateComponent,
+  PopupBantDealComponent
+
 ];
 
 @NgModule({

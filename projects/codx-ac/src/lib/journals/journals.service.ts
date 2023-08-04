@@ -72,25 +72,27 @@ export class JournalService {
 
   /**
    * If this model.voucherNo already exists, the system will automatically suggest another voucherNo.
-   * @param isEdit A boolean value that indicates whether you are in edit mode.*/
+   * @param isUpdate A boolean value that indicates whether you are in edit mode.*/
   checkVoucherNoBeforeSave(
     journal: IJournal,
     model: any,
     service: string,
     entityName: string,
     form: CodxFormComponent,
-    isEdit: boolean,
+    isUpdate: boolean,
     saveFunction: () => void
   ): void {
     if (
-      journal.assignRule !== '0' &&
+      journal.assignRule === '0' && // thu cong
       this.duplicateVoucherNo === '0' &&
       model.voucherNo
     ) {
       const options = new DataRequest();
       options.entityName = entityName;
-      options.predicates = !isEdit ? 'VoucherNo=@0' : 'VoucherNo=@0&&RecID!=@1';
-      options.dataValues = !isEdit
+      options.predicates = !isUpdate
+        ? 'VoucherNo=@0'
+        : 'VoucherNo=@0&&RecID!=@1';
+      options.dataValues = !isUpdate
         ? model.voucherNo
         : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;
@@ -260,5 +262,21 @@ export class JournalService {
 
   getUsers(): Observable<any[]> {
     return this.acService.loadComboboxData('Share_Users', 'AD');
+  }
+
+  getRoleType(field: string): string {
+    if (field === 'creater') {
+      return '1';
+    } else if (field === 'approver') {
+      return '2';
+    } else if (field === 'poster') {
+      return '3';
+    } else if (field === 'unposter') {
+      return '4';
+    } else if (field === 'sharer') {
+      return '6';
+    }
+
+    return null;
   }
 }

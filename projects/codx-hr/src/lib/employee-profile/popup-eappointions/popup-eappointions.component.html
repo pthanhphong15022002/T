@@ -27,32 +27,26 @@
             >
             </codx-img>
           </div>
-          <div class="d-flex flex-column">
-            <div>
-              <div class="text-dark fw-bold">
-                <span>
-                  {{
-                    employeeObj?.employeeName ?? employeeObj?.emp?.employeeName
-                  }}
-                </span>
-              </div>
+          <div class="d-flex flex-column ms-2">
+            <div class="text-dark fw-bold">
+              <span>{{ employeeObj?.employeeName }}</span>
             </div>
-            <div class="text-gray-700">
+            <div class="text-gray-500 fs-7" *ngIf="employeeObj?.positionID">
               <span
                 [innerHTML]="
-                  employeeObj?.positionID ?? employeeObj?.emp?.positionID
+                  employeeObj?.positionID
                     | formatvalue : formModel : 'positionID'
                     | async
                 "
               ></span>
             </div>
-            <span class="text-gray-700" *ngIf="employeeObj.orgUnitName">{{
+            <span class="text-gray-700" *ngIf="employeeObj?.orgUnitName">{{
               employeeObj?.orgUnitName
             }}</span>
             <!-- <div class="text-gray-700">
               <span
                 [innerHTML]="
-                  employeeObj?.orgUnitID ?? employeeObj?.emp?.orgUnitID
+                  employeeObj?.orgUnitID
                     | formatvalue : formModel : 'orgUnitID'
                     | async
                 "
@@ -103,7 +97,6 @@
       <div class="col-6">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
         <codx-input
-          #orgUnit
           [disabled]="disabledInput"
           (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
@@ -119,6 +112,7 @@
         ></codx-label>
         <codx-input
           [disabled]="true"
+          (render)="onRenderOldOrgUnitID($event)"
           field="oldOrgUnitID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -132,6 +126,7 @@
         <codx-input
           [disabled]="disabledInput"
           field="jobLevel"
+          (render)="onRenderJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangeJobLevel($event)"
@@ -142,6 +137,7 @@
         <codx-input
           [disabled]="true"
           field="oldJobLevel"
+          (render)="onRenderOldJobLevel($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -154,6 +150,7 @@
         <codx-input
           [disabled]="disabledInput"
           field="positionID"
+          (render)="onRenderPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
           (valueChange)="onChangePosition($event)"
@@ -167,6 +164,7 @@
         <codx-input
           [disabled]="true"
           field="oldPositionID"
+          (render)="onRenderOldPositionID($event)"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -178,6 +176,7 @@
         <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
+          (render)="onRenderLocationID($event)"
           field="locationID"
           [formModel]="formModel"
           [Group]="formGroup"
@@ -191,6 +190,7 @@
         ></codx-label>
         <codx-input
           [disabled]="disabledInput"
+          (render)="onRenderOldLocationID($event)"
           [disabled]="true"
           field="oldLocationID"
           [formModel]="formModel"

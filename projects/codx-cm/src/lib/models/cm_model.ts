@@ -190,6 +190,10 @@ export class CM_Deals {
   note: string;
   currencyID: string;
   exchangeRate: number;
+  dealValueTo: number = 0;
+  expectedFrom:Date;
+  expectedTo:Date;
+
 }
 
 export class CM_Permissions {
@@ -599,6 +603,7 @@ export class CM_Cases {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  applyProcess:boolean;
 }
 
 export class CM_Partners {
@@ -763,6 +768,7 @@ export class CM_Targets {
   owner: string;
   buid: string;
   createdOn: Date = new Date();
+  exchangeRate: number;
   createdBy: string;
   modifiedOn: Date;
   ModifiedBy: string;

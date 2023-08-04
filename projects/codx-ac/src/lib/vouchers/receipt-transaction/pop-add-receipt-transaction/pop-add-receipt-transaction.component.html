@@ -68,13 +68,10 @@
         id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
       >
-        <img
-          src="../assets/themes/ac/default/img/attachment.svg"
-          class="w-20px h-20px me-2"
-        />
+        <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
         <codx-input
           style="width: 100%"
-          class="fw-bold"
+          class="fw-bold border-0"
           [Group]="form.formGroup"
           field="memo"
           [formModel]="form.formModel"
@@ -147,9 +144,89 @@
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="ObjectID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="objectID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="Requester" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="requester"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="RequestDate" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="requestDate"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="warehouseID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="reasonID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-4">
               <div class="form-group">
-                <!-- Mã Kho -->
+                <codx-label fiedName="RefNo" [formModel]="form.formModel">
+                </codx-label
+                >:&nbsp;
+                <span *ngIf="vouchers.refNo">
+                  {{ vouchers.refNo }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-4">
+              <div class="form-group">
                 <div class="form-group">
                   <codx-label
                     fiedName="WarehouseID"
@@ -168,7 +245,6 @@
             </div>
             <div class="col-8">
               <div class="form-group">
-                <!-- Tên Kho -->
                 <div class="form-group">
                   <codx-label field="WarehouseName" default="Tên kho">
                   </codx-label>
@@ -185,7 +261,6 @@
           <div class="row">
             <div class="col-4">
               <div class="form-group">
-                <!-- Lý do -->
                 <div class="form-group">
                   <codx-label fiedName="ReasonID" [formModel]="form.formModel">
                   </codx-label>
@@ -201,7 +276,6 @@
             </div>
             <div class="col-8">
               <div class="form-group">
-                <!-- Đối tượng -->
                 <div class="form-group">
                   <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                   </codx-label>
@@ -228,7 +302,7 @@
               >
               </codx-input>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="col-2 ac-bettween"></div>
@@ -290,12 +364,13 @@
         service="IV"
         [autoLoad]="false"
         [autoFitColumns]="false"
-        [autoAddRow]="true"
-        (eventAction)="autoAddRowSet($event)"
+        [autoAddRow]="false"
+        [showEmptyRecord]="false"
+        [showRowNumber]="true"
+        (eventAction)="autoAddRow($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
-        (onDoubleClick)="onDoubleClick($event)"
         (cellChanged)="lineChanged($event)"
       ></codx-gridview-v2>
 
@@ -698,9 +773,66 @@
 
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="codx-detail-footer dialog-footer" *ngIf="vouchers">
-    <div class="btn btn-white btn-icon tab-action">
-      <span class="icon-unfold_more icon-20"></span>
+  <div
+    style="display: grid !important"
+    ngClass="collape"
+    class="codx-detail-footer dialog-footer align-items-center collape"
+    *ngIf="vouchers"
+  >
+    <!-- <div class="btn btn-white btn-icon tab-action">
+        <span (click)="expand()" class="icon-unfold_more icon-20"></span>
+        
+      </div> -->
+    <div
+      class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
+    >
+      <button
+        style="border: 1px solid"
+        id="discard"
+        type="button"
+        class="btn btn-md btn-light-danger me-2"
+        (click)="onDiscard()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-delete_outline icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblDiscard"
+            default="Hủy bỏ"
+          ></codx-label>
+        </div>
+      </button>
+      <button
+        style="border: 1px solid var(--primary-dark) !important"
+        type="button"
+        class="btn btn-md btn-light-primary me-2"
+        (click)="onSaveAdd()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-add_to_photos icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblSaveAndClear"
+            default="Lưu & Thêm"
+          ></codx-label>
+        </div>
+      </button>
+      <button
+        id="save"
+        type="button"
+        class="btn btn-md btn-primary"
+        style="min-width: 60px"
+        (click)="onSave()"
+      >
+        <div class="d-flex align-items-center">
+          <i class="icon-save_alt icon-16"></i>
+          <codx-label
+            class="fw-normal"
+            fiedName="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </div>
+      </button>
     </div>
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>
@@ -750,7 +882,7 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <div class="d-flex align-items-center justify-content-end">
+        <!-- <div class="d-flex align-items-center justify-content-end">
           <div *ngIf="formType != 'edit'" class="ms-2">
             <button
               type="button"
@@ -800,7 +932,7 @@
               </div>
             </button>
           </div>
-        </div>
+        </div> -->
         <div class="ms-2">
           <div
             class="btn btn-icon btn-light-danger btn-circle bg"

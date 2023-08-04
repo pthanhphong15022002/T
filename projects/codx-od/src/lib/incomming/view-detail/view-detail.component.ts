@@ -859,10 +859,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                 [this.formModel, item]
               );
               this.dialog.closed.subscribe((x) => {
-                if (x.event != null) {
-                  this.data = x.event[0];
-                  this.data.lstUserID = getListImg(x.event[0].relations);
-                  this.data.listInformationRel = x.event[1];
+                if (x.event) {
+                  var index = this.data.files.findIndex(a=>a.recID == x.event.recID);
+                  if(index >=0 ) this.data.files[index] = x.event;
                 }
               });
             }
@@ -954,7 +953,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
-      
+
       //Gửi duyệt
       case 'ODT201':
       case 'ODT3001':
@@ -1022,14 +1021,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                 this.cancelAproval(item);
                                 //this.callfunc.openForm();
                               } else if (res2?.eSign == false) {
-                                this.shareService.codxCancel(
-                                  'OD',
-                                  item?.recID, 
-                                  this.formModel.entityName,
-                                  null,
-                                  null,
-                                )
-                                .subscribe((res3) => {
+                                this.shareService
+                                  .codxCancel(
+                                    'OD',
+                                    item?.recID,
+                                    this.formModel.entityName,
+                                    null,
+                                    null
+                                  )
+                                  .subscribe((res3) => {
                                     if (res3) {
                                       this.data.status = '3';
                                       this.data.approveStatus = '1';
@@ -1251,13 +1251,22 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       default: {
+
+        //Biến động tự custom
+        var customData = 
+        {
+          refID : "",
+          refType : "",
+          dataSource: datas
+        }
         this.shareService.defaultMoreFunc(
           val,
           datas,
           this.afterSave,
           this.formModel,
           this.view.dataService,
-          this
+          this,
+          customData
         );
         // this.shareService.defaultMoreFunc(
         //   val,
@@ -1344,32 +1353,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Duyệt công văn
   documentApproval(datas: any) {
-    if (datas.bsCategory) {
-      //Có thiết lập bước duyệt
-      if (datas.bsCategory.approval) {
-        this.api
-          .execSv(
-            'ES',
-            'ES',
-            'CategoriesBusiness',
-            'GetByCategoryIDAsync',
-            datas.bsCategory.categoryID
-          )
-          .subscribe((item: any) => {
-            if (item) {
-              this.approvalTrans(item?.processID, datas);
-            } else {
-            }
-          });
-      }
-      //Chưa thiết lập bước duyệt
-      else {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        this.notifySvr.alertCode('OD024', config).subscribe((item) => {
-          if (item.event.status == 'Y') {
-            //Lấy processID mặc định theo entity
-            this.api
+    this.api
               .execSv(
                 'ES',
                 'ES',
@@ -1382,10 +1366,48 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                   this.approvalTrans(item?.processID, datas);
                 }
               });
-          }
-        });
-      }
-    }
+    // if (datas.bsCategory) {
+    //   //Có thiết lập bước duyệt
+    //   if (datas.bsCategory.approval) {
+    //     this.api
+    //       .execSv(
+    //         'ES',
+    //         'ES',
+    //         'CategoriesBusiness',
+    //         'GetByCategoryIDAsync',
+    //         datas.bsCategory.categoryID
+    //       )
+    //       .subscribe((item: any) => {
+    //         if (item) {
+    //           this.approvalTrans(item?.processID, datas);
+    //         } else {
+    //         }
+    //       });
+    //   }
+    //   //Chưa thiết lập bước duyệt
+    //   else {
+    //     var config = new AlertConfirmInputConfig();
+    //     config.type = 'YesNo';
+    //     this.notifySvr.alertCode('OD024', config).subscribe((item) => {
+    //       if (item.event.status == 'Y') {
+    //         //Lấy processID mặc định theo entity
+    //         this.api
+    //           .execSv(
+    //             'ES',
+    //             'ES',
+    //             'CategoriesBusiness',
+    //             'GetDefaulProcessIDAsync',
+    //             this.formModel.entityName
+    //           )
+    //           .subscribe((item: any) => {
+    //             if (item) {
+    //               this.approvalTrans(item?.processID, datas);
+    //             }
+    //           });
+    //       }
+    //     });
+    //   }
+    // }
   }
 
   afterSave(e?: any, that: any = null) {
@@ -1419,7 +1441,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   getJSONString(data) {
     return JSON.stringify(data);
   }
-  getSubTitle(relationType: any, agencyName: any, shareBy: any , agencies = null) {
+  getSubTitle(
+    relationType: any,
+    agencyName: any,
+    shareBy: any,
+    agencies = null
+  ) {
     if (
       relationType == '1' ||
       (this.formModel.funcID == 'ODT41' && relationType == '2')
@@ -1428,21 +1455,18 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         var text = this.ms020?.customName;
         if (!text) text = '';
 
-       
         return Util.stringFormat(
           text,
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
-      }
-      else
-      {
+      } else {
         var name = agencyName;
 
-        if(agencies && agencies.length > 0) name = agencies.map(u=>u.agencyName).join(" , ");
+        if (agencies && agencies.length > 0)
+          name = agencies.map((u) => u.agencyName).join(' , ');
         return 'Gửi đến ' + name;
       }
-     
     }
 
     return Util.stringFormat(
@@ -1690,6 +1714,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         processID
       )
       .subscribe((res2: any) => {
+        let category = res2;
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         //trình ký
@@ -1724,8 +1749,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               files: this.data?.files,
               cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
               disableCateID: true,
-              refType:this.formModel?.entityName,
-              refID:datas.recID,
+              refType: this.formModel?.entityName,
+              refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
             },
             '',
@@ -1753,9 +1778,46 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             }
           });
           //this.callfunc.openForm();
-        } else if (res2?.eSign == false)
-          //xét duyệt
-          this.release(datas, processID);
+        } 
+        if (res2?.eSign == false)
+        //xét duyệt
+        this.release(datas, processID);
+        // else
+        //   this.shareService
+        //     .codxReleaseDynamic(
+        //       this.view.service,
+        //       datas,
+        //       category,
+        //       this.view.formModel.entityName,
+        //       this.formModel.funcID,
+        //       datas?.title ,
+        //       (res2: any) => {
+        //         if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+        //         else {
+        //           datas.status = '3';
+        //           debugger
+        //           this.notifySvr.notifyCode('ES007');
+        //           // this.odService
+        //           //   .updateDispatch(
+        //           //     datas,
+        //           //     '',
+        //           //     false,
+        //           //     this.referType,
+        //           //     this.formModel?.entityName
+        //           //   )
+        //           //   .subscribe((item) => {
+        //           //     if (item.status == 0) {
+        //           //       this.view.dataService.update(item?.data).subscribe();
+        //           //     } else this.notifySvr.notify(item.message);
+        //           //   });
+        //           //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
+        //           if (datas.dispatchType == '3') {
+        //             this.addInternalIncoming(datas);
+        //           }
+        //         }
+        //         //this.notifySvr.notify(res2?.msgCodeError)
+        //       }
+        //     )
       });
   }
   handleViewFile(e: any) {

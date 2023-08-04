@@ -23,6 +23,7 @@ import { CM_Cases, CM_Deals } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, firstValueFrom, map, tap } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-cases',
@@ -120,6 +121,8 @@ export class PopupAddCasesComponent
   isLoading: boolean = false;
   processID:string = '';
 
+  applyProcess = false;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -164,8 +167,14 @@ export class PopupAddCasesComponent
     this.executeApiCalls();
   }
 
-  onInit(): void {}
-
+  async onInit(): Promise<void> {
+    await this.getCurrentSetting();
+    this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
+  }
+  ngAfterViewInit(): void {
+    // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
+    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+  }
   valueChange($event) {
     if ($event) {
       this.cases[$event.field] = $event.data;
@@ -365,10 +374,6 @@ export class PopupAddCasesComponent
     return true;
   }
 
-  ngAfterViewInit(): void {
-    this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
-    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
-  }
   async executeApiCalls() {
     try {
       await this.getGridView(this.formModel);
@@ -687,4 +692,81 @@ export class PopupAddCasesComponent
   //   //  this.selectedAction();
   //   }
   // }
+
+   //#region setDefault
+   async getCurrentSetting() {
+    let res = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (res?.length > 0) {
+      let dataParam = res.find((x) => x.category == '1' && !x.transType);
+      if (dataParam) {
+        let dataValue = JSON.parse(dataParam.dataValue);
+        this.applyProcess = dataValue?.ProcessCaseUsed == "1";
+        this.cases.applyProcess = this.applyProcess;
+      }
+    }
+  }
+
+  async getAutoNumber(){// kiểm tra có thiết lập tư động ko 
+    this.codxCmService
+    .getFieldAutoNoDefault(this.dialog.formModel.funcID, this.dialog.formModel.entityName)
+    .subscribe((res) => {
+      if (res && !res.stop) {
+        this.cache.message('AD019').subscribe((mes) => {
+          if (mes) {
+            // this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          }
+        });
+        this.getAutoNumberSetting();
+      } else {
+        // this.planceHolderAutoNumber = '';
+        this.cases.caseNo = null;
+        // this.disabledShowInput = false;
+      }
+    });
+  }
+  async getAutoNumberSetting() { // lấy mã tự động
+    this.codxCmService
+      .genAutoNumberDefault(
+        this.dialog.formModel.funcID,
+        this.dialog.formModel.entityName,
+        'LeadID'
+      )
+      .subscribe((autoNum) => {
+        // this.leadNoSetting = autoNum;
+        this.cases.caseNo = autoNum;
+        // this.disabledShowInput = true;
+        // this.lead.leadID = this.leadNoSetting;
+      });
+  }
+
+  // changeAutoNum(e) { // check trùm mã khi nhạp tay
+  //   if (!this.disabledShowInput && e) {
+  //     this.contracts.contractID = e?.crrValue;
+  //     if (
+  //       this.contracts.contractID &&
+  //       this.contracts.contractID.includes(' ')
+  //     ) {
+  //       this.notiService.notifyCode(
+  //         'CM026',
+  //         0,
+  //         '"' + this.grvSetup['ContractID'].headerText + '"'
+  //       );
+  //       return;
+  //     }
+  //     this.cmService
+  //       .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
+  //       .subscribe((res) => {
+  //         this.isExitAutoNum = res;
+  //         if (this.isExitAutoNum)
+  //           this.notiService.notifyCode(
+  //             'CM003',
+  //             0,
+  //             '"' + this.grvSetup['ContractID'].headerText + '"'
+  //           );
+  //       });
+  //   }
+  // }
+  //#endregion
 }

@@ -35,25 +35,7 @@
     <!-- CHAT -->
     <codx-chat></codx-chat>
     <!-- NOTES -->
-    <div
-      class="d-flex align-items-center ms-1 ms-lg-3"
-      (click)="openFormNoteDrawer()"
-    >
-      <!-- begin::Menu wrapper -->
-      <div
-        class="btn btn-icon btn-clean position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass"
-        id="kt_drawer_note_toggle"
-      >
-        <!-- <span [ngClass]="codxService.toolbarButtonIconSizeClass"></span> -->
-        <span
-          [inlineSVG]="'./assets/themes/sys/default/img/header_notes.svg'"
-          class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"
-        ></span>
-      </div>
-      <!-- end::Menu wrapper -->
-    </div>
+    <codx-notes></codx-notes>
     <!-- NOTIFICATIONS -->
     <!-- <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
         <div class="btn btn-icon btn-clean position-relative"
@@ -137,7 +119,7 @@
       </span>
       <span class="me-1" (click)="showGuide(p)">
         <span
-          class="icon-event_notes icon-24 text-hover-primary cursor-pointer"
+          class="icon-event_notes icon-20 text-hover-primary cursor-pointer"
           [ngbPopover]="popperMemo"
           #p="ngbPopover"
           (mouseenter)="processView?.memo ? p.open() : ''"

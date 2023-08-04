@@ -27,6 +27,9 @@ import { PopupAddQuotationsComponent } from './popup-add-quotations/popup-add-qu
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CM_Contracts, CM_Quotations } from '../models/cm_model';
+import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
+import { debug } from 'util';
 
 @Component({
   selector: 'lib-quotations',
@@ -90,9 +93,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   isNewVersion = false;
   popupView: DialogRef;
   viewType: any;
-  paramDefault: any;
   currencyIDDefault = 'VND';
   exchangeRateDefault = 1;
+  applyApprover = '0';
 
   constructor(
     private inject: Injector,
@@ -139,29 +142,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   async loadSetting() {
-    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
-      if (res?.length > 0) {
-        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
-        if (dataParam) {
-          this.paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyIDDefault =
-            this.paramDefault['DefaultCurrency'] ?? 'VND';
-          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
-          if (this.currencyIDDefault != 'VND') {
-            let day = new Date();
-            this.codxCmService
-              .getExchangeRate(this.currencyIDDefault, day)
-              .subscribe((res) => {
-                if (res && res != 0) this.exchangeRateDefault = res;
-                else {
-                  this.currencyIDDefault = 'VND';
-                  this.exchangeRateDefault = 1;
-                }
-              });
-          }
-        }
-      }
-    });
+    this.loadParam();
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
     );
@@ -175,6 +156,40 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         .map((x: any) => x.fieldName);
       this.getColumsGrid(this.grvSetup);
     }
+  }
+
+  loadParam() {
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
+
+    //tien te
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        let paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+        if (this.currencyIDDefault != 'VND') {
+          let day = new Date();
+          this.codxCmService
+            .getExchangeRate(this.currencyIDDefault, day)
+            .subscribe((res) => {
+              if (res) this.exchangeRateDefault = res?.exchRate;
+              else {
+                this.currencyIDDefault = 'VND';
+                this.exchangeRateDefault = 1;
+              }
+            });
+        }
+      }
+    });
   }
 
   getColumsGrid(grvSetup) {
@@ -296,28 +311,31 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         switch (res.functionID) {
           //gui duyet
           case 'CM0202_1':
-            if (data.status != '0' && data.status != '4') {
+            if (
+              (data.status != '0' && data.status != '4') ||
+              this.applyApprover != '1'
+            ) {
               res.disabled = true;
             }
             break;
           //huy duyet
           case 'CM0202_2':
-            if (data.status != '1') {
+            if (data.status != '1' || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;
           //tao hop dong
           case 'CM0202_3':
-            if (data.status != '2') {
+            if (data.status != '2' && this.applyApprover == '1') {
               res.isblur = true;
             }
             break;
           //tao version moi
           case 'CM0202_4':
-            if (data.status < 2) {
+            if (data.status < 2 && this.applyApprover == '1') {
               res.isblur = true;
             }
-            if (data?.newVerCreated) {
+            if (data?.newVerCreated || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;
@@ -350,6 +368,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   clickMF(e, data) {
     this.titleAction = e.text;
     this.itemSelected = data;
+    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -405,7 +424,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
     // res.status = res.status ?? '0';
-    res.exchangeRate = res.exchangeRate ?? this.exchangeRateDefault;
+    res.exchangeRate =
+      res.exchangeRate && res.exchangeRate != 0
+        ? res.exchangeRate
+        : this.exchangeRateDefault;
     res.totalAmt = res.totalAmt ?? 0;
     res.currencyID = res.currencyID ?? this.currencyIDDefault;
 
@@ -563,8 +585,29 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   // tạo hợp đồng
-  createContract(dt) {
-    //viet vao day thuan
+  createContract(quotation: CM_Quotations) {
+    let contract = new CM_Contracts();
+    contract.customerID = quotation?.customerID;
+    contract.quotationID = quotation?.recID;
+    let data = {
+      projectID: null,
+      action: 'add',
+      contract: contract || null,
+      account: null,
+      type: 'quotation',
+      actionName: this.titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = this.formModel;
+    this.callfunc
+      .openForm(AddContractsComponent, '', null, null, '', data, '', option)
+      .closed.subscribe((contract) => {
+        if (contract) {
+          this.notiService.notifyCode('SYS006');
+        }
+      });
   }
   // end
 
@@ -587,10 +630,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-    //   if (deals) {
-    // this.codxCmService.getProcess('ES_CM0501').subscribe((process) => {
-    //   if (process) {
     this.codxCmService
       .getESCategoryByCategoryID('ES_CM0501')
       .subscribe((res) => {
@@ -605,83 +644,66 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           this.release(dt, res);
         }
       });
-    // }
-    //     else {
-    //       this.notiService.notifyCode('DP040');
-    //     }
-    //   });
-    //  }
-    // else {
-    //   this.notiService.notify(
-    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-    //     '3'
-    //   );
-    //   }
-    // });
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCM
-    //         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.itemSelected = q;
-    //             this.view.dataService.update(this.itemSelected).subscribe();
-    //           }
-    //           this.notiService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
-    this.codxShareService.codxReleaseDynamic(
-      this.view.service,
-      data,
-      category,
-      this.view.formModel.entityName,
-      this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback
-    );
+    this.codxShareService
+      .codxRelease(
+        this.view.service,
+        data?.recID,
+        category.processID,
+        this.view.formModel.entityName,
+        this.view.formModel.funcID,
+        '',
+        data?.title,
+        ''
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+        else {
+          this.codxCmService
+            .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+            .subscribe((q) => {
+              if (q) {
+                this.itemSelected = q;
+                this.view.dataService.update(this.itemSelected).subscribe();
+              }
+              this.notiService.notifyCode('ES007');
+            });
+        }
+      });
+    // this.codxShareService.codxReleaseDynamic(
+    //   this.view.service,
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback
+    // );
   }
   //call Back
   releaseCallback(res: any) {
-    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    else {
-      this.codxCmService
-        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
-    }
+    console.log(this);
+    // lỗi call back cần tra this
+    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    // this.codxCmService
+    //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+    //   .subscribe((q) => {
+    //     if (q) {
+    //       this.itemSelected = q;
+    //       this.view.dataService.update(this.itemSelected).subscribe();
+    //     }
+    //     this.notiService.notifyCode('ES007');
+    //   });
+    //}
   }
 
   //Huy duyet
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        // this.codxCmService.getDeals(dt.dealID).subscribe((deals) => {
-        //   if (deals) {
-        //     this.codxCmService
-        //       .getProcess(deals.processID)
-        //       .subscribe((process) => {
-        //         if (process) {
         this.codxCmService
           .getESCategoryByCategoryID('ES_CM0501')
           .subscribe((res2: any) => {
@@ -718,15 +740,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.notiService.notifyCode('DP040');
       }
     });
-    // } else {
-    //   this.notiService.notify(
-    //     'Cơ hội không tồn tại hoặc đã bị xóa ! Vui lòng liên hê "Khanh" để xin messcode',
-    //     '3'
-    //   );
-    // }
-    //     });
-    //   }
-    // });
   }
   //end duyet
   //--------------------------------------------------------------------//

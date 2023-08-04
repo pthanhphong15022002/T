@@ -18,7 +18,7 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-50 min-w-350px p-1">
+    <div class="w-30 min-w-300px p-1">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -107,7 +107,7 @@
       </div>
     </div>
 
-    <div class="w-20 min-w-200px px-2">
+    <div class="w-40 min-w-300px px-2">
       <div class="d-flex">
         <ng-container *ngIf="flagChangeMF">
           <ng-container *ngIf="runModeCheck; else elseVll">
@@ -136,7 +136,12 @@
           </ng-template>
         </ng-container>
         <div
-          *ngIf="data?.isCurrent && !data?.isExpire"
+          *ngIf="
+            data?.status === '5' &&
+            dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+            (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+              data.expiredDate === null)
+          "
           #popOver="ngbPopover"
           [openDelay]="500"
           (mouseenter)="popOver.open()"
@@ -249,13 +254,13 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-50 min-w-350px p-3 fw-bold text-dark">
+    <div class="w-30 min-w-300px p-3 fw-bold text-dark">
       <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
     </div>
     <div class="w-30 min-w-250px p-3 fw-bold text-dark">
       <codx-label name="lblContractType" [default]="'Hợp đồng'"></codx-label>
     </div>
-    <div class="w-20 min-w-200px p-3 fw-bold text-dark">
+    <div class="w-40 min-w-300px p-3 fw-bold text-dark">
       <codx-label name="lblContractNum" [default]="'Tình trạng'"></codx-label>
     </div>
     <!-- <div class="w-150px min-w-150px p-3 fw-bold text-dark">
@@ -301,7 +306,12 @@
   </codx-temp-full>
   <ng-template #titleRight>
     <div
-      *ngIf="data?.isCurrent && !data?.isExpire"
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
@@ -419,7 +429,14 @@
 
 <ng-template #baseHeaderRightTmp let-data>
   <div>
-    <ng-container *ngIf="data?.isCurrent && !data?.isExpire">
+    <ng-container
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
+    >
       <span
         [style.color]="'#0078FF'"
         class="icon-bookmark icon-18"

@@ -169,8 +169,6 @@ export class CatagoryComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
-    //cm-VTHAO them ngay 4/07/2023
-    // if (this.function?.functionID == 'CMS')
   }
 
   openPopup(evt: any, item: any, reference: string = '') {

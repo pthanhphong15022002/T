@@ -902,8 +902,8 @@ export class InstancesComponent
                   res.isblur = true;
                 }
                 break;
-              case 'SYS004':
-              case 'SYS002':
+              // case 'SYS004':
+              // case 'SYS002':
               case 'DP21':
                 res.disabled = true;
                 break;
@@ -946,8 +946,8 @@ export class InstancesComponent
                 break;
               case 'DP09':
               case 'DP10':
-              case 'SYS004':
-              case 'SYS002':
+              // case 'SYS004':
+              // case 'SYS002':
               case 'DP02':
               case 'DP23':
                 mf.disabled = true;
@@ -1013,13 +1013,20 @@ export class InstancesComponent
         this.cancelApprover(data);
         break;
       default: {
+        //Biến động tự custom
+        var customData = {
+          refID: this.process.recID,
+          refType: 'DP_Processes',
+          dataSource: data.datas,
+        };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
           this.view.formModel,
           this.view.dataService,
-          this
+          this,
+          customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -2079,8 +2086,8 @@ export class InstancesComponent
     link.click();
   }
   loadEx() {
-    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
-    this.requestTemp.dataValues = this.process.recID + ';DP_Processes';
+    this.requestTemp.predicate = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValue = this.process.recID + ';DP_Processes';
     this.requestTemp.entityName = 'AD_ExcelTemplates';
     this.classNameTemp = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -2088,8 +2095,8 @@ export class InstancesComponent
     });
   }
   loadWord() {
-    this.requestTemp.predicates = 'RefID=@0 && RefType=@1';
-    this.requestTemp.dataValues = this.process.recID + ';DP_Processes';
+    this.requestTemp.predicate = 'RefID=@0 && RefType=@1';
+    this.requestTemp.dataValue = this.process.recID + ';DP_Processes';
     this.requestTemp.entityName = 'AD_WordTemplates';
     this.classNameTemp = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {

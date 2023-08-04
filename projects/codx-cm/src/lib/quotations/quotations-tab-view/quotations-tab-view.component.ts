@@ -92,6 +92,9 @@ export class QuotationsTabViewComponent
   popupView: DialogRef;
   isNewVersion: boolean;
   oldVersion: any;
+  applyApprover = '0';
+  currencyIDDefault = 'VND';
+  exchangeRateDefault = 1;
 
   constructor(
     private inject: Injector,
@@ -119,6 +122,7 @@ export class QuotationsTabViewComponent
         if (mfAdd) this.titleActionAdd = mfAdd?.customName;
       }
     });
+    this.loadParam();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -292,8 +296,11 @@ export class QuotationsTabViewComponent
     res.salespersonID = res.salespersonID ?? this.salespersonID;
     res.consultantID = res.consultantID ?? this.consultantID;
     res.totalAmt = res.totalAmt ?? 0;
-    res.exchangeRate = res.exchangeRate ?? 1;
-    res.currencyID = res.currencyID ?? 'VND';
+    res.exchangeRate =
+      res.exchangeRate && res.exchangeRate != 0
+        ? res.exchangeRate
+        : this.exchangeRateDefault;
+    res.currencyID = res.currencyID ?? this.currencyIDDefault;
     res.versionNo = res.versionNo ?? 'V1';
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
@@ -590,4 +597,38 @@ export class QuotationsTabViewComponent
   }
   //end duyet
   //--------------------------------------------------------------------//
+
+  loadParam() {
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
+
+    //tien te
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        let paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+        if (this.currencyIDDefault != 'VND') {
+          let day = new Date();
+          this.codxCmService
+            .getExchangeRate(this.currencyIDDefault, day)
+            .subscribe((res) => {
+              if (res) this.exchangeRateDefault = res?.exchRate;
+              else {
+                this.currencyIDDefault = 'VND';
+                this.exchangeRateDefault = 1;
+              }
+            });
+        }
+      }
+    });
+  }
 }

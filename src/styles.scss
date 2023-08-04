@@ -986,6 +986,19 @@ codx-view-list-detail .codx-detail-footer.expand .tab_footer {
   right: 15px;
 }
 
+.e-dlg-content .codx-detail-footer.expand .tab-content {
+  overflow: auto;
+  padding: 0 15px;
+  position: relative;
+  height: 360px;
+  padding-bottom: 0 !important;
+}
+
+.e-dlg-content .codx-detail-footer.expand .tab_footer {
+  bottom: 8px;
+  right: 15px;
+}
+
 codx-view-list-detail
   .codx-detail-footer.expand
   .tab_footer
@@ -1877,7 +1890,7 @@ textarea.codx-textarea {
 
 codx-dropdown-calendar {
   button.dropdown-toggle.btn {
-    height: 33px !important;
+    height: 28px !important;
     line-height: inherit;
   }
   .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(
@@ -1885,10 +1898,23 @@ codx-dropdown-calendar {
     ):not(.btn-flush):not(.btn-icon) {
     padding-top: 4px !important;
     padding-bottom: 4px !important;
-    height: 33px !important;
+    height: 28px !important;
   }
 }
-
+.page-pw{
+codx-dropdown-calendar {
+  button.dropdown-toggle.btn {
+    height: 28px !important;
+  }
+  .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(
+      .border-active
+    ):not(.btn-flush):not(.btn-icon) {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    height: 28px !important;
+  }
+}
+}
 
 codx-toolbar{
 codx-dropdown-calendar {
@@ -2784,6 +2810,7 @@ codx-toolbar {
     }
    
   }
+  
   .card-footer {
     padding: 5px !important;
     padding-bottom: 0 !important;
@@ -2796,6 +2823,7 @@ codx-toolbar {
   }
   
 }
+
 .aside.aside-extended{
   padding-left: 0px!important;
 }
@@ -3031,7 +3059,7 @@ codx-layout{
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
-    min-height: 28px;
+    min-height: 26px;
     padding: 3px 8px 3px 8px;
   }
   input.e-input {
@@ -3202,18 +3230,6 @@ codx-toolbar-report{
 }
 
 
-
-/////
-.e-gantt-splitter table tr{
-  height: 40px!important;
-}
-.e-gantt-splitter table tr.e-chart-row div{
-  height: 40px!important;
-}
-
-
-///
-/// 
 /// 
 .gridview-sum{
   .sum-label{
@@ -3314,7 +3330,7 @@ codx-card-center .card.codx_cardcenter{
 }
 lib-popup-detail{
 .conmement-body{
-    height: calc(100vh - 190px);
+    height: calc(100vh - 196px);
     overflow: auto;
 }
 }
@@ -3458,67 +3474,72 @@ lib-employee-list{
 .multiple-employee.w-25px.h-25px{
   line-height: 25px!important;
 }
-
-// .text-feed::-webkit-scrollbar-track {
-//   background-color: transparent !important; /* ẩn thanh cuộn */
-// }
-
-// .text-feed::-webkit-scrollbar-thumb {
-//   background-color: transparent !important; /* ẩn thanh cuộn */
-// }
-
-
-
-/*
-.cm-scroll .e-content{
-  padding-bottom: 30px;
-  overflow: auto;
-}
-
-*/
-/*
-codx-views[ng-reflect-func-i-d="CM0101"]{
-  .cm-scroll .e-content{
-    height: calc(100vh - 402px)!important;
+/** hr co cau to chuc */
+codx-view-list-tree{
+  height: 100%!important;
+  .item-tree.item-selected{
+    background-color: var(--primary-lighter);
+  }
+  codx-listview .card-body.p-0{
+    height: 100%!important;
+    background-color: white;
+  }
+} 
+.e-pane .aside-menu{
+  .menu-nav .menu-item >.d-flex.align-items-center:hover{
+    background-color: transparent;
+    span{
+      color: var(--gray-600);
+    }
+  }
+  .menu-nav .menu-item .item-selected{
+    color: var(--primary-dark);
   }
 }
-codx-views[ng-reflect-func-i-d="CM0102"]{
-  .cm-scroll .e-content{
-    height: calc(100vh - 300px)!important;
-  }
+.e-tab .e-tab-header .e-scroll-nav .e-nav-left-arrow::before, .e-tab .e-tab-header .e-scroll-nav .e-nav-right-arrow::before {
+  font-size: 16px;
 }
-codx-views[ng-reflect-func-i-d="CM0103"]{
-  .cm-scroll .e-content{
-    height: calc(100vh - 350px)!important;
-  }
+.e-hscroll .e-scroll-nav {
+  background: var(--gray-150)!important;
 }
-codx-views[ng-reflect-func-i-d="CM0104"]{
-  .cm-scroll .e-content{
-    height: calc(100vh - 340px)!important;
-  }
-}
-*/
 
-//////
+.e-dlg-content { 
+  .codx-detail-footer{
+    border-top: 1px var(--gray-150) solid;
+    .tab-action {
+      position: absolute;
+      top: 2px;
+      right: 15px;
+    }
+    .py-5.tab-content {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
+      padding-left: 25px;
+      padding-right: 15px;
+    }
+    codx-tabs .nav-link {
+      padding: 8px;
+    }
+  }
+  position: relative;
 
-/*
-codx-lead-detail{
-  .codx-detail-body ejs-tab .e-content{
-    height: calc(100vh - 424px)!important;
+  .codx-detail-main{
+    height: calc(100vh - 60px);
     overflow: auto;
- 
+    padding-bottom: 60px;
+  }
+  .codx-detail-footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 99;
+  }
+  .codx-detail-toolbar{
+    background-color: white;
+  }
+  .codx-detail-header.mt-3{
+    margin-top: 0!important;
   }
 }
-
-codx-deal-detail{
-  .deal-tab-content{    
-    height: calc(100vh - 424px)!important;
-    overflow: auto;
-
-  }
-}
-
-lib-organization .content-tree li.menu-item>div.d-flex.align-items-center{
-  align-items: start!important;
-}
-*/

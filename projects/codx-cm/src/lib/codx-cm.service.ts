@@ -1,3 +1,4 @@
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { Injectable } from '@angular/core';
 import { LayoutModel } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -684,12 +685,30 @@ export class CodxCmService {
     );
   }
   // API for More in deal
-  getEmployeesByEmpID(data) {
+  getEmployeesByDomainID(data) {
     return this.api.execSv(
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetEmployeeInforAsync',
+      'GetEmpByUserIDAsync',
+      data
+    );
+  }
+  changeStatus(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'ChangeStatusLeadAsync',
+      data
+    );
+  }
+  updateContentBANT(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'EditDealAsync',
       data
     );
   }
@@ -729,12 +748,30 @@ export class CodxCmService {
       data
     );
   }
+  moveStartFirstLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStartFirstLeadAsync',
+      data
+    );
+  }
   startInstance(data) {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
       'InstancesBusiness',
       'StartInstanceInDealAsync',
+      data
+    );
+  }
+  moveBackStartInstance(data) {
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstanceStepsBusiness',
+      'MoveBackStartByIdInstnaceAsync',
       data
     );
   }
@@ -748,6 +785,16 @@ export class CodxCmService {
       data
     );
   }
+  updateProcess(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'UpdateProcessLeadAsync',
+      data
+    );
+  }
+
 
   moveStageCases(data) {
     return this.api.execSv<any>(
@@ -1296,4 +1343,14 @@ export class CodxCmService {
   getOneObject(recID, className) {
     return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
   }
+  //#region getParamModule
+  getParam(sformName, category) {
+    return this.api.exec<any>(
+      'SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      [sformName, category]
+    );
+  }
+  //end
 }

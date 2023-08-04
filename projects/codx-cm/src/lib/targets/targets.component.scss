@@ -10,8 +10,53 @@
     }
   }
 }
-.om-ejs-tab {
+.scroll-tree {
   //height: calc(100vh - 212px);
   height: calc(100vh - 175px);
   overflow: auto;
+}
+
+.scroll-grid {
+  //height: calc(100vh - 212px);
+  height: calc(100vh - 182px);
+  overflow: auto;
+}
+
+.height-parent{
+  height: 50px !important
+}
+
+.height-child-user{
+  height: 25px !important;
+}
+
+.height-child{
+  height: 50px !important
+}
+.overflow-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overflow-ellipsis:hover {
+  white-space: normal;
+  overflow: visible;
+}
+
+.view-switch {
+  background-color: #a19999 !important;
+}
+
+.cm-bg-primary{
+  background-color: var(--primary) !important;
+}
+.cm-rounded-pill-left {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
+
+.cm-rounded-pill-right {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
 }

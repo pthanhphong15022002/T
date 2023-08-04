@@ -19,7 +19,7 @@ export class EmployeeListByOrgComponent {
   @Input() editable: boolean = false;
   @Input() modeView: string = 'employee';
   @Input() rowHeight: string = '50';
-  @Input() showRowNumber: boolean = false;
+  @Input() showRowNumber: boolean = true;
   @Input() funcID: string = 'HRT03a1';
   @Output() dataChange: EventEmitter<any> = new EventEmitter();
   @Output() gridViewDataService: EventEmitter<any> = new EventEmitter();
@@ -171,7 +171,7 @@ export class EmployeeListByOrgComponent {
           this.gridViewDataService.emit(this.grid.dataService);
         }
       }
-    }, 50);
+    }, 200);
   }
 
   getManager(orgUnitID: string) {
@@ -339,14 +339,14 @@ export class EmployeeListByOrgComponent {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
       let queryParams = {
         employeeID: data.employeeID,
-        page: this.view.dataService.page,
-        totalPage: this.view.dataService.pageCount,
+        page: this.grid.dataService.page,
+        totalPage: this.grid.dataService.pageCount,
       };
       let state = {
-        data: this.view.dataService.data.map(function (obj) {
+        data: this.grid.dataService.data.map(function (obj) {
           return { EmployeeID: obj.employeeID };
         }),
-        request: this.view.dataService.request,
+        request: this.grid.dataService.request,
       };
       this.codxService.navigate('', func?.url, queryParams, state, true);
     });

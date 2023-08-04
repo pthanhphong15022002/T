@@ -12,10 +12,10 @@
 
     <div class="col-4">
       <lib-dropdown-detail
-        *ngIf="objectType === 'U' || !objectType"
+        *ngIf="objectType === 'U'"
         [formModel]="formModel"
-        [objectId]="objectId"
         [objectType]="objectType"
+        [permissions]="permissions"
       ></lib-dropdown-detail>
     </div>
 
@@ -34,7 +34,7 @@
   <div class="pb-2" *ngIf="objectType && objectType !== 'U'">
     <lib-dropdown-detail
       [formModel]="formModel"
-      [objectId]="objectId"
+      [permissions]="permissions"
       [objectType]="objectType"
     ></lib-dropdown-detail>
   </div>

@@ -1,11 +1,14 @@
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Injector,
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   DialogData,
@@ -21,14 +24,19 @@ import {
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-voucher',
   templateUrl: './voucher.component.html',
   styleUrls: ['./voucher.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class VoucherComponent extends UIComponent implements OnInit {
   //#region Constructor
+  @ViewChild('grid') public grid: CodxGridviewV2Component;
+  @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   title: string;
   cashpayment: any;
@@ -48,10 +56,6 @@ export class VoucherComponent extends UIComponent implements OnInit {
   predicates: string;
   dataValues: string;
   objectName:any;
-  @ViewChild('grid') public grid: CodxGridviewV2Component;
-  @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
-  @ViewChild('cashRef') cashRef: ElementRef;
   morefunction: any;
   payAmt: number = 0;
   sort:any = Array<SortModel> ;
@@ -61,9 +65,12 @@ export class VoucherComponent extends UIComponent implements OnInit {
     allowEditing: true,
     mode: 'Normal',
   };
+  isInit:any = false;
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
+    private dt: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -75,31 +82,22 @@ export class VoucherComponent extends UIComponent implements OnInit {
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
+    this.setDefault();
   }
   //#region Constructor
 
   //#region Init
   onInit(): void {
-    this.cache
-      .moreFunction('SubLedgerOpen', 'grvSubLedgerOpen')
-      .subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'ACT041005');
-          if (m) {
-            this.morefunction = m;
-          }
-        }
-      });
-      this.setDefault();
+    this.acService.setPopupSize(this.dialog, '80%', '90%');
   }
 
   ngAfterViewInit() {
-    // let hBody, hTab;
-    // if (this.cardbodyRef)
-    //   hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
-    // if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
-    // this.gridHeight = hBody - (hTab + 120);
-    this.acService.setPopupSize(this.dialog, '80%', '80%');
+    this.dt.detectChanges();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   setDefault(){
@@ -133,36 +131,34 @@ export class VoucherComponent extends UIComponent implements OnInit {
     let cashDiscDate;
     let accID = this.form.formGroup.controls.accountID.value;
     if (data.unbounds) cashDiscDate = data.unbounds.cashDiscDate;
-    this.api
-      .exec('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
-        data,
-        accID,
-        this.cashpayment.objectID,
-        this.cashpayment.journalType,
-        this.cashpayment.voucherDate,
-        cashDiscDate,
-        this.cashpayment.currencyID,
-        this.cashpayment.exchangeRate,
-        this.payAmt,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.grid.dataSource[e.rowIndex] = res;
-          this.grid.gridRef.dataSource = [...this.grid.dataSource];
-          if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
-            this.oldSelected = e.rowIndexes;
-          }
-
-          setTimeout(() => {
-            if (this.isDblCLick) {
-              this.isDblCLick = false;
-              this.grid.gridRef.startEdit();
-            } else {
-              this.grid.gridRef?.selectRows(this.oldSelected);
-            }
-          }, 200);
+    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
+      data,
+      accID,
+      this.cashpayment.objectID,
+      this.cashpayment.journalType,
+      this.cashpayment.voucherDate,
+      cashDiscDate,
+      this.cashpayment.currencyID,
+      this.cashpayment.exchangeRate,
+      this.payAmt,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+      if (res) {
+        this.grid.dataSource[e.rowIndex] = res;
+        this.grid.gridRef.dataSource = [...this.grid.dataSource];
+        if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
+          this.oldSelected = e.rowIndexes;
         }
-      });
+
+        setTimeout(() => {
+          if (this.isDblCLick) {
+            this.isDblCLick = false;
+            this.grid.gridRef.startEdit();
+          } else {
+            this.grid.gridRef?.selectRows(this.oldSelected);
+          }
+        }, 200);
+      }
+    })
   }
 
   valueChange(e: any) {
@@ -200,6 +196,11 @@ export class VoucherComponent extends UIComponent implements OnInit {
     if (field === 'accountID' && e.data) {
       this.mapPredicates.set('accountID', 'AccountID = @0');
       this.mapDataValues.set('accountID', e.data);
+    }
+
+    if (field === 'currencyID' && e.data) {
+      this.mapPredicates.set('currencyID', 'CurrencyID = @0');
+      this.mapDataValues.set('currencyID', e.data);
     }
 
     if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {
@@ -259,12 +260,10 @@ export class VoucherComponent extends UIComponent implements OnInit {
   apply() {
     let data = this.grid.arrSelectedRows;
     this.dialog.close(data);
-    this.api
-      .exec<any>('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
-        this.cashpayment,
-        data,
-      ])
-      .subscribe((res) => {});
+    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
+      this.cashpayment,
+      data,
+    ]).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   paymentAmt(data) {
@@ -276,20 +275,19 @@ export class VoucherComponent extends UIComponent implements OnInit {
     });
 
     if (termID) {
-      this.api
-        .exec<any>(
-          'BS',
-          'PaymentTermsBusiness',
-          'GetListPmtAsync',
-          JSON.stringify(termID)
-        )
-        .subscribe((res) => {
-          if (res) this.handSettledAmt(data, res);
-        });
+      this.acService.execApi('BS',
+      'PaymentTermsBusiness',
+      'GetListPmtAsync',
+      JSON.stringify(termID)).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if(res){
+          this.handSettledAmt(data, res);
+        }
+      })
     } else this.handSettledAmt(data);
   }
 
   close() {
+    this.onDestroy();
     this.dialog.close();
   }
   //#endregion
@@ -352,48 +350,47 @@ export class VoucherComponent extends UIComponent implements OnInit {
     this.gridModel.entityName = 'AC_SubInvoices';
     let accID = this.form.formGroup.controls.accountID.value;
 
-    this.api
-      .exec<any>('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
-        this.gridModel,
-        accID,
-        this.cashpayment.objectID,
-        this.cashpayment.journalType,
-        this.cashpayment.voucherDate,
-        this.cashpayment.currencyID,
-        this.cashpayment.exchangeRate,
-        this.payAmt,
-        this.type,
-      ])
-      .subscribe((res) => {
-        if (res && res.length) {
-          this.subInvoices = res[0];
-          if (this.type == 1) {
-            setTimeout(() => {
-              this.grid.gridRef?.selectRows(res[2]);
-            }, 100);
-          }
+    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+      this.gridModel,
+      accID,
+      this.cashpayment.objectID,
+      this.cashpayment.journalType,
+      this.cashpayment.voucherDate,
+      this.cashpayment.currencyID,
+      this.cashpayment.exchangeRate,
+      this.payAmt,
+      this.type,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
+      if (res && res.length) {
+        this.subInvoices = res[0];
+        if (this.type == 1) {
           setTimeout(() => {
-            this.grid.refresh()
-          });     
+            this.grid.gridRef?.selectRows(res[2]);
+          }, 100);
         }
-      });
+        setTimeout(() => {
+          this.grid.refresh();
+        });     
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
   autoPay(data: []) {
     let accID = this.form.formGroup.controls.accountID.value;
-    this.api
-      .exec<any>('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
-        data,
-        this.cashpayment,
-        accID,
-        this.payAmt,
-      ])
-      .subscribe((res) => {
+    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
+      data,
+      this.cashpayment,
+      accID,
+      this.payAmt,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+      if (res) {
         this.subInvoices = res[0];
         setTimeout(() => {
           this.grid.gridRef?.selectRows(res[1]);
         }, 100);
-      });
+      }
+    })
   }
   //#endregion
 

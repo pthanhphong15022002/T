@@ -270,6 +270,7 @@ export class AppropvalNewsComponent extends UIComponent {
   //set des
   setDescription(data:any):string
   {
+    debugger
     if(data.category == "1" || data.category == "3" || data.category == "4")
       return data.content;
     else if(data.category == "companyinfo")
@@ -280,19 +281,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
   //
   hideMFc(moreFC:any,data:any){
-    // debugger
-    // if(moreFC && data.createdBy === this.user.userID)
-    // {
-    //   Array.from(moreFC).map((x:any) => {
-    //     if(x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03"){
-    //       x.disabled = true;
-    //     }
-    //     else
-    //     {
-    //       x.disabled = false;
-    //     }
-    //   });
-    // }
     Array.from(moreFC).map((x:any) => {
         x.disabled = true;
     });

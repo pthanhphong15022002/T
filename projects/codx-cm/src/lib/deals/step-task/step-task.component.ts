@@ -67,8 +67,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   listStepSuccess: tmpInstancesStepsReasons[] = [];
   listStepFail: tmpInstancesStepsReasons[] = [];
   stepIdReason: string = '';
-  dialogGuide: DialogRef;
+  dialogGuideZoomIn: DialogRef;
+  dialogGuideZoomOut: DialogRef;
   stepViews = [];
+  isZoomIn = false;
+  isZoomOut = false;
 
   formModel: FormModel = {
     entityName: 'DP_Instances_Steps_Reasons',
@@ -118,6 +121,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
       }
       if (this.listInstanceStep?.length > 0) {
+        this.stepViews = [];
         this.listInstanceStep.forEach((x) => {
           if (!x.isFailStep && !x.isSuccessStep) {
             let obj = {
@@ -374,12 +378,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.changeProgress.emit(event);
   }
 
-  showGuide(p) {
-    p.close();
+  showGuide() {
+    if(this.isZoomIn){
+      return;
+    }
+    if(this.isZoomOut){
+      this.dialogGuideZoomOut?.close();
+      this.isZoomOut = false;
+    }
+    this.isZoomIn = true;
     let option = new DialogModel();
     option.zIndex = 1001;
     if (this.popupGuide) {
-      this.dialogGuide = this.callfc.openForm(
+      this.dialogGuideZoomIn = this.callfc.openForm(
         this.popupGuide,
         '',
         600,
@@ -390,5 +401,41 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         option
       );
     }
+  }
+
+  zoomGuide(){
+    if(this.isZoomOut){
+      return;
+    }
+    if(this.isZoomIn){
+      this.dialogGuideZoomIn?.close();
+    }
+    this.isZoomOut = true;
+    this.isZoomIn = false;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    option.IsFull = true;
+    if (this.popupGuide) {
+      this.dialogGuideZoomOut = this.callfc.openForm(
+        this.popupGuide,
+        '',
+        600,
+        470,
+        '',
+        null,
+        '',
+        option
+      );
+    }
+  }
+  closeGuide(){
+    if(this.isZoomOut){
+      this.dialogGuideZoomOut?.close();
+    }
+    if(this.isZoomIn){
+      this.dialogGuideZoomIn?.close();
+    }
+    this.isZoomOut = false;
+    this.isZoomIn = false;
   }
 }

@@ -282,10 +282,6 @@
 
 <!-- (wheel)="onMouseWheel($event)" -->
 
-<!-- <button class="btn btn-primary" (click)="onScale(0.5)">50%</button>
-<button class="btn btn-primary mx-2" (click)="onScale(1)">100%</button>
-<button class="btn btn-primary" (click)="onScale(1.5)">150%</button> -->
-
 <!-- <org-diagram
   [items]="items"
   [annotations]="annotations"
@@ -315,36 +311,32 @@
 ]"
 >
 </org-diagram> -->
-<div class="me-4 mt-4 d-flex justify-content-end">
-  <input
-    min="1"
-    max="100"
-    value="50"
-    step="1"
-    #ref
-    (change)="showVal(ref.value)"
-    type="range"
-    [style]="stylesObj"
-  />
 
-  <button
-    class="btn btn-primary btn-sm me-2"
-    (click)="clearSetting()"
-  >
+<div class="me-4 mt-4 d-flex justify-content-end">
+  <!-- <div class="showhim">
+    <input
+      min="1"
+      max="100"
+      value="50"
+      step="1"
+      #ref
+      (change)="showVal(ref.value)"
+      type="range"
+      [style]="stylesObj"
+    />
+    <div class="showme">{{ scaleNumber * 100 + " %" }}</div>
+  </div> -->
+
+  <button class="btn btn-primary btn-sm me-2" (click)="clearSetting()">
     <i class="icon-clear_all icon-16"></i> Cài đặt lại
   </button>
-  <button
-    class="btn btn-primary btn-sm"
-    (click)="openSetting()"
-  >
+  <button class="btn btn-primary btn-sm" (click)="openSetting()">
     <i class="icon-settings icon-16"></i> Thiết lập
   </button>
 </div>
 
 <ng-template #templateUpdateStatus let-dialog1>
-  <div
-    class="codx-form card w-100 h-100 rounded-0 border-0"
-  >
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
@@ -369,9 +361,142 @@
       </div>
     </div>
 
+    <div class="card-body scroll-y h-100 pt-4">
+      <div class="text-dark fw-bold mt-5 mb-3">Chế độ phù hợp với trang</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          ngDefaultControl
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeNone"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeNone"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeWidth"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeWidth"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeWidth">
+          Vừa chiều rộng
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeHeight"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeHeight"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeHeight">
+          Vừa chiều cao
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
+          class="form-check-input"
+          type="radio"
+          name="flexRadioDefault"
+          id="pageFitModeFit"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="pageFitModeFit">
+          Vừa cả trang
+        </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          ngDefaultControl
+          [(ngModel)]="this.dataTree.orientationType"
+          value="orientationTop"
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationTop"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationTop"> Từ trên </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.orientationType"
+          value="orientationLeft"
+          class="form-check-input"
+          type="radio"
+          name="orientation"
+          id="orientationLeft"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="orientationLeft">Bên trái </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Vị trí cấp con</div>
+      <div class="form-check my-2 mx-3">
+        <input
+          ngDefaultControl
+          [(ngModel)]="this.dataTree.childrenPlacementType"
+          value="childrenPlacementVertical"
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementVertical"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementVertical">
+          Nằm ngang
+        </label>
+      </div>
+      <div class="form-check my-2 mx-3">
+        <input
+          [(ngModel)]="this.dataTree.childrenPlacementType"
+          value="childrenPlacementHorizontal"
+          class="form-check-input"
+          type="radio"
+          id="childrenPlacementHorizontal"
+          name="placement"
+          (change)="changeMode($event)"
+        />
+        <label class="form-check-label" for="childrenPlacementHorizontal">
+          Nằm dọc
+        </label>
+      </div>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Thông tin thẻ đơn vị</div>
+      <select class="form-select" #teams (change)="onSelected(teams.value)">
+        <option
+          value="Yes"
+          [selected]="this.dataTree.isGetManager === 'Yes' ? true : false"
+        >
+          Hiển thị thông tin Người quản lý
+        </option>
+        <option
+          value="No"
+          [selected]="this.dataTree.isGetManager === 'No' ? true : false"
+        >
+          Chỉ hiển thị tên đơn vị
+        </option>
+      </select>
+    </div>
+
     <!-- #region Layout -->
-    <div class="card-body px-0 scroll-y h-100 pt-4">
-      <div
+    <!-- <div class="card-body px-0 scroll-y h-100 pt-4"> -->
+    <!-- <div
         class="p-collapse c-first"
         (click)="collapsed[0] = !collapsed[0]"
         [attr.aria-expanded]="!collapsed[0]"
@@ -379,27 +504,38 @@
       >
         <div>Bố cục tự động</div>
 
-        <span class="icon-16"
+        <span
+          class="icon-16"
           [ngClass]="
             this.collapsed[0] ? 'icon-arrow_upward' : 'icon-arrow_downward'
           "
         ></span>
       </div>
-      
-      <div class="px-6 pb-3" #collapse="ngbCollapse" [(ngbCollapse)]="!collapsed[0]">
+
+      <div
+        class="px-6 pb-3"
+        #collapse="ngbCollapse"
+        [(ngbCollapse)]="!collapsed[0]"
+      >
         <div class="text-dark fw-bold mt-5 mb-3">Chế độ phù hợp với trang</div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeNone"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
             id="pageFitModeNone"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="pageFitModeNone"> Mặc định </label>
+          <label class="form-check-label" for="pageFitModeNone">
+            Mặc định
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeWidth"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -412,6 +548,8 @@
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeHeight"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -419,11 +557,13 @@
             (change)="changeMode($event)"
           />
           <label class="form-check-label" for="pageFitModeHeight">
-            Vừa chiều ngang
+            Vừa chiều cao
           </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.pagefit"
+            value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="flexRadioDefault"
@@ -434,32 +574,38 @@
             Vừa cả trang
           </label>
         </div>
-        <div class="form-check my-2 mx-3">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="flexRadioDefault"
-            id="pageFitModeSelect"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="pageFitModeSelect">
-            Chỉ khi chọn
-          </label>
-        </div>
 
-        <div class="text-dark fw-bold mt-5 mb-3">Định hướng</div>
+        <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.orientationType"
+            value="orientationTop"
             class="form-check-input"
             type="radio"
             name="orientation"
             id="orientationTop"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="orientationTop"> Trên cùng </label>
+          <label class="form-check-label" for="orientationTop"> Từ trên </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
+            [(ngModel)]="this.dataTree.orientationType"
+            value="orientationLeft"
+            class="form-check-input"
+            type="radio"
+            name="orientation"
+            id="orientationLeft"
+            (change)="changeMode($event)"
+          />
+          <label class="form-check-label" for="orientationLeft"
+            >Bên trái
+          </label>
+        </div>
+        <div class="form-check my-2 mx-3">
+          <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="orientation"
@@ -472,16 +618,8 @@
         </div>
         <div class="form-check my-2 mx-3">
           <input
-            class="form-check-input"
-            type="radio"
-            name="orientation"
-            id="orientationLeft"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="orientationLeft"> Trái </label>
-        </div>
-        <div class="form-check my-2 mx-3">
-          <input
+          [(ngModel)]="this.dataTree.pagefit"
+          value="pageFitModeFit"
             class="form-check-input"
             type="radio"
             name="orientation"
@@ -489,17 +627,7 @@
             (change)="changeMode($event)"
           />
           <label class="form-check-label" for="orientationRight"> Phải </label>
-        </div>
-        <div class="form-check my-2 mx-3">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="orientation"
-            id="orientationNone"
-            (change)="changeMode($event)"
-          />
-          <label class="form-check-label" for="orientationNone"> Không </label>
-        </div>
+        </div> 
 
         <div class="text-dark fw-bold mt-5 mb-3">Hạng mục căn dọc</div>
         <div class="form-check my-2 mx-3">
@@ -577,12 +705,12 @@
           </label>
         </div>
 
-        <!-- <div class="d-flex m-4">
+        <div class="d-flex m-4">
           <input type="checkbox" id="crossBranch" (change)="changeMode($event)" />
           <label class="ms-4 mt-2" for="crossBranch">
             Kích hoạt liên kết chéo nhánh con</label
           >
-        </div> -->
+        </div>
 
         <div class="form-check my-2 mx-3">
           <input
@@ -657,7 +785,9 @@
             name="leavesPlace"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="leavesPlaceAuto"> Tự động </label>
+          <label class="form-check-label" for="leavesPlaceAuto">
+            Tự động
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -754,7 +884,9 @@
             name="minimalNode"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="minimalNodeAuto"> Tự động </label>
+          <label class="form-check-label" for="minimalNodeAuto">
+            Tự động
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -776,7 +908,9 @@
             name="minimalNode"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="minimalNodeDot"> Dấu chấm </label>
+          <label class="form-check-label" for="minimalNodeDot">
+            Dấu chấm
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -851,12 +985,12 @@
             Đầy đủ
           </label>
         </div>
-      </div>
-    
-      <!-- #endregion-->
+      </div> -->
 
-      <!-- #region mẫu mặc định -->
-      <div
+    <!-- #endregion-->
+
+    <!-- #region mẫu mặc định -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[1] = !collapsed[1]"
         [attr.aria-expanded]="!collapsed[1]"
@@ -868,10 +1002,16 @@
           [ngClass]="collapsed[1] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-2" #collapse1="ngbCollapse" [ngbCollapse]="!collapsed[1]">
+      <div
+        class="px-6 pb-2"
+        #collapse1="ngbCollapse"
+        [ngbCollapse]="!collapsed[1]"
+      >
         <div class="row">
           <div class="col">
-            <div class="text-dark fw-bold mt-5 mb-3">Hiển thị các nút người dùng</div>
+            <div class="text-dark fw-bold mt-5 mb-3">
+              Hiển thị các nút người dùng
+            </div>
             <div class="form-check my-2 mx-3">
               <input
                 class="form-check-input"
@@ -880,7 +1020,9 @@
                 id="buttonUserAuto"
                 (change)="changeMode($event)"
               />
-              <label class="form-check-label" for="buttonUserAuto"> Auto </label>
+              <label class="form-check-label" for="buttonUserAuto">
+                Auto
+              </label>
             </div>
             <div class="form-check my-2 mx-3">
               <input
@@ -890,7 +1032,9 @@
                 id="buttonUserTrue"
                 (change)="changeMode($event)"
               />
-              <label class="form-check-label" for="buttonUserTrue"> True </label>
+              <label class="form-check-label" for="buttonUserTrue">
+                True
+              </label>
             </div>
             <div class="form-check my-2 mx-3">
               <input
@@ -900,7 +1044,9 @@
                 id="buttonUserFalse"
                 (change)="changeMode($event)"
               />
-              <label class="form-check-label" for="buttonUserFalse"> False </label>
+              <label class="form-check-label" for="buttonUserFalse">
+                False
+              </label>
             </div>
           </div>
           <div class="col">
@@ -946,36 +1092,20 @@
 
         <div class="text-dark fw-bold mt-5 mb-1">Nhãn hiển thị nút chọn</div>
         <div class="mb-3">
-          <input class="form-control"
+          <input
+            class="form-control"
             type="text"
             name="selectCheckBoxLabel"
             id="selectCheckBoxLabelText"
             (change)="changeMode($event)"
           />
         </div>
-      </div>
-
-      <!-- #endregion-->
-
-      <!-- #region tiêu đề nhóm -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[2] = !collapsed[2]"
-        [attr.aria-expanded]="!collapsed[2]"
-        aria-controls="collapseExample"
-      >
-        <span>Tiêu đề nhóm</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[2] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse2="ngbCollapse" [ngbCollapse]="!collapsed[2]">
-        <span>collapse</span>
       </div> -->
-      <!-- #endregion-->
-      <!-- #region đánh dấu -->
-      <div
+
+    <!-- #endregion-->
+
+    <!-- #region đánh dấu -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[3] = !collapsed[3]"
         [attr.aria-expanded]="!collapsed[3]"
@@ -987,7 +1117,11 @@
           [ngClass]="collapsed[3] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse3="ngbCollapse" [ngbCollapse]="!collapsed[3]">
+      <div
+        class="px-6 pb-3"
+        #collapse3="ngbCollapse"
+        [ngbCollapse]="!collapsed[3]"
+      >
         <div class="text-primary fw-bold mt-5 mb-3">Kích cỡ đánh dấu</div>
         <div class="row">
           <div class="col">
@@ -1065,7 +1199,9 @@
           </div>
         </div>
 
-        <div class="text-primary fw-bold mt-5 mb-3">Đánh dấu đường viền xung quanh</div>
+        <div class="text-primary fw-bold mt-5 mb-3">
+          Đánh dấu đường viền xung quanh
+        </div>
         <div class="row">
           <div class="col">
             <div class="text-dark mb-1">Trái</div>
@@ -1154,7 +1290,9 @@
             name="shapeMarker"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="rectangle"> Hình chữ nhật </label>
+          <label class="form-check-label" for="rectangle">
+            Hình chữ nhật
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -1214,7 +1352,9 @@
             name="shapeMarker"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="wedge"> Lăng trụ tam giác </label>
+          <label class="form-check-label" for="wedge">
+            Lăng trụ tam giác
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -1313,7 +1453,9 @@
             name="borderMarker"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="borderMarkerDot"> Dấu chấm </label>
+          <label class="form-check-label" for="borderMarkerDot">
+            Dấu chấm
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -1346,10 +1488,11 @@
           <option value="0.8">0.8</option>
           <option value="0.9">0.9</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region khoảng cách -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region khoảng cách -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[4] = !collapsed[4]"
         [attr.aria-expanded]="!collapsed[4]"
@@ -1361,8 +1504,14 @@
           [ngClass]="collapsed[4] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse4="ngbCollapse" [ngbCollapse]="!collapsed[4]">
-        <div class="text-primary fw-bold mt-5">Khoảng cách dọc giữa các hàng</div>
+      <div
+        class="px-6 pb-3"
+        #collapse4="ngbCollapse"
+        [ngbCollapse]="!collapsed[4]"
+      >
+        <div class="text-primary fw-bold mt-5">
+          Khoảng cách dọc giữa các hàng
+        </div>
         <div class="row">
           <div class="col-6">
             <div class="text-dark mt-3 mb-1">Bình thường</div>
@@ -1451,7 +1600,7 @@
             </select>
           </div>
         </div>
-        
+
         <div class="text-primary fw-bold mt-5">
           Khoảng cách ngang giữa các mục trong hàng
         </div>
@@ -1563,7 +1712,7 @@
             </select>
           </div>
         </div>
-       
+
         <div class="text-primary fw-bold mt-5">Tăng khoảng cách</div>
         <div class="row">
           <div class="col-6">
@@ -1655,11 +1804,11 @@
             </select>
           </div>
         </div>
- 
-      </div>
-      <!-- #endregion-->
-      <!-- #region Kết nối -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Kết nối -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[5] = !collapsed[5]"
         [attr.aria-expanded]="!collapsed[5]"
@@ -1671,7 +1820,11 @@
           [ngClass]="collapsed[5] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse5="ngbCollapse" [ngbCollapse]="!collapsed[5]">
+      <div
+        class="px-6 pb-3"
+        #collapse5="ngbCollapse"
+        [ngbCollapse]="!collapsed[5]"
+      >
         <div class="text-dark fw-bold mt-5 mb-3">Hướng mũi tên</div>
         <div class="form-check my-2 mx-3">
           <input
@@ -1790,7 +1943,11 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark mt-3 mb-3">Kích cỡ xiên cạnh</div>
-            <select id="bevelSize" class="form-select" (change)="changeMode($event)">
+            <select
+              id="bevelSize"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -1855,9 +2012,11 @@
             name="linesType"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="linesTypeDash"> Gạch ngang </label>
+          <label class="form-check-label" for="linesTypeDash">
+            Gạch ngang
+          </label>
         </div>
-        
+
         <div class="row">
           <div class="col-6">
             <div class="text-dark mt-3 mb-1">Màu đường kẻ</div>
@@ -1904,7 +2063,11 @@
           </div>
           <div class="col-6">
             <div class="text-dark mt-3 mb-3">Độ dày đường kẻ</div>
-            <select id="lineWidth" class="form-select" (change)="changeMode($event)">
+            <select
+              id="lineWidth"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -1918,11 +2081,11 @@
             </select>
           </div>
         </div>
- 
-      </div>
-      <!-- #endregion-->
-      <!-- #region Tiêu đề -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Tiêu đề -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[6] = !collapsed[6]"
         [attr.aria-expanded]="!collapsed[6]"
@@ -1934,7 +2097,11 @@
           [ngClass]="collapsed[6] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse6="ngbCollapse" [ngbCollapse]="!collapsed[6]">
+      <div
+        class="px-6 pb-3"
+        #collapse6="ngbCollapse"
+        [ngbCollapse]="!collapsed[6]"
+      >
         <div class="text-dark mt-3 mb-3">Hiển thị tiêu đề</div>
         <div class="form-check my-2 mx-3">
           <input
@@ -2094,7 +2261,9 @@
             name="labelPlacement"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="placeTopRight"> Trên phải </label>
+          <label class="form-check-label" for="placeTopRight">
+            Trên phải
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -2104,7 +2273,9 @@
             name="labelPlacement"
             (change)="changeMode($event)"
           />
-          <label class="form-check-label" for="placeRightTop"> Phải trên </label>
+          <label class="form-check-label" for="placeRightTop">
+            Phải trên
+          </label>
         </div>
         <div class="form-check my-2 mx-3">
           <input
@@ -2232,27 +2403,11 @@
           <option value="normal">Bình thường</option>
           <option value="bold">Đậm</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Gọi ra -->
-      <!-- <div
-        class="p-collapse"
-        (click)="collapsed[7] = !collapsed[7]"
-        [attr.aria-expanded]="!collapsed[7]"
-        aria-controls="collapseExample"
-      >
-        <span>Gọi ra</span>
-        <i
-          class="ms-auto"
-          [ngClass]="collapsed[7] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
-        ></i>
-      </div>
-      <div #collapse7="ngbCollapse" [ngbCollapse]="!collapsed[7]">
-        <span>collapse</span>
       </div> -->
-      <!-- #endregion-->
-      <!-- #region Tương tác -->
-      <div
+    <!-- #endregion-->
+
+    <!-- #region Tương tác -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[8] = !collapsed[8]"
         [attr.aria-expanded]="!collapsed[8]"
@@ -2264,7 +2419,11 @@
           [ngClass]="collapsed[8] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse8="ngbCollapse" [ngbCollapse]="!collapsed[8]">
+      <div
+        class="px-6 pb-3"
+        #collapse8="ngbCollapse"
+        [ngbCollapse]="!collapsed[8]"
+      >
         <div class="text-dark mt-3 mb-3">
           Sử dụng tùy chọn này để tắt đánh dấu chuột
         </div>
@@ -2316,10 +2475,11 @@
             Không kích hoạt
           </label>
         </div>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Hiển thị -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Hiển thị -->
+    <!-- <div
         class="p-collapse"
         (click)="collapsed[9] = !collapsed[9]"
         [attr.aria-expanded]="!collapsed[9]"
@@ -2331,19 +2491,22 @@
           [ngClass]="collapsed[9] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse9="ngbCollapse" [ngbCollapse]="!collapsed[9]">
-        <!-- <p class="text-dark fw-bold mt-5 mb-3">Phóng to thu nhỏ</p> -->
-
+      <div
+        class="px-6 pb-3"
+        #collapse9="ngbCollapse"
+        [ngbCollapse]="!collapsed[9]"
+      >
         <div class="text-dark mt-3 mb-1">Tùy chọn hiển thị đi kèm</div>
 
         <select class="form-select" #teams (change)="onSelected(teams.value)">
           <option default>Có quản lý</option>
           <option>Không có quản lý</option>
         </select>
-      </div>
-      <!-- #endregion-->
-      <!-- #region Khung -->
-      <div
+      </div> -->
+    <!-- #endregion-->
+
+    <!-- #region Khung -->
+    <!-- <div
         class="p-collapse c-first"
         (click)="collapsed[10] = !collapsed[10]"
         [attr.aria-expanded]="!collapsed[10]"
@@ -2352,10 +2515,16 @@
         <span>Khung</span>
         <span
           class="icon-16"
-          [ngClass]="collapsed[10] ? 'icon-arrow_upward' : 'icon-arrow_downward'"
+          [ngClass]="
+            collapsed[10] ? 'icon-arrow_upward' : 'icon-arrow_downward'
+          "
         ></span>
       </div>
-      <div class="px-6 pb-3" #collapse10="ngbCollapse" [ngbCollapse]="!collapsed[10]">
+      <div
+        class="px-6 pb-3"
+        #collapse10="ngbCollapse"
+        [ngbCollapse]="!collapsed[10]"
+      >
         <div class="text-dark fw-bold mt-5 mb-3">Hiển thị khung bao quanh</div>
         <div class="form-check my-2 mx-3">
           <input
@@ -2372,7 +2541,11 @@
         <div class="row">
           <div class="col-6">
             <div class="text-dark mt-3 mb-1">Trái</div>
-            <select id="frameLeft" class="form-select" (change)="changeMode($event)">
+            <select
+              id="frameLeft"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -2387,7 +2560,11 @@
           </div>
           <div class="col-6">
             <div class="text-dark mt-3 mb-1">Trên</div>
-            <select id="frameTop" class="form-select" (change)="changeMode($event)">
+            <select
+              id="frameTop"
+              class="form-select"
+              (change)="changeMode($event)"
+            >
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -2438,7 +2615,6 @@
               <option value="10">10</option>
             </select>
           </div>
-          
         </div>
 
         <div class="text-primary fw-bold mt-5">Tăng khoảng cách bên ngoài</div>
@@ -2519,17 +2695,28 @@
               <option value="10">10</option>
             </select>
           </div>
-
         </div>
-
-      </div>
-      <!-- #endregion-->
-    </div>
+      </div> -->
+    <!-- #endregion-->
+    <!-- </div> -->
+    <button
+      class="ms-auto btn btn-primary w-20 my-4 me-2"
+      (click)="onSaveForm()"
+      [disabled]="disableEdit"
+    >
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 
-<div class="sample">
+<div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
+    [cursorItem]="0"
     [navigationMode]="navigationMode"
     [items]="items"
     [annotations]="annotations"
@@ -2597,7 +2784,7 @@
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: 150 },
+        itemSize: { width: 170, height: selectedTeam.includes('No') ? 48 : 154 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2624,6 +2811,8 @@
           ? stylesObjChart
           : itemConfig.id === orgUnitID && !isCursor && !disableActive
           ? stylesObjChart
+          : selectedTeam.includes('No')
+          ? stylesObjChartNoneIsManager
           : stylesObjChartNone
       "
       (click)="clickActive(itemConfig.id)"
@@ -2659,7 +2848,7 @@
           </codx-mfunc>
         </div>
       </div>
-      <div class="p-1 mb-1">
+      <ng-container class="p-1 mb-1" *ngIf="!selectedTeam.includes('No')">
         <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
           <codx-img
             class="symbol symbol-60 symbol-circle me-2"
@@ -2783,8 +2972,13 @@
           ></codx-label>
         </div>
       </div> -->
-      </div>
-      <div *ngIf="itemConfig.context.isChildren" class="p-node">
+      </ng-container>
+      <div
+        *ngIf="itemConfig.context.isChildren"
+        [class]="
+          itemConfig.context.employeeManager ? 'p-node' : 'p-node__manager'
+        "
+      >
         <span
           #icon
           class="icon-20"

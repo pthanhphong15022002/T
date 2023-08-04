@@ -41,6 +41,7 @@ export class DealDetailComponent implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() saveAssign = new EventEmitter<any>();
+  @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabDetailViewDetail')
@@ -106,12 +107,6 @@ export class DealDetailComponent implements OnInit {
      this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
       {
-        name: 'Comment',
-        textDefault: 'Thảo luận',
-        isActive: false,
-        template: null,
-      },
-      {
         name: 'Attachment',
         textDefault: 'Đính kèm',
         isActive: false,
@@ -135,6 +130,12 @@ export class DealDetailComponent implements OnInit {
         isActive: false,
         template: this.referencesDeal,
         icon: 'icon-i-link',
+      },
+      {
+        name: 'Comment',
+        textDefault: 'Thảo luận',
+        isActive: false,
+        template: null,
       },
     ];
   }
@@ -565,4 +566,7 @@ export class DealDetailComponent implements OnInit {
     return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
   }
 
+  autoStart(event){
+    this.changeProgress.emit(event);
+  }
 }

@@ -529,6 +529,7 @@ export class DynamicProcessComponent
       case 'DP02014':
       case 'DP02024':
       case 'DP02034':
+      case 'DP034':
         if (this.isButton) this.roles(data);
         break;
       case 'DP01011':
@@ -536,6 +537,7 @@ export class DynamicProcessComponent
       case 'DP02021':
       case 'DP02031':
       case 'DP041':
+      case 'DP031':
         this.openDetail(data);
         //  this.viewDetailProcess(data);
         break;
@@ -543,26 +545,45 @@ export class DynamicProcessComponent
       case 'DP02033':
       case 'DP02023':
       case 'DP02013':
+      case 'DP033':
         if (this.isButton) this.properties(data);
         break;
       case 'DP01012': // edit name
       case 'DP02012':
       case 'DP02022':
+      case 'DP032':
         this.renameProcess(data);
         break;
+
       case 'DP042': // edit name
         this.restoreProcess(data);
         break;
       case 'DP01015': // thiết lập quy trình duyệt
+      case 'DP02015':
+      case 'DP02025':
+      case 'DP02035':
+      case 'DP035':
         this.settingSubmit(data.processNo);
         break;
       case 'DP01016': // phát hành quy trình
+      case 'DP02016':
+      case 'DP02026':
+      case 'DP02036':
+      case 'DP036':
         this.releaseProcess(data);
         break;
       case 'DP01017': //cập nhật phát hành quy trình
+      case 'DP02017':
+      case 'DP02027':
+      case 'DP02037':
+      case 'DP037':
         this.releaseProcess(data);
         break;
       case 'DP01018': // hủy phát hành quy trình
+      case 'DP02018':
+      case 'DP02028':
+      case 'DP02038':
+      case 'DP038':
         this.cancelReleaseProcess(data);
         break;
       default: {
@@ -587,11 +608,11 @@ export class DynamicProcessComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS005':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'SYS003':
+          // case 'SYS005':
+          // case 'SYS004':
+          // case 'SYS001':
+          // case 'SYS002':
+          // case 'SYS003':
           //more core - thay doi nhieu dong, bo chon, chon tat ca..
           case 'SYS007':
           case 'SYS006':
@@ -613,6 +634,7 @@ export class DynamicProcessComponent
           case 'DP02011':
           case 'DP02021':
           case 'DP02031':
+          case 'DP031':
             let isRead = this.checkPermissionRead(data);
             if (!isRead) {
               res.isblur = true;
@@ -623,6 +645,7 @@ export class DynamicProcessComponent
           case 'DP02012':
           case 'DP02022':
           case 'DP02032':
+          case 'DP032':
             if (
               data.category === '0' ||
               !data.write ||
@@ -647,16 +670,9 @@ export class DynamicProcessComponent
           case 'DP02014':
           case 'DP02024':
           case 'DP02034':
+          case 'DP034':
             if (!data.assign) res.isblur = true;
             break;
-          //Phát hành
-          // case 'DP01015':
-          // case 'DP02015':
-          // case 'DP02025':
-          //   let isPublish = data.publish;
-          //   if (!isPublish) res.isblur = true;
-
-          //   break;
           case 'SYS02': // xoa
             if (
               data.category === '0' ||
@@ -668,7 +684,12 @@ export class DynamicProcessComponent
               res.disabled = true;
             }
             break;
+          //Phát hành
           case 'DP01015':
+          case 'DP02015':
+          case 'DP02025':
+          case 'DP02035':
+          case 'DP035':
             if (!data.write) {
               res.disabled = true;
             } else if (!data.approveRule) {
@@ -676,14 +697,26 @@ export class DynamicProcessComponent
             }
             break;
           case 'DP01016':
+          case 'DP02016':
+          case 'DP02026':
+          case 'DP02036':
+          case 'DP036':
             if (data.category === '0' || data.released || !data?.publish)
               res.disabled = true;
             break;
           case 'DP01017':
+          case 'DP02017':
+          case 'DP02027':
+          case 'DP02037':
+          case 'DP037':
             if (data.category === '0' || !data.released || !data?.publish)
               res.disabled = true;
             break;
           case 'DP01018':
+          case 'DP02018':
+          case 'DP02028':
+          case 'DP02038':
+          case 'DP038':
             if (data.category === '0' || !data.released || !data?.publish)
               res.disabled = true;
             break;
@@ -765,6 +798,7 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
+    if (data?.deleted) return;
     let isRead = this.checkPermissionRead(data);
     if (isRead) {
       this.viewDetailProcess(data);

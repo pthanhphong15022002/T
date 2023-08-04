@@ -80,7 +80,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status == '2'; else statusDefault"
+          *ngIf="data.status == '2' && data.applyProcess ; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
           }"
@@ -178,6 +178,7 @@
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     [funcID]="funcID"
+    [applyProcess]="checkApplyProcess(dataSelected)"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
@@ -279,11 +280,11 @@
     </div>
   </div> -->
 
-  <div class="d-flex justify-content-end">
+  <div class="d-flex align-items-center justify-content-end">
     <div class="me-auto">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status == '2'; else statusDefault"
+        *ngIf="data.status == '2' && data.applyProcess ; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
           }"
@@ -321,7 +322,7 @@
                 ></span>
               </div>
             </ng-template>
-            <codx-vll
+             <codx-vll
               [name]="gridViewSetup?.Status?.referedValue"
               [field]="'Status'"
               [value]="data?.status"
@@ -334,20 +335,20 @@
         </ng-template>
       </div>
     </div>
-    <div class="pe-1">
-      <span class="icon-16 icon-av_timer me-1"></span>
+    <div class="pe-1 d-flex align-items-center">
+      <span class="icon-16 icon-av_timer me-1 pt-1"></span>
       <span
-        class="text-gray-700"
+        class="text-gray-700 pt-1"
         #modifiedOn
         [innerHTML]="
           data?.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
         "
       ></span>
     </div>
-    <div>
+    <div class="h-20px">
       <codx-imgs
         [isToolTip]="true"
-        [width]="25"
+        [width]="20"
         [objectId]="data?.owner"
         objectType="AD_Users"
         [numberImages]="1"
@@ -395,5 +396,31 @@
 
 <!-- View chi tiet kanban -gird -->
 <ng-template #popDetail let-popup>
-  <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
+  <codx-form [body]="templateDetail" [dialog]="popup"
+  > </codx-form>
+</ng-template>
+
+
+<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+  <codx-form
+  [headerText]="titleAction"
+    [body]="bodyFormCopyName"
+    [footer]="footerFormCopyName"
+    [dialog]="dialogQuestionCopy"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyFormCopyName>
+<ejs-combobox [dataSource]="valueListStatus"  [fields]="fieldCbxStatus"
+(valueChange)="valueChangeStatus($event)"
+[placeholder]="gridViewSetup?.Status?.description"
+[allowFiltering]='true' [value]=""></ejs-combobox>
+
+</ng-template>
+
+<ng-template #footerFormCopyName>
+  <button type="button" class="btn btn-primary" (click)="saveCopy()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
 </ng-template>

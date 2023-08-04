@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType, FormModel } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType, FormModel, DialogModel } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPolicyalComponent } from './popup-policyal/popup-policyal.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PopupIncludeExcludeObjComponent } from './popup-include-exclude-obj/popup-include-exclude-obj.component';
 
 @Component({
   selector: 'lib-employee-policyal',
@@ -121,6 +122,25 @@ export class EmployeePolicyalComponent extends UIComponent{
         );
   }
 
+  DeletePolicyBeneficiaries(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBeneficiariesBusiness',
+      'DeletePolicyBeneficiariesAsync',
+      policyID
+    );
+  }
+
+  DeletePolicyDetailByPolicyID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'DeletePolicyDetailByPolicyIDAsync',
+      data
+    );
+  }
 
 
   clickMF(event, data){
@@ -131,7 +151,14 @@ export class EmployeePolicyalComponent extends UIComponent{
 
       case 'SYS02': //delete
       this.view.dataService.delete([data]).subscribe((res)=>{
+        debugger
         this.deleteFile(data).subscribe((res) => {
+          debugger
+        })
+        this.DeletePolicyBeneficiaries(data.policyID).subscribe((res) => {
+          debugger
+        })
+        this.DeletePolicyDetailByPolicyID(data.policyID).subscribe((res) => {
           debugger
         })
       });
@@ -152,6 +179,27 @@ export class EmployeePolicyalComponent extends UIComponent{
       );
     });}
 
+  ViewIncludeExcludeObjects(data: any){
+    debugger
+    let option = new DialogModel();
+    option.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupIncludeExcludeObjComponent,
+      null,
+      550,
+      550,
+      this.view.funcID,
+      {
+        formModel: this.view.formModel,
+        headerText: '',
+        funcID: this.view.funcID,
+        dataObj: data,
+      },
+      null,
+      option
+    );
+  }
+
 
   HandlePolicyAL(actionHeaderText, actionType: string, data: any){
     let option = new SidebarModel();
@@ -163,12 +211,13 @@ export class EmployeePolicyalComponent extends UIComponent{
       {
         actionType: actionType,
         dataObj: data,
-        headerText: actionHeaderText + " " + this.view.function.description,
+        headerText: actionHeaderText + " ", //+ this.view.function.description,
         funcID: this.view.funcID,
       },
       option
     );
     dialg.closed.subscribe((res) => {
+      debugger
       if (res.event) {
         if (actionType == this.ActionAdd) {
           this.view.dataService.add(res.event, 0).subscribe();

@@ -21,15 +21,15 @@
                       <div [innerHTML]="data.contents | safe: 'html'"></div>
                   </div>
                 </ng-container>
-                <div class="d-flex border-top p-4">
+                <div class="d-flex border-top p-3">
                   <codx-img 
                     [width]="30" 
                     [objectId]="data.createdBy" 
                     [objectName]="data.createdName" 
                     objectType="AD_Users">
                   </codx-img>
-                  <div class="d-flex flex-column flex-grow-1 ms-2">
-                    <div class="d-flex align-items-center">
+                  <div class="d-flex flex-column flex-grow-1 ms-3">
+                    <div class="d-flex align-items-center mb-1">
                       <div class="user-name fw-bolder me-2">
                         <span>{{data.createdName}}</span>
                       </div>
