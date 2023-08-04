@@ -266,7 +266,8 @@ export class TargetsComponent
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
       this.isShow = false;
-      this.showButtonAdd = this.viewCurrent == '1' ? true : false;
+      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
+      this.view.button = this.showButtonAdd ? this.button : null;
       this.viewCurrent = valueView;
       this.loadTreeData(this.year?.toString());
     }
