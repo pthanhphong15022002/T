@@ -442,7 +442,6 @@ export class DealsComponent
       SYS102: isDelete,
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
-      CM0201_14: isUpdateBANT,
     };
 
     return functionMappings[type];
