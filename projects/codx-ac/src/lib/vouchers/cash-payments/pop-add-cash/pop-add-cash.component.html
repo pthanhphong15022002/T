@@ -757,11 +757,11 @@
   <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subtypeRef == '1') || (cashpayment?.subType == '4' && subtypeRef == '1')) 
       && (form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429')">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
+      <codx-gridview-v2 showRowNumber="true" class="tabLine" #gridCash [allowRowDragAndDrop]="true"
         [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
-        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
+        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true"
         [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [showEmptyRecord]="false"
         (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
@@ -987,7 +987,7 @@
   <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (changeDataMF)="changeDataMF($event)"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
-<ng-template #morefunction2 let-data>
+<!-- <ng-template #morefunction2 let-data>
   <div class="d-flex align-items-center justify-content-start">
     <span type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
       <i class="icon-edit icon-16"></i>
@@ -996,7 +996,7 @@
       <i class="icon-delete icon-16"></i>
     </span>
   </div>
-</ng-template>
+</ng-template> -->
 <!-- End: More function -->
 
 <!-- Start: Footer -->
@@ -1034,14 +1034,14 @@
         
       </div> -->
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+      <button *ngIf="cashpayment?.status == '0'" style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
         (click)="onDiscard()">
         <div class="d-flex align-items-center">
           <i class="icon-delete_outline icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button style="border: 1px solid var(--primary-dark) !important;" type="button"
+      <button *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important;" type="button"
         class="btn btn-md btn-light-primary me-2" (click)="onSaveAdd()">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
