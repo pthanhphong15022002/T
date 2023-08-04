@@ -89,7 +89,20 @@ export class PopupBantDealComponent
     this.lstContactDeal = e;
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
+  checkEndDay(endDate, endDateCondition) {
+    var date1 = new Date(endDate);
+    var date2 = new Date(endDateCondition);
+   // this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
+    date1.setHours(0, 0, 0, 0);
+    date2.setHours(0, 0, 0, 0);
+
+    return date1 < date2;
+  }
   onSaveForm() {
+    if (this.checkEndDay(this.data?.expectedTo,this.data?.ExpectedFrom) ) {
+      this.notificationsService.notify('Ngày bắt đầu không đến lớn hơn ngày ngày kết thúc');
+      return;
+    }
    let datas = [
       this.data,
       this.customerIDOld,
