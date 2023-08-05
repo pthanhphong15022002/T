@@ -13,12 +13,12 @@
 <ng-template #headerTemp>
   <div *ngIf="isView" class="d-flex justify-content-end">
     <button
-        class="button-close d-flex p-3"
-        style="border: none; outline: none; background: none"
-        (click)="dialog.close()"
-      >
-        <i class="icon-close icon-18 text-hover-danger p-1"></i>
-      </button>
+      class="button-close d-flex p-3"
+      style="border: none; outline: none; background: none"
+      (click)="dialog.close()"
+    >
+      <i class="icon-close icon-18 text-hover-danger p-1"></i>
+    </button>
   </div>
   <div class="d-flex justify-content-between">
     <div class="flex-grow-1">
@@ -34,15 +34,17 @@
           >
           </codx-img>
           <div class="d-flex flex-column">
-            <div class="fs-5-sm text-dark fw-bold">{{ contract?.contractName }}</div>
+            <div class="fs-5-sm text-dark fw-bold">
+              {{ contract?.contractName }}
+            </div>
             <div
-                class="text-gray-700 codx-textcontent"
-                [innerHTML]="
-                  contract?.customerID
-                    | formatvalue : formModel : 'CustomerID'
-                    | async
-                "
-              ></div>
+              class="text-gray-700 codx-textcontent"
+              [innerHTML]="
+                contract?.customerID
+                  | formatvalue : formModel : 'CustomerID'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>
@@ -148,7 +150,6 @@
           >
           </span>
         </div>
-        
       </div>
       <!-- Báo giá -->
       <div class="d-flex align-items-top mb-1">
@@ -187,10 +188,10 @@
                 | async
             "
           ></span>
-        </div>   
+        </div>
       </div>
     </div>
-    <div class="ms-5"> 
+    <div class="ms-5">
       <div class="d-flex justify-content-end align-items-center mb-2">
         <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
         <span
@@ -215,7 +216,8 @@
       </div>
       <div class="d-flex justify-content-end align-items-center mb-2">
         <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
-        <span class="text-gray-600"
+        <span
+          class="text-gray-600"
           [innerHTML]="
             contract?.createdOn | formatvalue : formModel : 'CreatedOn' | async
           "
@@ -803,16 +805,18 @@
     [TabControl]="tabControl"
     [objectID]="contract.recID"
     [funcID]="formModel.funcID"
+    [transID]="contract.recID"
+    [approveStatus]="contract.approveStatus"
   ></codx-tabs>
 </ng-template>
- <!-- nvthuan công việc -->
- <ng-template #steps let-data="value">
+<!-- nvthuan công việc -->
+<ng-template #steps let-data="value">
   <div *ngIf="listInsStep?.length > 0">
     <step-task
-    [dataSelected]="contract"
-    [listInstanceStep]="listInsStep"
-    (changeProgress)="autoStart($event)"
-  ></step-task>
+      [dataSelected]="contract"
+      [listInstanceStep]="listInsStep"
+      (changeProgress)="autoStart($event)"
+    ></step-task>
   </div>
 </ng-template>
 <ng-template #task let-data="value">
