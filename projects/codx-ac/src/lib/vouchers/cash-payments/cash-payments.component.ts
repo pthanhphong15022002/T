@@ -6,6 +6,7 @@ import {
   Optional,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -40,7 +41,8 @@ import { Subject, interval, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
-  styleUrls: ['./cash-payments.component.css'],
+  styleUrls: ['./cash-payments.component.css','../../codx-ac.component.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
