@@ -642,13 +642,16 @@ export class LeadsComponent
       case 'CM0205_15':
         this.updateProcess(data, false);
         break;
-
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
       default:
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
+        var customData :any=null;
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   dataSource: '', // truyen sau
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -1054,7 +1057,7 @@ export class LeadsComponent
     // }
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" '+ this.titleAction+' "' || '',
+        '"' + data?.leadName + '" ' + this.titleAction + ' "' || '',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
@@ -1072,9 +1075,7 @@ export class LeadsComponent
               }
               this.detectorRef.detectChanges();
             });
-          }
-          else {
-
+          } else {
           }
         }
       });
@@ -1373,5 +1374,39 @@ export class LeadsComponent
   }
   afterSave(e?: any, that: any = null) {
     //đợi xem chung sửa sao rồi làm tiếp
+  }
+
+   //export theo moreFun
+   exportFiles(e, data) {
+    let customData :any
+    if (data?.refID) {
+      this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
+        if (dts){
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        } 
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
   }
 }
