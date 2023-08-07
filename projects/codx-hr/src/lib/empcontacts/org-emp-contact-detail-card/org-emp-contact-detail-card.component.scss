@@ -9,17 +9,15 @@
   align-content: flex-start;
 }
 
-.card-body span {
-  //-webkit-line-clamp: 2;
-  width: 200px;
-}
-
 .card-user {
-  width: 220px;
+  width: 240px;
   height: 220px;
 
+  .card-footer{
+    padding: 0 10px !important;
+  }
   .card-body {
-    padding: 0 !important;
+    padding: 0 10px !important;
   }
 
   .symbol {

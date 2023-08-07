@@ -10,283 +10,262 @@
 </codx-views>
 
 <ng-template #template>
-  <ejs-dashboardlayout
-    id="defaultLayout"
-    [columns]="12"
-    #defaultLayout
-    [cellSpacing]="[10, 10]"
-  >
-    <e-panels>
-      <e-panel id="1" [sizeX]="3" [sizeY]="6" [row]="0" [col]="0"
-        ><ng-template #header>
-          <div>Thống kê dung lượng tài liệu tải lên</div>
-        </ng-template>
-        <ng-template #content>
-          <div class="p-2">
-            <div class="d-flex justify-content-center">
-              <div id="group1" class="btn-group">
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="left1"
-                  name="align1"
-                  value="left"
-                  checked
-                />
-                <label class="btn btn-outline-primary" for="left1"
-                  >Loại file</label
-                >
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="center1"
-                  name="align1"
-                  value="center"
-                />
-                <label class="btn btn-outline-primary" for="center1"
-                  >Ứng dụng</label
-                >
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="right1"
-                  name="align1"
-                  value="right"
-                />
-                <label class="btn btn-outline-primary" for="right1"
-                  >Phân loại</label
-                >
-              </div>
-            </div>
-            <div id="column">
-              <ejs-accumulationchart
-                id="pie"
-                class="d-block"
-                style="height: 100%; width: 100%"
-                [legendSettings]="{
-                visible: false,
-              }"
-                [tooltip]="{ enable: true, format: '${point.x}' }"
-                [enableAnimation]="{
-                  enable: true
-                }"
+  <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+</ng-template>
+
+<ng-template #dashboard1>
+  <codx-dashboard
+    [templates]="templates1"
+    [panels]="panels1"
+    [datas]="datas1"
+    [isEditMode]="isEditMode"
+    [cellSpacing]="[20, 20]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #my_dashboard>
+  <div class="w-100 h-100" id="1">
+    <div class="p-2">
+      <div class="d-flex justify-content-center">
+        <div id="group1" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="left1"
+            name="align1"
+            value="left"
+            checked
+          />
+          <label class="btn btn-outline-primary" for="left1">Loại file</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="center1"
+            name="align1"
+            value="center"
+          />
+          <label class="btn btn-outline-primary" for="center1">Ứng dụng</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="right1"
+            name="align1"
+            value="right"
+          />
+          <label class="btn btn-outline-primary" for="right1">Phân loại</label>
+        </div>
+      </div>
+      <div id="column">
+        <ejs-accumulationchart
+          id="pie"
+          class="d-block"
+          style="height: 100%; width: 100%"
+          [legendSettings]="{
+          visible: false,
+        }"
+          [tooltip]="{ enable: true, format: '${point.x}' }"
+          [enableAnimation]="{
+            enable: true
+          }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="data1"
+              xName="Product"
+              yName="Percentage"
+              innerRadius="70%"
+              [border]="{ width: 3 }"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #my_dashboard>
+  <div class="w-100 h-100" id="2">
+    <ejs-treemap
+      id="treemap"
+      style="display: block"
+      height="350px"
+      [dataSource]="data"
+      weightValuePath="Count"
+      [leafItemSettings]="leafItemSettings"
+    >
+    </ejs-treemap>
+  </div>
+</ng-template>
+
+<ng-template #my_dashboard>
+  <div class="w-100 h-100" id="3">
+    <div class="p-2">
+      <div class="d-flex justify-content-center">
+        <div id="group2" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="left2"
+            name="align2"
+            value="left"
+            checked
+          />
+          <label class="btn btn-outline-primary" for="left2">Dung lượng</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="center2"
+            name="align2"
+            value="center"
+          />
+          <label class="btn btn-outline-primary" for="center2">Số lượng</label>
+        </div>
+      </div>
+      <div>
+        <div class="m-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <codx-img
+                [objectId]="'AD_Users'"
+                [objectType]="'AD_Users'"
+                [width]="25"
               >
-                <e-accumulation-series-collection>
-                  <e-accumulation-series
-                    [dataSource]="data1"
-                    xName="Product"
-                    yName="Percentage"
-                    innerRadius="70%"
-                    [border]="{ width: 3 }"
-                  >
-                  </e-accumulation-series>
-                </e-accumulation-series-collection>
-              </ejs-accumulationchart>
+              </codx-img>
+              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
             </div>
+            <div>23MB</div>
           </div>
-        </ng-template>
-      </e-panel>
-      <e-panel id="2" [sizeX]="3" [sizeY]="3" [row]="0" [col]="3"
-        ><ng-template #header>
-          <div>Tài liệu theo phân hệ</div>
-        </ng-template>
-        <ng-template #content>
-          <ejs-treemap
-            id="treemap"
-            style="display: block"
-            height="350px"
-            [dataSource]="data"
-            weightValuePath="Count"
-            [leafItemSettings]="leafItemSettings"
+          <ejs-progressbar
+            #linear
+            id="linear1"
+            [type]="'Linear'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="80"
+            [width]="'100%'"
+            [height]="'60'"
           >
-          </ejs-treemap>
-        </ng-template>
-      </e-panel>
-      <e-panel id="3" [sizeX]="3" [sizeY]="3" [row]="0" [col]="6">
-        <ng-template #header>
-          <div>Thống kê tài liệu theo bộ phận</div>
-        </ng-template>
-        <ng-template #content>
-          <div class="p-2">
-            <div class="d-flex justify-content-center">
-              <div id="group2" class="btn-group">
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="left2"
-                  name="align2"
-                  value="left"
-                  checked
-                />
-                <label class="btn btn-outline-primary" for="left2"
-                  >Dung lượng</label
-                >
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="center2"
-                  name="align2"
-                  value="center"
-                />
-                <label class="btn btn-outline-primary" for="center2"
-                  >Số lượng</label
-                >
-              </div>
+          </ejs-progressbar>
+        </div>
+        <div class="m-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <codx-img
+                [objectId]="'AD_Users'"
+                [objectType]="'AD_Users'"
+                [width]="25"
+              >
+              </codx-img>
+              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
             </div>
-            <div>
-              <div class="m-2">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    <codx-img
-                      [objectId]="'AD_Users'"
-                      [objectType]="'AD_Users'"
-                      [width]="25"
-                    >
-                    </codx-img>
-                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
-                  </div>
-                  <div>23MB</div>
-                </div>
-                <ejs-progressbar
-                  #linear
-                  id="linear1"
-                  [type]="'Linear'"
-                  [maximum]="100"
-                  [minimum]="0"
-                  [value]="80"
-                  [width]="'100%'"
-                  [height]="'60'"
-                >
-                </ejs-progressbar>
-              </div>
-              <div class="m-2">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    <codx-img
-                      [objectId]="'AD_Users'"
-                      [objectType]="'AD_Users'"
-                      [width]="25"
-                    >
-                    </codx-img>
-                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
-                  </div>
-                  <div>23MB</div>
-                </div>
-                <ejs-progressbar
-                  #linear
-                  id="linear2"
-                  [type]="'Linear'"
-                  [maximum]="100"
-                  [minimum]="0"
-                  [value]="80"
-                  [width]="'100%'"
-                  [height]="'60'"
-                >
-                </ejs-progressbar>
-              </div>
-              <div class="m-2">
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    <codx-img
-                      [objectId]="'AD_Users'"
-                      [objectType]="'AD_Users'"
-                      [width]="25"
-                    >
-                    </codx-img>
-                    <div class="ms-2">Nhóm kiểm tra chất lượng</div>
-                  </div>
-                  <div>23MB</div>
-                </div>
-                <ejs-progressbar
-                  #linear
-                  id="linear3"
-                  [type]="'Linear'"
-                  [maximum]="100"
-                  [minimum]="0"
-                  [value]="80"
-                  [width]="'100%'"
-                  [height]="'60'"
-                >
-                </ejs-progressbar>
-              </div>
-            </div>
+            <div>23MB</div>
           </div>
-        </ng-template>
-      </e-panel>
-      <e-panel id="4" [sizeX]="6" [sizeY]="3" [row]="3" [col]="3"
-        ><ng-template #header>
-          <div>Thống kê mức độ sử dụng tài liệu theo bộ phận</div>
-        </ng-template>
-        <ng-template #content>
-          <ejs-chart id="chart-container" [primaryXAxis]="primaryXAxis">
-            <e-series-collection>
-              <e-series
-                [dataSource]="chartData"
-                type="Column"
-                xName="month"
-                yName="sales"
-                name="Sales"
-              ></e-series>
-              <e-series
-                [dataSource]="chartData"
-                type="Line"
-                xName="month"
-                yName="sales"
-                name="Sales"
-              ></e-series>
-            </e-series-collection>
-          </ejs-chart> </ng-template
-      ></e-panel>
-      <e-panel id="5" [sizeX]="3" [sizeY]="6" [row]="0" [col]="9"
-        ><ng-template #header>
-          <div>Top tài liệu</div>
-        </ng-template>
-        <ng-template #content>
-          <div class="p-2">
-            <div class="d-flex justify-content-center">
-              <div id="group3" class="btn-group">
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="left3"
-                  name="align3"
-                  value="left"
-                  checked
-                />
-                <label class="btn btn-outline-primary" for="left3">Xem</label>
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="center3"
-                  name="align3"
-                  value="center"
-                />
-                <label class="btn btn-outline-primary" for="center3">Mới</label>
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="right3"
-                  name="align3"
-                  value="right"
-                />
-                <label class="btn btn-outline-primary" for="right3"
-                  >Chia sẻ</label
-                >
-                <input
-                  class="btn-check"
-                  type="radio"
-                  id="right13"
-                  name="align3"
-                  value="right"
-                />
-                <label class="btn btn-outline-primary" for="right13"
-                  >Download</label
-                >
-              </div>
+          <ejs-progressbar
+            #linear
+            id="linear2"
+            [type]="'Linear'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="80"
+            [width]="'100%'"
+            [height]="'60'"
+          >
+          </ejs-progressbar>
+        </div>
+        <div class="m-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <codx-img
+                [objectId]="'AD_Users'"
+                [objectType]="'AD_Users'"
+                [width]="25"
+              >
+              </codx-img>
+              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
             </div>
+            <div>23MB</div>
           </div>
-        </ng-template>
-      </e-panel>
-    </e-panels>
-  </ejs-dashboardlayout>
+          <ejs-progressbar
+            #linear
+            id="linear3"
+            [type]="'Linear'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="80"
+            [width]="'100%'"
+            [height]="'60'"
+          >
+          </ejs-progressbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #my_dashboard>
+  <div class="w-100 h-100" id="4">
+    <ejs-chart id="chart-container" [primaryXAxis]="primaryXAxis">
+      <e-series-collection>
+        <e-series
+          [dataSource]="chartData"
+          type="Column"
+          xName="month"
+          yName="sales"
+          name="Sales"
+        ></e-series>
+        <e-series
+          [dataSource]="chartData"
+          type="Line"
+          xName="month"
+          yName="sales"
+          name="Sales"
+        ></e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #my_dashboard>
+  <div class="w-100 h-100" id="5">
+    <div class="p-2">
+      <div class="d-flex justify-content-center">
+        <div id="group3" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="left3"
+            name="align3"
+            value="left"
+            checked
+          />
+          <label class="btn btn-outline-primary" for="left3">Xem</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="center3"
+            name="align3"
+            value="center"
+          />
+          <label class="btn btn-outline-primary" for="center3">Mới</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="right3"
+            name="align3"
+            value="right"
+          />
+          <label class="btn btn-outline-primary" for="right3">Chia sẻ</label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="right13"
+            name="align3"
+            value="right"
+          />
+          <label class="btn btn-outline-primary" for="right13">Download</label>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
