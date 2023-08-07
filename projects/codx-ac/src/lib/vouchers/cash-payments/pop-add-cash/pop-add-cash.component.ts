@@ -156,7 +156,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
     private auth: AuthService,
-    private round: RoundService,
+    private roundService: RoundService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -176,7 +176,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+  }
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment, {
@@ -583,20 +584,22 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
-        this.acService
-          .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
-            this.cashpayment,
-            this.dataLine,
-            e.field,
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              this.dataLine.dR2 = res.dR2;
-              this.dataLine.cR2 = res.cR2;
-              this.dt.detectChanges();
-            }
-          });
+        this.dataLine = this.getValueByExRate(this.cashpayment,this.dataLine,true);
+        this.dt.detectChanges();
+        // this.acService
+        //   .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
+        //     this.cashpayment,
+        //     this.dataLine,
+        //     e.field,
+        //   ])
+        //   .pipe(takeUntil(this.destroy$))
+        //   .subscribe((res: any) => {
+        //     if (res) {
+        //       this.dataLine.dR2 = res.dR2;
+        //       this.dataLine.cR2 = res.cR2;
+        //       this.dt.detectChanges();
+        //     }
+        //   });
         if (this.journal.entryMode == '2') {
           this.consTraintGrid();
         }
@@ -2492,6 +2495,37 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
+  getValueByExRate(master, line, isdr){
+    if (isdr) {
+      let dDR2 = 0;
+      if (master.mutil) {
+        dDR2 = this.roundService.baseCurr(line.dr * master.exchangeRate);
+      }else{
+        dDR2 = master.exchangeRate != 0 ? this.roundService.baseCurr(line.dr / master.exchangeRate) : line.dr;
+      }
+      if (line.dR2 != dDR2) {
+        line.dR2 = dDR2;
+      }
+      if (line.cR2 != 0) {
+        line.cR2 = 0;
+      }
+    }else{
+      let dCR2 = 0;
+      if (master.mutil) {
+        dCR2 = this.roundService.baseCurr(line.cr * master.exchangeRate);
+      }else{
+        dCR2 = master.exchangeRate != 0 ? this.roundService.baseCurr(line.cr / master.exchangeRate) : line.cr;
+      }
+      if (line.cR2 != dCR2) {
+        line.cR2 = dCR2;
+      }
+      if (line.dR2 != 0) {
+        line.dR2 = 0;
+      }
+    }
+    return line;
+  }
+
   changeExchangeRate() {
     this.acService
       .execApi('AC', this.classNameLine, 'ChangeExchangeRateAsync', [
@@ -2730,26 +2764,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
-    if (e.key == 'Enter') {
-      if ((e.target as any).closest('codx-inplace') == null) {
-        let eleInput = document
-          ?.querySelector('.ac-form-master')
-          ?.querySelectorAll('codx-input');
-        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
-          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-          for (let index = 0; index < eleInput.length; index++) {
-            let elechildren = (
-              eleInput[index] as HTMLElement
-            ).getElementsByTagName('input')[0];
-            if (elechildren.tabIndex == nextIndex) {
-              elechildren.focus();
-              elechildren.select();
-              break;
-            }
-          }
-        }
-      }
-    }
+    // if (e.key == 'Enter') {
+    //   if ((e.target as any).closest('codx-inplace') == null) {
+    //     let eleInput = document
+    //       ?.querySelector('.ac-form-master')
+    //       ?.querySelectorAll('codx-input');
+    //     if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+    //       let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+    //       for (let index = 0; index < eleInput.length; index++) {
+    //         let elechildren = (
+    //           eleInput[index] as HTMLElement
+    //         ).getElementsByTagName('input')[0];
+    //         if (elechildren.tabIndex == nextIndex) {
+    //           elechildren.focus();
+    //           elechildren.select();
+    //           break;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
   @HostListener('click', ['$event'])
   onClick(e) {

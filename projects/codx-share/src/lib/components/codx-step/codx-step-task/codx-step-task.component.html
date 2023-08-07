@@ -215,7 +215,7 @@
     </div>
   </div>
   <ng-container
-    *ngIf="!isMoveStage && isStart && !isClose"
+    *ngIf="!isMoveStage"
     [ngTemplateOutlet]="buttonTemplate"
     [ngTemplateOutletContext]="{ value: '' }"
   ></ng-container>
