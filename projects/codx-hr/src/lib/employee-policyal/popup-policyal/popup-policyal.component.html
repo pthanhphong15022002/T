@@ -811,6 +811,15 @@
       ></i>
     </button>
     </div>
+    <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
+      <span>
+        <span
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="'Tất cả'"
+        >
+        </span>
+      </span>
+    </div>
     <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
       <span *ngFor="let org of lstOrgUnitID">
         <span *ngIf="org.rec == obj.recID"
