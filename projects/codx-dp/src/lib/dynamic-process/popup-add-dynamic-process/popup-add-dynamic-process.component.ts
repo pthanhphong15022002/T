@@ -234,7 +234,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     share: true,
     write: true,
     read: true,
-    download: true,
     delete: true,
   };
   //data test Thao
@@ -1820,6 +1819,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
     }
   }
+
   actionOpenFormApprove(transID) {
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
@@ -2038,16 +2038,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //add trường tùy chỉnh
-  // setMoreDefault(item) {
-  //   if (this.action != 'edit') return this.moreDefaut;
-  //   return {
-  //     share: item?.share,
-  //     write: item?.write,
-  //     read: item?.read,
-  //     download: item?.download,
-  //     delete: item?.delete,
-  //   };
-  // }
+  changeMFFields(e, item) {
+    //bi gọi 2 lần
+    var arEvent = this.uniqueMore(e);
+    if (arEvent?.length == e?.length) return;
+    e.forEach((x, index) => {
+      if (index >= arEvent?.length) {
+        x.disabled = true;
+      }
+    });
+  }
+
+  uniqueMore(arr) {
+    var newArr = [];
+    newArr = arr.filter(function (item) {
+      return newArr.some((x) => x.functionID == item.functionID)
+        ? ''
+        : newArr.push(item);
+    });
+    return newArr;
+  }
 
   clickMFFields(e, data, enabled) {
     console.log(e.functionID);

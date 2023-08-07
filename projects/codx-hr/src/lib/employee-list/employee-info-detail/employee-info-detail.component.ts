@@ -894,7 +894,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.layout.setLogo(null);
 
     //ẩn số đếm tổng nhân viên
-    // this.pageTitle.setBreadcrumbs([]);
+    this.pageTitle.setBreadcrumbs([]);
 
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
