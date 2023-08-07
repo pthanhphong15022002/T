@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ButtonModel,
@@ -21,6 +21,7 @@ import { IJournal } from './interfaces/IJournal.interface';
 @Component({
   selector: 'lib-journal',
   templateUrl: './journals.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JournalsComponent extends UIComponent {
   //#region Constructor
