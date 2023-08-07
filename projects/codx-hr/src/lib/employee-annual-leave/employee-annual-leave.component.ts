@@ -46,17 +46,13 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   currentItem: any;
   scrolling: boolean = true;
 
-  viewsDefault: any;
-  viewCrr: any;
   crrFuncID: any;
-
   resetView: boolean = false;
   constructor(
     private injector: Injector,
     private hrService: CodxHrService,
   ) {
     super(injector);
-
     this.router.params.subscribe((params: Params) => {
       this.resetView = true;
       this.funcID = params['funcID'];
@@ -65,19 +61,12 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   }
   onInit(): void {
     this.crrFuncID = this.funcID;
-    // this.api.execSv<any>("HR", "ERM.Business.HR", 'ScheduleBusiness', 'ScheduleUpdateExpiredContractsAsync')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //     }
-    //   });
   }
-
   ngAfterViewInit(): void {
     this.initRequest();
     this.initViewSetting();
     this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
-    this.viewsDefault = this.views;
   }
   changeFunction() {
     this.hrService.childMenuClick.subscribe((res) => {
@@ -185,7 +174,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
         this.resetView = false;
       }
     }
-
   }
   getFunction(funcID: string) {
     if (funcID) {
