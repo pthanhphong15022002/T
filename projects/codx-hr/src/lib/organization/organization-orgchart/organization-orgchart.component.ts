@@ -248,7 +248,6 @@ export class OrganizationOrgchartComponent {
     if (e?.target?.id) {
       this.disableEdit = false;
     }
-
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
@@ -1277,6 +1276,7 @@ export class OrganizationOrgchartComponent {
     } else {
       this.dataTree.isGetManager = 'Yes';
     }
+
     this.hrService
       .SaveSettingValue('HRParameters', '1', this.dataTree)
       .subscribe((res: any) => {

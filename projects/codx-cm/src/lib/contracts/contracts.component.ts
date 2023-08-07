@@ -385,8 +385,8 @@ export class ContractsComponent extends UIComponent {
       if (
         (data.closed && data.status != '1') ||
         ['1', '0'].includes(data.status) ||
-        (this.applyApprover != '1' && !data.processID) ||
-        (data.processID && data?.approveRule != '1')
+        (this.applyApprover != '1' && !data.applyProcess) ||
+        (data.applyProcess && data?.approveRule != '1')
       ) {
         eventItem.disabled = true;
       }
@@ -426,7 +426,7 @@ export class ContractsComponent extends UIComponent {
     );
   }
 
-  changeDataMF(event, data: CM_Contracts) {
+  changeDataMF(event, data) {
     if (event != null) {
       event.forEach((res) => {
         switch (res.functionID) {
@@ -441,15 +441,24 @@ export class ContractsComponent extends UIComponent {
 
           case 'SYS004': // gởi mail
             break;
-
-          case 'CM0204_1': //Gửi duyệt
-            if (data?.status != '1') {
+          //Gửi duyệt
+          case 'CM0204_1':
+            if (
+              (data.closed && data.status != '1') ||
+              data.status == '0' ||
+              (this.applyApprover != '1' && !data.applyApprover) ||
+              (data.applyApprover && data?.approveRule != '1')
+            ) {
               res.disabled = true;
             }
             break;
-
-          case 'CM0204_2': //Hủy yêu cầu duyệt
-            if (data?.approveStatus != '3') {
+          //Hủy yêu cầu duyệt
+          case 'CM0204_2':
+            if (
+              (data.closed && data.status != '1') ||
+              data.status == '0' ||
+              data.approveStatus != '3'
+            ) {
               res.disabled = true;
             }
             break;
@@ -588,12 +597,12 @@ export class ContractsComponent extends UIComponent {
         //thất bại
         this.moveReason(data, false);
         break;
-        //export
-        case 'SYS002':
-          this.exportFiles(e, data);
-          break;
+      //export
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
       default: {
-        var customData :any=null;
+        var customData: any = null;
         // var customData = {
         //   refID: data.processID,
         //   refType: 'DP_Processes',
@@ -785,7 +794,7 @@ export class ContractsComponent extends UIComponent {
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    if (dt?.processID) {
+    if (dt?.applyProcess && dt?.processID) {
       this.cmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
           this.cmService
@@ -816,58 +825,57 @@ export class ContractsComponent extends UIComponent {
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        category.processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-        else {
-          this.cmService
-            .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-            .subscribe((q) => {
-              if (q) {
-                this.itemSelected = q;
-                this.view.dataService.update(this.itemSelected).subscribe();
-              }
-              this.notiService.notifyCode('ES007');
-            });
-        }
-      });
+    // this.codxShareService
+    //   .codxRelease(
+    //     this.view.service,
+    //     data?.recID,
+    //     category.processID,
+    //     this.view.formModel.entityName,
+    //     this.view.formModel.funcID,
+    //     '',
+    //     data?.title,
+    //     ''
+    //   )
+    //   .subscribe((res2: any) => {
+    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
+    //     else {
+    //       this.cmService
+    //         .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+    //         .subscribe((q) => {
+    //           if (q) {
+    //             this.itemSelected = q;
+    //             this.view.dataService.update(this.itemSelected).subscribe();
+    //           }
+    //           this.notiService.notifyCode('ES007');
+    //         });
+    //     }
+    //   });
 
-    //duet moi
-    // this.codxShareService.codxReleaseDynamic(
-    //   this.view.service,
-    //   data,
-    //   category,
-    //   this.view.formModel.entityName,
-    //   this.view.formModel.funcID,
-    //   data?.title,
-    //   this.releaseCallback
-    // );
+    //duyet moi
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
   }
   //call Back
-  releaseCallback(res: any) {
-    // lỗi call back cần tra this
-    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    // else {
-    //   this.cmService
-    //     .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-    //     .subscribe((q) => {
-    //       if (q) {
-    //         this.itemSelected = q;
-    //         this.view.dataService.update(this.itemSelected).subscribe();
-    //       }
-    //       this.notiService.notifyCode('ES007');
-    //     });
-    // }
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    else {
+      this.cmService
+        .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+        .subscribe((q) => {
+          if (q) {
+            this.itemSelected = q;
+            this.view.dataService.update(this.itemSelected).subscribe();
+          }
+          this.notiService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet
@@ -1216,14 +1224,14 @@ export class ContractsComponent extends UIComponent {
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData :any
+    let customData: any;
     if (data?.refID) {
       this.cmService.getDatasExport(data?.refID).subscribe((dts) => {
-        if (dts){
+        if (dts) {
           customData.refID = data.processID;
           customData.refType = 'DP_Processes';
           customData.dataSource = dts;
-        } 
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -1248,4 +1256,3 @@ export class ContractsComponent extends UIComponent {
     }
   }
 }
-
