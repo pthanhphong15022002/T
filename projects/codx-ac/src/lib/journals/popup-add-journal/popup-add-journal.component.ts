@@ -99,6 +99,8 @@ export class PopupAddJournalComponent
   journalTypes110: string[] = [];
   journalTypes111: string[] = [];
   journalTypes122: string[] = [];
+  journalTypes125: string[] = [];
+  journalTypes126: string[] = [];
 
   vllJournalTypes064: any[] = [];
   vllIDIMControls069: any[] = [];
@@ -305,6 +307,8 @@ export class PopupAddJournalComponent
     this.assignVllToProp2('AC110', 'journalTypes110');
     this.assignVllToProp2('AC111', 'journalTypes111');
     this.assignVllToProp2('AC122', 'journalTypes122');
+    this.assignVllToProp2('AC125', 'journalTypes125');
+    this.assignVllToProp2('AC126', 'journalTypes126');
   }
 
   ngAfterViewInit(): void {

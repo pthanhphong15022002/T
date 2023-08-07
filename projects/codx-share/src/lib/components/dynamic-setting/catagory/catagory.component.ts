@@ -664,6 +664,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   valueChange(evt: any, data: any, autoDefault: any = null) {
+    debugger;
     var fieldName = data.fieldName;
     var transType = data.transType;
     var field = evt.field;

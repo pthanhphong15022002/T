@@ -2666,32 +2666,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //bùa tabindex
   setTabindex() {
     let ins = setInterval(() => {
-      let v = document
+      let eleInput = document
         ?.querySelector('.ac-form-master')
-        ?.querySelectorAll('input');
-      if (v) {
+        ?.querySelectorAll('codx-input');
+      if (eleInput) {
         clearInterval(ins);
-        for (let index = 0; index < v.length; index++) {
-          if ((v[index] as HTMLInputElement).readOnly) {
-            (v[index] as HTMLElement).setAttribute('tabindex', '-1');
+        for (let index = 0; index < eleInput.length; index++) {
+          let elechildren = (
+            eleInput[index] as HTMLElement
+          ).getElementsByTagName('input')[0];
+          if (elechildren.readOnly) {
+            elechildren.setAttribute('tabindex', '-1');
           } else {
-            (v[index] as HTMLElement).setAttribute(
-              'tabindex',
-              (index + 1).toString()
-            );
+            elechildren.setAttribute('tabindex', (index + 1).toString());
           }
         }
         // input refdoc
         let ref = document
           .querySelector('.ac-refdoc')
           .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '18');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '15');
       }
     }, 200);
     setTimeout(() => {
       if (ins) clearInterval(ins);
     }, 10000);
   }
+
+  nextEnableInput(elechildren, nextIndex) {}
 
   // onFocus() {
   //   let ins = setInterval(() => {
@@ -2716,9 +2718,32 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     if (e.key == 'Enter') {
+      let eleInput = document
+        ?.querySelector('.ac-form-master')
+        ?.querySelectorAll('codx-input');
       if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+        let curIndex = (e.target as HTMLElement).tabIndex;
         let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-        console.log((e.target as HTMLElement).nextSibling);
+        let elechildren = (
+          eleInput[curIndex] as HTMLElement
+        ).getElementsByTagName('input')[0];
+        this.nextEnableInput(elechildren, nextIndex);
+        if (elechildren.tabIndex == nextIndex) {
+          elechildren.focus();
+          elechildren.select();
+        } else {
+          elechildren = (
+            eleInput[curIndex + 1] as HTMLElement
+          ).getElementsByTagName('input')[0];
+        }
+
+        // (eleInput[nextIndex] as HTMLElement).getElementsByTagName('input')[0].focus();
+        // (eleInput[nextIndex] as HTMLElement).getElementsByTagName('input')[0].select();
+        // for (let index = 0; index < eleInput.length; index++) {
+        //   if ((eleInput[index] as HTMLElement).getElementsByTagName('input')[0].tabIndex) {
+
+        //   }
+        // }
       }
     }
   }

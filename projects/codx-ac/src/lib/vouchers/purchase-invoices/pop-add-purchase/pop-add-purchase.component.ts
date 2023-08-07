@@ -492,7 +492,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       return;
     }
 
-    const postFields: string[] = ['itemID'];
+    const postFields: string[] = ['itemID', 'quantity', "purcPrice"];
     if (postFields.includes(e.field)) {
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
