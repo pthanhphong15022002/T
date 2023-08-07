@@ -3550,3 +3550,16 @@ codx-view-list-tree{
   background-color: white;
   right: 0;
 }
+codx-detail-toolbar codx-mfunc .dropdown {
+  height: 26px;
+}
+
+.e-editable-value .rounded-pill.py-1{
+ padding-left:10px;
+ padding-right: 10px;
+ align-items: center;
+}
+.e-editable-value .rounded-pill.py-1 .icon-16{
+  font-size: 14px!important;
+  margin-right: 2px;
+ }

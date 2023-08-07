@@ -40,6 +40,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -136,6 +137,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  applyApprover = '0';
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -150,6 +153,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
     this.executeApiCalls();
+    this.loadParam();
   }
 
   onInit(): void {
@@ -431,6 +435,22 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
     let isDeleteProcess = (eventItem, data) => {
       eventItem.disabled = !data.applyProcess;
     };
+    let isAprove = (eventItem, data) => {
+      eventItem.disabled = eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        (this.applyApprover != '1' && !data.applyProcess) ||
+        (data.applyProcess && data?.approveRule != '1') ||
+        data?.approveStatus >= '3' ||
+        this.checkMoreReason(data);
+    };
+
+    let isRejectApprover = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        data.approveStatus != '3';
+    };
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isStartDay, // mergeLead
@@ -439,7 +459,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
       CM0205_5: isDisabled, // success
       CM0205_6: isFailReason, // fail
       CM0205_7: isDisabled,
-      CM0205_8: isClosed,
+      CM0205_8: isAprove,
       CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
@@ -454,6 +474,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
       CM0205_12: isChangeStatus,
       CM0205_14: isUpdateProcess, // co su dung quy trinh
       CM0205_15: isDeleteProcess, // khong su dung quy trinh
+      CM0205_17: isRejectApprover,
     };
     return functionMappings[type];
   }
@@ -577,6 +598,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 
   clickMF(e, data) {
     this.titleAction = e.text;
+    this.dataSelected = data;
+    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -621,7 +644,10 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
       case 'CM0205_6':
         this.moveReason(data, false);
         break;
-
+      //ki duyet
+      case 'CM0205_8':
+        this.approvalTrans(data);
+        break;
       case 'CM0205_9':
         this.popupOwnerRoles(data);
         break;
@@ -641,13 +667,24 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
       case 'CM0205_15':
         this.updateProcess(data, false);
         break;
+      case 'CM0205_16':
+        this.popupPermissions(data);
+        break;
 
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
+      //cancel Aprover
+      case 'CM0205_17':
+        this.cancelApprover(data);
+        break;
       default:
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
+        var customData: any = null;
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   dataSource: '', // truyen sau
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -979,6 +1016,39 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
         break;
     }
     console.log('gộp: ', e);
+  }
+  //#endregion
+
+  //#region Permissons
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
   //#endregion
 
@@ -1379,5 +1449,160 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   }
   afterSave(e?: any, that: any = null) {
     //đợi xem chung sửa sao rồi làm tiếp
+  }
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    let customData: any;
+    if (data?.refID) {
+      this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
+        if (dts) {
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        }
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    if (dt?.applyProcess && dt?.processID) {
+      this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
+        if (process) {
+          this.approvalTransAction(dt, process.processNo);
+        } else {
+          this.notificationsService.notifyCode('DP040');
+        }
+      });
+    } else {
+      this.approvalTransAction(dt, 'ES_CM0504');
+    }
+  }
+  approvalTransAction(data, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((category) => {
+        if (!category) {
+          this.notificationsService.notifyCode('ES028');
+          return;
+        }
+        if (category.eSign) {
+          //kys soos
+        } else {
+          this.release(data, category);
+        }
+      });
+  }
+  release(data: any, category: any) {
+    //duyet moi
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  //call Back
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'LeadsBusiness')
+        .subscribe((c) => {
+          if (c) {
+            this.dataSelected = c;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          }
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        if (dt.applyApprover) {
+          this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+            if (process) {
+              this.cancelAction(dt, process.processNo);
+            } else {
+              this.notificationsService.notifyCode('DP040');
+            }
+          });
+        } else {
+          this.cancelAction(dt, 'ES_CM0504');
+        }
+      }
+    });
+  }
+
+  cancelAction(dt, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((res2: any) => {
+        if (res2) {
+          if (res2?.eSign == true) {
+            //trình ký
+          } else if (res2?.eSign == false) {
+            //kí duyet
+            this.codxShareService
+              .codxCancel(
+                'CM',
+                dt?.recID,
+                this.view.formModel.entityName,
+                null,
+                null
+              )
+              .subscribe((res3) => {
+                if (res3) {
+                  this.dataSelected.approveStatus = '0';
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                } else this.notificationsService.notifyCode('SYS021');
+              });
+          }
+        } else this.notificationsService.notifyCode('ES028');
+      });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
+
+  loadParam() {
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
   }
 }

@@ -174,7 +174,7 @@
           </div>
           <span
             *ngIf="
-              data.isCurrent &&
+              data?.status === '5' &&
               dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
               (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
                 data.expiredDate === null)
@@ -281,7 +281,7 @@
   <ng-template #titleRight>
     <span
       *ngIf="
-        data.isCurrent &&
+        data?.status === '5' &&
         dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
         (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
           data.expiredDate === null)
@@ -424,7 +424,7 @@
       }}</span>
       <span
         *ngIf="
-          data.isCurrent &&
+          data?.status === '5' &&
           dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
           (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
             data.expiredDate === null)

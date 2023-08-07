@@ -23,7 +23,6 @@ import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { DealsComponent } from '../deals.component';
 
-
 @Component({
   selector: 'codx-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -66,18 +65,18 @@ export class DealDetailComponent implements OnInit {
     entityName: 'CM_Leads',
   };
 
-  isDataLoading:boolean = true;
+  isDataLoading: boolean = true;
 
   nameDetail = '';
   tabClicked = '';
 
   viewTag: string = '';
-  oldRecId:string = '';
+  oldRecId: string = '';
   treeTask = [];
   grvSetupQuotation: any[] = [];
   grvSetupLead: any[] = [];
   grvSetupContract: any[] = [];
-  tabControl:any[] = [];
+  tabControl: any[] = [];
   tabDetail = [];
   listStepsProcess = [];
   listContract: CM_Contracts[];
@@ -96,16 +95,26 @@ export class DealDetailComponent implements OnInit {
     private codxCmService: CodxCmService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private dealComponent: DealsComponent,
+    private dealComponent: DealsComponent
   ) {
     this.executeApiCalls();
-
   }
 
   ngOnInit(): void {
-     this.listTab();
-     this.tabControl = [
-      { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    this.listTab();
+    this.tabControl = [
+      {
+        name: 'History',
+        textDefault: 'Lịch sử',
+        isActive: true,
+        template: null,
+      },
+      {
+        name: 'Comment',
+        textDefault: 'Thảo luận',
+        isActive: false,
+        template: null,
+      },
       {
         name: 'Attachment',
         textDefault: 'Đính kèm',
@@ -131,12 +140,6 @@ export class DealDetailComponent implements OnInit {
         template: this.referencesDeal,
         icon: 'icon-i-link',
       },
-      {
-        name: 'Comment',
-        textDefault: 'Thảo luận',
-        isActive: false,
-        template: null,
-      },
     ];
   }
 
@@ -148,7 +151,6 @@ export class DealDetailComponent implements OnInit {
         changes['dataSelected'].currentValue != null &&
         changes['dataSelected'].currentValue?.recID
       ) {
-
         var index = this.tabControl.findIndex((x) => x.name === 'Deal');
         if (index != -1) {
           this.tabControl.splice(index, 1);
@@ -164,7 +166,7 @@ export class DealDetailComponent implements OnInit {
 
         this.getTags(this.dataSelected);
         this.dataSelected = this.dataSelected;
-        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+        if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
@@ -177,12 +179,11 @@ export class DealDetailComponent implements OnInit {
     try {
       await this.getTree(); //ve cay giao viec
       await this.getListInstanceStep();
-      await this.getContactByDeaID(this.dataSelected.recID)
+      await this.getContactByDeaID(this.dataSelected.recID);
       await this.getHistoryByDeaID();
-
     } catch (error) {}
   }
-  reloadListStep(listSteps:any) {
+  reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
     this.isDataLoading = false;
@@ -191,34 +192,33 @@ export class DealDetailComponent implements OnInit {
 
   listTab() {
     this.tabDetail = [
-     {
-       name: 'Information',
-       text: 'Thông tin chung',
-       icon: 'icon-info',
-     },
-     {
-       name: 'Contact',
-       text: 'Liên hệ',
-       icon: 'icon-contact_phone',
-     },
-     {
-       name: 'Opponent',
-       text: 'Đối thủ',
-       icon: 'icon-people_alt',
-     },
-     {
-       name: 'Task',
-       text: 'Công việc',
-       icon: 'icon-more',
-     },
-     {
-       name: 'History',
-       text: 'Lịch sử cập nhật',
-       icon: 'icon-sticky_note_2',
-     },
-
-   ];
- }
+      {
+        name: 'Information',
+        text: 'Thông tin chung',
+        icon: 'icon-info',
+      },
+      {
+        name: 'Contact',
+        text: 'Liên hệ',
+        icon: 'icon-contact_phone',
+      },
+      {
+        name: 'Opponent',
+        text: 'Đối thủ',
+        icon: 'icon-people_alt',
+      },
+      {
+        name: 'Task',
+        text: 'Công việc',
+        icon: 'icon-more',
+      },
+      {
+        name: 'History',
+        text: 'Lịch sử cập nhật',
+        icon: 'icon-sticky_note_2',
+      },
+    ];
+  }
   async executeApiCalls() {
     try {
       this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
@@ -229,7 +229,7 @@ export class DealDetailComponent implements OnInit {
       await this.getValueListRole();
     } catch (error) {}
   }
-  async getValueListRole(){
+  async getValueListRole() {
     this.cache.valueList('CRM040').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -274,7 +274,7 @@ export class DealDetailComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMF.emit({
-      e:  e,
+      e: e,
       data: data,
     });
   }
@@ -298,7 +298,6 @@ export class DealDetailComponent implements OnInit {
       } else {
         this.contactPerson = null;
       }
-
     });
   }
   //load giao việc
@@ -327,7 +326,7 @@ export class DealDetailComponent implements OnInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
-      '1'
+      '1',
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
@@ -357,38 +356,37 @@ export class DealDetailComponent implements OnInit {
         formModel: this.formModelQuotations,
         status: this.vllStatusQuotation,
         gridViewSetup: this.grvSetupQuotation,
-        name: this.grvSetupQuotation['QuotationName']?.headerText
-
+        name: this.grvSetupQuotation['QuotationName']?.headerText,
       },
       '2': {
         icon: 'icon-sticky_note_2',
         headerText: 'Hợp đồng',
-        deadValue:  this.grvSetupContract['ContractAmt']?.headerText,
+        deadValue: this.grvSetupContract['ContractAmt']?.headerText,
         formModel: this.formModelContract,
         status: this.vllStatusContract,
         gridViewSetup: this.grvSetupContract,
-        name: this.grvSetupContract['ContractName']?.headerText
+        name: this.grvSetupContract['ContractName']?.headerText,
       },
       '3': {
         icon: 'icon-monetization_on',
         headerText: 'Tiềm năng',
-        deadValue:  this.grvSetupLead['DealValue']?.headerText,
+        deadValue: this.grvSetupLead['DealValue']?.headerText,
         formModel: this.formModelLead,
         status: this.vllStatusLead,
         gridViewSetup: this.grvSetupLead,
-        name: this.grvSetupLead['LeadName']?.headerText
+        name: this.grvSetupLead['LeadName']?.headerText,
       },
     };
   }
-    //truong tuy chinh - đang cho bằng 1
-    showColumnControl(stepID) {
-      if (this.listStepsProcess?.length > 0) {
-        var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
-        if (idx == -1) return 1;
-        return this.listStepsProcess[idx]?.showColumnControl;
-      }
-      return 1;
+  //truong tuy chinh - đang cho bằng 1
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
     }
+    return 1;
+  }
 
   getSettingValue(type: string, fieldName: string): any {
     const obj = this.viewSettings[type];
@@ -553,20 +551,18 @@ export class DealDetailComponent implements OnInit {
   getNameCategory(categoryId: string) {
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
   }
-  getIcon($event){
-    if($event == '1') {
-      return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
+  getIcon($event) {
+    if ($event == '1') {
+      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    } else if ($event == '5') {
+      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
+    } else if ($event == '3') {
+      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
     }
-    else if($event == '5') {
-      return this.listRoles.filter(x=>x.value == '5')[0]?.icon ?? null;
-    }
-    else if($event == '3') {
-      return this.listRoles.filter(x=>x.value == '3')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
+    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
   }
 
-  autoStart(event){
+  autoStart(event) {
     this.changeProgress.emit(event);
   }
 }

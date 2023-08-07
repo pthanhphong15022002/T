@@ -241,31 +241,29 @@
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
+          <e-tabitem tabIndex="-1" aria-hidden="true">
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2">
+                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail" [formModel]="view.formModel"
+                  default="Thông tin chi tiết"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabSet"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!-- Tab hạch toán -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
-                <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="view.formModel"
+                <codx-label class="fw-bold fs-6" fiedName="lblAccounting" [formModel]="view.formModel"
                   default="Hạch toán"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
               <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem tabIndex="-1" aria-hidden="true">
-            <ng-template #headerText>
-              <div class="d-flex align-items-top me-2">
-                <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <span
-                  [innerHTML]="'1' | vll : 'AC070' : 'text' | async"
-                  class="fw-bold fs-6 text-uppercase"
-                >
-                </span>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabSet"></ng-container>
             </ng-template>
           </e-tabitem>
         </e-tabitems>
@@ -342,7 +340,7 @@
         </ejs-progressbar>
       </div>
       <table *ngIf="!loading && !loadingAcct" class="table table-hover table-row-bordered">
-        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15;">
+        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15; background-color: white;">
           <tr class="border-bottom">
             <th class="w-40 bg-gray-100 border-bottom ac-table-header">
               <div class="d-flex">
@@ -716,8 +714,20 @@
         </ejs-progressbar>
       </div>
       <table *ngIf="!loading && !loadingAcct" class="table table-hover table-row-bordered">
-        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15;">
+        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15; background-color: white;">
           <tr class="border-bottom">
+            <th class="min-w-50px">
+              <div class="d-flex">
+                <!-- <i class="icon-i-box icon-16 me-2"></i> -->
+                <codx-label
+                  [setRequire]="false"
+                  class="fw-bold line-clamp line-clamp-1 text-dark ps-3"
+                  fiedName="RowNo"
+                  [formModel]="fmVouchersLines"
+                >
+                </codx-label>
+              </div>
+            </th>
             <th class="w-50 min-w-350px">
               <div class="d-flex">
                 <!-- <i class="icon-i-box icon-16 me-2"></i> -->
@@ -764,8 +774,20 @@
         </thead>
         <tbody *ngFor="let item of vouchersLines">
           <tr>
+            <th style="width: 30px">
+              {{ item.rowNo }}
+            </th>
             <td class="d-flex flex-column gap-1">
-              <div class="fw-bold">{{ item.itemName }}</div>
+              <div class="fw-bold">
+                <span
+                  #itemID
+                  [innerHTML]="
+                    item?.itemID
+                    | formatvalue : fmVouchersLines : 'itemID' : itemID
+                    | async
+                  "
+                ></span>
+              </div>
               <div>
                 <codx-label
                   fiedName="idiM3"

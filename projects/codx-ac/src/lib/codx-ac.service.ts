@@ -32,11 +32,11 @@ export class CodxAcService {
         if (res) this.stores.set('account', res);
       });
 
-    // this.api
-    //   .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
-    //   .subscribe((res) => {
-    //     if (res) this.stores.set('subobject', res);
-    //   });
+    this.api
+      .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
+      .subscribe((res) => {
+        if (res) this.stores.set('subobject', res);
+      });
   }
 
   getCacheValue(storeName: string, value: string) {
@@ -68,7 +68,7 @@ export class CodxAcService {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
-  execApi(assemblyName: any, className: any, methodName: any, data: any){
+  execApi(assemblyName: any, className: any, methodName: any, data: any): Observable<any[]>{
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
@@ -168,7 +168,10 @@ export class CodxAcService {
     );
     for (const el of inputEls) {
       if (invalidFields.includes(el.getAttribute('field')?.toLowerCase())) {
-        el.querySelector('input').focus();
+        setTimeout(() => {
+          el.querySelector('input').focus();
+        }, 100);
+        
         break;
       }
     }

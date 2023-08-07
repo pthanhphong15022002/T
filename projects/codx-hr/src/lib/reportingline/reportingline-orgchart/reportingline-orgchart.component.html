@@ -91,9 +91,27 @@
       <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data }">
       </ng-container>
       <div class="text-center mt-2">
-        <p class="text-dark m-0 p-0 fw-bolder line-clamp line-clamp-1">{{data.employees[0].employeeName}}</p>
-        <p class="text-dark m-0 p-0 line-clamp line-clamp-1">{{data.employees[0].positionName}}</p>
-        <p class="text-dark m-0 p-0 m-0 p-0 line-clamp line-clamp-1">{{data.employees[0].orgUnitName}}</p>
+        <p #employeeName class="text-dark m-0 p-0 fw-bolder line-clamp line-clamp-1" [ngbTooltip]="employeeNameTooltip">{{data.employees[0].employeeName}}</p>
+        <p #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.positionID? positionNameTooltip : null">{{data.positionName}}</p>
+        <p #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.orgUnitID? orgUnitNameTooltip: null">{{data.orgUnitName}}</p>
+        <ng-template #employeeNameTooltip>
+          <div class="d-flex flex-column">
+            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
+            <span *ngIf="employeeName.scrollHeight > employeeName.clientHeight" class="data-text-color">{{data.employeeName}}</span>
+          </div>
+        </ng-template>
+        <ng-template #positionNameTooltip>
+          <div class="d-flex flex-column">
+            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
+            <span *ngIf="positionName.scrollHeight > positionName.clientHeight" class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
+          </div>
+        </ng-template>
+        <ng-template #orgUnitNameTooltip>
+          <div class="d-flex flex-column">
+            <!-- <span class="label-text-color">{{grvSetup['OrgUnitID']}}</span> -->
+            <span *ngIf="orgUnitName.scrollHeight > orgUnitName.clientHeight" class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+          </div>
+        </ng-template>
       </div>
     </div>
     <ng-template #tmpNoEmployee>
@@ -101,8 +119,20 @@
         <img src="assets/themes/sys/default/img/Avatar_Default.svg" class="w-60px" alt="" />
       </div>
       <div class="text-center mt-2">
-        <p class="text-dark m-0 p-0 line-clamp line-clamp-1">{{data.positionName}}</p>
-        <p class="text-dark m-0 p-0 line-clamp line-clamp-1">{{data.orgUnitName}}</p>
+        <p #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.positionID? positionNameTooltip : null">{{data.positionName}}</p>
+        <p #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.orgUnitID? orgUnitNameTooltip: null">{{data.orgUnitName}}</p>
+        <ng-template #positionNameTooltip>
+          <div class="d-flex flex-column">
+            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
+            <span *ngIf="positionName.scrollHeight > positionName.clientHeight" class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
+          </div>
+        </ng-template>
+        <ng-template #orgUnitNameTooltip>
+          <div class="d-flex flex-column">
+            <!-- <span class="label-text-color">{{grvSetup['OrgUnitID']}}</span> -->
+            <span *ngIf="orgUnitName.scrollHeight > orgUnitName.clientHeight" class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+          </div>
+        </ng-template>
       </div>
     </ng-template>
     <div *ngIf="data.isChildrent" class="d-flex mt-auto justify-content-center">

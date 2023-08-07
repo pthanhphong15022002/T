@@ -482,9 +482,8 @@
         [funcID]="formModel.funcID"
         [refType]="formModel.entityName"
         [refID]="dataSelected.recID"
-        [customerID]="dataSelected.customerID"
-        [salespersonID]="dataSelected.salespersonID"
-        [consultantID]="dataSelected.consultantID"
+        [transID]="dataSelected.recID"
+        [approveStatus]="dataSelected.approveStatus"
         (tabChange)="changeFooter($event)"
       ></codx-tabs>
     </ng-template>
