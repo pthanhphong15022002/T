@@ -574,51 +574,55 @@
       </div>
     </div>
 
-    <codx-label
-      fiedName="lblTaxSettings"
-      [formModel]="form.formModel"
-      default="Thiết lập thuế"
-      class="fs-5 text-primary"
-    ></codx-label>
-
-    <div class="d-flex justify-content-between form-group mt-5">
+    <ng-container *ngIf="journalTypes125.includes(journal.journalType)">
       <codx-label
-        fiedName="vatControl"
+        fiedName="lblTaxSettings"
         [formModel]="form.formModel"
-        default="Thuế GTGT"
+        default="Thiết lập thuế"
+        class="fs-5 text-primary"
       ></codx-label>
-      <codx-input
-        field="vatControl"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-    </div>
 
-    <div class="d-flex justify-content-between form-group">
-      <codx-label
-        fiedName="useDutyTax"
-        [formModel]="form.formModel"
-        default="Thuế xuất nhập khẩu"
-      ></codx-label>
-      <codx-input
-        field="useDutyTax"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-    </div>
+      <div class="d-flex justify-content-between form-group mt-5">
+        <codx-label
+          fiedName="vatControl"
+          [formModel]="form.formModel"
+          default="Thuế GTGT"
+        ></codx-label>
+        <codx-input
+          field="vatControl"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
 
-    <div class="d-flex justify-content-between form-group">
-      <codx-label
-        fiedName="useExciseTax"
-        [formModel]="form.formModel"
-        default="Thuế TTĐB"
-      ></codx-label>
-      <codx-input
-        field="useExciseTax"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
-    </div>
+      <ng-container *ngIf="journalTypes126.includes(journal.journalType)">
+        <div class="d-flex justify-content-between form-group">
+          <codx-label
+            fiedName="useDutyTax"
+            [formModel]="form.formModel"
+            default="Thuế xuất nhập khẩu"
+          ></codx-label>
+          <codx-input
+            field="useDutyTax"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+
+        <div class="d-flex justify-content-between form-group">
+          <codx-label
+            fiedName="useExciseTax"
+            [formModel]="form.formModel"
+            default="Thuế TTĐB"
+          ></codx-label>
+          <codx-input
+            field="useExciseTax"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </ng-container>
+    </ng-container>
 
     <ng-container *ngIf="journalTypes108.includes(journal.journalType)">
       <div class="mt-5 fs-5 text-primary">

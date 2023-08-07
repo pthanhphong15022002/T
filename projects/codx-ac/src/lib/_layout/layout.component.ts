@@ -1,21 +1,8 @@
-import {
-  Component,
-  Injector,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import { AsideComponent, CodxService } from 'codx-core';
-import {
-  CallFuncService,
-  DialogRef,
-  LayoutBaseComponent,
-  SidebarModel,
-} from 'codx-core';
+import { Component, Injector, ViewEncapsulation } from '@angular/core';
+import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 
-import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { BehaviorSubject } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
+import { RoundService } from '../round.service';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
@@ -27,16 +14,18 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private callfc: CallFuncService,
-    private codxAC: CodxAcService
+    private codxAC: CodxAcService,
+    private round: RoundService
   ) {
     super(inject);
 
     this.module = 'AC';
+    this.round.initCache();
   }
 
   onInit(): void {}
   onAfterViewInit(): void {}
-  
+
   childMenuClick(e) {
     if (e && e?.recID) {
       this.codxAC.childMenuClick.next(e.recID);
