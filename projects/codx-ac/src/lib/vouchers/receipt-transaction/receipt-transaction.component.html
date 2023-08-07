@@ -241,31 +241,29 @@
       <ejs-tab #cashRef>
         <e-tabitems>
           <!-- Tab thông tin chứng từ -->
+          <e-tabitem tabIndex="-1" aria-hidden="true">
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2">
+                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail" [formModel]="view.formModel"
+                  default="Thông tin chi tiết"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabSet"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!-- Tab hạch toán -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
-                <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="view.formModel"
+                <codx-label class="fw-bold fs-6" fiedName="lblAccounting" [formModel]="view.formModel"
                   default="Hạch toán"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
               <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem tabIndex="-1" aria-hidden="true">
-            <ng-template #headerText>
-              <div class="d-flex align-items-top me-2">
-                <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <span
-                  [innerHTML]="'1' | vll : 'AC070' : 'text' | async"
-                  class="fw-bold fs-6 text-uppercase"
-                >
-                </span>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabSet"></ng-container>
             </ng-template>
           </e-tabitem>
         </e-tabitems>
