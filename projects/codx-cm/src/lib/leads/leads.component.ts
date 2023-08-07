@@ -40,6 +40,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -642,13 +643,19 @@ export class LeadsComponent
       case 'CM0205_15':
         this.updateProcess(data, false);
         break;
-
+      case 'CM0205_16':
+        this.popupPermissions(data);
+        break;
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
       default:
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
+        var customData: any = null;
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   dataSource: '', // truyen sau
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -983,6 +990,39 @@ export class LeadsComponent
   }
   //#endregion
 
+  //#region Permissons
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction
+    }
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
+
   startDay(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
@@ -1054,7 +1094,7 @@ export class LeadsComponent
     // }
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" '+ this.titleAction+' "' || '',
+        '"' + data?.leadName + '" ' + this.titleAction + ' "' || '',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
@@ -1072,9 +1112,7 @@ export class LeadsComponent
               }
               this.detectorRef.detectChanges();
             });
-          }
-          else {
-
+          } else {
           }
         }
       });
@@ -1373,5 +1411,39 @@ export class LeadsComponent
   }
   afterSave(e?: any, that: any = null) {
     //đợi xem chung sửa sao rồi làm tiếp
+  }
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    let customData: any;
+    if (data?.refID) {
+      this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
+        if (dts) {
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        }
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
   }
 }

@@ -184,23 +184,7 @@ export class TargetsComponent
         this.lstCurrentView = res.datas;
       }
     });
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        this.currencyIDSys = this.currencyID;
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
-        this.exchangeRateSys = this.exchangeRate;
 
-      }
-    }
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -256,11 +240,8 @@ export class TargetsComponent
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
-    this.fetch().subscribe((item) => {
-      this.lstDataTree = item;
+    this.loadCurrentID();
 
-      this.loadedTree = true;
-    });
   }
 
   private fetch(): Observable<any[]> {
@@ -270,7 +251,7 @@ export class TargetsComponent
         this.assemblyNameTree,
         this.classNameTree,
         this.methodTree,
-        [this.requestTree, this.viewCurrent]
+        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
       )
       .pipe(
         finalize(() => {
@@ -296,6 +277,32 @@ export class TargetsComponent
     }
     this.detectorRef.detectChanges();
   }
+
+  async loadCurrentID(){
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.currencyIDSys = this.currencyID;
+        let exchangeRateCurrent = await firstValueFrom(
+          this.cmSv.getExchangeRate(this.currencyID, new Date())
+        );
+        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+        this.exchangeRateSys = this.exchangeRate;
+
+      }
+    }
+    this.fetch().subscribe((item) => {
+      this.lstDataTree = item;
+
+      this.loadedTree = true;
+    });
+  }
+
   isActive(item: any): boolean {
     return this.viewCurrent === item;
   }

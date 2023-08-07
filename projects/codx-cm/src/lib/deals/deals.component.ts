@@ -1772,14 +1772,14 @@ export class DealsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData = {
-      refID: data.processID,
-      refType: 'DP_Processes',
-      dataSource: '', // truyen sau
-    };
+    let customData :any
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
-        if (dts) customData.dataSource = dts;
+        if (dts){
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        } 
         this.codxShareService.defaultMoreFunc(
           e,
           data,

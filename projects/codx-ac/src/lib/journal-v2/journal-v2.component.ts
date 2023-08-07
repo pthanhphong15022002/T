@@ -1,6 +1,4 @@
-import { type } from 'os';
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
@@ -11,9 +9,6 @@ import {
   UIComponent,
   ViewModel,
   ViewType,
-  CacheService,
-  RequestModel,
-  RequestOption,
   DataRequest,
   SidebarModel,
   NotificationsService,
