@@ -720,12 +720,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                   .subscribe((res3) => {
                     if (res3) {
                       this.itemSelected.approveStatus = '0';
-                      this.codxCmService
-                        .updateApproveStatus(
-                          'QuotationsBusiness',
-                          dt?.recID,
-                          '0'
-                        )
+                      this.itemSelected.status = '0';
+                      this.view.dataService
+                        .update(this.itemSelected)
                         .subscribe();
                       this.notiService.notifyCode('SYS007');
                     } else this.notiService.notifyCode('SYS021');
@@ -733,8 +730,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
               }
             }
           });
-      } else {
-        this.notiService.notifyCode('DP040');
       }
     });
   }
