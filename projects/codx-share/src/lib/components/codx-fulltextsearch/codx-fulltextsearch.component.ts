@@ -10,7 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, DataRequest } from 'codx-core';
 import {
   convertHtmlAgency,
   extractContent,
@@ -45,10 +45,10 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   arrayPaging = [];
   hideN = true;
   page = 1;
-
+  userID:any;
   //template
   @Input() tempMenu: TemplateRef<any>;
-  @Input() service: string;
+
   @Input() entityName: string;
   @Input() widthItemTmp: number | any;
   //
@@ -61,12 +61,21 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   @Input() rightTmp?: TemplateRef<any>;
   @Input() funcID: any;
   @Input() formModel: any;
+
+  @Input() service: string;
+  @Input() method: string = "SearchFullTextAdvAsync";
+  @Input() assemblyName: string = "Core";
+  @Input() className: string = "DataBusiness";
+  
   @Output() selectedChange = new EventEmitter();
   constructor(
+    private auth : AuthStore,
     private router: ActivatedRoute,
     protected cache: CacheService,
     private api: ApiHttpService
-  ) {}
+  ) {
+    this.userID = this.auth.get();
+  }
   ngAfterViewInit(): void {
     //
   }
@@ -185,13 +194,14 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     this.api
       .execSv<any>(
         this.service,
-        'Core',
-        'DataBusiness',
-        'SearchFullTextAdvAsync',
+        this.assemblyName,
+        this.className,
+        this.method,
         {
           query: this.txtSearch,
           filter: this.filter,
           functionID: this.funcID,
+          tenant : this.userID?.tenant,
           entityName: this.entityName,
           page: this.page,
           pageSize: this.pageSize,
