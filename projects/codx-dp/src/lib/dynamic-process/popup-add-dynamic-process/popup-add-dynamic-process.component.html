@@ -2316,10 +2316,9 @@
     <codx-input
       field="stepName"
       [formModel]="grvStep"
-      [Group]
       type="text"
-      [crrValue]="stepName"
-      (valueChange)="changeNameStep($event)"
+      [crrValue]="stepNew?.stepName"
+      (valueChange)="changeNameStep($event,stepNew)"
       [disabled]="isEditReason"
     >
     </codx-input>
@@ -2437,7 +2436,7 @@
         style="flex-grow: 1"
         [ngStyle]="{ color: stepNew?.textColor }"
       >
-        {{ stepName }}
+        {{ stepNew?.stepName }}
       </span>
     </div>
   </div>

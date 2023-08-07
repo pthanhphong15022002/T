@@ -54,7 +54,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { firstValueFrom, Observable, finalize, map } from 'rxjs';
+import { firstValueFrom, Observable, finalize, map, } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
@@ -204,7 +204,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   dayStep = 0;
   hourStep = 0;
-  stepName = '';
   isContinues = false;
   refValue = 'DP018';
   gridViewSetup: any;
@@ -2490,8 +2489,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.openPopupStep('copy', stepCopy);
   }
 
-  changeNameStep(event) {
-    this.stepName = event?.data;
+  changeNameStep(event, data) {
+    // this.stepName = event?.data;
+    data[event?.field] = event?.data;
   }
 
   openPopupStep(type, step?: DP_Steps) {
@@ -2504,37 +2504,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['processID'] = this.process?.recID;
       this.stepNew['stepNo'] = this.stepList.length + 1;
       this.stepNew['createdBy'] = this.userId;
-      this.stepName = '';
     } else if (type === 'copy') {
       this.stepNew = step;
-      this.stepName = this.stepNew['stepName'];
     } else {
       this.stepNew = JSON.parse(JSON.stringify(step));
       this.stepEdit = step;
-      this.stepName = this.stepNew['stepName'];
     }
     this.popupAddStage = this.callfc.openForm(this.popupAddStep, '', 500, 550);
   }
 
   saveStep() {
-    if (
-      this.actionStep !== 'edit' ||
-      this.stepEdit['stepName']?.trim() != this.stepName?.trim()
+    if (this.actionStep !== 'edit' || this.stepEdit['stepName']?.trim() != this.stepNew?.stepName?.trim()
     ) {
-      let isRepeatName = this.checkStepName(this.stepName);
+      let isRepeatName = this.checkStepName(this.stepNew);
       if (isRepeatName) {
         this.notiService.notifyCode('DP029', 0, this.headerTextStepName);
         return;
       }
     }
     this.isSaveStep = true;
-    if (!this.stepName.trim()) {
+    if (!this.stepNew?.stepName.trim()) {
       this.notiService.notifyCode('SYS009', 0, this.headerTextStepName);
       this.isSaveStep = false;
       return;
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
-      this.stepNew['stepName'] = this.stepName;
+      // this.stepNew['stepName'] = this.stepName;
       this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
       this.viewStepSelect(this.stepList[this.stepList?.length - 1 || 0]);
       if (this.action == 'edit') {
@@ -2542,10 +2537,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     } else {
       this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
-      this.stepEdit['textColor'] = this.stepNew['textColor'];
-      this.stepEdit['icon'] = this.stepNew['icon'];
-      this.stepEdit['iconColor'] = this.stepNew['iconColor'];
-      this.stepEdit['stepName'] = this.stepName;
+      this.stepEdit['textColor'] = this.stepNew?.textColor;
+      this.stepEdit['icon'] = this.stepNew?.icon;
+      this.stepEdit['iconColor'] = this.stepNew?.iconColor;
+      this.stepEdit['stepName'] = this.stepNew?.stepName;
       this.stepEdit['modifiedOn'] = new Date();
       this.stepEdit['modifiedBy'] = this.userId;
       if (this.action == 'edit' && this.stepNew.recID) {
@@ -2559,13 +2554,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.isSaveStep = false;
   }
 
-  checkStepName(name: string): boolean {
-    let nameCheck = name?.toLocaleLowerCase()?.trim();
-    if (this.stepList?.length > 0 && nameCheck) {
-      let check = this.stepList?.some(
-        (step) => step.stepName?.toLocaleLowerCase()?.trim() == nameCheck
-      );
-      return check;
+  checkStepName(stepCheck): boolean {
+    if(stepCheck?.stepName){
+      let nameCheck = stepCheck?.stepName?.toLocaleLowerCase()?.trim();
+      if (this.stepList?.length > 0 && nameCheck) {
+        let check = this.stepList?.some(
+          (step) => step.stepName?.toLocaleLowerCase()?.trim() == nameCheck && step?.recID != stepCheck?.recID
+        );
+        return check;
+      }
     }
     return false;
   }
@@ -4399,7 +4396,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.isSaveStep = false;
     this.stepNew = JSON.parse(JSON.stringify(reason));
     this.stepEdit = reason;
-    this.stepName = this.stepNew['stepName'];
     this.isEditReason = true;
     this.action = 'edit';
     this.popupAddStage = this.callfc.openForm(this.popupAddStep, '', 500, 550);
@@ -4411,7 +4407,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.stepEdit['textColor'] = this.stepNew['textColor'];
     this.stepEdit['icon'] = this.stepNew['icon'];
     this.stepEdit['iconColor'] = this.stepNew['iconColor'];
-    this.stepEdit['stepName'] = this.stepName;
     this.stepEdit['modifiedOn'] = new Date();
     this.stepEdit['modifiedBy'] = this.userId;
     if (this.action == 'edit' && this.stepNew.recID) {
