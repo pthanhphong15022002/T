@@ -1154,7 +1154,7 @@ export class CodxShareService {
     approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
-    curComponent:any=null,
+    curComponent:any=null,//biến this: tại component gọi hàm 
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
