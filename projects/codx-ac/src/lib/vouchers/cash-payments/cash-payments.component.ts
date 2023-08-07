@@ -130,6 +130,9 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.baseCurr = res[0].baseCurr;
+        if (!res[0].baseCurr) {
+          this.baseCurr = 'VND';
+        }
       });
     this.routerActive.queryParams
       .pipe(takeUntil(this.destroy$))

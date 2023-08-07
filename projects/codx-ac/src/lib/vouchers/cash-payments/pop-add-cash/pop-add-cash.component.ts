@@ -171,15 +171,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.journal = { ...dialogData.data?.journal };
     this.modegrid = this.journal.addNewMode;
     this.baseCurr = dialogData.data?.baseCurr;
-    // let ins = setInterval(() => {
-    //   if ((this.dialog as any).dialog?.properties?.animate) {
-    //     clearInterval(ins);
-    //     (this.dialog as any).dialog.properties.animate = false;
-    //   }
-    // }, 200);
-    // setTimeout(() => {
-    //   if (ins) clearInterval(ins);
-    // }, 10000);
     this.loadInit();
   }
   //#endregion
@@ -252,49 +243,68 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   changeType(e?: any, ele?: TabComponent) {
-    // if ((this.gridCash && !this.gridCash.gridRef.isEdit) || (this.gridSet && !this.gridSet.gridRef.isEdit)) {
-
-    // }
     if (
-      e &&
-      e.data[0] &&
-      (this.cashpaymentline.length > 0 || this.settledInvoices.length > 0)
+      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+      (this.gridSet && !this.gridSet.gridRef.isEdit) ||
+      (this.gridVat && !this.gridVat.gridRef.isEdit)
     ) {
-      this.notification.alertCode('AC0014', null).subscribe((res) => {
-        if (res.event.status === 'Y') {
-          this.api
-            .exec<any>('AC', 'CommonBusiness', 'DeleteAllAsync', [
-              this.cashpayment,
-            ])
-            .subscribe((res) => {});
-          this.cashpayment.subType = e.data[0];
-          this.cashpaymentline = [];
-          this.settledInvoices = [];
-          this.form.formGroup.patchValue(
-            { subType: this.cashpayment.subType },
-            {
-              onlySelf: true,
-              emitEvent: false,
-            }
-          );
+      if (
+        e &&
+        e.data[0] &&
+        (this.cashpaymentline.length > 0 ||
+          this.settledInvoices.length > 0 ||
+          this.oriVatInvoices.length > 0)
+      ) {
+        this.notification.alertCode('AC0014', null).subscribe((res) => {
+          if (res.event.status === 'Y') {
+            this.loading = true;
+            this.dt.detectChanges();
+            this.dialog.dataService
+              .delete(
+                [this.cashpayment],
+                false,
+                null,
+                '',
+                '',
+                null,
+                null,
+                false
+              )
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res) => {
+                if (res.data != null) {
+                  this.loading = false;
+                  this.dt.detectChanges();
+                  this.clearCashpayment();
+                  this.cashpayment.subType = e.data[0];
+                  this.form.formGroup.patchValue(
+                    { subType: this.cashpayment.subType },
+                    {
+                      onlySelf: true,
+                      emitEvent: false,
+                    }
+                  );
+                  this.loadSubType(this.cashpayment.subType, this.tabObj);
+                }
+              });
+          } else {
+            //this.dt.reattach();
+            // this.form.formGroup.patchValue(
+            //   { subType: this.cashpayment.subType },
+            //   {
+            //     onlySelf: true,
+            //     emitEvent: false,
+            //   }
+            // );
+            // this.cbxSub.dropdownContent.value = '1';
+            // this.cbxSub.dropdownContent.loadDataVll();
+          }
+        });
+      } else {
+        this.cashpayment.subType = e.data[0];
+        if (this.tabObj) {
           this.loadSubType(this.cashpayment.subType, this.tabObj);
-        } else {
-          //this.dt.reattach();
-          // this.form.formGroup.patchValue(
-          //   { subType: this.cashpayment.subType },
-          //   {
-          //     onlySelf: true,
-          //     emitEvent: false,
-          //   }
-          // );
-          // this.cbxSub.dropdownContent.value = '1';
-          // this.cbxSub.dropdownContent.loadDataVll();
         }
-      });
-    } else {
-      this.cashpayment.subType = e.data[0];
-      if (this.tabObj) {
-        this.loadSubType(this.cashpayment.subType, this.tabObj);
       }
     }
   }
@@ -674,6 +684,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
       case 'note':
         this.dataLine.reasonID = e?.itemData?.ReasonID;
+        this.dataLine.accountID = e?.itemData?.OffsetAcctID;
+        this.dt.detectChanges();
         break;
       default:
         break;
@@ -1409,6 +1421,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentline = [];
     this.settledInvoices = [];
     this.vatInvoices = [];
+    this.oriVatInvoices = [];
   }
 
   loadBookmark(e) {
@@ -2671,6 +2684,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ?.querySelectorAll('codx-input');
       if (eleInput) {
         clearInterval(ins);
+        let tabindex = 0;
         for (let index = 0; index < eleInput.length; index++) {
           let elechildren = (
             eleInput[index] as HTMLElement
@@ -2678,7 +2692,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (elechildren.readOnly) {
             elechildren.setAttribute('tabindex', '-1');
           } else {
-            elechildren.setAttribute('tabindex', (index + 1).toString());
+            tabindex++;
+            elechildren.setAttribute('tabindex', tabindex.toString());
           }
         }
         // input refdoc
@@ -2692,8 +2707,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       if (ins) clearInterval(ins);
     }, 10000);
   }
-
-  nextEnableInput(elechildren, nextIndex) {}
 
   // onFocus() {
   //   let ins = setInterval(() => {
@@ -2718,32 +2731,23 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     if (e.key == 'Enter') {
-      let eleInput = document
-        ?.querySelector('.ac-form-master')
-        ?.querySelectorAll('codx-input');
-      if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
-        let curIndex = (e.target as HTMLElement).tabIndex;
-        let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-        let elechildren = (
-          eleInput[curIndex] as HTMLElement
-        ).getElementsByTagName('input')[0];
-        this.nextEnableInput(elechildren, nextIndex);
-        if (elechildren.tabIndex == nextIndex) {
-          elechildren.focus();
-          elechildren.select();
-        } else {
-          elechildren = (
-            eleInput[curIndex + 1] as HTMLElement
-          ).getElementsByTagName('input')[0];
+      if ((e.target as any).closest('codx-inplace') == null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
         }
-
-        // (eleInput[nextIndex] as HTMLElement).getElementsByTagName('input')[0].focus();
-        // (eleInput[nextIndex] as HTMLElement).getElementsByTagName('input')[0].select();
-        // for (let index = 0; index < eleInput.length; index++) {
-        //   if ((eleInput[index] as HTMLElement).getElementsByTagName('input')[0].tabIndex) {
-
-        //   }
-        // }
       }
     }
   }
