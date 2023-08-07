@@ -2647,7 +2647,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //taskGroup
   async openTaskGroup(data?: any, type?: string) {
-    let form = await this.getFormModel('DPS0105');
+    let formModelGroup = await this.getFormModel('DPS0105');
     let taskGroup = new DP_Steps_TaskGroups();
     let timeStep = this.dayStep * 24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
@@ -2670,11 +2670,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      { taskGroup: taskGroup, differenceTime, step: this.step, form }
+      { taskGroup: taskGroup, differenceTime, step: this.step, form: formModelGroup }
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event && res?.event?.taskGroupName) {
         this.saveGroupTask(type, taskGroup, data);
+        // check the change of step
         let check = this.listStepEdit.some((id) => id == data?.stepID);
         if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
@@ -2690,10 +2691,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       await this.setRole(role);
       taskGroup['roles'] = [role];
     }
-    // thêm mới
+    // create a new
     if (!taskGroup['recID']) {
       taskGroup['recID'] = Util.uid();
-      taskGroup['roles'].forEach((role) => {
+      taskGroup?.roles.forEach((role) => {
         role['taskGroupID'] = taskGroup['recID'];
       });
       let index = this.taskGroupList.length;
@@ -2782,7 +2783,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Task -- nvthuan
-  openTypeJob() {
+  openPopupChooseTask() {
     this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580);
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
@@ -3037,7 +3038,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openTypeJob();
+        this.openPopupChooseTask();
         break;
       case 'DP12':
         this.viewTask(data, 'G');
