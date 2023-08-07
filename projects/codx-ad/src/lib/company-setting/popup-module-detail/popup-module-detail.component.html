@@ -77,7 +77,7 @@
 </ng-template>
 <ng-template #body>
   <div class="mainInfo d-flex w-100 h-100 flex-column justify-content-between">
-    <div class="body">
+    <div class="body" *ngIf="lstADUserRoles && fmUserRole">
       <codx-gridview-v2
         #grid
         [formName]="fmUserRole?.formName"
@@ -89,6 +89,7 @@
         [predicates]="predicate"
         [dataValues]="dataValue"
         [autoLoad]="false"
+        [autoFitColumns]="false"
         rowHeight="40"
       ></codx-gridview-v2>
       <ng-template #operRoleEndDate let-data>

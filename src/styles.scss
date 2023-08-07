@@ -3543,3 +3543,13 @@ codx-view-list-tree{
     margin-top: 0!important;
   }
 }
+
+.toolbar-detail{
+  position: absolute;
+  top: 5px;
+  background-color: white;
+  right: 0;
+}
+codx-detail-toolbar codx-mfunc .dropdown {
+  height: 26px;
+}

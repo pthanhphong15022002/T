@@ -527,7 +527,34 @@ export class CasesComponent
       case 'CM0402_6':
         this.approvalTrans(data);
         break;
+      //export
+      case 'SYS002':
+        this.exportFiles(e, data);
+        break;
+      default: {
+        var customData :any=null;
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   dataSource: '', // truyen sau
+        // };
+
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
     }
+  }
+  afterSave(e?: any, that: any = null) {
+    //TODO: đợi core
   }
 
   moveStage(data: any) {
@@ -1451,4 +1478,38 @@ export class CasesComponent
     this.changeDataMF(e, data, 11);
   }
   //#endregion
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    let customData: any;
+    if (data?.refID) {
+      this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
+        if (dts) {
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        }
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
+  }
 }

@@ -200,6 +200,16 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null}
+        })
       if (
         this.actionType === 'copy' &&
         this.awardObj.awardDate == this.defaultAwardDate

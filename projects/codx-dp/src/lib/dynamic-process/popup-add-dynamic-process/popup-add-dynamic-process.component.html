@@ -1369,7 +1369,8 @@
                       <codx-mfunc
                         [formModel]="formModelField"
                         (clickMF)="clickMFFields($event, item1, !haveTitle)"
-                        [dataItem]="moreDefaut"
+                        (changeDataMF)="changeMFFields($event, item1)"
+                        [dataItem]="action != 'edit' ? moreDefaut : item"
                         [type]="'hover'"
                       >
                       </codx-mfunc>

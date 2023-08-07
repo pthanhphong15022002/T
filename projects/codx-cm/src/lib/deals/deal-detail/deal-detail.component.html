@@ -28,7 +28,7 @@
       </div>
     </ng-template>
     <ng-template #header let-data>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between mb-2">
         <div
           class="text-info d-flex align-items-center"
           [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
@@ -49,8 +49,7 @@
             "
           ></span>
         </div>
-        <div></div>
-        <div>
+        <div class="toolbar-detail">
           <codx-mfunc
             [hideMF]="false"
             [dataItem]="dataSelected"
@@ -64,7 +63,7 @@
       </div>
 
       <div class="container_detail mt-1">
-        <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex justify-content-between mb-3">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-start">
               <div class="me-4">
@@ -689,7 +688,7 @@
                     </div>
                   </div>
                 </div>
-<!--
+                <!--
                 <div class="row">
 
                 </div> -->
@@ -817,7 +816,6 @@
                     </div>
                   </div>
                 </div>
-
               </div>
               <div class="mt-5">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
@@ -1018,11 +1016,9 @@
     [dataValues]="formModel.entityName + ';' + dataSelected.recID"
     [refType]="formModel.entityName"
     [refID]="dataSelected.recID"
-    [customerID]="dataSelected.customerID"
-    [salespersonID]="dataSelected.salespersonID"
-    [consultantID]="dataSelected.consultantID"
+    [transID]="dataSelected?.recID"
+    [approveStatus]="dataSelected.approveStatus"
     (tabChange)="changeFooter($event)"
-    [disableRefID]="true"
   ></codx-tabs>
 </ng-template>
 
@@ -1095,7 +1091,10 @@
             class="badge badge-light badge-sm me-0"
           >
           </codx-vll>
-          <div class="d-flex align-items-center" [ngbTooltip]="getSettingValue(item?.type, 'createOn')">
+          <div
+            class="d-flex align-items-center"
+            [ngbTooltip]="getSettingValue(item?.type, 'createOn')"
+          >
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp-menu"
