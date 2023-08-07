@@ -17,7 +17,7 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 // import {} from '@syncfusion/ej2-diagrams';
 import { ChangeEventArgs as NumericChangeEventArgs } from '@syncfusion/ej2-inputs';
-import { ApiHttpService, CRUDService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
+import { ApiHttpService, CRUDService, CacheService, CallFuncService, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { PopupAddPositionsComponent } from '../popup-add-positions/popup-add-positions.component';
 import { DataManager } from '@syncfusion/ej2-data';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
@@ -37,6 +37,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() funcID: string = "";
   @Input() formModel: any;
   @Input() view: ViewsComponent;
+  @Input() grvSetup: any;
   @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
   @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
@@ -72,6 +73,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     private callfc: CallFuncService,
     private notiService: NotificationsService,
     private shareService: CodxShareService,
+    private cache : CacheService,
   ) { }
 
   //#region chart setting
@@ -179,7 +181,24 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           this.isCorporation = res.isCorporation;
         }
       });
+    this.getFunction(this.funcID);
     //this.getDataPositionByID(this.positionID);
+  }
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        //if (func) this.funcID = func;
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.posEmpPageIndex = 0;

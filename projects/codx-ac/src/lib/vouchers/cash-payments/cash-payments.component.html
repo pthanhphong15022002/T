@@ -101,7 +101,7 @@
           "></span>
         </div>
       </div>
-      <div class="d-flex justify-content-between align-items-center">
+      <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-end codx-badge">
           <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
             [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
@@ -116,7 +116,7 @@
         " class="text-gray-600"></span>
           </div>
         </div>
-        <div class="d-flex">
+        <div class="d-flex mt-1">
           <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
             [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
           </codx-imgs>
