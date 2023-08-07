@@ -36,6 +36,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, interval, takeUntil } from 'rxjs';
+import { RoundService } from '../../round.service';
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
@@ -70,8 +71,8 @@ export class CashPaymentsComponent extends UIComponent {
   totaloff: any = 0;
   totalsettledAmt: any = 0;
   totalbalAmt: any = 0;
-  totalVatBase:any = 0;
-  totalVatAtm:any = 0;
+  totalVatBase: any = 0;
+  totalVatAtm: any = 0;
   className: any;
   classNameLine: any;
   entityName: any;
@@ -788,7 +789,7 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  loadTotalVat(){
+  loadTotalVat() {
     this.totalVatBase = 0;
     this.totalVatAtm = 0;
     this.vatInvoices.forEach((item) => {
@@ -851,7 +852,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
-    debugger
+    debugger;
     this.api
       .execSv(
         'rptrp',

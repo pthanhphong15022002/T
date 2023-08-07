@@ -23,9 +23,6 @@ import {
 import {
   AuthService,
   AuthStore,
-  CallFuncService,
-  CodxComboboxComponent,
-  CodxDropdownSelectComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -38,25 +35,19 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { PopAddLinecashComponent } from '../pop-add-linecash/pop-add-linecash.component';
-import { Observable, Subject, interval, map, takeUntil, timeout } from 'rxjs';
-import { CashPayment } from '../../../models/CashPayment.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { Reason } from '../../../models/Reason.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import { VoucherComponent } from '../../../popup/voucher/voucher.component';
-import { CashReceiptsLines } from '../../../models/CashReceiptsLines.model';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
-import { PopUpVatComponent } from '../pop-up-vat/pop-up-vat.component';
 import {
   AnimationModel,
-  ILoadedEventArgs,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { VATInvoices } from '../../../models/VATInvoices.model';
-import { E } from '@angular/cdk/keycodes';
+import { RoundService } from '../../../round.service';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -189,6 +180,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private routerActive: ActivatedRoute,
     private journalService: JournalService,
     private auth: AuthService,
+    private round: RoundService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -208,7 +200,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.round.amount(9.256, 'VND');
+  }
 
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.cashpayment, {
@@ -266,7 +260,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       element.disabled = true;
     });
   }
-  
+
   changeType(e?: any, ele?: TabComponent) {
     // if ((this.gridCash && !this.gridCash.gridRef.isEdit) || (this.gridSet && !this.gridSet.gridRef.isEdit)) {
 
@@ -933,7 +927,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //                     }
   //                   }
   //                 }
-  //               });             
+  //               });
   //           }
   //         });
   //       }
@@ -980,7 +974,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   addVatInvoice() {
-    this.setLineVATDefault(); 
+    this.setLineVATDefault();
   }
 
   setLineVATDefault() {
@@ -1033,7 +1027,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
-
 
   //#endregion
 
@@ -1206,7 +1199,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       this.loading = false;
                       this.dt.detectChanges();
                     }
-                  });          
+                  });
               } else {
                 this.loading = false;
                 this.dt.detectChanges();
