@@ -317,7 +317,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         e.data.note = e.itemData.ReasonName;
         break;
       case 'itemID':
-        this.gridVouchersLine.rowDataSelected['itemName'] = e.itemData.ItemName;
+        e.data['itemName'] = e.itemData.ItemName;
         break;
     }
   }
