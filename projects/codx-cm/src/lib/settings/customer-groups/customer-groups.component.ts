@@ -38,7 +38,7 @@ export class CustomerGroupsComponent extends UIComponent {
   entityName = 'CM_CustomerGroups';
   predicate: string;
   dataValue: string;
-  idField = 'recID';
+  idField = 'custGroupID';
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   arrFieldIsVisible = [];
@@ -326,7 +326,7 @@ export class CustomerGroupsComponent extends UIComponent {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteAsync';
-    opt.data = [itemSelected.recID];
+    opt.data = [itemSelected.custGroupID];
     return true;
   }
   //#endregion

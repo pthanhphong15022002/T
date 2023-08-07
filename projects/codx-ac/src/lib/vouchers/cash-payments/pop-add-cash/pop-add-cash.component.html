@@ -81,9 +81,9 @@
   </div>
   <div style="height: 35px !important;" class="listcash-content row">
     <div class="row align-items-center">
-      <div *ngIf="form.formGroup" id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
+      <div *ngIf="form.formGroup" id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
-        <codx-input style="width: 100%" class="fw-bold" [Group]="form.formGroup" field="refDocs"
+        <codx-input #cbxRefdoc style="width: 100%" class="fw-bold" [Group]="form.formGroup" field="refDocs"
           [formModel]="form.formModel" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -135,17 +135,17 @@
   <ng-container *ngIf="form.formGroup && form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429'">
     <div class="p-3 tab-basic ac-form-master">
       <div #itemRef class="row">
-        <div class="col-8 ac-left">
-          <div style="max-width: 70%;">
+        <div class="col-7 ac-left">
+          <div class="mw-850">
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important;" fiedName="CashBookID" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input #cbxCashBook [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #cbxCashBook 
                       [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
-                      (valueChange)="valueChange($event)">
+                      (valueChange)="valueChange($event)" onkeypress="onKeyUp()">
                     </codx-input>
                   </div>
                 </div>
@@ -155,7 +155,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="TotalAmt" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input #tTotalAmt [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #tTotalAmt 
                       [Group]="form.formGroup" [formModel]="form.formModel" field="totalAmt" [min]="0"
                       (controlBlur)="valueFocusOut($event)"></codx-input>
                   </div>
@@ -167,7 +167,7 @@
                     <codx-label style="white-space: nowrap !important;" fiedName="ReasonID" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input #cbxReasonID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                      <codx-input #cbxReasonID 
                         [Group]="form.formGroup" field="reasonID" [formModel]="form.formModel"
                         (valueChange)="valueChange($event)">
                       </codx-input>
@@ -193,7 +193,7 @@
                       " fiedName="ObjectID" [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input #cbxObjectID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                      <codx-input #cbxObjectID 
                         [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
                         (valueChange)="valueChange($event)">
                       </codx-input>
@@ -213,7 +213,7 @@
                     [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" field="refID"
+                    <codx-input field="refID"
                       [disabled]="true" [crrValue]="voucherNoRef" [formModel]="form.formModel">
                     </codx-input>
                     <!-- <ejs-tooltip position="BottomCenter" id='tooltip' target="#tipref">
@@ -243,7 +243,7 @@
                     [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" disabled="true"
+                    <codx-input disabled="true"
                       type="number" [formModel]="form.formModel" [crrValue]="dRRef">
                     </codx-input>
                   </div>
@@ -261,7 +261,7 @@
                     <codx-label style="white-space: nowrap !important;" fiedName="Payee" [formModel]="form.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input #cbxPayee [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                      <codx-input #cbxPayee 
                         [Group]="form.formGroup" [formModel]="form.formModel" field="payee"
                         (valueChange)="valueChange($event)"></codx-input>
                     </div>
@@ -270,12 +270,12 @@
               </div>
             </div>
             <div class="row">
-              <div tabindex="8" class="col-12">
+              <div class="col-12">
                 <div class="form-group mb-0">
                   <codx-label style="white-space: nowrap !important;" fiedName="Memo" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input #tMemo [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #tMemo 
                       [Group]="form.formGroup" field="memo" [formModel]="form.formModel"
                       (controlBlur)="valueFocusOut($event)">
                     </codx-input>
@@ -285,15 +285,15 @@
             </div>
           </div>
         </div>
-        <div class="col-4 ac-right d-flex justify-content-end">
-          <div class="d-flex flex-column" style="max-width: 60%;">
+        <div class="col-5 ac-right d-flex justify-content-end">
+          <div class="d-flex flex-column mw-350px">
             <div *ngIf="journal" class="row">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important;" fiedName="CurrencyID" [formModel]="form.formModel">
                   </codx-label>
                   <div [class]="(!journal.multiCurrency) ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input #cbxCurrencyID [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #cbxCurrencyID 
                       [disabled]="(!journal.multiCurrency)" [Group]="form.formGroup" field="currencyID"
                       [formModel]="form.formModel" (valueChange)="valueChange($event)">
                     </codx-input>
@@ -306,7 +306,7 @@
                   </codx-label>
                   <div
                     [class]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr) ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input #tExchange [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #tExchange 
                       [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)"
                       [Group]="form.formGroup" field="exchangeRate" [formModel]="form.formModel"
                       (controlBlur)="valueFocusOut($event)">
@@ -321,7 +321,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="VoucherDate" [formModel]="form.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input #tVoucherDate [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #tVoucherDate 
                       [Group]="form.formGroup" [formModel]="form.formModel" field="voucherDate"
                       (valueChange)="valueChange($event)">
                     </codx-input>
@@ -333,7 +333,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="VoucherNo" [formModel]="form.formModel">
                   </codx-label>
                   <div [class]="journal?.assignRule != '0' ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input #tVourcherNo [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'"
+                    <codx-input #tVourcherNo 
                       [Group]="form.formGroup" field="voucherNo" [formModel]="form.formModel"
                       (valueChange)="valueChange($event)" [disabled]="journal?.assignRule != '0'">
                     </codx-input>
@@ -345,7 +345,7 @@
               <codx-label style="white-space: nowrap !important;" fiedName="PostedDate" [formModel]="form.formModel">
               </codx-label>
               <div class="ac-input">
-                <codx-input [style]="loadingform ? 'z-index: -1000;' : 'z-index: 1000;'" [Group]="form.formGroup"
+                <codx-input [Group]="form.formGroup"
                   field="postedDate" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
@@ -588,7 +588,7 @@
   <!-- Phiếu chi && Ủy nhiệm chi -->
 
   <!-- Phiếu thu && báo có -->
-  <ng-container
+  <!-- <ng-container
     *ngIf="form && form.formGroup && form.formModel.funcID == 'ACT0401' || form.formModel.funcID == 'ACT0428'">
     <div class="p-3 tab-basic">
       <div #itemRef class="row">
@@ -677,7 +677,6 @@
         <div class="col-3 ac-right d-flex justify-content-end">
           <div class="d-flex flex-column mw-300px">
             <div *ngIf="journal" class="row">
-              <!-- Tiền tệ -->
               <div class="col-6">
                 <div class="form-group">
                   <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
@@ -690,7 +689,6 @@
                   </div>
                 </div>
               </div>
-              <!-- Tỷ giá -->
               <div class="col-6">
                 <div class="form-group">
                   <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
@@ -706,7 +704,6 @@
             </div>
             <div class="row">
               <div class="col-6">
-                <!-- Ngày chứng từ -->
                 <div class="form-group">
                   <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
                   </codx-label>
@@ -743,10 +740,7 @@
         </div>
       </div>
     </div>
-    <!-- Phiếu chi && Ủy nhiệm chi -->
-
-    <!-- Phiếu thu && báo có -->
-  </ng-container>
+  </ng-container> -->
   <!-- Phiếu thu && báo có -->
 </ng-template>
 <!-- End: Tab Basic -->
@@ -757,18 +751,18 @@
   <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subtypeRef == '1') || (cashpayment?.subType == '4' && subtypeRef == '1')) 
       && (form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429')">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 columnsGrid="" showRowNumber="true" class="tabLine" #gridCash
+      <codx-gridview-v2 showRowNumber="true" class="tabLine" #gridCash [allowRowDragAndDrop]="true"
         [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
         [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
-        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
+        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true"
         [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [showEmptyRecord]="false"
         (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)" (onEdit)="onEdit($event)"
         (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
-            <button tabindex="-1" id="btnadd" class="btn btn-sm btn-light-primary"
+            <button tabindex="17" id="btnadd" class="btn btn-sm btn-light-primary"
               (keydown.enter)="addRow('1'); $event.preventDefault();" (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
@@ -987,7 +981,7 @@
   <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (changeDataMF)="changeDataMF($event)"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
-<ng-template #morefunction2 let-data>
+<!-- <ng-template #morefunction2 let-data>
   <div class="d-flex align-items-center justify-content-start">
     <span type="button" class="btn btn-icon btn-light-primary ms-1" (click)="editRow(data)">
       <i class="icon-edit icon-16"></i>
@@ -996,7 +990,7 @@
       <i class="icon-delete icon-16"></i>
     </span>
   </div>
-</ng-template>
+</ng-template> -->
 <!-- End: More function -->
 
 <!-- Start: Footer -->
@@ -1034,21 +1028,21 @@
         
       </div> -->
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
-        (click)="onDiscard()">
+      <button tabindex="19" *ngIf="cashpayment?.status == '0'" style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+      (keydown.enter)="onDiscard(); $event.preventDefault();" (click)="onDiscard()">
         <div class="d-flex align-items-center">
           <i class="icon-delete_outline icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button style="border: 1px solid var(--primary-dark) !important;" type="button"
-        class="btn btn-md btn-light-primary me-2" (click)="onSaveAdd()">
+      <button tabindex="20" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important;" type="button"
+        class="btn btn-md btn-light-primary me-2" (keydown.enter)="onSaveAdd(); $event.preventDefault();" (click)="onSaveAdd()">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
-      <button id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (click)="onSave()">
+      <button tabindex="21" id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (keydown.enter)="onSave(); $event.preventDefault();" (click)="onSave()">
         <div class="d-flex align-items-center">
           <i class="icon-save_alt icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
@@ -1194,9 +1188,9 @@
 <!-- End: Sub toolbar -->
 
 <!-- Start: addline -->
-<ng-template #addLine let-data>
+<!-- <ng-template #addLine let-data>
   <ng-container *ngIf="form.formGroup">
-    <div class="flex-column d-flex justify-content-start">
+    <div class="flex-column d-flex justify-content-start  mt-2">
       <div id="ac-column-def" class="d-flex align-items-center cursor-pointer w-fit ac-refdoc">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
         <codx-input placeholder="Nhập kèm chứng từ gốc" style="width: 100%" class="fw-bold" [Group]="form.formGroup"
@@ -1205,5 +1199,5 @@
       </div>
     </div>
   </ng-container>
-</ng-template>
+</ng-template> -->
 <!-- End: addline -->
