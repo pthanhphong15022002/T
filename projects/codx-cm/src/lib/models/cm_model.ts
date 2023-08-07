@@ -202,6 +202,7 @@ export class CM_Permissions {
   objectType: string;
   objectName: string;
   objectID: string;
+  full: boolean;
   create: boolean;
   read: boolean;
   update: boolean;

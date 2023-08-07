@@ -89,7 +89,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     {
       this.loading = true;
       
-      this.api.execSv(this.dataSelected.service,"Codx.RptBusiness.CM","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
+      this.api.execSv(this.dataSelected.service,"Codx.RptBusiness.","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
       .subscribe((res:any) => {
         if (res)
         {

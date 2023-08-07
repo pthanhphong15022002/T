@@ -69,4 +69,13 @@ export class SearchingComponent implements OnInit {
     }
     return bookmarked;
   }
+
+  
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
+  }
 }
