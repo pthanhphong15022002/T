@@ -507,63 +507,48 @@ export class DealsComponent
       case 'SYS03':
         this.edit(data);
         break;
-
       case 'SYS04':
         this.copy(data);
         break;
-
       case 'SYS02':
         this.delete(data);
         break;
-
       case 'CM0201_1':
         this.moveStage(data);
         break;
-
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
-
       case 'CM0201_3':
         this.moveReason(data, true);
         break;
-
       case 'CM0201_4':
         this.moveReason(data, false);
         break;
-
       case 'CM0201_8':
         this.openOrCloseDeal(data, true);
         break;
-
       case 'CM0201_7':
         this.popupOwnerRoles(data);
         break;
-
       case 'CM0201_9':
         this.openOrCloseDeal(data, false);
         break;
-
       case 'CM0201_5':
         this.exportFile(data);
         break;
-
       case 'CM0201_6':
         this.approvalTrans(data);
         break;
-
       case 'CM0201_12':
         this.confirmOrRefuse(true, data);
         break;
-
       case 'CM0201_13':
         this.confirmOrRefuse(false, data);
         break;
-
       case 'CM0201_14':
         this.openFormBANT(data);
         break;
-
       default:
         var customData = {
           refID: data.processID,

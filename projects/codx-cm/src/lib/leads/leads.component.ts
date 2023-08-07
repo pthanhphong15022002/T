@@ -45,8 +45,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
   encapsulation: ViewEncapsulation.None,
-})
-export class LeadsComponent
+})export class LeadsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -1048,36 +1047,43 @@ export class LeadsComponent
       });
   }
   updateProcess(data, isCheck) {
-    // if(isCheck) {
-    //   this.notificationsService.notify('Tính năng đang phát triển');
-    //   return;
-    // }
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" '+ this.titleAction+' "' || '',
+        '"' + data?.leadName + '" '+ this.titleAction+' ',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          var datas = [data.recID, this.applyForLead, isCheck];
           if (!isCheck) {
-            this.codxCmService.updateProcess(datas).subscribe((res) => {
-              if (res) {
-                this.dataSelected = res[0];
-                this.dataSelected = JSON.parse(
-                  JSON.stringify(this.dataSelected)
-                );
-
-                this.notificationsService.notifyCode('SYS007');
-                this.view.dataService.update(this.dataSelected).subscribe();
-              }
-              this.detectorRef.detectChanges();
-            });
+            let datas = [data.recID, this.applyForLead, isCheck,this.processId,'',''];
+            this.getApiUpdateProcess(datas,[]);
           }
           else {
-
+            let datas = [data.leadName,data.leadID,this.processId,this.applyForLead];
+            this.codxCmService.addInstanceNoRecId(datas).subscribe((res)=>{
+              if(res) {
+                  let dataInstance = [data.recID, this.applyForLead, isCheck,this.processId ,res[0],res[1]];
+                  this.getApiUpdateProcess(dataInstance,res[2]);
+              }
+            })
           }
         }
       });
+  }
+  getApiUpdateProcess(datas,listStep){
+    this.codxCmService.updateProcess(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res[0];
+        this.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+        if(listStep.length > 0 && listStep) {
+          this.detailViewLead.reloadListStep(listStep);
+        }
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected).subscribe();
+      }
+      this.detectorRef.detectChanges();
+    });
   }
 
   openOrCloseLead(data, check) {

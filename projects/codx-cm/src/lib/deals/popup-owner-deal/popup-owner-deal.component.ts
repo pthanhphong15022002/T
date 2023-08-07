@@ -27,6 +27,7 @@ export class PopupOwnerDealComponent {
   applyFor: string = '';
   titleAction = '';
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
+
   constructor(
     private codxCmService: CodxCmService,
     private cache: CacheService,
