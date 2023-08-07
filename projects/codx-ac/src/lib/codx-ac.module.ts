@@ -82,6 +82,7 @@ import { ClosingDataComponent } from './periodic/closing-data/closing-data.compo
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
+import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 export const routes: Routes = [
   {
     path: '',
@@ -301,6 +302,7 @@ export const routes: Routes = [
     JournalV2Component,
     LayloutJournalComponent,
     TableAccountingComponent,
+    TranformSubobjectPipe,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

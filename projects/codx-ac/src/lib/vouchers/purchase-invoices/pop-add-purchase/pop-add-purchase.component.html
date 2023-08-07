@@ -69,8 +69,9 @@
                 [autoLoad]="false"
                 [rowHeight]="35"
                 [dataSource]="lines"
+                [showRowNumber]="true"
                 (cellChanged)="onCellChange($event)"
-                (created)="onGridCreated($event, gridPurchaseInvoiceLines)"
+                (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew($event)"
                 (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -94,7 +95,7 @@
           </ng-template>
         </e-tabitem>
 
-        <e-tabitem *ngIf="vatType == '2'">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2">
               <i class="icon-format_list_numbered icon-20 me-2"></i>
@@ -119,9 +120,11 @@
                 [allowSorting]="true"
                 [dataSource]="vatInvoices"
                 [rowHeight]="35"
-                (created)="onGridCreated($event, gridVatInvoices)"
+                [showRowNumber]="true"
+                (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew2($event)"
                 (onEdit)="onEndEdit2($event)"
+                (eventAction)="onActionEvent2($event)"
               ></codx-gridview-v2>
 
               <button
@@ -191,6 +194,20 @@
     >
       <i class="icon-close icon-18"></i>
     </button>
+  </div>
+
+  <div class="mb-1" style="margin-left: 30px">
+    <codx-dropdown-select
+      cssClass="border-0 fw-bold w-350px"
+      cssPopup="h-350px w-550px"
+      [isMulti]="false"
+      type="valuelist"
+      field="subType"
+      [refValue]="grvPurchaseInvoices['SubType'].referedValue"
+      [emptyText]="grvPurchaseInvoices.SubType?.headerText"
+      [value]="master.subType"
+      (valueChange)="onSelectChange($event)"
+    ></codx-dropdown-select>
   </div>
 </ng-template>
 
@@ -282,7 +299,6 @@
             [Group]="form.formGroup"
             field="delModeID"
             [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -297,7 +313,6 @@
             [Group]="form.formGroup"
             field="invoiceSeriNo"
             [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
           ></codx-input>
         </div>
         <div class="col-2 form-group">
@@ -311,7 +326,6 @@
             [Group]="form.formGroup"
             field="invoiceNo"
             [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -326,7 +340,6 @@
             [Group]="form.formGroup"
             field="invoiceDate"
             [formModel]="form.formModel"
-            (valueChange)="onInputChange($event)"
           >
           </codx-input>
         </div>
@@ -468,6 +481,19 @@
       style="top: 4px"
     >
       <button
+        class="btn btn-md btn-danger"
+        (click)="onDiscard()"
+        *ngIf="masterService.hasSaved && master.status == '0'"
+      >
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+
+      <button
         *ngIf="!isEdit"
         type="button"
         class="btn btn-md btn-light-primary"
@@ -492,19 +518,6 @@
           fiedName="lblSave"
           [formModel]="form.formModel"
           default="Lưu"
-        ></codx-label>
-      </button>
-
-      <button
-        class="btn btn-md btn-danger"
-        (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && master.status == '0'"
-      >
-        <codx-label
-          class="fs-6 fw-normal"
-          fiedName="lblDiscard"
-          [formModel]="form.formModel"
-          default="Hủy bỏ"
         ></codx-label>
       </button>
     </div>

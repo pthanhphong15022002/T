@@ -22,11 +22,10 @@ import {
   SidebarModel,
   UIComponent,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment';
+import { CodxHrService } from '../../codx-hr.service';
+import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
   selector: 'lib-popup-eprocess-contract',
@@ -66,8 +65,10 @@ export class PopupEProcessContractComponent
   dialogAddBenefit: any;
   editBenefitObj: any;
   tempBenefitArr: any = [];
+  gridViewSetup: any;
   //#endregion
   employeeSign;
+  itemContractGroup: string;
 
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
@@ -139,6 +140,13 @@ export class PopupEProcessContractComponent
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
     this.fmSubContract.formName = 'EContracts';
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   initFormAddContract() {
@@ -245,8 +253,6 @@ export class PopupEProcessContractComponent
     dialog.close();
   }
 
-  lstFile = [];
-
   initForm() {
     this.hrSevice
       .getOrgUnitID(
@@ -265,6 +271,7 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
+            debugger
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
             this.df.detectChanges();
@@ -295,6 +302,16 @@ export class PopupEProcessContractComponent
       this.actionType === 'copy' ||
       this.actionType === 'view'
     ) {
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null}
+        })
       this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
@@ -349,6 +366,21 @@ export class PopupEProcessContractComponent
       return;
     }
 
+    if (this.data.limitMonths === null && this.data.expiredDate === null) {
+      this.notify.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ExpiredDate']?.headerText + '"'
+      );
+      return;
+    }
+
+    if (this.itemContractGroup !== '1' && this.data.expiredDate === null) {
+      this.setExpiredDate(this.data.limitMonths);
+    }
+
+    //Check limit month and expire date
+
     this.data.orgUnitID = this.employeeObj?.orgUnitID;
     this.data.parentUnit = this.employeeObj?.parentUnit;
     this.data.departmentID = this.employeeObj?.departmentID;
@@ -363,8 +395,6 @@ export class PopupEProcessContractComponent
         }
       });
     }
-    //Files
-    //this.data.attachments = this.attachment.fileUploadList.length;
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
@@ -379,7 +409,7 @@ export class PopupEProcessContractComponent
               this.data = res;
             } else if (res[1]) {
               this.notify.alertCode(res[1]).subscribe((stt) => {
-                if (stt?.event.status == 'Y') {
+                if (stt?.event?.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
                       .addEContract(this.data, this.useForQTNS)
@@ -445,6 +475,11 @@ export class PopupEProcessContractComponent
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'contractTypeID': {
+          this.itemContractGroup =
+            event.component.comboBoxObject.itemData.ContractGroup;
+          // console.log(
+          //   event.component.comboBoxObject.itemData.ContractGroup !== '1'
+          // );
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
@@ -473,7 +508,7 @@ export class PopupEProcessContractComponent
   }
 
   setExpiredDate(month) {
-    if (this.data.effectedDate) {
+    if (this.data.effectedDate && month !== null) {
       let date = new Date(this.data.effectedDate);
       //Trừ một ngày theo thay đổi mới
       this.data.expiredDate = new Date(

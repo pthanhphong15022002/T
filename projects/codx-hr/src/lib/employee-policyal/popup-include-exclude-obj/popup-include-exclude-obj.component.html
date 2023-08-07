@@ -1,0 +1,349 @@
+<codx-form
+    #form
+    [body]="body"
+    [formModel]="formModel"
+    [dialog]="dialog"
+    >
+    <!-- [customToolbar]="customeHeader" -->
+</codx-form>
+
+<ng-template #body>
+  <div class="mb-5"> 
+    <i class="icon-how_to_reg text-primary me-3"></i>
+    <codx-label
+        class="fw-bold"
+        [formModel]="formModel"
+        name = "lblApplyObj"
+        [default]="'Đối tượng áp dụng'"
+    ></codx-label>
+  </div>
+  <div *ngFor="let obj of lstPolicyBeneficiariesApply; let last = last">
+    <div class="border content-hover">
+      <div
+        class="d-flex mb-3 fw-bold align-items-center justify-content-between border-bottom"
+      >
+        <div class="text-primary ms-3">{{ obj.priority }}</div>
+      </div>
+      <div *ngFor="let detail of lstSelectedObj">
+        <div class="d-flex justify-content-between">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="false"
+            name="HRObject"
+            [value]="detail"
+            class="ms-3"
+          >
+          </codx-vll>
+        </div>
+        <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
+          <span *ngFor="let org of lstOrgUnitID">
+            <span
+              *ngIf="org.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                org.id
+                  | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
+          <span *ngFor="let joblevel of lstJobLevel">
+            <span
+              *ngIf="joblevel.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                joblevel.id
+                  | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
+          <span *ngFor="let position of lstPositionID">
+            <span
+              *ngIf="position.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                position.id
+                  | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
+          <span *ngFor="let empType of lstEmployeeTypeID">
+            <span
+              *ngIf="empType.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                empType.id
+                  | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
+          <span *ngFor="let labourType of lstLabourType">
+            <span *ngIf="labourType.rec == obj.recID">
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="false"
+                name="HR022"
+                [value]="labourType.id"
+                ngClass="badge badge-success border-0 ms-2"
+              >
+              </codx-vll>
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
+          <span *ngFor="let contractType of lstContractTypeID">
+            <span
+              *ngIf="contractType.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                contractType.id
+                  | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
+          <span *ngFor="let emp of lstEmployeeID">
+            <!-- <span
+              *ngIf="emp.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                emp.id
+                  | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+                  | async
+              "
+            >
+            </span> -->
+            <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+                <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                      [objectName]="emp.info?.employeeName" [width]="30">
+                </codx-img>
+                  <div class="d-flex flex-column w-350px">
+                      <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                          {{emp.info?.employeeName}}</span>
+                      <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                          {{emp.positionName}}
+                      </span>
+                        <!-- <ng-template #positionTooltip>
+                          {{emp.positionName}}
+                      </ng-template>
+                        <ng-template #employeeNameTooltip>
+                          {{emp.positionName}}
+                  </ng-template> -->
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
+          <span *ngFor="let empStatus of lstEmpStatus">
+            <span *ngIf="empStatus.rec == obj.recID">
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="false"
+                name="HR003"
+                [value]="empStatus.id"
+                ngClass="badge badge-success border-0 ms-2"
+              >
+              </codx-vll>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
+      <codx-label
+        default="Hoặc"
+        name="lblOr"
+        [formModel]="formModel"
+      ></codx-label>
+    </div>
+  </div>
+
+  <div class="mb-5 mt-8">
+      <i class="icon-person_remove text-primary me-3"></i>
+      <codx-label
+          class="fw-bold"
+          [formModel]="formModel"
+          name = "lblExcludeObj"
+          [default]="'Đối tượng loại trừ'"
+      ></codx-label>
+  </div>
+  <div *ngFor="let obj of lstPolicyBeneficiariesExclude; let last = last">
+    <div class="border content-hover">
+      <div
+        class="d-flex mb-3 align-items-center justify-content-between border-bottom"
+      >
+        <div class="text-primary ms-3">{{ obj.priority }}</div>
+      </div>
+
+      <div *ngFor="let detail of lstSelectedExcludeObj">
+        <div class="d-flex justify-content-between">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="false"
+            name="HRObject"
+            [value]="detail"
+            class="ms-3"
+          >
+          </codx-vll>
+        </div>
+        <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
+          <span *ngFor="let org of lstOrgUnitID">
+            <span
+              *ngIf="org.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                org.id
+                  | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
+          <span *ngFor="let joblevel of lstJobLevel">
+            <span
+              *ngIf="joblevel.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                joblevel.id
+                  | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
+          <span *ngFor="let position of lstPositionID">
+            <span
+              *ngIf="position.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                position.id
+                  | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
+          <span *ngFor="let empType of lstEmployeeTypeID">
+            <span
+              *ngIf="empType.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                empType.id
+                  | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
+          <span *ngFor="let labourType of lstLabourType">
+            <span *ngIf="labourType.rec == obj.recID">
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="false"
+                name="HR022"
+                [value]="labourType.id"
+                ngClass="badge badge-success border-0 ms-2"
+              >
+              </codx-vll>
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
+          <span *ngFor="let contractType of lstContractTypeID">
+            <span
+              *ngIf="contractType.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                contractType.id
+                  | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+                  | async
+              "
+            >
+            </span>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
+          <span *ngFor="let emp of lstEmployeeID">
+            <!-- <span
+              *ngIf="emp.rec == obj.recID"
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="
+                emp.id
+                  | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+                  | async
+              "
+            >
+            </span> -->
+
+            <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+                <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                      [objectName]="emp.info?.employeeName" [width]="30">
+                </codx-img>
+                  <div class="d-flex flex-column w-350px">
+                      <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                          {{emp.info?.employeeName}}</span>
+                      <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                          {{emp.positionName}}
+                      </span>
+                        <!-- <ng-template #positionTooltip>
+                          {{emp.positionName}}
+                      </ng-template>
+                        <ng-template #employeeNameTooltip>
+                          {{emp.positionName}}
+                  </ng-template> -->
+              </div>
+            </div>
+          </span>
+        </div>
+        <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
+          <span *ngFor="let empStatus of lstEmpStatus">
+            <span *ngIf="empStatus.rec == obj.recID">
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="false"
+                name="HR003"
+                [value]="empStatus.id"
+                ngClass="badge badge-success border-0 ms-2"
+              >
+              </codx-vll>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
+      <codx-label
+        default="Hoặc"
+        name="lblOr"
+        [formModel]="formModel"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>

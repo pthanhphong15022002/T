@@ -46,11 +46,8 @@ export class PopupModuleDetailComponent extends UIComponent {
       (md: TN_OrderModule) =>
         md.boughtModule?.refID == this.module?.boughtModule?.moduleID
     );
-    this.cache
-      .gridViewSetup(this.fmUserRole.formName, this.fmUserRole.gridViewName)
-      .subscribe((res) => {
-        this.formModel = res;
-      });
+
+
   }
 
   dialog;
@@ -70,7 +67,7 @@ export class PopupModuleDetailComponent extends UIComponent {
     gridViewName: 'grvTNUserRoles',
     entityName: 'TN_UserRoles',
   };
-  formModel: FormModel;
+  formModel: FormModel = null;
   lstUserRole: Array<any> = [];
   predicate = '';
   dataValue = '';
@@ -84,8 +81,11 @@ export class PopupModuleDetailComponent extends UIComponent {
   emplRoleEndDate: TemplateRef<any>;
 
   onInit(): void {
-    console.log('md', this.module);
-    console.log('child md', this.childMD);
+    this.cache
+      .gridViewSetup(this.fmUserRole.formName, this.fmUserRole.gridViewName)
+      .subscribe((res) => {
+        this.formModel = res;
+      });
     this.predicate = 'TenantID=@0 and Module=@1';
     this.dataValue = this.module?.boughtModule?.moduleID + ';' + this.tenantID;
     this.adService
@@ -101,19 +101,18 @@ export class PopupModuleDetailComponent extends UIComponent {
     this.clmnGrid = [
       {
         field: 'UserID',
-        width: 50,
         template: this.tmplUserInfo,
         textAlign: 'center',
       },
       {
+        field: 'operRoleEndDate',
         headerTemplate: this.operatorHT,
-        width: 25,
         template: this.operRoleEndDate,
         textAlign: 'center',
       },
       {
+        field: 'emplRoleEndDate',
         headerTemplate: this.employeeHT,
-        width: 25,
         template: this.emplRoleEndDate,
         textAlign: 'center',
       },

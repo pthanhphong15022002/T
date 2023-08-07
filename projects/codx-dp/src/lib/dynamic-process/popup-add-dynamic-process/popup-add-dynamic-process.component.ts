@@ -70,7 +70,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
-  @ViewChild('addStagePopup') addStagePopup: TemplateRef<any>;
+  @ViewChild('popupAddStep') popupAddStep: TemplateRef<any>;
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
@@ -234,7 +234,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     share: true,
     write: true,
     read: true,
-    download: true,
     delete: true,
   };
   //data test Thao
@@ -1820,6 +1819,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
     }
   }
+
   actionOpenFormApprove(transID) {
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
@@ -1979,8 +1979,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   loadEx() {
-    this.request.predicates = 'RefID=@0 && RefType=@1';
-    this.request.dataValues = this.process.recID + ';DP_Processes';
+    this.request.predicate = 'RefID=@0 && RefType=@1';
+    this.request.dataValue = this.process.recID + ';DP_Processes';
     this.request.entityName = 'AD_ExcelTemplates';
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -1988,8 +1988,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   loadWord() {
-    this.request.predicates = 'RefID=@0 && RefType=@1';
-    this.request.dataValues = this.process.recID + ';DP_Processes';
+    this.request.predicate = 'RefID=@0 && RefType=@1';
+    this.request.dataValue = this.process.recID + ';DP_Processes';
     this.request.entityName = 'AD_WordTemplates';
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
@@ -2038,8 +2038,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //add trường tùy chỉnh
+  changeMFFields(e, item) {
+    //bi gọi 2 lần
+    var arEvent = this.uniqueMore(e);
+    if (arEvent?.length == e?.length) return;
+    e.forEach((x, index) => {
+      if (index >= arEvent?.length) {
+        x.disabled = true;
+      }
+    });
+  }
+
+  uniqueMore(arr) {
+    var newArr = [];
+    newArr = arr.filter(function (item) {
+      return newArr.some((x) => x.functionID == item.functionID)
+        ? ''
+        : newArr.push(item);
+    });
+    return newArr;
+  }
 
   clickMFFields(e, data, enabled) {
+    console.log(e.functionID);
     switch (e.functionID) {
       case 'SYS02':
         this.deleteCustomField(data);
@@ -2476,7 +2497,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openPopupStep(type, step?: DP_Steps) {
     this.actionStep = type;
     this.isSaveStep = false;
+    this.isEditReason = false;
     if (type === 'add') {
+      this.stepNew = null;
       this.stepNew = new DP_Steps();
       this.stepNew['processID'] = this.process?.recID;
       this.stepNew['stepNo'] = this.stepList.length + 1;
@@ -2490,7 +2513,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepEdit = step;
       this.stepName = this.stepNew['stepName'];
     }
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
+    this.popupAddStage = this.callfc.openForm(this.popupAddStep, '', 500, 550);
   }
 
   saveStep() {
@@ -3082,53 +3105,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  async changeDataMFReason(e) {
-    if (e != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS03':
-            break;
-          default:
-            res.disabled = true;
-        }
-      });
-    }
-  }
-
-  clickReason(e: any, data: any) {
-    switch (e.functionID) {
-      case 'SYS03':
-        this.customerReason(data);
-        break;
-    }
-  }
-  isReason = false;
-
-  customerReason(reason: DP_Steps) {
-    this.isSaveStep = false;
-    this.stepNew = JSON.parse(JSON.stringify(reason));
-    this.stepEdit = reason;
-    this.stepName = this.stepNew['stepName'];
-    this.isEditReason = true;
-    this.action = 'edit';
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 550);
-  }
-  
-  editReason(){
-    this.isSaveStep = true;
-    this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
-    this.stepEdit['textColor'] = this.stepNew['textColor'];
-    this.stepEdit['icon'] = this.stepNew['icon'];
-    this.stepEdit['iconColor'] = this.stepNew['iconColor'];
-    this.stepEdit['stepName'] = this.stepName;
-    this.stepEdit['modifiedOn'] = new Date();
-    this.stepEdit['modifiedBy'] = this.userId;
-    if (this.action == 'edit' && this.stepNew.recID) {
-      this.listStepEdit.push(this.stepNew.recID);
-    }
-    this.isEditReason = false;
-    this.popupAddStage.close();
-  }
   // drop
   async drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {
     if (event.previousContainer === event.container) {
@@ -4165,7 +4141,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
         this.stepSuccess.icon = this.iconReasonSuccess?.icon;
-        this.stepFail.icon = this.iconReasonSuccess?.icon;
+        this.stepFail.icon = this.iconReasonFail?.icon;
 
         this.stepSuccess.backgroundColor = null;
         this.stepFail.backgroundColor = null;
@@ -4383,7 +4359,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     const [r, g, b] = result.slice(1).map((value) => parseInt(value, 16));
     return this.rgba2hex(r, g, b, opacity);
   }
-  //#endregion
 
   rgba2hex(r, g, b, alpha = 1) {
     const toHex = (num) => formatHex(num.toString(16));
@@ -4396,4 +4371,54 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     return `#${rHex}${gHex}${bHex}${alphaHex}`;
   }
+  //#endregion
+
+  //#region edit Reason
+  async changeDataMFReason(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03':
+            break;
+          default:
+            res.disabled = true;
+        }
+      });
+    }
+  }
+
+  clickReason(e: any, data: any) {
+    switch (e.functionID) {
+      case 'SYS03':
+        this.customerReason(data);
+        break;
+    }
+  }
+
+  customerReason(reason: DP_Steps) {
+    this.isSaveStep = false;
+    this.stepNew = JSON.parse(JSON.stringify(reason));
+    this.stepEdit = reason;
+    this.stepName = this.stepNew['stepName'];
+    this.isEditReason = true;
+    this.action = 'edit';
+    this.popupAddStage = this.callfc.openForm(this.popupAddStep, '', 500, 550);
+  }
+
+  editReason() {
+    this.isSaveStep = true;
+    this.stepEdit['backgroundColor'] = this.stepNew['backgroundColor'];
+    this.stepEdit['textColor'] = this.stepNew['textColor'];
+    this.stepEdit['icon'] = this.stepNew['icon'];
+    this.stepEdit['iconColor'] = this.stepNew['iconColor'];
+    this.stepEdit['stepName'] = this.stepName;
+    this.stepEdit['modifiedOn'] = new Date();
+    this.stepEdit['modifiedBy'] = this.userId;
+    if (this.action == 'edit' && this.stepNew.recID) {
+      this.listStepEdit.push(this.stepNew.recID);
+    }
+    this.isEditReason = false;
+    this.popupAddStage.close();
+  }
+  //#endregion
 }

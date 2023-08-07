@@ -32,6 +32,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  REQUIRESTART = ['taskName', 'endDate', 'startDate'];
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
@@ -69,6 +70,8 @@ export class CodxAddTaskComponent implements OnInit {
   isTaskDefault = false;
   isSaveTimeGroup = true;
   showLabelAttachment = false;
+  isStatusNew = true;
+  isStart = false;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -95,6 +98,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.user = this.authStore.get();
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
+    this.isStart = dt?.data?.isStart
     this.typeTask = dt?.data?.taskType;
     this.listTask = dt?.data?.listTask;
     this.listGroup = dt?.data?.listGroup;
@@ -109,6 +113,7 @@ export class CodxAddTaskComponent implements OnInit {
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
+
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(this.step?.startDate || new Date());
       this.endDateParent = new Date(this.step?.endDate || null);
@@ -119,10 +124,12 @@ export class CodxAddTaskComponent implements OnInit {
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
     }
+
     this.getFormModel();
     if (this.stepsTasks?.parentID) {
       this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
+
     this.owner = this.roles?.filter((role) => role.roleType === 'O');
     this.participant = this.roles?.filter((role) => role.roleType === 'P');
     if (this.action == 'add') {
@@ -130,6 +137,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.setRole(role);
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
+      this.stepsTasks.status = "1";
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }
@@ -317,7 +325,57 @@ export class CodxAddTaskComponent implements OnInit {
     if (index != -1) data.splice(index, 1);
   }
 
-  async saveData() {
+  handelMail() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: this.recIdEmail,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: this.isNewEmails,
+    };
+
+    let popEmail = this.callfunc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        // this.processSteps['reference'] = res.event?.recID;
+        this.recIdEmail = res.event?.recID ? res.event?.recID : '';
+        this.isNewEmails = this.recIdEmail ? true : false;
+      }
+    });
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded(e) {}
+
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  getfileDelete(event) {
+    event.data.length;
+  }
+
+  valueChangeRadio(event){
+    this.stepsTasks.status = event?.field ;
+    this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
+  }
+  //#region save
+  async beforeSave() {
     this.stepsTasks['roles'] = [...this.participant, ...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
@@ -382,7 +440,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.dialog.close(task);
     }
   }
-
   editTask(task) {
     if (this.isSave) {
       this.api
@@ -400,45 +457,5 @@ export class CodxAddTaskComponent implements OnInit {
       this.dialog.close(task);
     }
   }
-
-  handelMail() {
-    let data = {
-      dialog: this.dialog,
-      formGroup: null,
-      templateID: this.recIdEmail,
-      showIsTemplate: true,
-      showIsPublish: true,
-      showSendLater: true,
-      files: null,
-      isAddNew: this.isNewEmails,
-    };
-
-    let popEmail = this.callfunc.openForm(
-      CodxEmailComponent,
-      '',
-      800,
-      screen.height,
-      '',
-      data
-    );
-    popEmail.closed.subscribe((res) => {
-      if (res && res.event) {
-        // this.processSteps['reference'] = res.event?.recID;
-        this.recIdEmail = res.event?.recID ? res.event?.recID : '';
-        this.isNewEmails = this.recIdEmail ? true : false;
-      }
-    });
-  }
-  addFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-  fileAdded(e) {}
-  getfileCount(e) {
-    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
-    else this.isHaveFile = false;
-    this.showLabelAttachment = this.isHaveFile;
-  }
-  getfileDelete(event) {
-    event.data.length;
-  }
+  //#endregion
 }

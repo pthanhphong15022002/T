@@ -40,9 +40,8 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="fw-bold text-dark fs-4">
+                <div class="fw-bold text-dark fs-5-sm mb-1">
                   <span
-                    class="text-gray-600 line-clamp-menu"
                     [ngbTooltip]="itemSelected?.quotationName"
                     [innerHTML]="
                       itemSelected?.quotationName
@@ -85,30 +84,28 @@
           </div>
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex flex-column">
-              <div class="d-flex flex-row">
-                <div class="d-flex align-items-top justify-content-end">
-                  <span
-                    class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-                  ></span>
-                  <span
-                    class="fw-bold me-1 fs-5"
-                    #dealValue
-                    [innerHTML]="
-                      itemSelected?.totalAmt
-                        | formatvalue : formModel : 'totalAmt'
-                        | async
-                    "
-                  ></span>
-                  <span
-                    class="fw-bold me-1 fs-5"
-                    #dealValue
-                    [innerHTML]="
-                      itemSelected?.currencyID
-                        | formatvalue : formModel : 'currencyID'
-                        | async
-                    "
-                  ></span>
-                </div>
+              <div class="d-flex align-items-center justify-content-end">
+                <span
+                  class="icon-monetization_on pe-1 text-warning icon-16 me-1"
+                ></span>
+                <span
+                  class="fw-bold me-1 fs-5-sm"
+                  #dealValue
+                  [innerHTML]="
+                    itemSelected?.totalAmt
+                      | formatvalue : formModel : 'totalAmt'
+                      | async
+                  "
+                ></span>
+                <span
+                  class="fw-bold me-1 fs-5-sm"
+                  #dealValue
+                  [innerHTML]="
+                    itemSelected?.currencyID
+                      | formatvalue : formModel : 'currencyID'
+                      | async
+                  "
+                ></span>
               </div>
               <div class="d-flex align-items-top justify-content-end mt-1">
                 <codx-vll
@@ -353,6 +350,8 @@
         [TabControl]="tabControl"
         [objectID]="itemSelected.recID"
         [funcID]="formModel.funcID"
+        [transID]="itemSelected.recID"
+        [approveStatus]="itemSelected.approveStatus"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>

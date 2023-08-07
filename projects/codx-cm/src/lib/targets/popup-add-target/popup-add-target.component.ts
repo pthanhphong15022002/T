@@ -69,6 +69,8 @@ export class PopupAddTargetComponent {
   currencyID: any;
   exchangeRate: number;
   businessLineID: any;
+  exchangeRateSys: number;
+  currencyIDSys: any;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -84,6 +86,8 @@ export class PopupAddTargetComponent {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.action = data?.data?.action;
     this.headerText = data?.data?.title;
+    this.currencyIDSys = data?.data?.currencyID;
+    this.exchangeRateSys = data?.data?.exchangeRate;
     // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
@@ -93,6 +97,10 @@ export class PopupAddTargetComponent {
       let date = new Date().setFullYear(this.data.year);
       this.date = new Date(date);
     } else {
+      this.currencyID = this.currencyIDSys;
+      this.data.currencyID = this.currencyID;
+      this.exchangeRate = this.exchangeRateSys;
+      this.data.exchangeRate = this.exchangeRate;
       this.data.status = '1';
     }
   }
@@ -103,22 +111,6 @@ export class PopupAddTargetComponent {
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.data.owner = null;
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      if (param?.length > 0) {
-        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-        if (dataParam) {
-          let paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-          this.data.currencyID = this.currencyID;
-          let exchangeRateCurrent = await firstValueFrom(
-            this.cmSv.getExchangeRate(this.currencyID, new Date())
-          );
-          this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
-          this.data.exchangeRate = this.exchangeRate
-        }
-      }
     } else {
       this.lstOwners.forEach((element) => {
         if (this.data.target > 0) {
@@ -179,10 +171,10 @@ export class PopupAddTargetComponent {
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines];
+      data = [this.data, this.lstTargetLines, this.currencyIDSys, this.exchangeRate];
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines, this.lstTargetLinesDelete];
+      data = [this.data, this.lstTargetLines, this.lstTargetLinesDelete, this.currencyIDSys, this.exchangeRate];
     }
     op.className = 'TargetsBusiness';
 

@@ -19,7 +19,7 @@
     <div class="w-20 min-w-200px p-1">
       <span
         [innerHTML]="
-          data?.ALObjectID | formatvalue : view.formModel : 'ALObjectID' | async
+          data?.alObjectID | formatvalue : view.formModel : 'ALObjectID' | async
         "
       >
       </span>
@@ -28,7 +28,7 @@
     <div class="w-25 min-w-150px px-2">
       <span
         [innerHTML]="
-          data?.policyName | formatvalue : view.formModel : 'policyName' | async
+          data?.policyName | formatvalue : view.formModel : 'PolicyName' | async
         "
       >
       </span>
@@ -37,7 +37,7 @@
     <div class="w-25 min-w-250px px-2">
       <span
         [innerHTML]="
-          data?.ALStandard | formatvalue : view.formModel : 'alstandard' | async
+          data?.alStandard | formatvalue : view.formModel : 'ALStandard' | async
         "
       >
       </span>
@@ -49,7 +49,7 @@
           <i class="icon-calendar_today icon-14 text-dark"></i>
           {{ data.activeOn | fmDT }}
         </span>
-        <span class="ms-10">
+        <span class="ms-10 btn btn-icon" (click)="ViewIncludeExcludeObjects(data)">
           <button
             class="btn btn-icon"
             *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 0"
@@ -62,7 +62,6 @@
             [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
             class="btn btn-icon"
             *ngIf="data.hasIncludeObjects == 1 && data.hasExcludeObjects == 0"
-            (click)="onClickOpenPopupDetailInfo()"
           >
             <i class="icon-how_to_reg text-primary"></i>
           </button>
@@ -71,7 +70,6 @@
             [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
             class="btn btn-icon"
             *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 1"
-            (click)="onClickOpenPopupDetailInfo()"
           >
             <i class="icon-person_remove text-primary"></i>
           </button>
@@ -80,7 +78,6 @@
             [ngbTooltip]="'Xem chi tiết đối tượng áp dụng/ loại trừ'"
             class="btn btn-icon"
             *ngIf="data.hasIncludeObjects == 1 && data.hasExcludeObjects == 1"
-            (click)="onClickOpenPopupDetailInfo()"
           >
             <span>
               <i class="icon-how_to_reg text-primary"></i>

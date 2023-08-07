@@ -3503,21 +3503,53 @@ codx-view-list-tree{
   background: var(--gray-150)!important;
 }
 
-.e-dlg-content .codx-detail-footer{
+.e-dlg-content { 
+  .codx-detail-footer{
+    border-top: 1px var(--gray-150) solid;
+    .tab-action {
+      position: absolute;
+      top: 2px;
+      right: 15px;
+    }
+    .py-5.tab-content {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
+      padding-left: 25px;
+      padding-right: 15px;
+    }
+    codx-tabs .nav-link {
+      padding: 8px;
+    }
+  }
   position: relative;
-  border-top: 1px var(--gray-150) solid;
-  .tab-action {
+
+  .codx-detail-main{
+    height: calc(100vh - 60px);
+    overflow: auto;
+    padding-bottom: 60px;
+  }
+  .codx-detail-footer{
     position: absolute;
-    top: 2px;
-    right: 15px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 99;
   }
-  .py-5.tab-content {
-    padding-top: 5px !important;
-    padding-bottom: 0 !important;
-    padding-left: 25px;
-    padding-right: 15px;
+  .codx-detail-toolbar{
+    background-color: white;
   }
-  codx-tabs .nav-link {
-    padding: 8px;
+  .codx-detail-header.mt-3{
+    margin-top: 0!important;
   }
+}
+
+.toolbar-detail{
+  position: absolute;
+  top: 5px;
+  background-color: white;
+  right: 0;
+}
+codx-detail-toolbar codx-mfunc .dropdown {
+  height: 26px;
 }

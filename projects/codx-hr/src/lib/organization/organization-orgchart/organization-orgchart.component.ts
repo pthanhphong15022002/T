@@ -158,6 +158,7 @@ export class OrganizationOrgchartComponent {
   labelColor: string;
   labelFontWeight: string;
   disableActive: boolean = false;
+  disableEdit: boolean = true;
   @ViewChild('contactTemplate') contactTemplate: TemplateRef<any>;
   @Output() newIdItem = new EventEmitter<string>();
 
@@ -202,12 +203,12 @@ export class OrganizationOrgchartComponent {
   selectedTeam = '';
 
   //style slider
-  stylesObj = {
-    width: '100%',
-    display: 'flex',
-    margin: '5px 14px',
-    cursor: 'pointer',
-  };
+  // stylesObj = {
+  //   width: '100%',
+  //   display: 'flex',
+  //   margin: '5px 14px',
+  //   cursor: 'pointer',
+  // };
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
@@ -220,6 +221,12 @@ export class OrganizationOrgchartComponent {
     height: '100%',
     background: '#fff',
   };
+  stylesObjChartNoneIsManager = {
+    border: '1px ridge gray',
+    position: 'relative',
+    height: 'max-content',
+    background: '#fff',
+  };
 
   @ViewChild('diagram') diagram: any;
   constructor(
@@ -229,9 +236,7 @@ export class OrganizationOrgchartComponent {
     private cacheService: CacheService,
     private hrService: CodxHrService,
     private notify: NotificationsService
-  ) {
-    //this.isGetManager(this.selectedTeam);
-  }
+  ) {}
 
   showVal(value) {
     this.scaleNumber = parseInt(value) / 100;
@@ -240,6 +245,10 @@ export class OrganizationOrgchartComponent {
   //Settings
   changeMode(e) {
     var target = e?.target?.id ?? e;
+    if (e?.target?.id) {
+      this.disableEdit = false;
+    }
+
     switch (target) {
       case 'pageFitModeNone':
         this.pagefit = this.PageFitMode.None;
@@ -400,6 +409,7 @@ export class OrganizationOrgchartComponent {
       case 'buttonUserFalse':
         this.hasButtons = this.HasButtons.False;
         break;
+      // itemSize: { width: 170, height: 150 },
 
       //Nút chọn
       case 'selectionCheckboxAuto':
@@ -895,11 +905,11 @@ export class OrganizationOrgchartComponent {
 
   CloseDialog(dialog: DialogRef) {
     dialog.close();
+    this.disableEdit = true;
   }
 
   //Disable active chart
   clickActive(data) {
-    console.log(data);
     //Patch id to parent chart
     this.newIdItem.emit(data);
     this.disableActive = true;
@@ -961,26 +971,6 @@ export class OrganizationOrgchartComponent {
     //this.dt.detectChanges();
   }
 
-  // getDataInit() {
-  //   this.hrService
-  //     .GetParameterByHRAsync('HRParameters', '1')
-  //     .subscribe((res: any) => {
-  //       this.dataTree = JSON.parse(res);
-  //       console.log(this.dataTree);
-
-  //       this.selectedTeam = this.dataTree.isGetManager;
-  //       console.log(this.selectedTeam);
-  //       for (const [key, value] of Object.entries(this.dataTree)) {
-  //         this.changeMode(value);
-  //       }
-  //     });
-
-  //   this.cacheService.valueList('L0605').subscribe((res) => {
-  //     if (res) {
-  //       this.dataVll = res.datas;
-  //     }
-  //   });
-  // }
   ngOnInit(): void {
     this.hrService
       .GetParameterByHRAsync('HRParameters', '1')
@@ -1014,6 +1004,7 @@ export class OrganizationOrgchartComponent {
   }
 
   onSelected(value): void {
+    this.disableEdit = false;
     this.selectedTeam = value;
     this.isGetManager(value);
   }
@@ -1155,7 +1146,8 @@ export class OrganizationOrgchartComponent {
         if (res.event) {
           this.dataService.update(res.event).subscribe(() => {
             // this.dataSource = this.newDataManager(this.dataService.data);
-            this.getDataPositionByID(this.orgUnitID, true);
+            this.isGetManager(this.selectedTeam);
+            //this.getDataPositionByID(this.orgUnitID, true);
             this.dt.detectChanges();
           });
           //this.view.dataService.add(res.event).subscribe();
@@ -1189,26 +1181,13 @@ export class OrganizationOrgchartComponent {
       .subscribe((res) => {
         if (res === true) {
           this.notify.notifyCode('SYS008');
-          this.getDataPositionByID(this.orgUnitID, true);
+          this.isGetManager(this.selectedTeam);
+          //this.getDataPositionByID(this.orgUnitID, true);
           this.dt.detectChanges();
         } else {
           this.notify.notifyCode('SYS022');
         }
       });
-    // if (data) {
-    //   this.journalService.deleteAutoNumber(data.autoNumber);
-    //   this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-    //   this.api
-    //     .exec(
-    //       'AC',
-    //       'JournalsPermissionBusiness',
-    //       'DeleteByJournalNoAsync',
-    //       data.journalNo
-    //     )
-    //     .subscribe((res) => {
-    //       console.log('DeleteByJournalNoAsync', res);
-    //     });
-    // }
   }
 
   removeNode(id: string) {
@@ -1303,6 +1282,8 @@ export class OrganizationOrgchartComponent {
       .subscribe((res: any) => {
         if (res) {
           this.dialogEditStatus && this.dialogEditStatus.close();
+          this.notify.notifyCode('SYS007');
+          this.disableEdit = true;
         }
       });
   }

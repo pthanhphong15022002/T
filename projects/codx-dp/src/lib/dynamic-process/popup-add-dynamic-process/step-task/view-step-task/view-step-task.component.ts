@@ -100,7 +100,7 @@ export class ViewJobComponent implements OnInit {
   }
 
   getModeFunction() {
-    var functionID = 'DPT0206';
+    let functionID = 'DPT0206';
     this.cache.functionList(functionID).subscribe((f) => {
       this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
         this.frmModel['formName'] = f.formName;
@@ -140,8 +140,8 @@ export class ViewJobComponent implements OnInit {
   
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
-    var doc = document.getElementsByClassName('extend-more')[0];
-    var ext = document.getElementsByClassName('ext_button')[0];
+    let doc = document.getElementsByClassName('extend-more')[0];
+    let ext = document.getElementsByClassName('ext_button')[0];
     if (ext != null) {
       if (this.hideExtend) {
         document

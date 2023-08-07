@@ -386,8 +386,8 @@
               <div
               [title]="eInfoHeaderText?.DepartmentID"
             class="text-gray-500 mb-1"
-            *ngIf="infoPersonal"
-              >{{DepartmentStr}}</div>
+            *ngIf="infoPersonal && orgUnitStr != DepartmentStr"
+              >{{DepartmentStr}}</div>,
             </div>
               <!-- <div style="line-height: 20px;" class="text-dark d-flex flex-wrap h-40px border-gray-150 line-clamp line-clamp-2"> -->
                 <!-- <div
@@ -6751,7 +6751,7 @@
         {{ data?.trainFrom | fmDT }} 
       </span>
   
-      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo"> 
+      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo" *ngIf="data?.trainTo"> 
         - 
         {{ data?.trainTo | fmDT }}
       </span>
@@ -6864,7 +6864,7 @@
           {{ data?.effectedDate | fmDT }}
 
         </span>
-        <span
+        <span *ngIf="data?.expiredDate"
         placement="top" [title]="appointionHeaderTexts.ExpiredDate"
         >
         - {{ data?.expiredDate | fmDT }}

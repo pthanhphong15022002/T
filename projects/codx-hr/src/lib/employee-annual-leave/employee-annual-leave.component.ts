@@ -1,3 +1,5 @@
+import { load } from '@syncfusion/ej2-angular-charts';
+import { type } from 'os';
 import { concat } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -44,18 +46,19 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   currentItem: any;
   scrolling: boolean = true;
 
+  viewsDefault: any;
   viewCrr: any;
   crrFuncID: any;
+
+  resetView: boolean = false;
   constructor(
     private injector: Injector,
-    //private notiService: NotificationsService,
-    //private shareService: CodxShareService,
     private hrService: CodxHrService,
-    private routerActive: ActivatedRoute,
   ) {
     super(injector);
 
-    this.routerActive.params.subscribe((params: Params) => {
+    this.router.params.subscribe((params: Params) => {
+      this.resetView = true;
       this.funcID = params['funcID'];
       this.initViewSetting();
     })
@@ -74,6 +77,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.initViewSetting();
     this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
+    this.viewsDefault = this.views;
   }
   changeFunction() {
     this.hrService.childMenuClick.subscribe((res) => {
@@ -99,20 +103,21 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL01':
         this.views = [
           {
-            id: '1',
+            // id: ViewType.list.toString(),
             type: ViewType.list,
             sameData: true,
-            //active: true,
+            active: false,
             model: {
               template: this.templateListHRTAL01,
               headerTemplate: this.headerTemplateHRTAL01,
             },
           },
           {
-            id: '2',
+            // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
+            active: false,
             model: {
               resizable: true,
               isCustomize: true,
@@ -126,20 +131,21 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       case 'HRTAL02':
         this.views = [
           {
-            id: '3',
+            // id: ViewType.list.toString(),
             type: ViewType.list,
             sameData: true,
-            //active: true,
+            active: false,
             model: {
               template: this.templateListHRTAL02,
               headerTemplate: this.headerTemplateHRTAL02,
             },
           },
           {
-            id: '4',
+            // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
             request: this.request,
             sameData: false,
+            active: false,
             model: {
               resizable: true,
               isCustomize: true,
@@ -157,56 +163,29 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   viewChanging(event: any) {
-    if (event?.view?.id === '2' || event?.id === '2') {
+    if (event?.view?.type === 151 || event?.type === 151) {
       this.view.dataService.parentIdField = 'ParentID';
       this.view.dataService.idField = 'orgUnitID';
       this.view.idField = 'orgUnitID';
-    } else if (event?.view?.id === '1' || event?.id === '1') {
+    } else if (event?.view?.type === 1 || event?.type === 1) {
       this.view.dataService.parentIdField = '';
       this.view.dataService.idField = 'recID';
       this.view.idField = 'recID';
     }
-    // if (event?.view?.id === '1' || event?.id === '1'){
-    //   this.currentViewModel = event?.view || event;
-    // }
   }
   viewChanged(event: any) {
-    // this.viewCrr = event?.view?.type;
-    // if (this.crrFuncID != this.funcID) {
-    //   this.cache.viewSettings(this.funcID).subscribe(views => {
-    //     if (views) {
-    //       this.crrFuncID = this.funcID;
-    //       this.views = [];
-    //       let idxActive = -1;
-    //       let viewOut = false;
-    //       this.views.forEach((v, index) => {
-    //         let idx = views.findIndex(x => x.view == v.type);
-    //         if (idx != -1) {
-    //           v.hide = false;
-    //           if (v.type != this.viewCrr) views.active = false;
-    //           else views.active = true;
-    //           if (views[idx].isDefault) idxActive = index;
-    //         } else {
-    //           v.hide = true;
-    //           v.active = false;
-    //           if (this.viewCrr == v.type) viewOut = true;
-    //         }
-    //         this.views.push(v);
-    //       });
-    //       if (!this.views.some((x) => x.active)) {
-    //         if (idxActive != -1) this.views[idxActive].active = true;
-    //         else this.views[0].active = true;
+    // fix bug when chang funcID and from first view tree to  list
+    // the view reuse data because same data of list is true
+    // reset view data and recall get data
+    if (event?.view?.type === 1 || event?.type === 1) {
+      if(this.resetView){
+        this.view.dataService.data = [];
+        //this.view.dataService.oriData = [];
+        this.view.loadData();
+        this.resetView = false;
+      }
+    }
 
-    //         let viewModel =
-    //           idxActive != -1 ? this.views[idxActive] : this.views[0];
-    //         this.view.viewActiveType = viewModel.type;
-    //         this.view.viewChange(viewModel);
-    //         if (viewOut) this.view.load();
-    //       }
-    //       this.detectorRef.detectChanges();
-    //     }
-    //   })
-    // }
   }
   getFunction(funcID: string) {
     if (funcID) {

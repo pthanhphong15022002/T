@@ -202,12 +202,16 @@
         <!-- Kỳ phép -->
         <div class="w-10 p-3">
             <div class="d-flex flex-column">
-                <div class="d-flex align-items-center justify-content-between mb-1">
+                <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
+                [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
                     <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                         {{data.alYearMonth}}
                     </span>
                     <ng-template #noALYearMonth>
                         <span class="place-holder">{{grvSetup['ALYearMonth'].headerText}}</span>
+                    </ng-template>
+                    <ng-template #alYearMonthTooltip>
+                        <span class="data-text-color">{{data.alYearMonth}}</span>
                     </ng-template>
                 </div>
             </div>
@@ -422,7 +426,7 @@
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
     <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
-        [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff">
+        [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff" [rowHeight]="70">
     </lib-employee-annual-leave-by-org>
 </ng-template>
 <!-- #endregion tree-view HRTAL01 -->
