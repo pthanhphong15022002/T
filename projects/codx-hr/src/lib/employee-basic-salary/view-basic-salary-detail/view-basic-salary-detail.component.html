@@ -117,7 +117,7 @@
       </codx-temp-full>
       <span
         *ngIf="
-          itemDetail?.isCurrent &&
+          itemDetail?.status === '5' &&
           dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
           (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
             itemDetail.expiredDate === null)
@@ -493,7 +493,14 @@
 
 <ng-template #baseHeaderRightTmp let-data>
   <div>
-    <ng-container *ngIf="data?.isCurrent && !data?.isExpire">
+    <ng-container
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
+    >
       <span
         [style.color]="'#0078FF'"
         class="icon-bookmark icon-18"

@@ -74,12 +74,21 @@ export class PopupPolicyalComponent
   lstEmployeeTypeID: any = []
   lstContractTypeID: any = []
   lstEmployeeID: any = []
+  lstEmpStatus: any = []
+  lstLabourType: any = []
+
+  lstRecEmptyorgUnitID: any = []
+  lstRecEmptyjobLevel: any = []
+  lstRecEmptypositionID: any = []
+  lstRecEmptyemployeeTypeID: any = []
+  lstRecEmptylabourType: any = []
+  lstRecEmptycontractTypeID: any = []
+  lstRecEmptyemployeeID: any = []
+  lstRecEmptyemployeeStatus: any = []
   
   lstPolicyBeneficiariesApply: any = []
   lstPolicyBeneficiariesExclude: any = []
 
-  lstEmpStatus: any = []
-  lstLabourType: any = []
   // policyBeneficiariesDetail = {
   //   recId: '',
   //   fieldName: '',
@@ -207,7 +216,6 @@ export class PopupPolicyalComponent
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     if(this.alpolicyObj && this.actionType == 'edit'){
       this.originPolicyId = this.alpolicyObj.policyID;
-      console.log('obj nhan vao', this.alpolicyObj);
       
     }
   }
@@ -314,6 +322,14 @@ export class PopupPolicyalComponent
           }
         });
   }
+  
+  // checkExistInEmptyRec(lst, rec){
+  //   debugger
+  //   if(lst.includes(rec)){
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   clickMF(event, data, gridNum){
     this.notify.alertCode('SYS030').subscribe((x) => {
@@ -346,7 +362,6 @@ export class PopupPolicyalComponent
     )
     .subscribe((res) => {
       this.grvSetup = res;
-      console.log('grv setup ne', this.grvSetup);
     });
 
     this.cache
@@ -356,7 +371,6 @@ export class PopupPolicyalComponent
     )
     .subscribe((res) => {
       this.grvSetupPolicyDetail = res;
-      console.log('grv policydetail', this.grvSetupPolicyDetail);
 
     });
 
@@ -373,14 +387,13 @@ export class PopupPolicyalComponent
             if(res.key){
               this.autoNumField = res.key;
             }
-            console.log('res ssss', res);
             res.data.status = '1'
-            debugger
+            
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
             }
             this.alpolicyObj = res?.data;
-            debugger
+            
             this.formModel.currentData = this.alpolicyObj;
             this.formGroup.patchValue(this.alpolicyObj);
             this.cr.detectChanges();
@@ -389,7 +402,6 @@ export class PopupPolicyalComponent
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
-        console.log('data nhan vao', this.alpolicyObj);
         this.GetApplyObjs().subscribe((res) => {
           this.lstPolicyBeneficiariesApply = res;
         })
@@ -409,18 +421,19 @@ export class PopupPolicyalComponent
           }
         }
         if(this.alpolicyObj.hasIncludeObjects == true){
-          debugger
+          
           if(this.alpolicyObj.includeObjects){
             this.lstSelectedObj = this.alpolicyObj.includeObjects.split(';')
           }
         }
         if(this.alpolicyObj.hasExcludeObjects == true){
-          debugger
+          
           if(this.alpolicyObj.excludeObjects){
             this.lstSelectedExcludeObj = this.alpolicyObj.excludeObjects.split(';')
           }
         }
         this.GetPolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+          debugger
           this.lstPolicyBeneficiariesApply = res.filter((obj) => obj.category == 0);
         this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
           this.SplitToSubList(this.lstPolicyBeneficiariesApply);
@@ -434,7 +447,7 @@ export class PopupPolicyalComponent
         })
         this.formGroup.patchValue(this.alpolicyObj);
         this.formModel.currentData = this.alpolicyObj;
-        debugger
+        
         this.cr.detectChanges();
         this.isAfterRender = true;
       }
@@ -545,7 +558,7 @@ export class PopupPolicyalComponent
   }
 
   onClickMoveObjDown(obj){
-    debugger
+    
     let crrPriority = obj.priority;
     let objAfterIndex : any;
     if(this.currentTab == 'applyObj'){
@@ -576,7 +589,7 @@ export class PopupPolicyalComponent
   }
 
   onClickMoveObjUp(obj){
-    debugger
+    
     let crrPriority = obj.priority;
     let objBeforeIndex : any;
     if(this.currentTab == 'applyObj'){
@@ -865,7 +878,7 @@ export class PopupPolicyalComponent
       this.attachment.objectId=this.alpolicyObj?.policyID;
       (await (this.attachment.saveFilesObservable())).subscribe(
       (item2:any)=>{
-            debugger
+            
           });
       }
 
@@ -880,13 +893,14 @@ export class PopupPolicyalComponent
           if(res){
               this.notify.notifyCode('SYS006');
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                debugger
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                  debugger
+                  
                 })
               }
               for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                  debugger
+                  
                 })
               }
             this.dialog && this.dialog.close(this.alpolicyObj);
@@ -897,19 +911,22 @@ export class PopupPolicyalComponent
         })
       }
       else if(this.actionType === 'edit'){
+      
         if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
           this.EditPolicyALPolicyIDChanged().subscribe((res) => {
             if(res){
               this.notify.notifyCode('SYS007');
               this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  debugger
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                    debugger
+                    
                   })
                 }
                 for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  debugger
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                    debugger
+                    
                   })
                 }
                 this.dialog && this.dialog.close(this.alpolicyObj);
@@ -927,12 +944,12 @@ export class PopupPolicyalComponent
               this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                    debugger
+                    
                   })
                 }
                 for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                    debugger
+                    
                   })
                 }
                 this.dialog && this.dialog.close(this.alpolicyObj);
@@ -947,64 +964,67 @@ export class PopupPolicyalComponent
 }
 
   addRowGrid1(){
-    debugger
+    
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
-        if(res == true){
+        
+        if(res[0] == true){
           this.originPolicyId = this.alpolicyObj.policyID;
-
+          let idx = this.gridView1.dataSource.length;
+          // if(idx > 1){
+          //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
+          //   data.recID = Util.uid();
+          //   data.days = 0;
+          //   data.fromValue = 0;
+          //   this.gridView1.addRow(data, idx);
+          // }
+          let data = {
+            recID: Util.uid()
+          };
+          this.gridView1.addRow(data, idx, false, true);
         }
         else{
-          this.notify.notifyCode('');
+          this.notify.notifyCode('HR027');
         }
       })
     }
     else{
-      this.notify.notifyCode('');
+      this.notify.notifyCode('HR027');
     }
 
-    let idx = this.gridView1.dataSource.length;
-    // if(idx > 1){
-    //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
-    //   data.recID = Util.uid();
-    //   data.days = 0;
-    //   data.fromValue = 0;
-    //   this.gridView1.addRow(data, idx);
-    // }
-    let data = {
-      recID: Util.uid()
-    };
-    this.gridView1.addRow(data, idx, false, true);
+
   }
 
   addRowGrid2(){
-    debugger
+    
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
-        if(res == true){
+        
+        if(res[0] == true){
           this.originPolicyId = this.alpolicyObj.policyID;
+          let idx = this.gridView2.dataSource.length;
+          // if(idx > 1){
+          //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
+          //   data.recID = Util.uid();
+          //   data.days = 0;
+          //   data.fromValue = 0;
+          //   this.gridView1.addRow(data, idx);
+          // }
+          let data = {
+            recID: Util.uid()
+          };
+          this.gridView2.addRow(data, idx, false, true);
         }
         else{
-          this.notify.notifyCode('');
+          this.notify.notifyCode('HR027');
         }
       })
     }
     else{
-      this.notify.notifyCode('');
+      this.notify.notifyCode('HR027');
     }
 
-    let idx = this.gridView2.dataSource.length;
-    // if(idx > 1){
-    //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
-    //   data.recID = Util.uid();
-    //   data.days = 0;
-    //   data.fromValue = 0;
-    //   this.gridView1.addRow(data, idx);
-    // }
-    let data = {
-      recID: Util.uid()
-    };
-    this.gridView2.addRow(data, idx, false, true);
+
   }
 
   onAddNewGrid1(evt){
@@ -1252,6 +1272,7 @@ export class PopupPolicyalComponent
     newObj['priority'] = this.lstPolicyBeneficiariesApply.length + 1;
     newObj['policyType'] = 'AL';
     newObj['category'] = '0';
+    let lstFieldName = []
 
     for (let i = 0; i < this.lstSelectedObj.length; i++) {
       let fieldName: any;
@@ -1281,10 +1302,39 @@ export class PopupPolicyalComponent
           fieldName = 'employeeStatus'
           break;
       }
+      lstFieldName.push(fieldName);
       newObj[fieldName] = '';
     }
+    for(let i = 0; i < lstFieldName.length; i++){
+      switch(lstFieldName[i]){
+        case 'orgUnitID':
+          this.lstRecEmptyorgUnitID.push(newObj['recID']);
+          break;
+        case 'jobLevel':
+          this.lstRecEmptyjobLevel.push(newObj['recID']);
+          break;
+        case 'positionID':
+          this.lstRecEmptypositionID.push(newObj['recID']);
+          break;
+        case 'employeeTypeID':
+          this.lstRecEmptyemployeeTypeID.push(newObj['recID']);
+          break;
+        case 'labourType':
+          this.lstRecEmptylabourType.push(newObj['recID']);
+          break;
+        case 'contractTypeID':
+          this.lstRecEmptycontractTypeID.push(newObj['recID']);
+          break;
+        case 'employeeID':
+          this.lstRecEmptyemployeeID.push(newObj['recID']);
+          break;
+        case 'employeeStatus':
+          this.lstRecEmptyemployeeStatus.push(newObj['recID']);
+          break;
+      }
+    }
     this.lstPolicyBeneficiariesApply.push(newObj)
-    debugger
+    
     this.df.detectChanges()
   }
 
@@ -1327,12 +1377,12 @@ export class PopupPolicyalComponent
       newObj[fieldName] = '';
     }
     this.lstPolicyBeneficiariesExclude.push(newObj)
-    debugger
+    
     this.df.detectChanges()
   }
 
   onClickOpenSelectApplyObjDetail(detail, obj){
-    debugger
+    
     this.currentRec = obj.recID;
     if(this.alpolicyObj.hasIncludeObjects){
       if(detail == '5' || detail == '8'){
@@ -1379,7 +1429,7 @@ export class PopupPolicyalComponent
               }
             }
             else if(vll = 'HR003'){
-              debugger
+              
               this.lstPolicyBeneficiariesApply[index].employeeStatus = res.event;
               this.lstEmpStatus = this.lstEmpStatus.filter((obj) => obj.rec != this.currentRec);
               for(let i = 0; i < lstId.length; i++){
@@ -1391,14 +1441,14 @@ export class PopupPolicyalComponent
             }
             // this.lstPolicyBeneficiariesApply[index].
             // this.lstPolicyBeneficiariesApply.push(this.policyBeneficiariesDetail);
-            debugger
+            
             this.df.detectChanges();
           });
       }
       else{
         switch(detail){
           case '1':
-            debugger
+            
             this.currentCbxName = 'HRDepts';
             this.currentCbxValue = obj.orgUnitID;
             // this.policyBeneficiariesDetail.cbxVllName = 'HRDepts';
@@ -1446,7 +1496,7 @@ export class PopupPolicyalComponent
   }
 
   onClickOpenSelectExcludeObjDetail(detail, obj){
-    debugger
+    
     this.currentRec = obj.recID;
     if(this.alpolicyObj.hasExcludeObjects){
       if(detail == '5' || detail == '8'){
@@ -1504,14 +1554,14 @@ export class PopupPolicyalComponent
                 });
               }
             }
-            debugger
+            
             this.df.detectChanges();
           });
       }
       else{
         switch(detail){
           case '1':
-            debugger
+            
             this.currentCbxName = 'HRDepts';
             this.currentCbxValue = obj.orgUnitID;
             // this.policyBeneficiariesDetail.cbxVllName = 'HRDepts';
@@ -1581,7 +1631,7 @@ export class PopupPolicyalComponent
   }
 
   onClickDeleteObject(data){
-    debugger
+    
     if(this.currentTab == 'applyObj'){
       let index = this.lstPolicyBeneficiariesApply.indexOf(data);
       if(index != -1){
@@ -1602,7 +1652,7 @@ export class PopupPolicyalComponent
   }
 
   onClickHideComboboxPopup(event){
-    debugger
+    
     this.isHidden = true;
     if(event == null){
       this.detectorRef.detectChanges();
@@ -1631,6 +1681,10 @@ export class PopupPolicyalComponent
               rec:this.currentRec,
               id:lstId[i]
             });
+          }
+          let indexEmpty = this.lstRecEmptyorgUnitID.indexOf(this.currentRec);
+          if(indexEmpty !== -1){
+            this.lstRecEmptyorgUnitID.splice(indexEmpty,1);
           }
           break;
         case 'JobLevels':
@@ -1698,7 +1752,7 @@ export class PopupPolicyalComponent
           this.lstPolicyBeneficiariesApply[index].employeeID = event.id;
           }
           else{
-            debugger
+            
             this.lstPolicyBeneficiariesExclude[index].employeeID = event.id;
           }
           // this.lstPolicyBeneficiariesApply[index].employeeID = event.id;

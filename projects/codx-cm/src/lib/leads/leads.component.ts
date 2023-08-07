@@ -138,6 +138,8 @@ export class LeadsComponent
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  applyApprover = '0';
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -152,6 +154,7 @@ export class LeadsComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
     this.executeApiCalls();
+    this.loadParam();
   }
 
   onInit(): void {
@@ -433,6 +436,22 @@ export class LeadsComponent
     let isDeleteProcess = (eventItem, data) => {
       eventItem.disabled = !data.applyProcess;
     };
+    let isAprove = (eventItem, data) => {
+      eventItem.disabled = eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        (this.applyApprover != '1' && !data.applyProcess) ||
+        (data.applyProcess && data?.approveRule != '1') ||
+        data?.approveStatus >= '3' ||
+        this.checkMoreReason(data);
+    };
+
+    let isRejectApprover = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        data.approveStatus != '3';
+    };
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isStartDay, // mergeLead
@@ -441,7 +460,7 @@ export class LeadsComponent
       CM0205_5: isDisabled, // success
       CM0205_6: isFailReason, // fail
       CM0205_7: isDisabled,
-      CM0205_8: isClosed,
+      CM0205_8: isAprove,
       CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
@@ -456,6 +475,7 @@ export class LeadsComponent
       CM0205_12: isChangeStatus,
       CM0205_14: isUpdateProcess, // co su dung quy trinh
       CM0205_15: isDeleteProcess, // khong su dung quy trinh
+      CM0205_17: isRejectApprover,
     };
     return functionMappings[type];
   }
@@ -579,6 +599,8 @@ export class LeadsComponent
 
   clickMF(e, data) {
     this.titleAction = e.text;
+    this.dataSelected = data;
+    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -623,7 +645,10 @@ export class LeadsComponent
       case 'CM0205_6':
         this.moveReason(data, false);
         break;
-
+      //ki duyet
+      case 'CM0205_8':
+        this.approvalTrans(data);
+        break;
       case 'CM0205_9':
         this.popupOwnerRoles(data);
         break;
@@ -646,8 +671,13 @@ export class LeadsComponent
       case 'CM0205_16':
         this.popupPermissions(data);
         break;
+
       case 'SYS002':
         this.exportFiles(e, data);
+        break;
+      //cancel Aprover
+      case 'CM205_17':
+        this.cancelApprover(data);
         break;
       default:
         var customData: any = null;
@@ -1446,5 +1476,128 @@ export class LeadsComponent
       );
       this.detectorRef.detectChanges();
     }
+  }
+
+  //------------------------- Ký duyệt  ----------------------------------------//
+  approvalTrans(dt) {
+    if (dt?.applyProcess && dt?.processID) {
+      this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
+        if (process) {
+          this.codxCmService
+            .getESCategoryByCategoryID(process.processNo)
+            .subscribe((res) => {
+              this.approvalTransAction(dt, res);
+            });
+        } else {
+          this.notificationsService.notifyCode('DP040');
+        }
+      });
+    } else {
+      this.codxCmService
+        .getESCategoryByCategoryID('ES_CM0504')
+        .subscribe((res) => {
+          this.approvalTransAction(dt, res);
+        });
+    }
+  }
+  approvalTransAction(data, category) {
+    if (!category) {
+      this.notificationsService.notifyCode('ES028');
+      return;
+    }
+    if (category.eSign) {
+      //kys soos
+    } else {
+      this.release(data, category);
+    }
+  }
+  release(data: any, category: any) {
+    //duyet moi
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  //call Back
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'LeadsBusiness')
+        .subscribe((c) => {
+          if (c) {
+            this.dataSelected = c;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          }
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    this.notificationsService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+          if (process) {
+            this.codxCmService
+              .getESCategoryByCategoryID(process.processNo)
+              .subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        dt?.recID,
+                        this.view.formModel.entityName,
+                        null,
+                        null
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          this.dataSelected.approveStatus = '0';
+                          this.codxCmService
+                            .updateApproveStatus(
+                              'CasesBusiness',
+                              dt?.recID,
+                              '0'
+                            )
+                            .subscribe();
+                          this.notificationsService.notifyCode('SYS007');
+                        } else this.notificationsService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+          } else {
+            this.notificationsService.notifyCode('DP040');
+          }
+        });
+      }
+    });
+  }
+  //end duyet
+  //--------------------------------------------------------------------//
+
+  loadParam() {
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
   }
 }
