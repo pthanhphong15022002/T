@@ -238,6 +238,7 @@ export class DP_Steps_Tasks {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  owner: string;
 }
 
 export class DP_Steps_Tasks_Roles {

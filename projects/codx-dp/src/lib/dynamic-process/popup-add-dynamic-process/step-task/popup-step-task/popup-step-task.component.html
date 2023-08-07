@@ -75,7 +75,7 @@
           >
           </codx-label>
         </div>
-        <div>
+        <!-- <div>
           <ejs-dropdownlist
             [dataSource]="listGroupTask"
             [fields]="fieldsGroup"
@@ -83,7 +83,15 @@
             (valueChange)="changeCombobox($event, 'taskGroupID')"
             [readonly]="taskGroupID || listGroupTask.length === 0"
           ></ejs-dropdownlist>
-        </div>
+        </div> -->
+        <!-- <div>
+          <ejs-combobox
+          [dataSource]="listGroupTask"
+          (change)="changeCombobox($event, 'taskGroupID')"
+          [fields]="fieldsGroup"
+          [value]="stepsTasks?.taskGroupID"
+        ></ejs-combobox>
+        </div> -->
       </div>
     </div>
     <!-- Ten Cong Viec -->
