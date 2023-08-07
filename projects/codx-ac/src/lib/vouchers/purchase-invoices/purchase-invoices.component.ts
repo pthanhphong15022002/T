@@ -46,7 +46,6 @@ enum MF {
   selector: 'lib-purchase-invoices',
   templateUrl: './purchase-invoices.component.html',
   styleUrls: ['./purchase-invoices.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PurchaseinvoicesComponent
   extends UIComponent
