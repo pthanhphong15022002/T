@@ -1,5 +1,6 @@
 import { Component, Injector } from '@angular/core';
 import { LayoutBaseComponent } from 'codx-core';
+import { RoundService } from '../round.service';
 
 @Component({
   selector: 'lib-laylout-journal',

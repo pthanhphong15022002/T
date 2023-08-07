@@ -16,10 +16,13 @@ export class ApproveProcess {
   approvers : Array<string> ;     //Danh sách userID của Approver
   category : any ;     //ES_Category của nghiệp vụ
   title : any ;     //Tiêu đề
+  curComponent:any;
 }
 
 export class ResponseModel {
   rowCount: number;
   msgCodeError: string;
-  approveStatus: string;
+  returnStatus: string;
+  isLastStep:boolean;
+  
 }

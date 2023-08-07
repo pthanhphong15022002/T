@@ -145,7 +145,7 @@
                   <div class="ac-input">
                     <codx-input #cbxCashBook 
                       [Group]="form.formGroup" field="cashBookID" [formModel]="form.formModel"
-                      (valueChange)="valueChange($event)" onkeypress="onKeyUp()">
+                      (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                 </div>
@@ -762,7 +762,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
-            <button tabindex="17" id="btnadd" class="btn btn-sm btn-light-primary"
+            <button tabindex="14" id="btnadd" class="btn btn-sm btn-light-primary"
               (keydown.enter)="addRow('1'); $event.preventDefault();" (click)="addRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
@@ -1028,21 +1028,21 @@
         
       </div> -->
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button tabindex="19" *ngIf="cashpayment?.status == '0'" style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
+      <button tabindex="16" *ngIf="cashpayment?.status == '0'" style="border: 1px solid;" id="discard" type="button" class="btn btn-md btn-light-danger me-2"
       (keydown.enter)="onDiscard(); $event.preventDefault();" (click)="onDiscard()">
         <div class="d-flex align-items-center">
           <i class="icon-delete_outline icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button tabindex="20" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important;" type="button"
+      <button tabindex="17" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important;" type="button"
         class="btn btn-md btn-light-primary me-2" (keydown.enter)="onSaveAdd(); $event.preventDefault();" (click)="onSaveAdd()">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
-      <button tabindex="21" id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (keydown.enter)="onSave(); $event.preventDefault();" (click)="onSave()">
+      <button tabindex="18" id="save" type="button" class="btn btn-md btn-primary" style="min-width: 60px" (keydown.enter)="onSave(); $event.preventDefault();" (click)="onSave()">
         <div class="d-flex align-items-center">
           <i class="icon-save_alt icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
