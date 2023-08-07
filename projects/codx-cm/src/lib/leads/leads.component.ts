@@ -364,16 +364,16 @@ export class LeadsComponent
   }
 
   changeDataMF($event, data, type = null) {
-    if ($event != null && data != null) {
-      for (let eventItem of $event) {
-        if (type == 11) eventItem.isbookmark = false;
-        const functionID = eventItem.functionID;
-        const mappingFunction = this.getRoleMoreFunction(functionID);
-        if (mappingFunction) {
-          mappingFunction(eventItem, data);
-        }
-      }
-    }
+    // if ($event != null && data != null) {
+    //   for (let eventItem of $event) {
+    //     if (type == 11) eventItem.isbookmark = false;
+    //     const functionID = eventItem.functionID;
+    //     const mappingFunction = this.getRoleMoreFunction(functionID);
+    //     if (mappingFunction) {
+    //       mappingFunction(eventItem, data);
+    //     }
+    //   }
+    // }
   }
 
   getRoleMoreFunction(type) {
@@ -1001,7 +1001,8 @@ export class LeadsComponent
     dialogModel.FormModel = formModel;
     let obj = {
       data: data,
-      title: this.titleAction
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName
     }
     this.callfc
       .openForm(

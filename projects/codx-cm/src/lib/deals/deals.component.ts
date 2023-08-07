@@ -44,6 +44,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'lib-deals',
@@ -355,18 +356,18 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
   changeDataMF($event, data, type = null) {
-    if ($event != null && data != null) {
-      for (let eventItem of $event) {
-        if (type == 11) {
-          eventItem.isbookmark = false;
-        }
-        const functionID = eventItem.functionID;
-        const mappingFunction = this.getRoleMoreFunction(functionID);
-        if (mappingFunction) {
-          mappingFunction(eventItem, data);
-        }
-      }
-    }
+    // if ($event != null && data != null) {
+    //   for (let eventItem of $event) {
+    //     if (type == 11) {
+    //       eventItem.isbookmark = false;
+    //     }
+    //     const functionID = eventItem.functionID;
+    //     const mappingFunction = this.getRoleMoreFunction(functionID);
+    //     if (mappingFunction) {
+    //       mappingFunction(eventItem, data);
+    //     }
+    //   }
+    // }
   }
   getRoleMoreFunction(type) {
     let functionMappings;
@@ -565,6 +566,10 @@ export class DealsComponent
         break;
       case 'SYS002':
         this.exportFiles(e, data);
+        break;
+
+      case 'CM0201_15':
+        this.popupPermissions(data);
         break;
       default:
         var customData = {
@@ -1779,7 +1784,7 @@ export class DealsComponent
           customData.refID = data.processID;
           customData.refType = 'DP_Processes';
           customData.dataSource = dts;
-        } 
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -1803,4 +1808,38 @@ export class DealsComponent
       this.detectorRef.detectChanges();
     }
   }
+
+   //#region Permissons
+   popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName
+    }
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }
