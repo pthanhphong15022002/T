@@ -61,6 +61,7 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
+  callBackComponent: any;
   //
   //
   //listApproveMF = [];
@@ -1148,11 +1149,12 @@ export class CodxShareService {
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
-    releaseCallback: (response: ResponseModel) => void, //Hàm xử lí kết quả trả về
+    releaseCallback: (response: ResponseModel,component:any) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    releaseOnly: boolean = false //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
+    releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
+    curComponent:any=null,
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
@@ -1167,6 +1169,7 @@ export class CodxShareService {
     approveProcess.approvers = approvers;
     approveProcess.category = category;
     approveProcess.data = data;
+    this.callBackComponent = curComponent;
 
     //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
     if (releaseOnly) {
@@ -1201,7 +1204,7 @@ export class CodxShareService {
   }
   codxCheckReleaseESign(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void
+    releaseCallback: (response: ResponseModel,component:any) => void
   ) {
     if (approveProcess?.category?.eSign) {
       switch (approveProcess?.category?.releaseControl) {
@@ -1260,7 +1263,7 @@ export class CodxShareService {
 
   baseRelease(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void
+    releaseCallback: (response: ResponseModel,cur:any) => void
   ) {
     this.api
       .execSv(
@@ -1272,14 +1275,14 @@ export class CodxShareService {
       )
       .subscribe((res: ResponseModel) => {
         if (res) {
-          releaseCallback && releaseCallback(res);
+          releaseCallback && releaseCallback(res,this.callBackComponent);
         }
       });
   }
 
   releaseWithOldFile(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void,
+    releaseCallback: (response: ResponseModel,component:any) => void,
     listFiles: any
   ) {
     let signFile = this.createSignFile(approveProcess, listFiles);
@@ -1293,7 +1296,7 @@ export class CodxShareService {
 
   releaseWithExportFile(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void,
+    releaseCallback: (response: ResponseModel,component:any) => void,
     template: any,
     releaseBackground: boolean = false
   ) {
@@ -1329,7 +1332,7 @@ export class CodxShareService {
   }
   exportFileRelease(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void,
+    releaseCallback: (response: ResponseModel,component:any) => void,
     exportUpload:ExportUpload,
   ) {
     let signFile = this.createSignFile(approveProcess);
@@ -1347,7 +1350,7 @@ export class CodxShareService {
 
   releaseWithEmptySignFile(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void
+    releaseCallback: (response: ResponseModel,component:any) => void
   ) {
     let signFile = this.createSignFile(approveProcess);
     this.openPopupSignFile(approveProcess, releaseCallback, signFile);
@@ -1355,7 +1358,7 @@ export class CodxShareService {
 
   releaseInBackground(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void
+    releaseCallback: (response: ResponseModel,component:any) => void
   ) {
     this.getFileByObjectID(approveProcess.recID).subscribe((listFiles: any) => {
       if (listFiles?.length > 0 ) {
@@ -1394,7 +1397,7 @@ export class CodxShareService {
 
   openPopupSignFile(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void,
+    releaseCallback: (response: ResponseModel,component:any) => void,
     signFile: ES_SignFile,
     listFile: Array<any> = []
   ) {
@@ -1425,7 +1428,7 @@ export class CodxShareService {
         let respone = new ResponseModel();
         respone.msgCodeError = res?.event?.responseModel?.msgCodeError;
         respone.rowCount = res?.event?.responseModel?.rowCount;
-        releaseCallback && releaseCallback(respone);
+        releaseCallback && releaseCallback(respone,this.callBackComponent);
       } else {
         //Lưu - Tắt form kí số khi chưa gửi duyệt
       }
@@ -1462,7 +1465,7 @@ export class CodxShareService {
   releaseAfterGetTemplate(
     sfTemplates: any,
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel) => void,
+    releaseCallback: (response: ResponseModel,component:any) => void,
     releaseBackground: boolean = false
   ) {
     if (sfTemplates?.length > 1) {
