@@ -290,7 +290,6 @@ export class PopupAddSalesInvoiceComponent
       'netAmt',
       'vatid',
       'vatAmt',
-      'lineType',
       'umid',
       'idiM1',
       'discAmt',
@@ -304,7 +303,7 @@ export class PopupAddSalesInvoiceComponent
         .subscribe((line) => {
           console.log(line);
 
-          this.lines[e.idx] = Object.assign(this.lines[e.idx], line);
+          Object.assign(this.lines[e.idx], line);
         });
     }
   }

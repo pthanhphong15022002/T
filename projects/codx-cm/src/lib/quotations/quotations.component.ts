@@ -368,7 +368,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   clickMF(e, data) {
     this.titleAction = e.text;
     this.itemSelected = data;
-    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);

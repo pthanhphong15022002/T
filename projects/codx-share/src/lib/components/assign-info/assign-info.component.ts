@@ -429,6 +429,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   actionSaveAssign(taskIDParent, isContinue) {
+    debugger;
     this.tmSv
       .saveAssign([
         this.task,

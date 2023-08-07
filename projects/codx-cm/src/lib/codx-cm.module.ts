@@ -96,6 +96,7 @@ import { PopupAssginDealComponent } from './deals/popup-assgin-deal/popup-assgin
 import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-dashboard.component';
 import { PopupChangeAllocationRateComponent } from './targets/popup-change-allocation-rate/popup-change-allocation-rate.component';
 import { PopupBantDealComponent } from './deals/popup-bant-deal/popup-bant-deal.component';
+import { PopupPermissionsComponent } from './popup-permissions/popup-permissions.component';
 
 export const routes: Routes = [
   {
@@ -232,7 +233,7 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component],
+  declarations: [T_Component, PopupPermissionsComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

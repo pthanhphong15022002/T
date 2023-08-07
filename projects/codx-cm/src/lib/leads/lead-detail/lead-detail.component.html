@@ -152,33 +152,33 @@
                     "
                   ></span> -->
                   <div
-                      *ngFor="
-                        let item of dataSelected?.industries?.split(';');
-                        index as i
+                    *ngFor="
+                      let item of dataSelected?.industries?.split(';');
+                      index as i
+                    "
+                  >
+                    <span
+                      #industries
+                      class="text-gray-700"
+                      [innerHTML]="
+                        item
+                          | formatvalue
+                            : formModel
+                            : 'industries'
+                            : industries
+                            : 'CMLeads'
+                            : 'grvCMLeads'
+                          | async
                       "
+                    ></span>
+                    <span
+                      class="me-1"
+                      *ngIf="
+                        i < dataSelected?.industries?.split(';').length - 1
+                      "
+                      >,</span
                     >
-                      <span
-                        #industries
-                        class="text-gray-700"
-                        [innerHTML]="
-                          item
-                            | formatvalue
-                              : formModel
-                              : 'industries'
-                              : industries
-                              : 'CMLeads'
-                              : 'grvCMLeads'
-                            | async
-                        "
-                      ></span>
-                      <span
-                        class="me-1"
-                        *ngIf="
-                          i < dataSelected?.industries?.split(';').length - 1
-                        "
-                        >,</span
-                      >
-                    </div>
+                  </div>
                 </div>
                 <div class="d-flex align-items-top">
                   <codx-label
@@ -482,9 +482,8 @@
         [funcID]="formModel.funcID"
         [refType]="formModel.entityName"
         [refID]="dataSelected.recID"
-        [customerID]="dataSelected.customerID"
-        [salespersonID]="dataSelected.salespersonID"
-        [consultantID]="dataSelected.consultantID"
+        [transID]="dataSelected.recID"
+        [approveStatus]="dataSelected.approveStatus"
         (tabChange)="changeFooter($event)"
       ></codx-tabs>
     </ng-template>

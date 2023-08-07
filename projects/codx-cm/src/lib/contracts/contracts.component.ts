@@ -588,14 +588,25 @@ export class ContractsComponent extends UIComponent {
         //thất bại
         this.moveReason(data, false);
         break;
+        //export
+        case 'SYS002':
+          this.exportFiles(e, data);
+          break;
       default: {
+        var customData :any=null;
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   dataSource: '', // truyen sau
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
           this.view.formModel,
           this.view.dataService,
-          this
+          this,
+          customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -1202,4 +1213,39 @@ export class ContractsComponent extends UIComponent {
       }
     });
   }
+
+  //export theo moreFun
+  exportFiles(e, data) {
+    let customData :any
+    if (data?.refID) {
+      this.cmService.getDatasExport(data?.refID).subscribe((dts) => {
+        if (dts){
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+          customData.dataSource = dts;
+        } 
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+      });
+    } else {
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave,
+        this.view.formModel,
+        this.view.dataService,
+        this
+      );
+      this.detectorRef.detectChanges();
+    }
+  }
 }
+

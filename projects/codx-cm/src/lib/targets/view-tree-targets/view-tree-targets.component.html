@@ -113,7 +113,7 @@
             0
           </span>
         </div>
-        <div class="w-100px min-w-100px ms-2">
+        <div class="w-60px min-w-60px ms-2">
           <span
             *ngIf="item?.parentID == null"
             class="fw-bold me-2"
@@ -227,33 +227,7 @@
             0
           </span>
         </div>
-        <div class="w-50px min-w-50px ms-2">
-          <span
-            *ngIf="item?.parentID == null"
-            class="fw-bold me-2"
-            [innerHTML]="
-              item?.currencyID
-                | formatvalue : fmTargetLines : 'CurrencyID'
-                | async
-            "
-            [ngbPopover]="tooltipCurrency"
-            #p1="ngbPopover"
-            [openDelay]="500"
-            (mouseenter)="p1.open()"
-            (mouseleave)="p1.close()"
-            placement="bottom right top"
-          >
-            <ng-template #tooltipCurrency>
-              <codx-label
-                [formModel]="formModel"
-                fiedName="CurrencyID"
-                default="Tiền tệ"
-              >
-              </codx-label>
-            </ng-template>
-          </span>
 
-        </div>
       </div>
     </div>
   </div>
