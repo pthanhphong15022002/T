@@ -1280,35 +1280,6 @@ export class DealsComponent
   }
 
   release(data: any, category: any) {
-    // duyet cu
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError)
-    //       this.notificationsService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCmService
-    //         .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.dataSelected = q;
-    //             this.view.dataService.update(this.dataSelected).subscribe();
-    //             if (this.kanban) this.kanban.updateCard(this.dataSelected);
-    //           }
-    //           this.notificationsService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
-
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1362,13 +1333,11 @@ export class DealsComponent
                       .subscribe((res3) => {
                         if (res3) {
                           this.dataSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'DealsBusiness',
-                              dt?.recID,
-                              '0'
-                            )
+                          this.view.dataService
+                            .update(this.dataSelected)
                             .subscribe();
+                          if (this.kanban)
+                            this.kanban.updateCard(this.dataSelected);
                           this.notificationsService.notifyCode('SYS007');
                         } else this.notificationsService.notifyCode('SYS021');
                       });
