@@ -6,6 +6,9 @@
   [widthLeft]="400"
   [funcID]="funcID"
   [service]="service"
+  [assemblyName]="'ES'"
+  [className]="'SignFilesBusiness'"
+  [method]="'FullTextSearchAsync'"
   [entityName]="entityName"
   (selectedChange)="onSelected($event)"
 >
@@ -15,26 +18,28 @@
 </ng-template> -->
 <ng-template #centerTmp let-data>
   <codx-temp-full
-    [content]="extractContent(data.title)"
-    [desc]="
-      convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)
-    "
-    [status]="data.status"
-    [statusVll]="gridViewSetup['ApproveStatus']['referedValue']"
-    [date]="data.createdOn"
-    cardCss="card-template border-bottom px-2 py-3"
-    [resources]="getIdUser(data.createdBy, data.owner)"
-    [resourceObjType]="'AD_Users'"
-    [icoStatus]="data?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
-    [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
-    [modeImgs]="false"
-    [bookmark]="isBookmark(data)"
-    [titleLine]="2"
-    [dataItem]="data"
-  >
-  </codx-temp-full>
+  cardCss="card-template border-bottom p-3"
+  [title]="data?.categoryName"
+  [desc]="data?.title"
+  [icoCss]="
+    'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
+    data?.icon
+  "
+  [status]="data?.approveStatus "
+  [icoStyle]="setStyles(data?.color)"
+  [date]="data?.createdOn"
+  [resources]="data?.createdBy != undefined ? data?.createdBy : ''"
+  [resourceObjType]="'AD_Users'"
+  [titleLine]="2"
+  [titleCss]="'fw-bold fs-6 mb-1'"
+  [icoDateCss]="'icon-access_alarm'"
+  [dataItem]="data"
+  [formModel]="true ? view.formModel : null"
+  typeMF="hover"
+  [dataItem]="data"
+  [bookmark]="isBookmark(data)"
+>
+</codx-temp-full>
 </ng-template>
 
 <ng-template #rightTmp>
