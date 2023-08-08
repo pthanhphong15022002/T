@@ -20,6 +20,7 @@ export class CalendarsComponent
   @ViewChild('cellTemplate') cellTemplate!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>; //ressouce cuar schedule
+  @ViewChild('eventTemplate') eventTemplate!: TemplateRef<any>; //ressouce cuar schedule
 
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
@@ -31,9 +32,10 @@ export class CalendarsComponent
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
     resourceId: { name: 'owner' }, //trung voi idField của resourceField
+    status: 'taskType',
   };
 
-  vllTypeTask = '';
+  vllTypeTask = 'DP004';
   dayoff: any;
   calendarID = 'STD';
   resourceField: {
@@ -73,7 +75,7 @@ export class CalendarsComponent
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           /// template6: this.mfButton, //header morefun
-          // template: this.eventTemplate,
+          template: this.eventTemplate,
           //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content  nội dung chính
@@ -94,7 +96,7 @@ export class CalendarsComponent
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader, //temp ressources
           // template6: this.mfButton, //header // more
-          // template: this.eventTemplate, lấy event của temo
+          template: this.eventTemplate, //lấy event của temo
           //template2: this.headerTemp,
           template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
@@ -178,6 +180,7 @@ export class CalendarsComponent
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'owner' },
+      status: 'taskType',
     };
 
     this.resourceField = {
