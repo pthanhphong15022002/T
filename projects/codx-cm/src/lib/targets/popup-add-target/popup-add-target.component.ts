@@ -94,6 +94,13 @@ export class PopupAddTargetComponent {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+      this.currencyID = this.data.currencyID;
+      this.exchangeRate = this.data.exchangeRate;
+      if(this.exchangeRate <= 0){
+        this.currencyID = 'VND';
+        this.exchangeRate = 1;
+      }
+
       let date = new Date().setFullYear(this.data.year);
       this.date = new Date(date);
     } else {
@@ -128,10 +135,10 @@ export class PopupAddTargetComponent {
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
 
-    this.gridViewSetupTarget = firstValueFrom(
+    this.gridViewSetupTarget = await firstValueFrom(
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
-    this.gridViewSetupTargetLine = firstValueFrom(
+    this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
     this.changedetectorRef.detectChanges();
@@ -157,9 +164,17 @@ export class PopupAddTargetComponent {
           res.target =
             (res.target / exchangeRate?.exchRate) * this.exchangeRate;
         });
-
       }
-      this.exchangeRate = exchangeRate?.exchRate ?? 0;
+      if (exchangeRate?.exchRate > 0) {
+        this.exchangeRate = exchangeRate?.exchRate;
+      } else {
+        this.exchangeRate = 1;
+      }
+      this.currencyID = 'VND';
+      this.currencyIDSys = this.currencyID;
+      this.exchangeRateSys = this.exchangeRate;
+
+      this.data.currencyID = this.currencyID;
     }
   }
   //#endregion
@@ -171,10 +186,21 @@ export class PopupAddTargetComponent {
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines, this.currencyIDSys, this.exchangeRate];
+      data = [
+        this.data,
+        this.lstTargetLines,
+        this.currencyIDSys,
+        this.exchangeRateSys,
+      ];
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines, this.lstTargetLinesDelete, this.currencyIDSys, this.exchangeRate];
+      data = [
+        this.data,
+        this.lstTargetLines,
+        this.lstTargetLinesDelete,
+        this.currencyIDSys,
+        this.exchangeRateSys,
+      ];
     }
     op.className = 'TargetsBusiness';
 
@@ -207,7 +233,7 @@ export class PopupAddTargetComponent {
   }
   onSave() {
     if (
-      this.data?.businessLineID == null &&
+      this.data?.businessLineID == null ||
       this.data?.businessLineID?.trim() == ''
     ) {
       this.notiService.notifyCode(
@@ -219,9 +245,7 @@ export class PopupAddTargetComponent {
     }
 
     if (!this.checkTarget()) {
-      this.notiService.notifyCode(
-        'CM032'
-      );
+      this.notiService.notifyCode('CM032');
       return;
     }
 
@@ -711,7 +735,6 @@ export class PopupAddTargetComponent {
           });
           this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
           this.lstTargetLines = res[1] ?? [];
-
         } else {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
@@ -839,9 +862,7 @@ export class PopupAddTargetComponent {
   dbClick(data, type) {
     if (type == 'target') {
       if (this.data.target == 0) {
-        this.notiService.notifyCode(
-          'CM033'
-        );
+        this.notiService.notifyCode('CM033');
         return;
       }
     }
