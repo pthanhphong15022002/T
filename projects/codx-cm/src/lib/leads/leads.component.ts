@@ -381,18 +381,18 @@ export class LeadsComponent
 
   getRoleMoreFunction(type) {
     let functionMappings;
-    let isDisabled = (eventItem, data) => {
+    let isDisabled = (eventItem, data) => { // Mặc định
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         this.checkMoreReason(data) ||
         !data.applyProcess;
     };
-    let isCRD = (eventItem, data) => {
+    let isCRD = (eventItem, data) => { // Thêm, xóa, copy
       eventItem.disabled = data.closed || this.checkMoreReason(data);
       // eventItem.disabled  = false;
     };
-    let isEdit = (eventItem, data) => {
+    let isEdit = (eventItem, data) => { // Chỉnh sửa
       eventItem.disabled = eventItem.disabled =
         data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
@@ -417,30 +417,30 @@ export class LeadsComponent
       eventItem.disabled = data.full ?
         !['0', '1', '2'].includes(data.status) || data.closed : false;
     };
-    let isFailReason = (eventItem, data) => {
+    let isFailReason = (eventItem, data) => { // Đánh dấu thất bại
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         (data.status != '13' && this.checkMoreReason(data)) ||
         !data.applyProcess;
     };
-    let isDisabledDefault = (eventItem, data) => {
+    let isDisabledDefault = (eventItem, data) => { // Mặc định tắt hết
       eventItem.disabled = true;
     };
-    let isStartFirst = (eventItem, data) => {
+    let isStartFirst = (eventItem, data) => { // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = !['3', '5'].includes(data.status);
     };
-    let isChangeStatus = (eventItem, data) => {
+    let isChangeStatus = (eventItem, data) => { // Đổi trạng thái cho tiềm năng ko có quy trình
       eventItem.disabled = this.checkApplyProcess(data);
     };
 
-    let isUpdateProcess = (eventItem, data) => {
+    let isUpdateProcess = (eventItem, data) => { // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.applyProcess;
     };
-    let isDeleteProcess = (eventItem, data) => {
+    let isDeleteProcess = (eventItem, data) => { // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
       eventItem.disabled = !data.applyProcess;
     };
-    let isAprove = (eventItem, data) => {
+    let isAprove = (eventItem, data) => { // Gửi duyệt của a thảo
       eventItem.disabled = eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -450,7 +450,7 @@ export class LeadsComponent
         this.checkMoreReason(data);
     };
 
-    let isRejectApprover = (eventItem, data) => {
+    let isRejectApprover = (eventItem, data) => { // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
