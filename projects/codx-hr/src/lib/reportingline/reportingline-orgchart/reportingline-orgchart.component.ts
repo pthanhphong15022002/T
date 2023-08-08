@@ -254,6 +254,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetDataOrgChartAsync", [positionID])
         .subscribe((res: any) => {
           if (res) {
+            let index = res.findIndex(x => x.positionID === positionID);
+            res.forEach(item => {
+              if (item?.positionID === positionID) {
+                item['isSelected'] = true;
+              } else item['isSelected'] = false
+            });
             this.data = JSON.parse(JSON.stringify(res))
             this.setDataOrg(this.data);
           }
