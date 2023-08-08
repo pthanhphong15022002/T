@@ -1,5 +1,4 @@
 <ng-container *ngIf="loaded">
-
   <div
     class="codx-listcontact pb-3"
     *ngIf="listContacts != null && listContacts.length > 0; else noData"
@@ -24,23 +23,24 @@
       >
       </ng-container>
     </div>
-  </div>
-  <div [class]="'mb-1'">
-    <div class="d-flex" *ngIf="!hidenMF && objectID">
-      <button
-        type="button"
-        class="btn btn-sm btn-primary"
-        (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
-      >
-        <i class="icon-person_add_alt_1 icon-16 me-1"></i>
-        <codx-label
-          name="lblQuickAdd"
-          [formModel]="formModelContact"
-          default="Thêm nhanh liên hệ"
-        ></codx-label>
-      </button>
+    <div [class]="'mb-1'">
+      <div class="d-flex justify-content-center" *ngIf="!hidenMF && objectID">
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+        >
+          <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+          <codx-label
+            name="lblQuickAdd"
+            [formModel]="formModelContact"
+            default="Thêm nhanh liên hệ"
+          ></codx-label>
+        </button>
+      </div>
     </div>
   </div>
+
 </ng-container>
 
 <ng-template #noData>
@@ -56,12 +56,14 @@
             {{ "SYS011" | mssg | async }}
           </div>
         </div>
-        <!-- <div [class]="'d-flex justify-content-center mt-5'" >
+        <div [class]="'d-flex justify-content-center mt-5'">
           <div class="d-flex" *ngIf="!hidenMF && objectID">
             <button
               type="button"
               class="btn btn-sm btn-primary"
-              (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+              (click)="
+                isButton ? clickAddContact('add', null, moreFuncAdd) : null
+              "
             >
               <i class="icon-person_add_alt_1 icon-16 me-1"></i>
               <codx-label
@@ -71,7 +73,7 @@
               ></codx-label>
             </button>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -98,7 +100,11 @@
         </div>
         <div class="me-3">
           <codx-img
-            [objectId]="type == 'formDetail' && objectType == '4' ? data?.refID : data?.recID"
+            [objectId]="
+              type == 'formDetail' && objectType == '4'
+                ? data?.refID
+                : data?.recID
+            "
             [objectName]="data?.contactName"
             [objectType]="'CM_Contacts'"
             [width]="30"
@@ -130,10 +136,19 @@
           </div>
           <div *ngIf="objectType == '4'">
             <span class="">
-              <input type="text" #lblRole name="lblRole" matInput autofocus [value]="data?.role" [disabled]="type == 'formDetail' ? true : false"
+              <input
+                type="text"
+                #lblRole
+                name="lblRole"
+                matInput
+                autofocus
+                [value]="data?.role"
+                [disabled]="type == 'formDetail' ? true : false"
                 (blur)="updateRole(lblRole.value, data.recID)"
-                (keydown.enter)="updateRole(lblRole.value, data.recID)" class="form-control no-border text-gray-600"
-                placeholder="{{ placeholder }}" />
+                (keydown.enter)="updateRole(lblRole.value, data.recID)"
+                class="form-control no-border text-gray-600"
+                placeholder="{{ placeholder }}"
+              />
             </span>
           </div>
           <!-- <div class="" *ngIf="data.isDefault">
@@ -203,7 +218,9 @@
         class="d-flex justify-content-start align-items-center"
         *ngIf="data.isDefault"
       >
-        <span class="icon-vpn_key icon-16 text-hover-primary cursor-pointer" [ngbTooltip]="popupIsDefault"
+        <span
+          class="icon-vpn_key icon-16 text-hover-primary cursor-pointer"
+          [ngbTooltip]="popupIsDefault"
           ><ng-template #popupIsDefault>
             <codx-label
               name="lblIsDefault"

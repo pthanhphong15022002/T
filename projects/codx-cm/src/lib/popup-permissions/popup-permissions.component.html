@@ -199,10 +199,39 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="full"
+                    [crrValue]="full"
                     field="full"
                     (valueChange)="valueChange($event, 'full')"
                     (focus)="controlFocus(true)"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Xem'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Read'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Người dùng có quyền xem'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionRead'"
+                  >
+                  </codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="read"
+                    field="read"
+                    (valueChange)="valueChange($event, 'read')"
                     [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>
@@ -228,7 +257,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="update"
+                    [crrValue]="update"
                     field="update"
                     (valueChange)="valueChange($event, 'update')"
                     [disabled]="checkAdminUpdate()"
@@ -256,7 +285,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="assign"
+                    [crrValue]="assign"
                     field="assign"
                     (valueChange)="valueChange($event, 'assign')"
                     [disabled]="checkAdminUpdate()"
@@ -284,7 +313,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="delete"
+                    [crrValue]="delete"
                     field="delete"
                     (valueChange)="valueChange($event, 'delete')"
                     [disabled]="checkAdminUpdate()"
@@ -311,7 +340,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="upload"
+                    [crrValue]="upload"
                     field="upload"
                     (valueChange)="valueChange($event, 'upload')"
                     [disabled]="checkAdminUpdate()"
@@ -339,7 +368,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="download"
+                    [crrValue]="download"
                     field="download"
                     (valueChange)="valueChange($event, 'download')"
                     [disabled]="checkAdminUpdate()"
@@ -368,7 +397,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="allowPermit"
+                    [crrValue]="allowPermit"
                     field="allowPermit"
                     (valueChange)="valueChange($event, 'allowPermit')"
                     [disabled]="checkAdminUpdate()"
@@ -397,7 +426,7 @@
                     class="test-check"
                     type="switch"
                     style="width: 100%"
-                    [checked]="allowUpdateStatus"
+                    [crrValue]="allowUpdateStatus"
                     field="allowUpdateStatus"
                     (valueChange)="valueChange($event, 'allowUpdateStatus')"
                     [disabled]="checkAdminUpdate()"

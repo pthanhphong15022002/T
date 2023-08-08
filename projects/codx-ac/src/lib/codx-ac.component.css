@@ -60,7 +60,7 @@
  .btn-addline{
      position: absolute;
      right: 0;
-     top: -28px;
+     top: -35px;
  }
  .add-cash #gridViewV2.e-grid .e-summarycell {
      border-width: 0;
@@ -237,5 +237,7 @@
  .codx-dialog-container{
      background-color: rgba(0,0,0,.5) !important;
  }
- 
+ .rounded-15{
+    border-radius: 15px !important;
+ }
  
