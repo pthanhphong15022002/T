@@ -48,7 +48,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('memoContent', { read: ElementRef })
   memoContent: ElementRef<HTMLElement>;
-  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
+  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
+  public animationAcctTrans: AnimationModel = { enable: true, duration: 500, delay: 0 };
   private destroy$ = new Subject<void>();
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
