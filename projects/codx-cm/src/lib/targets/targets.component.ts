@@ -628,6 +628,8 @@ export class TargetsComponent
             } else {
               this.lstDataTree.push(Object.assign({}, data));
             }
+            this.exChangeRate(this.data.currencyID, this.currencyIDSys);
+
             if (this.lstDataTree != null && this.viewMode == 9) {
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
@@ -690,6 +692,7 @@ export class TargetsComponent
               } else {
                 this.lstDataTree.push(Object.assign({}, data));
               }
+              this.exChangeRate(this.data.currencyID, this.currencyIDSys);
               if (this.lstDataTree != null && this.viewMode == 9) {
                 this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
@@ -811,6 +814,7 @@ export class TargetsComponent
 
             this.lstDataTree[index].targetsLines = updatedItems;
           }
+          this.exChangeRate(this.data.currencyID, this.currencyIDSys);
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
         this.isShow = false;
