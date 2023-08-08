@@ -348,28 +348,17 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     let functionMappings;
     let isDisabled = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        this.checkMoreReason(data)
-      ) {
-        eventItem.disabled = true;
-      }
+        eventItem.disabled = (data.closed && data.status != '1') || ['1', '0'].includes(data.status) || this.checkMoreReason(data);
     };
     let isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+        //eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
+        eventItem.disabled = false;
     };
     let isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+        eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
     };
     let isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+        eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
     };
     let isClosed = (eventItem, data) => {
       eventItem.disabled = data.closed || data.status == '0';

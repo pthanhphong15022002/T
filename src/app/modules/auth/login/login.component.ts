@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private cache: CacheService,
-    private signalRService:SignalRService,
+    private signalRService: SignalRService,
     private readonly authService: AuthService,
     // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService
@@ -128,35 +128,25 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.email = this.user.email;
         dt.detectChanges();
       } else {
-        if (this.authService.checkUserStatus()) {
-          this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-          if (this.returnUrl) {
-            this.returnUrl = decodeURIComponent(this.returnUrl);
+        this.authService.checkUserStatus().subscribe((res) => {
+          if (res) {
+            this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+            if (this.returnUrl) {
+              this.returnUrl = decodeURIComponent(this.returnUrl);
+            }
+            if (
+              this.returnUrl.indexOf('http://') == 0 ||
+              this.returnUrl.indexOf('https://') == 0
+            ) {
+              this.iParams = UrlUtil.getUrl('i') || '';
+              if (this.iParams.toLocaleLowerCase() == 'hcs') {
+                this.shareService.redirect(this.iParams, this.returnUrl);
+              } else {
+                document.location.href = this.returnUrl;
+              }
+            } else this.router.navigate([`/${tenant}`]);
           }
-          if (
-            this.returnUrl.indexOf('http://') == 0 ||
-            this.returnUrl.indexOf('https://') == 0
-          ) {
-            this.api
-              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-              .pipe(
-                map((data) => {
-                  if (data && data.userID) {
-                    this.iParams = UrlUtil.getUrl('i') || '';
-                    if (this.iParams.toLocaleLowerCase() == 'hcs') {
-                      this.shareService.redirect(this.iParams, this.returnUrl);
-                    } else {
-                      document.location.href =
-                        this.returnUrl + '&token=' + this.auth.get().token;
-                    }
-                  }
-                })
-              )
-              .subscribe();
-
-            return;
-          } else this.router.navigate([`/${tenant}`]);
-        }
+        });
       }
     });
   }
@@ -166,33 +156,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
-
-    // this.extendAuthService.authState.subscribe(
-    //   (sus: SocialUser | undefined) => {
-    //     if (sus) {
-    //       let extendUser = new ExtendUser()
-    //       extendUser.provider = sus.provider;
-    //       extendUser.id = sus.id;
-    //       extendUser.email = sus.email;
-    //       extendUser.name = sus.name;
-    //       extendUser.photoUrl = sus.photoUrl;
-    //       extendUser.firstName = sus.firstName;
-    //       extendUser.lastName = sus.lastName;
-    //       extendUser.idToken = sus.idToken;
-    //       extendUser.authToken = sus.authToken;
-    //       extendUser.authorizationCode = sus.authorizationCode;
-    //       extendUser.response = sus.response;
-
-    //       const loginSubscr = this.authService
-    //         .extendLogin(extendUser)
-    //         .pipe()
-    //         .subscribe((data) => {
-    //           this.loginAfter(data);
-    //         });
-    //       this.unsubscribe.push(loginSubscr);
-    //     }
-    //   }
-    // );
   }
 
   // convenience getter for easy access to form fields
@@ -415,8 +378,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private loginAfter(data: any) {
     if (data) {
       if (!data.isError) {
-        if(this.signalRService.logOut)
-        {
+        if (this.signalRService.logOut) {
           this.signalRService.createConnection();
         }
         this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
@@ -428,48 +390,22 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.returnUrl.indexOf('http://') == 0 ||
           this.returnUrl.indexOf('https://') == 0
         ) {
-          return (
-            this.api
-              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-              // .pipe(
-              //   map((data: any) => {
-              //     if (data && data.userID) {
-              //       this.router.navigate([`${this.returnUrl + '&token=' + this.auth.get().token}`]);
-              //       document.location.href =
-              //         this.returnUrl + '&token=' + this.auth.get().token;
-              //     }
-              //   })
-              // )
-              .subscribe((data: any) => {
-                this.iParams = UrlUtil.getUrl('i') || '';
+          this.iParams = UrlUtil.getUrl('i') || '';
 
-                if (this.iParams.toLocaleLowerCase() == 'hcs') {
-                  this.shareService.redirect(this.iParams, this.returnUrl);
-                } else if (data && data.userID)
-                  this.router.navigate([
-                    `${this.returnUrl + '&token=' + this.auth.get().token}`,
-                  ]);
-              })
-          );
+          if (this.iParams.toLocaleLowerCase() == 'hcs') {
+            this.shareService.redirect(this.iParams, this.returnUrl);
+          } else window.location.href = this.returnUrl;
         } else {
           if (this.returnUrl.indexOf(data.tenant) > 0)
             return this.router.navigate([`${this.returnUrl}`]);
-          // window.location.href = this.returnUrl;
           else if (environment.saas == 1) {
             if (!data.tenant) return this.router.navigate(['/tenants']);
-            //window.location.href = '/tenants';
-            // window.location.href = this.returnUrl
-            //   ? this.returnUrl
-            //   : data.tenant;
             else
               return this.router.navigate([
                 `${this.returnUrl ? this.returnUrl : data.tenant}`,
               ]);
           }
           window.location.href = this.returnUrl ? this.returnUrl : data.tenant;
-          // return this.router.navigate([
-          //   `${this.returnUrl ? this.returnUrl : data.tenant}`,
-          // ]);
         }
       } else {
         this.notificationsService.notify(data.error);
