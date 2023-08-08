@@ -97,7 +97,7 @@
       <div style="height: 18px !important;" class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
           <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
-            data?.objectID | tranformSubobject
+            data?.objectID | tranformSubobject : view.formModel
           "></span>
         </div>
       </div>
@@ -161,7 +161,7 @@
         <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" /> -->
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectID [innerHTML]="
             itemSelected?.objectID
-            | tranformSubobject
+            | tranformSubobject : view.formModel
           "></span>
       </div>
       <div class="d-flex align-self-center">
@@ -917,7 +917,7 @@
         </div>
         <div class="d-flex align-items-center">
           <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
-          data?.objectID | tranformSubobject
+          data?.objectID | tranformSubobject : view.formModel
                 "></span>
         </div>
       </div>
