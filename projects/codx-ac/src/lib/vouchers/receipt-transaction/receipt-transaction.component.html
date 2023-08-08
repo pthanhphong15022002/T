@@ -245,8 +245,12 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
-                <codx-label class="fw-bold fs-6" fiedName="lblDetail" [formModel]="view.formModel"
-                  default="Thông tin chi tiết"></codx-label>
+                <codx-label
+                  class="fw-bold fs-6"
+                  fiedName="lblDetail"
+                  [formModel]="view.formModel"
+                  default="Thông tin chi tiết"
+                ></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
@@ -258,8 +262,12 @@
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-file-earmark-spreadsheet icon-16 me-2"></i>
-                <codx-label class="fw-bold fs-6" fiedName="lblAccounting" [formModel]="view.formModel"
-                  default="Hạch toán"></codx-label>
+                <codx-label
+                  class="fw-bold fs-6"
+                  fiedName="lblAccounting"
+                  [formModel]="view.formModel"
+                  default="Hạch toán"
+                ></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
@@ -321,8 +329,11 @@
 <ng-template #tabBasic>
   <ng-container *ngIf="acctTrans">
     <div class="table-vouchers table-responsive mt-2">
-      <table *ngIf="!loading && !loadingAcct" class="table table-hover table-row-bordered">
-        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15; background-color: white;">
+      <table *ngIf="!loadingAcct" class="table table-hover table-row-bordered">
+        <thead
+          class="border-gray-200"
+          style="position: sticky; top: 0; z-index: 15; background-color: white"
+        >
           <tr class="border-bottom">
             <th class="w-40 bg-gray-100 border-bottom ac-table-header">
               <div class="d-flex">
@@ -337,12 +348,12 @@
             </th>
             <th class="w-15 bg-gray-100 border-bottom">
               <span class="fw-bold">
-                {{'3' | vll : 'ACL0001' : 'text' | async}}
+                {{ "3" | vll : "ACL0001" : "text" | async }}
               </span>
             </th>
             <th class="w-15 bg-gray-100 border-bottom">
               <span class="fw-bold">
-                {{'4' | vll : 'ACL0001' : 'text' | async}}
+                {{ "4" | vll : "ACL0001" : "text" | async }}
               </span>
             </th>
             <th class="w-30 bg-gray-100 border-bottom">
@@ -364,98 +375,171 @@
               <td class="">
                 <div class="d-flex justify-content-start ps-3">
                   <div class="w-100px min-w-100px">
-                    <div class="d-flex align-items-center justify-content-start">
-                      <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
+                    <div
+                      class="d-flex align-items-center justify-content-start"
+                    >
+                      <ng-container
+                        *ngIf="item.accountID != null && item.accountID != ''"
+                      >
                         <span class="d-flex align-items-center mb-2">
                           <span class="fs-6 fw-bold me-2">N</span>
-                          <span style="margin-top: 1px;" class="fw-bold">{{item.accountID}}</span>
+                          <span style="margin-top: 1px" class="fw-bold">{{
+                            item.accountID
+                          }}</span>
                         </span>
                       </ng-container>
                     </div>
                   </div>
                   <div class="align-items-center w-100">
-                    <div *ngIf="(item.accountID != null && item.accountID != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.accountID != null && item.accountID != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <span #accountID class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
+                        <span
+                          #accountID
+                          class="fw-bold line-clamp line-clamp-1"
+                          >{{ item.accountName }}</span
+                        >
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.objectName!= null && item.objectName != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.objectName != null && item.objectName != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
-                          style="white-space: nowrap" class="fs-7 fw-bold" default="Nhà cung cấp">
+                        <codx-label
+                          *ngIf="
+                            itemSelected?.subType == '1' ||
+                            itemSelected?.subType == '2'
+                          "
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Nhà cung cấp"
+                        >
                         </codx-label>
-                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'"
-                          style="white-space: nowrap" class="fs-7 fw-bold" default="Nhân viên">
+                        <codx-label
+                          *ngIf="
+                            itemSelected?.subType == '3' ||
+                            itemSelected?.subType == '4'
+                          "
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Nhân viên"
+                        >
                         </codx-label>
-                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
-                          class="fs-7 fw-bold" default="Đối tượng">
+                        <codx-label
+                          *ngIf="itemSelected?.subType == '9'"
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Đối tượng"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.objectName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.objectName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM3 != null && item.diM3 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM3 != null && item.diM3 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="lblDIM3"
-                          default="Mục phí">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold label-colon"
+                          fiedName="lblDIM3"
+                          default="Mục phí"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM3}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM3 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          :&nbsp;{{item.costItemName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          :&nbsp;{{ item.costItemName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM2 != null && item.diM2 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM2 != null && item.diM2 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2" default="TTCP">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fw-bold fs-7"
+                          fiedName="lblDIM2"
+                          default="TTCP"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM2}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM2 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.costCenterName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.costCenterName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM1 != null && item.diM1 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM1 != null && item.diM1 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblDIM1"
-                          default="Phòng ban">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          fiedName="lblDIM1"
+                          default="Phòng ban"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM1}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM1 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.departmentName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.departmentName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.projectID != null && item.projectID != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.projectID != null && item.projectID != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblProjectID"
-                          default="Dự án">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          fiedName="lblProjectID"
+                          default="Dự án"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>
+                        <span
+                          style="white-space: nowrap"
+                          class="fs-7 text-gray-700"
+                          >{{ item.projectID }}</span
+                        >
                         &nbsp;-&nbsp;
-                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
-                          item.projectID
-                            | formatvalue
-                              : fmVouchersLines
-                              : 'projectID'
-                              : projectID
-                            | async
-                        "></span>
+                        <span
+                          #projectID
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                          [innerHTML]="
+                            item.projectID
+                              | formatvalue
+                                : fmVouchersLines
+                                : 'projectID'
+                                : projectID
+                              | async
+                          "
+                        ></span>
                       </ng-container>
                     </div>
                   </div>
@@ -464,124 +548,220 @@
               <td class="text-center">
                 <div class="d-flex align-items-center">
                   <ng-container>
-                    <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                    <span
+                      class="fw-bold line-clamp line-clamp-1"
+                      #transAmt
+                      [innerHTML]="
+                        item?.transAmt
+                          | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                          | async
+                      "
+                    ></span>
                   </ng-container>
                 </div>
               </td>
               <td>
                 <div class="d-flex align-items-center">
                   <ng-container>
-                    <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                    <span
+                      class="fw-bold line-clamp line-clamp-1"
+                      #transAmt
+                      [innerHTML]="
+                        item?.transAmt
+                          | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                          | async
+                      "
+                    ></span>
                   </ng-container>
                 </div>
               </td>
               <td>
-                <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
+                <div
+                  *ngIf="item.memo != null && item.memo != ''"
+                  class="d-flex flex-wrap"
+                >
                   <div class="d-flex align-items-center mb-1">
-                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.memo }}</span>
+                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{
+                      item.memo
+                    }}</span>
                   </div>
                 </div>
               </td>
             </tr>
-            <tr *ngIf="item.crediting"
-              [style]="createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
+            <tr
+              *ngIf="item.crediting"
+              [style]="
+                createLine(item)
+                  ? 'border-bottom: 1px solid var(--bs-border-color) !important;'
+                  : ''
+              "
+            >
               <td>
                 <div class="d-flex justify-content-start w-100 ps-3">
                   <div class="w-100px min-w-100px">
-                    <div class="d-flex align-items-center justify-content-start">
-                      <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
+                    <div
+                      class="d-flex align-items-center justify-content-start"
+                    >
+                      <ng-container
+                        *ngIf="item.accountID != null && item.accountID != ''"
+                      >
                         <span class="d-flex align-items-center mb-2">
                           <span class="fw-bold fs-6 me-2 ms-5">C</span>
-                          <span style="margin-top: 1px;" class="fw-bold">{{item.accountID}}</span>
+                          <span style="margin-top: 1px" class="fw-bold">{{
+                            item.accountID
+                          }}</span>
                         </span>
                       </ng-container>
                     </div>
                   </div>
                   <div class="align-items-center w-100">
-                    <div *ngIf="(item.accountID != null && item.accountID != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.accountID != null && item.accountID != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <span class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
+                        <span class="fw-bold line-clamp line-clamp-1">{{
+                          item.accountName
+                        }}</span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.objectName!= null && item.objectName != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.objectName != null && item.objectName != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
-                          style="white-space: nowrap" class="fs-7 fw-bold" default="Nhà cung cấp">
+                        <codx-label
+                          *ngIf="
+                            itemSelected?.subType == '1' ||
+                            itemSelected?.subType == '2'
+                          "
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Nhà cung cấp"
+                        >
                         </codx-label>
-                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'"
-                          style="white-space: nowrap" class="fs-7 fw-bold" default="Nhân viên">
+                        <codx-label
+                          *ngIf="
+                            itemSelected?.subType == '3' ||
+                            itemSelected?.subType == '4'
+                          "
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Nhân viên"
+                        >
                         </codx-label>
-                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
-                          class="fs-7 fw-bold" default="Đối tượng">
+                        <codx-label
+                          *ngIf="itemSelected?.subType == '9'"
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          default="Đối tượng"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.objectName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.objectName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM3 != null && item.diM3 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM3 != null && item.diM3 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="lblDIM3"
-                          default="Mục phí">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold label-colon"
+                          fiedName="lblDIM3"
+                          default="Mục phí"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM3}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM3 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          :&nbsp;{{item.costItemName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          :&nbsp;{{ item.costItemName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM2 != null && item.diM2 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM2 != null && item.diM2 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2" default="TTCP">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fw-bold fs-7"
+                          fiedName="lblDIM2"
+                          default="TTCP"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM2}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM2 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.costCenterName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.costCenterName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.diM1 != null && item.diM1 != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.diM1 != null && item.diM1 != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblDIM1"
-                          default="Phòng ban">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          fiedName="lblDIM1"
+                          default="Phòng ban"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span class="fs-7 text-gray-700">{{item.diM1}}</span>
+                        <span class="fs-7 text-gray-700">{{ item.diM1 }}</span>
                         &nbsp;-&nbsp;
-                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                          {{item.departmentName}}
+                        <span
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                        >
+                          {{ item.departmentName }}
                         </span>
                       </ng-container>
                     </div>
-                    <div *ngIf="(item.projectID != null && item.projectID != '')"
-                      class="d-flex align-items-center justify-content-start">
+                    <div
+                      *ngIf="item.projectID != null && item.projectID != ''"
+                      class="d-flex align-items-center justify-content-start"
+                    >
                       <ng-container>
-                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblProjectID"
-                          default="Dự án">
+                        <codx-label
+                          style="white-space: nowrap"
+                          class="fs-7 fw-bold"
+                          fiedName="lblProjectID"
+                          default="Dự án"
+                        >
                         </codx-label>
                         :&nbsp;
-                        <span style="white-space: nowrap" class="fs-7 text-gray-700">{{item.projectID}}</span>
+                        <span
+                          style="white-space: nowrap"
+                          class="fs-7 text-gray-700"
+                          >{{ item.projectID }}</span
+                        >
                         &nbsp;-&nbsp;
-                        <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
-                          item.projectID
-                            | formatvalue
-                              : fmVouchersLines
-                              : 'projectID'
-                              : projectID
-                            | async
-                        "></span>
+                        <span
+                          #projectID
+                          class="fs-7 text-gray-700 line-clamp line-clamp-1"
+                          [innerHTML]="
+                            item.projectID
+                              | formatvalue
+                                : fmVouchersLines
+                                : 'projectID'
+                                : projectID
+                              | async
+                          "
+                        ></span>
                       </ng-container>
                     </div>
                   </div>
@@ -590,23 +770,42 @@
               <td>
                 <div class="d-flex align-items-center">
                   <ng-container>
-                    <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                    <span
+                      class="fw-bold line-clamp line-clamp-1"
+                      #transAmt
+                      [innerHTML]="
+                        item?.transAmt
+                          | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                          | async
+                      "
+                    ></span>
                   </ng-container>
                 </div>
               </td>
               <td>
                 <div class="d-flex align-items-center">
                   <ng-container>
-                    <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                    <span
+                      class="fw-bold line-clamp line-clamp-1"
+                      #transAmt
+                      [innerHTML]="
+                        item?.transAmt
+                          | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                          | async
+                      "
+                    ></span>
                   </ng-container>
                 </div>
               </td>
               <td>
-                <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
+                <div
+                  *ngIf="item.memo != null && item.memo != ''"
+                  class="d-flex flex-wrap"
+                >
                   <div class="d-flex align-items-center mb-1">
-                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{item.memo}}</span>
+                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{
+                      item.memo
+                    }}</span>
                   </div>
                 </div>
               </td>
@@ -614,19 +813,40 @@
           </ng-container>
         </tbody>
       </table>
-      <div *ngIf="loadingAcct" style="background-color: white;" class="ac-empty h-100">
-        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+      <div
+        *ngIf="loadingAcct"
+        style="background-color: white"
+        class="ac-empty h-100"
+      >
+        <div
+          style="padding-top: 0px !important"
+          class="list-empty card card-flush h-100"
+        >
           <div class="d-flex flex-column flex-center justify-content-center">
-            <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-              [value]="75" width="50" height="50" [animation]="animation" [isIndeterminate]="true" [trackThickness]="1" [a] [progressThickness]="3">
+            <ejs-progressbar
+              #pgbAcctranst
+              id="load-acctTrans-container"
+              type="Circular"
+              [maximum]="100"
+              [minimum]="0"
+              [value]="75"
+              width="50"
+              height="50"
+              [animation]="animationAcctTrans"
+              [isIndeterminate]="true"
+              [trackThickness]="1"
+              [a]
+              [progressThickness]="3"
+            >
               <e-progressbar-annotations>
-                <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+                <e-progressbar-annotation content=" ">
+                </e-progressbar-annotation>
               </e-progressbar-annotations>
             </ejs-progressbar>
           </div>
         </div>
       </div>
-      <div *ngIf="!loading && !loadingAcct">
+      <div *ngIf="!loadingAcct">
         <div *ngIf="acctTrans.length == 0 && !isLoadDataAcct" class="ac-empty">
           <div class="list-empty card card-flush h-100 mt-20">
             <div class="d-flex flex-column flex-center justify-content-center">
@@ -642,22 +862,51 @@
         </div>
       </div>
     </div>
-    <table style="table-layout: fixed;border: 1px solid var(--bs-border-color) !important;" class="table mb-0">
-      <tfoot class="bg-light" style="position: sticky;
-        bottom: 0;">
+    <table
+      style="
+        table-layout: fixed;
+        border: 1px solid var(--bs-border-color) !important;
+      "
+      class="table mb-0"
+    >
+      <tfoot class="bg-light" style="position: sticky; bottom: 0">
         <td class="w-40 bg-gray-100"></td>
         <td class="w-15 bg-gray-100">
           <div class="d-flex align-items-center">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
-                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+            <span
+              *ngIf="acctTrans.length > 0"
+              class="fw-bold line-clamp line-clamp-1"
+              #transAmt
+              [innerHTML]="
+                totalacct
+                  | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                  | async
+              "
+            ></span>
+            <span
+              *ngIf="acctTrans.length == 0"
+              class="fw-bold line-clamp line-clamp-1"
+              >0</span
+            >
           </div>
         </td>
         <td class="w-15 bg-gray-100">
           <div class="d-flex align-items-center">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
-                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
-            <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+            <span
+              *ngIf="acctTrans.length > 0"
+              class="fw-bold line-clamp line-clamp-1"
+              #transAmt
+              [innerHTML]="
+                totaloff
+                  | formatvalue : fmAccTrans : 'transAmt' : transAmt
+                  | async
+              "
+            ></span>
+            <span
+              *ngIf="acctTrans.length == 0"
+              class="fw-bold line-clamp line-clamp-1"
+              >0</span
+            >
           </div>
         </td>
         <td class="w-30 bg-gray-100"></td>
@@ -669,8 +918,11 @@
 <ng-template #tabSet>
   <ng-container *ngIf="vouchersLines">
     <div class="table-vouchers table-responsive mt-2">
-      <table *ngIf="!loading && !loadingAcct" class="table table-hover table-row-bordered">
-        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15; background-color: white;">
+      <table *ngIf="!loading" class="table table-hover table-row-bordered">
+        <thead
+          class="border-gray-200"
+          style="position: sticky; top: 0; z-index: 15; background-color: white"
+        >
           <tr class="border-bottom">
             <th class="min-w-50px">
               <div class="d-flex">
@@ -739,8 +991,8 @@
                   #itemID
                   [innerHTML]="
                     item?.itemID
-                    | formatvalue : fmVouchersLines : 'itemID' : itemID
-                    | async
+                      | formatvalue : fmVouchersLines : 'itemID' : itemID
+                      | async
                   "
                 ></span>
               </div>
@@ -827,23 +1079,41 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="loading" style="background-color: white;" class="ac-empty h-100">
-        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+      <div
+        *ngIf="loading"
+        style="background-color: white"
+        class="ac-empty h-100"
+      >
+        <div
+          style="padding-top: 0px !important"
+          class="list-empty card card-flush h-100"
+        >
           <div class="d-flex flex-column flex-center justify-content-center">
-            <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-              [value]="75" width="50" height="50" [animation]="animation" [isIndeterminate]="true" [trackThickness]="1" [a] [progressThickness]="3">
+            <ejs-progressbar
+              #pgbDetail
+              id="load-detail-container"
+              type="Circular"
+              [maximum]="100"
+              [minimum]="0"
+              [value]="75"
+              width="50"
+              height="50"
+              [animation]="animation"
+              [isIndeterminate]="true"
+              [trackThickness]="1"
+              [a]
+              [progressThickness]="3"
+            >
               <e-progressbar-annotations>
-                <e-progressbar-annotation content=" "> </e-progressbar-annotation>
+                <e-progressbar-annotation content=" ">
+                </e-progressbar-annotation>
               </e-progressbar-annotations>
             </ejs-progressbar>
           </div>
         </div>
       </div>
       <div *ngIf="!loading">
-        <div
-          *ngIf="vouchersLines.length == 0"
-          class="container w-90 h-90"
-        >
+        <div *ngIf="vouchersLines.length == 0" class="container w-90 h-90">
           <div class="list-empty card card-flush h-100 mt-20">
             <div class="d-flex flex-column flex-center justify-content-center">
               <img
@@ -865,7 +1135,7 @@
       "
       class="table mb-0"
     >
-      <tfoot class="bg-light" style="position: sticky;">
+      <tfoot class="bg-light" style="position: sticky">
         <td class="w-50 min-w-350px bg-gray-100"></td>
         <td class="min-w-100px bg-gray-100">
           <div class="d-flex align-items-center">

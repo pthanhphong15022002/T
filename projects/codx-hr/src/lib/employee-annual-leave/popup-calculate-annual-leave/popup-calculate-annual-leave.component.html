@@ -1,0 +1,69 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
+</codx-form>
+<ng-template #body>
+    <div class="form-group row mt-3">
+        <div class="d-flex mb-2 h-50px">
+            <span class="fw-bold fs-5 ms-3 me-3"> 2023 </span>
+        </div>
+        <div class="d-flex flex-column mb-2 h-70px">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label class="fw-bold" default="Đối tượng phép"></codx-label>
+                <span class="me-3">Input here</span>
+            </div>
+            <span class="data-text-color mb-2">Chọn các đối tượng phép cần tính tiêu chuẩn phép năm</span>
+            <div class="d-flex align-items-center">
+                <span class="badge badge-sm badge-inline flex-wrap border-0 me-2 w-150px" style="background: yellowgreen;">Phép năm 14 ngày</span>
+                <span class="badge badge-sm badge-inline flex-wrap border-0 me-2 w-150px" style="background: yellowgreen;">Phép năm 12 ngày</span>
+            </div>
+        </div>
+        <div class="d-flex flex-column mb-2 h-70px">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label class="fw-bold" default="Phòng ban"></codx-label>
+                <span class="me-3">Input here</span>
+            </div>
+            <span class="data-text-color mb-2">Chọn phòng ban cần tính tiêu chuẩn phép năm</span>
+            <div class="d-flex align-items-center">
+                <span class="badge badge-sm badge-inline flex-wrap border-0 me-2 w-100px" style="background: yellowgreen;">Phòng nhân sự</span>
+                <span class="badge badge-sm badge-inline flex-wrap border-0 me-2 w-100px" style="background: yellowgreen;">Phòng kế toán</span>
+            </div>        
+        </div>
+        <div class="d-flex flex-column mb-2 h-90px">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label class="fw-bold" default="Nhân viên"></codx-label>
+                <span class="me-3">Input here</span>
+            </div>
+            <span class="data-text-color mb-2">Chọn nhân viên cần tính tiêu chuẩn phép năm</span>
+            <div class="d-flex align-items-center">
+                <span class="badge badge-sm badge-inline border-0 me-0 w-40px h-40px" style="background: yellowgreen; border-radius: 50%!important;"> AV </span>
+                <span class="badge badge-sm badge-inline border-0 me-0 w-40px h-40px" style="background: yellowgreen; border-radius: 50%!important;"> AV </span>
+            </div>
+        </div>
+        <div class="d-flex flex-column mb-2 h-70px">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label class="fw-bold" default="Nhân viên có"></codx-label>
+                <span class="me-3">Input here</span>
+            </div>
+            <span class="data-text-color mb-2">Tính tiêu chuẩn phép năm cho các nhân viên thỏa điều kiện</span>
+        </div>
+        <hr />
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label class="fw-bold " default="Bỏ qua nhân viên đã được tính phép tiêu chuẩn">
+                </codx-label>
+                <!-- <codx-input class="mx-3" field=""></codx-input> -->
+                <span class="me-3">Input here</span>
+            </div>
+            <span class="data-text-color">Chỉ tính tiêu chuẩn cho những nhân viên chưa được tính. Nếu bỏ chọn sẽ tính lại tất cả theo điều kiện chọn trên</span>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary me-3" (click)="confirm()">
+            <codx-label name="Confirm" [default]="btnCalculate"></codx-label>
+        </button>
+        <button type="button" class="btn btn-danger" (click)="cancel()">
+            <codx-label name="Cancel" [default]="btnCancel"></codx-label>
+        </button>
+    </div>
+</ng-template>

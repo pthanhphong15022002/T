@@ -3563,7 +3563,7 @@
         field="reasonName"
         type="text"
         [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event)"
+        (valueChange)="changeValueReaName($event,reason.recID)"
       >
       </codx-input>
     </div>

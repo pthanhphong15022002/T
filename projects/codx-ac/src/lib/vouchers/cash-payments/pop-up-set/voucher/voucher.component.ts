@@ -1,4 +1,3 @@
-import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -21,10 +20,11 @@ import {
   CacheService,
   SortModel,
   UIComponent,
+  DataRequest,
 } from 'codx-core';
-import { CodxAcService } from '../../codx-ac.service';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from 'projects/codx-ac/src/lib/codx-ac.service';
 
 @Component({
   selector: 'lib-voucher',
