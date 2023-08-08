@@ -911,7 +911,6 @@ export class PopupPolicyalComponent
         })
       }
       else if(this.actionType === 'edit'){
-      
         if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
           this.EditPolicyALPolicyIDChanged().subscribe((res) => {
             if(res){
