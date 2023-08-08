@@ -3,8 +3,9 @@ import { type } from 'os';
 import { concat } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ButtonModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
+import { PopupCalculateAnnualLeaveComponent } from './popup-calculate-annual-leave/popup-calculate-annual-leave.component';
 
 @Component({
   selector: 'lib-employee-annual-leave',
@@ -27,7 +28,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   grvEDaysOff: any;
   popupLoading: boolean = false;
   request: ResourceModel;
-
+  lang: any;
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
 
@@ -48,25 +49,50 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
   crrFuncID: any;
   resetView: boolean = false;
+  headerText: string = '';
+  btnCalculate: string = 'Tính';
+  btnCancel: string = 'Hủy';
   constructor(
     private injector: Injector,
     private hrService: CodxHrService,
+    private autStore: AuthStore,
   ) {
     super(injector);
     this.router.params.subscribe((params: Params) => {
       this.resetView = true;
       this.funcID = params['funcID'];
       this.initViewSetting();
+      this.getFunction(this.funcID);
     })
   }
   onInit(): void {
     this.crrFuncID = this.funcID;
+    // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeavesBusiness', 'AddEmployeeAnnualLeaveAsync')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //     }
+    //   });
   }
   ngAfterViewInit(): void {
     this.initRequest();
     this.initViewSetting();
-    this.getFunction(this.funcID);
     this.getEDaysOffGrvSetUp();
+    this.getLanguage();
+  }
+  getFunction(funcID: string) {
+    if (funcID) {
+      this.cache.functionList(funcID).subscribe((func: any) => {
+        if (func?.formName && func?.gridViewName) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grvSetup = grd;
+              }
+            });
+        }
+      });
+    }
   }
   changeFunction() {
     this.hrService.childMenuClick.subscribe((res) => {
@@ -90,6 +116,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   initViewSetting() {
     switch (this.funcID) {
       case 'HRTAL01':
+        this.button = { id: 'btnAdd' }
+        // this.button = null;
         this.views = [
           {
             // id: ViewType.list.toString(),
@@ -108,7 +136,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             sameData: false,
             active: false,
             model: {
-              resizable: true,
+              resizable: false,
               isCustomize: true,
               template: this.treeTemplate,
               panelRightRef: this.rightTemplateHRTAL01,
@@ -118,6 +146,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
         ];
         break;
       case 'HRTAL02':
+        this.button = { id: 'btnAdd'}
         this.views = [
           {
             // id: ViewType.list.toString(),
@@ -136,7 +165,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
             sameData: false,
             active: false,
             model: {
-              resizable: true,
+              resizable: false,
               isCustomize: true,
               template: this.treeTemplate,
               panelRightRef: this.rightTemplateHRTAL01,
@@ -167,7 +196,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     // the view reuse data because same data of list is true
     // reset view data and recall get data
     if (event?.view?.type === 1 || event?.type === 1) {
-      if(this.resetView){
+      if (this.resetView) {
         this.view.dataService.data = [];
         //this.view.dataService.oriData = [];
         this.view.loadData();
@@ -175,19 +204,39 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       }
     }
   }
-  getFunction(funcID: string) {
-    if (funcID) {
-      this.cache.functionList(funcID).subscribe((func: any) => {
-        if (func?.formName && func?.gridViewName) {
-          this.cache
-            .gridViewSetup(func.formName, func.gridViewName)
-            .subscribe((grd: any) => {
-              if (grd) {
-                this.grvSetup = grd;
-              }
-            });
-        }
-      });
+  clickButton(event) {
+    let popupData = {
+      funcID: this.funcID,
+      headerText: this.headerText.length > 0 ? this.headerText : 'Tính phép tiêu chuẩn',
+      btnCancel: this.btnCancel,
+      btnCalculate: this.btnCalculate,
+      formModel: this.view.formModel ? this.view.formModel : null,
+      grvSetup: this.grvSetup ? this.grvSetup : null,
+    }
+
+    let popup = this.callfc.openForm(PopupCalculateAnnualLeaveComponent,
+      this.headerText,
+      800,
+      600,
+      this.funcID,
+      popupData);
+
+    popup.closed.subscribe(e => {
+      if (e?.event) {
+
+      }
+    })
+  }
+  getLanguage() {
+    let lang = this.autStore.get().language;
+    if (lang.toLowerCase() === 'en') {
+      this.headerText = 'Calculate Annual Leave';
+      this.btnCancel = 'Cancel';
+      this.btnCalculate = 'Calculate';
+    } else {
+      this.headerText = 'Tính phép tiêu chuẩn';
+      this.btnCancel = 'Hủy';
+      this.btnCalculate = 'Tính';
     }
   }
   getEDaysOffGrvSetUp() {

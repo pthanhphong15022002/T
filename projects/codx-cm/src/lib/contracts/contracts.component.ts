@@ -92,7 +92,6 @@ export class ContractsComponent extends UIComponent {
     entityName: 'CM_Quotations',
     gridViewName: 'grvCMQuotations',
   };
-
   fmQuotationLines: FormModel = {
     funcID: 'CM02021',
     formName: 'CMQuotationsLines',
@@ -545,10 +544,11 @@ export class ContractsComponent extends UIComponent {
       });
     }
   }
-
+  
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
+
   clickMF(e, data) {
     this.actionName = e.text;
     switch (e.functionID) {
@@ -622,6 +622,7 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
+
   afterSave(e?: any, that: any = null) {
     //TODO: đợi core
   }
@@ -761,6 +762,7 @@ export class ContractsComponent extends UIComponent {
   addPayHistory() {
     this.openPopupPay('add', 'payHistory', null);
   }
+
   addPay() {
     this.openPopupPay('add', 'pay', null);
   }
@@ -1115,6 +1117,7 @@ export class ContractsComponent extends UIComponent {
       this.openFormReason(data, fun, isMoveSuccess);
     });
   }
+
   openFormReason(data, fun, isMoveSuccess) {
     var formMD = new FormModel();
     formMD.funcID = fun.functionID;
@@ -1172,6 +1175,7 @@ export class ContractsComponent extends UIComponent {
       }
     });
   }
+
   autoStart(event) {
     if (event) {
       this.api

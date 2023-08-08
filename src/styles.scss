@@ -6,6 +6,7 @@
 
 :root {
   --fs-body: 13px;
+
   --speeddialVertDist: 98px;
   
   --bs-primary-rgb: var(--primary);
@@ -3449,7 +3450,7 @@ lib-employee-list{
   min-width: 100px;
 }
 
-.icon-14.icon-me-2 span[class*="fa-"]{
+.icon-14.eicon-me-2 span[class*="fa-"]{
   margin-right: 2px;
   
 }
@@ -3563,3 +3564,43 @@ codx-detail-toolbar codx-mfunc .dropdown {
   font-size: 14px!important;
   margin-right: 2px;
  }
+ .employee-grid {
+  .e-rowcell{
+    padding-top: 6px!important;
+    padding-bottom: 6px!important;
+  }
+  .e-columnheader{
+    height: 40px!important;
+    .e-headercell{
+      background-color: var(--gray-100);
+    }
+ }
+}
+
+codx-view-tree-detail .e-splitter{
+  .e-resize-handler.e-icons{
+    display: none!important;
+  }
+  .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
+    cursor: default;
+  }
+  .e-split-bar.e-split-bar-horizontal {
+    background: transparent!important;
+  }
+}
+
+.template{
+  font-family:inherit!important;
+  font-size: var(--fs-body);
+}
+
+.dropdown-toggle.btn-active-light-primary{
+  color: var(--primary)!important;
+  &:hover i[class*="icon"]{
+    color: var(--primary)!important;
+  }
+}
+.org-mfunc i, .org-mfunc span{
+  color: #fff!important;
+  font-size: 15px!important;
+}
