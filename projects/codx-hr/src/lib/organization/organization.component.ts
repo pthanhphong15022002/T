@@ -125,7 +125,6 @@ export class OrgorganizationComponent extends UIComponent {
         sameData: false,
         request: this.request,
         model: {
-          resizable: true,
           template: this.tempTree,
           panelRightRef: this.tmpOrgChart,
           // panelRightRef: this.panelRightLef,
