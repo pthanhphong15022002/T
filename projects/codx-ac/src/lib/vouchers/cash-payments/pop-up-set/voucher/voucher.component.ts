@@ -21,6 +21,7 @@ import {
   SortModel,
   UIComponent,
   DataRequest,
+  NotificationsService,
 } from 'codx-core';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { Subject, takeUntil } from 'rxjs';
@@ -71,6 +72,7 @@ export class VoucherComponent extends UIComponent implements OnInit {
     inject: Injector,
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
+    private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -141,24 +143,30 @@ export class VoucherComponent extends UIComponent implements OnInit {
       this.cashpayment.currencyID,
       this.cashpayment.exchangeRate,
       this.payAmt,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
-        this.grid.dataSource[e.rowIndex] = res;
-        this.grid.gridRef.dataSource = [...this.grid.dataSource];
+        this.subInvoices[e.rowIndex] = res;
+        this.grid.refresh();
+        // this.grid.updateRow(e.rowIndex,res,false);
+        //this.grid.dataSource = [...this.subInvoices];
+        //this.grid.gridRef.updateCell(e.rowIndex,'settledAmt',res.settledAmt)
         if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
           this.oldSelected = e.rowIndexes;
         }
-
         setTimeout(() => {
           if (this.isDblCLick) {
             this.isDblCLick = false;
             this.grid.gridRef.startEdit();
           } else {
             this.grid.gridRef?.selectRows(this.oldSelected);
-          }
-        }, 200);
+          }     
+        },50);
       }
     })
+  }
+
+  onDeselected(e:any){
+    this.grid.arrSelectedRows.splice(e.rowIndex,1);
   }
 
   valueChange(e: any) {
@@ -362,16 +370,20 @@ export class VoucherComponent extends UIComponent implements OnInit {
       this.type,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
       if (res && res.length) {
-        this.subInvoices = res[0];
-        if (this.type == 1) {
+        if (res[0].length > 0) {
+          this.subInvoices = res[0];
+          if (this.type == 1) {
+            setTimeout(() => {
+              this.grid.gridRef?.selectRows(res[2]);
+            }, 100);
+          }
           setTimeout(() => {
-            this.grid.gridRef?.selectRows(res[2]);
-          }, 100);
-        }
-        setTimeout(() => {
-          this.grid.refresh();
-        });     
-        this.detectorRef.detectChanges();
+            this.grid.refresh();
+          });     
+          this.detectorRef.detectChanges();
+        }else{
+          this.notification.notifyCode('AC0027');
+        }    
       }
     })
   }
