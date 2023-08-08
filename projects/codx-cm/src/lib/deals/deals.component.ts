@@ -493,59 +493,45 @@ export class DealsComponent
       case 'SYS03':
         this.edit(data);
         break;
-
       case 'SYS04':
         this.copy(data);
         break;
-
       case 'SYS02':
         this.delete(data);
         break;
-
       case 'CM0201_1':
         this.moveStage(data);
         break;
-
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
-
       case 'CM0201_3':
         this.moveReason(data, true);
         break;
-
       case 'CM0201_4':
         this.moveReason(data, false);
         break;
-
       case 'CM0201_8':
         this.openOrCloseDeal(data, true);
         break;
-
       case 'CM0201_7':
         this.popupOwnerRoles(data);
         break;
-
       case 'CM0201_9':
         this.openOrCloseDeal(data, false);
         break;
-
       case 'CM0201_5':
         this.exportFile(data);
         break;
-
       case 'CM0201_6':
         this.approvalTrans(data);
         break;
-
       case 'CM0201_12':
         this.confirmOrRefuse(true, data);
         break;
-
       case 'CM0201_13':
         this.confirmOrRefuse(false, data);
         break;
-
       case 'CM0201_14':
         this.openFormBANT(data);
         break;
@@ -1285,35 +1271,6 @@ export class DealsComponent
   }
 
   release(data: any, category: any) {
-    // duyet cu
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError)
-    //       this.notificationsService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCmService
-    //         .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.dataSelected = q;
-    //             this.view.dataService.update(this.dataSelected).subscribe();
-    //             if (this.kanban) this.kanban.updateCard(this.dataSelected);
-    //           }
-    //           this.notificationsService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
-
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1367,13 +1324,11 @@ export class DealsComponent
                       .subscribe((res3) => {
                         if (res3) {
                           this.dataSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'DealsBusiness',
-                              dt?.recID,
-                              '0'
-                            )
+                          this.view.dataService
+                            .update(this.dataSelected)
                             .subscribe();
+                          if (this.kanban)
+                            this.kanban.updateCard(this.dataSelected);
                           this.notificationsService.notifyCode('SYS007');
                         } else this.notificationsService.notifyCode('SYS021');
                       });

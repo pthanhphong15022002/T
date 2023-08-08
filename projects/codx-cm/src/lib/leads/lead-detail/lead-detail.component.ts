@@ -21,6 +21,7 @@ import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-cus
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { CM_Deals } from '../../models/cm_model';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'codx-lead-detail',
@@ -28,6 +29,8 @@ import { CM_Deals } from '../../models/cm_model';
   styleUrls: ['./lead-detail.component.scss'],
 })
 export class LeadDetailComponent implements OnInit {
+  @ViewChild('tabObj')
+  public tabObj?: TabComponent;
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -60,7 +63,10 @@ export class LeadDetailComponent implements OnInit {
   isDataLoading = false;
 
   oldRecId: string = '';
+  isHidden: boolean = true;
 
+  isBool: boolean = false;
+  headerText:any = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -73,6 +79,11 @@ export class LeadDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.headerText= [
+      { text: 'Twitter', iconCss: 'e-twitter' },
+      { text: 'Facebook', iconCss: 'e-facebook' },
+      { text: 'WhatsApp', iconCss: 'e-whatsapp' },
+    ];
     this.tabControl = [
       {
         name: 'History',
@@ -129,16 +140,18 @@ export class LeadDetailComponent implements OnInit {
           template: this.referencesDeal,
           icon: 'icon-i-link',
         };
+
         if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
           this.promiseAllLoad();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
-
+        this.resetTab(this.dataSelected.applyProcess);
         this.tabControl.push(references);
       }else {
         this.tmpDeal = null;
       }
       this.getTags(this.dataSelected);
+
     }
   }
 
@@ -155,13 +168,26 @@ export class LeadDetailComponent implements OnInit {
   }
 
   changeFooter(e) {}
+  resetTab(data){
+    if(!this.tabObj) return;
+    this.isBool = data;
+    if(this.isBool) {
+      (this.tabObj as TabComponent).hideTab(1, true);
+      (this.tabObj as TabComponent).hideTab(2,false);
+    }
+    else {
+      (this.tabObj as TabComponent).hideTab(1, false );
+      (this.tabObj as TabComponent).hideTab(2, true);
+    }
+  }
 
   async promiseAllLoad() {
     this.isDataLoading = true;
-    this.applyProcess && await this.getListInstanceStep();
+    this.dataSelected.applyProcess && await this.getListInstanceStep();
     await this.getTmpDeal();
   }
   async executeApiCalls(){
+
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
   }

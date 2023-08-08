@@ -46,8 +46,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
   encapsulation: ViewEncapsulation.None,
-})
-export class LeadsComponent
+})export class LeadsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -676,7 +675,7 @@ export class LeadsComponent
         this.exportFiles(e, data);
         break;
       //cancel Aprover
-      case 'CM205_17':
+      case 'CM0205_17':
         this.cancelApprover(data);
         break;
       default:
@@ -1119,34 +1118,43 @@ export class LeadsComponent
       });
   }
   updateProcess(data, isCheck) {
-    // if(isCheck) {
-    //   this.notificationsService.notify('Tính năng đang phát triển');
-    //   return;
-    // }
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" ' + this.titleAction + ' "' || '',
+        '"' + data?.leadName + '" '+ this.titleAction+' ',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          var datas = [data.recID, this.applyForLead, isCheck];
           if (!isCheck) {
-            this.codxCmService.updateProcess(datas).subscribe((res) => {
-              if (res) {
-                this.dataSelected = res[0];
-                this.dataSelected = JSON.parse(
-                  JSON.stringify(this.dataSelected)
-                );
-
-                this.notificationsService.notifyCode('SYS007');
-                this.view.dataService.update(this.dataSelected).subscribe();
+            let datas = [data.recID, this.applyForLead, isCheck,this.processId,'',''];
+            this.getApiUpdateProcess(datas,[]);
+          }
+          else {
+            let datas = [data.leadName,data.leadID,this.processId,this.applyForLead];
+            this.codxCmService.addInstanceNoRecId(datas).subscribe((res)=>{
+              if(res) {
+                  let dataInstance = [data.recID, this.applyForLead, isCheck,this.processId ,res[0],res[1]];
+                  this.getApiUpdateProcess(dataInstance,res[2]);
               }
-              this.detectorRef.detectChanges();
-            });
-          } else {
+            })
           }
         }
       });
+  }
+  getApiUpdateProcess(datas,listStep){
+    this.codxCmService.updateProcess(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res[0];
+        this.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+        if(listStep.length > 0 && listStep) {
+          this.detailViewLead.reloadListStep(listStep);
+        }
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected).subscribe();
+      }
+      this.detectorRef.detectChanges();
+    });
   }
 
   openOrCloseLead(data, check) {
@@ -1483,33 +1491,29 @@ export class LeadsComponent
     if (dt?.applyProcess && dt?.processID) {
       this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
-          this.codxCmService
-            .getESCategoryByCategoryID(process.processNo)
-            .subscribe((res) => {
-              this.approvalTransAction(dt, res);
-            });
+          this.approvalTransAction(dt, process.processNo);
         } else {
           this.notificationsService.notifyCode('DP040');
         }
       });
     } else {
-      this.codxCmService
-        .getESCategoryByCategoryID('ES_CM0504')
-        .subscribe((res) => {
-          this.approvalTransAction(dt, res);
-        });
+      this.approvalTransAction(dt, 'ES_CM0504');
     }
   }
-  approvalTransAction(data, category) {
-    if (!category) {
-      this.notificationsService.notifyCode('ES028');
-      return;
-    }
-    if (category.eSign) {
-      //kys soos
-    } else {
-      this.release(data, category);
-    }
+  approvalTransAction(data, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((category) => {
+        if (!category) {
+          this.notificationsService.notifyCode('ES028');
+          return;
+        }
+        if (category.eSign) {
+          //kys soos
+        } else {
+          this.release(data, category);
+        }
+      });
   }
   release(data: any, category: any) {
     //duyet moi
@@ -1544,46 +1548,48 @@ export class LeadsComponent
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-          if (process) {
-            this.codxCmService
-              .getESCategoryByCategoryID(process.processNo)
-              .subscribe((res2: any) => {
-                if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxShareService
-                      .codxCancel(
-                        'CM',
-                        dt?.recID,
-                        this.view.formModel.entityName,
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          this.dataSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'CasesBusiness',
-                              dt?.recID,
-                              '0'
-                            )
-                            .subscribe();
-                          this.notificationsService.notifyCode('SYS007');
-                        } else this.notificationsService.notifyCode('SYS021');
-                      });
-                  }
-                }
-              });
-          } else {
-            this.notificationsService.notifyCode('DP040');
-          }
-        });
+        if (dt.applyApprover) {
+          this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+            if (process) {
+              this.cancelAction(dt, process.processNo);
+            } else {
+              this.notificationsService.notifyCode('DP040');
+            }
+          });
+        } else {
+          this.cancelAction(dt, 'ES_CM0504');
+        }
       }
     });
+  }
+
+  cancelAction(dt, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((res2: any) => {
+        if (res2) {
+          if (res2?.eSign == true) {
+            //trình ký
+          } else if (res2?.eSign == false) {
+            //kí duyet
+            this.codxShareService
+              .codxCancel(
+                'CM',
+                dt?.recID,
+                this.view.formModel.entityName,
+                null,
+                null
+              )
+              .subscribe((res3) => {
+                if (res3) {
+                  this.dataSelected.approveStatus = '0';
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                } else this.notificationsService.notifyCode('SYS021');
+              });
+          }
+        } else this.notificationsService.notifyCode('ES028');
+      });
   }
   //end duyet
   //--------------------------------------------------------------------//
