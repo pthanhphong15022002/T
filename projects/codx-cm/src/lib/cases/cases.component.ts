@@ -392,6 +392,7 @@ export class CasesComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
+        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -432,7 +433,7 @@ export class CasesComponent
       eventItem.disabled = data.status != '1';
     };
 
-    let isAprove = (eventItem, data) => {
+    let isApprover = (eventItem, data) => {
       eventItem.disabled = eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -447,6 +448,7 @@ export class CasesComponent
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
+      eventItem.isblur = false;
     };
 
     if (this.caseType === '1') {
@@ -465,8 +467,8 @@ export class CasesComponent
         SYS04: isCopy,
         SYS102: isDelete,
         SYS02: isDelete,
-        CM0401_6: isAprove,
-        CM0402_6: isAprove,
+        CM0401_6: isApprover,
+        CM0402_6: isApprover,
         CM0401_11: isRejectApprover,
         CM0402_11: isRejectApprover,
       };

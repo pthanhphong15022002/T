@@ -1,0 +1,17 @@
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  [toolbarDisplay]="false"
+  (onActions)="onAction($event)"
+  [viewActiveType]="7"
+>
+</codx-views>
+
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data?.date)"></div>
+</ng-template>
+
+<ng-template #contentTmp let-data>
+  <h1>DATA view ne</h1>
+</ng-template>
