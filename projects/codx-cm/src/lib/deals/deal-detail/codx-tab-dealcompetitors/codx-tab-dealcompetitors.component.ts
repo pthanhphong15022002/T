@@ -85,7 +85,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
-    this.request.funcID = 'CM0201';
     this.className = 'DealsBusiness';
     this.fetch().subscribe((item) => {
       this.lstDealCompetitors = item;

@@ -158,7 +158,7 @@
       </span>
       <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
-    <div *ngIf="funcID == 'CM0101'" class="mb-1 d-flex align-items-center">
+    <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="mb-1 d-flex align-items-center">
       <div
         *ngIf="
           data?.custGroupID != null && data?.custGroupID?.trim() != '';
@@ -246,14 +246,14 @@
     </div>
     <div
       [ngClass]="
-        funcID == 'CM0101'
+        (funcID == 'CM0101' || funcID == 'CM0105')
           ? 'd-flex justify-content-between align-items-center'
           : 'd-flex justify-content-end'
       "
     >
       <div
         class="justify-content-start align-items-end codx-badge"
-        *ngIf="funcID == 'CM0101'"
+        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
       >
         <codx-vll
           [name]="gridViewSetup?.Status?.referedValue"
@@ -280,7 +280,7 @@
           class="h-25px"
           [isToolTip]="true"
           [width]="25"
-          [objectId]="funcID == 'CM0101' ? data?.owner : data?.createdBy"
+          [objectId]="funcID == 'CM0101' || funcID == 'CM0105' ? data?.owner : data?.createdBy"
           [objectType]="'AD_Users'"
           [numberImages]="1"
         >

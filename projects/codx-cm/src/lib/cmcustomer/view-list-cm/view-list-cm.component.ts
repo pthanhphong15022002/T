@@ -41,7 +41,7 @@ export class ViewListCmComponent implements OnInit {
     this.getAdressNameByIsDefault(this.dataSelected?.recID, this.entityName);
     if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
       this.getListContactByObjectID(this.dataSelected?.recID);
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       this.countDealsByCustomerID(this.dataSelected?.recID);
       var lst = await firstValueFrom(this.api.execSv<any>('CM', 'ERM.Business.CM','ContractsBusiness','CountContractByCustomerIDAsync', this.dataSelected?.recID));
       this.countContract = lst > 0 ? lst : 0;
@@ -117,7 +117,7 @@ export class ViewListCmComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       return data.customerName;
     } else if (this.funcID == 'CM0102') {
       return data.contactName;
@@ -148,7 +148,7 @@ export class ViewListCmComponent implements OnInit {
 
       if (this.funcID == 'CM0101' || this.funcID == 'CM0103')
         this.getListContactByObjectID(this.dataSelected.recID);
-      if (this.funcID == 'CM0101') {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.countDealsByCustomerID(this.dataSelected.recID);
       }
     });

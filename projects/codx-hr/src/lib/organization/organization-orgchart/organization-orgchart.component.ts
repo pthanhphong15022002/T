@@ -190,7 +190,7 @@ export class OrganizationOrgchartComponent {
   @Input() dataService: CRUDService = null;
   @Output() clickMFunction = new EventEmitter();
 
-  scaleNumber: number = 0.5;
+  scaleNumber: number = 0.7;
   width = 250;
   height = 350;
   maxWidth = 300;
@@ -932,6 +932,7 @@ export class OrganizationOrgchartComponent {
         )
         .subscribe((res: any) => {
           if (res) {
+            console.log(res);
             // this.dataSource = this.newDataManager(res);
             var items: Array<OrgItemConfig> = [];
 
