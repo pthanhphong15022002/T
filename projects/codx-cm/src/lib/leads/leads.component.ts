@@ -340,7 +340,61 @@ export class LeadsComponent
     });
   }
 
-  onLoading(e) {}
+  onLoading(e) {
+    this.loadViewModel();
+  }
+
+  loadViewModel() {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        // toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
+    // this.cache.viewSettings(this.funcID).subscribe((views) => {
+    //   this.viewsDefault.forEach((v, index) => {
+    //     let idx = views.findIndex((x) => x.view == v.type);
+    //     if (idx != -1) {
+    //       v.hide = false;
+    //       if (views[idx].isDefault) v.action = true;
+    //       else v.active = false;
+    //     } else {
+    //       v.hide = true;
+    //       v.active = false;
+    //     }
+    //     // if (!(this.funcID == 'CM0201' && v.type == '6'))
+    //     this.views.push(v);
+    //   });
+    // });
+    //this.changeDetectorRef.detectChanges();
+  }
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -381,18 +435,21 @@ export class LeadsComponent
 
   getRoleMoreFunction(type) {
     let functionMappings;
-    let isDisabled = (eventItem, data) => { // Mặc định
+    let isDisabled = (eventItem, data) => {
+      // Mặc định
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         this.checkMoreReason(data) ||
         !data.applyProcess;
     };
-    let isCRD = (eventItem, data) => { // Thêm, xóa, copy
+    let isCRD = (eventItem, data) => {
+      // Thêm, xóa, copy
       eventItem.disabled = data.closed || this.checkMoreReason(data);
       // eventItem.disabled  = false;
     };
-    let isEdit = (eventItem, data) => { // Chỉnh sửa
+    let isEdit = (eventItem, data) => {
+      // Chỉnh sửa
       eventItem.disabled = eventItem.disabled =
         data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
@@ -404,43 +461,57 @@ export class LeadsComponent
       // Mở tiềm năng
       eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : false;
     };
-    let isStartDay = (eventItem, data) => { // Bắt đầu ngay
-      eventItem.disabled = data?.alloweStatus == '1' ?
-        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess : false;
+    let isStartDay = (eventItem, data) => {
+      // Bắt đầu ngay
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? !['0', '1'].includes(data.status) ||
+            data.closed ||
+            !data.applyProcess
+          : false;
     };
     let isConvertLead = (eventItem, data) => {
       eventItem.disabled = data.write
         ? !['13', '3'].includes(data.status) || data.closed
         : true;
     };
-    let isOwner = (eventItem, data) => { // Phân bổ
-      eventItem.disabled = data.full ?
-        !['0', '1', '2'].includes(data.status) || data.closed : false;
+    let isOwner = (eventItem, data) => {
+      // Phân bổ
+      eventItem.disabled = data.full
+        ? !['0', '1', '2'].includes(data.status) || data.closed
+        : false;
     };
-    let isFailReason = (eventItem, data) => { // Đánh dấu thất bại
+    let isFailReason = (eventItem, data) => {
+      // Đánh dấu thất bại
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         (data.status != '13' && this.checkMoreReason(data)) ||
         !data.applyProcess;
     };
-    let isDisabledDefault = (eventItem, data) => { // Mặc định tắt hết
+    let isDisabledDefault = (eventItem, data) => {
+      // Mặc định tắt hết
       eventItem.disabled = true;
     };
-    let isStartFirst = (eventItem, data) => { // Làm lại khi tiềm năng đã thành công or thất bại
+    let isStartFirst = (eventItem, data) => {
+      // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = !['3', '5'].includes(data.status);
     };
-    let isChangeStatus = (eventItem, data) => { // Đổi trạng thái cho tiềm năng ko có quy trình
+    let isChangeStatus = (eventItem, data) => {
+      // Đổi trạng thái cho tiềm năng ko có quy trình
       eventItem.disabled = this.checkApplyProcess(data);
     };
 
-    let isUpdateProcess = (eventItem, data) => { // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
+    let isUpdateProcess = (eventItem, data) => {
+      // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.applyProcess;
     };
-    let isDeleteProcess = (eventItem, data) => { // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
+    let isDeleteProcess = (eventItem, data) => {
+      // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
       eventItem.disabled = !data.applyProcess;
     };
-    let isAprove = (eventItem, data) => { // Gửi duyệt của a thảo
+    let isAprove = (eventItem, data) => {
+      // Gửi duyệt của a thảo
       eventItem.disabled = eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -450,7 +521,8 @@ export class LeadsComponent
         this.checkMoreReason(data);
     };
 
-    let isRejectApprover = (eventItem, data) => { // Gửi duyệt của a thảo
+    let isRejectApprover = (eventItem, data) => {
+      // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -806,6 +878,7 @@ export class LeadsComponent
           titleAction: 'Chỉnh sửa tiềm năng',
           applyFor: this.applyForLead,
           processId: this.processId,
+          gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
