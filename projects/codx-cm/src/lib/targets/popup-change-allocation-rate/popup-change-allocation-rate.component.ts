@@ -153,9 +153,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
 
   onSave() {
     if (!this.checkTarget()) {
-      this.notiService.notifyCode(
-        'CM032'
-      );
+      this.notiService.notifyCode('CM032');
       return;
     }
 
@@ -400,11 +398,34 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         var indexQuarter = this.lstQuarters.findIndex((x) =>
           this.checkMonthQuarter(parseInt(x.quarter), parseInt(month))
         );
+
         if (indexQuarter != -1) {
           main =
             type == 'weight'
               ? this.lstQuarters[indexQuarter].weight
               : this.lstQuarters[indexQuarter].target;
+          let targetNoExit = 0;
+          this.lstMonths.forEach((element) => {
+            let monthNoExit = parseInt(element.month);
+            if (
+              this.checkMonthQuarter(
+                parseInt(this.lstQuarters[indexQuarter].quarter),
+                monthNoExit
+              ) && parseInt(month) != monthNoExit
+            ) {
+              if (type == 'weight') {
+                targetNoExit += element.weight;
+              } else {
+                targetNoExit += element.target;
+              }
+            }
+          });
+          if ((targetNoExit + target) > main) {
+            this.editingItem = null;
+            this.typeChange = '';
+            this.notiService.notifyCode('CM035');
+            return;
+          }
         }
       }
       if (type == 'weight') {
@@ -433,7 +454,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
             this.data.target,
             this.lstMonths
           );
-          this.updateQuarterByMonth();
+          this.updateQuarterByMonth(this.lstMonths[index].month);
           this.updateListLines();
           this.isSave = true;
         }
@@ -464,7 +485,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
             this.data.target,
             this.lstMonths
           );
-          this.updateQuarterByMonth();
+          this.updateQuarterByMonth(this.lstMonths[index].month);
           this.updateListLines();
           this.isSave = true;
         }
@@ -572,11 +593,11 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     }
   }
 
-  updateQuarterByMonth(){
+  updateQuarterByMonth(monthExit) {
     this.lstQuarters.forEach((res) => {
       let targetQua = 0;
       for (let item of this.lstMonths) {
-        var month = parseInt(item.month)
+        var month = parseInt(item.month);
         if (this.checkMonthQuarter(parseInt(res.quarter), month)) {
           targetQua += item.target;
         }
@@ -586,6 +607,10 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         } else {
           res.weight = 0;
         }
+      }
+
+      if (this.checkMonthQuarter(parseInt(res.quarter), parseInt(monthExit))) {
+        res.isExit = true;
       }
     });
   }

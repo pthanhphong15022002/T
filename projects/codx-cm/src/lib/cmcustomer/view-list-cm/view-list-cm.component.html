@@ -46,7 +46,7 @@
         <div class="d-flex align-items-center mb-1 min-w-200px">
           <div class="text-dark line-clamp line-clamp-1 me-2 fs-6 fw-bold">
             {{
-              funcID == "CM0101"
+              funcID == "CM0101" || funcID == "CM0105"
                 ? data.customerName
                 : funcID == "CM0102"
                 ? data.contactName
@@ -300,7 +300,7 @@
         >
       </div>
 
-      <div *ngIf="funcID == 'CM0101'" class="d-flex align-items-center me-4">
+      <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="d-flex align-items-center me-4">
         <span
           class="icon-add_shopping_cart icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountDeal"
@@ -314,7 +314,7 @@
         <span class="text-gray-900">{{ countDeal }}</span>
       </div>
 
-      <div *ngIf="funcID == 'CM0101'" class="d-flex align-items-center me-4">
+      <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="d-flex align-items-center me-4">
         <span
           class="icon-shopping_bag icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountContract"

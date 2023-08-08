@@ -337,7 +337,6 @@ export class TargetsComponent
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
-      this.currencyID = e.data;
     }
     this.detectorRef.detectChanges();
   }
@@ -349,6 +348,7 @@ export class TargetsComponent
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
+      this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
       if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {

@@ -141,7 +141,7 @@ export const routes: Routes = [
       {
         path: 'calendars/:funcID',
         component: CalendarsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'dashboard/:funcID',
