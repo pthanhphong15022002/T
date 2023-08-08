@@ -94,6 +94,9 @@ export class PopupAddTargetComponent {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
       this.lstTargetLines = data?.data?.lstTargetLines;
+      this.currencyID = this.data.currencyID;
+      this.exchangeRate = this.data.exchangeRate;
+
       let date = new Date().setFullYear(this.data.year);
       this.date = new Date(date);
     } else {
@@ -157,7 +160,6 @@ export class PopupAddTargetComponent {
           res.target =
             (res.target / exchangeRate?.exchRate) * this.exchangeRate;
         });
-
       }
       this.exchangeRate = exchangeRate?.exchRate ?? 0;
     }
@@ -171,10 +173,21 @@ export class PopupAddTargetComponent {
     if (this.action === 'add') {
       this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines, this.currencyIDSys, this.exchangeRate];
+      data = [
+        this.data,
+        this.lstTargetLines,
+        this.currencyIDSys,
+        this.exchangeRate,
+      ];
     } else {
       op.method = 'UpdateTargetAndTargetLineAsync';
-      data = [this.data, this.lstTargetLines, this.lstTargetLinesDelete, this.currencyIDSys, this.exchangeRate];
+      data = [
+        this.data,
+        this.lstTargetLines,
+        this.lstTargetLinesDelete,
+        this.currencyIDSys,
+        this.exchangeRate,
+      ];
     }
     op.className = 'TargetsBusiness';
 
@@ -219,9 +232,7 @@ export class PopupAddTargetComponent {
     }
 
     if (!this.checkTarget()) {
-      this.notiService.notifyCode(
-        'CM032'
-      );
+      this.notiService.notifyCode('CM032');
       return;
     }
 
@@ -711,7 +722,6 @@ export class PopupAddTargetComponent {
           });
           this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
           this.lstTargetLines = res[1] ?? [];
-
         } else {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
@@ -839,9 +849,7 @@ export class PopupAddTargetComponent {
   dbClick(data, type) {
     if (type == 'target') {
       if (this.data.target == 0) {
-        this.notiService.notifyCode(
-          'CM033'
-        );
+        this.notiService.notifyCode('CM033');
         return;
       }
     }
