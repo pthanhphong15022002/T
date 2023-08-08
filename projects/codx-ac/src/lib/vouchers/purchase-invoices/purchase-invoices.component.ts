@@ -1,12 +1,11 @@
 import {
   AfterViewChecked,
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -22,6 +21,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable } from 'rxjs';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../journals/journals.service';
 import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
 import {
   SumFormat,
@@ -31,7 +31,6 @@ import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from './interfaces/IPurchaseInvoiceLine.interface';
 import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
 import { PurchaseInvoiceService } from './purchase-invoices.service';
-import { JournalService } from '../../journals/journals.service';
 
 enum MF {
   GuiDuyet = 'ACT060102',
@@ -171,6 +170,8 @@ export class PurchaseinvoicesComponent
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.purchaseInvoiceService.journal = this.journal = journal;
     });
+
+    // this.purchaseInvoiceService.getCache();
   }
 
   ngAfterViewInit() {
