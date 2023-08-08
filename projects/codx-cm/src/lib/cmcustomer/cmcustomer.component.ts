@@ -194,7 +194,7 @@ export class CmCustomerComponent
             'CM',
             'ERM.Business.CM',
             'CustomerGroupsBusiness',
-            'GetListDealCompetitorsAsync'
+            'GetListCustGroupsAsync'
           )
         );
         this.cache

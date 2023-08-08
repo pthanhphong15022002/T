@@ -84,14 +84,16 @@
             [readonly]="taskGroupID || listGroupTask.length === 0"
           ></ejs-dropdownlist>
         </div> -->
-        <!-- <div>
+        <div>
           <ejs-combobox
+          #sample
           [dataSource]="listGroupTask"
           (change)="changeCombobox($event, 'taskGroupID')"
           [fields]="fieldsGroup"
           [value]="stepsTasks?.taskGroupID"
+          [allowCustom]="false"
         ></ejs-combobox>
-        </div> -->
+        </div>
       </div>
     </div>
     <!-- Ten Cong Viec -->
