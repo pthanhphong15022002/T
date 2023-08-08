@@ -171,8 +171,10 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   }
   changeValueText(view: any, e: any) {
     var data = e?.data;
-    this.filter[view] = [data];
+    if(data) this.filter[view] = [data];
+    else if(e?.component?.type == "text") delete this.filter[view];
     this.searchText();
+   
   }
   changeValueCbb(id: any = '', view: any, e: any) {
     var data = e?.data;
@@ -188,7 +190,11 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     //
     this.searchText();
   }
-  changeValueDate(view: any, e: any) {}
+  changeValueDate(view: any, e: any) {
+    if(e?.data?.fromDate) this.filter[view] = [e?.data?.fromDate];
+    else delete this.filter[view];
+    this.searchText();
+  }
   searchText(changePage = false) {
     if (changePage == false) this.page = 1;
     this.api
@@ -304,7 +310,8 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
             var obj = {
               id: element[cbb?.valueMember],
               name: element[cbb?.viewMember],
-              view: cbb?.viewMember,
+              //view: cbb?.viewMember,
+              view: data?.fieldName
             };
             result.push(obj);
           });

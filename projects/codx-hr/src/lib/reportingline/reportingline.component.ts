@@ -117,7 +117,7 @@ export class ReportinglineComponent extends UIComponent {
         sameData: false,
         request: this.request,
         model: {
-          resizable: true,
+          resizable: false,
           template: this.tmpTree,
           panelRightRef: this.tmpOrgchart,
           resourceModel: { parentIDField: 'ReportTo' },
