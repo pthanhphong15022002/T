@@ -77,14 +77,14 @@ export class PopupPolicyalComponent
   lstEmpStatus: any = []
   lstLabourType: any = []
 
-  lstRecEmptyorgUnitID: any = []
-  lstRecEmptyjobLevel: any = []
-  lstRecEmptypositionID: any = []
-  lstRecEmptyemployeeTypeID: any = []
-  lstRecEmptylabourType: any = []
-  lstRecEmptycontractTypeID: any = []
-  lstRecEmptyemployeeID: any = []
-  lstRecEmptyemployeeStatus: any = []
+  // lstRecEmptyorgUnitID: any = []
+  // lstRecEmptyjobLevel: any = []
+  // lstRecEmptypositionID: any = []
+  // lstRecEmptyemployeeTypeID: any = []
+  // lstRecEmptylabourType: any = []
+  // lstRecEmptycontractTypeID: any = []
+  // lstRecEmptyemployeeID: any = []
+  // lstRecEmptyemployeeStatus: any = []
   
   lstPolicyBeneficiariesApply: any = []
   lstPolicyBeneficiariesExclude: any = []
@@ -1306,34 +1306,34 @@ export class PopupPolicyalComponent
       lstFieldName.push(fieldName);
       newObj[fieldName] = '';
     }
-    for(let i = 0; i < lstFieldName.length; i++){
-      switch(lstFieldName[i]){
-        case 'orgUnitID':
-          this.lstRecEmptyorgUnitID.push(newObj['recID']);
-          break;
-        case 'jobLevel':
-          this.lstRecEmptyjobLevel.push(newObj['recID']);
-          break;
-        case 'positionID':
-          this.lstRecEmptypositionID.push(newObj['recID']);
-          break;
-        case 'employeeTypeID':
-          this.lstRecEmptyemployeeTypeID.push(newObj['recID']);
-          break;
-        case 'labourType':
-          this.lstRecEmptylabourType.push(newObj['recID']);
-          break;
-        case 'contractTypeID':
-          this.lstRecEmptycontractTypeID.push(newObj['recID']);
-          break;
-        case 'employeeID':
-          this.lstRecEmptyemployeeID.push(newObj['recID']);
-          break;
-        case 'employeeStatus':
-          this.lstRecEmptyemployeeStatus.push(newObj['recID']);
-          break;
-      }
-    }
+    // for(let i = 0; i < lstFieldName.length; i++){
+    //   switch(lstFieldName[i]){
+    //     case 'orgUnitID':
+    //       this.lstRecEmptyorgUnitID.push(newObj['recID']);
+    //       break;
+    //     case 'jobLevel':
+    //       this.lstRecEmptyjobLevel.push(newObj['recID']);
+    //       break;
+    //     case 'positionID':
+    //       this.lstRecEmptypositionID.push(newObj['recID']);
+    //       break;
+    //     case 'employeeTypeID':
+    //       this.lstRecEmptyemployeeTypeID.push(newObj['recID']);
+    //       break;
+    //     case 'labourType':
+    //       this.lstRecEmptylabourType.push(newObj['recID']);
+    //       break;
+    //     case 'contractTypeID':
+    //       this.lstRecEmptycontractTypeID.push(newObj['recID']);
+    //       break;
+    //     case 'employeeID':
+    //       this.lstRecEmptyemployeeID.push(newObj['recID']);
+    //       break;
+    //     case 'employeeStatus':
+    //       this.lstRecEmptyemployeeStatus.push(newObj['recID']);
+    //       break;
+    //   }
+    // }
     this.lstPolicyBeneficiariesApply.push(newObj)
     
     this.df.detectChanges()
@@ -1632,24 +1632,27 @@ export class PopupPolicyalComponent
   }
 
   onClickDeleteObject(data){
-    
-    if(this.currentTab == 'applyObj'){
-      let index = this.lstPolicyBeneficiariesApply.indexOf(data);
-      if(index != -1){
-        this.lstPolicyBeneficiariesApply.splice(index, 1);
-        this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
-        this.fixPriorityIndex(this.lstPolicyBeneficiariesApply)
+    this.notify.alertCode('SYS030').subscribe((x) =>{
+      if (x.event?.status == 'Y') {
+        if(this.currentTab == 'applyObj'){
+          let index = this.lstPolicyBeneficiariesApply.indexOf(data);
+          if(index != -1){
+            this.lstPolicyBeneficiariesApply.splice(index, 1);
+            this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
+            this.fixPriorityIndex(this.lstPolicyBeneficiariesApply)
+          }
+        }
+        else if(this.currentTab == 'subtractObj'){
+          let index = this.lstPolicyBeneficiariesExclude.indexOf(data);
+          if(index != -1){
+            this.lstPolicyBeneficiariesExclude.splice(index, 1);
+            this.lstPolicyBeneficiariesExclude = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
+            this.fixPriorityIndex(this.lstPolicyBeneficiariesExclude)
+          }
+        }
+        this.df.detectChanges();
       }
-    }
-    else if(this.currentTab == 'subtractObj'){
-      let index = this.lstPolicyBeneficiariesExclude.indexOf(data);
-      if(index != -1){
-        this.lstPolicyBeneficiariesExclude.splice(index, 1);
-        this.lstPolicyBeneficiariesExclude = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
-        this.fixPriorityIndex(this.lstPolicyBeneficiariesExclude)
-      }
-    }
-    this.df.detectChanges();
+    })
   }
 
   onClickHideComboboxPopup(event){
@@ -1683,10 +1686,10 @@ export class PopupPolicyalComponent
               id:lstId[i]
             });
           }
-          let indexEmpty = this.lstRecEmptyorgUnitID.indexOf(this.currentRec);
-          if(indexEmpty !== -1){
-            this.lstRecEmptyorgUnitID.splice(indexEmpty,1);
-          }
+          // let indexEmpty = this.lstRecEmptyorgUnitID.indexOf(this.currentRec);
+          // if(indexEmpty !== -1){
+          //   this.lstRecEmptyorgUnitID.splice(indexEmpty,1);
+          // }
           break;
         case 'JobLevels':
           if(this.currentTab == 'applyObj'){

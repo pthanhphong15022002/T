@@ -22,6 +22,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
+import { TMDashboardService } from './tmdashboard.service';
 
 export class GridModels {
   pageSize: number;
@@ -66,7 +67,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   teamDBData: any;
   assignDBData: any;
 
-  isEditMode: boolean = true;
+  isEditMode: boolean = false;
 
   paletteColor = ['#06ddb8', '#a6dff5'];
 
@@ -358,7 +359,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
-    private routerActive: ActivatedRoute
+    private routerActive: ActivatedRoute,
+    private tmDBService: TMDashboardService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -395,6 +397,17 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.datas3 = JSON.parse(
       '[{"panelId":"0.9240829789281733_layout","data":"1"},{"panelId":"0.0014514686635016538_layout","data":"2"},{"panelId":"0.7062776900074157_layout","data":"3"},{"panelId":"0.19694528981098758_layout","data":"4"},{"panelId":"0.3905464098807283_layout","data":"5"},{"panelId":"0.6324365355784578_layout","data":"6"},{"panelId":"0.7307926980008612_layout","data":"7"},{"panelId":"0.09230805583161117_layout","data":"8"},{"panelId":"0.4142359240869473_layout","data":"9"},{"panelId":"0.13567559377635385_layout","data":"10"},{"panelId":"0.0919781174656844_layout","data":"11"}]'
     );
+
+    this.tmDBService
+      .getReportsByModule(this.funcID.substring(0, 2))
+      .subscribe((report: any[]) => {
+        const lstReportID = report.map((report) => report.reportID);
+        lstReportID.forEach((reportID: string) => {
+          this.tmDBService.getChartByReportID(reportID).subscribe((chart) => {
+            console.log(chart);
+          });
+        });
+      });
   }
 
   ngAfterViewInit(): void {

@@ -438,6 +438,14 @@ export class CodxCmService {
       data
     );
   }
+  addInstanceNoRecId(data: any) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'AddInstanceByIdCMAsync',
+      data
+    );
+  }
   copyFileAvata(idOld, idNew, entityName = null) {
     return this.api.exec<any>('DM', 'FileBussiness', 'CoppyFileByIdAsync', [
       idNew,

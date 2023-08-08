@@ -1114,7 +1114,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costAmt = line.costPrice * line.quantity;
+        setTimeout(() => {
+          line.costAmt = line.costPrice * line.quantity;
+          this.dt.detectChanges();
+        }, 100);
       }
     }
   }
@@ -1125,7 +1128,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costPrice = line.costAmt / line.quantity
+        setTimeout(() => {
+          line.costPrice = line.costAmt / line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+        
       }
     }
   }

@@ -567,12 +567,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         ) {
           this.dataLine.isBrigdeAcct = false;
         } else {
-          this.dataLine.isBrigdeAcct =
-            (
-              this.acService.getCacheValue(
-                'account',
-                this.dataLine.offsetAcctID
-              ) as any
+          this.dataLine.isBrigdeAcct =(this.acService.getCacheValue('account',this.dataLine.offsetAcctID) as any
             )?.accountType == '5'
               ? true
               : false;
@@ -584,8 +579,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.dataLine.cr = 0;
           this.dataLine.cR2 = 0;
         }
-        this.dataLine = this.getValueByExRate(this.cashpayment,this.dataLine,true);
-        this.dt.detectChanges();
+        setTimeout(() => {
+          this.dataLine = this.getValueByExRate(this.cashpayment,this.dataLine,true);
+          this.dt.detectChanges();
+        }, 100);  
         // this.acService
         //   .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
         //     this.cashpayment,
@@ -608,21 +605,25 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         if ((this.dataLine.cr! = 0 && this.dataLine.dR2 != 0)) {
           this.dataLine.dr = 0;
           this.dataLine.dR2 = 0;
-        }
-        this.acService
-          .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
-            this.cashpayment,
-            this.dataLine,
-            e.field,
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              this.dataLine.dR2 = res.dR2;
-              this.dataLine.cR2 = res.cR2;
-              this.dt.detectChanges();
-            }
-          });
+        }       
+        setTimeout(() => {
+          this.dataLine = this.getValueByExRate(this.cashpayment,this.dataLine,false);
+          this.dt.detectChanges();
+        }, 100);
+        // this.acService
+        //   .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
+        //     this.cashpayment,
+        //     this.dataLine,
+        //     e.field,
+        //   ])
+        //   .pipe(takeUntil(this.destroy$))
+        //   .subscribe((res: any) => {
+        //     if (res) {
+        //       this.dataLine.dR2 = res.dR2;
+        //       this.dataLine.cR2 = res.cR2;
+        //       this.dt.detectChanges();
+        //     }
+        //   });
         if (this.journal.entryMode == '2') {
           this.consTraintGrid();
         }
@@ -641,19 +642,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             ) as any
           )?.multiCurrency
         ) {
-          this.acService
-            .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
-              this.cashpayment,
-              this.dataLine,
-              e.field,
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res) {
-                this.dataLine.dr = res.dr;
-                this.dt.detectChanges();
-              }
-            });
+          setTimeout(() => {
+            if (this.cashpayment.multi) {
+              this.dataLine.dr = this.cashpayment.exchangeRate != 0 ? this.roundService.amount((this.dataLine.cR2 / this.cashpayment.exchangeRate),this.cashpayment.currencyID) : this.dataLine.cR2;
+            }else{
+              this.dataLine.dr = this.roundService.amount((this.dataLine.cR2 * this.cashpayment.exchangeRate),this.cashpayment.currencyID);
+            }
+          }, 100);      
+          // this.acService
+          //   .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
+          //     this.cashpayment,
+          //     this.dataLine,
+          //     e.field,
+          //   ])
+          //   .pipe(takeUntil(this.destroy$))
+          //   .subscribe((res: any) => {
+          //     if (res) {
+          //       this.dataLine.dr = res.dr;
+          //       this.dt.detectChanges();
+          //     }
+          //   });
         }
         break;
       case 'cr2':
@@ -670,25 +678,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             ) as any
           )?.multiCurrency
         ) {
-          this.acService
-            .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
-              this.cashpayment,
-              this.dataLine,
-              e.field,
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res) {
-                this.dataLine.cr = res.cr;
-                this.dt.detectChanges();
-              }
-            });
+          setTimeout(() => {
+            if (this.cashpayment.multi) {
+              this.dataLine.cr = this.cashpayment.exchangeRate != 0 ? this.roundService.amount((this.dataLine.cR2 / this.cashpayment.exchangeRate),this.cashpayment.currencyID) : this.dataLine.cR2;
+            }else{
+              this.dataLine.cr = this.roundService.amount((this.dataLine.cR2 * this.cashpayment.exchangeRate),this.cashpayment.currencyID);
+            }
+          }, 100);  
+          // this.acService
+          //   .execApi('AC', this.classNameLine, 'ValueChangedAsync', [
+          //     this.cashpayment,
+          //     this.dataLine,
+          //     e.field,
+          //   ])
+          //   .pipe(takeUntil(this.destroy$))
+          //   .subscribe((res: any) => {
+          //     if (res) {
+          //       this.dataLine.cr = res.cr;
+          //       this.dt.detectChanges();
+          //     }
+          //   });
         }
         break;
       case 'note':
         this.dataLine.reasonID = e?.itemData?.ReasonID;
-        this.dataLine.accountID = e?.itemData?.OffsetAcctID;
-        this.dt.detectChanges();
+        setTimeout(() => {
+          this.dataLine.accountID = e?.itemData?.OffsetAcctID;
+          this.dt.detectChanges();
+        }, 100);
         break;
       default:
         break;
@@ -2015,19 +2032,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     let dRemainAmt = this.calcRemainAmt(this.cashpayment?.totalAmt);
     if (dRemainAmt > 0) {
       this.dataLine.dr = dRemainAmt;
+      this.dataLine = this.getValueByExRate(this.cashpayment,this.dataLine,true);
       // this.dataLine = this.getValueByExRate(true);
-      this.api
-        .exec('AC', this.classNameLine, 'SetDefaultAsync', [
-          this.cashpayment,
-          this.dataLine,
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataLine.dR2 = res.dR2;
-            this.dataLine.cR2 = res.cR2;
-          }
-        });
+      // this.api
+      //   .exec('AC', this.classNameLine, 'SetDefaultAsync', [
+      //     this.cashpayment,
+      //     this.dataLine,
+      //   ])
+      //   .pipe(takeUntil(this.destroy$))
+      //   .subscribe((res: any) => {
+      //     if (res) {
+      //       this.dataLine.dR2 = res.dR2;
+      //       this.dataLine.cR2 = res.cR2;
+      //     }
+      //   });
     }
   }
 
@@ -2498,7 +2516,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   getValueByExRate(master, line, isdr){
     if (isdr) {
       let dDR2 = 0;
-      if (master.mutil) {
+      if (master.multi) {
         dDR2 = this.roundService.baseCurr(line.dr * master.exchangeRate);
       }else{
         dDR2 = master.exchangeRate != 0 ? this.roundService.baseCurr(line.dr / master.exchangeRate) : line.dr;
@@ -2511,7 +2529,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }else{
       let dCR2 = 0;
-      if (master.mutil) {
+      if (master.multi) {
         dCR2 = this.roundService.baseCurr(line.cr * master.exchangeRate);
       }else{
         dCR2 = master.exchangeRate != 0 ? this.roundService.baseCurr(line.cr / master.exchangeRate) : line.cr;
@@ -2683,6 +2701,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
       case 'closeEdit':
         this.gridCash.rowDataSelected = null;
+        setTimeout(() => {
+          let element = document.getElementById('btnadd');
+          element.focus();
+        }, 100);      
         break;
     }
   }
@@ -2734,7 +2756,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         let ref = document
           .querySelector('.ac-refdoc')
           .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '15');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '16');
       }
     }, 200);
     setTimeout(() => {
@@ -2764,26 +2786,26 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
-    // if (e.key == 'Enter') {
-    //   if ((e.target as any).closest('codx-inplace') == null) {
-    //     let eleInput = document
-    //       ?.querySelector('.ac-form-master')
-    //       ?.querySelectorAll('codx-input');
-    //     if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
-    //       let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-    //       for (let index = 0; index < eleInput.length; index++) {
-    //         let elechildren = (
-    //           eleInput[index] as HTMLElement
-    //         ).getElementsByTagName('input')[0];
-    //         if (elechildren.tabIndex == nextIndex) {
-    //           elechildren.focus();
-    //           elechildren.select();
-    //           break;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    if (e.key == 'Enter') {
+      if ((e.target as any).closest('codx-input') != null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
+        }
+      }
+    }
   }
   @HostListener('click', ['$event'])
   onClick(e) {
