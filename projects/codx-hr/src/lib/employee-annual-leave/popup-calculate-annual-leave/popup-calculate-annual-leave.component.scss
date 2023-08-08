@@ -1,0 +1,31 @@
+.label-text-color {
+    color: #6c757d;
+}
+
+.data-text-color {
+    color: #161719;
+}
+
+.place-holder-text-color {
+    color: #b4b6b8;
+    font-style: italic;
+}
+
+.multiple-employee {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background-color: var(--primary);
+    text-align: center;
+    color: white;
+}
+
+.more-employee{
+    background-color: var(--primary-lighter);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background-color: var(--primary);
+    text-align: center;
+    color: white;
+}
