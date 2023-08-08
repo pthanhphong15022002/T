@@ -134,6 +134,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   stepNameFail: string = '';
   stepNameReason: string = '';
   reasonName: string = '';
+  reasonId: string = '';
   dataValueview: string = '';
   reasonAction: any;
   totalInstance: number = 0;
@@ -3921,7 +3922,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       let inxIsExist = this.step.reasons.findIndex(
         (x) =>
           x.reasonName.trim().toLowerCase() ===
-          this.reasonName.trim().toLowerCase()
+          this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
       );
       if (inxIsExist !== -1) {
         this.notiService.notifyCode(
@@ -3951,9 +3952,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
-  changeValueReaName($event) {
+  changeValueReaName($event,recid) {
     if ($event) {
       this.reasonName = $event?.data;
+      this.reasonId = recid;
     }
   }
 

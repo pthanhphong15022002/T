@@ -110,7 +110,7 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
     this.getFormModelAddress();
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102' || this.funcID == 'CM0105') {
       this.tabControl = [
         {
           name: 'History',
@@ -229,7 +229,7 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   listTab(funcID) {
-    if (funcID == 'CM0101') {
+    if (funcID == 'CM0101' || funcID == 'CM0105') {
       if (this.dataSelected?.category == '1') {
         this.tabDetail = [
           {
@@ -361,7 +361,7 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       return data.customerName;
     } else if (this.funcID == 'CM0102') {
       return data.contactName;

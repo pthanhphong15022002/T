@@ -267,19 +267,19 @@ export class LeadsComponent
                 panelRightRef: this.templateDetail,
               },
             },
-            {
-              type: ViewType.kanban,
-              active: false,
-              sameData: false,
-              request: this.request,
-              request2: this.resourceKanban,
-              // toolbarTemplate: this.footerButton,
-              model: {
-                template: this.cardKanban,
-                template2: this.viewColumKaban,
-                setColorHeader: true,
-              },
-            },
+            // {
+            //   type: ViewType.kanban,
+            //   active: false,
+            //   sameData: false,
+            //   request: this.request,
+            //   request2: this.resourceKanban,
+            //   // toolbarTemplate: this.footerButton,
+            //   model: {
+            //     template: this.cardKanban,
+            //     template2: this.viewColumKaban,
+            //     setColorHeader: true,
+            //   },
+            // },
             {
               type: ViewType.grid,
               active: false,
@@ -424,6 +424,7 @@ export class LeadsComponent
     if ($event != null && data != null) {
       for (let eventItem of $event) {
         if (type == 11) eventItem.isbookmark = false;
+        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -438,28 +439,39 @@ export class LeadsComponent
     let isDisabled = (eventItem, data) => {
       // Mặc định
       eventItem.disabled =
-        (data.closed && !['0', '1'].includes(data.status)) ||
-        ['0', '1'].includes(data.status) ||
-        this.checkMoreReason(data) ||
-        !data.applyProcess;
+        data?.alloweStatus == '1'
+          ? (data.closed && !['0', '1'].includes(data.status)) ||
+            ['0', '1'].includes(data.status) ||
+            this.checkMoreReason(data) ||
+            !data.applyProcess
+          : true;
     };
-    let isCRD = (eventItem, data) => {
+    let isCopy = (eventItem, data) => {
       // Thêm, xóa, copy
-      eventItem.disabled = data.closed || this.checkMoreReason(data);
+      eventItem.disabled = data.write
+        ? data.closed || this.checkMoreReason(data)
+        : true;
       // eventItem.disabled  = false;
     };
     let isEdit = (eventItem, data) => {
       // Chỉnh sửa
-      eventItem.disabled = eventItem.disabled =
-        data.closed || (data.status != '13' && this.checkMoreReason(data));
+      eventItem.disabled = data.write
+        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        : true;
+    };
+    let isDelete = (eventItem, data) => {
+      // Chỉnh sửa
+      eventItem.disabled = data.delete
+        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        : true;
     };
     let isClosed = (eventItem, data) => {
       //Đóng tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : false;
+      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : true;
     };
     let isOpened = (eventItem, data) => {
       // Mở tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : false;
+      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : true;
     };
     let isStartDay = (eventItem, data) => {
       // Bắt đầu ngay
@@ -468,26 +480,36 @@ export class LeadsComponent
           ? !['0', '1'].includes(data.status) ||
             data.closed ||
             !data.applyProcess
-          : false;
+          : true;
     };
     let isConvertLead = (eventItem, data) => {
+      // Chuyển thành cơ hội
       eventItem.disabled = data.write
         ? !['13', '3'].includes(data.status) || data.closed
         : true;
     };
+    let isMergeLead = (eventItem, data) => {
+      // Chuyển thành cơ hội
+      eventItem.disabled = data.write
+        ? !['0', '1'].includes(data.status) || data.closed || !data.applyProcess
+        : true;
+    };
+
     let isOwner = (eventItem, data) => {
       // Phân bổ
       eventItem.disabled = data.full
         ? !['0', '1', '2'].includes(data.status) || data.closed
-        : false;
+        : true;
     };
     let isFailReason = (eventItem, data) => {
       // Đánh dấu thất bại
       eventItem.disabled =
-        (data.closed && !['0', '1'].includes(data.status)) ||
-        ['0', '1'].includes(data.status) ||
-        (data.status != '13' && this.checkMoreReason(data)) ||
-        !data.applyProcess;
+        data?.alloweStatus == '1'
+          ? (data.closed && !['0', '1'].includes(data.status)) ||
+            ['0', '1'].includes(data.status) ||
+            (data.status != '13' && this.checkMoreReason(data)) ||
+            !data.applyProcess
+          : true;
     };
     let isDisabledDefault = (eventItem, data) => {
       // Mặc định tắt hết
@@ -495,11 +517,14 @@ export class LeadsComponent
     };
     let isStartFirst = (eventItem, data) => {
       // Làm lại khi tiềm năng đã thành công or thất bại
-      eventItem.disabled = !['3', '5'].includes(data.status);
+      eventItem.disabled = data.write
+        ? !['3', '5'].includes(data.status)
+        : true;
     };
     let isChangeStatus = (eventItem, data) => {
       // Đổi trạng thái cho tiềm năng ko có quy trình
-      eventItem.disabled = this.checkApplyProcess(data);
+      eventItem.disabled =
+        data?.alloweStatus == '1' ? this.checkApplyProcess(data) : true;
     };
 
     let isUpdateProcess = (eventItem, data) => {
@@ -508,11 +533,11 @@ export class LeadsComponent
     };
     let isDeleteProcess = (eventItem, data) => {
       // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = !data.applyProcess;
+      eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
     };
-    let isAprove = (eventItem, data) => {
-      // Gửi duyệt của a thảo
-      eventItem.disabled = eventItem.disabled =
+
+    let isApprover = (eventItem, data) => {
+      eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
@@ -520,23 +545,40 @@ export class LeadsComponent
         data?.approveStatus >= '3' ||
         this.checkMoreReason(data);
     };
-
+    let isPermission = (eventItem, data) => {
+      // Phân quyền
+      eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
+    };
     let isRejectApprover = (eventItem, data) => {
       // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
+      eventItem.isblur = false;
     };
+    let isUpload = (eventItem, data) => {
+      // ĐÍnh kèm file, nhập khẩu dữ liệu
+      eventItem.disabled = !data.upload ? true : false;
+    };
+    let isEmail = (eventItem, data) => {
+      // Gửi mail
+      eventItem.disabled = !data.write ? true : false;
+    };
+    let isDownload = (eventItem, data) => {
+      // Nhập khẩu dữ liệu
+      eventItem.disabled = !data.download ? true : false;
+    };
+
     functionMappings = {
       CM0205_1: isConvertLead, // convertLead
-      CM0205_2: isStartDay, // mergeLead
+      CM0205_2: isMergeLead, // mergeLead
       CM0205_3: isDisabled,
       CM0205_4: isStartDay, // startyDay
       CM0205_5: isDisabled, // success
       CM0205_6: isFailReason, // fail
       CM0205_7: isDisabled,
-      CM0205_8: isAprove,
+      CM0205_8: isApprover,
       CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
@@ -544,14 +586,19 @@ export class LeadsComponent
       SYS103: isDisabledDefault,
       SYS03: isEdit,
       SYS104: isDisabledDefault,
-      SYS04: isCRD,
+      SYS04: isCopy,
       SYS102: isDisabledDefault,
-      SYS02: isCRD,
+      SYS02: isDelete,
       CM0205_13: isStartFirst, // tiep tup van,
       CM0205_12: isChangeStatus,
       CM0205_14: isUpdateProcess, // co su dung quy trinh
       CM0205_15: isDeleteProcess, // khong su dung quy trinh
       CM0205_17: isRejectApprover,
+      CM0205_16: isPermission, //Phân quyền
+      SYS003: isUpload,
+      SYS004: isEmail,
+      SYS001: isUpload,
+      SYS002: isDownload,
     };
     return functionMappings[type];
   }

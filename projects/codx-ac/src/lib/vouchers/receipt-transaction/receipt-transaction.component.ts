@@ -48,7 +48,8 @@ export class ReceiptTransactionComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('memoContent', { read: ElementRef })
   memoContent: ElementRef<HTMLElement>;
-  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
+  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
+  public animationAcctTrans: AnimationModel = { enable: true, duration: 500, delay: 0 };
   private destroy$ = new Subject<void>();
   dialog!: DialogRef;
   button?: ButtonModel = { id: 'btnAdd' };
@@ -378,13 +379,15 @@ export class ReceiptTransactionComponent extends UIComponent {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.vouchersLines = res;
-        this.loadTotal();
+        if(res)
+        {
+          this.vouchersLines = res;
+          this.loadTotal();
+          this.detectorRef.detectChanges();
+        }
         this.loading = false;
-        this.detectorRef.detectChanges();
       });
     this.api
-      //.exec('AC', 'AcctTransBusiness', 'LoadDataAsync', 'e973e7b7-10a1-11ee-94b4-00155d035517')
       .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
