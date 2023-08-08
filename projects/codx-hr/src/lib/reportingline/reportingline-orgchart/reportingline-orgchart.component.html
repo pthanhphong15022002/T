@@ -80,7 +80,7 @@
 <ng-template #template let-data>
   <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
     [ngClass]="data?.isSelected ?'highlight-node-border': 'border'" (click)="changeSelectedItem(data)" [ngStyle]=" { 
-      background: haveHighLight?(data?.positionID == positionID? 'aliceblue': null) : 'white', 
+      background: haveHighLight?(data?.positionID == positionID? 'var(--primary-lighter)': null) : 'white', 
       borderColor: '' 
     }">
     <div class="has-action-menu">
