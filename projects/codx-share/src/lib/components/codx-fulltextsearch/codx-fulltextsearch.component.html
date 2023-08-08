@@ -17,8 +17,9 @@
           </ng-container>
           <ng-container *ngSwitchCase="'DateTime'">
             <div class="w-100">
-              <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100"
-                (change)="changeValueDate(item?.view , $event)"></codx-dropdown-calendar>
+              <!-- <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100"
+                (change)="changeValueDate(item?.view , $event)"></codx-dropdown-calendar> -->
+                <codx-input type="datetime" (valueChange)="changeValueDate(item?.view , $event)"></codx-input>
             </div>
           </ng-container>
           <ng-container *ngSwitchCase="'Int'">

@@ -137,16 +137,16 @@ export class EmpContactsComponent extends UIComponent {
     this.request.idField = 'orgUnitID';
 
     this.views = [
+      // {
+      //   id: '1',
+      //   type: ViewType.grid,
+      //   sameData: true,
+      //   model: {
+      //     resources: this.columnsGrid,
+      //   },
+      // },
       {
         id: '1',
-        type: ViewType.grid,
-        sameData: true,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-      {
-        id: '5',
         type: ViewType.list,
         sameData: true,
         model: {
@@ -168,7 +168,7 @@ export class EmpContactsComponent extends UIComponent {
         sameData: false,
         request: this.request,
         model: {
-          resizable: true,
+          resizable: false,
           template: this.tmpTree,
           panelRightRef: this.tmpTreeItemDetail,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
@@ -180,7 +180,7 @@ export class EmpContactsComponent extends UIComponent {
         sameData: false,
         request: this.request,
         model: {
-          resizable: true,
+          resizable: false,
           template: this.tmpTree,
           panelRightRef: this.tmpTreeItemDetailCard,
           resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },

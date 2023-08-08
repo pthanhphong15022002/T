@@ -36,7 +36,7 @@ import { Reason } from '../../../models/Reason.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
-import { VoucherComponent } from '../../../popup/voucher/voucher.component';
+import { VoucherComponent } from '../../cash-payments/pop-up-set/voucher/voucher.component';
 
 @Component({
   selector: 'lib-pop-add-receipts',

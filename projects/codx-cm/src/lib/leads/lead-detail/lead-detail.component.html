@@ -6,7 +6,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="dataSelected?.status == '11' || !dataSelected?.roles?.isOnwer"
+    [hideMF]="dataSelected?.status == '11'"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -52,15 +52,43 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <span
-                  class="fw-bold text-dark fs-5-sm mb-1"
-                  #leadName
-                  [innerHTML]="
-                    dataSelected?.leadName
-                      | formatvalue : formModel : 'leadName' : leadName
-                      | async
+                <div
+                  class="d-flex align-items-top"
+                  *ngIf="
+                    dataSelected.leadName != null &&
+                    dataSelected.leadName.trim() != ''
                   "
-                ></span>
+                >
+                  <span
+                    class="fw-bold text-dark fs-5-sm mb-1"
+                    #leadName
+                    [innerHTML]="
+                      dataSelected?.leadName
+                        | formatvalue : formModel : 'leadName' : leadName
+                        | async
+                    "
+                  ></span>
+                </div>
+
+                <div
+                  class="d-flex align-items-top"
+                  *ngIf="
+                    dataSelected.address != null &&
+                    dataSelected.address.trim() != ''
+                  "
+                >
+                  <span
+                    [ngbTooltip]="popupAddress"
+                    class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
+                    ><ng-template #popupAddress>
+                      <codx-label
+                        fiedName="Address"
+                        [formModel]="formModel"
+                      ></codx-label>
+                    </ng-template>
+                  </span>
+                  <span class="text-gray-600">{{ dataSelected.address }}</span>
+                </div>
               </div>
             </div>
           </div>

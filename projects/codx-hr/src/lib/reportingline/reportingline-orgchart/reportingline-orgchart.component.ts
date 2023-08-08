@@ -152,7 +152,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     connector.cornerRadius = 5;
     connector.targetDecorator.height = 5;
     connector.targetDecorator.width = 5;
-    connector.style!.strokeColor = '#6d6d6d';
+    //connector.style!.strokeColor = '#6d6d6d';
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
     if (sourceNode['positionID'] === targetNode['reportTo2']) {
@@ -163,7 +163,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       // diagram.sendBackward();
     }
     if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
-      connector.style!.strokeColor = '#3699FF';
+      // connector.style!.strokeColor = '#3699FF';
+      connector.style!.strokeColor = 'var(--primary)';
       connector.style!.strokeWidth = 2;
     }
     return connector;
@@ -254,6 +255,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.api.execSv("HR", "ERM.Business.HR", "PositionsBusiness", "GetDataOrgChartAsync", [positionID])
         .subscribe((res: any) => {
           if (res) {
+            let index = res.findIndex(x => x.positionID === positionID);
+            res.forEach(item => {
+              if (item?.positionID === positionID) {
+                item['isSelected'] = true;
+              } else item['isSelected'] = false
+            });
             this.data = JSON.parse(JSON.stringify(res))
             this.setDataOrg(this.data);
           }
