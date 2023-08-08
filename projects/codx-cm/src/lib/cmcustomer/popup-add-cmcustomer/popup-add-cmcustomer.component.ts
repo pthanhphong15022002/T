@@ -123,12 +123,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.recID = dt?.data[2];
     }
     this.recID = dt?.data[2];
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       if (this.action == 'add') {
-        this.radioChecked = true;
-        this.data.category = '1';
-      } else {
-        this.radioChecked = this.data?.category == '1' ? true : false;
+        this.data.category = this.funcID == 'CM0101' ? '1' : '2';
       }
     }
     if (this.data?.objectType == '1') {
@@ -226,7 +223,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getTab() {
-    if (this.funcID == 'CM0101' && this.radioChecked) {
+    if (this.funcID == 'CM0101') {
       this.tabInfo = [
         { icon: 'icon-info', text: 'Thông tin chung', name: 'Information' },
         {
@@ -288,6 +285,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   getAutoNumber(autoNumber) {
     switch (this.funcID) {
+      case 'CM0105':
       case 'CM0101':
         this.data.customerID =
           this.action != 'edit' ? autoNumber : this.data.customerID;
@@ -484,8 +482,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       this.data.customerName = this.data?.customerName;
+      this.data.category = this.funcID == 'CM0101' ? '1' : '2';
     } else if (this.funcID == 'CM0103') {
       this.data.partnerName = this.data?.partnerName;
       this.data.annualRevenue =
@@ -794,7 +793,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   getNameCrm(data) {
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       return data.customerName;
     } else if (this.funcID == 'CM0102') {
       return data.contactName;
