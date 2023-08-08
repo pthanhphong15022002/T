@@ -32,6 +32,7 @@ owner:any;
 ownerOld:any;
 ownerStep:any;
 step:any;
+buid:any;
 startControl:string = '';
 applyFor: string = '';
 orgUnitName: string = '';
@@ -40,6 +41,8 @@ positionName: string = '';
 listParticipants = [];
 
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
+readonly viewBUID:string = 'ViewBUID';
+readonly viewDefault:string = 'ViewDefault';
 constructor(
   private injector: Injector,
   private notificationsService: NotificationsService,
@@ -166,9 +169,18 @@ async getListUserByOrg(lstRoles, objectType) {
   return owner;
 }
 
-changeOwner(evt: any) {
+changeOwner(evt: any, view: any) {
+
   if (evt?.data) {
-   this.owner = evt.data;
+    if(view === this.viewDefault) {
+      this.owner = evt.data;
+      this.buid = '';
+    }
+    else if(view === this.viewBUID) {
+      this.buid =  evt.data;
+      this.owner = evt.itemsSelected[0].Owner;
+    }
+
   }
 }
 
@@ -216,13 +228,13 @@ onSaveForm() {
 
 saveOwner(){
  this.applyProcess && this.setRoles();
-  var datas = [this.recID, this.owner,this.ownerStep, this.startControl];
+  var datas = [this.recID, this.owner,this.ownerStep, this.startControl,this.buid];
   if(this.applyFor == "1"){
-    this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
-      if(res) {
-        this.dialogRef.close(res[0]);
-      }
-  })
+  //   this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
+  //     if(res) {
+  //       this.dialogRef.close(res[0]);
+  //     }
+  // })
   }
   else if (this.applyFor == "5") {
     this.codxCmService.updateOwnerLead(datas).subscribe((res)=> {

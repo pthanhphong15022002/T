@@ -84,6 +84,8 @@
     <div
       class="d-flex justify-content-between align-items-top list-action-menu"
     >
+    <div class="d-flex flex-column me-6"></div>
+    
       <div class="d-flex align-items-top justify-content-between pe-9">
         <div class="me-3">
           <codx-img
@@ -180,15 +182,17 @@
           <div class="fs-2 fw-bold mb-2 text-primary number-users">
             {{ item?.counts ? item?.counts : 0 }}
           </div>
-          <ng-container *ngIf="item.staffEmp?.length > 0">
-            <ng-container
-              *ngTemplateOutlet="
-                templateListEmployee;
-                context: { $implicit: item.staffEmp }
-              "
-            >
+          <div class="org-imgs">
+            <ng-container *ngIf="item.staffEmp?.length > 0">
+              <ng-container
+                *ngTemplateOutlet="
+                  templateListEmployee;
+                  context: { $implicit: item.staffEmp }
+                "
+              >
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
         </div>
         <!-- <div #o class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(o, item.departmentCode, '30')">
@@ -232,7 +236,7 @@
         [showText]="true"
         [showBgColor]="true"
         [showIcon]="true"
-        class="c-orgtype badge badge-light badge-sm icon-12 icon-me-2"
+        class="c-orgtype badge badge-light badge-sm eicon-12 eicon-me-2"
       >
       </codx-vll>
       <div *ngIf="item.parentName" class="text-gray-600 me-2 mt-1">

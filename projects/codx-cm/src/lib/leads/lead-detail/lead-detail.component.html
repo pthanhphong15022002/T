@@ -6,7 +6,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="dataSelected?.status == '11' || !dataSelected?.roles?.isOnwer"
+    [hideMF]="dataSelected?.status == '11'"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -491,7 +491,7 @@
 </ng-container>
 <ng-template #body let-data>
   <div style="overflow: hidden">
-    <ejs-tab>
+    <ejs-tab #tabObj>
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -783,33 +783,6 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <!-- <e-tabitem *ngIf="applyProcess"> -->
-        <!-- <ng-template #headerText>
-          <div class="d-flex align-items-top">
-            <span class="icon-add_to_photos icon-16 me-1"></span>
-            <codx-label
-              class="fw-bold"
-              default="Trường tùy chỉnh"
-              [formModel]="formModel"
-              name="lblField"
-            ></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <div class="d-flex flex-column mt-4">
-            <ng-container *ngFor="let item of listSteps">
-              <codx-fields-detail-temp
-                *ngIf="item?.fields?.length > 0 && item?.fields"
-                [dataStep]="item"
-                [showColumnControl]="showColumnControl(item.stepID)"
-                [isUpdate]="['0', '1','2','13'].includes(dataSelected.status) && dataSelected?.roles?.isOnwer && !dataSelected.closed "
-              >
-              </codx-fields-detail-temp>
-            </ng-container>
-          </div>
-        </ng-template> -->
-
-        <!-- </e-tabitem> -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
@@ -838,7 +811,7 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem *ngIf="applyProcess">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -851,14 +824,16 @@
             </div>
           </ng-template>
           <ng-template #content let-data="value">
-            <step-task
-              [isDataLoading]="isDataLoading"
-              [dataSelected]="dataSelected"
-              [listInstanceStep]="listSteps"
-              [applyFor]="'5'"
-              (continueStep)="continueStep($event)"
-              (saveAssignTask)="saveAssignTask($event)"
-            ></step-task>
+            <div>
+              <step-task
+                [isDataLoading]="isDataLoading"
+                [dataSelected]="dataSelected"
+                [listInstanceStep]="listSteps"
+                [applyFor]="'5'"
+                (continueStep)="continueStep($event)"
+                (saveAssignTask)="saveAssignTask($event)"
+              ></step-task>
+            </div>
           </ng-template>
         </e-tabitem>
         <e-tabitem>

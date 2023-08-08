@@ -2033,7 +2033,7 @@
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light-primary ms-2"
-              (click)="openTypeJob()"
+              (click)="openPopupChooseTask()"
             >
               <i class="icon-add_task icon-16"></i>
             </button>
@@ -2257,7 +2257,7 @@
         <button
           type="button"
           class="btn btn-outline-primary"
-          (click)="openTypeJob()"
+          (click)="openPopupChooseTask()"
         >
           <i class="icon-add_task icon-18 text-primary"></i>
           <codx-label
@@ -2316,10 +2316,9 @@
     <codx-input
       field="stepName"
       [formModel]="grvStep"
-      [Group]
       type="text"
-      [crrValue]="stepName"
-      (valueChange)="changeNameStep($event)"
+      [crrValue]="stepNew?.stepName"
+      (valueChange)="changeNameStep($event,stepNew)"
       [disabled]="isEditReason"
     >
     </codx-input>
@@ -2437,7 +2436,7 @@
         style="flex-grow: 1"
         [ngStyle]="{ color: stepNew?.textColor }"
       >
-        {{ stepName }}
+        {{ stepNew?.stepName }}
       </span>
     </div>
   </div>
@@ -3564,7 +3563,7 @@
         field="reasonName"
         type="text"
         [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event)"
+        (valueChange)="changeValueReaName($event,reason.recID)"
       >
       </codx-input>
     </div>

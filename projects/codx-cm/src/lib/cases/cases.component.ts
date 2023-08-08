@@ -130,6 +130,7 @@ export class CasesComponent
   processIDKanban: any;
   processIDDefault: any;
   crrProcessID: any;
+  applyApprover = '0';
 
   constructor(
     private inject: Injector,
@@ -147,7 +148,7 @@ export class CasesComponent
     this.cache.functionList(this.funcID).subscribe((fun) => {
       if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
     });
-
+    this.loadParam();
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
@@ -391,6 +392,7 @@ export class CasesComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
+        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -430,6 +432,25 @@ export class CasesComponent
     var isStartDay = (eventItem, data) => {
       eventItem.disabled = data.status != '1';
     };
+
+    let isApprover = (eventItem, data) => {
+      eventItem.disabled = eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        (this.applyApprover != '1' && !data.applyProcess) ||
+        (data.applyProcess && data?.approveRule != '1') ||
+        data?.approveStatus >= '3' ||
+        this.checkMoreReason(data);
+    };
+
+    let isRejectApprover = (eventItem, data) => {
+      eventItem.disabled =
+        (data.closed && data.status != '1') ||
+        data.status == '0' ||
+        data.approveStatus != '3';
+      eventItem.isblur = false;
+    };
+
     if (this.caseType === '1') {
       functionMappings = {
         CM0401_1: isDisabled,
@@ -446,6 +467,10 @@ export class CasesComponent
         SYS04: isCopy,
         SYS102: isDelete,
         SYS02: isDelete,
+        CM0401_6: isApprover,
+        CM0402_6: isApprover,
+        CM0401_11: isRejectApprover,
+        CM0402_11: isRejectApprover,
       };
     } else {
     }
@@ -527,12 +552,17 @@ export class CasesComponent
       case 'CM0402_6':
         this.approvalTrans(data);
         break;
+      //huy duyet
+      case 'CM0401_11':
+      case 'CM0402_11':
+        this.cancelApprover(data);
+        break;
       //export
       case 'SYS002':
         this.exportFiles(e, data);
         break;
       default: {
-        var customData :any=null;
+        var customData: any = null;
         // var customData = {
         //   refID: data.processID,
         //   refType: 'DP_Processes',
@@ -1143,139 +1173,108 @@ export class CasesComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    if (dt?.processID) {
+    if (dt?.applyProcess && dt?.processID) {
       this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
-          this.codxCmService
-            .getESCategoryByCategoryID(process.processNo)
-            .subscribe((res) => {
-              this.approvalTransAction(dt, res);
-            });
+          this.approvalTransAction(dt, process.processNo);
         } else {
           this.notificationsService.notifyCode('DP040');
         }
       });
     } else {
-      this.codxCmService
-        .getESCategoryByCategoryID('ES_CM0504')
-        .subscribe((res) => {
-          this.approvalTransAction(dt, res);
-        });
+      this.approvalTransAction(dt, 'ES_CM0504');
     }
   }
-  approvalTransAction(data, category) {
-    if (!category) {
-      this.notificationsService.notifyCode('ES028');
-      return;
-    }
-    if (category.eSign) {
-      //kys soos
-    } else {
-      this.release(data, category);
-    }
-  }
-  release(data: any, category: any) {
-    // duyet cu
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        category.processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.codxCmService
-            .getOneObject(this.dataSelected.recID, 'CasesBusiness')
-            .subscribe((q) => {
-              if (q) {
-                this.dataSelected = q;
-                this.view.dataService.update(this.dataSelected).subscribe();
-                if (this.kanban) this.kanban.updateCard(this.dataSelected);
-              }
-              this.notificationsService.notifyCode('ES007');
-            });
+
+  approvalTransAction(data, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((category) => {
+        if (!category) {
+          this.notificationsService.notifyCode('ES028');
+          return;
+        }
+        if (category.eSign) {
+          //kys soos
+        } else {
+          this.release(data, category);
         }
       });
+  }
+  release(data: any, category: any) {
     //duyet moi
-    // this.codxShareService.codxReleaseDynamic(
-    //   this.view.service,
-    //   data,
-    //   category,
-    //   this.view.formModel.entityName,
-    //   this.view.formModel.funcID,
-    //   data?.title,
-    //   this.releaseCallback
-    // );
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
   }
   //call Back
-  releaseCallback(res: any) {
-    // lỗi call back cần tra this
-    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    // else {
-    //   this.codxCmService
-    //     .getOneObject(this.dataSelected.recID, 'CasesBusiness')
-    //     .subscribe((c) => {
-    //       if (c) {
-    //         this.dataSelected = c;
-    //         this.view.dataService.update(this.dataSelected).subscribe();
-    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-    //       }
-    //       this.notificationsService.notifyCode('ES007');
-    //     });
-    // }
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'CasesBusiness')
+        .subscribe((c) => {
+          if (c) {
+            this.dataSelected = c;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          }
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-          if (process) {
-            this.codxCmService
-              .getESCategoryByCategoryID(process.processNo)
-              .subscribe((res2: any) => {
-                if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxShareService
-                      .codxCancel(
-                        'CM',
-                        dt?.recID,
-                        this.view.formModel.entityName,
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          this.dataSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'CasesBusiness',
-                              dt?.recID,
-                              '0'
-                            )
-                            .subscribe();
-                          this.notificationsService.notifyCode('SYS007');
-                        } else this.notificationsService.notifyCode('SYS021');
-                      });
-                  }
-                }
-              });
-          } else {
-            this.notificationsService.notifyCode('DP040');
-          }
-        });
+        if (dt.applyApprover) {
+          this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+            if (process) {
+              this.cancelAction(dt, process.processNo);
+            } else {
+              this.notificationsService.notifyCode('DP040');
+            }
+          });
+        } else this.cancelAction(dt, 'ES_CM0504');
       }
     });
+  }
+
+  cancelAction(dt, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((res2: any) => {
+        if (res2) {
+          if (res2?.eSign == true) {
+            //trình ký
+          } else if (res2?.eSign == false) {
+            //kí duyet
+            this.codxShareService
+              .codxCancel(
+                'CM',
+                dt?.recID,
+                this.view.formModel.entityName,
+                null,
+                null
+              )
+              .subscribe((res3) => {
+                if (res3) {
+                  this.dataSelected.approveStatus = '0';
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                  this.notificationsService.notifyCode('SYS007');
+                } else this.notificationsService.notifyCode('SYS021');
+              });
+          }
+        } else this.notificationsService.notifyCode('ES028');
+      });
   }
   //end duyet
   //--------------------------------------------------------------------//
@@ -1511,5 +1510,18 @@ export class CasesComponent
       );
       this.detectorRef.detectChanges();
     }
+  }
+  //load Parama
+  loadParam() {
+    //approver
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
   }
 }

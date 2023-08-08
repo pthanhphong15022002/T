@@ -47,6 +47,19 @@ div.e-content.e-lib {
     background-color: #f5f9fa;
     border-radius: var(--bs-border-radius);
 }
+.images-300:hover{
+    cursor: pointer;
+    position: relative;
+}
+.images-300:hover .images-300_close {
+    display: block;
+}
+.images-300_close{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 10px;
+}
 .h-250px{
     height: 250px;
 }

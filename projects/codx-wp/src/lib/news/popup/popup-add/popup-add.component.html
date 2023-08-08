@@ -136,6 +136,13 @@
                                 [default]="grvSetup['Image']['headerText']">
                             </codx-label>
                             <div class="images-300"  (click)="clickUpload('image')">
+                                <ng-container *ngIf="fileImage">
+                                    <div class="images-300_close">
+                                        <button class="btn" (click)="removeImage($event);$event.stopPropagation()">
+                                            <i class="icon-close text-danger"></i>
+                                        </button>
+                                    </div>
+                                </ng-container>
                                 <img [ngClass]="fileImage ? 'w-100 h-300px' : 'w-100 h-250px'"
                                     [src]="fileImage ? fileImage.source: defaultImgSrc">
                                 <ng-container *ngIf="!fileImage">
@@ -255,7 +262,7 @@
                                     [hideBtnSave]="'1'" 
                                     [hideImageThumb]="'1'"
                                     [hideUploadBtn]="'1'" 
-                                    allowExtensions=".mp4,.m4p"
+                                    allowExtensions=".mp4,.m4p,.m4v,.avi"
                                     (fileAdded)="addFiles($event)">
                                 </codx-attachment>
                             </div>
@@ -280,15 +287,15 @@
                     </div>
                 </ng-container>
                 <ng-template #tmpEdit>
-                    <ng-container *ngIf="data.createdBy == user.userID ">
+                    <ng-container *ngIf="data.createdBy == user.userID">
                         <div class="card-footer px-0">
                             <div class="d-flex align-items-center justify-content-end">
-                                <div *ngIf="!data.isActive">
+                                <div>
                                     <button [disabled]="loading" (click)="clickUpdate()" type="button" class="btn btn-primary">
                                         <codx-label [formModel]="dialogRef.formModel" name="lblUpdate" default="Cập nhật"></codx-label>
                                     </button>
                                 </div>
-                                <ng-container *ngIf="!data.isActive && data.approveControl == '0' ">
+                                <ng-container *ngIf="data.approveControl == '0' && data.isActive == false">
                                     <div class="ms-3">
                                         <button [disabled]="loading" (click)="clickRelease()" type="button" class="btn btn-primary">
                                             <codx-label [formModel]="dialogRef.formModel" name="lblRelease" default="Phát hành"></codx-label>

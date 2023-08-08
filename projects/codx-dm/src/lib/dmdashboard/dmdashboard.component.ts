@@ -36,8 +36,9 @@ export class GridModels {
 export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChildren('panel') lstPanels: QueryList<any>;
-  @Input() panels: any;
-  @Input() datas: any;
+  @ViewChildren('my_dashboard') templates1: QueryList<any>;
+  @Input() panels1: any;
+  @Input() datas1: any;
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   funcID: string = 'DMD';
@@ -45,7 +46,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   arrReport: any = [];
   dbData;
   isLoaded = false;
-  isEditMode = true;
+  isEditMode = false;
 
   public chartData: Object[] = [
     { month: 'Jan', sales: 35 },
@@ -182,16 +183,12 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.panels = JSON.parse(
-      '[{"id":"0.9605255352952085_layout","row":0,"col":0,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null},{"id":"0.47112877938374287_layout","row":0,"col":12,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.7647024471772221_layout","row":0,"col":24,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.6213687501730532_layout","row":12,"col":12,"sizeX":24,"sizeY":12,"minSizeX":24,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.7292886175486251_layout","row":0,"col":36,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null}]'
+    this.panels1 = JSON.parse(
+      '[{"id":"0.9605255352952085_layout","row":0,"col":0,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê dung lượng tài liệu tải lên"},{"id":"0.47112877938374287_layout","row":0,"col":12,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header":"Tài liệu theo phân hệ"},{"id":"0.7647024471772221_layout","row":0,"col":24,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê tài liệu theo bộ phận"},{"id":"0.6213687501730532_layout","row":12,"col":12,"sizeX":24,"sizeY":12,"minSizeX":24,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header":"Thống kê mức độ sử dụng tài liệu theo bộ phận"},{"id":"0.7292886175486251_layout","row":0,"col":36,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null, "header":"Top tài liệu"}]'
     );
-    this.datas = JSON.parse(
-      '[{"panelId":"0.9605255352952085_layout","data":""},{"panelId":"0.47112877938374287_layout","data":""},{"panelId":"0.7647024471772221_layout","data":""},{"panelId":"0.6213687501730532_layout","data":""},{"panelId":"0.7292886175486251_layout","data":""}]'
+    this.datas1 = JSON.parse(
+      '[{"panelId":"0.9605255352952085_layout","data":"1"},{"panelId":"0.47112877938374287_layout","data":"2"},{"panelId":"0.7647024471772221_layout","data":"3"},{"panelId":"0.6213687501730532_layout","data":"4"},{"panelId":"0.7292886175486251_layout","data":"5"}]'
     );
-
-    // this.api
-    //   .execSv('DM', 'DM', 'FileBussiness', 'GetDataDashboardAsync', [])
-    //   .subscribe((res: any) => {});
   }
 
   ngAfterViewInit(): void {
