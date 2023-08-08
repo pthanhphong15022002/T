@@ -6,7 +6,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="dataSelected?.status == '11' || !dataSelected?.roles?.isOnwer"
+    [hideMF]="dataSelected?.status == '11'"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"

@@ -46,7 +46,8 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
   encapsulation: ViewEncapsulation.None,
-})export class LeadsComponent
+})
+export class LeadsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -395,22 +396,26 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
       eventItem.disabled = eventItem.disabled =
         data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
-    let isClosed = (eventItem, data) => { // Đóng tiềm năng
-      eventItem.disabled = data.closed;
+    let isClosed = (eventItem, data) => {
+      //Đóng tiềm năng
+      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : false;
     };
-    let isOpened = (eventItem, data) => { // Mở tiềm năng
-      eventItem.disabled = !data.closed;
+    let isOpened = (eventItem, data) => {
+      // Mở tiềm năng
+      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : false;
     };
     let isStartDay = (eventItem, data) => { // Bắt đầu
       eventItem.disabled =
         !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
     };
-    let isConvertLead = (eventItem, data) => { // Chuyển đổi
-      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
+    let isConvertLead = (eventItem, data) => {
+      eventItem.disabled = data.write
+        ? !['13', '3'].includes(data.status) || data.closed
+        : true;
     };
-    let isOwner = (eventItem, data) => { // Phân bổ lại
-      eventItem.disabled =
-        !['0', '1', '2'].includes(data.status) || data.closed;
+    let isOwner = (eventItem, data) => { // Phân bổ
+      eventItem.disabled = data.full ?
+        !['0', '1', '2'].includes(data.status) || data.closed : false;
     };
     let isFailReason = (eventItem, data) => { // Đánh dấu thất bại
       eventItem.disabled =
@@ -1031,6 +1036,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
     let obj = {
       data: data,
       title: this.titleAction,
+      entityName: this.view.formModel.entityName,
     };
     this.callfc
       .openForm(
@@ -1119,34 +1125,50 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   updateProcess(data, isCheck) {
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" '+ this.titleAction+' ',
+        '"' + data?.leadName + '" ' + this.titleAction + ' ',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (!isCheck) {
-            let datas = [data.recID, this.applyForLead, isCheck,this.processId,'',''];
-            this.getApiUpdateProcess(datas,[]);
-          }
-          else {
-            let datas = [data.leadName,data.leadID,this.processId,this.applyForLead];
-            this.codxCmService.addInstanceNoRecId(datas).subscribe((res)=>{
-              if(res) {
-                  let dataInstance = [data.recID, this.applyForLead, isCheck,this.processId ,res[0],res[1]];
-                  this.getApiUpdateProcess(dataInstance,res[2]);
+            let datas = [
+              data.recID,
+              this.applyForLead,
+              isCheck,
+              this.processId,
+              '',
+              '',
+            ];
+            this.getApiUpdateProcess(datas, []);
+          } else {
+            let datas = [
+              data.leadName,
+              data.leadID,
+              this.processId,
+              this.applyForLead,
+            ];
+            this.codxCmService.addInstanceNoRecId(datas).subscribe((res) => {
+              if (res) {
+                let dataInstance = [
+                  data.recID,
+                  this.applyForLead,
+                  isCheck,
+                  this.processId,
+                  res[0],
+                  res[1],
+                ];
+                this.getApiUpdateProcess(dataInstance, res[2]);
               }
-            })
+            });
           }
         }
       });
   }
-  getApiUpdateProcess(datas,listStep){
+  getApiUpdateProcess(datas, listStep) {
     this.codxCmService.updateProcess(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res[0];
-        this.dataSelected = JSON.parse(
-          JSON.stringify(this.dataSelected)
-        );
-        if(listStep.length > 0 && listStep) {
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
         this.notificationsService.notifyCode('SYS007');
