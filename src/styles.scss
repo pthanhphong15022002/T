@@ -6,6 +6,7 @@
 
 :root {
   --fs-body: 13px;
+
   --speeddialVertDist: 98px;
   
   --bs-primary-rgb: var(--primary);
@@ -3574,4 +3575,32 @@ codx-detail-toolbar codx-mfunc .dropdown {
       background-color: var(--gray-100);
     }
  }
+}
+
+codx-view-tree-detail .e-splitter{
+  .e-resize-handler.e-icons{
+    display: none!important;
+  }
+  .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
+    cursor: default;
+  }
+  .e-split-bar.e-split-bar-horizontal {
+    background: transparent!important;
+  }
+}
+
+.template{
+  font-family:inherit!important;
+  font-size: var(--fs-body);
+}
+
+.dropdown-toggle.btn-active-light-primary{
+  color: var(--primary)!important;
+  &:hover i[class*="icon"]{
+    color: var(--primary)!important;
+  }
+}
+.org-mfunc i, .org-mfunc span{
+  color: #fff!important;
+  font-size: 16px!important;
 }
