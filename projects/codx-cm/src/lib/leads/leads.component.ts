@@ -477,9 +477,8 @@ export class LeadsComponent
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.applyProcess;
     };
-    let isDeleteProcess = (eventItem, data) => {
-      // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = data.full ? !data.applyProcess : true;
+    let isDeleteProcess = (eventItem, data) => { // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
+      eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
     };
 
     let isApprover = (eventItem, data) => {
@@ -491,9 +490,9 @@ export class LeadsComponent
         data?.approveStatus >= '3' ||
         this.checkMoreReason(data);
     };
-    let isPermission = (eventItem, data) => {
-      // Phân quyền
-      eventItem.disabled = !data.assign || !data.allowPermit ? true : false;
+    let isPermission =  (eventItem, data) => { // Phân quyền
+      eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
+
     };
     let isRejectApprover = (eventItem, data) => {
       // Gửi duyệt của a thảo
