@@ -175,6 +175,7 @@
               [formModel]="fmVatPosting"
               class="label-colon fw-bold"
               default="Ghi sổ theo"
+              [setRequire]="false"
             ></codx-label>
             <span
               class="fw-bold"
@@ -189,17 +190,17 @@
             <span class="fs-3">&#183;</span>
             &nbsp;
             <codx-label
-              fiedName="PostTypeOffset"
+              fiedName="PostOffset"
               [formModel]="fmVatPosting"
               class="label-colon fw-bold"
               default="Đối ứng"
             ></codx-label>
             <span
               class="fw-bold"
-              #postTypeOffset
+              #postOffset
               [innerHTML]="
-                item?.postTypeOffset
-                  | formatvalue : fmVatPosting : 'postTypeOffset' : postTypeOffset
+                item?.postOffset
+                  | formatvalue : fmVatPosting : 'postOffset' : postOffset
                   | async
               "
             ></span>

@@ -73,6 +73,9 @@ export class PopAddVatpostingComponent extends UIComponent implements OnInit{
           this.isDisableOffsetAcctID = true;
         this.dt.detectChanges();
         break;
+      case 'objectType':
+        this.form.formGroup?.controls['objectID'].reset();
+        break;
     }
   }
 

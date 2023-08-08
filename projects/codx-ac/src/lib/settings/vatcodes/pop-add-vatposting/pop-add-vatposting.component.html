@@ -127,13 +127,36 @@
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="ObjectID">
                     </codx-label>
-                    <codx-input
-                        [Group]="form.formGroup"
-                        field="objectID"
-                        [formModel]="form.formModel"
-                        (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
+                    <ng-container *ngIf="!vatPosting.objectType || vatPosting.objectType =='3'">
+                        <codx-input
+                          field="objectID"
+                          [formModel]="form.formModel"
+                          [Group]="form.formGroup"
+                          [disabled]="true"
+                        ></codx-input>
+                    </ng-container>
+                    <ng-containt *ngIf="vatPosting.objectType == '1'">
+                        <codx-input
+                            type="combobox"
+                            field="objectID"
+                            refType="3"
+                            refValue="SubObjectsVendorsName"
+                            [crrValue]="vatPosting.objectID"
+                            (valueChange)="valueChange($event)"
+                        >
+                        </codx-input>
+                    </ng-containt>
+                    <ng-containt *ngIf="vatPosting.objectType == '2'">
+                        <codx-input
+                            type="combobox"
+                            field="objectID"
+                            refType="3"
+                            refValue="VendorGroups"
+                            [crrValue]="vatPosting.objectID"
+                            (valueChange)="valueChange($event)"
+                        >
+                        </codx-input>
+                    </ng-containt>
                 </div>
             </div>
         </div>
