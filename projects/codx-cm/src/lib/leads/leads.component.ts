@@ -267,19 +267,19 @@ export class LeadsComponent
                 panelRightRef: this.templateDetail,
               },
             },
-            {
-              type: ViewType.kanban,
-              active: false,
-              sameData: false,
-              request: this.request,
-              request2: this.resourceKanban,
-              // toolbarTemplate: this.footerButton,
-              model: {
-                template: this.cardKanban,
-                template2: this.viewColumKaban,
-                setColorHeader: true,
-              },
-            },
+            // {
+            //   type: ViewType.kanban,
+            //   active: false,
+            //   sameData: false,
+            //   request: this.request,
+            //   request2: this.resourceKanban,
+            //   // toolbarTemplate: this.footerButton,
+            //   model: {
+            //     template: this.cardKanban,
+            //     template2: this.viewColumKaban,
+            //     setColorHeader: true,
+            //   },
+            // },
             {
               type: ViewType.grid,
               active: false,
