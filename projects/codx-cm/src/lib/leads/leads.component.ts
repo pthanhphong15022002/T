@@ -340,9 +340,12 @@ export class LeadsComponent
     });
   }
 
-  onLoading(e) {}
+  onLoading(e) {
+
+  }
 
   changeView(e) {
+    debugger;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
@@ -1236,6 +1239,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
+        this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }
@@ -1446,6 +1450,7 @@ export class LeadsComponent
       owner: data.owner,
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
+      buid: data.buid,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1521,6 +1526,7 @@ export class LeadsComponent
     }
   }
   openFormChangeStatus(data) {
+    this.dataSelected = data
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,

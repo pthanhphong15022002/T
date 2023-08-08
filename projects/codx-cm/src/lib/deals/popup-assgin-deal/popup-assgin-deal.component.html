@@ -18,7 +18,7 @@
                 <span>
                   <codx-label
                     class="fw-bold"
-                    default="Thông tin chung"
+                    default="Nhân viên"
                     [formModel]="formModel"
                     name="lblEmployee"
                   ></codx-label>
@@ -33,7 +33,7 @@
                       <codx-input
                         field="owner"
                         [formModel]="formModel"
-                        (valueChange)="changeOwner($event,'buid')"
+                        (valueChange)="changeOwner($event,viewDefault)"
                         [crrValue]="owner"
                       >
                       </codx-input>
@@ -45,7 +45,7 @@
                         [fields]="fieldCbxParticipants"
                         [placeholder]="gridViewSetup?.Owner?.description"
                         [allowFiltering]="true"
-                        [value]="owner"
+                        [value]="buid ?'':owner"
                       ></ejs-combobox>
                     </ng-template>
 
@@ -106,6 +106,7 @@
                     <codx-input
                       field="buid"
                       [formModel]="formModel"
+                      [crrValue]="buid"
                       (valueChange)="changeOwner($event,viewBUID)"
                     >
                     </codx-input>

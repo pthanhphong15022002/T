@@ -294,6 +294,7 @@ export class DealsComponent
       this.kanban = (this.view?.currentView as any)?.kanban;
     }
 
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -397,19 +398,19 @@ export class DealsComponent
     };
 
     functionMappings = {
-      CM0201_1: isDisabled,
-      CM0201_2: isStartDay,
-      CM0201_3: isDisabled,
-      CM0201_4: isDisabled,
-      CM0201_5: isDisabled,
+      CM0201_1: isDisabled, // chuyển tiếp
+      CM0201_2: isStartDay, // bắt đầu
+      CM0201_3: isDisabled, // thành công
+      CM0201_4: isDisabled, // thất bại
+      CM0201_5: isDisabled, // xuất file
       CM0201_6: isApprovalTrans, //xet duyet
-      CM0201_7: isOwner,
-      CM0201_8: isClosed,
-      CM0201_9: isOpened,
-      CM0201_12: isConfirmOrRefuse,
-      CM0201_13: isConfirmOrRefuse,
-      SYS101: isDisabled,
-      SYS103: isEdit,
+      CM0201_7: isOwner, // phân bổ
+      CM0201_8: isClosed, // đóng
+      CM0201_9: isOpened, // mở
+      CM0201_12: isConfirmOrRefuse, // Xác nghận
+      CM0201_13: isConfirmOrRefuse, // từ chối
+      SYS101: isDisabled, // add bị thừa
+      SYS103: isEdit, // edit
       SYS03: isEdit,
       SYS104: isCopy,
       SYS04: isCopy,
