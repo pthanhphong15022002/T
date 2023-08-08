@@ -906,7 +906,7 @@
                 [objectType]="'4'"
                 [type]="'formDetail'"
                 [hidenMF]="
-                  !dataSelected?.roles?.isOnwer ||
+                  !dataSelected?.write ||
                   dataSelected?.closed ||
                   ['1', '0', '3', '5'].includes(dataSelected.status)
                 "
@@ -932,7 +932,7 @@
               <codx-tab-dealcompetitors
                 [dealID]="dataSelected.recID"
                 [hidenMF]="
-                  !dataSelected?.roles?.isOnwer ||
+                  !dataSelected?.write ||
                   dataSelected.closed ||
                   ['1', '0', '3', '5'].includes(dataSelected.status)
                 "

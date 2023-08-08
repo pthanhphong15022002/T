@@ -107,7 +107,7 @@ export class EmployeeListComponent extends UIComponent {
         request: this.request,
         sameData: false,
         model: {
-          resizable: true,
+          resizable: false,
           isCustomize: true,
           template: this.tempTree,
           panelRightRef: this.tmpMasterDetail,

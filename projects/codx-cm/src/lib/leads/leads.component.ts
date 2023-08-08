@@ -341,11 +341,46 @@ export class LeadsComponent
   }
 
   onLoading(e) {
+    this.loadViewModel();
+  }
 
+  loadViewModel() {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        // toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
   }
 
   changeView(e) {
-    debugger;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
@@ -482,7 +517,7 @@ export class LeadsComponent
     };
     let isDeleteProcess = (eventItem, data) => {
       // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = data.full ? !data.applyProcess : true;
+      eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
     };
 
     let isApprover = (eventItem, data) => {
@@ -496,7 +531,7 @@ export class LeadsComponent
     };
     let isPermission = (eventItem, data) => {
       // Phân quyền
-      eventItem.disabled = !data.assign || !data.allowPermit ? true : false;
+      eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
     let isRejectApprover = (eventItem, data) => {
       // Gửi duyệt của a thảo
@@ -672,7 +707,6 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
-    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -874,6 +908,7 @@ export class LeadsComponent
           titleAction: 'Chỉnh sửa tiềm năng',
           applyFor: this.applyForLead,
           processId: this.processId,
+          gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
