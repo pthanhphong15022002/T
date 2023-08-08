@@ -9,12 +9,17 @@
 }
 
 .card-user {
-  width: 220px;
+  width: 240px;
   height: 220px;
 
-  .card-body {
-    padding: 0 !important;
+  
+  .card-footer{
+    padding: 0 10px !important;
   }
+  .card-body {
+    padding: 0 10px !important;
+  }
+
 
   .symbol {
     margin-bottom: 16px !important;

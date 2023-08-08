@@ -79,7 +79,7 @@
 
       <div
         *ngIf="
-          itemDetail.isCurrent &&
+          itemDetail?.status === '5' &&
           dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
           (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
             itemDetail.expiredDate === null)

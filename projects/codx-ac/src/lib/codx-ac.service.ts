@@ -168,7 +168,10 @@ export class CodxAcService {
     );
     for (const el of inputEls) {
       if (invalidFields.includes(el.getAttribute('field')?.toLowerCase())) {
-        el.querySelector('input').focus();
+        setTimeout(() => {
+          el.querySelector('input').focus();
+        }, 100);
+        
         break;
       }
     }

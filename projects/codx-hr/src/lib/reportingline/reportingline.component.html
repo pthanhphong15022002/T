@@ -12,7 +12,7 @@
 
 
 <ng-template #tmpOrgchart>
-    <lib-reportingline-orgchart #orgChart [positionID]="positionID" [funcID]="funcID"
+    <lib-reportingline-orgchart #orgChart [positionID]="positionID" [funcID]="funcID" [grvSetup]="grvSetup"
         (deletedInputPosition)="changeSelectedData($event)" [view]="view"
         (hasChangedData)="changedDataFromChart($event)"
         (dataSelectedChanged)="changeSelectedData($event)"></lib-reportingline-orgchart>

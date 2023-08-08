@@ -184,23 +184,7 @@ export class TargetsComponent
         this.lstCurrentView = res.datas;
       }
     });
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        this.currencyIDSys = this.currencyID;
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
-        this.exchangeRateSys = this.exchangeRate;
 
-      }
-    }
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -256,11 +240,7 @@ export class TargetsComponent
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
-    this.fetch().subscribe((item) => {
-      this.lstDataTree = item;
-
-      this.loadedTree = true;
-    });
+    this.loadCurrentID();
   }
 
   private fetch(): Observable<any[]> {
@@ -270,7 +250,7 @@ export class TargetsComponent
         this.assemblyNameTree,
         this.classNameTree,
         this.methodTree,
-        [this.requestTree, this.viewCurrent]
+        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
       )
       .pipe(
         finalize(() => {
@@ -296,6 +276,36 @@ export class TargetsComponent
     }
     this.detectorRef.detectChanges();
   }
+
+  async loadCurrentID() {
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        let exchangeRateCurrent = await firstValueFrom(
+          this.cmSv.getExchangeRate(this.currencyID, new Date())
+        );
+        if (exchangeRateCurrent?.exchRate > 0) {
+          this.exchangeRate = exchangeRateCurrent?.exchRate;
+        } else {
+          this.exchangeRate = 1;
+          this.currencyID = 'VND';
+        }
+        this.currencyIDSys = this.currencyID;
+        this.exchangeRateSys = this.exchangeRate;
+      }
+    }
+    this.fetch().subscribe((item) => {
+      this.lstDataTree = item;
+
+      this.loadedTree = true;
+    });
+  }
+
   isActive(item: any): boolean {
     return this.viewCurrent === item;
   }
@@ -334,24 +344,24 @@ export class TargetsComponent
 
   async exChangeRate(currencyIDOld, currencyID) {
     if (currencyIDOld !== currencyID) {
-      let day =  new Date();
+      let day = new Date();
 
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
-
-      if (this.exchangeRate > 0) {
+      this.exchangeRate = exchangeRate?.exchRate;
+      if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {
           element.target =
             (element.target / exchangeRate?.exchRate) * element.exchangeRate;
           element.currencyID = currencyID;
-          element.exchangeRate = exchangeRate?.exchRate ?? 0;
+          element.exchangeRate = exchangeRate?.exchRate ?? 1;
           if (element?.targetsLines != null) {
             element?.targetsLines.forEach((line) => {
               line.target =
                 (line.target / exchangeRate?.exchRate) * line.exchangeRate;
               line.currencyID = currencyID;
-              line.exchangeRate = exchangeRate?.exchRate ?? 0;
+              line.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
           if (element?.items != null) {
@@ -365,15 +375,18 @@ export class TargetsComponent
                 });
               }
               item.currencyID = currencyID;
-              item.exchangeRate = exchangeRate?.exchRate ?? 0;
+              item.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
         });
-        if(this.lstDataTree != null && this.viewMode == 9){
+        if (this.lstDataTree != null && this.viewMode == 9) {
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
+      }else{
+        this.exchangeRate = 1;
+        this.currencyID = 'VND';
       }
-      this.exchangeRate = exchangeRate?.exchRate ?? 0;
+
     }
   }
 
@@ -654,6 +667,8 @@ export class TargetsComponent
           title: this.titleAction,
           lstOwners: lstOwners,
           lstTargetLines: lstTargetLines,
+          currencyID: this.currencyID,
+          exchangeRate: this.exchangeRate,
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
@@ -799,6 +814,10 @@ export class TargetsComponent
 
             this.lstDataTree[index].targetsLines = updatedItems;
           }
+          this.exChangeRate(
+            this.lstDataTree[index].currencyID,
+            this.currencyID
+          );
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
         this.isShow = false;

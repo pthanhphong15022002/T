@@ -25,6 +25,7 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-job',
@@ -34,6 +35,7 @@ import {
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('sample') comboBoxObj: ComboBoxComponent;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   title = '';
   dialog!: DialogRef;
@@ -210,8 +212,9 @@ export class PopupJobComponent implements OnInit {
   }
 
   async changeCombobox(value, key) {
-    this.stepsTasks[key] = value;
-    let group = this.listGroupTask.find((x) => x.recID === value);
+    let data = this.comboBoxObj?.value;
+    this.stepsTasks[key] = data;
+    let group = this.listGroupTask.find((x) => x.recID === data);
     this.taskGroupName = group?.taskGroupName;
     let taskLink = group?.recID
       ? JSON.parse(JSON.stringify(group?.task))

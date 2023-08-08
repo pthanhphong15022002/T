@@ -316,6 +316,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
+      case 'itemID':
+        e.data['itemName'] = e.itemData.ItemName;
+        break;
     }
   }
 
@@ -1111,7 +1114,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costAmt = line.costPrice * line.quantity;
+        setTimeout(() => {
+          line.costAmt = line.costPrice * line.quantity;
+          this.dt.detectChanges();
+        }, 100);
       }
     }
   }
@@ -1122,7 +1128,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costPrice = line.costAmt / line.quantity
+        setTimeout(() => {
+          line.costPrice = line.costAmt / line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+        
       }
     }
   }
