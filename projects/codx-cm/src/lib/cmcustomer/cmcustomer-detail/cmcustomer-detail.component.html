@@ -29,7 +29,7 @@
                   <ng-container *ngFor="let item of lstCustGroups">
                     <div
                       class="d-flex align-items-center"
-                      *ngIf="item?.recID == dataSelected?.custGroupID"
+                      *ngIf="item?.custGroupID == dataSelected?.custGroupID"
                     >
                       <span
                         [ngClass]="item?.icon ?? 'icon-corporate_fare icon-16'"
