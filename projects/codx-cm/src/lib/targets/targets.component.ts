@@ -241,7 +241,6 @@ export class TargetsComponent
     resource.pageLoading = false;
     this.requestTree = resource;
     this.loadCurrentID();
-
   }
 
   private fetch(): Observable<any[]> {
@@ -278,7 +277,7 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
 
-  async loadCurrentID(){
+  async loadCurrentID() {
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -290,15 +289,14 @@ export class TargetsComponent
         let exchangeRateCurrent = await firstValueFrom(
           this.cmSv.getExchangeRate(this.currencyID, new Date())
         );
-        if(exchangeRateCurrent?.exchRate > 0){
+        if (exchangeRateCurrent?.exchRate > 0) {
           this.exchangeRate = exchangeRateCurrent?.exchRate;
-        }else{
+        } else {
           this.exchangeRate = 1;
           this.currencyID = 'VND';
         }
         this.currencyIDSys = this.currencyID;
         this.exchangeRateSys = this.exchangeRate;
-
       }
     }
     this.fetch().subscribe((item) => {
@@ -346,7 +344,7 @@ export class TargetsComponent
 
   async exChangeRate(currencyIDOld, currencyID) {
     if (currencyIDOld !== currencyID) {
-      let day =  new Date();
+      let day = new Date();
 
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
@@ -381,7 +379,7 @@ export class TargetsComponent
             });
           }
         });
-        if(this.lstDataTree != null && this.viewMode == 9){
+        if (this.lstDataTree != null && this.viewMode == 9) {
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
       }
@@ -628,8 +626,6 @@ export class TargetsComponent
             } else {
               this.lstDataTree.push(Object.assign({}, data));
             }
-            this.exChangeRate(data.currencyID, this.currencyIDSys);
-
             if (this.lstDataTree != null && this.viewMode == 9) {
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
@@ -668,6 +664,8 @@ export class TargetsComponent
           title: this.titleAction,
           lstOwners: lstOwners,
           lstTargetLines: lstTargetLines,
+          currencyID: this.currencyID,
+          exchangeRate: this.exchangeRate,
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
@@ -692,7 +690,6 @@ export class TargetsComponent
               } else {
                 this.lstDataTree.push(Object.assign({}, data));
               }
-              this.exChangeRate(data.currencyID, this.currencyIDSys);
               if (this.lstDataTree != null && this.viewMode == 9) {
                 this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
@@ -814,7 +811,10 @@ export class TargetsComponent
 
             this.lstDataTree[index].targetsLines = updatedItems;
           }
-          this.exChangeRate( this.lstDataTree[index].currencyID, this.currencyIDSys);
+          this.exChangeRate(
+            this.lstDataTree[index].currencyID,
+            this.currencyIDSys
+          );
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
         this.isShow = false;

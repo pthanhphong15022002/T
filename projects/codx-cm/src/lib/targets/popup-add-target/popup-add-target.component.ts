@@ -86,7 +86,8 @@ export class PopupAddTargetComponent {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.action = data?.data?.action;
     this.headerText = data?.data?.title;
-
+    this.currencyIDSys = data?.data?.currencyID;
+    this.exchangeRateSys = data?.data?.exchangeRate;
     // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
@@ -97,16 +98,12 @@ export class PopupAddTargetComponent {
       this.exchangeRate = this.data.exchangeRate;
       if(this.exchangeRate <= 0){
         this.currencyID = 'VND';
-        this.currencyIDSys = this.currencyID;
         this.exchangeRate = 1;
-        this.exchangeRateSys = 1;
       }
 
       let date = new Date().setFullYear(this.data.year);
       this.date = new Date(date);
     } else {
-      this.currencyIDSys = data?.data?.currencyID;
-      this.exchangeRateSys = data?.data?.exchangeRate;
       this.currencyID = this.currencyIDSys;
       this.data.currencyID = this.currencyID;
       this.exchangeRate = this.exchangeRateSys;
@@ -138,10 +135,10 @@ export class PopupAddTargetComponent {
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
 
-    this.gridViewSetupTarget = firstValueFrom(
+    this.gridViewSetupTarget = await firstValueFrom(
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
-    this.gridViewSetupTargetLine = firstValueFrom(
+    this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
     this.changedetectorRef.detectChanges();
