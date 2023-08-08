@@ -104,7 +104,7 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
         }
       }
       if(this.data.report){
-
+        debugger
         this.api.execSv(this.data.report.service,this.data.report.assemblyName,this.data.report.className,this.data.report.methodName,this.data.parameters)
         .subscribe((res:any)=>{
           if(res){

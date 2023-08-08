@@ -54,7 +54,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { firstValueFrom, Observable, finalize, map, } from 'rxjs';
+import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
@@ -2515,7 +2515,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
-    if (this.actionStep !== 'edit' || this.stepEdit['stepName']?.trim() != this.stepNew?.stepName?.trim()
+    if (
+      this.actionStep !== 'edit' ||
+      this.stepEdit['stepName']?.trim() != this.stepNew?.stepName?.trim()
     ) {
       let isRepeatName = this.checkStepName(this.stepNew);
       if (isRepeatName) {
@@ -2556,11 +2558,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   checkStepName(stepCheck): boolean {
-    if(stepCheck?.stepName){
+    if (stepCheck?.stepName) {
       let nameCheck = stepCheck?.stepName?.toLocaleLowerCase()?.trim();
       if (this.stepList?.length > 0 && nameCheck) {
         let check = this.stepList?.some(
-          (step) => step.stepName?.toLocaleLowerCase()?.trim() == nameCheck && step?.recID != stepCheck?.recID
+          (step) =>
+            step.stepName?.toLocaleLowerCase()?.trim() == nameCheck &&
+            step?.recID != stepCheck?.recID
         );
         return check;
       }
@@ -2671,7 +2675,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      { taskGroup: taskGroup, differenceTime, step: this.step, form: formModelGroup }
+      {
+        taskGroup: taskGroup,
+        differenceTime,
+        step: this.step,
+        form: formModelGroup,
+      }
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event && res?.event?.taskGroupName) {

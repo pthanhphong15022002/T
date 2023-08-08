@@ -59,6 +59,7 @@ export class PopupJobComponent implements OnInit {
   taskList: DP_Steps_Tasks[] = [];
   show = false;
   dataCombobox = [];
+  dataTask = [];
   valueInput = '';
   litsParentID = [];
   listJobType = [];
@@ -79,23 +80,52 @@ export class PopupJobComponent implements OnInit {
     D: 'Share_Departments_Sgl',
     O: 'Share_OrgUnits_Sgl',
   };
+
+  public sportsData: Object[] = [
+    { Id: 'Game1', Game: 'American Football' },
+    { Id: 'Game2', Game: 'Badminton' },
+    { Id: 'Game3', Game: 'Basketball' },
+    { Id: 'Game4', Game: 'Cricket' },
+    { Id: 'Game5', Game: 'Football' },
+    { Id: 'Game6', Game: 'Golf' },
+    { Id: 'Game7', Game: 'Hockey' },
+    { Id: 'Game8', Game: 'Rugby' },
+    { Id: 'Game9', Game: 'Snooker' },
+    { Id: 'Game10', Game: 'Tennis' },
+  ];
+  // maps the appropriate column to fields property
+  public fields: Object = { text: 'Game', value: 'Id' };
+  fieldsPrent= { text: 'Game', value: 'Id' };
+  // set the placeholder to MultiSelect input element
+  public waterMark: string = 'Favorite Sports';
+  // set the type of mode for how to visualized the selected items in input element.
+  public default: string = 'Default';
+  public box: string = 'Box';
+  public delimiter: string = 'Delimiter';
+
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private authStore: AuthStore,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
     this.step = dt?.data?.step;
-    this.listGroupTask = dt?.data?.listGroup || [];
-
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
     this.dialog = dialog;
+    if(dt?.data?.listGroup){
+      this.listGroupTask = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
+      let index = this.listGroupTask?.findIndex(group => !group.recID);
+      if(index >= 0){
+        this.listGroupTask?.splice(index, 1);
+      }
+    }
     if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['taskType'] = this.typeTask?.value;
@@ -191,6 +221,8 @@ export class PopupJobComponent implements OnInit {
     if (!e || e?.length == 0) return;
     let listUser = e || [];
     let listRole = [];
+    let idO = listUser[0].objectID;
+    let type = listUser[0].objectType;
     for(let role of listUser){
       if(roleType == 'P' && this.owner.some(ownerFind => ownerFind.objectID == role.objectID)){
         continue;
@@ -205,10 +237,21 @@ export class PopupJobComponent implements OnInit {
     }
     if(roleType == 'O'){
       this.owner = listRole;
+      this.stepsTasks.owner = this.owner[0]?.objectID;
     }
     if(roleType == 'P'){
       this.participant =  listRole;
     }
+    this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserByListOrgUnitIDAsync',
+      [[idO], type]
+    ).subscribe(result => {
+      if(result){
+      }
+    });
   }
 
   async changeCombobox(value, key) {
@@ -537,4 +580,9 @@ export class PopupJobComponent implements OnInit {
     }
   }
 
+// selectedSports = ["Game1","Game2"]; // Khởi tạo mảng trống để lưu các mục đã chọn
+
+// onSelectionChange(event) {
+//   this.selectedSports = event; // Cập nhật mảng selectedSports khi có thay đổi
+// }
 }
