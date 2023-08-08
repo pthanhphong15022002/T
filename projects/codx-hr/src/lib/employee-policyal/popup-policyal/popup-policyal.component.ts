@@ -850,6 +850,7 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
+    debugger
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -911,7 +912,7 @@ export class PopupPolicyalComponent
         })
       }
       else if(this.actionType === 'edit'){
-      
+      debugger
         if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
           this.EditPolicyALPolicyIDChanged().subscribe((res) => {
             if(res){
