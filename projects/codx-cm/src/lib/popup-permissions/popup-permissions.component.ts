@@ -28,6 +28,7 @@ export class PopupPermissionsComponent implements OnInit {
   //#region quyền
   isSetFull = false;
   full: boolean = false;
+  read: boolean = true;
   update: boolean;
   assign: boolean;
   upload: boolean;
@@ -96,6 +97,7 @@ export class PopupPermissionsComponent implements OnInit {
         this.lstPermissions[oldIndex] != null
       ) {
         this.lstPermissions[oldIndex].full = this.full;
+        this.lstPermissions[oldIndex].read = this.read;
         this.lstPermissions[oldIndex].update = this.update;
         this.lstPermissions[oldIndex].assign = this.assign;
         this.lstPermissions[oldIndex].delete = this.delete;
@@ -109,6 +111,7 @@ export class PopupPermissionsComponent implements OnInit {
     }
     if (this.lstPermissions[index] != null) {
       this.full = this.lstPermissions[index].full;
+      this.read = this.lstPermissions[index].read;
       this.update = this.lstPermissions[index].update;
       this.assign = this.lstPermissions[index].assign;
       this.delete = this.lstPermissions[index].delete;
@@ -120,6 +123,7 @@ export class PopupPermissionsComponent implements OnInit {
       this.currentPemission = index;
     } else {
       this.full = false;
+      this.read = true;
       this.update = false;
       this.assign = false;
       this.delete = false;
@@ -175,6 +179,7 @@ export class PopupPermissionsComponent implements OnInit {
     }
     if (index == -1) {
       perm.full = false;
+      perm.read = true;
       perm.update = true;
       perm.assign = false;
       perm.delete = false;
@@ -188,6 +193,7 @@ export class PopupPermissionsComponent implements OnInit {
 
     if(perm.objectType == '7'){
       perm.full = true;
+      perm.read = true;
       perm.update = true;
       perm.assign = true;
       perm.delete = true;
@@ -232,6 +238,7 @@ export class PopupPermissionsComponent implements OnInit {
       case 'full':
         this.full = data;
         if (this.isSetFull) {
+          this.read = data;
           this.update = data;
           this.assign = data;
           this.delete = data;
@@ -250,6 +257,7 @@ export class PopupPermissionsComponent implements OnInit {
     if (type != 'full' && data == false) this.full = false;
 
     if (
+      this.read &&
       this.update &&
       this.assign &&
       this.delete &&
@@ -339,6 +347,7 @@ export class PopupPermissionsComponent implements OnInit {
       this.lstPermissions[this.currentPemission].objectType != '7'
     ) {
       this.lstPermissions[this.currentPemission].full = this.full;
+      this.lstPermissions[this.currentPemission].read = this.read;
       this.lstPermissions[this.currentPemission].update = this.update;
       this.lstPermissions[this.currentPemission].assign = this.assign;
       this.lstPermissions[this.currentPemission].delete = this.delete;
