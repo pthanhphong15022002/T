@@ -103,7 +103,6 @@ export class CodxAddressCmComponent implements OnInit {
       this.request.predicates = 'ObjectID=@0 && ObjectType=@1';
       this.request.dataValues = this.id + ';' + this.entityName;
       this.request.entityName = 'BS_AddressBook';
-      this.request.funcID = this.funcID;
       this.className = 'AddressBookBusiness';
       this.fetch().subscribe(async (item) => {
         this.loaded = true;
