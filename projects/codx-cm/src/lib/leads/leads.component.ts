@@ -46,7 +46,8 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
   encapsulation: ViewEncapsulation.None,
-})export class LeadsComponent
+})
+export class LeadsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
@@ -366,76 +367,80 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   }
 
   changeDataMF($event, data, type = null) {
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) eventItem.isbookmark = false;
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     if (mappingFunction) {
-    //       mappingFunction(eventItem, data);
-    //     }
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) eventItem.isbookmark = false;
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        if (mappingFunction) {
+          mappingFunction(eventItem, data);
+        }
+      }
+    }
   }
 
   getRoleMoreFunction(type) {
     let functionMappings;
-    let isDisabled = (eventItem, data) => {
+    let isDisabled = (eventItem, data) => { // Mặc định
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         this.checkMoreReason(data) ||
         !data.applyProcess;
     };
-    let isCRD = (eventItem, data) => {
+    let isCRD = (eventItem, data) => { // Thêm, xóa, copy
       eventItem.disabled = data.closed || this.checkMoreReason(data);
       // eventItem.disabled  = false;
     };
-    let isEdit = (eventItem, data) => {
+    let isEdit = (eventItem, data) => { // Chỉnh sửa
       eventItem.disabled = eventItem.disabled =
         data.closed || (data.status != '13' && this.checkMoreReason(data));
     };
     let isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed;
+      //Đóng tiềm năng
+      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : false;
     };
     let isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed;
+      // Mở tiềm năng
+      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : false;
     };
-    let isStartDay = (eventItem, data) => {
-      eventItem.disabled =
-        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
+    let isStartDay = (eventItem, data) => { // Bắt đầu ngay
+      eventItem.disabled = data?.alloweStatus == '1' ?
+        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess : false;
     };
     let isConvertLead = (eventItem, data) => {
-      eventItem.disabled = !['13', '3'].includes(data.status) || data.closed;
+      eventItem.disabled = data.write
+        ? !['13', '3'].includes(data.status) || data.closed
+        : true;
     };
-    let isOwner = (eventItem, data) => {
-      eventItem.disabled =
-        !['0', '1', '2'].includes(data.status) || data.closed;
+    let isOwner = (eventItem, data) => { // Phân bổ
+      eventItem.disabled = data.full ?
+        !['0', '1', '2'].includes(data.status) || data.closed : false;
     };
-    let isFailReason = (eventItem, data) => {
+    let isFailReason = (eventItem, data) => { // Đánh dấu thất bại
       eventItem.disabled =
         (data.closed && !['0', '1'].includes(data.status)) ||
         ['0', '1'].includes(data.status) ||
         (data.status != '13' && this.checkMoreReason(data)) ||
         !data.applyProcess;
     };
-    let isDisabledDefault = (eventItem, data) => {
+    let isDisabledDefault = (eventItem, data) => { // Mặc định tắt hết
       eventItem.disabled = true;
     };
-    let isStartFirst = (eventItem, data) => {
+    let isStartFirst = (eventItem, data) => { // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = !['3', '5'].includes(data.status);
     };
-    let isChangeStatus = (eventItem, data) => {
+    let isChangeStatus = (eventItem, data) => { // Đổi trạng thái cho tiềm năng ko có quy trình
       eventItem.disabled = this.checkApplyProcess(data);
     };
 
-    let isUpdateProcess = (eventItem, data) => {
+    let isUpdateProcess = (eventItem, data) => { // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.applyProcess;
     };
-    let isDeleteProcess = (eventItem, data) => {
+    let isDeleteProcess = (eventItem, data) => { // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
       eventItem.disabled = !data.applyProcess;
     };
-    let isAprove = (eventItem, data) => {
+    let isAprove = (eventItem, data) => { // Gửi duyệt của a thảo
       eventItem.disabled = eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -445,7 +450,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
         this.checkMoreReason(data);
     };
 
-    let isRejectApprover = (eventItem, data) => {
+    let isRejectApprover = (eventItem, data) => { // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
@@ -1031,8 +1036,8 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
     let obj = {
       data: data,
       title: this.titleAction,
-      entityName: this.view.formModel.entityName
-    }
+      entityName: this.view.formModel.entityName,
+    };
     this.callfc
       .openForm(
         PopupPermissionsComponent,
@@ -1120,34 +1125,50 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
   updateProcess(data, isCheck) {
     this.notificationsService
       .alertCode('DP033', null, [
-        '"' + data?.leadName + '" '+ this.titleAction+' ',
+        '"' + data?.leadName + '" ' + this.titleAction + ' ',
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (!isCheck) {
-            let datas = [data.recID, this.applyForLead, isCheck,this.processId,'',''];
-            this.getApiUpdateProcess(datas,[]);
-          }
-          else {
-            let datas = [data.leadName,data.leadID,this.processId,this.applyForLead];
-            this.codxCmService.addInstanceNoRecId(datas).subscribe((res)=>{
-              if(res) {
-                  let dataInstance = [data.recID, this.applyForLead, isCheck,this.processId ,res[0],res[1]];
-                  this.getApiUpdateProcess(dataInstance,res[2]);
+            let datas = [
+              data.recID,
+              this.applyForLead,
+              isCheck,
+              this.processId,
+              '',
+              '',
+            ];
+            this.getApiUpdateProcess(datas, []);
+          } else {
+            let datas = [
+              data.leadName,
+              data.leadID,
+              this.processId,
+              this.applyForLead,
+            ];
+            this.codxCmService.addInstanceNoRecId(datas).subscribe((res) => {
+              if (res) {
+                let dataInstance = [
+                  data.recID,
+                  this.applyForLead,
+                  isCheck,
+                  this.processId,
+                  res[0],
+                  res[1],
+                ];
+                this.getApiUpdateProcess(dataInstance, res[2]);
               }
-            })
+            });
           }
         }
       });
   }
-  getApiUpdateProcess(datas,listStep){
+  getApiUpdateProcess(datas, listStep) {
     this.codxCmService.updateProcess(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res[0];
-        this.dataSelected = JSON.parse(
-          JSON.stringify(this.dataSelected)
-        );
-        if(listStep.length > 0 && listStep) {
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
         this.notificationsService.notifyCode('SYS007');
