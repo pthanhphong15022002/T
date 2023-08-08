@@ -404,9 +404,9 @@ export class LeadsComponent
       // Mở tiềm năng
       eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : false;
     };
-    let isStartDay = (eventItem, data) => { // Bắt đầu
-      eventItem.disabled =
-        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess;
+    let isStartDay = (eventItem, data) => { // Bắt đầu ngay
+      eventItem.disabled = data?.alloweStatus == '1' ?
+        !['0', '1'].includes(data.status) || data.closed || !data.applyProcess : false;
     };
     let isConvertLead = (eventItem, data) => {
       eventItem.disabled = data.write

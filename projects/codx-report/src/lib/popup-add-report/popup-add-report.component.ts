@@ -236,7 +236,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       {
         this.api.execSv(
             'rptrp',
-            'Codx.RptBusiness.',
+            'Codx.RptBusiness',
             'LVReportHelper',
             'GetReportParamsAsync',
             [this.reportID])
@@ -479,7 +479,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if (!serviceName) {
       serviceName = 'rpt' + this.moduleName.toLowerCase();
     }
-    this.api.execSv(serviceName,'Codx.RptBusiness.','ReportBusiness','SetDatasetAsync',this.reportID).subscribe();
+    this.api.execSv(serviceName,'Codx.RptBusiness','ReportBusiness','SetDatasetAsync',this.reportID).subscribe();
   }
 
 
@@ -533,7 +533,7 @@ download(){
   if(serviceName && reportName)
   {
     this.api.execSv(serviceName,
-    'Codx.RptBusiness.',
+    'Codx.RptBusiness',
     'ReportBusiness',
     'GetRootFileAsync',
     reportName)
