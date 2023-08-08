@@ -26,7 +26,7 @@
 <ng-template #tabDescription>
   <ng-container *ngIf="form?.formGroup">
     <div class="row">
-      <div class="col-4 form-group">
+      <div class="form-group">
         <codx-label fiedName="VATID" [formModel]="form.formModel"> </codx-label>
         <codx-input
           [Group]="form.formGroup"
@@ -119,9 +119,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
-        <codx-label fiedName="TaxableObject" [formModel]="form.formModel">
-        </codx-label>
+      <div class="col-1 form-group">
         <codx-input
           [Group]="form.formGroup"
           field="taxableObject"
@@ -130,10 +128,13 @@
         >
         </codx-input>
       </div>
+      <div class="col-11 form-group">
+        <codx-label fiedName="TaxableObject" [formModel]="form.formModel">
+        </codx-label>
+      </div>
     </div>
     <div class="row">
-      <div class="form-group">
-        <codx-label fiedName="Stop" [formModel]="form.formModel"> </codx-label>
+      <div class="col-1 form-group">
         <codx-input
           [Group]="form.formGroup"
           field="stop"
@@ -141,6 +142,9 @@
           (valueChange)="valueChange($event)"
         >
         </codx-input>
+      </div>
+      <div class="col-11 form-group">
+        <codx-label fiedName="Stop" [formModel]="form.formModel"> </codx-label>
       </div>
     </div>
   </ng-container>

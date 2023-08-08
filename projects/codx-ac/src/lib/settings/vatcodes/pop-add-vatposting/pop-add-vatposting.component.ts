@@ -22,6 +22,8 @@ export class PopAddVatpostingComponent extends UIComponent implements OnInit{
   formType: any;
   validate: any = 0;
   keyField: any = '';
+  isDisableOffsetAcctID: boolean = true;
+  isDisableVatAcctID: boolean = true;
   
   constructor(
     inject: Injector,
@@ -55,6 +57,23 @@ export class PopAddVatpostingComponent extends UIComponent implements OnInit{
   //Event
   valueChange(e: any) {
     this.vatPosting[e.field] = e.data;
+
+    switch(e.field){
+      case 'postType':
+        if(this.vatPosting.postType == '1')
+          this.isDisableVatAcctID = false;
+        else
+          this.isDisableVatAcctID = true;
+        this.dt.detectChanges();
+        break;
+      case 'postOffset':
+        if(this.vatPosting.postOffset == '1')
+          this.isDisableOffsetAcctID = false;
+        else
+          this.isDisableOffsetAcctID = true;
+        this.dt.detectChanges();
+        break;
+    }
   }
 
   close()
