@@ -287,11 +287,16 @@ export class TargetsComponent
       if (dataParam) {
         let paramDefault = JSON.parse(dataParam.dataValue);
         this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        this.currencyIDSys = this.currencyID;
         let exchangeRateCurrent = await firstValueFrom(
           this.cmSv.getExchangeRate(this.currencyID, new Date())
         );
-        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
+        if(exchangeRateCurrent?.exchRate > 0){
+          this.exchangeRate = exchangeRateCurrent?.exchRate;
+        }else{
+          this.exchangeRate = 1;
+          this.currencyID = 'VND';
+        }
+        this.currencyIDSys = this.currencyID;
         this.exchangeRateSys = this.exchangeRate;
 
       }
