@@ -180,7 +180,8 @@ export class CmCustomerComponent
     //     : this.funcID == 'CM0103'
     //     ? 'CM_Partners'
     //     : 'CM_Competitors';
-    this.cache.functionList(this.funcID).subscribe(async (fun) => {
+    let funcID = this.funcID == 'CM0105' ? 'CM0101' : this.funcID;
+    this.cache.functionList(funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
       this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
       // formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
@@ -188,7 +189,7 @@ export class CmCustomerComponent
       // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
-      if (this.funcID == 'CM0101') {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.lstCustGroups = await firstValueFrom(
           this.api.execSv<any>(
             'CM',
@@ -339,7 +340,7 @@ export class CmCustomerComponent
           .getAutonumber(
             this.funcID,
             fun.entityName,
-            this.funcID == 'CM0101'
+            this.funcID == 'CM0101' || this.funcID == 'CM0105'
               ? 'CustomerID'
               : this.funcID == 'CM0102'
               ? 'ContactID'
@@ -438,7 +439,7 @@ export class CmCustomerComponent
           .getAutonumber(
             this.funcID,
             fun.entityName,
-            this.funcID == 'CM0101'
+            this.funcID == 'CM0101' || this.funcID == 'CM0105'
               ? 'CustomerID'
               : this.funcID == 'CM0102'
               ? 'ContactID'
@@ -480,7 +481,7 @@ export class CmCustomerComponent
   async delete(data: any) {
     this.view.dataService.dataSelected = data;
     var check = false;
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       check = await firstValueFrom(
         this.cmSv.checkCustomerIDByDealsAsync(data?.recID)
       );
@@ -715,7 +716,7 @@ export class CmCustomerComponent
 
   getNameCrm(data) {
     var name = '';
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       name = data?.customerName;
     } else if (this.funcID == 'CM0102') {
       name = data.contactName;
