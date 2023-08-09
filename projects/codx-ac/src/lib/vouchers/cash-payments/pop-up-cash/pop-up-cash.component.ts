@@ -127,10 +127,12 @@ export class PopUpCashComponent extends UIComponent implements OnInit {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res) {
+        if (res && res.length > 0) {
           this.dataCash = res;
           this.grid.refresh();
           this.dt.detectChanges();
+        }else{
+          this.notification.notifyCode('AC0027');
         }
       });
   }
