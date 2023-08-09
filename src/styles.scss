@@ -3604,3 +3604,8 @@ codx-view-tree-detail .e-splitter{
   color: #fff!important;
   font-size: 15px!important;
 }
+ejs-richtexteditor{
+  .e-toolbar-wrapper[id*="richtexteditor"]{
+    height: auto!important;
+  }
+}
