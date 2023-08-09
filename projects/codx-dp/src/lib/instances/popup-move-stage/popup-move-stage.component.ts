@@ -153,7 +153,6 @@ export class PopupMoveStageComponent implements OnInit {
     this.processID = this.dataCM ? this.dataCM?.processID: this.instance?.processID;
     this.recID = this.dataCM ? this.dataCM?.refID: this.instance?.recID;
 
-
     if(!this.isLoad) {
       this.lstParticipants = dt?.data.lstParticipants;
     }
@@ -395,7 +394,6 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    this.instancesStepOld.owner = this.owner;
     if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -471,7 +469,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepIdOld = '';
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
-      this.instancesStepOld.owner = this.owner;
       this.setRoles();
       this.instancesStepOld.stepID = this.stepIdClick;
     }
