@@ -549,7 +549,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabSet>
-  <ng-container *ngIf="(itemSelected.subType == '2' || itemSelected.subType == '9') && settledInvoices">
+  <ng-container *ngIf="settledInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;">
@@ -693,7 +693,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabVat>
-  <ng-container *ngIf="itemSelected.subType == '9' && vatInvoices">
+  <ng-container *ngIf="vatInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200" style="position: sticky; top: 0">

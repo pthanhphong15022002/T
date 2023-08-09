@@ -623,6 +623,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.settledInvoices = [];
     switch (data.subType) {
       case '2':
+      case '12':
         this.acService
           .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
             data.recID,
@@ -830,6 +831,7 @@ export class CashPaymentsComponent extends UIComponent {
           ele.hideTab(2, true);
           break;
         case '2':
+        case '12':
           ele.hideTab(1, false);
           ele.hideTab(2, true);
           break;

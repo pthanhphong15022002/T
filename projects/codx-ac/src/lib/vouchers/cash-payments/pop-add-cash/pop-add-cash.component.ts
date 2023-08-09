@@ -1480,6 +1480,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadTotal();
         this.gridSet.refresh();
         this.dialog.dataService.update(this.cashpayment).subscribe();
+        this.dt.detectChanges();
       }
     });
   }
@@ -1651,7 +1652,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadTotal() {
     this.total = 0;
-    if (this.cashpayment.subType != 2) {
+    if (this.cashpayment.subType != '2' && this.cashpayment.subType != '12') {
       if (this.gridCash.dataSource.length > 0) {
         this.gridCash.dataSource.forEach((element) => {
           this.total = this.total + element.dr;
@@ -1771,6 +1772,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadFormSubType('1');
         break;
       case '2':
+      case '12':
         ele.hideTab(0, true);
         ele.hideTab(1, false);
         ele.hideTab(2, true);
