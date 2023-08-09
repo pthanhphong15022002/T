@@ -25,7 +25,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'detail/:funcID',
+        path: 'detail/:recID',
         component: CodxReportViewDetailComponent,
       },
       {

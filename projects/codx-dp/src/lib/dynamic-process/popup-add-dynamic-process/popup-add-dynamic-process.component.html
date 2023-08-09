@@ -1888,7 +1888,7 @@
                   [ngStyle]="
                     process?.stepsColorMode
                       ? {}
-                      : { color: iconReasonFail?.iconColor }
+                      : { color: stepFail?.iconColor }
                   "
                 >
                 </i>
@@ -2155,24 +2155,23 @@
                             class="d-flex justify-content-start align-items-center"
                           >
                             <!-- icon task -->
-                            <div
-                              class="icon-container"
-                              [ngStyle]="getColor(task)"
-                            >
-                              <span
-                                class="icon-16"
-                                [ngClass]="getIconTask(task)"
-                              ></span>
-                            </div>
-                            <!-- avata -->
+                            <codx-icon-step
+                              [typeTask]="task?.taskType"
+                              [listTypeTask]="listTypeTask"
+                              [isStep]="false"
+                              [size]="30"
+                            ></codx-icon-step>
                             <div class="mx-3">
-                              <codx-img
-                                [width]="30"
-                                [objectId]="getRole(task, 'ID')"
-                                objectType="AD_Users"
-                                [objectName]="getRole(task, 'name')"
+                              <codx-imgs
+                                class="me-2 d-flex align-items-center"
+                                [width]="25"
+                                ojectType="AD_Users"
+                                [numberImages]="1"
+                                [isToolTip]="true"
+                                [objectId]="task?.owner"
+                                [objectName]="getRoleName(task)"
                               >
-                              </codx-img>
+                              </codx-imgs>
                             </div>
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">

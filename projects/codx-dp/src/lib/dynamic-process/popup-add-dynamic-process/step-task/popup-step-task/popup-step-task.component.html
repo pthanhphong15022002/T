@@ -160,33 +160,6 @@
           </codx-input>
         </div>
       </div>
-      <!-- End cuoc hop -->
-      <!-- Gui mail -->
-      <!-- <div
-        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
-        class=""
-        style="flex-basis: 10%"
-      >
-        <div>
-          <codx-label></codx-label>
-        </div>
-        <div
-          *ngIf="typeTask?.value === 'E'"
-          class="d-flex justify-content-end"
-          style="margin-top: 2px"
-        >
-          <button
-            class="button-mail"
-            *ngIf="typeTask?.value == 'E'"
-            (click)="handelMail()"
-          >
-            <span
-              class="icon-email icon-20 text-primary-600 py-2 text-muted"
-            ></span>
-          </button>
-        </div>
-      </div> -->
-      <!-- End gui mail -->
     </div>
     <!--End ten Cong Viec -->
 
@@ -307,19 +280,18 @@
         </codx-label>
       </div>
       <div>
-        <!-- <ejs-multiselect
-          id="sample-list1"
-          [dataSource]="dataCombobox"
-          [mode]="default"
+        <ejs-multiselect
+          [dataSource]="listTaskLink"
+          [mode]="'Default'"
           [fields]="fieldsTask"
-          [placeholder]="waterMark"
-          [value]="selectedSports"
-          (valueChange)="onSelectionChange($event)"
-        ></ejs-multiselect> -->
-        <ng-container
+          [value]="listParentID"
+          (valueChange)="parentIDChange($event)"
+        ></ejs-multiselect>
+
+        <!-- <ng-container
           [ngTemplateOutlet]="comboboxMulti"
           [ngTemplateOutletContext]="{ dataSource: dataCombobox }"
-        ></ng-container>
+        ></ng-container> -->
       </div>
     </div>
 
@@ -534,7 +506,7 @@
   </button>
 </ng-template>
 
-<ng-template #comboboxMulti let-data="dataSource">
+<!-- <ng-template #comboboxMulti let-data="dataSource">
   <div class="combobox-multi" #inputContainer>
     <div>
       <div
@@ -551,7 +523,7 @@
         <span class="e-input-group-icon e-spin-down"></span>
       </div>
     </div>
-    <div class="select" *ngIf="show">
+    <div class="select" *ngIf="showCbxParentID">
       <ul>
         <li
           *ngFor="let item of data"
@@ -568,4 +540,32 @@
       </ul>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+
+<!-- End cuoc hop -->
+      <!-- Gui mail -->
+      <!-- <div
+        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
+        class=""
+        style="flex-basis: 10%"
+      >
+        <div>
+          <codx-label></codx-label>
+        </div>
+        <div
+          *ngIf="typeTask?.value === 'E'"
+          class="d-flex justify-content-end"
+          style="margin-top: 2px"
+        >
+          <button
+            class="button-mail"
+            *ngIf="typeTask?.value == 'E'"
+            (click)="handelMail()"
+          >
+            <span
+              class="icon-email icon-20 text-primary-600 py-2 text-muted"
+            ></span>
+          </button>
+        </div>
+      </div> -->
+      <!-- End gui mail -->

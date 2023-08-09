@@ -2708,14 +2708,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         role['taskGroupID'] = taskGroup['recID'];
       });
       let index = this.taskGroupList.length;
-      if (index === 0) {
-        let taskGroupNull = new DP_Steps_TaskGroups();
-        taskGroupNull['task'] = [];
-        taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.taskGroupList.push(taskGroupNull);
-      }
-
       if (type === 'copy' && taskGroup['task'].length > 0) {
+        if (index === 0) {
+          let taskGroupNull = new DP_Steps_TaskGroups();
+          taskGroupNull['task'] = [];
+          taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+          this.taskGroupList.push(taskGroupNull);
+        }
         for (let task of taskGroup['task']) {
           task['recID'] = Util.uid();
           task['taskGroupID'] = taskGroup['recID'];
@@ -3597,10 +3596,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data[event.field] = event.data;
     }
   }
-  getRole(task, type) {
+  getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return type == 'ID' ? role?.objectID : role?.objectName;
+      task?.roles.find((role) => role.objectID == task?.owner) || task?.roles[0];
+    return role?.objectName;
   }
 
   checkOverflow(event: any, popup: any) {

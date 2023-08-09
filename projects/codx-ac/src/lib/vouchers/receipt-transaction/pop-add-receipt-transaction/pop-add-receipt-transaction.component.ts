@@ -1148,6 +1148,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.addRow();
         }
         break;
+      case 'endEdit':
+        if (!this.gridVouchersLine.autoAddRow) 
+        {
+          setTimeout(() => {
+            let element = document.getElementById('btnadd');
+            element.focus();
+          }, 100); 
+        }
+      break;
     }
   }
 
