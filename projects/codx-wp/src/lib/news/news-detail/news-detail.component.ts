@@ -12,6 +12,7 @@ import { WP_Comments } from '../../models/WP_Comments.model';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-comment.component';
+import { Post } from '@shared/models/post';
 
 @Component({
   selector: 'wp-news-detail',
@@ -37,7 +38,7 @@ export class NewsDetailComponent extends UIComponent {
   listNews = [];
   views: Array<ViewModel> = [];
   userPermission: any = null;
-  sysMoreFunc: any = null;
+  moreFunction: any = null;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   constructor(private injector: Injector) {
@@ -70,11 +71,7 @@ export class NewsDetailComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  //
-  onLoading(event: any) {
-    debugger;
-  }
-
+ 
   //load data
   loadData(recID: string, category: string) {
     this.getData(recID);
@@ -164,19 +161,25 @@ export class NewsDetailComponent extends UIComponent {
     this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
   // add
-  moreFunction: any = null;
   openPopupAdd(type: string) {
     if (this.view) {
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      let mfc = Array.from<any>(this.moreFunction).find(
+      let mfc = Array.from<any>(this.moreFunction)?.find(
         (x: any) => x.functionID === 'SYS01'
       );
+      let post = new Post();
+      if(this.category && this.category != "home")
+      {
+        post.category = this.category;
+      }
+      post.newsType = type;
       let data = {
-        action: mfc.defaultName,
+        action: mfc?.defaultName,
         type: type,
+        data : post
       };
       this.callfc.openForm(PopupAddComponent, '', 0, 0, '', data, '', option);
     }
