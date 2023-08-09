@@ -1,3 +1,4 @@
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -20,6 +21,7 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  Filters,
   FormModel,
   NotificationsService,
   QueryBuilderComponent,
@@ -96,6 +98,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     },
   ];
   tabContent: any[];
+  qbFilter: any;
   setTitle(e: any) {
     console.log(e);
   }
@@ -148,7 +151,19 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
 
     this.hideTabQuery = data?.data.hideTabQuery ?? false;
-
+    if(this.isAdd ){
+      this.qbFilter = new Filters();
+      this.qbFilter.logic= 'or';
+      this.qbFilter.filters=[];
+    }
+    else{
+      if(this.data?.constraints?.length>0){
+        this.qbFilter = this.data?.constraints[0];
+      }
+      else{
+        this.qbFilter = new Filters();
+      }
+    }
     this.tabContent = [
       this.tabInfo0,
       this.tabQuery,
@@ -265,6 +280,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
+                this.data.constraints = [this.qbFilter];
                 this.data.signatureType = this.defaultSignType;
                 this.dialogApprovalStep.patchValue(this.data);
 
@@ -422,7 +438,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   saveFilterChange(event) {
-    this.data.constraints = event.filters;
+    this.data.constraints = [event];
     this.onSaveForm();
   }
 
@@ -456,6 +472,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,
     });
+    if(this.data?.constraints==null){
+      this.data.constraints = [this.qbFilter];
+    }
     this.data.approveMode = this.currentApproveMode;
     this.data.approvers = this.lstApprover;
     if (this.isAdd) {
