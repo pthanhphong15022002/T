@@ -97,6 +97,7 @@ import { InstanceDashboardComponent } from './deals/instance-dashboard/instance-
 import { PopupChangeAllocationRateComponent } from './targets/popup-change-allocation-rate/popup-change-allocation-rate.component';
 import { PopupBantDealComponent } from './deals/popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from './popup-permissions/popup-permissions.component';
+import { CalendarsComponent } from './calendars/calendars.component';
 
 export const routes: Routes = [
   {
@@ -136,6 +137,11 @@ export const routes: Routes = [
         path: 'leads/:funcID',
         component: LeadsComponent,
         // data: { noReuse: true },
+      },
+      {
+        path: 'calendars/:funcID',
+        component: CalendarsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'dashboard/:funcID',
@@ -228,12 +234,13 @@ const T_Component: Type<any>[] = [
   PopupAssginDealComponent,
   InstanceDashboardComponent,
   PopupChangeAllocationRateComponent,
-  PopupBantDealComponent
-
+  PopupBantDealComponent,
+  CalendarsComponent,
+  PopupPermissionsComponent,
 ];
 
 @NgModule({
-  declarations: [T_Component, PopupPermissionsComponent],
+  declarations: [T_Component],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

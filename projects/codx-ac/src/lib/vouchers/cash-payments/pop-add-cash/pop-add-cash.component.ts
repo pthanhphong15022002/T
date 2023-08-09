@@ -23,6 +23,7 @@ import {
 import {
   AuthService,
   AuthStore,
+  CodxDropdownSelectComponent,
   CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
@@ -40,7 +41,6 @@ import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
-import { VoucherComponent } from '../../../popup/voucher/voucher.component';
 import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
 import {
   AnimationModel,
@@ -48,6 +48,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { VATInvoices } from '../../../models/VATInvoices.model';
 import { RoundService } from '../../../round.service';
+import { VoucherComponent } from '../pop-up-set/voucher/voucher.component';
 @Component({
   selector: 'lib-pop-add-cash',
   templateUrl: './pop-add-cash.component.html',
@@ -79,6 +80,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   @ViewChild('cbxPayee') cbxPayee: any;
   @ViewChild('cbxCashBook') cbxCashBook: any;
   @ViewChild('cbxRefdoc') cbxRefdoc: any;
+  @ViewChild('cbxSub') cbxSub: CodxDropdownSelectComponent;
   headerText: string;
   dialog!: DialogRef;
   dialogData?: any;
@@ -185,6 +187,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       emitEvent: false,
     });
     this.setTabindex();
+    this.onFocus();
   }
   //#endregion
 
@@ -278,27 +281,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.dt.detectChanges();
                   this.clearCashpayment();
                   this.cashpayment.subType = e.data[0];
-                  this.form.formGroup.patchValue(
-                    { subType: this.cashpayment.subType },
-                    {
-                      onlySelf: true,
-                      emitEvent: false,
-                    }
-                  );
                   this.loadSubType(this.cashpayment.subType, this.tabObj);
                 }
               });
           } else {
-            //this.dt.reattach();
-            // this.form.formGroup.patchValue(
-            //   { subType: this.cashpayment.subType },
-            //   {
-            //     onlySelf: true,
-            //     emitEvent: false,
-            //   }
-            // );
-            // this.cbxSub.dropdownContent.value = '1';
-            // this.cbxSub.dropdownContent.loadDataVll();
+            // this.cbxSub.dropdownContent.value = this.cashpayment.subType;
+            
+            // this.dt.detectChanges();
           }
         });
       } else {
@@ -1275,39 +1264,40 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDiscard() {
-    if (
-      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
-      (this.gridSet && !this.gridSet.gridRef.isEdit)
-    ) {
-      if (this.hasSaved) {
-        this.notification.alertCode('AC0010', null).subscribe((res) => {
-          if (res.event.status === 'Y') {
-            this.loading = true;
-            this.dt.detectChanges();
-            this.dialog.dataService
-              .delete(
-                [this.cashpayment],
-                false,
-                null,
-                '',
-                '',
-                null,
-                null,
-                false
-              )
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if (res.data != null) {
-                  this.loading = false;
-                  this.dt.detectChanges();
-                  this.notification.notifyCode('E0860');
-                  this.dialog.close();
-                  this.onDestroy();
-                }
-              });
-          }
-        });
-      }
+    // if (
+    //   (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+    //   (this.gridSet && !this.gridSet.gridRef.isEdit)
+    // ) {
+      
+    // }
+    if (this.hasSaved) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.loading = true;
+          this.dt.detectChanges();
+          this.dialog.dataService
+            .delete(
+              [this.cashpayment],
+              false,
+              null,
+              '',
+              '',
+              null,
+              null,
+              false
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.loading = false;
+                this.dt.detectChanges();
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
+        }
+      });
     }
   }
 
@@ -2376,9 +2366,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         });
     }
     this.gridInit(this.gridCash.columnsGrid);
-    this.setTabindex();
     this.dt.detectChanges();
     this.gridCash.refresh();
+    this.setTabindex();
   }
 
   setMemo() {
@@ -2764,25 +2754,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }, 10000);
   }
 
-  // onFocus() {
-  //   let ins = setInterval(() => {
-  //     if (this.cbxCashBook) {
-  //       if (
-  //         this.cbxCashBook.ComponentCurrent &&
-  //         this.cbxCashBook.ComponentCurrent.comboBoxObject
-  //       ) {
-  //         if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
-  //           clearInterval(ins);
-  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
-  //           this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
-  //         }
-  //       }
-  //     }
-  //   }, 200);
-  //   setTimeout(() => {
-  //     if (ins) clearInterval(ins);
-  //   }, 10000);
-  // }
+  onFocus() {
+    let ins = setInterval(() => {
+      if (this.cbxCashBook) {
+        if (
+          this.cbxCashBook.ComponentCurrent &&
+          this.cbxCashBook.ComponentCurrent.comboBoxObject
+        ) {
+          if (this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement) {
+            clearInterval(ins);
+            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.focus();
+            this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
+            let itv = setInterval(() => {
+              if (this.cbxCashBook?.ComponentCurrent?.itemsSelected.length > 0) {
+                clearInterval(itv);
+                this.cbxCashBook.ComponentCurrent.comboBoxObject.inputElement.select();
+              }
+            },200)
+            setTimeout(() => {
+              if (itv) clearInterval(itv);
+            }, 1000);  
+          }
+        }
+      }
+    },200)
+    setTimeout(() => {
+      if (ins) clearInterval(ins);
+    }, 10000);  
+  }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {

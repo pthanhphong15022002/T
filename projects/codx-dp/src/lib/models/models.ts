@@ -188,6 +188,7 @@ export class DP_Steps_TaskGroups {
   roles: DP_Steps_TaskGroups_Roles[] = []; // objects
   statusCodeID: string;
   memo: string;
+  owner: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -420,6 +421,7 @@ export class DP_Instances_Steps_TaskGroups {
   modifiedBy: string;
   reminders: string;
   isTaskDefault: boolean;
+  owner: string;
 }
 export class DP_Instances_Steps_TaskGroups_Roles {
   recID = Util.uid();

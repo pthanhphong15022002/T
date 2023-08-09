@@ -80,7 +80,7 @@
 <ng-template #template let-data>
   <div class="d-flex flex-column w-250px position-relative p-4 rounded-2 h-150px"
     [ngClass]="data?.isSelected ?'highlight-node-border': 'border'" (click)="changeSelectedItem(data)" [ngStyle]=" { 
-      background: haveHighLight?(data?.positionID == positionID? 'aliceblue': null) : 'white', 
+      background: haveHighLight?(data?.positionID == positionID? 'var(--primary-lighter)': null) : 'white', 
       borderColor: '' 
     }">
     <div class="has-action-menu">
@@ -91,26 +91,21 @@
       <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data }">
       </ng-container>
       <div class="text-center mt-2">
-        <p #employeeName class="text-dark m-0 p-0 fw-bolder line-clamp line-clamp-1" [ngbTooltip]="employeeNameTooltip">{{data.employees[0].employeeName}}</p>
-        <p #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.positionID? positionNameTooltip : null">{{data.positionName}}</p>
-        <p #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.orgUnitID? orgUnitNameTooltip: null">{{data.orgUnitName}}</p>
+        <p #employeeName class="text-dark m-0 p-0 fw-bolder line-clamp line-clamp-1"
+          [ngbTooltip]="employeeName.scrollHeight > employeeName.clietHeight?  employeeNameTooltip : null">
+          {{data.employees[0].employeeName}}</p>
+        <span #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1"
+          [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionNameTooltip : null">{{data.positionName}}</span>
+        <span #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1"
+          [ngbTooltip]="orgUnitName.scrollHeight > orgUnitName.clientHeight? orgUnitNameTooltip: null">{{data.orgUnitName}}</span>
         <ng-template #employeeNameTooltip>
-          <div class="d-flex flex-column">
-            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
-            <span *ngIf="employeeName.scrollHeight > employeeName.clientHeight" class="data-text-color">{{data.employeeName}}</span>
-          </div>
+          <span class="data-text-color">{{data.employees[0].employeeName}}</span>
         </ng-template>
         <ng-template #positionNameTooltip>
-          <div class="d-flex flex-column">
-            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
-            <span *ngIf="positionName.scrollHeight > positionName.clientHeight" class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
-          </div>
+          <span class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
         </ng-template>
         <ng-template #orgUnitNameTooltip>
-          <div class="d-flex flex-column">
-            <!-- <span class="label-text-color">{{grvSetup['OrgUnitID']}}</span> -->
-            <span *ngIf="orgUnitName.scrollHeight > orgUnitName.clientHeight" class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-          </div>
+          <span class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
         </ng-template>
       </div>
     </div>
@@ -119,19 +114,15 @@
         <img src="assets/themes/sys/default/img/Avatar_Default.svg" class="w-60px" alt="" />
       </div>
       <div class="text-center mt-2">
-        <p #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.positionID? positionNameTooltip : null">{{data.positionName}}</p>
-        <p #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1" [ngbTooltip]="data?.orgUnitID? orgUnitNameTooltip: null">{{data.orgUnitName}}</p>
+        <span #positionName class="text-dark m-0 p-0 line-clamp line-clamp-1"
+          [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionNameTooltip : null">{{data.positionName}}</span>
+        <span #orgUnitName class="text-dark m-0 p-0 line-clamp line-clamp-1"
+          [ngbTooltip]="orgUnitName.scrollHeight > orgUnitName.clientHeight? orgUnitNameTooltip: null">{{data.orgUnitName}}</span>
         <ng-template #positionNameTooltip>
-          <div class="d-flex flex-column">
-            <!-- <span class="label-text-color">{{grvSetup['PositionID']}}</span> -->
-            <span *ngIf="positionName.scrollHeight > positionName.clientHeight" class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
-          </div>
+          <span class="data-text-color">{{data.positionName? data.positionName : data.positionID}}</span>
         </ng-template>
         <ng-template #orgUnitNameTooltip>
-          <div class="d-flex flex-column">
-            <!-- <span class="label-text-color">{{grvSetup['OrgUnitID']}}</span> -->
-            <span *ngIf="orgUnitName.scrollHeight > orgUnitName.clientHeight" class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
-          </div>
+          <span class="data-text-color">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
         </ng-template>
       </div>
     </ng-template>
