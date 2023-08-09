@@ -112,8 +112,8 @@
   <div class="container">
     <codx-temp-full
       [imageId]="data.resourceData?.owner"
-      [title]="data.resourceData.userName"
-      [subTitle]="data.resourceData.postionName"
+      [title]="data.resourceData?.userName"
+      [subTitle]="data.resourceData?.postionName"
       [content]="'(' + data.resourceData.events + ')'"
     >
     </codx-temp-full>
@@ -122,8 +122,9 @@
 
 <ng-template #eventTemplate let-data>
   <div class="d-flex flex-column w-100">
-    <!-- <span class="d-flex flex-start"
-      >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span> -->
+    <span class="d-flex flex-start"
+      >{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span
+    >
     <span class="fw-bold text-truncate">{{ data?.taskName }}</span>
   </div>
 </ng-template>
