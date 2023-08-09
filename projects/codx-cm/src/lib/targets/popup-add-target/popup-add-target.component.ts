@@ -88,7 +88,7 @@ export class PopupAddTargetComponent {
     this.headerText = data?.data?.title;
     this.currencyIDSys = data?.data?.currencyID;
     this.exchangeRateSys = data?.data?.exchangeRate;
-    // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
+    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
@@ -96,7 +96,7 @@ export class PopupAddTargetComponent {
       this.lstTargetLines = data?.data?.lstTargetLines;
       this.currencyID = this.data.currencyID;
       this.exchangeRate = this.data.exchangeRate;
-      if(this.exchangeRate <= 0){
+      if (this.exchangeRate <= 0) {
         this.currencyID = 'VND';
         this.exchangeRate = 1;
       }
@@ -135,9 +135,9 @@ export class PopupAddTargetComponent {
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
 
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
+    // this.gridViewSetupTarget = await firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -153,7 +153,7 @@ export class PopupAddTargetComponent {
         this.cmSv.getExchangeRate(currencyID, day)
       );
 
-      if (this.exchangeRate > 0) {
+      if (exchangeRate?.exchRate > 0) {
         this.data.target =
           (this.data.target / exchangeRate?.exchRate) * this.exchangeRate;
         this.lstOwners.forEach((element) => {
@@ -168,13 +168,16 @@ export class PopupAddTargetComponent {
       if (exchangeRate?.exchRate > 0) {
         this.exchangeRate = exchangeRate?.exchRate;
       } else {
-        this.exchangeRate = 1;
+        exchangeRate.exchRate =  this.exchangeRate;
+        currencyID = this.currencyID;
       }
-      this.currencyID = 'VND';
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate.exchRate;
       this.currencyIDSys = this.currencyID;
       this.exchangeRateSys = this.exchangeRate;
 
       this.data.currencyID = this.currencyID;
+      this.data.exchangeRate = this.exchangeRate;
     }
   }
   //#endregion
@@ -284,7 +287,6 @@ export class PopupAddTargetComponent {
       if (this.data[e?.field] != e?.data) {
         this.exChangeRate(this.data.currencyID, e?.data);
 
-        this.data[e.field] = e.data;
       }
     }
 
@@ -400,13 +402,16 @@ export class PopupAddTargetComponent {
         if (res.isExit) weightExit += res.weight;
       });
       for (var item of this.lstOwners) {
-        if (!item.isExit && this.action == 'add') {
+        if (!item.isExit) {
           if (type == 'user') {
             item.weight = 100 / this.lstOwners.length;
           } else {
-            item.weight =
-              (100 - weightExit) /
-              this.lstOwners.filter((x) => !x.isExit).length;
+            let all = this.lstOwners.filter((x) => !x.isExit).length;
+            if (all > 0) {
+              item.weight =
+                (100 - weightExit) /
+                all;
+            }
           }
         }
         item.target = (this.data.target * item.weight) / 100;

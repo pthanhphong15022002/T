@@ -38,7 +38,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     },
   ]
   rootFunction:any;
-  funcItem:any;
+  data:any;
   reportList:any=[];
   user:any = null;
   constructor(
@@ -58,8 +58,11 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
 
   onInit(): void {
     this.router.params.subscribe((param:any) => {
-      this.funcID = param.funcID;
-      this.getReport(this.funcID);
+      if(param["funcID"])
+      {
+        this.reportID = param["funcID"];
+        this.getReport(this.reportID);
+      }
     });
     this.getMessageDefault();
   }
@@ -95,56 +98,28 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         },
       },
     ];
-
-    this.routerNg.events.subscribe((event: any)=>{
-      if(event instanceof NavigationEnd){
-        if(event.url.includes('detail')){
-          let funcID = event.url.split('/').pop();
-          this.funcID = funcID;
-          //this.pageTitle.setBreadcrumbs([]);
-          this.layout.showIconBack = true;
-          this.pageTitle.setRootNode(this.rootFunction.customName);
-
-          //this.funcID = this.router.snapshot.params['funcID'];
-          //this.getReport(funcID);
-        }
-        else if(event.url.includes(this.rootFunction.funtionID)){
-
-          //this.pageTitle.setTitle(this.rootFunction.customName);
-          //this.pageTitle.setSubTitle(this.rootFunction.customName);
-          //this.pageTitle.setBreadcrumbs([]);
-          //this.setBreadCrumb(this.funcItem,true)
-        }
-        this.changeDetectorRef.detectChanges();
-      }
-    })
-
-
   }
   viewChanged(e:any){
     this.viewBase.moreFuncs = this.moreFc;
-    // if(this.funcID && !this.funcItem){
-    //   this.getReport(this.funcID);
-    // }
   }
   //get report by ID
-  getReport(funcID:string){
+  getReport(recID:string){
     this.api
     .execSv(
       'rptrp',
       'Codx.RptBusiness.RP',
       'ReportListBusiness',
       'GetAsync',
-      [funcID])
+      [recID])
       .subscribe((res: any) => {
       if (res) {
-        this.funcItem = res;
+        this.data = res;
         this.reportID = res.reportID;
         this.isRunMode = res.runMode == "1";
-        this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        // this.pageTitle.setSubTitle("");
+        this.pageTitle.setRootNode(this.data.customName);
+        this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(res.displayMode == "3"){
-          this.test(res.recID);
+          this.getReportPDF(res.recID);
         }
       }
     });
@@ -162,7 +137,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           path: this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID
         }
         this.pageTitle.setParent(parent);
-        this.getReportList(this.funcItem.moduleID, this.funcItem.reportType);
+        this.getReportList(this.data.moduleID, this.data.reportType);
       }
     })
   }
@@ -181,8 +156,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
        arrChildren.push(pageLink);
       }
       this.pageTitle.setChildren(arrChildren);
-      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
-      this.setBreadCrumb(this.funcItem);
+      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.data.recID);
+      this.setBreadCrumb(this.data);
     })
   }
 
@@ -207,10 +182,11 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     });
   }
   onActions(e:any){
-    if(e.id == 'btnViewDs'){
+    if(e.id == 'btnViewDs' && this.data)
+    {
       let dialog = new DialogModel;
       dialog.IsFull = true;
-      let parameters = this.funcItem.parameters;
+      let parameters = this.data.parameters;
       if(parameters){
         parameters.forEach((x:any) => {
           if(x.defaultValue){
@@ -218,7 +194,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
           }
         });
       }
-      this.callfc.openForm(PopupShowDatasetComponent,"",window.innerWidth,window.innerHeight,"",{report: this.funcItem, parameters: e.parameters},"",dialog)
+      this.callfc.openForm(PopupShowDatasetComponent,"",window.innerWidth,window.innerHeight,"",{report: this.data, parameters: e.parameters},"",dialog)
     }
   }
 
@@ -230,30 +206,32 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     }
   }
 
-  private editReport() {
-    let option = new DialogModel();
-    option.DataService = this.viewBase.dataService;
-    option.FormModel = this.viewBase.formModel;
-    this.callfc.openForm(
-      PopupAddReportComponent,
-      '',
-      screen.width,
-      screen.height,
-      " ",
-      this.funcID,
-      '',
-      option
-    );
+  editReport() {
+    if(this.data)
+    {
+      let option = new DialogModel();
+      option.DataService = this.viewBase.dataService;
+      option.FormModel = this.viewBase.formModel;
+      this.callfc.openForm(
+        PopupAddReportComponent,
+        '',
+        screen.width,
+        screen.height,
+        " ",
+        {
+          module:this.data.moduleID,
+          reportID:this.data.recID,
+        },
+        '',
+        option
+      );
+    }
+    
   }
   isRunMode = false;
   filterReportChange(e:any){
     if(this.isRunMode)
       this.isRunMode = false;
-    // if(e[0]){
-    //   debugger
-    //   this.predicate = e[0].predicates;
-    //   this.dataValue = e[0].dataValues;
-    // }
     if(e == null) return;
     let objParam:any = {};
     let objLabel:any={};
@@ -270,7 +248,9 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
       this._labelString = JSON.stringify(objLabel);
     }
-    this.test(this.funcItem.recID);
+    if(this.data.displayMode == "3"){
+      this.getReportPDF(this.data.recID);
+    }
   }
 
   
@@ -281,14 +261,14 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   
   itemSelect(e:any){
     if(e){
-      this.funcItem = e;
+      this.data = e;
       this.codxService.navigate('', e.moduleID.toLowerCase()+'/report/detail/' + e.recID);
-      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.funcItem.recID);
+      this.reportList = this.orgReportList.filter((x:any)=>x.recID != this.data.recID);
     }
   }
   homeClick(){
     this.codxService.navigate('', this.rootFunction.module.toLowerCase()+'/report/' + this.rootFunction.functionID);
-    this.setBreadCrumb(this.funcItem,true);
+    this.setBreadCrumb(this.data,true);
   }
 
   clickViewReport(){
@@ -296,9 +276,9 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
 
   url:string = "";
-  test(recID:string){
+  getReportPDF(recID:string){
     let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
-    this.url = `${environment.apiUrl}/api/${this.funcItem.service}/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
+    this.url = `${environment.apiUrl}/api/${this.data.service}/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
   }
 }
 

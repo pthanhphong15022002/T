@@ -71,10 +71,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('uploader') uploader!: UploaderComponent;
-  @ViewChild('uploaderRDL') uploaderRDL!: UploaderComponent;
-  @ViewChild('uploaderXLS') uploaderXLS!: UploaderComponent;
-  @ViewChild('uploaderDOC') uploaderDOC!: UploaderComponent;
-
 
   files:any=[];
   title: string = 'Thêm mới báo cáo';
@@ -82,7 +78,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   tabTitle: any[] = [];
   dialog: any;
   data: any;
-  fuctionItem: any = {};
   reportID: any;
   recID: any;
   checkFile = false;
@@ -92,7 +87,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   assemblyName: any;
   methodName: any;
   moduleName: any;
-  funcID: any;
   menuInfo = {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -141,6 +135,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   dataEx:any=[];
   fields: any = {};
   module:any;
+  rootFunction:any = null;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -152,42 +148,30 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     // private realHub: RealHubService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
+  ) 
+  {
     if(dt?.data?.module){
       this.module = dt.data.module;
     }
     if(dt?.data?.reportID){
       this.reportID = dt.data.reportID;
     }
-    if(dt?.data?.tabTitle){
-      this.tabTitle = dt.data?.tabTitle;
-    }
     this.dialog = dialog;
-    if (this.dialog.formModel) {
-      this.funcID = this.dialog.formModel.funcID;
-    }
   }
 
   ngOnInit(): void {
-    // this.realHub.startConnection('wp')(x=>{
-    //   x.asObjectserable().subscribe(z=>{
-
-    //   });
-    // });
+    if (this.reportID) 
+    {
+      this.getReport();
+      this.getExcelTemplate();
+     }
+     else this.setDefaut();
+     
   }
 
   ngAfterViewInit(): void {
     this.tabContent = [this.tabInfo, this.tabParam, this.tabSignature, this.tabTemplate];
-    if(this.tabTitle.length == 0)
-      this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature,this.menuTemplate];
-    if (this.reportID) {
-     this.getReport();
-     this.getExcelTemplate();
-     //this.getReportParams();
-
-    } else this.setDefaut();
-
-
+    this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature];
   }
 
   getReport(){
@@ -287,10 +271,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
             this.reportID = res;
             this.data.reportID = this.reportID;
           }
-
         })
-
-
       }
     });
   }
@@ -304,7 +285,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         '',
         600,
         800,
-        this.funcID,
+        this.dialog?.formModel?.funcID,
         evt,
         '',
         option
@@ -383,7 +364,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if(action == 'edit'){
       let op = new DialogModel();
       op.DataService = data;
-      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
+      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.dialog?.formModel?.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
       dialog.closed.subscribe((res:any)=>{
         if(res.event){
         }
@@ -433,39 +414,28 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
   getRootFunction(module:string, type:string){
     this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
-      if(res){
-        this.module = res.functionID;
-      }
+      this.rootFunction = res;
     })
   }
 
   saveForm() {
-    if (!this.data.recID) {
+    debugger
+    if (!this.data.recID)
+    {
       this.data.recID = this.recID;
     }
-    if(!this.data.customName) this.data.customName = this.data.defaultName;
-    if(this.moduleName){
-      this.data.service = 'rpt' + this.moduleName.toLowerCase();
+    if(!this.data.customName) {
+      this.data.customName = this.data.defaultName;
+    }  
+    if(!this.data.service)
+    {
+      this.data.service = 'rpt' + this.data.moduleID.toLowerCase();
     }
-    else
-      this.data.service = 'rpt' + this.data.assemblyName.split(".")[2].toLowerCase();
-    this.fuctionItem.functionID = this.data.reportID;
-    this.fuctionItem.functionType = 'R';
-    this.fuctionItem.parentID = this.funcID;
-    this.fuctionItem.defaultName = this.fuctionItem.customName =
-      this.data.defaultName;
-    this.fuctionItem.description = this.data.description;
-    this.fuctionItem.module = this.moduleName;
-    this.fuctionItem.width = 0;
-    this.fuctionItem.height = 0;
-
     if (!this.data.reportType) {
       this.data.reportType = 'R';
     }
-    if (!this.data.service) {
-      this.data.service = this.data.assemblyName;
-    }
-    if(this.data.reportContent && this.data.reportContent.split(',').length >1){
+    if(this.data.reportContent && this.data.reportContent.split(',').length >1)
+    {
       this.data.reportContent = this.data.reportContent.split(',')[1];
     }
     this.api
@@ -535,23 +505,22 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   download(){
-    let serviceName = this.data.service ? this.data.service : 'rpt'+this.data.module.toLowerCase(); 
-    let reportName = this.data.reportName;
-    if(serviceName && reportName)
+    if(this.data.reportName && this.data.reportName)
     {
-      this.api.execSv(serviceName,
+      let fileName = this.data.reportName;
+      this.api.execSv(this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
       'GetRootFileAsync',
-      reportName)
+      fileName)
       .subscribe((res:any)=>{
         let linkSource = res;
         if(linkSource.split(',').length ==1){
-          linkSource = `data:application/${reportName ? reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
+          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
         }
         const downloadLink = document.createElement("a");
         downloadLink.href = linkSource;
-        downloadLink.download = reportName;
+        downloadLink.download = fileName;
         downloadLink.click();
       });
     }
@@ -593,23 +562,46 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     return new File([u8arr], filename, {type:mime});
   }
-  tmpSelected:String = "";
+  templateType:String = "";
   clickUpload(type:string)
   {
-    let ctrl;
-    if(type == "excel")
+    this.templateType = type;
+
+    if(type == "rdl")
     {
-      ctrl = this.uploaderXLS.element as HTMLElement;
+      let ctrl = this.uploader.element as HTMLElement;
+      ctrl?.click();
     }
-    else if(type == "word"){
-      ctrl = this.uploaderDOC.element as HTMLElement;
-    }
-    else
+    else     
     {
-      ctrl = this.uploaderRDL.element as HTMLElement;
+      let option = new DialogModel();
+      option.FormModel = this.dialog.formModel;
+      option.DataService = null;
+      this.callFuncService
+        .openForm(
+          CodxExportAddComponent,
+          null,
+          1100,
+          800,
+          null,
+          {
+            action: 'add',
+            type: type,
+            refType: "RP_ReportList",
+            refID: this.data.recID,
+            formModel: this.dialog.formModel
+          },
+          '',
+          option
+        ).closed.subscribe((res:any) => {
+          debugger;
+          if(res?.event?.length > 0)
+          {
+            let template = res.event[0];
+            this.data.templateID = template.recID;
+          }
+        })
     }
-    this.tmpSelected = type;
-    ctrl?.click();
   }
 
 }

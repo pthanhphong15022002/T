@@ -157,8 +157,10 @@ export class VoucherComponent extends UIComponent implements OnInit {
           if (this.isDblCLick) {
             this.isDblCLick = false;
             this.grid.gridRef.startEdit();
+            this.dt.detectChanges();
           } else {
             this.grid.gridRef?.selectRows(this.oldSelected);
+            this.dt.detectChanges();
           }     
         },50);
       }
@@ -166,7 +168,15 @@ export class VoucherComponent extends UIComponent implements OnInit {
   }
 
   onDeselected(e:any){
-    this.grid.arrSelectedRows.splice(e.rowIndex,1);
+    e.data.forEach(data => {
+      let index = this.grid.arrSelectedRows.findIndex(
+        (x) => x.recID == data.recID
+      );
+      this.grid.arrSelectedRows.splice(index,1);
+    }); 
+    setTimeout(() => {
+      this.dt.detectChanges();
+    }, 100);
   }
 
   valueChange(e: any) {

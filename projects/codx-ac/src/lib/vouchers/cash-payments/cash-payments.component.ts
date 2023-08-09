@@ -20,6 +20,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  TenantStore,
   UIComponent,
   Util,
   ViewModel,
@@ -59,7 +60,6 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
-  button?: ButtonModel;
   headerText: any;
   funcName: any;
   journalNo: string;
@@ -111,6 +111,10 @@ export class CashPaymentsComponent extends UIComponent {
     gridViewName: 'grvAcctTrans',
     entityName: 'AC_AcctTrans',
   };
+  button : ButtonModel = {
+    id: 'btnAdd',
+    icon: 'icon-i-file-earmark-plus',
+  };  
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   private destroy$ = new Subject<void>();
   constructor(
@@ -120,6 +124,7 @@ export class CashPaymentsComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private tenant: TenantStore,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -199,7 +204,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
-    //this.detectorRef.detectChanges();
   }
 
   trackByFn(index, item) {
@@ -220,7 +224,15 @@ export class CashPaymentsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        let ins = setInterval(() => {
+          if (this.oCash) {
+            clearInterval(ins);
+            this.add();
+          }
+        },200)
+        setTimeout(() => {
+          if (ins) clearInterval(ins);
+        }, 10000);
         break;
     }
   }
@@ -611,6 +623,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.settledInvoices = [];
     switch (data.subType) {
       case '2':
+      case '12':
         this.acService
           .execApi('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
             data.recID,
@@ -739,13 +752,9 @@ export class CashPaymentsComponent extends UIComponent {
         if (res) {
           this.journal = res.journal;
           this.oCash = res.data;
-          this.hideFields = res.hideFields;
-          this.button = {
-            id: 'btnAdd',
-            icon: 'icon-i-file-earmark-plus',
-          };
-          this.detectorRef.detectChanges();
-        }
+          this.hideFields = res.hideFields;   
+          this.detectorRef.detectChanges();  
+        }    
       });
   }
 
@@ -822,6 +831,7 @@ export class CashPaymentsComponent extends UIComponent {
           ele.hideTab(2, true);
           break;
         case '2':
+        case '12':
           ele.hideTab(1, false);
           ele.hideTab(2, true);
           break;
@@ -834,7 +844,6 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
-    debugger;
     this.api
       .execSv(
         'rptrp',
@@ -848,10 +857,12 @@ export class CashPaymentsComponent extends UIComponent {
           if (res.length > 1) {
             this.openPopupCashReport(data, res);
           } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].recID}`
-            );
+            window.open('/'+this.tenant.getName()+'/'+'ac/report/detail/' + `${res[0].recID}`);
+            
+            // this.codxService.navigate(
+            //   '',
+            //   'ac/report/detail/' + `${res[0].recID}`
+            // );
           }
         }
       });

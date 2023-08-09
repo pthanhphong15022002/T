@@ -73,7 +73,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
       if(mfc?.length > 0)
       {
         this.sysMoreFC = mfc.filter(element => {
-          return element.functionID == "SYS02" || element.functionID == "SYS03";
+          return element.functionID == "SYS03";
         }).sort((x,y) => (x.sorting - y.sorting));
       }
     });
@@ -83,7 +83,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     this.dialog.close();
   }
 
-  clickMF(e:any,data:any){
+  clickMF(e:any,report:any){
     switch(e.functionID){
       case"SYS02": //xóa
         break;
@@ -91,31 +91,9 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
         let option = new DialogModel();
         option.DataService = this.dialog.dataService;
         option.FormModel = this.dialog.formModel;
-        let menuInfo = {
-          icon: 'icon-info',
-          text: 'Thông tin chung',
-          name: 'Description',
-          subName: 'Description Info',
-          subText: 'Description Info',
-        };
-        let menuParam = {
-          icon: 'icon-assignment_turned_in',
-          text: 'Tham số báo cáo',
-          name: 'Report parameters',
-          subName: 'Report parameters',
-          subText: 'Report parameters',
-        };
-        let menuSignature = {
-          icon: 'icon-assignment',
-          text: 'Chữ ký',
-          name: 'Sinatures',
-          subName: 'Sinatures',
-          subText: 'Sinatures',
-        };
         let data = {
-          module:this.dataSelected.moduleID,
-          tabTitle : [menuInfo,menuParam,menuSignature],
-          reportID:this.dataSelected.recID
+          module:report.moduleID,
+          reportID:report.recID,
         }
         this.callfc.openForm(
           PopupAddReportComponent,

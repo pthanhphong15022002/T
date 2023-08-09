@@ -5,9 +5,7 @@
   [service]="'DP'"
   [entityName]="'DP_Activities'"
   [autoLoad]="true"
-  [toolbarDisplay]="true"
   (onActions)="onAction($event)"
-  [viewActiveType]="8"
 >
 </codx-views>
 
@@ -16,13 +14,115 @@
 </ng-template>
 
 <ng-template #contentTmp let-data>
-  <h1>DATA view ne</h1>
+  <div>
+    <h5>{{ data?.taskName }}</h5>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <span class="ms-1 fw-bold">
+      {{ data?.createdByName }}
+    </span>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today icon-16 me-2"></i>
+      <span class="ms-1 fw-bold">
+        <span
+          class="text-gray-700"
+          #startDate
+          [innerHTML]="
+            data?.startDate
+              | formatvalue : formModelActivities : 'startDate'
+              | async
+          "
+        >
+        </span>
+        <span>-</span>
+        <span
+          class="text-gray-700"
+          #startDate
+          [innerHTML]="
+            data?.endDate
+              | formatvalue : formModelActivities : 'endDate'
+              | async
+          "
+        ></span>
+      </span>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="mb-2 text-dark me-6">
+    <span>
+      <codx-label
+        fiedName="Memo"
+        [formModel]="formModelActivities"
+        class="text-gray-600 label-colon"
+      >
+      </codx-label>
+    </span>
+    <span class="ms-2 fw-bold">
+      <span class="text-gray-700 size-content-schedule cursor-pointer">
+        <span
+          *ngIf="data?.memo"
+          [innerHTML]="data?.memo"
+          [ngbTooltip]="tooltipMemo"
+          placement="left bottom top right"
+          container="body"
+        ></span>
+        <span
+          *ngIf="!data?.memo"
+          [innerHTML]="
+            data?.memo | formatvalue : formModelActivities : 'memo' | async
+          "
+        ></span>
+      </span>
+    </span>
+  </div>
+  <div class="d-flex mb-2">
+    <div class="d-flex text-dark me-6">
+      <codx-label
+        class="text-gray-600 me-4 label-colon"
+        fiedName="Owner"
+        [formModel]="formModelActivities"
+      >
+      </codx-label>
+      <div class="d-flex justify-content-end">
+        <codx-imgs
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [width]="30"
+          [numberImages]="3"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #tooltipMemo>
+    <div [innerHTML]="data?.memo"></div>
+  </ng-template>
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <h1>DATA resourceHeader</h1>
+  <div class="container">
+    <codx-temp-full
+      [imageId]="data.resourceData?.owner"
+      [title]="data.resourceData.userName"
+      [subTitle]="data.resourceData.postionName"
+      [content]="'(' + data.resourceData.events + ')'"
+    >
+    </codx-temp-full>
+  </div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
   <h1>{{ data?.taskName }}</h1>
+</ng-template>
+
+<ng-template #headerTempContent>
+  <div class="mt-6"></div>
 </ng-template>
