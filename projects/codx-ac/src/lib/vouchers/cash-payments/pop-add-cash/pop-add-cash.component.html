@@ -186,7 +186,7 @@
                       " [formModel]="form.formModel" default="Nhân viên">
                     </codx-label>
                     <codx-label style="white-space: nowrap !important;" *ngIf="
-                        cashpayment.subType == '5' || cashpayment.subType == '9'
+                        cashpayment.subType == '5' || cashpayment.subType == '9' || cashpayment.subType == '11'
                       " fiedName="ObjectID" [formModel]="form.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
@@ -375,8 +375,8 @@
   <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '11') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subtypeRef == '1') || (cashpayment?.subType == '4' && subtypeRef == '1'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 showRowNumber="true" class="tabLine" #gridCash [allowRowDragAndDrop]="true"
-        [formName]="fmCashPaymentsLines.formName" [gridViewName]="fmCashPaymentsLines.gridViewName"
-        [entityName]="fmCashPaymentsLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
+        [formName]="fmCashLines.formName" [gridViewName]="fmCashLines.gridViewName"
+        [entityName]="fmCashLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
         predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
         [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true"
         [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35" [showEmptyRecord]="false"

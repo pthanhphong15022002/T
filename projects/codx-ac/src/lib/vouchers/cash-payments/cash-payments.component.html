@@ -37,7 +37,8 @@
           [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
       </div>
       <ng-template #content>
-        <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+        <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+        <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065' : 'text' | async}}</span>
       </ng-template>
     </ejs-tooltip>
     <!-- <ejs-tooltip position="BottomRight" id='tooltip' target="#tipsub">
@@ -138,7 +139,8 @@
             [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
         </div>
         <ng-template #content>
-          <span>{{(itemSelected?.subType | vll : 'AC063' : 'text' | async)}}</span>
+          <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>
+          <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{itemSelected?.subType | vll : 'AC065' : 'text' | async}}</span>
         </ng-template>
       </ejs-tooltip>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
@@ -886,7 +888,8 @@
         [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
     </div>
     <ng-template #content>
-      <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+      <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+      <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065' : 'text' | async}}</span>
     </ng-template>
   </ejs-tooltip>
   <div class="d-flex flex-column text-content flex-grow-1">

@@ -60,7 +60,6 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('pgbSet') pgbSet: ProgressBar;
   @ViewChild('pgbVat') pgbVat: ProgressBar;
   @ViewChild('annotationsave') annotationsave: ProgressBar;
-  button?: ButtonModel;
   headerText: any;
   funcName: any;
   journalNo: string;
@@ -112,6 +111,10 @@ export class CashPaymentsComponent extends UIComponent {
     gridViewName: 'grvAcctTrans',
     entityName: 'AC_AcctTrans',
   };
+  button : ButtonModel = {
+    id: 'btnAdd',
+    icon: 'icon-i-file-earmark-plus',
+  };  
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 };
   private destroy$ = new Subject<void>();
   constructor(
@@ -201,7 +204,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.routerActive.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
-    //this.detectorRef.detectChanges();
   }
 
   trackByFn(index, item) {
@@ -222,7 +224,15 @@ export class CashPaymentsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        let ins = setInterval(() => {
+          if (this.oCash) {
+            clearInterval(ins);
+            this.add();
+          }
+        },200)
+        setTimeout(() => {
+          if (ins) clearInterval(ins);
+        }, 10000);
         break;
     }
   }
@@ -741,13 +751,9 @@ export class CashPaymentsComponent extends UIComponent {
         if (res) {
           this.journal = res.journal;
           this.oCash = res.data;
-          this.hideFields = res.hideFields;
-          this.button = {
-            id: 'btnAdd',
-            icon: 'icon-i-file-earmark-plus',
-          };
-          this.detectorRef.detectChanges();
-        }
+          this.hideFields = res.hideFields;   
+          this.detectorRef.detectChanges();  
+        }    
       });
   }
 
