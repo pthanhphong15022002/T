@@ -20,6 +20,7 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  Filters,
   FormModel,
   NotificationsService,
   ScrollComponent,
@@ -222,7 +223,7 @@ export class CodxApproveStepsComponent
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       confirmControl: this.data?.confirmControl,
       allowEditAreas: this.data?.allowEditAreas,
-      hideTabQuery: true,
+      hideTabQuery: false,//
     };
     if(this.isTemplate){
       data.transID=this.transId;
@@ -248,7 +249,8 @@ export class CodxApproveStepsComponent
       type: '0',
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       vllShare:this.data?.approverList,
-      hideTabQuery: true,
+      hideTabQuery: false,//
+
     };
     
    

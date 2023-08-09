@@ -160,35 +160,36 @@ export class PopupAddComponent implements OnInit {
 
   // insert post
   clickInsert(){
-    debugger;
     if(this.checkValidate()) return;
     this.loading = true;
     this.data.image = this.fileUpload.length;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
     this.codxATMImage.saveFilesMulObservable()
     .subscribe((res1: any) => {
-      if(res1 == null || res1.status != 0)
+      if(res1 && ((typeof res1 == 'object' && res1?.status != 0) || (Array.isArray(res1) && res1[0]?.status != 0)))
+      {
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'NewsBusiness',
+          'InsertAsync',
+          [this.data])
+          .subscribe((res2:boolean) => {
+            this.notifSV.notifyCode( res2 ? "WP024" : "WP013");
+            this.dialogRef.close(res2);
+          });
+      }
+      else
       {
         let fileNames = this.fileUpload.map(x => x.fileName).join(";");
         this.notifSV.notifyCode("DM006",0,fileNames);
         this.dialogRef.close();
         return;
       }
-      this.api.execSv(
-      'WP',
-      'ERM.Business.WP',
-      'NewsBusiness',
-      'InsertAsync',
-      [this.data])
-      .subscribe((res2:boolean) => {
-        this.notifSV.notifyCode( res2 ? "WP024" : "WP013");
-        this.dialogRef.close(res2);
-      });
     });
   }
   // release post
   clickRelease() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
@@ -196,15 +197,18 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
-        if(res == null || res.status != 0)
+        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
+        {
+          this.releasePost(this.data)
+          .subscribe();
+        }
+        else
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
           this.notifSV.notifyCode("DM006",0,fileNames);
           this.dialogRef.close();
           return;
         }
-        this.releasePost(this.data)
-        .subscribe();
       });
     }
     else
@@ -369,7 +373,6 @@ export class PopupAddComponent implements OnInit {
 
   //update
   clickUpdate() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0) // upload file
@@ -377,15 +380,19 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res:any) => {
-        if(res == null || res?.status != 0)
+        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
+        {
+          this.updatePost(this.data)
+          .subscribe();
+        }
+        else
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
           this.notifSV.notifyCode("DM006",0,fileNames);
           this.dialogRef.close();
           return;
         }
-        this.updatePost(this.data)
-        .subscribe();
+       
       });
     }
     else

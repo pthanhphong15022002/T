@@ -622,7 +622,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (signFile.categoryID == null || signFile.categoryID == '') {
             signFile.title = this.data?.categoryName;
             signFile.categoryID = this.data?.categoryID;
-            signFile.refType = this.formModel?.entityName ?? 'ES_Categories';
+            signFile.refType = 'ES_Categories';
             signFile.owner = this.authService?.userValue?.userID;
             signFile.isTemplate = true;
             signFile.processID = this.data?.recID;
@@ -647,7 +647,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               option: option,
               disableCateID: true,
               isTemplate: true,
-              refType:this.formModel?.entityName ?? 'ES_Categories'
+              refType:'ES_Categories'
             },
             '',
             dialogModel
