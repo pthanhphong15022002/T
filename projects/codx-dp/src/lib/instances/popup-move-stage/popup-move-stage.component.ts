@@ -139,21 +139,19 @@ export class PopupMoveStageComponent implements OnInit {
       this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       this.listStepProccess = dt?.data?.listStepProccess;
       this.isDurationControl = dt?.data?.isDurationControl;
+      this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
       this.getIdReason();
-
     }
     else if(this.applyFor != '0' ){
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.probability = dt?.data?.deal?.probability;
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
-      // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.dataCM?.listStepCbx));
       this.executeApiCalls();
       this.isLoad = true;
     }
     this.stepID = this.dataCM ? this.dataCM?.stepID:this.instance?.stepID;
     this.processID = this.dataCM ? this.dataCM?.processID: this.instance?.processID;
     this.recID = this.dataCM ? this.dataCM?.refID: this.instance?.recID;
-    this.stepIdClick = this.dataCM ? this.dataCM?.nextStep : JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
 
     if(!this.isLoad) {
       this.lstParticipants = dt?.data.lstParticipants;
@@ -177,8 +175,16 @@ export class PopupMoveStageComponent implements OnInit {
   ngOnInit(): void {
     if(!this.isLoad){
       this.removeReasonInSteps(this.listStepsCbx, this.isUseReason);
-      !this.stepIdClick && this.stepIdClick != this.stepIdOld &&  this.autoClickedSteps(this.listStepsCbx, this.stepName);
+      this.stepIdClick && this.stepIdClick != this.stepIdOld &&  this.autoClickedSteps(this.listStepsCbx);
       this.eventAutoClick();
+    }
+  }
+  autoClickedSteps(listStep: any) {
+    let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
+    if (idx > -1 && idx !== listStep.length - 1) {
+      this.stepIdClick = listStep[idx + 1]?.stepID;
+    } else {
+      this.stepIdClick = this.stepIdOld;
     }
   }
 
@@ -206,6 +212,8 @@ export class PopupMoveStageComponent implements OnInit {
         this.eventAutoClick();
         this.removeReasonInStepsAuto(res[3],res[4],res[1]);
         this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+        this.autoClickedSteps(this.listStepsCbx);
+        this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
         this.changeDetectorRef.detectChanges();
       }
 
@@ -386,7 +394,6 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    this.instancesStepOld.owner = this.owner;
     if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -462,7 +469,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepIdOld = '';
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
-      this.instancesStepOld.owner = this.owner;
       this.setRoles();
       this.instancesStepOld.stepID = this.stepIdClick;
     }
@@ -536,14 +542,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  autoClickedSteps(listStep: any, stepName: string) {
-    let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
-    if (idx > -1 && idx !== listStep.length - 1) {
-      this.stepIdClick = listStep[idx + 1]?.stepID;
-    } else {
-      this.stepIdClick = this.stepIdOld;
-    }
-  }
+
   cbxChange($event) {
     if ($event && this.stepIdClick !== $event) {
       this.stepIdClick = $event;

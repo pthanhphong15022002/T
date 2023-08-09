@@ -2746,7 +2746,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         let ref = document
           .querySelector('.ac-refdoc')
           .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '16');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '18');
       }
     }, 200);
     setTimeout(() => {

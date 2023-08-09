@@ -73,7 +73,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
       if(mfc?.length > 0)
       {
         this.sysMoreFC = mfc.filter(element => {
-          return element.functionID == "SYS02" || element.functionID == "SYS03";
+          return element.functionID == "SYS03";
         }).sort((x,y) => (x.sorting - y.sorting));
       }
     });
