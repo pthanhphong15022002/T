@@ -1579,10 +1579,7 @@ export class PopupAddSignFileComponent implements OnInit {
         tempTemplateType = null;
         break;
     }
-    if (
-      this.data.files?.length > 0 &&
-      this.data?.templateType == tempTemplateType
-    ) {
+    if (this.data.files?.length > 0 && this.data?.templateType == tempTemplateType ) {
       return;
     } else if (
       this.data.files?.length > 0 &&
@@ -1595,15 +1592,21 @@ export class PopupAddSignFileComponent implements OnInit {
         .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
         .closed.subscribe((x) => {
           if (x?.event?.status == 'Y') {
-            this.esService.deleteFileByObjectID(this.data?.recID, 'ES_SignFiles', true).subscribe((deleted) => { 
-              if(deleted){
-                //Đã xóa file
-              }
-            });
+            this.esService
+              .deleteFileByObjectID(this.data?.recID, 'ES_SignFiles', true)
+              .subscribe((deleted) => {
+                if (deleted) {
+                  //Đã xóa file
+                }
+                this.showAttachment = false;
+                this.cr.detectChanges();
+                this.showAttachment = true;
+                this.cr.detectChanges();
+              });
             if (
               this.data?.templateType != null &&
               this.data?.templateID != null
-            ) {              
+            ) {
               let method =
                 this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
               if (type == 'excel') {
@@ -1615,7 +1618,11 @@ export class PopupAddSignFileComponent implements OnInit {
                         .execActionData<any>(method, [template], 'DeleteAsync')
                         .subscribe((item) => {});
                       this.esService
-                        .deleteFileByObjectID(this.data?.templateID, 'AD_ExcelTemplates ', true)
+                        .deleteFileByObjectID(
+                          this.data?.templateID,
+                          'AD_ExcelTemplates ',
+                          true
+                        )
                         .subscribe((deleted) => {});
                     }
                   });
@@ -1628,7 +1635,11 @@ export class PopupAddSignFileComponent implements OnInit {
                         .execActionData<any>(method, [template], 'DeleteAsync')
                         .subscribe((item) => {});
                       this.esService
-                        .deleteFileByObjectID(this.data?.templateID, 'AD_WordTemplates', true)
+                        .deleteFileByObjectID(
+                          this.data?.templateID,
+                          'AD_WordTemplates',
+                          true
+                        )
                         .subscribe((deleted) => {});
                     }
                   });
@@ -1723,8 +1734,8 @@ export class PopupAddSignFileComponent implements OnInit {
                 newCopyFile
               )
               .subscribe((copyF) => {
-                if (copyF) {                  
-                  this.showAttachment=false;
+                if (copyF) {
+                  this.showAttachment = false;
                   this.cr.detectChanges();
                   let lstFile = [];
                   for (let i = 0; i < copyF?.length; i++) {
@@ -1739,7 +1750,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   }
                   //
                   this.data.files = lstFile;
-                  this.showAttachment=true;
+                  this.showAttachment = true;
                   this.cr.detectChanges();
                 } else {
                   this.notify.notify(
@@ -1753,7 +1764,7 @@ export class PopupAddSignFileComponent implements OnInit {
           }
           if (action == 'edit') {
             //Có upload lại file
-            if ((closeEvent?.event?.length>2 && closeEvent?.event[2] == true)) {
+            if (closeEvent?.event?.length > 2 && closeEvent?.event[2] == true) {
               this.esService
                 .deleteFileByObjectID(this.data.recID, 'ES_SignFiles', true)
                 .subscribe((deleted) => {
@@ -1768,7 +1779,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     )
                     .subscribe((copyF) => {
                       if (copyF) {
-                        this.showAttachment=false;
+                        this.showAttachment = false;
                         this.cr.detectChanges();
                         let lstFile = [];
                         for (let i = 0; i < copyF?.length; i++) {
@@ -1783,7 +1794,7 @@ export class PopupAddSignFileComponent implements OnInit {
                         }
                         //
                         this.data.files = lstFile;
-                        this.showAttachment=true;
+                        this.showAttachment = true;
                         this.cr.detectChanges();
                       } else {
                         this.notify.notify(

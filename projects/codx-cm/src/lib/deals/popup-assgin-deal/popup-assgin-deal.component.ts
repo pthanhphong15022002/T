@@ -43,6 +43,7 @@ listParticipants = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID:string = 'ViewBUID';
 readonly viewDefault:string = 'ViewDefault';
+readonly viewGroupUser:string = 'viewGroupUser';
 constructor(
   private injector: Injector,
   private notificationsService: NotificationsService,
