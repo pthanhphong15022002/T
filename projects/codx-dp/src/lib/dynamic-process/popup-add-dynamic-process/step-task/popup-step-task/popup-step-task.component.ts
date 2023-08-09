@@ -246,12 +246,24 @@ export class PopupJobComponent implements OnInit {
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetListUserByListOrgUnitIDAsync',
-      [[idO], type]
+      'GetUserLeader',
+      [idO]
     ).subscribe(result => {
       if(result){
+        console.log(result);
+        
       }
     });
+    // this.api.execSv<any>(
+    //   'HR',
+    //   'HR',
+    //   'EmployeesBusiness',
+    //   'GetListUserByListOrgUnitIDAsync',
+    //   [[idO], type]
+    // ).subscribe(result => {
+    //   if(result){
+    //   }
+    // });
   }
 
   async changeCombobox(value, key) {
