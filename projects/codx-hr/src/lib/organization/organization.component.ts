@@ -43,7 +43,6 @@ export class OrgorganizationComponent extends UIComponent {
   currView?: TemplateRef<any>;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: string;
   codxTreeView: CodxTreeviewComponent = null;
   dataService: CRUDService = null;
   templateActive: number = 0;
@@ -51,9 +50,8 @@ export class OrgorganizationComponent extends UIComponent {
   request: any = null;
   viewActive: string = '';
   count: any;
-  buttonAdd: ButtonModel = {
-    id: 'btnAdd',
-  };
+  buttonAdd: any = null;
+  activeMFC:boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
@@ -71,13 +69,29 @@ export class OrgorganizationComponent extends UIComponent {
     inject: Injector,
     private activedRouter: ActivatedRoute,
     private hrService: CodxHrService,
-
     private df: ChangeDetectorRef
   ) {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
+    this.activedRouter.params.subscribe((param:any) => {
+      debugger;
+      let funcID = param["funcID"]; 
+      if (funcID.includes('WP')) {
+        this.button = null; 
+        this.activeMFC = false;
+      }
+      else
+      {
+        this.button = {
+          id: 'btnAdd',
+        };
+        this.activeMFC = true;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
