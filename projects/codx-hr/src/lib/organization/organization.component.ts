@@ -77,7 +77,6 @@ export class OrgorganizationComponent extends UIComponent {
   onInit(): void {
     // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
     this.activedRouter.params.subscribe((param:any) => {
-      debugger;
       let funcID = param["funcID"]; 
       if (funcID.includes('WP')) {
         this.button = null; 
