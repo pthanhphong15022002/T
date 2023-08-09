@@ -117,7 +117,7 @@
         <div class="ms-2" ngbDropdown [container]="'body'">
           <div
             role="button"
-            class="d-flex align-items-center border px-2 h-32px rounded-1 w-100px"
+            class="d-flex align-items-center border px-2 h-32px rounded-1 w-100px bg-gray-100"
             (click)="clickShow(!isShow)"
             *ngIf="isShow == true"
           >
@@ -420,11 +420,11 @@
             [objectName]="item?.title"
           ></codx-img>
           <div [ngClass]="'ms-2 d-flex flex-column'">
-            <span class="text-dark fw-bold">
+            <span class="text-dark fw-bold fs-6">
               {{ item?.title }}
             </span>
             <div
-              class="line-clamp line-clamp-1"
+              class="line-clamp line-clamp-1 text-gray-600"
               [ngbPopover]="item?.positionName"
               #p="ngbPopover"
               [openDelay]="500"
