@@ -348,8 +348,7 @@ export class TargetsComponent
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
-      this.currencyID = currencyID;
-      this.exchangeRate = exchangeRate?.exchRate;
+
       if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {
           element.target =
@@ -383,10 +382,11 @@ export class TargetsComponent
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
       }else{
-        this.exchangeRate = 1;
-        this.currencyID = 'VND';
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
       }
-
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate?.exchRate;
     }
   }
 
