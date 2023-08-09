@@ -142,7 +142,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         this.reportID = res.reportID;
         this.isRunMode = res.runMode == "1";
         this.getRootFunction(this.funcItem.moduleID, this.funcItem.reportType);
-        // this.pageTitle.setSubTitle("");
         if(res.displayMode == "3"){
           this.test(res.recID);
         }
