@@ -489,7 +489,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onCellChange(e: any) {
     console.log('onCellChange', e);
-    if (e.data[e.field] == null || e.data[e.field] == '' || !this.master) {
+    if (!this.master) {
       return;
     }
 
@@ -498,15 +498,22 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
 
     const postFields: string[] = [
-      'itemID',
+      'itemid',
       'quantity',
-      'purcPrice',
+      'purcprice',
       'vatid',
-      'netAmt',
-      'discPct',
-      'discAmt',
+      'netamt',
+      'discpct',
+      'discamt',
+      'vatbase',
+      'vatamt',
+      'miscamt',
+      'salestaxpct',
+      'salestaxamt',
+      'excisetaxpct',
+      'excisetaxamt',
     ];
-    if (postFields.includes(e.field)) {
+    if (postFields.includes(e.field.toLowerCase())) {
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
@@ -534,7 +541,24 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     }
 
     if (e.type === 'beginEdit') {
-      this.prevLine = null;
+      this.prevLine = { ...e.data };
+
+      if (!e.data.isAddNew) {
+        this.api
+          .exec(
+            'AC',
+            'PurchaseInvoicesLinesBusiness',
+            'BeforeEditAsync',
+            e.data
+          )
+          .subscribe();
+      }
+    }
+
+    if (e.type === 'closeEdit') {
+      this.api
+        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'CloseEdit')
+        .subscribe();
     }
   }
   //#endregion
