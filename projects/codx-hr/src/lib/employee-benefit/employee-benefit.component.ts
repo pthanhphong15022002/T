@@ -23,6 +23,7 @@ import { PopupEmployeeBenefitComponent } from './popup-employee-benefit/popup-em
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import moment from 'moment';
+import { PopupEbenefitComponent } from '../employee-profile/popup-ebenefit/popup-ebenefit.component';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -403,20 +404,21 @@ export class EmployeeBenefitComponent extends UIComponent {
     option.Width = '550px';
     option.FormModel = this.view.formModel;
     let dialogAdd = this.callfc.openSide(
-      PopupEmployeeBenefitComponent,
+      PopupEbenefitComponent,
       {
         actionType: actionType,
-        dataObj: data,
+        benefitObj: data,
         empObj: this.currentEmpObj,
         headerText: actionHeaderText,
+        formModel: this.view.formModel,
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
-        fromListView: true,
         useForQTNS: true,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      console.log(res.event);
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});

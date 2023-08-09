@@ -51,6 +51,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   initialMaster: IPurchaseInvoice;
   master: IPurchaseInvoice;
   prevMaster: IPurchaseInvoice;
+  prevLine: IPurchaseInvoiceLine;
   lines: IPurchaseInvoiceLine[] = [];
   vatInvoices: IVATInvoice[] = [];
   masterService: CRUDService;
@@ -488,11 +489,23 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onCellChange(e: any) {
     console.log('onCellChange', e);
-    if (!e.data[e.field] || !this.master) {
+    if (e.data[e.field] == null || e.data[e.field] == '' || !this.master) {
       return;
     }
 
-    const postFields: string[] = ['itemID', 'quantity', "purcPrice", "vatid"];
+    if (this.prevLine?.[e.field] == e.data[e.field]) {
+      return;
+    }
+
+    const postFields: string[] = [
+      'itemID',
+      'quantity',
+      'purcPrice',
+      'vatid',
+      'netAmt',
+      'discPct',
+      'discAmt',
+    ];
     if (postFields.includes(e.field)) {
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
@@ -500,8 +513,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
           this.master,
           e.data,
         ])
-        .subscribe((line) => {
+        .subscribe((line: any) => {
           console.log(line);
+          this.prevLine = { ...line };
           Object.assign(this.lines[e.idx], line);
           this.detectorRef.markForCheck();
         });
@@ -517,6 +531,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         .subscribe((res: IPurchaseInvoiceLine) => {
           this.gridPurchaseInvoiceLines.addRow(res, this.lines.length);
         });
+    }
+
+    if (e.type === 'beginEdit') {
+      this.prevLine = null;
     }
   }
   //#endregion
