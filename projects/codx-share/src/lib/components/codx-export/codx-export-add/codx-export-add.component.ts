@@ -239,8 +239,21 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
                 this.attachment2.objectId = item[1].recID;
-                this.attachment2.saveFiles();
-                this.dialog.close([item[1], this.type]);
+                //this.attachment2.saveFiles();
+                //Upload file
+                this.attachment2.saveFilesObservable().then(saveFile=>{
+                  if(saveFile){
+                    saveFile.subscribe(saved=>{
+                      if(saved){
+                        //Trả về thông tin khi upload file thành công
+                        this.dialog.close([item[1], this.type]);
+                      }
+                      else{
+                        this.notifySvr.notify('SYS023');
+                      }
+                    })
+                  }                
+                })
               } else this.notifySvr.notifyCode('SYS023');
             });
         } else this.notifySvr.notifyCode('OD022');
@@ -268,9 +281,22 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe();
                 this.attachment2.objectId = item[1][0].recID;
-                this.attachment2.saveFiles();
+                //this.attachment2.saveFiles();
+                //Upload file mới
+                this.attachment2.saveFilesObservable().then(saveFile=>{
+                  if(saveFile){
+                    saveFile.subscribe(saved=>{
+                      if(saved){
+                        //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
+                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
+                      }
+                      else{
+                        this.notifySvr.notify('SYS021');
+                      }
+                    })
+                  }
+                })
               }
-              this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notify('SYS021');
           });
       }
