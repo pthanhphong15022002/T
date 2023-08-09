@@ -378,22 +378,6 @@ export class LeadsComponent
         },
       },
     ];
-    // this.cache.viewSettings(this.funcID).subscribe((views) => {
-    //   this.viewsDefault.forEach((v, index) => {
-    //     let idx = views.findIndex((x) => x.view == v.type);
-    //     if (idx != -1) {
-    //       v.hide = false;
-    //       if (views[idx].isDefault) v.action = true;
-    //       else v.active = false;
-    //     } else {
-    //       v.hide = true;
-    //       v.active = false;
-    //     }
-    //     // if (!(this.funcID == 'CM0201' && v.type == '6'))
-    //     this.views.push(v);
-    //   });
-    // });
-    //this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
@@ -723,7 +707,6 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
-    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -1291,6 +1274,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
+        this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }
@@ -1501,6 +1485,7 @@ export class LeadsComponent
       owner: data.owner,
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
+      buid: data.buid,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1576,6 +1561,7 @@ export class LeadsComponent
     }
   }
   openFormChangeStatus(data) {
+    this.dataSelected = data
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
