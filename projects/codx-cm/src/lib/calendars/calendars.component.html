@@ -5,9 +5,7 @@
   [service]="'DP'"
   [entityName]="'DP_Activities'"
   [autoLoad]="true"
-  [toolbarDisplay]="true"
   (onActions)="onAction($event)"
-  [viewActiveType]="8"
 >
 </codx-views>
 
@@ -110,7 +108,15 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <h1>DATA resourceHeader</h1>
+  <div class="container">
+    <codx-temp-full
+      [imageId]="data.resourceData?.owner"
+      [title]="data.resourceData.userName"
+      [subTitle]="data.resourceData.postionName"
+      [content]="'(' + data.resourceData.events + ')'"
+    >
+    </codx-temp-full>
+  </div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
