@@ -103,7 +103,7 @@ export class PopupConvertLeadComponent implements OnInit {
   dateMax: Date;
   dateMessage: string;
   gridViewSetup: any;
-  radioCheckedCus= true;
+  radioCheckedCus = true;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -374,7 +374,7 @@ export class PopupConvertLeadComponent implements OnInit {
       );
       return;
     }
-    if (!this.deal?.businessLineID?.trim() && this.deal?.businessLineID ) {
+    if (!this.deal?.businessLineID?.trim() && this.deal?.businessLineID) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -487,7 +487,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.deal.businessLineID = e?.data;
       if (this.deal.businessLineID) {
         var processId = e.component.itemsSelected[0].ProcessID;
-        if (processId != this.deal?.processID) {
+        if (!this.deal?.processID || processId != this.deal?.processID) {
           this.deal.processID = processId;
           this.getListInstanceSteps(this.deal.processID);
         }
@@ -630,7 +630,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-  changeRadioCus(e){
+  changeRadioCus(e) {
     if (e.field === 'yes' && e.component.checked === true) {
       this.radioCheckedCus = true;
       this.customer.category = '1';
