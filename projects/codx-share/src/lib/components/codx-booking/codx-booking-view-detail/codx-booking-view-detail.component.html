@@ -5,10 +5,12 @@
   <!----------------------------------Header---------------------------------->
   <ng-template #header>
     <div class="d-flex justify-content-between mt-2 mb-2">
-      <h3>{{ itemDetail?.title }}</h3>
-      <codx-vll [name]="'EP022'" [value]="itemDetail?.approveStatus" [showText]="true" [showBgColor]="true"
-        class="badge badge-light badge-square badge-md fs-7 p-2">
-      </codx-vll>
+      <div class="fs-5 fw-bold text-dark">{{ itemDetail?.title }}</div>
+      <div class="min-w-100px">
+        <codx-vll [name]="'EP022'" [value]="itemDetail?.approveStatus" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-square badge-md fs-7 p-2">
+        </codx-vll>
+      </div>
     </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full [title]="itemDetail?.requester" [titleCss]="'fs-6'" [subTitleTmp]="subTitleHeader" [imageId]="itemDetail?.createdBy"

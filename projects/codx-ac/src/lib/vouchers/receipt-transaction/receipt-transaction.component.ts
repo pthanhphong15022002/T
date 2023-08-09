@@ -379,13 +379,15 @@ export class ReceiptTransactionComponent extends UIComponent {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.vouchersLines = res;
-        this.loadTotal();
+        if(res)
+        {
+          this.vouchersLines = res;
+          this.loadTotal();
+          this.detectorRef.detectChanges();
+        }
         this.loading = false;
-        this.detectorRef.detectChanges();
       });
     this.api
-      //.exec('AC', 'AcctTransBusiness', 'LoadDataAsync', 'e973e7b7-10a1-11ee-94b4-00155d035517')
       .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -482,99 +484,11 @@ export class ReceiptTransactionComponent extends UIComponent {
   {
     if(this.funcID == 'ACT0708')
     {
-      var bm = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'ACT070806' || // ghi sổ
-          x.functionID == 'ACT070804' || // gửi duyệt
-          x.functionID == 'ACT070805' || // hủy yêu cầu duyệt
-          x.functionID == 'ACT070807' || // khôi phục
-          x.functionID == 'ACT070808' || // in
-          x.functionID == 'ACT070803' // kiểm tra tính hợp lệ
-      );
+      this.loadMFVouchersReceipts(e, data);
     }
     if(this.funcID == 'ACT0714')
     {
-      var bm = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'ACT071406' || // ghi sổ
-          x.functionID == 'ACT071404' || // gửi duyệt
-          x.functionID == 'ACT071405' || // hủy yêu cầu duyệt
-          x.functionID == 'ACT071407' || // khôi phục
-          x.functionID == 'ACT071408' || // in
-          x.functionID == 'ACT071403' // kiểm tra tính hợp lệ
-      );
-    }
-    if (bm.length > 0) {
-      switch(data.status)
-      {
-        case '0':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070803' || morefunction.functionID == 'ACT070808'
-            || morefunction.functionID == 'ACT071403' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '1':
-          if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT070804' || morefunction.functionID == 'ACT070808'
-              || morefunction.functionID == 'ACT071404' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
-            });
-          }
-          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808'
-              || morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
-            });
-          }
-          break;
-        case '3':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070805' || morefunction.functionID == 'ACT070808'
-            || morefunction.functionID == 'ACT071405' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '5':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808'
-            || morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '6':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070807' || morefunction.functionID == 'ACT070808'
-            || morefunction.functionID == 'ACT071407' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '9':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808'
-            || morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-        break;
-      }
+      this.loadMFVouchersIssues(e, data);
     }
   }
 
@@ -676,6 +590,162 @@ export class ReceiptTransactionComponent extends UIComponent {
       '',
       opt
     );
+  }
+
+  loadMFVouchersReceipts(e: any, data: any)
+  {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT070806' || // ghi sổ
+        x.functionID == 'ACT070804' || // gửi duyệt
+        x.functionID == 'ACT070805' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT070807' || // khôi phục
+        x.functionID == 'ACT070808' || // in
+        x.functionID == 'ACT070803' // kiểm tra tính hợp lệ
+    );
+    if (bm.length > 0) {
+      switch(data.status)
+      {
+        case '0':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT070803' || morefunction.functionID == 'ACT070808')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '1':
+          if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
+          {
+            bm.forEach((morefunction) => {
+              if(morefunction.functionID == 'ACT070804' || morefunction.functionID == 'ACT070808')
+                morefunction.disabled = false;
+              else
+                morefunction.disabled = true;
+            });
+          }
+          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
+          {
+            bm.forEach((morefunction) => {
+              if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+                morefunction.disabled = false;
+              else
+                morefunction.disabled = true;
+            });
+          }
+          break;
+        case '3':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT070805' || morefunction.functionID == 'ACT070808')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '5':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '6':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT070807' || morefunction.functionID == 'ACT070808')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '9':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+        break;
+      }
+    }
+  }
+
+  loadMFVouchersIssues(e: any, data: any)
+  {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ACT071406' || // ghi sổ
+        x.functionID == 'ACT071404' || // gửi duyệt
+        x.functionID == 'ACT071405' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT071407' || // khôi phục
+        x.functionID == 'ACT071408' || // in
+        x.functionID == 'ACT071403' // kiểm tra tính hợp lệ
+    );
+    if (bm.length > 0) {
+      switch(data.status)
+      {
+        case '0':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT071403' || morefunction.functionID == 'ACT071408')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '1':
+          if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
+          {
+            bm.forEach((morefunction) => {
+              if(morefunction.functionID == 'ACT071404' || morefunction.functionID == 'ACT071408')
+                morefunction.disabled = false;
+              else
+                morefunction.disabled = true;
+            });
+          }
+          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
+          {
+            bm.forEach((morefunction) => {
+              if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
+                morefunction.disabled = false;
+              else
+                morefunction.disabled = true;
+            });
+          }
+          break;
+        case '3':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT071405' || morefunction.functionID == 'ACT071408')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '5':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '6':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT071407' || morefunction.functionID == 'ACT071408')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+          break;
+        case '9':
+          bm.forEach((morefunction) => {
+            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
+              morefunction.disabled = false;
+            else
+              morefunction.disabled = true;
+          });
+        break;
+      }
+    }
   }
   //#endregion
 }

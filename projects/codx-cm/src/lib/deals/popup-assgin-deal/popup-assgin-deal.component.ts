@@ -43,6 +43,7 @@ listParticipants = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID:string = 'ViewBUID';
 readonly viewDefault:string = 'ViewDefault';
+readonly viewGroupUser:string = 'viewGroupUser';
 constructor(
   private injector: Injector,
   private notificationsService: NotificationsService,
@@ -62,6 +63,8 @@ constructor(
     this.processID = dialogData?.data.processID;
   }
   this.recID = dialogData?.data?.recID;
+  debugger;
+  this.buid = dialogData?.data?.buid;
   this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
@@ -178,7 +181,7 @@ changeOwner(evt: any, view: any) {
     }
     else if(view === this.viewBUID) {
       this.buid =  evt.data;
-      this.owner = evt.itemsSelected[0].Owner;
+      this.owner = evt.component.itemsSelected[0].Owner;
     }
 
   }

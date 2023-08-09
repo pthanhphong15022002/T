@@ -337,7 +337,6 @@ export class TargetsComponent
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
-      this.currencyID = e.data;
     }
     this.detectorRef.detectChanges();
   }
@@ -349,7 +348,7 @@ export class TargetsComponent
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
-      this.exchangeRate = exchangeRate?.exchRate;
+
       if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {
           element.target =
@@ -382,11 +381,12 @@ export class TargetsComponent
         if (this.lstDataTree != null && this.viewMode == 9) {
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
-      }else{
-        this.exchangeRate = 1;
-        this.currencyID = 'VND';
+      } else {
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
       }
-
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate?.exchRate;
     }
   }
 
@@ -747,23 +747,33 @@ export class TargetsComponent
   //#region Month
   async popupChangeAllocationRate(data) {
     var lstLinesBySales = [];
-    lstLinesBySales = await firstValueFrom(
+    let result = await firstValueFrom(
       this.api.execSv<any>(
         'CM',
         'ERM.Business.CM',
         'TargetsLinesBusiness',
         'GetSalesPersonsByBusinessIDAsync',
-        [data?.businessLineID, data?.salespersonID]
+        [data?.businessLineID, data?.salespersonID, this.year]
       )
     );
+    let dataEdit = JSON.parse(JSON.stringify(data));
+    if (result != null) {
+      dataEdit.target = result[0];
+      dataEdit.currencyID = result[1];
+      dataEdit.exchangeRate = result[2];
+      lstLinesBySales = result[3];
+    }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view?.formModel;
     dialogModel.zIndex = 999;
     var obj = {
-      data: data,
+      data: dataEdit,
       title: this.titleAction,
       lstLinesBySales: lstLinesBySales,
+      currencyID: this.currencyID,
+      exchangeRate: this.exchangeRate,
+      targetSys: data.target
     };
     var dialog = this.callfc.openForm(
       PopupChangeAllocationRateComponent,
@@ -814,10 +824,6 @@ export class TargetsComponent
 
             this.lstDataTree[index].targetsLines = updatedItems;
           }
-          this.exChangeRate(
-            this.lstDataTree[index].currencyID,
-            this.currencyID
-          );
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
         this.isShow = false;

@@ -20,6 +20,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  TenantStore,
   UIComponent,
   Util,
   ViewModel,
@@ -120,6 +121,7 @@ export class CashPaymentsComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private tenant: TenantStore,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -834,7 +836,6 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   print(data: any, reportID: any, reportType: string = 'V') {
-    debugger;
     this.api
       .execSv(
         'rptrp',
@@ -848,10 +849,12 @@ export class CashPaymentsComponent extends UIComponent {
           if (res.length > 1) {
             this.openPopupCashReport(data, res);
           } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].recID}`
-            );
+            window.open('/'+this.tenant.getName()+'/'+'ac/report/detail/' + `${res[0].recID}`);
+            
+            // this.codxService.navigate(
+            //   '',
+            //   'ac/report/detail/' + `${res[0].recID}`
+            // );
           }
         }
       });
