@@ -156,6 +156,7 @@ export class TargetsComponent
   currencyIDSys: any;
   exchangeRateSys: number;
   gridViewSetupTarget: any;
+  countLoad = 0;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -192,9 +193,9 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
+    // this.gridViewSetupTarget = await firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -270,6 +271,7 @@ export class TargetsComponent
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.countLoad++;
       this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? false : true;
       this.view.button = this.showButtonAdd ? this.button : null;
@@ -282,30 +284,34 @@ export class TargetsComponent
   }
 
   async loadCurrentID() {
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        if (exchangeRateCurrent?.exchRate > 0) {
-          this.exchangeRate = exchangeRateCurrent?.exchRate;
-        } else {
-          this.exchangeRate = 1;
-          this.currencyID = 'VND';
+    if (this.countLoad == 0) {
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          if (exchangeRateCurrent?.exchRate > 0) {
+            this.exchangeRate = exchangeRateCurrent?.exchRate;
+          } else {
+            this.exchangeRate = 1;
+            this.currencyID = 'VND';
+          }
+          this.currencyIDSys = this.currencyID;
+          this.exchangeRateSys = this.exchangeRate;
         }
-        this.currencyIDSys = this.currencyID;
-        this.exchangeRateSys = this.exchangeRate;
       }
     }
+
     this.fetch().subscribe((item) => {
       this.lstDataTree = item;
-
       this.loadedTree = true;
     });
   }
@@ -517,16 +523,15 @@ export class TargetsComponent
     ];
   }
   searchChanged(e) {
-    console.log('seasrch: ',e);
+    console.log('seasrch: ', e);
   }
 
-  filterChange(e){
-    console.log('filter: ',e);
+  filterChange(e) {
+    console.log('filter: ', e);
   }
 
-  filterReportChange(e){
-    console.log('filterReport: ',e);
-
+  filterReportChange(e) {
+    console.log('filterReport: ', e);
   }
   selectedChange(e) {}
   //#endregion
@@ -619,7 +624,7 @@ export class TargetsComponent
         title: this.titleAction,
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
-        gridViewSetupTarget: this.gridViewSetupTarget
+        gridViewSetupTarget: this.gridViewSetupTarget,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -685,7 +690,7 @@ export class TargetsComponent
           lstTargetLines: lstTargetLines,
           currencyID: this.currencyID,
           exchangeRate: this.exchangeRate,
-          gridViewSetupTarget: this.gridViewSetupTarget
+          gridViewSetupTarget: this.gridViewSetupTarget,
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
@@ -790,7 +795,7 @@ export class TargetsComponent
       lstLinesBySales: lstLinesBySales,
       currencyID: this.currencyID,
       exchangeRate: this.exchangeRate,
-      targetSys: data.target
+      targetSys: data.target,
     };
     var dialog = this.callfc.openForm(
       PopupChangeAllocationRateComponent,
