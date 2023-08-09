@@ -1006,16 +1006,17 @@ export class AddContractsComponent implements OnInit {
   //#endregion
   //#region setDefault
   async getSettingContract() {
+    // let res = await firstValueFrom(this.cache.viewSettingValues('CMParameters'));
     let res = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
+      this.cmService.getParam('CMParameters', '1')
     );
-    if (res?.length > 0) {
-      let dataParam = res.find((x) => x.category == '1' && !x.transType);
-      if (dataParam) {
-        let dataValue = JSON.parse(dataParam.dataValue);
-        this.currnecyID = dataValue?.DefaultCurrency;
-        this.applyProcess = dataValue?.ProcessContractUsed == '1';
-      }
+    if (res?.dataValue) {
+      let dataValue = JSON.parse(res?.dataValue);
+      this.currnecyID = dataValue?.DefaultCurrency;
+      this.applyProcess = dataValue?.ProcessContractUsed == '1';
+    }else{
+      this.currnecyID = null;
+      this.applyProcess = false;
     }
   }
 
