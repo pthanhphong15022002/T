@@ -67,6 +67,7 @@ export class CodxTasksComponent
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
+  @Input() sessionID?: any;
   @Input() showButtonAdd = true;
   @Input() showMoreFunc = true;
   @Input() refID?: any;
@@ -512,7 +513,8 @@ export class CodxTasksComponent
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
-
+      if (this.sessionID)
+        this.view.dataService.dataSelected.sessionID = this.sessionID;
       let obj = {
         data: this.view.dataService.dataSelected,
         action: 'add',

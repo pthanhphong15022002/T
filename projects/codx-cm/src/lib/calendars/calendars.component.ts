@@ -87,20 +87,19 @@ export class CalendarsComponent
     this.views = [
       {
         type: ViewType.calendar,
-        active: false,
+        active: true,
         sameData: false,
         request: this.requestSchedule,
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          //resourceModel: this.resourceModel,
           // resourceModel: this.resourceField, //calendar  not take
-          template: this.eventTemplate,
-          //template2: this.headerTemp,
-          template3: this.cellTemplate,
           template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
+          template: this.eventTemplate,
+          //template2: this.headerTemp,
+          template3: this.cellTemplate,
           template8: this.contentTmp, //content  nội dung chính
           statusColorRef: this.vllTypeTask,
         },
@@ -112,16 +111,16 @@ export class CalendarsComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        showFilter: false, //filter ở dưới
+        // showFilter: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate, //lấy event của temo
-          //template2: this.headerTemp,
-          template3: this.cellTemplate, //tem cell
           template4: this.resourceHeader, //temp ressources
           template6: this.headerTempContent, //header // more
           //template7: this.footerNone, ///footer
+          template: this.eventTemplate, //lấy event của temo
+          //template2: this.headerTemp,
+          template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
           statusColorRef: this.vllTypeTask,
         },
@@ -192,6 +191,7 @@ export class CalendarsComponent
     this.requestSchedule.idField = 'recID';
 
     //xu ly khi truyeefn vao 1 list resourece
+    this.modelResource = new ResourceModel();
     if (this.funcID == 'CM0702') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
