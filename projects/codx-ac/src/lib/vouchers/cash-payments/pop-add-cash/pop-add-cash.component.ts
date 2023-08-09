@@ -1264,39 +1264,40 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onDiscard() {
-    if (
-      (this.gridCash && !this.gridCash.gridRef.isEdit) ||
-      (this.gridSet && !this.gridSet.gridRef.isEdit)
-    ) {
-      if (this.hasSaved) {
-        this.notification.alertCode('AC0010', null).subscribe((res) => {
-          if (res.event.status === 'Y') {
-            this.loading = true;
-            this.dt.detectChanges();
-            this.dialog.dataService
-              .delete(
-                [this.cashpayment],
-                false,
-                null,
-                '',
-                '',
-                null,
-                null,
-                false
-              )
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if (res.data != null) {
-                  this.loading = false;
-                  this.dt.detectChanges();
-                  this.notification.notifyCode('E0860');
-                  this.dialog.close();
-                  this.onDestroy();
-                }
-              });
-          }
-        });
-      }
+    // if (
+    //   (this.gridCash && !this.gridCash.gridRef.isEdit) ||
+    //   (this.gridSet && !this.gridSet.gridRef.isEdit)
+    // ) {
+      
+    // }
+    if (this.hasSaved) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.loading = true;
+          this.dt.detectChanges();
+          this.dialog.dataService
+            .delete(
+              [this.cashpayment],
+              false,
+              null,
+              '',
+              '',
+              null,
+              null,
+              false
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.loading = false;
+                this.dt.detectChanges();
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
+        }
+      });
     }
   }
 
@@ -2745,7 +2746,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         let ref = document
           .querySelector('.ac-refdoc')
           .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '16');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '18');
       }
     }, 200);
     setTimeout(() => {
@@ -2772,7 +2773,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             },200)
             setTimeout(() => {
               if (itv) clearInterval(itv);
-            }, 5000);  
+            }, 1000);  
           }
         }
       }

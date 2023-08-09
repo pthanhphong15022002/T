@@ -880,7 +880,7 @@
   <div class="form-group" *ngIf="funcID == 'CM0101'">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
-    <codx-input
+    <!-- <codx-input
       type="combobox"
       [crrValue]="data?.industries"
       [formModel]="form.formModel"
@@ -889,13 +889,13 @@
       (valueChange)="valueChangeIndustries($event)"
       field="industries"
     >
-    </codx-input>
-    <!-- <codx-input
+    </codx-input> -->
+    <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="industries"
     >
-    </codx-input> -->
+    </codx-input>
   </div>
   <div class="form-group" *ngIf="funcID == 'CM0105'">
     <codx-label [formModel]="form.formModel" fiedName="Occupation">
