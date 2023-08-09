@@ -237,7 +237,7 @@
                   <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>              
                 </div>
                 <div class="text-center sign-attachment" *ngIf="oSignFile==null || (oSignFile!=null && oSignFile?.files?.length==0)">
-                  <codx-attachment #attachment [objectType]="data?.refType!=null?data?.refType : 'ES_SignFiles'" hideImageUpload="0" [objectId]="data?.recID"
+                  <codx-attachment #attachment [objectType]="data?.refType!=null && data?.refType!='ES_Categories' ? data?.refType : 'ES_SignFiles'" hideImageUpload="0" [objectId]="data?.recID"
                     hideBtnSave="1" hideFolder="1" [hideUploadBtn]="isTemplate? '0':'0'" [functionID]="formModelCustom.funcID" type="inline"
                     (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
                   </codx-attachment>                

@@ -73,8 +73,8 @@
                   </div>
                   <div class="d-none">
                     <ejs-uploader
-                      #uploaderRDL
-                      id="preloadfileuploadRDL"
+                      #uploader
+                      id="preloadfileupload"
                       [autoUpload]="false"
                       [multiple]="false"
                       locale="vi"
@@ -114,23 +114,6 @@
                       <span>Dowload</span>
                     </button>
                   </div>
-                  <div class="d-none">
-                    <ejs-uploader
-                      #uploaderXLS
-                      id="preloadfileuploadXLS"
-                      [autoUpload]="false"
-                      [multiple]="false"
-                      locale="vi"
-                      [allowedExtensions]="'.xls,.xlsx'"
-                      (selected)="fileSelected($event)"
-                      (removing)="onFileRemove($event)"
-                      (beforeUpload)="beforeUpload($event)"
-                      (uploading)="uploading($event)"
-                      [files]="files"
-                      (fileListRendering)="fileRendering($event)"
-                    >
-                    </ejs-uploader>
-                  </div>
                 </div>
               </div>
             </div>
@@ -156,23 +139,6 @@
                       <i class="icon-cloud_download i-14"></i>
                       <span>Dowload</span>
                     </button>
-                  </div>
-                  <div class="d-none">
-                    <ejs-uploader
-                    #uploaderDOC
-                    id="preloadfileuploadDOC"
-                      [autoUpload]="false"
-                      [multiple]="false"
-                      locale="vi"
-                      [allowedExtensions]="'.doc,.docx'"
-                      (selected)="fileSelected($event)"
-                      (removing)="onFileRemove($event)"
-                      (beforeUpload)="beforeUpload($event)"
-                      (uploading)="uploading($event)"
-                      [files]="files"
-                      (fileListRendering)="fileRendering($event)"
-                    >
-                    </ejs-uploader>
                   </div>
                 </div>
               </div>

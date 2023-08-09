@@ -384,7 +384,7 @@ export class CodxOmService {
       "BS", 
       "ERM.Business.BS", 
       "UnitsOfMearsureBusiness", 
-      "GetAsync", 
+      "GetListAsync", 
       []
     );
   }
