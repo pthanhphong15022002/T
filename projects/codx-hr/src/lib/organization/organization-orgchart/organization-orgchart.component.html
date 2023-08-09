@@ -2818,7 +2818,7 @@
       (click)="clickActive(itemConfig.id)"
     >
       <div
-        class="d-flex align-items-center px-3 w-100"
+        class="d-flex align-items-center ps-3 pe-1 w-100"
         [style.background-color]="item.color"
         data-bs-toggle="tooltip"
         data-bs-placement="top"
@@ -2829,7 +2829,7 @@
         "
       >
         <i class="text-white me-2 fs-8" [ngClass]="item.icon"></i>
-        <div>
+        <div class="w-100">
           <span
             #departmentField2
             class="line-clamp line-clamp-1 text-white"
@@ -2837,7 +2837,7 @@
             {{ itemConfig.title }}
           </span>
         </div>
-        <div class="w-30px h-30px org-mfunc">
+        <div class="w-20px h-30px org-mfunc">
           <codx-mfunc
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, itemConfig.context.data)"

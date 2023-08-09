@@ -1,3 +1,4 @@
+import { forkJoin } from 'rxjs';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormModel, CodxGridviewV2Component, CacheService, ApiHttpService, ImageViewerComponent, RequestOption, CRUDService, SidebarModel, CallFuncService, CodxService } from 'codx-core';
 import { PopupAddEmployeeComponent } from '../popup/popup-add-employee/popup-add-employee.component';
@@ -337,18 +338,28 @@ export class EmployeeListByOrgComponent {
   }
   clickViewEmpInfo(data: any) {
     this.cache.functionList(this.funcIDEmpInfor).subscribe((func) => {
-      let queryParams = {
-        employeeID: data.employeeID,
-        page: this.grid.dataService.page,
-        totalPage: this.grid.dataService.pageCount,
-      };
-      let state = {
-        data: this.grid.dataService.data.map(function (obj) {
-          return { EmployeeID: obj.employeeID };
-        }),
-        request: this.grid.dataService.request,
-      };
-      this.codxService.navigate('', func?.url, queryParams, state, true);
+      this.api.execSv('HR', 'ERM.Business.HR', 'OrganizationUnitsBusiness', 'GetOrgUnitChild', [this.orgUnitID])
+      .subscribe(res => {
+        if (res){
+          let dataValue = Array(res).join();
+          
+          let request = this.grid.dataService.request;
+          request.dataValues = dataValue;
+
+          let queryParams = {
+            employeeID: data.employeeID,
+            page: this.grid.dataService.page,
+            totalPage: this.grid.dataService.pageCount,
+          };
+          let state = {
+            data: this.grid.dataService.data.map(function (obj) {
+              return { EmployeeID: obj.employeeID };
+            }),
+            request: request,
+          };
+          this.codxService.navigate('', func?.url, queryParams, state, true);
+        }else return;
+      });
     });
   }
   updateStatus(data: any, funcID: string) {
@@ -376,4 +387,5 @@ export class EmployeeListByOrgComponent {
       }
     });
   }
+
 }

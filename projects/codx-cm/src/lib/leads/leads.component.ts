@@ -340,7 +340,45 @@ export class LeadsComponent
     });
   }
 
-  onLoading(e) {}
+  onLoading(e) {
+    this.loadViewModel();
+  }
+
+  loadViewModel() {
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        // toolbarTemplate: this.footerButton,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
+        },
+      },
+    ];
+  }
 
   changeView(e) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -477,7 +515,8 @@ export class LeadsComponent
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.applyProcess;
     };
-    let isDeleteProcess = (eventItem, data) => { // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
+    let isDeleteProcess = (eventItem, data) => {
+      // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
       eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
     };
 
@@ -490,9 +529,9 @@ export class LeadsComponent
         data?.approveStatus >= '3' ||
         this.checkMoreReason(data);
     };
-    let isPermission =  (eventItem, data) => { // Phân quyền
+    let isPermission = (eventItem, data) => {
+      // Phân quyền
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
-
     };
     let isRejectApprover = (eventItem, data) => {
       // Gửi duyệt của a thảo
@@ -668,7 +707,6 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
-    debugger;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -870,6 +908,7 @@ export class LeadsComponent
           titleAction: 'Chỉnh sửa tiềm năng',
           applyFor: this.applyForLead,
           processId: this.processId,
+          gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -1235,6 +1274,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
+        this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }
@@ -1445,6 +1485,7 @@ export class LeadsComponent
       owner: data.owner,
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
+      buid: data.buid,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1520,6 +1561,7 @@ export class LeadsComponent
     }
   }
   openFormChangeStatus(data) {
+    this.dataSelected = data
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,

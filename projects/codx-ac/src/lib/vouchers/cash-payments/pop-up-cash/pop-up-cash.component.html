@@ -98,7 +98,7 @@
         </div>
         <div class="row">
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px"
+                <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
                     (click)="submit()">
                     <div class="d-flex align-items-center">
                         <i class="icon-i-funnel icon-16 me-1"></i>
@@ -154,7 +154,7 @@
 </ng-template>
 <ng-template #tabDetail>
     <div class="h-100px tabcash-content position-relative hidden-checkbox-mutilple">
-        <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" 
+        <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" [showEmptyRecord]="false"
             (onSelected)="onSelected($event)" [gridViewName]="dialog.formModel.gridViewName" [rowHeight]="35"
             [entityName]="dialog.formModel.entityName" [dataSource]="dataCash" hideMoreFunc="true" service="AC"
             [autoLoad]="false" [autoFitColumns]="false" [editSettings]="noEditSetting"></codx-gridview-v2>
@@ -162,7 +162,7 @@
 </ng-template>
 <ng-template #footer>
     <div class="ms-2 me-2">
-        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="accept()">
+        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="accept()">
             <div class="d-flex align-items-center">
                 <i class="icon-i-check2 icon-16 me-1"></i>
                 <codx-label class="fw-normal" default="Chọn"></codx-label>

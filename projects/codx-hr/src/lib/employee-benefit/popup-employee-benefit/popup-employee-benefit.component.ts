@@ -286,12 +286,14 @@ export class PopupEmployeeBenefitComponent
           }
         });
     } else {
-      this.hrSevice.EditEBenefit(this.formModel.currentData).subscribe((p) => {
-        if (p != null) {
-          this.notify.notifyCode('SYS007');
-          this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS021');
-      });
+      this.hrSevice
+        .EditEBenefit(this.formModel.currentData, this.useForQTNS)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
+        });
     }
   }
 
