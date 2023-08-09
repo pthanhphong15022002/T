@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -25,13 +26,14 @@ import { CodxAcService } from '../../../codx-ac.service';
 @Component({
   selector: 'lib-pop-add-accounts',
   templateUrl: './pop-add-accounts.component.html',
-  styleUrls: ['./pop-add-accounts.component.css'],
+  styleUrls: ['./pop-add-accounts.component.css','../../../codx-ac.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopAddAccountsComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   dialog!: DialogRef;
-  Accounts: Accounts;
+  accounts: Accounts;
   headerText: any;
   title: any;
   formType: any;
@@ -57,10 +59,10 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.Accounts = dialog.dataService!.dataSelected;
+    this.accounts = dialog.dataService!.dataSelected;
     this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'add') {
-      this.Accounts.detail = true;
+      this.accounts.detail = true;
     }
     this.cache
       .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
@@ -69,16 +71,16 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.Accounts.accountID != null) {
-      if (this.Accounts.loanControl) {
-        this.Accounts.loanControl = '1';
+    if (this.accounts != null) {
+      if (this.accounts.loanControl) {
+        this.accounts.loanControl = '1';
       } else {
-        this.Accounts.loanControl = '0';
+        this.accounts.loanControl = '0';
       }
-      if (this.Accounts.postDetail == '1') {
-        this.Accounts.postDetail = true;
+      if (this.accounts.postDetail == '1') {
+        this.accounts.postDetail = true;
       } else {
-        this.Accounts.postDetail = false;
+        this.accounts.postDetail = false;
       }
     }
   }
@@ -87,20 +89,26 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.Accounts);
+    this.form.formGroup.patchValue(this.accounts, {
+      onlySelf: true,
+      emitEvent: false,
+    });
+    setTimeout(() => {
+      this.dt.detectChanges();
+    }, 100);
+    
   }
   //#endregion
 
   //#region Event
   valueChange(e: any) {
-    this.Accounts[e.field] = e.data;
+    this.accounts[e.field] = e.data;
   }
   valueChangeloan(e: any) {
     if (e.data == '0') {
-      this.Accounts[e.field] = false;
+      this.accounts[e.field] = false;
     } else {
-      this.Accounts[e.field] = true;
+      this.accounts[e.field] = true;
     }
   }
   //#endregion
@@ -111,26 +119,26 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   checkcontrol() {
-    if (this.Accounts.loanControl == '0') {
-      this.Accounts.loanControl = false;
+    if (this.accounts.loanControl == '0') {
+      this.accounts.loanControl = false;
     } else {
-      this.Accounts.loanControl = true;
+      this.accounts.loanControl = true;
     }
-    if (this.Accounts.postDetail == true) {
-      this.Accounts.postDetail = '1';
+    if (this.accounts.postDetail == true) {
+      this.accounts.postDetail = '1';
     }else{
-      this.Accounts.postDetail = '0';
+      this.accounts.postDetail = '0';
     }
   }
   checkSubLGControl(){
-    if(this.Accounts.subLGControl && !this.Accounts.subLGType)
+    if(this.accounts.subLGControl && !this.accounts.subLGType)
     {
       this.notification.notifyCode(
         'SYS009',
         0,
         '"' + this.gridViewSetup['SubLGType'].headerText + '"'
       );
-      this.validate++;
+      return;
     }
   }
   //#endregion
@@ -157,15 +165,11 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       return;
     }
     this.checkSubLGControl();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    }
     if (this.formType == 'add' || this.formType == 'copy') {
       this.checkcontrol();
       this.dialog.dataService
         .save((opt: RequestOption) => {
-          opt.data = [this.Accounts];
+          opt.data = [this.accounts];
         })
         .subscribe((res) => {
           if (res && !res.save.error) {
@@ -174,7 +178,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
             this.notification.notifyCode(
               'SYS031',
               0,
-              '"' + this.Accounts.accountID + '"'
+              '"' + this.accounts.accountID + '"'
             );
             return;
           }
@@ -185,7 +189,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'UpdateAsync';
-          opt.data = [this.Accounts];
+          opt.data = [this.accounts];
         })
         .subscribe((res) => {
           if (res.save || res.update) {

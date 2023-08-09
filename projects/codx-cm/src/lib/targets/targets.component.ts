@@ -155,6 +155,7 @@ export class TargetsComponent
   exchangeRate: number;
   currencyIDSys: any;
   exchangeRateSys: number;
+  gridViewSetupTarget: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -190,7 +191,10 @@ export class TargetsComponent
     }
     // this.getSchedule();
   }
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -512,7 +516,18 @@ export class TargetsComponent
       },
     ];
   }
-  searchChanged(e) {}
+  searchChanged(e) {
+    console.log('seasrch: ',e);
+  }
+
+  filterChange(e){
+    console.log('filter: ',e);
+  }
+
+  filterReportChange(e){
+    console.log('filterReport: ',e);
+
+  }
   selectedChange(e) {}
   //#endregion
 
@@ -604,6 +619,7 @@ export class TargetsComponent
         title: this.titleAction,
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
+        gridViewSetupTarget: this.gridViewSetupTarget
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -669,6 +685,7 @@ export class TargetsComponent
           lstTargetLines: lstTargetLines,
           currencyID: this.currencyID,
           exchangeRate: this.exchangeRate,
+          gridViewSetupTarget: this.gridViewSetupTarget
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,

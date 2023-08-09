@@ -10,10 +10,10 @@
 </codx-views>
 
 <ng-template #headerTemplate>
-  <ul class="nav nav-news">
+  <ul class="nav nav-news px-3">
     <ng-container *ngFor="let item of tabAsside">
       <li class="nav-item" [class.text-primary]="item.active">
-        <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item)">
+        <a class="nav-link fw-bold mt-2 h-30px" href="javascript:;" (click)="clickTabApprove(item)">
           <codx-label [formModel]="view.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
           <span>({{ item.total }})</span>
         </a>
@@ -41,7 +41,7 @@
         [statusVll]="'CO003'" 
         [bookmark]="false"
         [typeMF]="'hover'" 
-        cardCss="card-template border-bottom px-4 py-3"
+        cardCss="card-template border-bottom p-4"
         >
       </codx-temp-full>
   </div>
