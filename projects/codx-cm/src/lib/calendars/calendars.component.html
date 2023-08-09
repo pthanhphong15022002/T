@@ -87,6 +87,7 @@
       <codx-label
         class="text-gray-600 me-4 label-colon"
         fiedName="Owner"
+        [setRequire]="false"
         [formModel]="formModelActivities"
       >
       </codx-label>
@@ -120,7 +121,11 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <h1>{{ data?.taskName }}</h1>
+  <div class="d-flex flex-column w-100">
+    <!-- <span class="d-flex flex-start"
+      >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span> -->
+    <span class="fw-bold text-truncate">{{ data?.taskName }}</span>
+  </div>
 </ng-template>
 
 <ng-template #headerTempContent>

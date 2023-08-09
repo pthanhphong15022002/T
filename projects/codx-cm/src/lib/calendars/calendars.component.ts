@@ -51,7 +51,7 @@ export class CalendarsComponent
     Title: 'Resources',
   };
 
-  vllTypeTask = 'DP004';
+  vllTypeTask = 'DP050';
   dayoff: any;
   calendarID = 'STD';
   // resourceField: {
@@ -94,7 +94,7 @@ export class CalendarsComponent
         model: {
           eventModel: this.fields,
           // resourceModel: this.resourceField, //calendar  not take
-          template4: this.resourceHeader,
+          // template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
           template: this.eventTemplate,
@@ -206,5 +206,17 @@ export class CalendarsComponent
       this.modelResource.dataValue = this.user.userID;
     }
   }
-  //#endregion setting schedule
+  //#endregion setting
+
+  showHour(stringDate: any) {
+    const date: Date = new Date(stringDate);
+    const hours: number = date.getHours();
+    const minutes: number = date.getMinutes();
+
+    const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    return timeString;
+  }
 }
