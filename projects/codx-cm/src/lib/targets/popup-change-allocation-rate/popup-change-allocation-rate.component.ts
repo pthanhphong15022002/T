@@ -29,6 +29,9 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   language = 'vn';
   isTargetQuarter: boolean = false;
   editingQuarter: any;
+  currencyID: string;
+  exchangeRate: number;
+  targetSys: number;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private decimalPipe: DecimalPipe,
@@ -44,6 +47,9 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     this.language = this.auth.userValue?.language?.toLowerCase();
     this.title = data?.data?.title;
     this.lstLinesBySales = data?.data?.lstLinesBySales;
+    this.currencyID = data?.data?.currencyID;
+    this.exchangeRate = data?.data?.exchangeRate;
+    this.targetSys = data?.data?.targetSys;
   }
 
   async ngOnInit() {
@@ -248,6 +254,9 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         element.isCollapse = true;
       });
       this.data.targetsLines = lstLinesBySales;
+      this.data.target = this.targetSys;
+      this.data.currencyID = this.currencyID;
+      this.data.exchangeRate = this.exchangeRate;
     }
   }
 

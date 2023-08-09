@@ -39,7 +39,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-import { ApproveProcess } from './models/ApproveProcess.model';
+import { ApproveProcess, ResponseModel } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -230,6 +230,11 @@ export class CodxShareService {
               data.unbounds.statusApproval = x.event?.mode;
               dataService.update(data).subscribe();
             }
+            // if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
+            //   data.unbounds.statusApproval = x.event?.returnStatus;
+            //   data.unbounds.isLastStep = x.event?.isLastStep;
+            //   dataService.update(data).subscribe();
+            // }
           });
         } else {
           var status;
@@ -1323,7 +1328,7 @@ export class CodxShareService {
           this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
         }
         else{
-          template?.templateType =="AD_ExcelTemplates" ? JSON.stringify([approveProcess?.data]) : JSON.stringify(approveProcess?.data);
+          exportUpload.dataJson = template?.templateType =="AD_ExcelTemplates" ? JSON.stringify([approveProcess?.data]) : JSON.stringify([approveProcess?.data]);
           this.exportFileRelease(approveProcess,releaseCallback,exportUpload);
         }
       })     
@@ -1336,14 +1341,21 @@ export class CodxShareService {
     exportUpload:ExportUpload,
   ) {
     let signFile = this.createSignFile(approveProcess);
-    this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exported:any)=>{
-      if(exported){      
-        //debugger        
-        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
+    this.exportTemplateData(approveProcess.module,exportUpload).subscribe((exportedFile:any)=>{
+      if(exportedFile){            
+        let signFile = this.createSignFile(approveProcess, [exportedFile]);
+        this.getFileByObjectID(approveProcess.recID).subscribe((lstFile:any)=>{
+          if(lstFile?.length>0){
+            this.openPopupSignFile(approveProcess, releaseCallback, signFile,lstFile);
+
+          }
+          else{            
+            this.notificationsService.notify('Không tìm thấy file!','2');
+          }
+        })
       }
       else{
-        this.openPopupSignFile(approveProcess, releaseCallback, signFile);
-        //this.notificationsService.notify('Xuất file thất bại!','2');
+        this.notificationsService.notify('Xuất file thất bại!','2');
       }
     })
   }
@@ -1419,6 +1431,7 @@ export class CodxShareService {
         refID: approveProcess.recID,
         editApprovers: approveProcess.category?.editApprovers,
         approvers: approveProcess.approvers,
+
       },
       '',
       dialogModel
@@ -1450,8 +1463,11 @@ export class CodxShareService {
     if (listFiles != null && listFiles?.length > 0) {
       for (let i = 0; i < listFiles?.length; i++) {
         let file = new ES_File();
-        file.fileID = listFiles[i].recID;
-        file.fileName = listFiles[i].fileName;
+        file.fileID = listFiles[i]?.recID;
+        file.fileName = listFiles[i]?.fileName;        
+        file.createdOn = listFiles[i]?.createdOn;
+        file.createdBy = listFiles[i]?.createdBy;
+        file.comment = listFiles[i]?.extension;
         file.eSign = true;
         signFile.files.push(file);
       }
@@ -1526,7 +1542,7 @@ export class CodxShareService {
     );
   }
   exportWordData(approveProcess: ApproveProcess, templateRecID:any, convertToPDF = false){
-    let dataJson = JSON.stringify([approveProcess?.data]);
+    let dataJson = JSON.stringify(approveProcess?.data);
     return this.api.execSv(
       approveProcess.module,
       'ERM.Business.Core',
@@ -1662,11 +1678,7 @@ export class CodxShareService {
   }
 }
 //#region Model
-export class ResponseModel {
-  rowCount: number;
-  msgCodeError: string;
-  approveStatus: string;
-}
+
 
 export class Approvers {
   recID: string;

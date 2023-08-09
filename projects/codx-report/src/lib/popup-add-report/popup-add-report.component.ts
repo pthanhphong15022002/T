@@ -596,20 +596,43 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   tmpSelected:String = "";
   clickUpload(type:string)
   {
-    let ctrl;
-    if(type == "excel")
-    {
-      ctrl = this.uploaderXLS.element as HTMLElement;
-    }
-    else if(type == "word"){
-      ctrl = this.uploaderDOC.element as HTMLElement;
-    }
-    else
-    {
-      ctrl = this.uploaderRDL.element as HTMLElement;
-    }
     this.tmpSelected = type;
-    ctrl?.click();
+
+    if(type == "rdl")
+    {
+      let ctrl = this.uploader.element as HTMLElement;
+      ctrl?.click();
+    }
+    else     
+    {
+      let option = new DialogModel();
+      option.FormModel = this.dialog.formModel;
+      option.DataService = null;
+      this.callFuncService
+        .openForm(
+          CodxExportAddComponent,
+          null,
+          1100,
+          800,
+          null,
+          {
+            action: 'add',
+            type: type,
+            refType: "RP_ReportList",
+            refID: this.data.recID,
+            formModel: this.dialog.formModel
+          },
+          '',
+          option
+        ).closed.subscribe((res:any) => {
+          debugger;
+          if(res?.event?.length > 0)
+          {
+            let template = res.event[0];
+            this.data.templateID = template.recID;
+          }
+        })
+    }
   }
 
 }
