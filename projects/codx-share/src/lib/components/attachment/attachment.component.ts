@@ -841,7 +841,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.addPermissionA();
       let total = this.fileUploadList.length;
 
-      var data = JSON.parse(JSON.stringify(this.fileUploadList));
+      var data = this.fileUploadList;
       //  var that = this;
       //await this.dmSV.getToken();
       for (var i = 0; i < total; i++) {

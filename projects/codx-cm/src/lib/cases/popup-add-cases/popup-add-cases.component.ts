@@ -119,7 +119,7 @@ export class PopupAddCasesComponent
 
   // load data form DP
   isLoading: boolean = false;
-  processID:string = '';
+  processID: string = '';
 
   applyProcess = false;
 
@@ -145,15 +145,17 @@ export class PopupAddCasesComponent
 
     this.cases.status = '1';
 
-  if (this.isLoading) {
+    if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-      this.caseType = this.applyFor == '2' ? '1': '2';
+      this.caseType = this.applyFor == '2' ? '1' : '2';
       if (this.action != this.actionAdd) {
         this.cases = dt?.data?.dataCM;
       }
     } else {
-      this.cases = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)):this.cases;
-
+      this.cases =
+        this.action != this.actionAdd
+          ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
+          : this.cases;
     }
 
     if (this.action != this.actionAdd) {
@@ -169,7 +171,9 @@ export class PopupAddCasesComponent
 
   async onInit(): Promise<void> {
     await this.getCurrentSetting();
-    this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
+    this.tabInfo = this.applyProcess
+      ? [this.menuGeneralInfo, this.menuInputInfo]
+      : [this.menuGeneralInfo];
   }
   ngAfterViewInit(): void {
     // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
@@ -186,7 +190,7 @@ export class PopupAddCasesComponent
     }
   }
   saveCases() {
-    if (!this.cases?.processID) {
+    if (!this.cases?.processID && this.applyProcess) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -210,7 +214,7 @@ export class PopupAddCasesComponent
       );
       return;
     }
-    if (!this.cases?.owner) {
+    if (!this.cases?.owner && this.applyProcess) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -254,8 +258,11 @@ export class PopupAddCasesComponent
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
     }
-    this.updateDataCases(this.instance, this.cases);
-    this.convertDataInstance(this.cases, this.instance);
+    if (this.applyProcess) {
+      this.updateDataCases(this.instance, this.cases);
+      this.convertDataInstance(this.cases, this.instance);
+    }
+
     // if (this.action !== this.actionEdit) {
     //   this.insertInstance();
     // } else {
@@ -377,11 +384,9 @@ export class PopupAddCasesComponent
   async executeApiCalls() {
     try {
       await this.getGridView(this.formModel);
-      if(this.processID) {
+      if (this.processID) {
         await this.getListInstanceSteps(this.cases.processID);
       }
-
-
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
@@ -392,31 +397,30 @@ export class PopupAddCasesComponent
       if (this.isLoading) {
         if (this.action !== this.actionEdit) {
           await this.addCasesForDP();
-          await this.insertInstance();
+          this.applyProcess && await this.insertInstance();
         } else {
-      //    await this.editDealForDP();
-          await this.editInstance();
+          //    await this.editDealForDP();
+          this.applyProcess && await this.editInstance();
         }
       } else {
         if (this.action !== this.actionEdit) {
-          await this.insertInstance();
+          this.applyProcess && await this.insertInstance();
           await this.onAdd();
         } else {
-          await this.editInstance();
+          this.applyProcess &&  await this.editInstance();
           await this.onEdit();
         }
       }
     } catch (error) {}
   }
 
-  async addCasesForDP(){
+  async addCasesForDP() {
     var datas = [this.cases];
     this.codxCmService.addCases(datas).subscribe((cases) => {
       if (cases) {
       }
     });
   }
-
 
   async getGridView(formModel) {
     this.cache
@@ -693,40 +697,45 @@ export class PopupAddCasesComponent
   //   }
   // }
 
-   //#region setDefault
-   async getCurrentSetting() {
+  //#region setDefault
+  async getCurrentSetting() {
     let res = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
+      this.codxCmService.getParam('CMParameters', '1')
     );
-    if (res?.length > 0) {
-      let dataParam = res.find((x) => x.category == '1' && !x.transType);
-      if (dataParam) {
-        let dataValue = JSON.parse(dataParam.dataValue);
-        this.applyProcess = dataValue?.ProcessCaseUsed == "1";
-        this.cases.applyProcess = this.applyProcess;
-      }
+    if (res?.dataValue) {
+      let dataValue = JSON.parse(res?.dataValue);
+      this.applyProcess = dataValue?.ProcessCaseUsed == '1';
+      this.cases.applyProcess = this.applyProcess;
+    }else{
+      this.applyProcess = false;
+      this.cases.applyProcess = this.applyProcess;
     }
   }
 
-  async getAutoNumber(){// kiểm tra có thiết lập tư động ko 
+  async getAutoNumber() {
+    // kiểm tra có thiết lập tư động ko
     this.codxCmService
-    .getFieldAutoNoDefault(this.dialog.formModel.funcID, this.dialog.formModel.entityName)
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes) {
-            // this.planceHolderAutoNumber = mes?.customName || mes?.description;
-          }
-        });
-        this.getAutoNumberSetting();
-      } else {
-        // this.planceHolderAutoNumber = '';
-        this.cases.caseNo = null;
-        // this.disabledShowInput = false;
-      }
-    });
+      .getFieldAutoNoDefault(
+        this.dialog.formModel.funcID,
+        this.dialog.formModel.entityName
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes) {
+              // this.planceHolderAutoNumber = mes?.customName || mes?.description;
+            }
+          });
+          this.getAutoNumberSetting();
+        } else {
+          // this.planceHolderAutoNumber = '';
+          this.cases.caseNo = null;
+          // this.disabledShowInput = false;
+        }
+      });
   }
-  async getAutoNumberSetting() { // lấy mã tự động
+  async getAutoNumberSetting() {
+    // lấy mã tự động
     this.codxCmService
       .genAutoNumberDefault(
         this.dialog.formModel.funcID,
