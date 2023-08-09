@@ -103,7 +103,6 @@ implements OnInit, AfterViewInit {
     if (changes['dataSelected']) {
 
       if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
-
         if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
           this.promiseAllAsync();
         }
@@ -118,10 +117,7 @@ implements OnInit, AfterViewInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      // await this.getTree(); //ve cay giao viec
-      await this.getListInstanceStep();
-      //await this.getContactByDeaID(this.dataSelected.recID)
-
+      this.dataSelected.applyProcess && await this.getListInstanceStep();
     } catch (error) {}
   }
   reloadListStep(listSteps:any) {
@@ -140,8 +136,6 @@ implements OnInit, AfterViewInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        debugger;
-        console.log(this.listSteps);
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
@@ -194,7 +188,7 @@ implements OnInit, AfterViewInit {
   async executeApiCalls() {
     try {
       await this.getValueList();
-      await this.getListInstanceStep();
+      this.dataSelected.applyProcess &&  await this.getListInstanceStep();
     } catch (error) {
       console.error('Error executing API calls:', error);
     }

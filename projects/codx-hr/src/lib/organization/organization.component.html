@@ -214,7 +214,7 @@
       </div> -->
     </div>
 
-    <div class="w-100px">
+    <div class="w-100px" *ngIf="activeMFC">
       <codx-mfunc
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"

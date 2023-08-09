@@ -352,7 +352,7 @@ export class CodxBookingService {
       'BS',
       'ERM.Business.BS',
       'UnitsOfMearsureBusiness',
-      'GetAsync',
+      'GetListAsync',
       []
     );
   }
