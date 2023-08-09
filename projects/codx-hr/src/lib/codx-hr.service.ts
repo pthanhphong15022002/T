@@ -1815,13 +1815,13 @@ export class CodxHrService {
     );
   }
 
-  EditEBenefit(data: any) {
+  EditEBenefit(data: any, useForQTNS: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'EditEBenefitAsync',
-      data
+      [data, useForQTNS]
     );
   }
 

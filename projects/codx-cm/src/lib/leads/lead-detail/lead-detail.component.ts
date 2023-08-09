@@ -29,8 +29,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
   styleUrls: ['./lead-detail.component.scss'],
 })
 export class LeadDetailComponent implements OnInit {
-  @ViewChild('tabObj')
-  public tabObj?: TabComponent;
+  @ViewChild('tabObj') tabObj: TabComponent;
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -66,7 +65,7 @@ export class LeadDetailComponent implements OnInit {
   isHidden: boolean = true;
 
   isBool: boolean = false;
-  headerText:any = [];
+  hasRunOnce = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -76,14 +75,10 @@ export class LeadDetailComponent implements OnInit {
     this.isDataLoading = true;
     this.executeApiCalls();
 
+
   }
 
   ngOnInit(): void {
-    this.headerText= [
-      { text: 'Twitter', iconCss: 'e-twitter' },
-      { text: 'Facebook', iconCss: 'e-facebook' },
-      { text: 'WhatsApp', iconCss: 'e-whatsapp' },
-    ];
     this.tabControl = [
       {
         name: 'History',
@@ -119,8 +114,13 @@ export class LeadDetailComponent implements OnInit {
     ];
   }
 
-  ngAfterViewInit(): void {}
-
+  ngAfterViewInit(): void {
+  }
+  ngAfterViewChecked() {
+    if(!this.hasRunOnce) {
+      this.resetTab(this.dataSelected.applyProcess);
+    }
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
 
@@ -141,11 +141,13 @@ export class LeadDetailComponent implements OnInit {
           icon: 'icon-i-link',
         };
 
-        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID && this.oldRecId){
+          this.hasRunOnce = true;
+          this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
         }
+        !this.hasRunOnce &&  this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
-        this.resetTab(this.dataSelected.applyProcess);
         this.tabControl.push(references);
       }else {
         this.tmpDeal = null;
@@ -169,15 +171,16 @@ export class LeadDetailComponent implements OnInit {
 
   changeFooter(e) {}
   resetTab(data){
-    if(!this.tabObj) return;
-    this.isBool = data;
-    if(this.isBool) {
-      (this.tabObj as TabComponent).hideTab(1, true);
-      (this.tabObj as TabComponent).hideTab(2,false);
-    }
-    else {
-      (this.tabObj as TabComponent).hideTab(1, false );
-      (this.tabObj as TabComponent).hideTab(2, true);
+    if(this.tabObj) {
+      this.isBool = data;
+      if(this.isBool) {
+        (this.tabObj as TabComponent).hideTab(1, true);
+        (this.tabObj as TabComponent).hideTab(2,false);
+      }
+      else {
+        (this.tabObj as TabComponent).hideTab(1, false );
+        (this.tabObj as TabComponent).hideTab(2, true);
+      }
     }
   }
 
@@ -187,7 +190,6 @@ export class LeadDetailComponent implements OnInit {
     await this.getTmpDeal();
   }
   async executeApiCalls(){
-
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
   }

@@ -784,15 +784,7 @@
                 </span>
               </div>
               <div *ngIf="applyProcess">
-                <div class="mt-5">
-                  <codx-label
-                    class="fw-bold text-primary"
-                    default="Trường tùy chỉnh"
-                    [formModel]="formModel"
-                    name="lblField"
-                  ></codx-label>
-                </div>
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column mt-5">
                   <ng-container *ngFor="let item of listSteps">
                     <codx-fields-detail-temp
                       *ngIf="item?.fields?.length > 0 && item?.fields"
@@ -800,7 +792,7 @@
                       [showColumnControl]="showColumnControl(item.stepID)"
                       [isUpdate]="
                         ['0', '1', '2', '13'].includes(dataSelected.status) &&
-                        dataSelected?.roles?.isOnwer &&
+                        dataSelected?.full &&
                         !dataSelected.closed
                       "
                     >
@@ -811,7 +803,7 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem>
+        <e-tabitem >
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -828,18 +820,13 @@
               <step-task
                 [typeTask]="2"
                 [customerID]="dataSelected?.recID"
-                [isPause]="
-                  ['0', '1', '3', '5', '13', '11'].includes(
-                    dataSelected.status
-                  ) ||
-                  !dataSelected?.roles?.isOnwer ||
-                  dataSelected.closed
+                [isPause]=" ['0', '1', '3', '5', '13', '11'].includes(dataSelected.status ) ||!dataSelected?.full ||dataSelected.closed
                 "
               ></step-task>
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem>
+        <e-tabitem >
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
