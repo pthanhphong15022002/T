@@ -294,6 +294,7 @@ export class DealsComponent
       this.kanban = (this.view?.currentView as any)?.kanban;
     }
 
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -433,11 +434,11 @@ export class DealsComponent
       eventItem.disabled =  true ;
     };
     functionMappings = {
-      CM0201_1: isDisabled,
-      CM0201_2: isStartDay,
-      CM0201_3: isDisabled,
-      CM0201_4: isDisabled,
-      CM0201_5: isDisabled,
+      CM0201_1: isDisabled, // chuyển tiếp
+      CM0201_2: isStartDay, // bắt đầu
+      CM0201_3: isDisabled, // thành công
+      CM0201_4: isDisabled, // thất bại
+      CM0201_5: isDisabled, // xuất file
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
       CM0201_8: isClosed,
