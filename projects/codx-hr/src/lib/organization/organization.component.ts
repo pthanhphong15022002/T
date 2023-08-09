@@ -61,8 +61,8 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  @ViewChild(OrganizationOrgchartComponent)
-  child: OrganizationOrgchartComponent;
+  // @ViewChild(OrganizationOrgchartComponent)
+  // child: OrganizationOrgchartComponent;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
@@ -70,9 +70,7 @@ export class OrgorganizationComponent extends UIComponent {
   constructor(
     inject: Injector,
     private activedRouter: ActivatedRoute,
-    private hrService: CodxHrService,
-
-    private df: ChangeDetectorRef
+    private hrService: CodxHrService
   ) {
     super(inject);
   }
@@ -273,6 +271,8 @@ export class OrgorganizationComponent extends UIComponent {
   getIdFromChild(e) {
     this.selectItemFromChild = e;
   }
+
+  itemAdded;
   // button add toolbar
   btnClick(e) {
     if (this.view) {
@@ -304,7 +304,8 @@ export class OrgorganizationComponent extends UIComponent {
             if (res.event) {
               this.view.dataService.add(res.event, 0).subscribe();
               //Update view chart diagram
-              this.child.GetChartDiagram();
+              this.itemAdded = res.event;
+              // this.child.GetChartDiagram();
               this.flagLoaded = true;
             }
           });
