@@ -78,16 +78,16 @@ export class CalendarsComponent {
   ) {
     // super(inject);
     this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        this.funcID = param.funcID;
+      if (param.funcID && this.funcID != param.funcID) {
+        this.cmService.viewActiveType.subscribe((res) => {
+          if (res && this.viewActiveType != res) {
+            this.viewActiveType = res;
+          }
+          this.funcID = param.funcID;
+        });
       }
     });
-    this.cmService.viewActiveType.subscribe((res) => {
-      if (res) {
-        this.viewActiveType = res;
-        this.cmService.viewActiveType.next(null);
-      }
-    });
+
     // this.user = this.authstore.get();
     // this.afterLoad();
   }
