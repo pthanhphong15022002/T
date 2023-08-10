@@ -1,6 +1,6 @@
 <div class="treeview mw-1000px mx-auto target-treeview">
   <codx-treeview
-    id="tree"
+    id="treeView"
     #treeView
     [itemTemplate]="templateTree"
     [data]="dataTree"
@@ -62,7 +62,9 @@
           {{ item?.title }}
         </span>
       </div>
-      <div class="w-250px min-w-250px d-flex align-items-center justify-content-end">
+      <div
+        class="w-250px min-w-250px d-flex align-items-center justify-content-end"
+      >
         <div
           class="h-30px"
           *ngIf="
@@ -85,9 +87,7 @@
             {{ item?.titleMonth }}
           </span>
         </div>
-        <div
-          class="ms-3 fw-bold d-flex justify-content-end min-w-150px"
-        >
+        <div class="ms-3 fw-bold d-flex justify-content-end min-w-150px">
           <span
             *ngIf="item?.target > 0"
             [ngStyle]="
@@ -168,9 +168,7 @@
             [objectType]="'AD_Users'"
             [objectName]="item?.title"
           ></codx-img>
-          <div
-            [ngClass]="'ms-4 d-flex flex-column'"
-          >
+          <div [ngClass]="'ms-4 d-flex flex-column'">
             <span
               class="text-dark"
               [ngClass]="
@@ -228,7 +226,6 @@
             0
           </span>
         </div>
-
       </div>
     </div>
   </div>

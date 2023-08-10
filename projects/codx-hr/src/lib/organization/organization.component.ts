@@ -32,7 +32,7 @@ import { OrganizationOrgchartComponent } from './organization-orgchart/organizat
 })
 export class OrgorganizationComponent extends UIComponent {
   console = console;
-  views: Array<ViewModel> = [];
+  views: Array<ViewModel>;
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;

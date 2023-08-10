@@ -375,13 +375,13 @@
             field="owner"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueChangeOwner($event,viewOwnerDefault)"
           >
           </codx-input>
         </div>
         <ng-template #ownerProcess>
           <ejs-combobox [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
+          (valueChange)="valueChangeOwner($event,viewOwnerProcess)" [fields]="fieldCbxParticipants"
           [placeholder]="gridViewSetup?.Owner?.description"
           [allowFiltering]='true' [value]="owner"></ejs-combobox>
         </ng-template>
