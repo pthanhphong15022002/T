@@ -15,6 +15,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-calendars',
@@ -62,6 +63,7 @@ export class CalendarsComponent {
   // //   Title: string;
   // // };
   funcID: any;
+  viewActiveType = '7';
   // user: any;
   // crrFuncID: any;
 
@@ -70,11 +72,20 @@ export class CalendarsComponent {
   //   formName: 'DPActivities',
   // };
 
-  constructor(private inject: Injector, private router: ActivatedRoute) {
+  constructor(
+    private router: ActivatedRoute,
+    private cmService: CodxCmService
+  ) {
     // super(inject);
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.funcID = param.funcID;
+      }
+    });
+    this.cmService.viewActiveType.subscribe((res) => {
+      if (res) {
+        this.viewActiveType = res;
+        this.cmService.viewActiveType.next(null);
       }
     });
     // this.user = this.authstore.get();
