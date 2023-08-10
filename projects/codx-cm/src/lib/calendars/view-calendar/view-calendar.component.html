@@ -123,12 +123,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div class="d-flex flex-column w-100">
-    <span class="d-flex flex-start"
-      >{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span
-    >
-    <span class="fw-bold text-truncate">{{ data?.taskName }}</span>
-  </div>
+  <div class="fw-bold">{{ data?.taskName }}</div>
 </ng-template>
 
 <ng-template #headerTempContent>
