@@ -32,7 +32,7 @@ export class CodxCmService {
   valueRadio = this.loadingSubject.asObservable();
 
   contactSubject = new BehaviorSubject<any>(null);
-  // valueContact = this.contactSubject.asObservable();
+  viewActiveType = new BehaviorSubject<any>(null);
 
   constructor(
     private api: ApiHttpService,
@@ -435,6 +435,14 @@ export class CodxCmService {
       'DP',
       'InstancesBusiness',
       'GetInstanceStepById',
+      data
+    );
+  }
+  addInstanceNoRecId(data: any) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'AddInstanceByIdCMAsync',
       data
     );
   }

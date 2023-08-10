@@ -49,7 +49,7 @@
         >
         <ng-template #noOrgUnitName>
           <span class="place-holder">{{
-            grvSetup["orgUnitID"].headerText
+            grvSetup["orgUnitID"]?.headerText
           }}</span>
         </ng-template>
         <!-- <span
@@ -79,7 +79,7 @@
 
       <div
         *ngIf="
-          itemDetail.isCurrent &&
+          itemDetail?.status === '5' &&
           dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
           (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
             itemDetail.expiredDate === null)

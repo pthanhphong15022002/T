@@ -8,7 +8,7 @@ import {
   AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
@@ -40,7 +40,6 @@ import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
-import { VoucherComponent } from './popup/voucher/voucher.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
@@ -83,6 +82,7 @@ import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-clos
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
+import { VoucherComponent } from './vouchers/cash-payments/pop-up-set/voucher/voucher.component';
 export const routes: Routes = [
   {
     path: '',

@@ -71,8 +71,8 @@
 <!-- End: Body -->
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div class="ms-2 me-2">
-    <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px" (click)="apply()">
+  <div *ngIf="grid" class="ms-2 me-2">
+    <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
       <div class="d-flex align-items-center">
         <i class="icon-i-check2 icon-16 me-1"></i>
         <codx-label class="fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
@@ -142,7 +142,7 @@
     </div>
     <div class="row">
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-lg btn-primary" style="min-width: 60px;border: 1px solid var(--primary-dark) !important;"
+        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
             (click)="submit()">
             <div class="d-flex align-items-center">
               <i class="icon-i-funnel icon-16 me-1"></i>
@@ -157,9 +157,9 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div class="tabset-content position-relative hidden-checkbox-mutilple">
-    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName"
-      [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices"
+  <div [class]="type === 0 ? 'tabset-content position-relative' : 'tabset-content position-relative hidden-checkbox-mutilple'">
+    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName" [showEmptyRecord]="false"
+      [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
       service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false" [rowHeight]="35"
       (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" hideMoreFunc="true"
       (eventAction)="actions($event)"></codx-gridview-v2>

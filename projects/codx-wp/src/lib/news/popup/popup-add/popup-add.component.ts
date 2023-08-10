@@ -2,13 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild,
 import { Permission } from '@shared/models/file.model';
 import { ViewsComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService, ImageViewerComponent, AuthStore } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { WP_News } from '../../../models/WP_News.model';
-import moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { map } from 'rxjs';
-import { Base64 } from '@syncfusion/ej2-angular-documenteditor';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-popup-add',
@@ -32,6 +29,8 @@ export class PopupAddComponent implements OnInit {
   headerText:string = "";
   loading:boolean = false;
   isAdd:boolean = true;
+  allowExtensions:string = ".png, .jpg, .jpeg";
+  defaultCategory:string = "";
   defaultImgSrc:string = "../assets/themes/wp/default/img/upload_image.svg"; 
   NEWSTYPE = {
     POST: "1",
@@ -76,6 +75,7 @@ export class PopupAddComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
+    private router:ActivatedRoute,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
@@ -90,7 +90,6 @@ export class PopupAddComponent implements OnInit {
     this.isAdd = dialogData.data.isAdd;
     this.data = JSON.parse(JSON.stringify(dialogData.data.data));
     this.user = auth.get();
-    
   }
   ngOnInit(): void {
     if(this.isAdd)
@@ -107,7 +106,7 @@ export class PopupAddComponent implements OnInit {
     .subscribe((func:any) => {
       if(func){
         this.function = func;
-        this.headerText += " " + func.defaultName;
+        this.headerText += " " + func.customName;
         this.cache.gridViewSetup(func.formName, func.gridViewName)
         .subscribe((grv:any) => {
           if(grv){
@@ -146,7 +145,7 @@ export class PopupAddComponent implements OnInit {
     this.cache.message('WP017')
     .subscribe((mssg: any) => {
       if(mssg){
-        this.messageImage = mssg.defaultName;
+        this.messageImage = mssg.customName;
       }
     });
   }
@@ -161,35 +160,36 @@ export class PopupAddComponent implements OnInit {
 
   // insert post
   clickInsert(){
-    if(this.checkValidate()){
-      return;
-    }
+    if(this.checkValidate()) return;
     this.loading = true;
     this.data.image = this.fileUpload.length;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
     this.codxATMImage.saveFilesMulObservable()
     .subscribe((res1: any) => {
-      if(res1.status != 0)
+      if(res1 && ((typeof res1 == 'object' && res1?.status != 0) || (Array.isArray(res1) && res1[0]?.status != 0)))
       {
-        let fileNames = "";
-        this.fileUpload.forEach(x => fileNames += `${x.fileName};`);
-        this.notifSV.notifyCode("DM006",0,fileNames);
+        this.api.execSv(
+          'WP',
+          'ERM.Business.WP',
+          'NewsBusiness',
+          'InsertAsync',
+          [this.data])
+          .subscribe((res2:boolean) => {
+            this.notifSV.notifyCode( res2 ? "WP024" : "WP013");
+            this.dialogRef.close(res2);
+          });
       }
-      this.api.execSv(
-      'WP',
-      'ERM.Business.WP',
-      'NewsBusiness',
-      'InsertAsync',
-      [this.data])
-      .subscribe((res2:boolean) => {
-        this.notifSV.notifyCode( res2 ? "WP024" : "WP013");
-        this.dialogRef.close(res2);
-      });
+      else
+      {
+        let fileNames = this.fileUpload.map(x => x.fileName).join(";");
+        this.notifSV.notifyCode("DM006",0,fileNames);
+        this.dialogRef.close();
+        return;
+      }
     });
   }
   // release post
   clickRelease() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
@@ -197,25 +197,23 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
-        if(res.status != 0)
+        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
+        {
+          this.releasePost(this.data)
+          .subscribe();
+        }
+        else
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
           this.notifSV.notifyCode("DM006",0,fileNames);
+          this.dialogRef.close();
+          return;
         }
-        this.releasePost(this.data)
-        .subscribe((res2:any) => {
-          this.loading = false;
-          this.notifSV.notifyCode(res2 ? "WP024" : "WP013");
-          this.dialogRef.close(res2);
-        });
       });
     }
     else
     {
-      this.releasePost(this.data).subscribe((res:any) => {
-        this.loading = false;
-        this.dialogRef.close(res);
-      });
+      this.releasePost(this.data).subscribe();
     }
   }
 
@@ -226,7 +224,11 @@ export class PopupAddComponent implements OnInit {
       'NewsBusiness',
       'ReleaseNewsAsync',
       [post])
-      .pipe(map((res:any) => res));
+      .pipe(map((res:any) => {
+        this.loading = false;
+        this.notifSV.notifyCode(res ? "WP024" : "WP013");
+        this.dialogRef.close(res);
+      }));
   }
   // check validate
   checkValidate(){
@@ -365,6 +367,7 @@ export class PopupAddComponent implements OnInit {
   //click upload file
   clickUpload(type:string)
   {
+    debugger
     type == 'image' ? this.codxATMImage.uploadFile() : this.codxATMVideo.uploadFile();;
   }
 
@@ -372,40 +375,41 @@ export class PopupAddComponent implements OnInit {
   clickUpdate() {
     if(this.checkValidate()) return;
     this.loading = true;
-    if(this.fileUpload.length > 0)
+    if(this.fileUpload.length > 0) // upload file
     {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res:any) => {
-        if(res.status != 0)
+        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
+        {
+          this.updatePost(this.data)
+          .subscribe();
+        }
+        else
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
           this.notifSV.notifyCode("DM006",0,fileNames);
+          this.dialogRef.close();
+          return;
         }
-        this.updatePost(this.data)
-        .subscribe((res2:any) => {
-          this.loading = false;
-          this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
-          this.dialogRef.close(res2);
-        });
+       
       });
     }
     else
     {
       this.updatePost(this.data)
-      .subscribe((res:any) => {
-        this.loading = false;
-        this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
-        this.dialogRef.close(res);
-      });
+      .subscribe();
     }
   }
-
 
   updatePost(post:any){
     return this.api
     .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post])
-    .pipe(map((res:any) => res));
+    .pipe(map((res:any) => {
+        this.loading = false;
+        this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
+        this.dialogRef.close(res);
+    }));
   }
   // get file by objectID
   getFileByObjectID(objectID: string) {
@@ -433,11 +437,9 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-
-  //check base 64
-  removeBase64(){
-    // let strUrl = "";
-    // let isBase64 = Base64
+  // removeImage
+  removeImage(e:any){
+    this.fileUpload = this.fileUpload.filter(x => x.fileName == this.fileImage.fileImage);
+    this.fileImage = null;
   }
-  
 }

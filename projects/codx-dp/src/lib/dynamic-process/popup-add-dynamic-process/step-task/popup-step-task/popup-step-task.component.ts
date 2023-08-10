@@ -4,8 +4,6 @@ import {
   Component,
   ViewChild,
   ElementRef,
-  HostListener,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
   Util,
@@ -18,13 +16,14 @@ import {
   NotificationsService,
   AuthStore,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import {
   DP_Steps,
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -34,42 +33,40 @@ import {
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('sample') comboBoxObj: ComboBoxComponent;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
-  title = '';
-  dialog!: DialogRef;
+
   typeTask;
-  vllShare = 'DP0331';
-  stepName = '';
-  taskGroupName = '';
-  linkQuesiton = 'http://';
-  roles: DP_Steps_Tasks_Roles[] = [];
-  participant: DP_Steps_Tasks_Roles[] = [];
-  owner: DP_Steps_Tasks_Roles[] = [];
-  recIdEmail = '';
+  action = 'add';
+
   isNewEmails = true;
+  vllShare = 'DP0331';
+  linkQuesiton = 'http://';
   listGroupTask = [];
+  step: DP_Steps;
+  dialog!: DialogRef;
   stepsTasks: DP_Steps_Tasks;
+  listTask: DP_Steps_Tasks[] = [];
+  roles: DP_Steps_Tasks_Roles[] = [];
+  owner: DP_Steps_Tasks_Roles[] = [];
+  participant: DP_Steps_Tasks_Roles[] = [];
+
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
-  tasksItem = '';
+
+  view = [];
+  listParentID = [];
+  listTaskLink = [];
+  listFileTask: string[] = [];
+
   stepID = '';
-  action = 'add';
-  taskList: DP_Steps_Tasks[] = [];
-  show = false;
-  dataCombobox = [];
-  valueInput = '';
-  litsParentID = [];
-  listJobType = [];
+  stepName = '';
+  recIdEmail = '';
   taskGroupID = '';
   isHaveFile = false;
   showLabelAttachment = false;
-  folderID = '';
-  frmModel: FormModel;
-  view = [];
-  step: DP_Steps;
-  listFileTask: string[] = [];
   user: any;
-  functionID = 'DP01';
+
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -77,29 +74,35 @@ export class PopupJobComponent implements OnInit {
     D: 'Share_Departments_Sgl',
     O: 'Share_OrgUnits_Sgl',
   };
+
   constructor(
     private cache: CacheService,
+    private authStore: AuthStore,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
-    private changeDef: ChangeDetectorRef,
-    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.dialog = dialog;
+    this.step = dt?.data?.step;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
-    this.step = dt?.data?.step;
-    this.listGroupTask = dt?.data?.listGroup || [];
-
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
-    this.dialog = dialog;
+    if (dt?.data?.listGroup) { // remove group task recID null
+      this.listGroupTask = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
+      let index = this.listGroupTask?.findIndex((group) => !group.recID);
+      if (index >= 0) {
+        this.listGroupTask?.splice(index, 1);
+      }
+    }
+
     if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
-      this.stepsTasks['taskType'] = this.typeTask?.value;
-      this.stepsTasks['stepID'] = this.stepID;
-      this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['durationDay'] = 1;
+      this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['taskType'] = this.typeTask?.value;
+      this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
     } else if (this.action == 'copy') {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
@@ -108,155 +111,24 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
     }
-    this.taskList = dt?.data?.listTask;
+
+    this.listTask = dt?.data?.listTask;
     this.taskGroupID = dt?.data?.groupTaskID;
     this.listFileTask = dt?.data?.listFileTask;
     this.user = this.authStore.get();
   }
   async ngOnInit() {
-    // this.getTypeTask();
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) || [];
+    this.participant = this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) || [];
 
-    this.litsParentID = this.stepsTasks['parentID']
-      ? this.stepsTasks['parentID']?.split(';')
-      : [];
-    let group = this.listGroupTask?.find(
-      (x) => x.recID === this.stepsTasks?.taskGroupID
-    );
-    let listTaskConvert = group?.recID
-      ? JSON.parse(JSON.stringify(group['task']))
-      : JSON.parse(JSON.stringify(this.taskList));
+    let group = this.listGroupTask?.find((x) => x.recID === this.stepsTasks?.taskGroupID);
+    let listTaskConvert = group?.recID ? JSON.parse(JSON.stringify(group?.task)) : JSON.parse(JSON.stringify(this.listTask));
     await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
-    this.dataCombobox = this.mapDataTask(listTaskConvert, this.litsParentID);
-    this.valueInput = this.dataCombobox
-      .filter((x) => x.checked)
-      .map((y) => y.value)
-      .join('; ');
-  }
-
-  mapDataTask(liskTask, listID?) {
-    let taskLinks = [];
-    let data;
-    if (liskTask?.length > 0) {
-      liskTask.forEach((element) => {
-        if (element['recID'] && element['taskName']) {
-          taskLinks.push({
-            key: element.recID,
-            value: element.taskName,
-            checked: false,
-          });
-        }
-      });
-    }
-    if (listID && listID.length > 0 && taskLinks.length > 0) {
-      data = taskLinks.map((task) => {
-        return listID.some((x) => x == task.key)
-          ? { ...task, checked: true }
-          : { ...task };
-      });
-      taskLinks = data;
-    }
-    return taskLinks;
-  }
-
-  valueChangeText(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-
-  valueChangeCombobox(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-
-  valueChangeAlert(event) {
-    this.stepsTasks[event?.field] = event?.data;
-  }
-
-  // changeOwner(e) {
-  //   let owner = e?.map((x) => {
-  //     return {
-  //       ...x,
-  //       roleType: 'O',
-  //     };
-  //   });
-  //   this.owner = owner;
-  // }
-
-  changeRoler(e, roleType) {    
-    if (!e || e?.length == 0) return;
-    let listUser = e || [];
-    let listRole = [];
-    for(let role of listUser){
-      if(roleType == 'P' && this.owner.some(ownerFind => ownerFind.objectID == role.objectID)){
-        continue;
-      }
-      listRole.push({
-        objectID: role.objectID,
-        objectName: role.objectName,
-        objectType: role.objectType,
-        roleType: roleType,
-        taskID: this.stepsTasks['recID'],
-      });
-    }
-    if(roleType == 'O'){
-      this.owner = listRole;
-    }
-    if(roleType == 'P'){
-      this.participant =  listRole;
-    }
-  }
-
-  async changeCombobox(value, key) {
-    this.stepsTasks[key] = value;
-    let group = this.listGroupTask.find((x) => x.recID === value);
-    this.taskGroupName = group?.taskGroupName;
-    let taskLink = group?.recID
-      ? JSON.parse(JSON.stringify(group?.task))
-      : JSON.parse(JSON.stringify(this.taskList));
-    this.dataCombobox = this.mapDataTask(taskLink);
-    await this.getTasksWithoutLoop(this.stepsTasks, this.dataCombobox);
-    this.stepsTasks['parentID'] = '';
-  }
-
-  async getTasksWithoutLoop(task, tasks) {
-    let indexTask = tasks?.findIndex((item) => item.recID === task.recID);
-    if (indexTask >= 0) {
-      tasks.splice(indexTask, 1);
-    }
-    let listTask = tasks.filter((item) =>
-      item?.parentID?.includes(task?.recID)
-    );
-    if (listTask?.length == 0) return;
-
-    listTask?.forEach(async (element) => {
-      await this.getTasksWithoutLoop(element, tasks);
-    });
-  }
-
-  showCombobox() {
-    this.show = !this.show;
-  }
-  // combobox chọn nhiều
-  handelCheck(data) {
-    data.checked = !data.checked;
-    let dataCheck = this.dataCombobox
-      .filter((x) => x.checked)
-      .map((y) => y.value);
-    this.litsParentID = this.dataCombobox
-      .filter((x) => x.checked)
-      .map((y) => y.key);
-    this.valueInput = dataCheck.join('; ');
-  }
-
-  @HostListener('document:click', ['$event'])
-  clickout(event) {
-    let a = this.inputContainer?.nativeElement.contains(event.target);
-    if (!a) {
-      this.show = false;
-    }
+    this.listTaskLink = listTaskConvert;
+    this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
   }
 
   getFormModel() {
@@ -310,16 +182,16 @@ export class PopupJobComponent implements OnInit {
   }
 
   viewDetailSurveys() {
-    if (this.linkQuesiton){
+    if (this.linkQuesiton) {
       this.setLink();
       window.open(this.linkQuesiton);
-    } 
+    }
   }
 
-  setLink(){
+  setLink() {
     let url = window.location.href;
     let index = url.indexOf('/dp/');
-    if (index != -1){
+    if (index != -1) {
       this.linkQuesiton =
         url.substring(0, index) +
         Util.stringFormat(
@@ -334,8 +206,7 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {
-  }
+  fileAdded(e) {}
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -346,13 +217,18 @@ export class PopupJobComponent implements OnInit {
   getfileDelete(event) {
     event.data.length;
   }
-  // save
+  //#region save
   async saveData() {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
-    this.stepsTasks['parentID'] = this.litsParentID.join(';');
+    this.stepsTasks['parentID'] = this.listParentID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
-      if((typeof this.stepsTasks[key] === 'string' && !this.stepsTasks[key].trim()) || !this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
+      if (
+        (typeof this.stepsTasks[key] === 'string' &&
+          !this.stepsTasks[key].trim()) ||
+        !this.stepsTasks[key] ||
+        this.stepsTasks[key]?.length === 0
+      ) {
         message.push(this.view[key]);
       }
     }
@@ -387,13 +263,22 @@ export class PopupJobComponent implements OnInit {
     let task = this.stepsTasks;
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
-      let groupTask = this.listGroupTask.find((x) => x.recID == task['taskGroupID']);
-      if (task['dependRule'] != '1' || !task['parentID'].trim() || groupTask['task'].length === 0) {
+      let groupTask = this.listGroupTask.find(
+        (x) => x.recID == task['taskGroupID']
+      );
+      if (
+        task['dependRule'] != '1' ||
+        !task['parentID'].trim() ||
+        groupTask['task'].length === 0
+      ) {
         //No parentID
         this.checkSave(groupTask);
       } else {
         // tính thời gian lớn nhất của group
-        let timeMax = this.getTimeMaxGroupTask(groupTask['task'], this.stepsTasks);
+        let timeMax = this.getTimeMaxGroupTask(
+          groupTask['task'],
+          this.stepsTasks
+        );
         this.checkSave(groupTask, timeMax);
       }
     } else {
@@ -404,8 +289,11 @@ export class PopupJobComponent implements OnInit {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'] || 0;
               this.step['durationHour'] = this.stepsTasks['durationHour'] || 0;
-              this.dialog?.close({ data: this.stepsTasks, status: this.action });
-            } 
+              this.dialog?.close({
+                data: this.stepsTasks,
+                status: this.action,
+              });
+            }
           });
         } else {
           this.dialog.close({ data: this.stepsTasks, status: this.action });
@@ -415,7 +303,7 @@ export class PopupJobComponent implements OnInit {
         let listIdTask = this.stepsTasks['parentID'].split(';');
         let maxtime = 0;
         listIdTask?.forEach((id) => {
-          let time = this.getSumTimeTask(this.taskList,id, false);
+          let time = this.getSumTimeTask(this.listTask, id, false);
           maxtime = Math.max(time, maxtime);
         });
         maxtime += this.getHour(this.stepsTasks);
@@ -461,8 +349,9 @@ export class PopupJobComponent implements OnInit {
       });
     }
   }
+  //#endregion
 
-  // xử lý thời gian
+  //#region handle time
   getHour(data) {
     let hour =
       Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
@@ -488,39 +377,40 @@ export class PopupJobComponent implements OnInit {
   }
 
   getTimeMaxGroupTask(tasks, task) {
-    if(!task) return 0;
-    if(!tasks || tasks?.length <= 0) return this.getHour(task);
+    if (!task) return 0;
+    if (!tasks || tasks?.length <= 0) return this.getHour(task);
     let listTask = JSON.parse(JSON.stringify(tasks));
     let maxTime = 0;
-    if(this.action === 'edit'){
-      let index = listTask?.findIndex(t => t.recID == task.recID);
-      if(index >=0){
-        listTask?.splice(index,1,task);
+    if (this.action === 'edit') {
+      let index = listTask?.findIndex((t) => t.recID == task.recID);
+      if (index >= 0) {
+        listTask?.splice(index, 1, task);
       }
       listTask?.forEach((itemTask) => {
-        let time = this.getSumTimeTask(listTask,itemTask['recID']);
+        let time = this.getSumTimeTask(listTask, itemTask['recID']);
         maxTime = Math.max(maxTime, time);
       });
-    }else{
+    } else {
       listTask?.push(task);
-      maxTime = this.getSumTimeTask(listTask,task['recID']);
+      maxTime = this.getSumTimeTask(listTask, task['recID']);
     }
     return maxTime;
   }
-
 
   getSumTimeTask(taskList: any[], taskId: string, isGroup = true) {
     let task = taskList?.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
       let maxTime = this.getHour(task);
-      if(task.taskGroupID && !isGroup){
-        let groupFind = this.listGroupTask?.find(group => group['recID'] == task.taskGroupID);
-        if(groupFind){
-          let time = this.sumHourGroupTask(groupFind?.indexNo) || 0
+      if (task.taskGroupID && !isGroup) {
+        let groupFind = this.listGroupTask?.find(
+          (group) => group['recID'] == task.taskGroupID
+        );
+        if (groupFind) {
+          let time = this.sumHourGroupTask(groupFind?.indexNo) || 0;
           maxTime += time;
         }
-      }     
+      }
       return maxTime;
     } else {
       const parentIds = task?.parentID.split(';');
@@ -533,5 +423,102 @@ export class PopupJobComponent implements OnInit {
       return completionTime;
     }
   }
+  //#endregion
 
+  //#region change value
+  parentIDChange(event) {
+    this.listParentID = event;
+  }
+
+  valueChangeText(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
+
+  valueChangeCombobox(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
+
+  valueChangeAlert(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
+
+  changeRoler(e, roleType) {
+    if (!e || e?.length == 0) return;
+    let listUser = e || [];
+    let listRole = [];
+    for (let role of listUser) {
+      if (
+        roleType == 'P' &&
+        this.owner.some((ownerFind) => ownerFind.objectID == role.objectID)
+      ) {
+        continue;
+      }
+      listRole.push({
+        objectID: role?.objectID,
+        objectName: role?.objectName,
+        objectType: role?.objectType,
+        roleType: role?.roleType,
+        taskID: this.stepsTasks?.recID,
+      });
+    }
+    if (roleType == 'O') {
+      this.owner = listRole;
+      this.stepsTasks.owner = this.owner[0]?.objectID;
+    }
+    if (roleType == 'P') {
+      this.participant = listRole;
+    }
+  }
+  //#endregion
+
+  //#region prarentID
+  async changeCombobox(value, key) {
+    let data = this.comboBoxObj?.value;
+    this.stepsTasks[key] = data;
+    let group = this.listGroupTask.find((x) => x.recID === data);
+    this.listTaskLink = group?.recID
+      ? JSON.parse(JSON.stringify(group?.task))
+      : JSON.parse(JSON.stringify(this.listTask));
+    await this.getTasksWithoutLoop(this.stepsTasks, this.listTaskLink);
+    this.stepsTasks['parentID'] = '';
+  }
+
+  async getTasksWithoutLoop(task, tasks) {
+    this.listParentID;
+    let indexTask = tasks?.findIndex((item) => item.recID === task.recID);
+    if (indexTask >= 0) {
+      tasks.splice(indexTask, 1);
+    }
+    let listTask = tasks.filter((item) =>
+      item?.parentID?.includes(task?.recID)
+    );
+    if (listTask?.length == 0) return;
+
+    listTask?.forEach(async (element) => {
+      await this.getTasksWithoutLoop(element, tasks);
+    });
+  }
+  //#endregion
+  // this.api.execSv<any>(
+  //   'HR',
+  //   'HR',
+  //   'EmployeesBusiness',
+  //   'GetUserLeader',
+  //   [idO]
+  // ).subscribe(result => {
+  //   if(result){
+  //     console.log(result);
+
+  //   }
+  // });
+  // this.api.execSv<any>(
+  //   'HR',
+  //   'HR',
+  //   'EmployeesBusiness',
+  //   'GetListUserByListOrgUnitIDAsync',
+  //   [[idO], type]
+  // ).subscribe(result => {
+  //   if(result){
+  //   }
+  // });
 }

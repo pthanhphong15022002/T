@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   Injector,
   Optional,
@@ -44,6 +45,7 @@ const irrPropNames: string[] = [
   selector: 'lib-popup-add-journal',
   templateUrl: './popup-add-journal.component.html',
   styleUrls: ['./popup-add-journal.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddJournalComponent
   extends UIComponent
@@ -313,11 +315,11 @@ export class PopupAddJournalComponent
 
   ngAfterViewInit(): void {
     this.formTitle = this.dialogData.data?.formTitle;
-
+    this.detectorRef.detectChanges();
     setTimeout(() => {
       let moreInfoLabel: Element = document.getElementById('moreInfo');
       let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
-      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;
+      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;     
     });
   }
   //#endregion

@@ -37,7 +37,8 @@
           [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
       </div>
       <ng-template #content>
-        <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+        <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+        <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065' : 'text' | async}}</span>
       </ng-template>
     </ejs-tooltip>
     <!-- <ejs-tooltip position="BottomRight" id='tooltip' target="#tipsub">
@@ -97,11 +98,11 @@
       <div style="height: 18px !important;" class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
           <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
-            data?.objectID | tranformSubobject
+            data?.objectID | tranformSubobject : view.formModel
           "></span>
         </div>
       </div>
-      <div class="d-flex justify-content-between align-items-center">
+      <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-end codx-badge">
           <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
             [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
@@ -116,7 +117,7 @@
         " class="text-gray-600"></span>
           </div>
         </div>
-        <div class="d-flex">
+        <div class="d-flex mt-1">
           <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
             [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
           </codx-imgs>
@@ -138,7 +139,8 @@
             [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
         </div>
         <ng-template #content>
-          <span>{{(itemSelected?.subType | vll : 'AC063' : 'text' | async)}}</span>
+          <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>
+          <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{itemSelected?.subType | vll : 'AC065' : 'text' | async}}</span>
         </ng-template>
       </ejs-tooltip>
       <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
@@ -161,7 +163,7 @@
         <!-- <img src="../assets/themes/ac/default/img/company.svg" class="w-20px h-20px me-2" /> -->
         <span class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" #objectID [innerHTML]="
             itemSelected?.objectID
-            | tranformSubobject
+            | tranformSubobject : view.formModel
           "></span>
       </div>
       <div class="d-flex align-self-center">
@@ -547,7 +549,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabSet>
-  <ng-container *ngIf="(itemSelected.subType == '2' || itemSelected.subType == '9') && settledInvoices">
+  <ng-container *ngIf="settledInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;">
@@ -691,7 +693,7 @@
   </ng-container>
 </ng-template>
 <ng-template #tabVat>
-  <ng-container *ngIf="itemSelected.subType == '9' && vatInvoices">
+  <ng-container *ngIf="vatInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200" style="position: sticky; top: 0">
@@ -886,7 +888,8 @@
         [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
     </div>
     <ng-template #content>
-      <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+      <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
+      <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065' : 'text' | async}}</span>
     </ng-template>
   </ejs-tooltip>
   <div class="d-flex flex-column text-content flex-grow-1">
@@ -917,7 +920,7 @@
         </div>
         <div class="d-flex align-items-center">
           <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
-          data?.objectID | tranformSubobject
+          data?.objectID | tranformSubobject : view.formModel
                 "></span>
         </div>
       </div>

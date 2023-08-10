@@ -172,5 +172,16 @@ export class VATCodesComponent extends UIComponent{
     });
   }
 
+  hideMoreFunction(e: any)
+  {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'SYS003' ||
+        x.functionID == 'SYS004'
+    );
+    bm.forEach((morefunction) => {
+      morefunction.disabled = true;
+    });
+  }
   //End Method
 }

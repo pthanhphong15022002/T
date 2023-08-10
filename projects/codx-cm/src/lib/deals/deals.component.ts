@@ -44,6 +44,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'lib-deals',
@@ -172,8 +173,8 @@ export class DealsComponent
     private codxShareService: CodxShareService
   ) {
     super(inject);
-
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
       this.functionModule = f.module;
@@ -189,30 +190,6 @@ export class DealsComponent
       if (res) {
         this.processIDDefault = res.recID;
         this.processIDKanban = res.recID;
-      }
-    });
-    ///lay tien mac dinh
-    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
-      if (res?.length > 0) {
-        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
-        if (dataParam) {
-          this.paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyIDDefault =
-            this.paramDefault['DefaultCurrency'] ?? 'VND';
-          this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
-          if (this.currencyIDDefault != 'VND') {
-            let day = new Date();
-            this.codxCmService
-              .getExchangeRate(this.currencyIDDefault, day)
-              .subscribe((res) => {
-                if (res) this.exchangeRateDefault = res?.exchRate;
-                else {
-                  this.currencyIDDefault = 'VND';
-                  this.exchangeRateDefault = 1;
-                }
-              });
-          }
-        }
       }
     });
   }
@@ -317,6 +294,7 @@ export class DealsComponent
       this.kanban = (this.view?.currentView as any)?.kanban;
     }
 
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -371,77 +349,116 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     let functionMappings;
     let isDisabled = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        this.checkMoreReason(data)
-      ) {
-        eventItem.disabled = true;
-      }
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? (data.closed && data.status != '1') ||
+            ['1', '0'].includes(data.status) ||
+            this.checkMoreReason(data)
+          : true;
     };
     let isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+        eventItem.disabled = data.delete ? data.closed || this.checkMoreReason(data) || data.status == '0' : true;
+
     };
     let isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+      eventItem.disabled = data.write
+        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        : true;
     };
     let isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
+      eventItem.disabled = data.write
+        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        : true;
     };
     let isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || data.status == '0';
+      eventItem.disabled =
+        data?.alloweStatus == '1' ? data.closed || data.status == '0' : true;
     };
     let isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || data.status == '0';
+      eventItem.disabled =
+        data?.alloweStatus == '1' ? !data.closed || data.status == '0' : true;
     };
     let isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status) || data.closed;
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? !['1'].includes(data.status) || data.closed
+          : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed;
+      eventItem.disabled = data.full ? !['1', '2'].includes(data.status) || data.closed : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
-      eventItem.disabled = data.status != '0';
+      //Xác nhận từ chối
+      eventItem.disabled = data.full ? data.status != '0' : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        data?.approveRule != '1';
+        data.status == '0' ||
+        (data.processID && data?.approveRule != '1') ||
+        data?.approveStatus >= '3';
     };
     let isUpdateBANT = (eventItem, data) => {
+      eventItem.disabled = data.write
+        ? (data.closed && data.status != '1') ||
+          data.status == '0' ||
+          this.checkMoreReason(data)
+        : true;
+    };
+
+    let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
-        this.checkMoreReason(data);
+        data.approveStatus != '3';
+    };
+    let isPermission = (eventItem, data) => {
+      // Phân quyền
+      eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
+    };
+    let isUpload = (eventItem, data) => {
+      // ĐÍnh kèm file, nhập khẩu dữ liệu
+      eventItem.disabled = !data.upload ? true : false;
+    };
+    let isEmail = (eventItem, data) => {
+      // Gửi mail
+      eventItem.disabled = !data.write ? true : false;
+    };
+    let isDownload = (eventItem, data) => {
+      // Nhập khẩu dữ liệu
+      eventItem.disabled = !data.download ? true : false;
     };
 
+    let isDisCRd = (eventItem, data) => {
+      // Nhập khẩu dữ liệu
+      eventItem.disabled =  true ;
+    };
     functionMappings = {
-      CM0201_1: isDisabled,
-      CM0201_2: isStartDay,
-      CM0201_3: isDisabled,
-      CM0201_4: isDisabled,
-      CM0201_5: isDisabled,
+      CM0201_1: isDisabled, // chuyển tiếp
+      CM0201_2: isStartDay, // bắt đầu
+      CM0201_3: isDisabled, // thành công
+      CM0201_4: isDisabled, // thất bại
+      CM0201_5: isDisabled, // xuất file
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
       CM0201_8: isClosed,
       CM0201_9: isOpened,
       CM0201_12: isConfirmOrRefuse,
       CM0201_13: isConfirmOrRefuse,
-      SYS101: isDisabled,
-      SYS103: isEdit,
+      SYS101: isDisCRd,
+      SYS103: isDisCRd,
       SYS03: isEdit,
-      SYS104: isCopy,
+      SYS104: isDisCRd,
       SYS04: isCopy,
-      SYS102: isDelete,
+      SYS102: isDisCRd,
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
+      CM0201_16: isRejectApprover,
+      SYS003: isUpload,
+      SYS004: isEmail,
+      SYS001: isUpload,
+      SYS002: isDownload,
+      CM0201_15: isPermission,
     };
 
     return functionMappings[type];
@@ -507,64 +524,58 @@ export class DealsComponent
       case 'SYS03':
         this.edit(data);
         break;
-
       case 'SYS04':
         this.copy(data);
         break;
-
       case 'SYS02':
         this.delete(data);
         break;
-
       case 'CM0201_1':
         this.moveStage(data);
         break;
-
       case 'CM0201_2':
         this.handelStartDay(data);
         break;
-
       case 'CM0201_3':
         this.moveReason(data, true);
         break;
-
       case 'CM0201_4':
         this.moveReason(data, false);
         break;
-
       case 'CM0201_8':
         this.openOrCloseDeal(data, true);
         break;
-
       case 'CM0201_7':
         this.popupOwnerRoles(data);
         break;
-
       case 'CM0201_9':
         this.openOrCloseDeal(data, false);
         break;
-
       case 'CM0201_5':
         this.exportFile(data);
         break;
-
       case 'CM0201_6':
         this.approvalTrans(data);
         break;
-
       case 'CM0201_12':
         this.confirmOrRefuse(true, data);
         break;
-
       case 'CM0201_13':
         this.confirmOrRefuse(false, data);
         break;
-
       case 'CM0201_14':
         this.openFormBANT(data);
         break;
+      //cancel Aprover
+      case 'CM0201_16':
+        this.cancelApprover(data);
+        break;
       case 'SYS002':
         this.exportFiles(e, data);
+        break;
+
+      case 'CM0201_15':
+        this.popupPermissions(data);
         break;
       default:
         var customData = {
@@ -1289,91 +1300,34 @@ export class DealsComponent
       }
     });
   }
-  //Gửi duyệt
-  // release(data: any, processID: any) {
-  //   this.codxShareService
-  //     .codxRelease(
-  //       this.view.service,
-  //       data?.recID,
-  //       processID,
-  //       this.view.formModel.entityName,
-  //       this.view.formModel.funcID,
-  //       '',
-  //       data?.title,
-  //       ''
-  //     )
-  //     .subscribe((res2: any) => {
-  //       if (res2?.msgCodeError)
-  //         this.notificationsService.notify(res2?.msgCodeError);
-  //       else {
-  //         this.dataSelected.approveStatus = '3';
-  //         this.view.dataService.update(this.dataSelected).subscribe();
-  //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-  //         this.codxCmService
-  //           .updateApproveStatus('DealsBusiness', data?.recID, '3')
-  //           .subscribe();
-  //         this.notificationsService.notifyCode('ES007');
-  //       }
-  //     });
-  // }
 
   release(data: any, category: any) {
-    // duyet cu
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        category.processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.codxCmService
-            .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-            .subscribe((q) => {
-              if (q) {
-                this.dataSelected = q;
-                this.view.dataService.update(this.dataSelected).subscribe();
-                if (this.kanban) this.kanban.updateCard(this.dataSelected);
-              }
-              this.notificationsService.notifyCode('ES007');
-            });
-        }
-      });
-
-    //duet moi
-    // this.codxShareService.codxReleaseDynamic(
-    //   this.view.service,
-    //   data,
-    //   category,
-    //   this.view.formModel.entityName,
-    //   this.view.formModel.funcID,
-    //   data?.title,
-    //   this.releaseCallback
-    // );
+    // new function release
+    this.codxShareService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
   }
   //call Back
-  releaseCallback(res: any) {
-    // lỗi call back cần tra this
-    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    // else {
-    //   this.codxCmService
-    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-    //     .subscribe((q) => {
-    //       if (q) {
-    //         this.dataSelected = q;
-    //         this.view.dataService.update(this.dataSelected).subscribe();
-    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-    //       }
-    //       this.notificationsService.notifyCode('ES007');
-    //     });
-    // }
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+        .subscribe((q) => {
+          if (q) {
+            this.dataSelected = q;
+            this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          }
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet
@@ -1401,13 +1355,11 @@ export class DealsComponent
                       .subscribe((res3) => {
                         if (res3) {
                           this.dataSelected.approveStatus = '0';
-                          this.codxCmService
-                            .updateApproveStatus(
-                              'DealsBusiness',
-                              dt?.recID,
-                              '0'
-                            )
+                          this.view.dataService
+                            .update(this.dataSelected)
                             .subscribe();
+                          if (this.kanban)
+                            this.kanban.updateCard(this.dataSelected);
                           this.notificationsService.notifyCode('SYS007');
                         } else this.notificationsService.notifyCode('SYS021');
                       });
@@ -1772,14 +1724,14 @@ export class DealsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData :any
+    let customData: any;
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
-        if (dts){
+        if (dts) {
           customData.refID = data.processID;
           customData.refType = 'DP_Processes';
           customData.dataSource = dts;
-        } 
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -1803,4 +1755,72 @@ export class DealsComponent
       this.detectorRef.detectChanges();
     }
   }
+
+  loadParam() {
+    //approver
+    // this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+    //   if (res) {
+    //     let dataValue = JSON.parse(res.dataValue);
+    //     if (Array.isArray(dataValue)) {
+    //       let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+    //       if (setting) this.applyApprover = setting['ApprovalRule'];
+    //     }
+    //   }
+    // });
+
+    //tien te
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        let paramDefault = JSON.parse(dataParam1.dataValue);
+        this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
+        if (this.currencyIDDefault != 'VND') {
+          let day = new Date();
+          this.codxCmService
+            .getExchangeRate(this.currencyIDDefault, day)
+            .subscribe((res) => {
+              if (res) this.exchangeRateDefault = res?.exchRate;
+              else {
+                this.currencyIDDefault = 'VND';
+                this.exchangeRateDefault = 1;
+              }
+            });
+        }
+      }
+    });
+  }
+
+  //#region Permissons
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }

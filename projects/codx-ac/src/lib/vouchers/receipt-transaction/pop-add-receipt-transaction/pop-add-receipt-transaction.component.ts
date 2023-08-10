@@ -316,9 +316,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      case 'itemID':
-        this.gridVouchersLine.rowDataSelected['itemName'] = e.itemData.ItemName;
-        break;
+      // case 'itemID':
+      //   e.data['itemName'] = e.itemData.ItemName;
+      //   break;
+      
     }
   }
 
@@ -1114,7 +1115,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costAmt = line.costPrice * line.quantity;
+        setTimeout(() => {
+          line.costAmt = line.costPrice * line.quantity;
+          this.dt.detectChanges();
+        }, 100);
       }
     }
   }
@@ -1125,7 +1129,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     {
       if(line.quantity != 0)
       {
-        line.costPrice = line.costAmt / line.quantity
+        setTimeout(() => {
+          line.costPrice = line.costAmt / line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+        
       }
     }
   }
@@ -1140,6 +1148,15 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.addRow();
         }
         break;
+      case 'endEdit':
+        if (!this.gridVouchersLine.autoAddRow) 
+        {
+          setTimeout(() => {
+            let element = document.getElementById('btnadd');
+            element.focus();
+          }, 100); 
+        }
+      break;
     }
   }
 

@@ -1,14 +1,12 @@
-import { change } from '@syncfusion/ej2-grids';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
+  FormModel,
+  DialogRef,
+  DialogData,
   CacheService,
   CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
   NotificationsService,
 } from 'codx-core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
@@ -17,24 +15,32 @@ import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
   styleUrls: ['./step-task-group.component.css'],
 })
 export class StepTaskGroupComponent implements OnInit {
+  REQUIRE = ['taskGroupName'];
   dialog!: DialogRef;
   formModel: FormModel;
   taskGroup: DP_Steps_TaskGroups;
   view = {};
-  REQUIRE = ['taskGroupName'];
   days = 0;
   hours = 0;
   minutes = 0;
-  type: string;
   timeOld = 0;
-  differenceTime = 0;
-  step;
   maxTimeGroup = 0;
+  differenceTime = 0;
+  type: string;
+  step;
   isSave = true;
+  titleText = "";
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
   constructor(
-    private notiService: NotificationsService,
     private cache: CacheService,
     private callfc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -76,10 +82,10 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    let roles = e?.map((role) => {
-      return { ...role, roleType: 'O' };
-    });
-    this.taskGroup['roles'] = roles || [];
+    this.taskGroup['roles'] = e || [];
+    if(this.taskGroup?.roles?.length > 0){
+      this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
+    }
   }
 
   changeValueNumber(event) {

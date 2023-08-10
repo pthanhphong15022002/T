@@ -34,10 +34,10 @@
               </div>
             </div>
             <div class="row" >
-              <div class="col-6 hot-left">
+              <div class="col-6 hot-left cursor-pointer" (click)="clickViewDetail(posts[0])">
                 <ng-container *ngIf="posts[0]">
-                  <div class="post" (click)="clickViewDetail(posts[0])">
-                    <div class="w-100 position-relative cursor-pointer">
+                  <div class="post">
+                    <div class="w-100 position-relative">
                       <codx-img 
                         imageType="square" 
                         [isDefaulImg]="true" 
@@ -47,7 +47,7 @@
                         [objectType]="'WP_News'"
                         [referType]="'image'">
                       </codx-img>
-                      <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0">
+                      <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0 mb-1">
                         <codx-vll 
                             [name]="'WP002'" 
                             [classList]="'badge badge-danger p-2 px-4 text-center'"
@@ -56,7 +56,7 @@
                         </codx-vll>
                       </div>
                     </div>
-                    <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
+                    <div class="fs-4 fw-bolder mt-2 news-title">
                       {{ posts[0].subject | maxlenght:150}}
                     </div>
                   </div>

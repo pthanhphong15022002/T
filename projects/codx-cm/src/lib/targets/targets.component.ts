@@ -101,6 +101,7 @@ export class TargetsComponent
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
+  lstTreeSearchs = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -155,6 +156,8 @@ export class TargetsComponent
   exchangeRate: number;
   currencyIDSys: any;
   exchangeRateSys: number;
+  gridViewSetupTarget: any;
+  countLoad = 0;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -190,7 +193,10 @@ export class TargetsComponent
     }
     // this.getSchedule();
   }
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    // this.gridViewSetupTarget = await firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -241,7 +247,6 @@ export class TargetsComponent
     resource.pageLoading = false;
     this.requestTree = resource;
     this.loadCurrentID();
-
   }
 
   private fetch(): Observable<any[]> {
@@ -267,6 +272,7 @@ export class TargetsComponent
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.countLoad++;
       this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? false : true;
       this.view.button = this.showButtonAdd ? this.button : null;
@@ -278,27 +284,36 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
 
-  async loadCurrentID(){
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        this.currencyIDSys = this.currencyID;
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        this.exchangeRate = exchangeRateCurrent?.exchRate ?? 0;
-        this.exchangeRateSys = this.exchangeRate;
-
+  async loadCurrentID() {
+    if (this.countLoad == 0) {
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          if (exchangeRateCurrent?.exchRate > 0) {
+            this.exchangeRate = exchangeRateCurrent?.exchRate;
+          } else {
+            this.exchangeRate = 1;
+            this.currencyID = 'VND';
+          }
+          this.currencyIDSys = this.currencyID;
+          this.exchangeRateSys = this.exchangeRate;
+        }
       }
     }
+
     this.fetch().subscribe((item) => {
       this.lstDataTree = item;
-
+      this.lstTreeSearchs = this.lstDataTree;
       this.loadedTree = true;
     });
   }
@@ -334,31 +349,30 @@ export class TargetsComponent
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
-      this.currencyID = e.data;
     }
     this.detectorRef.detectChanges();
   }
 
   async exChangeRate(currencyIDOld, currencyID) {
     if (currencyIDOld !== currencyID) {
-      let day =  new Date();
+      let day = new Date();
 
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
 
-      if (this.exchangeRate > 0) {
+      if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {
           element.target =
             (element.target / exchangeRate?.exchRate) * element.exchangeRate;
           element.currencyID = currencyID;
-          element.exchangeRate = exchangeRate?.exchRate ?? 0;
+          element.exchangeRate = exchangeRate?.exchRate ?? 1;
           if (element?.targetsLines != null) {
             element?.targetsLines.forEach((line) => {
               line.target =
                 (line.target / exchangeRate?.exchRate) * line.exchangeRate;
               line.currencyID = currencyID;
-              line.exchangeRate = exchangeRate?.exchRate ?? 0;
+              line.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
           if (element?.items != null) {
@@ -372,15 +386,19 @@ export class TargetsComponent
                 });
               }
               item.currencyID = currencyID;
-              item.exchangeRate = exchangeRate?.exchRate ?? 0;
+              item.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
         });
-        if(this.lstDataTree != null && this.viewMode == 9){
+        if (this.lstDataTree != null && this.viewMode == 9) {
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
+      } else {
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
       }
-      this.exchangeRate = exchangeRate?.exchRate ?? 0;
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate?.exchRate;
     }
   }
 
@@ -506,7 +524,39 @@ export class TargetsComponent
       },
     ];
   }
-  searchChanged(e) {}
+  searchChanged(e) {
+    this.loadedTree = false;
+    if (e == null || e?.trim() == '') {
+      this.loadedTree = true;
+      this.lstDataTree = this.lstTreeSearchs;
+      return;
+    }
+
+    let text = e;
+    if (this.viewCurrent == '1') {
+      this.lstDataTree = this.lstTreeSearchs.filter(
+        (item) =>
+          (text == item?.businessLineID && item.year == this.year) ||
+          (text == item?.title && item.year == this.year)
+      );
+    } else {
+      this.lstDataTree = this.lstTreeSearchs.filter(
+        (item) =>
+          (text == item?.title && item.year == this.year) ||
+          (text == item?.salespersonID && item.year == this.year)
+      );
+    }
+    this.loadedTree = true;
+    this.detectorRef.detectChanges();
+  }
+
+  filterChange(e) {
+    console.log('filter: ', e);
+  }
+
+  filterReportChange(e) {
+    console.log('filterReport: ', e);
+  }
   selectedChange(e) {}
   //#endregion
 
@@ -598,6 +648,7 @@ export class TargetsComponent
         title: this.titleAction,
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
+        gridViewSetupTarget: this.gridViewSetupTarget,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -661,6 +712,9 @@ export class TargetsComponent
           title: this.titleAction,
           lstOwners: lstOwners,
           lstTargetLines: lstTargetLines,
+          currencyID: this.currencyID,
+          exchangeRate: this.exchangeRate,
+          gridViewSetupTarget: this.gridViewSetupTarget,
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
@@ -739,23 +793,33 @@ export class TargetsComponent
   //#region Month
   async popupChangeAllocationRate(data) {
     var lstLinesBySales = [];
-    lstLinesBySales = await firstValueFrom(
+    let result = await firstValueFrom(
       this.api.execSv<any>(
         'CM',
         'ERM.Business.CM',
         'TargetsLinesBusiness',
         'GetSalesPersonsByBusinessIDAsync',
-        [data?.businessLineID, data?.salespersonID]
+        [data?.businessLineID, data?.salespersonID, this.year]
       )
     );
+    let dataEdit = JSON.parse(JSON.stringify(data));
+    if (result != null) {
+      dataEdit.target = result[0];
+      dataEdit.currencyID = result[1];
+      dataEdit.exchangeRate = result[2];
+      lstLinesBySales = result[3];
+    }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view?.formModel;
     dialogModel.zIndex = 999;
     var obj = {
-      data: data,
+      data: dataEdit,
       title: this.titleAction,
       lstLinesBySales: lstLinesBySales,
+      currencyID: this.currencyID,
+      exchangeRate: this.exchangeRate,
+      targetSys: data.target,
     };
     var dialog = this.callfc.openForm(
       PopupChangeAllocationRateComponent,
@@ -831,8 +895,8 @@ export class TargetsComponent
       });
       if (this.viewMode == 9)
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+      this.isShow = isShow;
     }
-    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 

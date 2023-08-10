@@ -1813,6 +1813,15 @@
                     ></codx-label>
                     <span class="fw-bold">{{ itemStep?.tasks?.length }}</span>
                   </div>
+                  <div class="fs-7">
+                    <codx-label
+                      class="label-colon"
+                      fiedName="InstanceProgress"
+                      [formModel]="grvStep"
+                      [setRequire]="false"
+                    ></codx-label>
+                    <span class="fw-bold">{{itemStep?.instanceProgress || 0 }}%</span>
+                  </div>
                 </div>
                 <codx-mfunc
                   *ngIf="viewStepCrr == viewStepCustom"
@@ -1888,7 +1897,7 @@
                   [ngStyle]="
                     process?.stepsColorMode
                       ? {}
-                      : { color: iconReasonFail?.iconColor }
+                      : { color: stepFail?.iconColor }
                   "
                 >
                 </i>
@@ -2033,7 +2042,7 @@
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light-primary ms-2"
-              (click)="openTypeJob()"
+              (click)="openPopupChooseTask()"
             >
               <i class="icon-add_task icon-16"></i>
             </button>
@@ -2155,24 +2164,23 @@
                             class="d-flex justify-content-start align-items-center"
                           >
                             <!-- icon task -->
-                            <div
-                              class="icon-container"
-                              [ngStyle]="getColor(task)"
-                            >
-                              <span
-                                class="icon-16"
-                                [ngClass]="getIconTask(task)"
-                              ></span>
-                            </div>
-                            <!-- avata -->
+                            <codx-icon-step
+                              [typeTask]="task?.taskType"
+                              [listTypeTask]="listTypeTask"
+                              [isStep]="false"
+                              [size]="30"
+                            ></codx-icon-step>
                             <div class="mx-3">
-                              <codx-img
-                                [width]="30"
-                                [objectId]="getRole(task, 'ID')"
-                                objectType="AD_Users"
-                                [objectName]="getRole(task, 'name')"
+                              <codx-imgs
+                                class="me-2 d-flex align-items-center"
+                                [width]="25"
+                                ojectType="AD_Users"
+                                [numberImages]="1"
+                                [isToolTip]="true"
+                                [objectId]="task?.owner"
+                                [objectName]="getRoleName(task)"
                               >
-                              </codx-img>
+                              </codx-imgs>
                             </div>
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
@@ -2257,7 +2265,7 @@
         <button
           type="button"
           class="btn btn-outline-primary"
-          (click)="openTypeJob()"
+          (click)="openPopupChooseTask()"
         >
           <i class="icon-add_task icon-18 text-primary"></i>
           <codx-label
@@ -2316,10 +2324,9 @@
     <codx-input
       field="stepName"
       [formModel]="grvStep"
-      [Group]
       type="text"
-      [crrValue]="stepName"
-      (valueChange)="changeNameStep($event)"
+      [crrValue]="stepNew?.stepName"
+      (valueChange)="changeNameStep($event,stepNew)"
       [disabled]="isEditReason"
     >
     </codx-input>
@@ -2331,6 +2338,23 @@
         giai đoạn hoàn tất)"
       ></codx-label>
     </div>
+  </div>
+
+  <div class="form-group mt-5" *ngIf="!stepNew?.isSuccessStep && !stepNew?.isFailStep">
+    <div class="fw-bold text-dark mb-1">
+      <codx-label
+        fiedName="InstanceProgress"
+        [formModel]="grvStep"
+      ></codx-label>
+    </div>
+    <ejs-numerictextbox
+      [value]="stepNew?.instanceProgress"
+      format="###'%'"
+      min="0"
+      max="100"
+      (change)="changeProgress($event, stepNew)"
+      disabled="false"
+    ></ejs-numerictextbox>
   </div>
 
   <div class="form-group row">
@@ -2437,7 +2461,7 @@
         style="flex-grow: 1"
         [ngStyle]="{ color: stepNew?.textColor }"
       >
-        {{ stepName }}
+        {{ stepNew?.stepName }}
       </span>
     </div>
   </div>
@@ -3564,7 +3588,7 @@
         field="reasonName"
         type="text"
         [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event)"
+        (valueChange)="changeValueReaName($event,reason.recID)"
       >
       </codx-input>
     </div>

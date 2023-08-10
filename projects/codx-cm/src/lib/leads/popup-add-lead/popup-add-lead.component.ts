@@ -23,11 +23,12 @@ import {
   CodxFormComponent,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
-import { CM_Deals, CM_Leads } from '../../models/cm_model';
+import { CM_Deals, CM_Leads, CM_Permissions } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
 import { recordEdited } from '@syncfusion/ej2-pivotview';
 import { environment } from 'src/environments/environment';
 import { T } from '@angular/cdk/keycodes';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -62,7 +63,7 @@ export class PopupAddLeadComponent
   contactId: string = '';
   applyFor: string = '';
   oldIdInstance: string = '';
-  currencyIDDefault:string;
+  currencyIDDefault: string;
 
   // Data struct Opportunity
   lead: CM_Leads = new CM_Leads();
@@ -92,6 +93,9 @@ export class PopupAddLeadComponent
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly radioCompany: string = 'company';
   readonly radioCustomer: string = 'customer';
+  readonly viewOwnerProcess: string = 'viewOwnerProcess';
+  readonly viewOwnerDefault: string = 'viewOwnerDefault';
+
   // Tab control
   menuGeneralInfo = {
     icon: 'icon-info',
@@ -149,7 +153,7 @@ export class PopupAddLeadComponent
   isCategory: boolean = true;
   disabledShowInput: boolean = true;
   isExist: boolean = false;
-
+  applyProcess: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -177,18 +181,13 @@ export class PopupAddLeadComponent
         this.leadId = dt?.data?.leadIdOld;
         this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
-        this.lead.leadID ='';
         this.lead.applyProcess = dt?.data?.applyProcess;
-        !this.lead.applyProcess && this.getAutoNumber();
-      }
-      else {
+
+        this.lead.leadID = '';
+      } else {
         this.planceHolderAutoNumber = this.lead.leadID;
       }
-    }
-    else {
-      this.lead.applyProcess =  dt?.data?.applyProcessSetting;
-      this.checkApplyProcess(this.lead.applyProcess);
-      this.lead.currencyID = this.currencyIDDefault;
+    } else {
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
@@ -276,10 +275,49 @@ export class PopupAddLeadComponent
       this.lead[field] = $event;
     }
   }
-  valueChangeOwner($event) {
+  valueChangeOwner($event, view) {
     if ($event) {
-      this.owner = $event;
-      this.lead.owner = this.owner;
+      let ownerName = '';
+      if (view === this.viewOwnerDefault) {
+        this.lead[$event.field] = $event.data;
+        ownerName = $event.component.itemsSelected[0].UserName;
+      } else {
+        this.lead.owner = $event;
+        if (this.listParticipants.length > 0 && this.listParticipants) {
+          ownerName = this.listParticipants.filter(
+            (x) => x.userID === this.lead.owner
+          )[0].userName;
+        }
+      }
+      this.checkOwner(this.lead.owner, ownerName);
+    }
+  }
+  checkOwner(owner: any, ownerName: any) {
+    if (owner) {
+      let index = this.lead.permissions.findIndex(
+        (x) => x.objectType === 'U' && x.roleType === 'O'
+      );
+      if (index !== -1) {
+        this.lead.permissions[index].objectID = owner;
+        this.lead.permissions[index].objectName = ownerName;
+      } else {
+        var permission = new CM_Permissions();
+        permission.objectID = owner;
+        permission.objectName = ownerName;
+        permission.objectType = '1';
+        permission.roleType = 'O';
+        permission.full = true;
+        permission.read = true;
+        permission.update = true;
+        permission.assign = true;
+        permission.delete = true;
+        permission.upload = true;
+        permission.download = true;
+        permission.memberType = '1';
+        permission.allowPermit = true;
+        permission.allowUpdateStatus = '1';
+        this.lead.permissions.push(permission);
+      }
     }
   }
   valueChangeIndustries($event) {
@@ -289,37 +327,37 @@ export class PopupAddLeadComponent
   }
 
   checkApplyProcess(check: boolean) {
-      if (check) {
-        this.lead.leadID = this.leadNoProcess;
-        this.planceHolderAutoNumber = this.leadNoProcess;
-        this.disabledShowInput = true;
-        this.removeItemInTab(true);
-      } else {
-        this.getAutoNumber();
-        this.removeItemInTab(false);
-      }
-      this.lead.applyProcess = check;
+
+    if (check) {
+      this.lead.leadID = this.leadNoProcess;
+      this.planceHolderAutoNumber = this.leadNoProcess;
+      this.disabledShowInput = true;
+      this.removeItemInTab(true);
+    } else {
+      this.getAutoNumber();
+      this.removeItemInTab(false);
+    }
+    this.lead.applyProcess = check;
   }
-  async getAutoNumber(){
+  async getAutoNumber() {
     this.codxCmService
-    .getFieldAutoNoDefault(this.funcID, this.formModel.entityName)
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes) {
-            this.planceHolderAutoNumber =
-              mes?.customName || mes?.description;
-          }
-        });
-        !this.leadNoSetting && this.getAutoNumberSetting();
-        this.lead.leadID = this.leadNoSetting;
-        this.disabledShowInput = true;
-      } else {
-        this.planceHolderAutoNumber = '';
-        this.lead.leadID = '';
-        this.disabledShowInput = false;
-      }
-    });
+      .getFieldAutoNoDefault(this.funcID, this.formModel.entityName)
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes) {
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+            }
+          });
+          !this.leadNoSetting && this.getAutoNumberSetting();
+          this.lead.leadID = this.leadNoSetting;
+          this.disabledShowInput = true;
+        } else {
+          this.planceHolderAutoNumber = '';
+          this.lead.leadID = '';
+          this.disabledShowInput = false;
+        }
+      });
   }
   async getAutoNumberSetting() {
     this.codxCmService
@@ -396,7 +434,8 @@ export class PopupAddLeadComponent
   }
 
   async promiseSaveFile() {
-    this.lead.applyProcess && this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess &&
+      this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
     try {
@@ -485,12 +524,26 @@ export class PopupAddLeadComponent
   }
   async executeApiCalls() {
     try {
-      this.lead.applyProcess && await this.getListInstanceSteps(this.lead.processID);
+      if (this.action === this.actionAdd) {
+        let res = await firstValueFrom(
+          this.codxCmService.getParam('CMParameters', '1')
+        );
+        if (res?.dataValue) {
+          let dataValue = JSON.parse(res?.dataValue);
+          this.currencyIDDefault = dataValue?.DefaultCurrency;
+          this.applyProcess = dataValue?.ProcessLead == '1';
+        }
+        this.lead.currencyID = this.currencyIDDefault;
+        this.lead.applyProcess = this.applyProcess;
+        this.checkApplyProcess(this.lead.applyProcess);
+      }
+      !this.lead.applyProcess && this.action !== this.actionEdit && this.getAutoNumber();
+      this.lead.applyProcess &&
+        (await this.getListInstanceSteps(this.lead.processID));
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
-
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.lead.processID : processId;
@@ -702,7 +755,7 @@ export class PopupAddLeadComponent
   changeAutoNum(e) {
     if (!this.disabledShowInput && e) {
       this.lead.leadID = e?.crrValue;
-      if ( this.lead.leadID && this.lead.leadID.includes(' ') ) {
+      if (this.lead.leadID && this.lead.leadID.includes(' ')) {
         this.notificationsService.notifyCode(
           'CM026',
           0,

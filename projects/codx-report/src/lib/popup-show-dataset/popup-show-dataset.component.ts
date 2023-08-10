@@ -28,7 +28,6 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
     this.data = dt?.data;
     this.loadData();
     this.dialog = dialog;
-    debugger
   }
   ngOnInit(): void {
 
@@ -95,6 +94,8 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
   }
 
   loadData(){
+    debugger
+
     if(this.data){
       let mapParams = new Map();
 
@@ -104,12 +105,10 @@ export class PopupShowDatasetComponent implements OnInit, AfterViewInit {
         }
       }
       if(this.data.report){
-
-        this.api.execSv(this.data.report.service,this.data.report.assemblyName,this.data.report.className,this.data.report.methodName,this.data.parameters)
+        this.api.execSv(this.data.report.service,"Codx.RptBusiness","ReportBusiness","GetReportSourceAsync",[this.data.report,this.data.parameters])
         .subscribe((res:any)=>{
           if(res){
-            this.dataSource = JSON.parse(res);
-
+            this.dataSource = JSON.parse(JSON.stringify(res));
           }
         })
       }

@@ -16,14 +16,14 @@
     <div class="d-flex justify-content-between align-items-center w-100">
       <div class="d-flex align-items-center w-100 job">
         <span
-            class="icon-18 me-3 circle"
-            [ngClass]="typeTask?.icon"
-            [ngStyle]="{'color' : (typeTask?.color || 'gray'), 'border': '2px solid'}"
-          ></span>
-          <span class="fs-4 fw-bold">{{ typeTask?.text }}</span>
+          class="icon-18 me-3 circle"
+          [ngClass]="typeTask?.icon"
+          [ngStyle]="{ color: typeTask?.color || 'gray', border: '2px solid' }"
+        ></span>
+        <span class="fs-4 fw-bold">{{ typeTask?.text }}</span>
       </div>
       <button
-        class="button-close d-flex "
+        class="button-close d-flex"
         style="border: none; outline: none; background: none"
         (click)="dialog.close()"
       >
@@ -59,7 +59,7 @@
           default="Thuộc giai đoạn: "
         >
         </codx-label>
-        <span style="font-weight: 500;"> {{stepName}} </span>
+        <span style="font-weight: 500"> {{ stepName }} </span>
       </div>
     </div>
     <!--End Link group -->
@@ -76,13 +76,14 @@
           </codx-label>
         </div>
         <div>
-          <ejs-dropdownlist
+          <ejs-combobox
+            #sample
             [dataSource]="listGroupTask"
+            (change)="changeCombobox($event, 'taskGroupID')"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
-            (valueChange)="changeCombobox($event, 'taskGroupID')"
-            [readonly]="taskGroupID || listGroupTask.length === 0"
-          ></ejs-dropdownlist>
+            [allowCustom]="false"
+          ></ejs-combobox>
         </div>
       </div>
     </div>
@@ -91,7 +92,10 @@
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <!-- name -->
-      <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
+      <div
+        class="step-name w-100"
+        [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''"
+      >
         <div>
           <codx-label
             fiedName="taskName"
@@ -111,7 +115,11 @@
       </div>
       <!--End name -->
       <!-- Cuoc goi -->
-      <div *ngIf="typeTask?.value === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
+      <div
+        *ngIf="typeTask?.value === 'C'"
+        class="w-100 ms-4"
+        style="flex-basis: 100%"
+      >
         <div>
           <codx-label
             fiedName="callType"
@@ -152,33 +160,6 @@
           </codx-input>
         </div>
       </div>
-      <!-- End cuoc hop -->
-      <!-- Gui mail -->
-      <!-- <div
-        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
-        class=""
-        style="flex-basis: 10%"
-      >
-        <div>
-          <codx-label></codx-label>
-        </div>
-        <div
-          *ngIf="typeTask?.value === 'E'"
-          class="d-flex justify-content-end"
-          style="margin-top: 2px"
-        >
-          <button
-            class="button-mail"
-            *ngIf="typeTask?.value == 'E'"
-            (click)="handelMail()"
-          >
-            <span
-              class="icon-email icon-20 text-primary-600 py-2 text-muted"
-            ></span>
-          </button>
-        </div>
-      </div> -->
-      <!-- End gui mail -->
     </div>
     <!--End ten Cong Viec -->
 
@@ -299,10 +280,18 @@
         </codx-label>
       </div>
       <div>
-        <ng-container
+        <ejs-multiselect
+          [dataSource]="listTaskLink"
+          [mode]="'Default'"
+          [fields]="fieldsTask"
+          [value]="listParentID"
+          (valueChange)="parentIDChange($event)"
+        ></ejs-multiselect>
+
+        <!-- <ng-container
           [ngTemplateOutlet]="comboboxMulti"
           [ngTemplateOutletContext]="{ dataSource: dataCombobox }"
-        ></ng-container>
+        ></ng-container> -->
       </div>
     </div>
 
@@ -327,14 +316,14 @@
 
     <div class="form-group">
       <codx-user
-        *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B' "
+        *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
         [default]="'Vai trò/bộ phận thực hiện'"
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event,'O')"
+        (valueList)="changeRoler($event, 'O')"
         [vllShare]="'DP0331'"
         [multiple]="false"
         [listCombobox]="listCombobox"
@@ -347,13 +336,17 @@
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="typeTask?.value === 'M'? 'Người chủ trì' : 'Người đi công tác'"
+        [default]="
+          typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'
+        "
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event,'O')"
+        (valueList)="changeRoler($event, 'O')"
         [multiple]="false"
-        [type]="'user'"
+        [vllShare]="'DP0331'"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
       ></codx-user>
     </div>
 
@@ -365,7 +358,7 @@
         [dataSource]="participant"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event,'P')"
+        (valueList)="changeRoler($event, 'P')"
         [vllShare]="'DP0331'"
         [multiple]="true"
         [listCombobox]="listCombobox"
@@ -373,7 +366,7 @@
       ></codx-user>
     </div>
 
-    <div class="form-group border-bottom pb-1">
+    <div class="form-group">
       <div>
         <codx-label
           fiedName="assignControl"
@@ -513,19 +506,24 @@
   </button>
 </ng-template>
 
-<ng-template #comboboxMulti let-data="dataSource">
+<!-- <ng-template #comboboxMulti let-data="dataSource">
   <div class="combobox-multi" #inputContainer>
     <div>
       <div
         class="e-float-input e-input-group cursor-pointer m-0"
         (click)="data?.length > 0 ? showCombobox() : ''"
       >
-        <input type="text" [value]="valueInput" [disabled]="data?.length == 0" class="cursor-pointer" />
+        <input
+          type="text"
+          [value]="valueInput"
+          [disabled]="data?.length == 0"
+          class="cursor-pointer"
+        />
         <span class="e-float-line"></span>
         <span class="e-input-group-icon e-spin-down"></span>
       </div>
     </div>
-    <div class="select" *ngIf="show">
+    <div class="select" *ngIf="showCbxParentID">
       <ul>
         <li
           *ngFor="let item of data"
@@ -542,4 +540,32 @@
       </ul>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+
+<!-- End cuoc hop -->
+      <!-- Gui mail -->
+      <!-- <div
+        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
+        class=""
+        style="flex-basis: 10%"
+      >
+        <div>
+          <codx-label></codx-label>
+        </div>
+        <div
+          *ngIf="typeTask?.value === 'E'"
+          class="d-flex justify-content-end"
+          style="margin-top: 2px"
+        >
+          <button
+            class="button-mail"
+            *ngIf="typeTask?.value == 'E'"
+            (click)="handelMail()"
+          >
+            <span
+              class="icon-email icon-20 text-primary-600 py-2 text-muted"
+            ></span>
+          </button>
+        </div>
+      </div> -->
+      <!-- End gui mail -->

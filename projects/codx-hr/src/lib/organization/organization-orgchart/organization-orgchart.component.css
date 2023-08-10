@@ -85,8 +85,9 @@
 .p-node {
   position: absolute;
   left: 45%;
-  bottom: -5%;
+  bottom: -13px;
   cursor: pointer;
+  background-color: var(--bg-body);
 }
 
 .p-node__manager {

@@ -21,6 +21,7 @@ import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-cus
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { CM_Deals } from '../../models/cm_model';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'codx-lead-detail',
@@ -28,6 +29,7 @@ import { CM_Deals } from '../../models/cm_model';
   styleUrls: ['./lead-detail.component.scss'],
 })
 export class LeadDetailComponent implements OnInit {
+  @ViewChild('tabObj') tabObj: TabComponent;
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -60,7 +62,10 @@ export class LeadDetailComponent implements OnInit {
   isDataLoading = false;
 
   oldRecId: string = '';
+  isHidden: boolean = true;
 
+  isBool: boolean = false;
+  hasRunOnce = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -69,6 +74,7 @@ export class LeadDetailComponent implements OnInit {
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
+
 
   }
 
@@ -108,8 +114,13 @@ export class LeadDetailComponent implements OnInit {
     ];
   }
 
-  ngAfterViewInit(): void {}
-
+  ngAfterViewInit(): void {
+  }
+  ngAfterViewChecked() {
+    if(!this.hasRunOnce) {
+      this.resetTab(this.dataSelected.applyProcess);
+    }
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
 
@@ -129,16 +140,20 @@ export class LeadDetailComponent implements OnInit {
           template: this.referencesDeal,
           icon: 'icon-i-link',
         };
-        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+
+        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID && this.oldRecId){
+          this.hasRunOnce = true;
+          this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
         }
+        !this.hasRunOnce &&  this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
-
         this.tabControl.push(references);
       }else {
         this.tmpDeal = null;
       }
       this.getTags(this.dataSelected);
+
     }
   }
 
@@ -155,10 +170,23 @@ export class LeadDetailComponent implements OnInit {
   }
 
   changeFooter(e) {}
+  resetTab(data){
+    if(this.tabObj) {
+      this.isBool = data;
+      if(this.isBool) {
+        (this.tabObj as TabComponent).hideTab(1, true);
+        (this.tabObj as TabComponent).hideTab(2,false);
+      }
+      else {
+        (this.tabObj as TabComponent).hideTab(1, false );
+        (this.tabObj as TabComponent).hideTab(2, true);
+      }
+    }
+  }
 
   async promiseAllLoad() {
     this.isDataLoading = true;
-    this.applyProcess && await this.getListInstanceStep();
+    this.dataSelected.applyProcess && await this.getListInstanceStep();
     await this.getTmpDeal();
   }
   async executeApiCalls(){

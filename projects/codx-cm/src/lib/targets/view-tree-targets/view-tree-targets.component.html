@@ -1,6 +1,6 @@
-<div class="treeview" style="padding-right: 100px; padding-left: 100px">
+<div class="treeview mw-1000px mx-auto target-treeview">
   <codx-treeview
-    id="tree"
+    id="treeView"
     #treeView
     [itemTemplate]="templateTree"
     [data]="dataTree"
@@ -17,17 +17,17 @@
 </div>
 
 <ng-template #templateTree let-item>
-  <div class="mb-1" (click)="clickTreeNode($event)">
+  <div (click)="clickTreeNode($event)">
     <div
       class="d-flex justify-content-between align-items-center"
       *ngIf="viewCurrent == '1'"
     >
-      <div class="w-250px min-w-250px d-flex justify-content-between">
+      <div class="w-100 d-flex justify-content-between">
         <div class="d-flex flex-row ms-3" *ngIf="item.parentID != null">
           <codx-img
             [objectId]="item?.salespersonID"
             imageType="circle"
-            width="30"
+            width="35"
             [objectType]="'AD_Users'"
             [objectName]="item?.title"
           ></codx-img>
@@ -44,7 +44,7 @@
             >
               {{ item?.title }}
             </span>
-            <div class="">
+            <div class="text-gray-600">
               {{ item?.positionName }}
             </div>
           </div>
@@ -62,9 +62,11 @@
           {{ item?.title }}
         </span>
       </div>
-      <div class="w-250px min-w-250px d-flex justify-content-end">
+      <div
+        class="w-250px min-w-250px d-flex align-items-center justify-content-end"
+      >
         <div
-          style="margin-right: 40px"
+          class="h-30px"
           *ngIf="
             item?.owner != null &&
             item?.owner.trim() != '' &&
@@ -80,15 +82,12 @@
           >
           </codx-imgs>
         </div>
-        <div style="margin-right: 40px" *ngIf="item?.parentID != null">
+        <div class="me-6" *ngIf="item?.parentID != null">
           <span class="text-gray-600 text-nowrap">
             {{ item?.titleMonth }}
           </span>
         </div>
-        <div
-          class="ms-3 fw-bold d-flex justify-content-end"
-          style="min-width: 150px"
-        >
+        <div class="ms-3 fw-bold d-flex justify-content-end min-w-150px">
           <span
             *ngIf="item?.target > 0"
             [ngStyle]="
@@ -113,7 +112,7 @@
             0
           </span>
         </div>
-        <div class="w-60px min-w-60px ms-2">
+        <div class="ms-2 d-flex align-items-center w-100px">
           <span
             *ngIf="item?.parentID == null"
             class="fw-bold me-2"
@@ -138,27 +137,29 @@
               </codx-label>
             </ng-template>
           </span>
-          <codx-mfunc
-            [ngStyle]="
-              item?.parentID == null ? { top: '-24px' } : { top: '-5px' }
-            "
-            style="position: relative"
-            [formModel]="formModel"
-            (clickMF)="clickMF($event, item)"
-            (changeDataMF)="changeDataMF($event, item)"
-            [isBookMark]="false"
-            [dataItem]="item"
-            type="view"
-          >
-          </codx-mfunc>
+          <span class="target-mfunc">
+            <codx-mfunc
+              [ngStyle]="
+                item?.parentID == null ? { top: '0px' } : { top: '0px' }
+              "
+              style="position: relative"
+              [formModel]="formModel"
+              (clickMF)="clickMF($event, item)"
+              (changeDataMF)="changeDataMF($event, item)"
+              [isBookMark]="false"
+              [dataItem]="item"
+              type="view"
+            >
+            </codx-mfunc>
+          </span>
         </div>
       </div>
     </div>
     <div
-      class="d-flex justify-content-between align-items-center"
+      class="d-flex justify-content-between align-items-center w-100 mb-3"
       *ngIf="viewCurrent == '2'"
     >
-      <div class="w-350px min-w-350px d-flex justify-content-between">
+      <div class="w-100 d-flex justify-content-between">
         <div class="d-flex flex-row" *ngIf="item.parentID == null">
           <codx-img
             [objectId]="item?.salespersonID"
@@ -167,9 +168,7 @@
             [objectType]="'AD_Users'"
             [objectName]="item?.title"
           ></codx-img>
-          <div
-            [ngClass]="'ms-4 d-flex flex-column'"
-          >
+          <div [ngClass]="'ms-4 d-flex flex-column'">
             <span
               class="text-dark"
               [ngClass]="
@@ -180,14 +179,14 @@
             >
               {{ item?.title }}
             </span>
-            <div class="">
+            <div class="text-gray-600">
               {{ item?.positionName }}
             </div>
           </div>
         </div>
 
         <span
-          class="text-dark ms-3"
+          class="text-dark ms-4"
           [ngClass]="
             item?.fontSize != null && item?.fontSize?.trim() != ''
               ? item?.fontSize
@@ -227,7 +226,6 @@
             0
           </span>
         </div>
-
       </div>
     </div>
   </div>
