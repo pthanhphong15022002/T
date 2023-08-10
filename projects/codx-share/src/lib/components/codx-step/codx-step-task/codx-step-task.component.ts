@@ -2210,4 +2210,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
     }
   }
+
+  setBackground(status){
+    return status == 1 ? { background: '#ef4023'} : (status == 2 ? { background: '#d1d1d1' } : { background: '#28a745'})
+  }
 }
