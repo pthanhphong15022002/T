@@ -33,7 +33,6 @@ import { OrganizationOrgchartComponent } from './organization-orgchart/organizat
 export class OrgorganizationComponent extends UIComponent {
   console = console;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
@@ -50,8 +49,8 @@ export class OrgorganizationComponent extends UIComponent {
   request: any = null;
   viewActive: string = '';
   count: any;
-  buttonAdd: any = null;
-  activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
+  buttonAdd: ButtonModel;
+  activeMFC:boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
@@ -67,25 +66,28 @@ export class OrgorganizationComponent extends UIComponent {
 
   constructor(
     inject: Injector,
-    private activedRouter: ActivatedRoute,
-    private hrService: CodxHrService
-  ) {
+    private hrService: CodxHrService,
+  ) 
+  {
     super(inject);
   }
 
   onInit(): void {
     // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
-    this.activedRouter.params.subscribe((param: any) => {
-      let funcID = param['funcID'];
+    this.router.params.subscribe((param:any) => {
+      let funcID = param["funcID"]; 
       if (funcID.includes('WP')) {
-        this.button = null;
+        this.buttonAdd = null; 
         this.activeMFC = false;
-      } else {
-        this.button = {
+      }
+      else
+      {
+        this.buttonAdd = {
           id: 'btnAdd',
         };
         this.activeMFC = true;
       }
+    this.detectorRef.detectChanges();
     });
   }
 
@@ -117,20 +119,8 @@ export class OrgorganizationComponent extends UIComponent {
           // resourceModel: { parentIDField: 'ParentID' },
         },
       },
-      // {
-      //   id: '3',
-      //   type: ViewType.tree_masterdetail,
-      //   // active: false,
-      //   sameData: false,
-      //   request: this.request,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.tmpMasterDetail,
-      //   },
-      // },
       {
-        id: '4',
+        id: '3',
         type: ViewType.tree_orgchart,
         sameData: false,
         request: this.request,
@@ -142,9 +132,20 @@ export class OrgorganizationComponent extends UIComponent {
           // resourceModel: { parentIDField: 'ParentID' },
         },
       },
+      // {
+      //   id: '4',
+      //   type: ViewType.tree_masterdetail,
+      //   // active: false,
+      //   sameData: false,
+      //   request: this.request,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.tmpMasterDetail,
+      //   },
+      // },
     ];
 
-    // this.detectorRef.detectChanges();
   }
 
   //loadEmployList

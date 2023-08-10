@@ -266,7 +266,6 @@ export class CM_Customers {
   stop: boolean;
   stopReason: string;
   customerFrom: Date;
-  customerResource: string;
   bankAccount: string;
   bankID: string;
   memo: string;
@@ -750,6 +749,7 @@ export class CM_Leads {
   currencyID: string;
   exchangeRate: number;
   dealValue: number = 0;
+  permissions: CM_Permissions[] = [];
 }
 
 export class CM_Targets {

@@ -248,6 +248,10 @@ export class NewsComponent extends UIComponent {
       (x: any) => x.functionID === 'SYS01'
     );
     let post = new Post();
+    if(this.category && this.category != "home")
+    {
+      post.category = this.category;
+    }
     post.newsType = type;
     let data = {
       action: mfc.defaultName,

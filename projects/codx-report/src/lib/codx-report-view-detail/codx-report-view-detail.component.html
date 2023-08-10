@@ -16,7 +16,7 @@
 
   </iframe> -->
   <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
-  <ng-container *ngIf="funcItem">
+  <ng-container *ngIf="data">
     <ng-container *ngIf="isRunMode ; else tmpElse">
       <div class="d-flex align-items-center justify-content-center w-100 h-100">
         <div class="report_panel">
@@ -29,11 +29,11 @@
       </div>
     </ng-container>
     <ng-template #tmpElse>
-      <ng-container *ngIf="funcItem.displayMode == '3'; else reportBolder">
+      <ng-container *ngIf="data.displayMode == '3'; else reportBolder">
         <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true"></lib-pdf>
       </ng-container>
       <ng-template #reportBolder>
-        <codx-report-iframe [service]="funcItem.service" [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+        <codx-report-iframe [service]="data.service" [funcID]="data.recID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
       </ng-template>
     </ng-template>
   </ng-container>
@@ -50,7 +50,7 @@
   <div ngbDropdown class="d-inline-block flex-column" *ngIf="reportList.length" #drop="ngbDropdown" >
     <span class="me-3 fw-bolder fs-3 text-dark" *ngIf="rootFunction" (click)="homeClick()">{{rootFunction.customName}}</span>
     <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle >
-      <span class="text-muted text-hover-primary pt-1"> > {{this.funcItem.customName}}</span>
+      <span class="text-muted text-hover-primary pt-1"> > {{this.data.customName}}</span>
     </a>
     <div ngbDropdownMenu aria-labelledby="dropdownReport">
       <a ngbDropdownItem *ngFor="let item of reportList" (click)="itemSelect(item)">{{item.customName}}</a>

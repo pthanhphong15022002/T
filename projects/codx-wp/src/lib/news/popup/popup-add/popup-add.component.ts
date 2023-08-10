@@ -2,13 +2,10 @@ import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild,
 import { Permission } from '@shared/models/file.model';
 import { ViewsComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService, ImageViewerComponent, AuthStore } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { WP_News } from '../../../models/WP_News.model';
-import moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { map } from 'rxjs';
-import { Base64 } from '@syncfusion/ej2-angular-documenteditor';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-popup-add',
@@ -33,6 +30,7 @@ export class PopupAddComponent implements OnInit {
   loading:boolean = false;
   isAdd:boolean = true;
   allowExtensions:string = ".png, .jpg, .jpeg";
+  defaultCategory:string = "";
   defaultImgSrc:string = "../assets/themes/wp/default/img/upload_image.svg"; 
   NEWSTYPE = {
     POST: "1",
@@ -77,6 +75,7 @@ export class PopupAddComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
+    private router:ActivatedRoute,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
@@ -91,7 +90,6 @@ export class PopupAddComponent implements OnInit {
     this.isAdd = dialogData.data.isAdd;
     this.data = JSON.parse(JSON.stringify(dialogData.data.data));
     this.user = auth.get();
-    
   }
   ngOnInit(): void {
     if(this.isAdd)
