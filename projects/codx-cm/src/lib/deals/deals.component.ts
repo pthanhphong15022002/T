@@ -338,6 +338,7 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
+        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -411,6 +412,7 @@ export class DealsComponent
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
+        eventItem.isblur = false;
     };
     let isPermission = (eventItem, data) => {
       // Phân quyền

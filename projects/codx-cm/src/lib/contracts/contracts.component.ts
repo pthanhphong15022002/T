@@ -428,6 +428,7 @@ export class ContractsComponent extends UIComponent {
   changeDataMF(event, data) {
     if (event != null) {
       event.forEach((res) => {
+        res.isblur = data.approveStatus == '3';
         switch (res.functionID) {
           case 'SYS02':
             break;
@@ -460,6 +461,7 @@ export class ContractsComponent extends UIComponent {
             ) {
               res.disabled = true;
             }
+            res.isblur= false ;
             break;
 
           case 'CM0204_4':
