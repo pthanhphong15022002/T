@@ -125,10 +125,9 @@ export class OrgorganizationComponent extends UIComponent {
           // resourceModel: { parentIDField: 'ParentID' },
         },
       },
-      // test thử lỗi ko ẩn mode view theo thiết lập
       {
         id: '1',
-        type: ViewType.content,
+        type: ViewType.list,
         sameData: true,
         model: {
           template: this.templateList,
