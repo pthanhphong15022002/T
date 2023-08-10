@@ -304,7 +304,7 @@ export class PopupAddLeadComponent
         var permission = new CM_Permissions();
         permission.objectID = owner;
         permission.objectName = ownerName;
-        permission.objectType = 'U';
+        permission.objectType = '1';
         permission.roleType = 'O';
         permission.full = true;
         permission.update = true;

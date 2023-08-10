@@ -1013,10 +1013,7 @@ export class AddContractsComponent implements OnInit {
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
       this.currnecyID = dataValue?.DefaultCurrency;
-      this.applyProcess = dataValue?.ProcessContractUsed == '1';
-    }else{
-      this.currnecyID = null;
-      this.applyProcess = false;
+      this.applyProcess = dataValue?.ProcessContract == '1';
     }
   }
 
