@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
+  AuthService,
   ButtonModel,
   DataRequest,
   DialogModel,
@@ -158,17 +159,21 @@ export class TargetsComponent
   exchangeRateSys: number;
   gridViewSetupTarget: any;
   countLoad = 0;
+  datasVll = [];
+  language: string;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService,
+    private auth: AuthService,
     private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
@@ -194,6 +199,16 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
+    ];
     this.gridViewSetupTarget = await firstValueFrom(
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
@@ -440,7 +455,10 @@ export class TargetsComponent
     this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
-  onLoading(e) {
+  async onLoading(e) {
+    // if(datasVll && datasVll.datas){
+    let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
+
     this.columnGrids = [
       {
         headerTemplate: this.headerBusinessLine,
@@ -536,26 +554,19 @@ export class TargetsComponent
         width: 150,
       },
     ];
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
+
+    let obj = {
+      type: ViewType.chart,
+      text: datasVll?.datas[1]?.text,
+      icon:  datasVll?.datas[1]?.icon,
+      sameData: false,
+      active: false,
+      model: {
+        panelRightRef: this.panelRight,
       },
-      {
-        type: ViewType.chart,
-        text: 'Lưới',
-        icon: 'icon-email',
-        sameData: false,
-        active: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
+    };
+    this.views.push(Object.assign({}, obj));
+    // }
   }
   searchChanged(e) {
     if (e == null || e?.trim() == '') {
