@@ -38,6 +38,14 @@ export class AddApproversComponent extends UIComponent {
   //#endregion
   date = new Date();
   showPopup: boolean = false;
+
+  //#region RoleType
+  grv;
+  lstRoleTypes;
+  curSelectMemberID;
+  popover;
+  //#endregion
+
   constructor(
     private inject: Injector,
     // private api: ApiHttpService,
@@ -90,6 +98,25 @@ export class AddApproversComponent extends UIComponent {
       }
       this.dialog.dataService.clear();
     });
+
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.grv = data;
+          if (this.grv.RoleType?.referedValue != '') {
+            this.cache
+              .valueList(this.grv.RoleType?.referedValue)
+              .subscribe((vll) => {
+                this.lstRoleTypes = vll.datas;
+                console.log('lstRoleTypes', this.lstRoleTypes);
+              });
+          }
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -214,5 +241,24 @@ export class AddApproversComponent extends UIComponent {
   clickAddMemeber() {
     this.showPopup = !this.showPopup;
     this.changeDetectorRef.detectChanges();
+  }
+
+  selectMember(p, memberID) {
+    p.open();
+    this.popover = p;
+    this.curSelectMemberID = memberID;
+    console.log('selectMember', p, memberID);
+  }
+
+  selectRoleType(memberID, roleType) {
+    let curMember = this.members.find((member) => member.memberID == memberID);
+    curMember.roleType = roleType.value;
+    console.log('member', curMember);
+
+    this.popover.close();
+  }
+
+  getIcon(memRole) {
+    return this.lstRoleTypes.find((roleType) => roleType.value == memRole).icon;
   }
 }

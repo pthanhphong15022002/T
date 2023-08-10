@@ -532,18 +532,27 @@ export class TargetsComponent
       return;
     }
 
-    let text = e;
+    let text = e.toLowerCase();
     if (this.viewCurrent == '1') {
       this.lstDataTree = this.lstTreeSearchs.filter(
         (item) =>
-          (text == item?.businessLineID && item.year == this.year) ||
-          (text == item?.title && item.year == this.year)
+          (text == item?.businessLineID?.toLowerCase() && item.year == this.year) ||
+          (text == item?.title?.toLowerCase() && item.year == this.year) ||
+          item?.items?.some(
+            (x) =>
+              (text == x?.title?.toLowerCase() && x.year == this.year) ||
+              (text == x?.salespersonID?.toLowerCase() && x.year == this.year)
+          )
       );
     } else {
       this.lstDataTree = this.lstTreeSearchs.filter(
         (item) =>
-          (text == item?.title && item.year == this.year) ||
-          (text == item?.salespersonID && item.year == this.year)
+          (text == item?.title?.toLowerCase() && item.year == this.year) ||
+          (text == item?.salespersonID?.toLowerCase() && item.year == this.year) ||  item?.items?.some(
+            (x) =>
+              (text == x?.title?.toLowerCase() && x.year == this.year) ||
+              (text == x?.businessLineID?.toLowerCase() && x.year == this.year)
+          )
       );
     }
     this.loadedTree = true;

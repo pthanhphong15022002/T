@@ -18,6 +18,7 @@ import {
   AuthStore,
   DialogModel,
   Util,
+  PageTitleService,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
@@ -60,7 +61,8 @@ export class DynamicFormComponent extends UIComponent {
     private route: ActivatedRoute,
     private layout: LayoutService,
     private notifySvr: NotificationsService,
-    private userStore: AuthStore
+    private userStore: AuthStore,
+    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -102,6 +104,10 @@ export class DynamicFormComponent extends UIComponent {
     // this.cache
     //   .gridViewSetup(view.function.formName, view.function.gridViewName)
     //   .subscribe(() => {});
+    this.view = view;
+    var formName = view.function!.formName;
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
   }
 
   changeDataMF(e: any, data) {
