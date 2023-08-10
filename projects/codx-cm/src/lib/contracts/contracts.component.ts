@@ -611,7 +611,7 @@ export class ContractsComponent extends UIComponent {
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -624,7 +624,13 @@ export class ContractsComponent extends UIComponent {
   }
 
   afterSave(e?: any, that: any = null) {
-    //TODO: đợi core
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus !=null &&  appoverStatus != this.itemSelected.approveStatus) {
+        this.itemSelected.approveStatus=appoverStatus
+      } 
+      this.view.dataService.update(this.itemSelected).subscribe();
+    }
   }
 
   async addContract() {
