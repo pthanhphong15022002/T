@@ -397,7 +397,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this
@@ -408,7 +408,21 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      if (e.approveStatus != this.itemSelected.approveStatus) {
+        switch (e.approveStatus) {
+          case '5':
+            e.Status = '2';
+            break;
+          case '4':
+          case '2':
+            e.Status = '3';
+            break;
+        }
+      }
+      this.itemSelected = e;
+      this.view.dataService.update(this.itemSelected).subscribe();
+    }
   }
 
   // region CRUD
