@@ -307,6 +307,7 @@ export class PopupAddLeadComponent
         permission.objectType = '1';
         permission.roleType = 'O';
         permission.full = true;
+        permission.read = true;
         permission.update = true;
         permission.assign = true;
         permission.delete = true;
