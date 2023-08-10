@@ -2495,6 +2495,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     data[event?.field] = event?.data;
   }
 
+  changeProgress(e, data) {
+    data.instanceProgress = e?.value ? e?.value : 0;
+  }
   openPopupStep(type, step?: DP_Steps) {
     this.actionStep = type;
     this.isSaveStep = false;
@@ -2544,6 +2547,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepEdit['icon'] = this.stepNew?.icon;
       this.stepEdit['iconColor'] = this.stepNew?.iconColor;
       this.stepEdit['stepName'] = this.stepNew?.stepName;
+      this.stepEdit['instanceProgress'] = this.stepNew?.instanceProgress;
       this.stepEdit['modifiedOn'] = new Date();
       this.stepEdit['modifiedBy'] = this.userId;
       if (this.action == 'edit' && this.stepNew.recID) {
