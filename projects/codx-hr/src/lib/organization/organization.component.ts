@@ -101,14 +101,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.parentIDField = 'ParentID';
 
     this.views = [
-      {
-        id: '1',
-        type: ViewType.list,
-        sameData: true,
-        model: {
-          template: this.templateList,
-        },
-      },
+      
       {
         id: '2',
         type: ViewType.listtree,
@@ -130,6 +123,14 @@ export class OrgorganizationComponent extends UIComponent {
           // panelRightRef: this.panelRightLef,
           // template2: this.tmpOrgChart,
           // resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
+      {
+        id: '1',
+        type: ViewType.content,
+        sameData: true,
+        model: {
+          template: this.templateList,
         },
       },
       // {

@@ -562,12 +562,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     return new File([u8arr], filename, {type:mime});
   }
-  templateType:String = "";
-  clickUpload(type:string)
-  {
-    this.templateType = type;
 
-    if(type == "rdl")
+  displayMode:string = "";
+  clickUpload(mode:string)
+  {
+    this.displayMode = mode;
+    if(mode == "0")
     {
       let ctrl = this.uploader.element as HTMLElement;
       ctrl?.click();
@@ -586,7 +586,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           null,
           {
             action: 'add',
-            type: type,
+            type: mode == "3" ? "excel" : "word",
             refType: "RP_ReportList",
             refID: this.data.recID,
             formModel: this.dialog.formModel
@@ -597,8 +597,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           debugger;
           if(res?.event?.length > 0)
           {
-            let template = res.event[0];
-            this.data.templateID = template.recID;
+            this.data.templateID = res.event[0].recID;
           }
         })
     }
