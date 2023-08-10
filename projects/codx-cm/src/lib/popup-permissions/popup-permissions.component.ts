@@ -153,6 +153,7 @@ export class PopupPermissionsComponent implements OnInit {
         perm.roleType = 'S';
         perm.isActive = true;
         perm.objectType = data.objectType;
+        perm.memberType = '1';
         lst = this.checkUserPermission(this.lstPermissions, perm);
 
         // this.groupBy(this.process.permissions);
@@ -282,7 +283,7 @@ export class PopupPermissionsComponent implements OnInit {
     if (this.lstPermissions != null && this.lstPermissions.length > 0) {
       if (
         (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
-          this.lstPermissions[this.currentPemission]?.roleType ==
+          this.lstPermissions[this.currentPemission]?.objectID ==
             this.data?.owner) ||
         !this.data?.allowPermit
       )
@@ -304,7 +305,7 @@ export class PopupPermissionsComponent implements OnInit {
     if (this.lstPermissions != null && this.lstPermissions.length > 0) {
       if (
         (this.lstPermissions[index]?.roleType == 'O' &&
-          this.lstPermissions[index]?.roleType == this.data?.owner) ||
+          this.lstPermissions[index]?.objectID == this.data?.owner) ||
         !this.data?.assign
       )
         return true;

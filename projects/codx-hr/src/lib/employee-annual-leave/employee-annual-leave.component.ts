@@ -47,7 +47,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   currentItem: any;
   scrolling: boolean = true;
 
-  crrFuncID: any;
   resetView: boolean = false;
   headerText: string = '';
   btnCalculate: string = 'Tính';
@@ -66,8 +65,12 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     })
   }
   onInit(): void {
-    this.crrFuncID = this.funcID;
     // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeavesBusiness', 'AddEmployeeAnnualLeaveAsync')
+    //   .subscribe((res) => {
+    //     if (res) {
+    //     }
+    //   });
+    // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeavesBusiness', 'AddEmployeeAnnualLeaveMonthAsync')
     //   .subscribe((res) => {
     //     if (res) {
     //     }
@@ -146,7 +149,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
         ];
         break;
       case 'HRTAL02':
-        this.button = { id: 'btnAdd'}
+        this.button = { id: 'btnAdd' }
         this.views = [
           {
             // id: ViewType.list.toString(),
