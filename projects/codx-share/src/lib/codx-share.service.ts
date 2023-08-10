@@ -49,6 +49,7 @@ import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/po
 import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
 import { ES_File } from './components/codx-approval-procress/model/codx-approval-process.model';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
+import { tmpCopyFileInfo } from './models/fileInfo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -1320,10 +1321,32 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
-    if (template?.templateID == null && !releaseBackground) {
+    if (template?.templateID == null && template?.templateType == null ) {
       //TemplateID null -> bật form kí số nhưng ko có file
       //Copy file từ template mẫu
-      this.releaseWithEmptySignFile(approveProcess, releaseCallback);
+      let tempCopyFile = new tmpCopyFileInfo();
+      tempCopyFile.objectID=approveProcess.recID;
+      tempCopyFile.objectType=approveProcess.entityName;
+      tempCopyFile.referType='source';
+      
+      this.copyFileByObjectID(template?.recID,approveProcess.recID,template?.refType,'source',tempCopyFile).subscribe((copied:any)=>{
+        if(copied){
+          this.getFileByObjectID(approveProcess.recID).subscribe((nFile:any)=>{
+            if(nFile){
+              let signFile = this.createSignFile(approveProcess,nFile);
+              this.openPopupSignFile(approveProcess,releaseCallback,signFile,nFile);
+            }
+            else{              
+              this.notificationsService.notify('Không tìm thấy tài liệu trình kí','2');
+              return;
+            }
+          });
+        }
+        else{
+          this.notificationsService.notify('Sao chép tài liệu từ mẫu thiết lập không thành công','2');
+          return;
+        }
+      });
     } else {
       let exportUpload = new ExportUpload();
       exportUpload.templateRecID = template?.templateID;
@@ -1382,12 +1405,12 @@ export class CodxShareService {
                   lstFile
                 );
               } else {
-                this.notificationsService.notify('Không tìm thấy file!', '2');
+                this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
               }
             }
           );
         } else {
-          this.notificationsService.notify('Xuất file thất bại!', '2');
+          this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
         }
       }
     );
@@ -1546,6 +1569,16 @@ export class CodxShareService {
       'CMBusiness',
       'ExportUploadAsync',
       [exportUpload]
+    );
+  }
+
+  copyFileByObjectID(oldRecID:string, newRecID:string,objectType:string,referType:string='',copyFileInfo:tmpCopyFileInfo = null): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'CopyFileByObjectIDAsync',
+      [oldRecID, newRecID,objectType , referType,copyFileInfo]
     );
   }
 

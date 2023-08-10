@@ -136,6 +136,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   fields: any = {};
   module:any;
   rootFunction:any = null;
+  displayMode:string = "";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -186,6 +187,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       if (res) {
         this.data = res;
         this.recID = this.data.recID;
+        this.displayMode = this.data.displayMode;
         this.parameters = this.data.parameters;
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.reportContent){
@@ -256,7 +258,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
-
+    this.displayMode = "";
     this.cache.functionList(this.module)
     .subscribe((res) => {
       if (res) {
@@ -563,7 +565,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     return new File([u8arr], filename, {type:mime});
   }
 
-  displayMode:string = "";
   clickUpload(mode:string)
   {
     this.displayMode = mode;
