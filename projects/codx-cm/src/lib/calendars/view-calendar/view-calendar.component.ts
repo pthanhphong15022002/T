@@ -16,6 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -33,6 +34,7 @@ export class ViewCalendarComponent
   @ViewChild('headerTempContent') headerTempContent!: TemplateRef<any>; //temp Content
 
   @Input() funcID: any;
+  @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
@@ -57,24 +59,20 @@ export class ViewCalendarComponent
   vllTypeTask = 'DP050';
   dayoff: any;
   calendarID = 'STD';
-  // resourceField: {
-  //   Name: string;
-  //   Field: string;
-  //   IdField: string;
-  //   TextField: string;
-  //   Title: string;
-  // };
-  // funcID: any;
+
   user: any;
   crrFuncID: any;
-  viewActiveType = 7;
 
   formModelActivities: FormModel = {
     gridViewName: 'grvDPActivities',
     formName: 'DPActivities',
   };
 
-  constructor(private inject: Injector, private authstore: AuthStore) {
+  constructor(
+    private inject: Injector,
+    private authstore: AuthStore,
+    private cmService: CodxCmService
+  ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
@@ -96,8 +94,6 @@ export class ViewCalendarComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          // resourceModel: this.resourceField, //calendar  not take
-          // template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
           template: this.eventTemplate,
@@ -114,7 +110,7 @@ export class ViewCalendarComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        // showFilter: true,
+        showFilter: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -271,6 +267,7 @@ export class ViewCalendarComponent
   }
 
   viewChanged(e) {
+    this.cmService.viewActiveType.next(e?.view?.type ?? '7');
     // this.viewCrr = evt?.view?.type;
     // this.funcID = this.router.snapshot.params['funcID'];
     // if (this.crrFuncID != this.funcID) {
