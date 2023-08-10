@@ -1,6 +1,14 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormModel } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectorRef,
+  ViewChild,
+} from '@angular/core';
+import { CodxTreeviewComponent, FormModel } from 'codx-core';
 
 @Component({
   selector: 'codx-view-tree-targets',
@@ -9,6 +17,7 @@ import { FormModel } from 'codx-core';
   providers: [DecimalPipe],
 })
 export class ViewTreeTargetsComponent implements OnInit {
+  @ViewChild('treeView') treeView: CodxTreeviewComponent;
   @Input() dataTree: any;
   @Input() fmTargetLines: any;
   @Input() formModel: FormModel;
@@ -17,7 +26,10 @@ export class ViewTreeTargetsComponent implements OnInit {
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() eventClickShow = new EventEmitter<any>();
 
-  constructor(private decimalPipe: DecimalPipe) {}
+  constructor(
+    private decimalPipe: DecimalPipe,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -38,7 +50,6 @@ export class ViewTreeTargetsComponent implements OnInit {
     if (!parent.isItem) {
       parent.data.items = parent.data.items;
     }
-    console.log(this.dataTree);
   }
 
   clickMF(e, data) {
@@ -47,5 +58,15 @@ export class ViewTreeTargetsComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data, type: 'tree' });
+  }
+
+  clickShowGrid(item, isShow: boolean) {
+    item.isCollapse = isShow;
+    if (item != null && item?.items != null) {
+      item?.items.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }

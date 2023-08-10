@@ -23,7 +23,7 @@
 }
 
 .height-parent{
-  height: 50px !important
+  height: 50px !important;
 }
 
 .height-child-user{
@@ -31,7 +31,8 @@
 }
 
 .height-child{
-  height: 50px !important
+  height: 50px !important;
+  border-bottom: 1px var(--gray-100) solid;
 }
 .overflow-ellipsis {
   white-space: nowrap;

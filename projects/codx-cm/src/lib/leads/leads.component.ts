@@ -451,11 +451,11 @@ export class LeadsComponent
     };
     let isClosed = (eventItem, data) => {
       //Đóng tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : true;
+      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? data.closed : true;
     };
     let isOpened = (eventItem, data) => {
       // Mở tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : true;
+      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? !data.closed : true;
     };
     let isStartDay = (eventItem, data) => {
       // Bắt đầu ngay
@@ -475,7 +475,7 @@ export class LeadsComponent
     let isMergeLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['0', '1'].includes(data.status) || data.closed || !data.applyProcess
+        ? !['0', '1'].includes(data.status) || data.closed
         : true;
     };
 
