@@ -59,14 +59,18 @@ export class PopupPersonalComponent implements OnInit {
       .updateInformationCompanySettings(this.items, this.option)
       .subscribe((response) => {
         if (response[0]) {
-          this.imageAvatar
-            .updateFileDirectReload(response[0].recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadDataImg.emit();
-                this.dialog.close(response[0]);
-              }
-            });
+          if (this.isAvatarChange) {
+            this.imageAvatar
+              .updateFileDirectReload(response[0].recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.loadDataImg.emit();
+                  this.dialog.close(response[0]);
+                }
+              });
+          } else {
+            this.dialog.close(response[0]);
+          }
         } else {
           this.notiService.notifyCode('SYS021');
         }
@@ -92,4 +96,11 @@ export class PopupPersonalComponent implements OnInit {
 
   @ViewChild(CompanySettingComponent)
   public childCmp: CompanySettingComponent;
+
+  //#region NHBUU
+  isAvatarChange = false;
+  changeAvatar() {
+    this.isAvatarChange = true;
+  }
+  //#endregion
 }
