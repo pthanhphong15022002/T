@@ -721,6 +721,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   pageNum: number = 0;
   maxPageNum: number = 0;
   crrIndex: number = 0;
+  totalCount: number = 0;
+  fromView: string = '';
 
   currentDate = new Date();
   passPortIsExpired = false;
@@ -909,7 +911,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
-      this.maxPageNum = params['totalPage']
+      // this.maxPageNum = params['totalPage']
+      // this.totalCount = params['totalCount']
+      // this.fromView = params['from']
       if(this.employeeID){
         // Load full thong tin employee
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
@@ -954,6 +958,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       if (this.employeeID) {
         if (history.state) {
+          this.totalCount = history.state.totalCount;
+          this.maxPageNum = history.state.totalPage;
+          this.fromView = history.state.from;
           this.listEmp = history.state.data;
           if(history.state.request)
           {
@@ -4480,38 +4487,76 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
 
   nextEmp() {
-    if (this.listEmp) {
+    if (this.listEmp.length <= this.totalCount) {
       // console.log('vi tri tim trong mang', this.listEmp.findIndex(
-      //   (x: any) => this.employeeID == x['EmployeeID']
-      // ))
-      this.crrIndex += 1;
-      if(this.crrIndex == this.listEmp.length - 1){
-        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
+        //   (x: any) => this.employeeID == x['EmployeeID']
+        // ))
+        this.crrIndex += 1;
+      if(this.fromView == 'listView'){
+        if(this.crrIndex == this.listEmp.length - 1 || (this.crrIndex == this.listEmp.length && this.crrIndex < this.totalCount -1)){
+          this.request.page += 1;
+
+          this.hrService.loadData('HR', this.request).subscribe((res) =>{
+            if(res && res[0].length > 0){
+              this.listEmp.push(...res[0])
+              this.navigateEmp(0, true);
+            }
+            else{
+              this.navigateEmp(0);
+            }
+          })
+        }
+        else{
+          this.navigateEmp(0);
+        }
+        // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
+        //   this.navigateEmp(0);
+        // }
+      }else if(this.fromView == 'gridView'){
+        if(this.crrIndex == this.listEmp.length){
+
+          this.request.page += 1;
+          this.hrService.loadData('HR', this.request).subscribe((res) =>{
+            if(res && res[0].length > 0){
+              this.listEmp.push(...res[0])
+              this.navigateEmp(0, true);
+            }
+            else{
+              this.navigateEmp(0);
+            }
+          })
+        }
+        if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length) {
+          this.navigateEmp(0);
+        }
+      }
+      // if(this.crrIndex == this.listEmp.length - 1){
+      //   // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
         
-        // let requestNewEmpPage = new DataRequest();
-        // requestNewEmpPage.entityName = this.request.entityName;
-        // requestNewEmpPage.gridViewName = this.request.gridViewName;
-        // requestNewEmpPage.page = this.request.page + 1;
-        // requestNewEmpPage.predicate = this.request.predicate;
-        // requestNewEmpPage.dataValue = this.request.dataValue;
-        // requestNewEmpPage.selector = "EmployeeID;";
-        // requestNewEmpPage.pageSize = this.request.pageSize;
-        this.request.page += 1;
+      //   // let requestNewEmpPage = new DataRequest();
+      //   // requestNewEmpPage.entityName = this.request.entityName;
+      //   // requestNewEmpPage.gridViewName = this.request.gridViewName;
+      //   // requestNewEmpPage.page = this.request.page + 1;
+      //   // requestNewEmpPage.predicate = this.request.predicate;
+      //   // requestNewEmpPage.dataValue = this.request.dataValue;
+      //   // requestNewEmpPage.selector = "EmployeeID;";
+      //   // requestNewEmpPage.pageSize = this.request.pageSize;
+      //   this.request.page += 1;
 
 
-        this.hrService.loadData('HR', this.request).subscribe((res) =>{
-          if(res && res[0].length > 0){
-            this.listEmp.push(...res[0])
-            this.navigateEmp(0, true);
-          }
-          else{
-            this.navigateEmp(0);
-          }
-        })
-      }
-      if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
-        this.navigateEmp(0);
-      }
+      //   this.hrService.loadData('HR', this.request).subscribe((res) =>{
+      //     if(res && res[0].length > 0){
+      //       this.listEmp.push(...res[0])
+      //       this.navigateEmp(0, true);
+      //     }
+      //     else{
+      //       this.navigateEmp(0);
+      //     }
+      //   })
+      // }
+      // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
+      //   this.navigateEmp(0);
+      // }
       this.loadDataWhenChangeEmp();
       this.refreshGridViews();
     }
@@ -4530,11 +4575,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         {
           employeeID: this.listEmp[this.crrIndex + isNextEmp]?.EmployeeID,
           page: this.pageNum.toString(),
-          totalPage: this.maxPageNum
+          // totalPage: this.maxPageNum,
+          // totalCount: this.totalCount,
+          // from: this.fromView
         },
         {
           data: this.listEmp,
           request: this.request,
+          totalPage: this.maxPageNum,
+          totalCount: this.totalCount,
+          from: this.fromView,
         }
       );
     }

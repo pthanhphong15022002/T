@@ -88,7 +88,7 @@ export class PopupAddTargetComponent {
     this.headerText = data?.data?.title;
     this.currencyIDSys = data?.data?.currencyID;
     this.exchangeRateSys = data?.data?.exchangeRate;
-    // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
+    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
@@ -135,9 +135,9 @@ export class PopupAddTargetComponent {
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
 
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
+    // this.gridViewSetupTarget = await firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
     this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );

@@ -98,6 +98,7 @@ import { PopupChangeAllocationRateComponent } from './targets/popup-change-alloc
 import { PopupBantDealComponent } from './deals/popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from './popup-permissions/popup-permissions.component';
 import { CalendarsComponent } from './calendars/calendars.component';
+import { ViewCalendarComponent } from './calendars/view-calendar/view-calendar.component';
 
 export const routes: Routes = [
   {
@@ -240,7 +241,7 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component],
+  declarations: [T_Component, ViewCalendarComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

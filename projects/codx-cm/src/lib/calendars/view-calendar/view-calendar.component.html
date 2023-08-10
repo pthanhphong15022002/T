@@ -1,4 +1,4 @@
-<!-- <codx-views
+<codx-views
   #view
   [views]="views"
   [funcID]="funcID"
@@ -7,6 +7,7 @@
   [autoLoad]="true"
   (onActions)="onAction($event)"
   (viewChanged)="viewChanged($event)"
+  [viewActiveType]="viewActiveType"
 >
 </codx-views>
 
@@ -115,8 +116,8 @@
       [imageId]="data?.resourceData?.owner"
       [title]="data?.resourceData?.userName"
       [subTitle]="data?.resourceData?.postionName"
-      [content]="'(' + data.resourceData.events + ')'"
     >
+      <!-- [content]="'(' + data.resourceData.events + ')'" -->
     </codx-temp-full>
   </div>
 </ng-template>
@@ -132,6 +133,4 @@
 
 <ng-template #headerTempContent>
   <div class="mt-6"></div>
-</ng-template> -->
-
-<lib-view-calendar [funcID]="funcID"></lib-view-calendar>
+</ng-template>

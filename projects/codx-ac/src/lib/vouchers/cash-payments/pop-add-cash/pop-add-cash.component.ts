@@ -101,11 +101,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   hasSaved: any = false;
   hasSelected: any = false;
   journal: IJournal;
-  fmCashPaymentsLines: FormModel = {
-    formName: 'CashPaymentsLines',
-    gridViewName: 'grvCashPaymentsLines',
-    entityName: 'AC_CashPaymentsLines',
-  };
+  fmCashLines: FormModel = {};
   fmCashCashReceiptsLine: FormModel = {
     formName: 'CashReceiptsLines',
     gridViewName: 'grvCashReceiptsLines',
@@ -308,6 +304,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         case 'objectid':
           switch (this.cashpayment.journalType) {
             case 'CP':
+            case 'CR':
               this.cashpayment.memo = this.setMemo();
               this.cashpayment.objectType =
                 e.component.itemsSelected[0].ObjectType;
@@ -362,6 +359,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
           break;
         case 'payee':
+        case 'payor':
           this.cashpayment.memo = this.setMemo();
           this.form.formGroup.patchValue(
             { memo: this.cashpayment.memo },
@@ -1081,7 +1079,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.acService
                 .execApi(
                   'AC',
-                  'CashPaymentsBusiness',
+                  this.className,
                   'ValidateVourcherAsync',
                   [this.cashpayment, this.cashpaymentline]
                 )
@@ -1126,7 +1124,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.acService
                 .execApi(
                   'AC',
-                  'CashPaymentsBusiness',
+                  this.className,
                   'ValidateVourcherAsync',
                   [this.cashpayment, this.cashpaymentline]
                 )
@@ -1140,6 +1138,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                       .update(this.cashpayment)
                       .subscribe();
                     this.onDestroy();
+                    this.loading = false;
+                    this.dt.detectChanges();
                     this.dialog.close();
                     this.notification.notifyCode('SYS007');
                   } else {
@@ -1323,8 +1323,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   onEdit(e: any) {
-    if (this.updateCell) {
-      this.loadTotal();
+    this.loadTotal();
       this.hasSaved = true;
       if (this.cashpayment.totalAmt != 0) {
         if (this.total > this.cashpayment.totalAmt) {
@@ -1336,7 +1335,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         .exec('AC', this.classNameLine, 'UpdateAsync', [this.cashpayment, e])
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {});
-    }
   }
 
   onAddNewVat(data) {
@@ -1482,6 +1480,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadTotal();
         this.gridSet.refresh();
         this.dialog.dataService.update(this.cashpayment).subscribe();
+        this.dt.detectChanges();
       }
     });
   }
@@ -1495,6 +1494,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.entityNameLine = 'AC_CashPaymentsLines';
         this.className = 'CashPaymentsBusiness';
         this.classNameLine = 'CashPaymentsLinesBusiness';
+        this.fmCashLines.formName = 'CashPaymentsLines';
+        this.fmCashLines.gridViewName = 'grvCashPaymentsLines';
+        this.fmCashLines.entityName = 'AC_CashPaymentsLines';
         break;
       case 'ACT0428':
       case 'ACT0401':
@@ -1503,6 +1505,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.entityNameLine = 'AC_CashReceiptsLines';
         this.className = 'CashReceiptsBusiness';
         this.classNameLine = 'CashReceiptsLinesBusiness';
+        this.fmCashLines.formName = 'CashReceiptsLines';
+        this.fmCashLines.gridViewName = 'grvCashReceiptsLines';
+        this.fmCashLines.entityName = 'AC_CashReceiptsLines';
         break;
     }
     switch (this.action) {
@@ -1510,6 +1515,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.hasSaved = true;
         switch (this.cashpayment.subType) {
           case '1':
+          case '11':
             this.acService
               .execApi(
                 'AC',
@@ -1646,7 +1652,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadTotal() {
     this.total = 0;
-    if (this.cashpayment.subType != 2) {
+    if (this.cashpayment.subType != '2' && this.cashpayment.subType != '12') {
       if (this.gridCash.dataSource.length > 0) {
         this.gridCash.dataSource.forEach((element) => {
           this.total = this.total + element.dr;
@@ -1766,6 +1772,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.loadFormSubType('1');
         break;
       case '2':
+      case '12':
         ele.hideTab(0, true);
         ele.hideTab(1, false);
         ele.hideTab(2, true);
@@ -1777,7 +1784,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   loadAccountControl(columnsGrid) {
     if (!this.hideFields.includes('Settlement')) {
-      if (this.cashpayment.subType == '1') {
+      if (this.cashpayment.subType == '1' || this.cashpayment.subType == '11') {
         this.hideFields.push('Settlement');
       }
     }
@@ -1934,18 +1941,37 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
 
     if (this.journal?.entryMode == '1') {
-      if (this.dataLine?.offsetAcctID == null && !this.dataLine?.isBrigdeAcct) {
+      if ((this.dataLine?.offsetAcctID == null || this.dataLine?.accountID == null)  && !this.dataLine?.isBrigdeAcct) {
         if (cAcctID) {
           switch (this.journal?.crAcctControl) {
             case '1':
               if (cAcctID == this.journal?.crAcctID) {
-                this.dataLine.offsetAcctID = cAcctID;
+                switch (this.dialog.formModel.funcID) {
+                  case 'ACT0429':
+                  case 'ACT0410':
+                    this.dataLine.offsetAcctID = cAcctID;
+                    break;
+                  case 'ACT0428':
+                  case 'ACT0401':
+                    this.dataLine.accountID = cAcctID;
+                    break;
+                }
+                
               } else {
                 this.dataLine.offsetAcctID = this.journal.crAcctID;
               }
               break;
             default:
-              this.dataLine.offsetAcctID = cAcctID;
+              switch (this.dialog.formModel.funcID) {
+                case 'ACT0429':
+                case 'ACT0410':
+                  this.dataLine.offsetAcctID = cAcctID;
+                  break;
+                case 'ACT0428':
+                case 'ACT0401':
+                  this.dataLine.accountID = cAcctID;
+                  break;
+              }
               break;
           }
         }
@@ -1954,18 +1980,37 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.dataLine.offsetAcctID = null;
     }
 
-    if (this.dataLine?.accountID == null && !this.dataLine?.isBrigdeAcct) {
+    if ((this.dataLine?.offsetAcctID == null || this.dataLine?.accountID == null) && !this.dataLine?.isBrigdeAcct) {
       if (rAcctID) {
         switch (this.journal?.drAcctControl) {
           case '1':
             if (rAcctID == this.journal?.drAcctID) {
-              this.dataLine.accountID = rAcctID;
+              switch (this.dialog.formModel.funcID) {
+                case 'ACT0429':
+                case 'ACT0410':
+                  this.dataLine.accountID = rAcctID;
+                  break;
+                case 'ACT0428':
+                case 'ACT0401':
+                  this.dataLine.offsetAcctID = rAcctID;
+                  break;
+              }
+              
             } else {
               this.dataLine.accountID = this.journal.drAcctID;
             }
             break;
           default:
-            this.dataLine.accountID = rAcctID;
+            switch (this.dialog.formModel.funcID) {
+              case 'ACT0429':
+              case 'ACT0410':
+                this.dataLine.accountID = rAcctID;
+                break;
+              case 'ACT0428':
+              case 'ACT0401':
+                this.dataLine.offsetAcctID = rAcctID;
+                break;
+            }
             break;
         }
       }
@@ -2249,7 +2294,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 aDiM3Control = true;
               }
             }
-            if (lsOffAccount.length > 0) {
+            if (lsOffAccount != null) {
               if (lsOffAccount.diM1Control && lsOffAccount.diM1Control == '4') {
                 oDiM1Control = true;
               }
