@@ -475,7 +475,7 @@ export class LeadsComponent
     let isMergeLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['0', '1'].includes(data.status) || data.closed || !data.applyProcess
+        ? !['0', '1'].includes(data.status) || data.closed
         : true;
     };
 

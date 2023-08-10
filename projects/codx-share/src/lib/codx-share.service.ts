@@ -285,7 +285,7 @@ export class CodxShareService {
                 data.unbounds.statusApproval = status;
                 dataService.update(data).subscribe();
                 this.notificationsService.notifyCode('SYS007');
-                afterSave(data.statusApproval);
+                afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
             });
           }
