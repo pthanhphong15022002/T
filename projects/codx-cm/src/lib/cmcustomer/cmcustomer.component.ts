@@ -93,8 +93,7 @@ export class CmCustomerComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
-    private codxShareService: CodxShareService,
-
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
@@ -233,21 +232,26 @@ export class CmCustomerComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'CM0105_1':
       case 'CM0101_1':
         this.setIsBlackList(data, true);
         break;
+      case 'CM0105_3':
       case 'CM0101_3':
         this.setIsBlackList(data, false);
         break;
       case 'CM0102_3':
+      case 'CM0105_1':
       case 'CM0102_2':
         this.deleteContactToCM(data);
         break;
       //tạm ngưng
+      case 'CM0105_4':
       case 'CM0101_4':
         this.updateStatusCustomer('99', data);
         break;
       //mở lại
+      case 'CM0105_5':
       case 'CM0101_5':
         this.updateStatusCustomer('2', data);
         break;
@@ -278,10 +282,11 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-
+          case 'CM0105_1':
           case 'CM0101_1':
             if (data.isBlackList) res.disabled = true;
             break;
+          case 'CM0105_3':
           case 'CM0101_3':
             if (!data.isBlackList) res.disabled = true;
             break;
@@ -301,9 +306,11 @@ export class CmCustomerComponent
             )
               res.disabled = true;
             break;
+          case 'CM0105_4':
           case 'CM0101_4':
             if (data.status === '99') res.disabled = true;
             break;
+          case 'CM0105_5':
           case 'CM0101_5':
             if (data.status !== '99') res.disabled = true;
             break;
