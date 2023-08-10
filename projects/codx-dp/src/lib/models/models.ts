@@ -149,6 +149,7 @@ export class DP_Steps {
   iconColor: String;
   progressTaskGroupControl: boolean = true;
   progressStepControl: boolean = true;
+  instanceProgress: number;
 }
 export class DP_Steps_Roles {
   recID: string = Util.uid();
@@ -378,6 +379,7 @@ export class DP_Instances_Steps {
   progressTaskGroupControl: boolean = false;
   progressStepControl: boolean = false;
   note: string;
+  instanceProgress: number;
 }
 
 export class DP_Instances_Steps_Roles {

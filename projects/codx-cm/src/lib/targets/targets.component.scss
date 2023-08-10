@@ -44,19 +44,19 @@
   overflow: visible;
 }
 
-.view-switch {
-  background-color: #a19999 !important;
+.view-switch .btn{
+  background-color:var(--primary-lighter) !important;
 }
 
-.cm-bg-primary{
+.cm-bg-primary .btn{
   background-color: var(--primary) !important;
+  color: var(--primary-lightest);
 }
-.cm-rounded-pill-left {
-  border-top-left-radius: 50rem;
-  border-bottom-left-radius: 50rem;
+.cm-rounded-pill-left .btn{
+  border-top-right-radius: 0!important;
+  border-bottom-right-radius: 0!important;
 }
-
-.cm-rounded-pill-right {
-  border-top-right-radius: 50rem;
-  border-bottom-right-radius: 50rem;
+.cm-rounded-pill-right .btn{
+  border-top-left-radius: 0!important;
+  border-bottom-left-radius: 0!important;
 }

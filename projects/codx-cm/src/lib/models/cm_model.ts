@@ -266,7 +266,6 @@ export class CM_Customers {
   stop: boolean;
   stopReason: string;
   customerFrom: Date;
-  customerResource: string;
   bankAccount: string;
   bankID: string;
   memo: string;

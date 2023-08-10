@@ -778,13 +778,13 @@ export class PopupPolicyalComponent
     );
   }
 
-  AddPolicyBeneficiaries(policyID){
+  AddPolicyBeneficiaries(obj){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'PolicyBeneficiariesBusiness',
       'AddPolicyBeneficiariesAsync',
-      policyID
+      obj
     );
   }
 

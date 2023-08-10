@@ -1536,14 +1536,18 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           });
           let resourceStillAvailable = false;
           if (this.data.resourceID != null) {
-            this.cbbResource.forEach((item) => {
-              if (item.resourceID == this.data.resourceID) {
+            for(let i=0;i<this.cbbResource?.length;i++){
+              if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
                 resourceStillAvailable = true;
               }
-            });
+            }
+            // this.cbbResource.forEach((item) => {
+            //   if (item.resourceID == this.data.resourceID) {
+            //     resourceStillAvailable = true;
+            //   }
+            // });
             if (!resourceStillAvailable) {
               this.data.resourceID = null;
-              debugger;
               this.tmplstDevice = [];
               this.cusCBB.value = null;
             } else {

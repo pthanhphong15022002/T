@@ -149,19 +149,19 @@
       <!-- radio button -->
       <div class="row mt-5">
         <div class="col">
-          <codx-input type="radio" name="rdReport" label="Xem mẫu báo cáo gốc" [checked]="tmpSelected == ''"></codx-input>
+          <codx-input crrValue="0" field="displayMode" type="radio" name="rdReport" label="Xem mẫu báo cáo gốc" [checked]="templateType == ''" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input type="radio" name="rdReport" label="Xem trang in báo cáo" [checked]="tmpSelected == 'rdl'"></codx-input>
+          <codx-input crrValue="1" field="displayMode" type="radio" name="rdReport" label="Xem trang in báo cáo" [checked]="templateType == 'rdl'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input type="radio" name="rdReport" label="Xem dạng PDF" [checked]="tmpSelected == 'pdf'"></codx-input>
+          <codx-input crrValue="2" field="displayMode" type="radio" name="rdReport" label="Xem dạng PDF" [checked]="templateType == 'pdf'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input type="radio" name="rdReport" label="Mẫu excel" [checked]="tmpSelected == 'excel'"></codx-input>
+          <codx-input crrValue="3" field="displayMode" type="radio" name="rdReport" label="Mẫu excel" [checked]="templateType == 'excel'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input type="radio" name="rdReport" label="Mẫu word" [checked]="tmpSelected == 'word'"></codx-input>
+          <codx-input crrValue="4" field="displayMode" type="radio" name="rdReport" label="Mẫu word" [checked]="templateType == 'word'" (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
       <!-- report infor -->
