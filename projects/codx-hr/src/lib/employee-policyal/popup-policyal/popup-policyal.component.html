@@ -1017,7 +1017,7 @@
 >
 </codx-combobox-popup>
 
-<div class="d-flex justify-content-end mt-3">
+<div class="d-flex justify-content-end mt-3" *ngIf="alpolicyObj.hasIncludeObjects" >
   <button
     type="button"
     class="btn btn-sm btn-light-primary"
@@ -1031,17 +1031,6 @@
     ></codx-label>
   </button>
 </div>
-
-    <!-- <codx-combobox-popup
-    *ngIf="!isHidden && alpolicyObj.hasIncludeObjects"
-    [comboboxName]="'HRObject'"
-    [multiple]="true"
-    [width]="600"
-    [height]="500"
-    [value]="alpolicyObj.includeObjects"
-    (clickSave)="onClickHideComboboxPopup($event)"
-    >
-    </codx-combobox-popup> -->
 </ng-template>
 
 <ng-template #subtractObj> 
@@ -1390,7 +1379,7 @@
 >
 </codx-combobox-popup> -->
 
-<div class="d-flex justify-content-end mt-3">
+<div class="d-flex justify-content-end mt-3" *ngIf="alpolicyObj.hasExcludeObjects">
   <button
     type="button"
     class="btn btn-sm btn-light-primary"

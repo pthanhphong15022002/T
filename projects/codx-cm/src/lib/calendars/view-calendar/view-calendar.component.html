@@ -123,7 +123,13 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <h5 class="fw-bold">{{ data?.taskName }}</h5>
+  <h5
+    class="fw-bold {{
+      data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'
+    }}"
+  >
+    {{ data?.taskName }}
+  </h5>
 </ng-template>
 
 <ng-template #headerTempContent>

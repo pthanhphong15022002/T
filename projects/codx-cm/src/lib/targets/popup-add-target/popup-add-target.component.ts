@@ -168,7 +168,7 @@ export class PopupAddTargetComponent {
       if (exchangeRate?.exchRate > 0) {
         this.exchangeRate = exchangeRate?.exchRate;
       } else {
-        exchangeRate.exchRate =  this.exchangeRate;
+        exchangeRate.exchRate = this.exchangeRate;
         currencyID = this.currencyID;
       }
       this.currencyID = currencyID;
@@ -187,7 +187,6 @@ export class PopupAddTargetComponent {
     var data = [];
     this.data.exchangeRate = this.exchangeRate ?? 0;
     if (this.action === 'add') {
-      this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
       data = [
         this.data,
@@ -235,6 +234,8 @@ export class PopupAddTargetComponent {
       });
   }
   onSave() {
+    if (this.action == 'add') this.data.businessLineID = this.businessLineID;
+
     if (
       this.data?.businessLineID == null ||
       this.data?.businessLineID?.trim() == ''
@@ -286,7 +287,6 @@ export class PopupAddTargetComponent {
     } else {
       if (this.data[e?.field] != e?.data) {
         this.exChangeRate(this.data.currencyID, e?.data);
-
       }
     }
 
@@ -408,9 +408,7 @@ export class PopupAddTargetComponent {
           } else {
             let all = this.lstOwners.filter((x) => !x.isExit).length;
             if (all > 0) {
-              item.weight =
-                (100 - weightExit) /
-                all;
+              item.weight = (100 - weightExit) / all;
             }
           }
         }

@@ -4494,7 +4494,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.crrIndex += 1;
       if(this.fromView == 'listView'){
         if(this.crrIndex == this.listEmp.length - 1 || (this.crrIndex == this.listEmp.length && this.crrIndex < this.totalCount -1)){
-          this.request.page += 1;
+          if(this.crrIndex == this.listEmp.length && this.crrIndex < this.totalCount -1){
+            this.request.page = this.request.page;
+          }
+          else{
+            this.request.page += 1;
+          }
 
           this.hrService.loadData('HR', this.request).subscribe((res) =>{
             if(res && res[0].length > 0){
