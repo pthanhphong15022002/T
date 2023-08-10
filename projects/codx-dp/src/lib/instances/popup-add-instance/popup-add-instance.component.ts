@@ -98,6 +98,8 @@ export class PopupAddInstanceComponent implements OnInit {
   listCustomFile = [];
   instanceNoSetting: any;
   processID: string = '';
+  idxCrr: number = -1;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -121,7 +123,11 @@ export class PopupAddInstanceComponent implements OnInit {
     this.processID = dt?.data?.processID;
     this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    this.promiseAll();
+
+    if (this.action != 'add') {
+      this.promiseAll();
+    }
+
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
@@ -161,20 +167,8 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.applyFor === '1') {
-      this.tabInfo = [
-        this.menuGeneralInfo,
-        this.menuAddress,
-        this.menuInputInfo,
-      ];
-      this.tabContent = [
-        this.tabOpporGeneralInfo,
-        this.tabLocation,
-        this.tabInputInfo,
-      ];
-    } else {
-      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
-      this.tabContent = [this.tabGeneralInfo, this.tabInputInfo];
+    if (this.action == 'add') {
+      this.loadTabsForm();
     }
   }
 
@@ -190,12 +184,40 @@ export class PopupAddInstanceComponent implements OnInit {
     this.action === 'copy' && (await this.getListInstaceStepCopy());
   }
 
+  loadTabsForm() {
+    if (this.action != 'add')
+      this.idxCrr = this.listStep.findIndex(
+        (x) => x.stepID == this.instance.stepID
+      );
+
+    if (this.applyFor === '1') {
+      this.tabInfo = [
+        this.menuGeneralInfo,
+        this.menuAddress,
+        this.menuInputInfo,
+      ];
+      this.tabContent = [
+        this.tabOpporGeneralInfo,
+        this.tabLocation,
+        this.tabInputInfo,
+      ];
+    } else {
+      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
+      this.tabContent = [this.tabGeneralInfo, this.tabInputInfo];
+    }
+    if (!this.checkOnTab()) {
+      this.tabInfo.pop();
+      this.tabContent.pop();
+    }
+  }
+
   async getListInstanceStep(recID, processID, status) {
     this.codxDpService
       .GetStepsByInstanceIDAsync([recID, processID, status, this.applyFor])
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));
+          this.loadTabsForm();
         }
       });
   }
@@ -205,6 +227,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.codxDpService.getInstanceStepsCopy(datas).subscribe((res) => {
       if (res && res.length > 0) {
         this.listStep = res[0];
+        this.loadTabsForm();
         this.instance.instanceNo = res[1];
         this.changeDetectorRef.detectChanges();
       }
@@ -427,5 +450,36 @@ export class PopupAddInstanceComponent implements OnInit {
       }
     }
     return listStep;
+  }
+
+  checkAddField(stepCrr, idx) {
+    if (stepCrr) {
+      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+        return true;
+      }
+      if (idx == 0) return true;
+      return false;
+    }
+    return false;
+  }
+
+  checkOnTab() {
+    if (this.listStep?.length > 0) {
+      if (this.action != 'edit') {
+        if (this.listStep[0].fields?.length > 0) return true;
+        return false;
+      }
+      let check = false;
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (this.listStep[i]?.fields?.length > 0) {
+            check = true;
+            break;
+          }
+        }
+      }
+      return check;
+    }
+    return false;
   }
 }
