@@ -576,7 +576,7 @@ export class CasesComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -588,7 +588,13 @@ export class CasesComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //TODO: đợi core
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
+        this.dataSelected.approveStatus=appoverStatus
+      } 
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
 
   moveStage(data: any) {

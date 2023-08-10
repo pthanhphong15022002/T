@@ -338,6 +338,7 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
+        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -411,6 +412,7 @@ export class DealsComponent
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
+        eventItem.isblur = false;
     };
     let isPermission = (eventItem, data) => {
       // Phân quyền
@@ -586,7 +588,7 @@ export class DealsComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -597,7 +599,13 @@ export class DealsComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
+        this.dataSelected.approveStatus=appoverStatus
+      } 
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
