@@ -1322,6 +1322,7 @@ export class CodxShareService {
   ) {
     if (template?.templateID == null && !releaseBackground) {
       //TemplateID null -> bật form kí số nhưng ko có file
+      //Copy file từ template mẫu
       this.releaseWithEmptySignFile(approveProcess, releaseCallback);
     } else {
       let exportUpload = new ExportUpload();
