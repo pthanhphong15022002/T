@@ -418,89 +418,89 @@ export class TargetsComponent
       {
         headerTemplate: this.headerYear,
         template: this.templateYear,
-        width: 150,
+        width: 120,
       },
       //quý
       {
         headerTemplate: this.headerQuarter1,
         template: this.templateQuarter1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter2,
         template: this.templateQuarter2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter3,
         template: this.templateQuarter3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter4,
         template: this.templateQuarter4,
-        width: 150,
+        width: 120,
       },
       //Tháng
       {
         headerTemplate: this.headerMonth1,
         template: this.templateMonth1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth2,
         template: this.templateMonth2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth3,
         template: this.templateMonth3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth4,
         template: this.templateMonth4,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth5,
         template: this.templateMonth5,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth6,
         template: this.templateMonth6,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth7,
         template: this.templateMonth7,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth8,
         template: this.templateMonth8,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth9,
         template: this.templateMonth9,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth10,
         template: this.templateMonth10,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth11,
         template: this.templateMonth11,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth12,
         template: this.templateMonth12,
-        width: 150,
+        width: 120,
       },
     ];
     this.views = [

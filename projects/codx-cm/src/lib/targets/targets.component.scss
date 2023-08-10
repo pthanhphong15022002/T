@@ -23,15 +23,18 @@
 }
 
 .height-parent{
-  height: 50px !important
+  height: 40px !important;
+  background-color: aqua;
 }
 
 .height-child-user{
   height: 25px !important;
+  background-color: beige;
 }
 
 .height-child{
-  height: 50px !important
+  height: 40px !important;
+  background-color: blueviolet;
 }
 .overflow-ellipsis {
   white-space: nowrap;
