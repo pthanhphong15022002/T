@@ -400,9 +400,14 @@ export class EmployeeListComponent extends UIComponent {
       let queryParams = {
         employeeID: data.employeeID,
         page: this.view.dataService.page,
-        totalPage: this.view.dataService.pageCount,
+        // totalPage: this.view.dataService.pageCount,
+        // totalCount: this.view.dataService.rowCount,
+        // from: 'listView'
       };
       let state = {
+        totalPage: this.view.dataService.pageCount,
+        totalCount: this.view.dataService.rowCount,
+        from: 'listView',
         data: this.view.dataService.data.map(function (obj) {
           return { EmployeeID: obj.employeeID };
         }),

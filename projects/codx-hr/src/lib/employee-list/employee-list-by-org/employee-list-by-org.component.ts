@@ -348,14 +348,16 @@ export class EmployeeListByOrgComponent {
 
           let queryParams = {
             employeeID: data.employeeID,
-            page: this.grid.dataService.page,
-            totalPage: this.grid.dataService.pageCount,
+            page: this.grid.dataService.page +1,
           };
           let state = {
             data: this.grid.dataService.data.map(function (obj) {
               return { EmployeeID: obj.employeeID };
             }),
             request: request,
+            totalPage: this.grid.dataService.pageCount,
+            totalCount: this.grid.dataService.rowCount,
+            from: 'gridView'
           };
           this.codxService.navigate('', func?.url, queryParams, state, true);
         }else return;

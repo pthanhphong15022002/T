@@ -220,7 +220,7 @@ export class LeadsComponent
     try {
       this.getFuncID(this.funcID);
       this.getColorReason();
-      this.getCurrentSetting();
+    // this.getCurrentSetting();
       this.getValuelistStatus();
     } catch (error) {}
   }
@@ -236,20 +236,20 @@ export class LeadsComponent
       }
     });
   }
-  async getCurrentSetting() {
-    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
-      if (res?.length > 0) {
-        let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
-        if (dataParam) {
-          var applyProcessSetting = JSON.parse(dataParam.dataValue);
-          // applyProcess
-          this.applyProcess = applyProcessSetting['ProcessLeadUsed'] == '1';
-          // currnecy
-          this.currencyIDDefault = applyProcessSetting['DefaultCurrency'];
-        }
-      }
-    });
-  }
+  // async getCurrentSetting() {
+  //   this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+  //     if (res?.length > 0) {
+  //       let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
+  //       if (dataParam) {
+  //         var applyProcessSetting = JSON.parse(dataParam.dataValue);
+  //         // applyProcess
+  //         this.applyProcess = applyProcessSetting['ProcessLead'] == '1';
+  //         // currnecy
+  //         this.currencyIDDefault = applyProcessSetting['DefaultCurrency'];
+  //       }
+  //     }
+  //   });
+  // }
   async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
@@ -870,8 +870,6 @@ export class LeadsComponent
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected.applyProcess,
-      currencyIDDefault: this.currencyIDDefault,
-      applyProcessSetting: this.applyProcess,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,

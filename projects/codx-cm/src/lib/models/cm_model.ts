@@ -750,6 +750,7 @@ export class CM_Leads {
   currencyID: string;
   exchangeRate: number;
   dealValue: number = 0;
+  permissions: CM_Permissions[] = [];
 }
 
 export class CM_Targets {
