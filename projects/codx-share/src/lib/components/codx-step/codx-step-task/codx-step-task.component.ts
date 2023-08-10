@@ -57,7 +57,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() stepId: any;
   @Input() dataSources: any;
   @Input() formModel: FormModel;
-  @Input() taskAdd: DP_Instances_Steps_Tasks;
+  @Input() taskAdd: DP_Instances_Steps_Tasks;1
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
@@ -667,16 +667,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS03': //sửa
-            if (!this.isOnlyView) {
+            if (!(this.isRoleAll || isGroup)) {
               res.disabled = true;
-            } else {
-              if (!(this.isRoleAll || isGroup)) {
-                res.disabled = true;
-              } else {
-                if (group?.isTaskDefault && !this.isEditTimeDefault) {
-                  res.disabled = true;
-                }
-              }
             }
             break;
           case 'SYS003': //đính kèm file
@@ -1285,6 +1277,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask[taskBeforeIndex]?.endDate ||
         this.currentStep?.startDate;
       taskGroup['indexNo'] = taskBeforeIndex + 1;
+    }else{
+      taskGroup['startDate'] = this.currentStep?.startDate;
+      taskGroup['indexNo'] = taskBeforeIndex + 1;
     }
     let taskOutput = await this.openPopupGroup('add', taskGroup);
     if (taskOutput?.event.groupTask) {
@@ -1406,6 +1401,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       step: this.currentStep,
       dataGroup: group || {},
       isEditTimeDefault: this.currentStep?.leadtimeControl,
+      isStart: this.isStart,
     };
     let popupTask = this.callfc.openForm(
       CodxAddGroupTaskComponent,
