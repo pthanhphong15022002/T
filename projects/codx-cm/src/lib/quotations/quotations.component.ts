@@ -414,11 +414,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.itemSelected.approveStatus=appoverStatus
         switch (appoverStatus) {
           case '5':
-            this.itemSelected.Status = '2';
+            this.itemSelected.status = '2';
             break;
           case '4':
           case '2':
-            this.itemSelected.Status = '3';
+            this.itemSelected.status = '3';
             break;
             
         }
