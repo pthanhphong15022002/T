@@ -285,7 +285,7 @@ export class PopupPermissionsComponent implements OnInit {
         (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
           this.lstPermissions[this.currentPemission]?.objectID ==
             this.data?.owner) ||
-        !this.data?.allowPermit
+        !this.data?.allowPermit || this.lstPermissions[this.currentPemission]?.memberType == '0'
       )
         return true;
     }
@@ -306,7 +306,7 @@ export class PopupPermissionsComponent implements OnInit {
       if (
         (this.lstPermissions[index]?.roleType == 'O' &&
           this.lstPermissions[index]?.objectID == this.data?.owner) ||
-        !this.data?.assign
+        !this.data?.assign || this.lstPermissions[index]?.memberType == '0'
       )
         return true;
     }
