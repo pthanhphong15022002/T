@@ -84,7 +84,7 @@ export interface IPurchaseInvoiceLine {
     cwRegisteredQty: number;
     cwDeliveredQty: number;
     autoCreated: boolean;
-    createdOn: string;
+    createdOn: Date;
     createdBy: string;
     modifiedOn: string | null;
     modifiedBy: string;
