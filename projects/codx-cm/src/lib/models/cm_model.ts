@@ -230,6 +230,7 @@ export class CM_Permissions {
   approvedOn: Date;
   autoCreate: string;
   allowUpdateStatus: string;
+  memberType: string;
 }
 
 export class CM_Customers {

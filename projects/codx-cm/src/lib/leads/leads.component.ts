@@ -451,11 +451,11 @@ export class LeadsComponent
     };
     let isClosed = (eventItem, data) => {
       //Đóng tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : true;
+      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? data.closed : true;
     };
     let isOpened = (eventItem, data) => {
       // Mở tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' ? !data.closed : true;
+      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? !data.closed : true;
     };
     let isStartDay = (eventItem, data) => {
       // Bắt đầu ngay
