@@ -33,7 +33,9 @@
               <div class="row ">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/file.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode != '3' && displayMode != '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
@@ -76,7 +78,9 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/xls.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode == '3';else tmpDefaultName">
+                      <span class="ms-2">{{data.reportName}}</span>
+                  </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
@@ -102,7 +106,9 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/doc.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode == '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
@@ -233,6 +239,9 @@
       </div>
     </div>
   </div>
+  <ng-template #tmpDefaultName>
+    <span class="ms-2">Mẫu báo cáo</span>
+  </ng-template>
 </ng-template>
 
 <ng-template #tabParam>
