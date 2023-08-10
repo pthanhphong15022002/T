@@ -87,7 +87,9 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   lockFields: string[];
   voucherNoPlaceholderText$: Observable<string>;
   acParams: any;
+
   defaultLineData: IPurchaseInvoiceLine;
+  defaultVatInvoiceData: IVATInvoice;
 
   constructor(
     inject: Injector,
@@ -173,6 +175,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
     this.getDefaultPurchaseInvoiceLine().subscribe((res) => {
       this.defaultLineData = res.data;
+    });
+
+    this.getDefaultVatInvoice().subscribe((res) => {
+      this.defaultVatInvoiceData = res.data;
     });
   }
 
@@ -590,6 +596,8 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   //#region Event VATInvoices
   onEndAddNew2(data: any): void {
+    this.vatInvoiceService.clear();
+    this.vatInvoiceService.addDatas.set(data.recID, data);
     this.vatInvoiceService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -601,6 +609,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   onEndEdit2(data: any): void {
+    this.vatInvoiceService.clear();
     this.vatInvoiceService.updateDatas.set(data.recID, data);
     this.vatInvoiceService
       .save(null, null, null, null, false)
@@ -616,11 +625,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     console.log('onActionEvent2', e);
 
     if (e.type === 'add' && this.gridVatInvoices.autoAddRow) {
-      this.vatInvoiceService
-        .addNew(() => this.getDefaultVatInvoice())
-        .subscribe((res: IPurchaseInvoiceLine) => {
-          this.gridVatInvoices.addRow(res, this.lines.length);
-        });
+      const newVatInvoice: IVATInvoice = this.createNewVatInvoice();
+      this.vatInvoiceService.clear();
+      this.vatInvoiceService.addDatas.set(newVatInvoice.recID, newVatInvoice);
+      this.gridVatInvoices.addRow(newVatInvoice, this.vatInvoices.length);
     }
   }
   //#endregion
@@ -699,15 +707,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         // later
       }
     } else {
-      this.vatInvoiceService
-        .addNew(() => this.getDefaultVatInvoice())
-        .subscribe((newVatInvoice: IVATInvoice) => {
-          if (this.journal.addNewMode === '1') {
-            this.gridVatInvoices.addRow(newVatInvoice, this.vatInvoices.length);
-          } else {
-            // later
-          }
-        });
+      const newVatInvoice: IVATInvoice = this.createNewVatInvoice();
+      this.vatInvoiceService.clear();
+      this.vatInvoiceService.addDatas.set(newVatInvoice.recID, newVatInvoice);
+      if (this.journal.addNewMode === '1') {
+        this.gridVatInvoices.addRow(newVatInvoice, this.vatInvoices.length);
+      } else {
+        // later
+      }
     }
   }
 
@@ -759,6 +766,14 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     line.createdOn = new Date();
 
     return line;
+  }
+
+  createNewVatInvoice(): IVATInvoice {
+    const vatInvoice: IVATInvoice = { ...this.defaultVatInvoiceData };
+    vatInvoice.recID = Util.uid();
+    vatInvoice.createdOn = new Date();
+
+    return vatInvoice;
   }
 
   // openPopupLine(data, type: string) {
