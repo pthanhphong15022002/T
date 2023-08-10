@@ -123,12 +123,13 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div class="d-flex flex-column w-100">
-    <span class="d-flex flex-start"
-      >{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span
-    >
-    <span class="fw-bold text-truncate">{{ data?.taskName }}</span>
-  </div>
+  <h5
+    class="fw-bold {{
+      data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'
+    }}"
+  >
+    {{ data?.taskName }}
+  </h5>
 </ng-template>
 
 <ng-template #headerTempContent>

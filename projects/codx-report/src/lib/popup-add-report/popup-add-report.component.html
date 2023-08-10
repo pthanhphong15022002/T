@@ -25,29 +25,6 @@
     </h6>
     <div class="container" id="reportInfo" *ngIf="data">
       <!-- uploader template -->
-      <!-- <div class="row mt-5">
-        <div class="col-12">
-          <div class="border border-secondary h-100">
-            <div class="m-3">
-              <ejs-uploader
-                #uploader
-                id="preloadfileupload"
-                [autoUpload]="false"
-                [multiple]="false"
-                locale="vi"
-                [allowedExtensions]="'.rdl,.rdlc'"
-                (selected)="fileSelected($event)"
-                (removing)="onFileRemove($event)"
-                (beforeUpload)="beforeUpload($event)"
-                (uploading)="uploading($event)"
-                [files]="files"
-                (fileListRendering)="fileRendering($event)"
-              >
-              </ejs-uploader>
-            </div>
-          </div>
-        </div>
-      </div> -->
       <div class="row mt-5">
         <!-- template -->
         <div class="col-4">
@@ -56,13 +33,15 @@
               <div class="row ">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/file.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode != '3' && displayMode != '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-12">
                   <div class="d-flex align-items-center justify-content-between">
-                    <button class="btn btn-light-primary" (click)="clickUpload('rdl')">
+                    <button class="btn btn-light-primary" (click)="clickUpload('0')">
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
@@ -99,13 +78,15 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/xls.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode == '3';else tmpDefaultName">
+                      <span class="ms-2">{{data.reportName}}</span>
+                  </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-12">
                   <div class="d-flex align-items-center justify-content-between">
-                    <button class="btn btn-light-primary" (click)="clickUpload('excel')">
+                    <button class="btn btn-light-primary" (click)="clickUpload('3')">
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
@@ -125,13 +106,15 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/doc.svg" class="rp_template-item_rdl">
-                  <span class="ms-2">Mẫu báo cáo</span>
+                  <ng-container *ngIf="displayMode == '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-12">
                   <div class="d-flex align-items-center justify-content-between">
-                    <button class="btn btn-light-primary" (click)="clickUpload('word')">
+                    <button class="btn btn-light-primary" (click)="clickUpload('4')">
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
@@ -149,19 +132,19 @@
       <!-- radio button -->
       <div class="row mt-5">
         <div class="col">
-          <codx-input crrValue="0" field="displayMode" type="radio" name="rdReport" label="Xem mẫu báo cáo gốc" [checked]="templateType == ''" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input crrValue="0" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem mẫu báo cáo gốc" [checked]="!displayMode || displayMode == '' || displayMode == '0'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input crrValue="1" field="displayMode" type="radio" name="rdReport" label="Xem trang in báo cáo" [checked]="templateType == 'rdl'" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input crrValue="1" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem trang in báo cáo" [checked]="displayMode == '1'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input crrValue="2" field="displayMode" type="radio" name="rdReport" label="Xem dạng PDF" [checked]="templateType == 'pdf'" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input crrValue="2" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem dạng PDF" [checked]="displayMode == '2'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input crrValue="3" field="displayMode" type="radio" name="rdReport" label="Mẫu excel" [checked]="templateType == 'excel'" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input crrValue="3" [disabled]="displayMode != '3'" field="displayMode" type="radio" name="rdReport" label="Mẫu excel" [checked]="displayMode == '3'" (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col">
-          <codx-input crrValue="4" field="displayMode" type="radio" name="rdReport" label="Mẫu word" [checked]="templateType == 'word'" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input crrValue="4" [disabled]="displayMode != '4'" field="displayMode" type="radio" name="rdReport" label="Mẫu word" [checked]="displayMode == '4'" (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
       <!-- report infor -->
@@ -256,6 +239,9 @@
       </div>
     </div>
   </div>
+  <ng-template #tmpDefaultName>
+    <span class="ms-2">Mẫu báo cáo</span>
+  </ng-template>
 </ng-template>
 
 <ng-template #tabParam>

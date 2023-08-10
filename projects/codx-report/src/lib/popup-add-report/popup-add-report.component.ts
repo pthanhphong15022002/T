@@ -136,6 +136,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   fields: any = {};
   module:any;
   rootFunction:any = null;
+  displayMode:string = "";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -186,6 +187,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       if (res) {
         this.data = res;
         this.recID = this.data.recID;
+        this.displayMode = this.data.displayMode;
         this.parameters = this.data.parameters;
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.reportContent){
@@ -256,7 +258,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
-
+    this.displayMode = "";
     this.cache.functionList(this.module)
     .subscribe((res) => {
       if (res) {
@@ -562,12 +564,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
     return new File([u8arr], filename, {type:mime});
   }
-  templateType:String = "";
-  clickUpload(type:string)
-  {
-    this.templateType = type;
 
-    if(type == "rdl")
+  clickUpload(mode:string)
+  {
+    this.displayMode = mode;
+    if(mode == "0")
     {
       let ctrl = this.uploader.element as HTMLElement;
       ctrl?.click();
@@ -586,7 +587,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           null,
           {
             action: 'add',
-            type: type,
+            type: mode == "3" ? "excel" : "word",
             refType: "RP_ReportList",
             refID: this.data.recID,
             formModel: this.dialog.formModel
@@ -597,8 +598,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           debugger;
           if(res?.event?.length > 0)
           {
-            let template = res.event[0];
-            this.data.templateID = template.recID;
+            this.data.templateID = res.event[0].recID;
           }
         })
     }

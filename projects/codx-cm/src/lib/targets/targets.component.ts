@@ -101,6 +101,7 @@ export class TargetsComponent
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
+  lstTreeSearchs = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -193,9 +194,9 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    // this.gridViewSetupTarget = await firstValueFrom(
-    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    // );
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -237,7 +238,7 @@ export class TargetsComponent
   //#endregion setting schedule
 
   //#region load tree
-  loadTreeData(year) {
+  loadTreeData(year, text = '') {
     this.loadedTree = false;
     var resource = new DataRequest();
     resource.predicates = 'Year=@0';
@@ -245,7 +246,7 @@ export class TargetsComponent
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
-    this.loadCurrentID();
+    this.loadCurrentID(text);
   }
 
   private fetch(): Observable<any[]> {
@@ -267,23 +268,7 @@ export class TargetsComponent
         })
       );
   }
-
-  viewBusinessLines(valueView) {
-    if (valueView != this.viewCurrent) {
-      this.lstDataTree = [];
-      this.countLoad++;
-      this.isShow = false;
-      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
-      this.view.button = this.showButtonAdd ? this.button : null;
-      this.currencyID = this.currencyIDSys;
-      this.exchangeRate = this.exchangeRateSys;
-      this.viewCurrent = valueView;
-      this.loadTreeData(this.year?.toString());
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  async loadCurrentID() {
+  async loadCurrentID(text = '') {
     if (this.countLoad == 0) {
       var param = await firstValueFrom(
         this.cache.viewSettingValues('CMParameters')
@@ -306,14 +291,62 @@ export class TargetsComponent
           }
           this.currencyIDSys = this.currencyID;
           this.exchangeRateSys = this.exchangeRate;
+          this.countLoad++;
         }
       }
     }
 
-    this.fetch().subscribe((item) => {
-      this.lstDataTree = item;
-      this.loadedTree = true;
-    });
+    this.lstDataTree = await firstValueFrom(this.fetch());
+    this.lstTreeSearchs = this.lstDataTree;
+    if (text != '') {
+      if (this.viewCurrent == '1') {
+        this.lstDataTree = this.lstTreeSearchs.filter(
+          (item) =>
+            (item?.businessLineID?.toLowerCase()?.indexOf(text) >= 0 &&
+              item.year == this.year) ||
+            (item?.title?.toLowerCase()?.indexOf(text) >= 0 &&
+              item.year == this.year) ||
+            item?.items?.some(
+              (x) =>
+                (x?.title?.toLowerCase()?.indexOf(text) >= 0 &&
+                  x.year == this.year) ||
+                (x?.salespersonID?.toLowerCase()?.indexOf(text) >= 0 &&
+                  x.year == this.year)
+            )
+        );
+      } else {
+        this.lstDataTree = this.lstTreeSearchs.filter(
+          (item) =>
+            (item?.title?.toLowerCase()?.indexOf(text) >= 0 &&
+              item.year == this.year) ||
+            (item?.salespersonID?.toLowerCase()?.indexOf(text) >= 0 &&
+              item.year == this.year) ||
+            item?.items?.some(
+              (x) =>
+                (x?.title?.toLowerCase()?.indexOf(text) >= 0 &&
+                  x.year == this.year) ||
+                (x?.businessLineID?.toLowerCase()?.indexOf(text) >= 0 &&
+                  x.year == this.year)
+            )
+        );
+      }
+    }
+
+    this.loadedTree = true;
+  }
+  viewBusinessLines(valueView) {
+    if (valueView != this.viewCurrent) {
+      this.lstDataTree = [];
+      this.countLoad++;
+      this.isShow = false;
+      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
+      this.view.button = this.showButtonAdd ? this.button : null;
+      this.currencyID = this.currencyIDSys;
+      this.exchangeRate = this.exchangeRateSys;
+      this.viewCurrent = valueView;
+      this.loadTreeData(this.year?.toString());
+    }
+    this.detectorRef.detectChanges();
   }
 
   isActive(item: any): boolean {
@@ -514,6 +547,8 @@ export class TargetsComponent
       },
       {
         type: ViewType.chart,
+        text: 'Lưới',
+        icon: 'icon-email',
         sameData: false,
         active: false,
         model: {
@@ -523,7 +558,13 @@ export class TargetsComponent
     ];
   }
   searchChanged(e) {
-    console.log('seasrch: ', e);
+    if (e == null || e?.trim() == '') {
+      this.loadTreeData(this.year);
+      return;
+    }
+    this.loadTreeData(this.year, e.toLowerCase());
+
+    this.detectorRef.detectChanges();
   }
 
   filterChange(e) {
@@ -653,6 +694,7 @@ export class TargetsComponent
             if (this.lstDataTree != null && this.viewMode == 9) {
               this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             }
+            this.lstTreeSearchs = this.lstDataTree;
           }
           this.isShow = false;
 
@@ -718,6 +760,7 @@ export class TargetsComponent
               if (this.lstDataTree != null && this.viewMode == 9) {
                 this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               }
+              this.lstTreeSearchs = this.lstDataTree;
             }
             // this.lstDataTree.push(Object.assign({}, data));
             this.isShow = false;
@@ -847,6 +890,7 @@ export class TargetsComponent
             this.lstDataTree[index].targetsLines = updatedItems;
           }
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+          this.lstTreeSearchs = this.lstDataTree;
         }
         this.isShow = false;
         this.detectorRef.detectChanges();
@@ -871,8 +915,8 @@ export class TargetsComponent
       });
       if (this.viewMode == 9)
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+      this.isShow = isShow;
     }
-    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 
