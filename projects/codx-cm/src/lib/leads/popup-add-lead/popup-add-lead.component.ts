@@ -313,6 +313,7 @@ export class PopupAddLeadComponent
         permission.delete = true;
         permission.upload = true;
         permission.download = true;
+        permission.memberType = '1';
         permission.allowPermit = true;
         permission.allowUpdateStatus = '1';
         this.lead.permissions.push(permission);
