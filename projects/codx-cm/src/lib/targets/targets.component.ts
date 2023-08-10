@@ -101,6 +101,7 @@ export class TargetsComponent
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
+  lstTreeSearchs = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -312,6 +313,7 @@ export class TargetsComponent
 
     this.fetch().subscribe((item) => {
       this.lstDataTree = item;
+      this.lstTreeSearchs = this.lstDataTree;
       this.loadedTree = true;
     });
   }
@@ -523,7 +525,38 @@ export class TargetsComponent
     ];
   }
   searchChanged(e) {
-    console.log('seasrch: ', e);
+    this.loadedTree = false;
+    if (e == null || e?.trim() == '') {
+      this.loadedTree = true;
+      this.lstDataTree = this.lstTreeSearchs;
+      return;
+    }
+
+    let text = e.toLowerCase();
+    if (this.viewCurrent == '1') {
+      this.lstDataTree = this.lstTreeSearchs.filter(
+        (item) =>
+          (text == item?.businessLineID?.toLowerCase() && item.year == this.year) ||
+          (text == item?.title?.toLowerCase() && item.year == this.year) ||
+          item?.items?.some(
+            (x) =>
+              (text == x?.title?.toLowerCase() && x.year == this.year) ||
+              (text == x?.salespersonID?.toLowerCase() && x.year == this.year)
+          )
+      );
+    } else {
+      this.lstDataTree = this.lstTreeSearchs.filter(
+        (item) =>
+          (text == item?.title?.toLowerCase() && item.year == this.year) ||
+          (text == item?.salespersonID?.toLowerCase() && item.year == this.year) ||  item?.items?.some(
+            (x) =>
+              (text == x?.title?.toLowerCase() && x.year == this.year) ||
+              (text == x?.businessLineID?.toLowerCase() && x.year == this.year)
+          )
+      );
+    }
+    this.loadedTree = true;
+    this.detectorRef.detectChanges();
   }
 
   filterChange(e) {
@@ -871,8 +904,8 @@ export class TargetsComponent
       });
       if (this.viewMode == 9)
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+      this.isShow = isShow;
     }
-    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 
