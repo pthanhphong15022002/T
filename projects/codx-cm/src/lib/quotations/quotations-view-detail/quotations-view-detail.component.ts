@@ -28,6 +28,7 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
   @Input() hideMF: any = false;
   @Input() formModel: FormModel;
   @Input() vllStatus = 'CRM012';
+  @Input() vllApprove: string = 'DP043';
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() eventChangeMF = new EventEmitter<any>();
   contact: any;

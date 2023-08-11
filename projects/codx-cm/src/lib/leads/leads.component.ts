@@ -106,6 +106,8 @@ export class LeadsComponent
   //endregion
 
   titleAction = '';
+  vllApprove = 'DP043';
+  vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
   viewMode = 2;
@@ -220,7 +222,7 @@ export class LeadsComponent
     try {
       this.getFuncID(this.funcID);
       this.getColorReason();
-    // this.getCurrentSetting();
+      // this.getCurrentSetting();
       this.getValuelistStatus();
     } catch (error) {}
   }
@@ -314,6 +316,10 @@ export class LeadsComponent
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.vllStatus =
+          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+        this.vllApprove =
+          this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
       }
     });
   }
@@ -451,11 +457,13 @@ export class LeadsComponent
     };
     let isClosed = (eventItem, data) => {
       //Đóng tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? data.closed : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? data.closed : true;
     };
     let isOpened = (eventItem, data) => {
       // Mở tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? !data.closed : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? !data.closed : true;
     };
     let isStartDay = (eventItem, data) => {
       // Bắt đầu ngay
@@ -1559,7 +1567,7 @@ export class LeadsComponent
     }
   }
   openFormChangeStatus(data) {
-    this.dataSelected = data
+    this.dataSelected = data;
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
@@ -1575,11 +1583,13 @@ export class LeadsComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval 
-      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
-        this.dataSelected.approveStatus=appoverStatus
-       
-      } 
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.dataSelected.approveStatus
+      ) {
+        this.dataSelected.approveStatus = appoverStatus;
+      }
       this.view.dataService.update(this.dataSelected).subscribe();
     }
   }

@@ -441,6 +441,19 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
+          <ng-container
+            *ngIf="data?.approveStatus && data?.approveStatus != '1'"
+          >
+            <codx-vll
+              [name]="vllApprove"
+              [field]="'ApproveStatus'"
+              [value]="data?.approveStatus"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-primary badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
           <div>
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
