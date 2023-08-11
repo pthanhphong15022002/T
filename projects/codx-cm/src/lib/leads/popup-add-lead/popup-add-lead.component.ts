@@ -337,7 +337,7 @@ export class PopupAddLeadComponent
       // this.itemTab(true);
     } else {
       this.getAutoNumber();
-      this.itemTab(false);
+      // this.itemTab(false);
     }
 
     this.lead.applyProcess = check;
