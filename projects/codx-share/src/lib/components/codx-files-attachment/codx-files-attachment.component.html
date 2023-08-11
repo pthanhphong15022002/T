@@ -1,0 +1,28 @@
+<codx-attachment
+#attachment
+[objectType]="entityName"
+[objectId]="objectID"
+[actionType]="'A'"
+[hideFolder]="1"
+[hideUploadBtn]="isEdit ? 0 : 1"
+[hideDes]="hideFolder"
+[type]="type"
+[allowMultiFile]="allowMultiFile"
+[formModel]="formModel"
+[functionID]="funcID"
+[dataSelected]="dataSelected"
+(fileAdded)="fileAddeds($event)"
+(fileCount)="fileCounts($event)"
+(fileSave)="fileSaves($event)"
+[displayThumb]="displayThumb"
+[isSaveSelected]="1"
+[isTab]="true"
+[hideDelete]="isEdit ? 0 : 1"
+[hideMoreF]="isEdit ? 1 : 0"
+[referType]="!referType ? 'attach' : referType"
+[addPermissions]="addPermissions"
+[isReferType]="true"
+[pageLoading]="false"
+[heightScroll]="heightScroll"
+>
+</codx-attachment>
