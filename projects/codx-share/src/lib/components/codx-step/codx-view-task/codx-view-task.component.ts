@@ -98,6 +98,12 @@ export class CodxViewTaskComponent implements OnInit {
     } else {
       this.getInstanceStepByRecID(this.dataInput?.stepID);
     }
+    this.formModelStep = {
+      entityName:"DP_Instances_Steps_Tasks",
+      formName: "DPInstancesStepsTasks",
+      funcID: "DPT040102",
+      gridViewName: "grvDPInstancesStepsTasks",
+    }
   }
 
   closePopup() {
@@ -331,7 +337,6 @@ export class CodxViewTaskComponent implements OnInit {
             if (
               !(
                 this.isRoleAll &&
-                this.isOnlyView &&
                 (this.type == 'P' || this.type == 'G')
               )
             ) {

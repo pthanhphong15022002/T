@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
-  [footer]="footer" [data]="currencies" subToolbarCss="text-end">
+  [footer]="footer" [data]="currencies" subToolbarCss="text-end" class="ac-animation-slideRight">
 </codx-form>
 
 <ng-template popup adde #body let-data>
@@ -9,7 +9,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="CurrencyID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="currencyID"
-            [crrValue]="currencies.currencyID" [disabled]="keyField == 'CurrencyID' ? true : false || formType == 'edit' ? true : false" (valueChange)="valueChange($event)">
+            [crrValue]="currencies.currencyID" [disabled]="keyField == 'CurrencyID' ? true : false || action == 'edit' ? true : false" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -103,7 +103,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
-    <div *ngIf="formType != 'edit'" class="ms-2">
+    <div *ngIf="action != 'edit'" class="ms-2">
       <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
       </button>

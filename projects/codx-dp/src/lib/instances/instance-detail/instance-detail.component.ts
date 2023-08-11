@@ -68,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() hideFooter = false;
   @Input() hideMF = false;
   @Input() applyFor: any;
+  @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
@@ -810,24 +811,28 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   handleProgressInstance(event?) {
-    let listStepConvert = this.listSteps?.filter(
-      (step) => !step.isSuccessStep && !step.isFailStep
-    );
-    if (listStepConvert?.length <= 0) {
-      this.progress = '0';
-      return;
-    }
-    if (event) {
-      let stepFind = listStepConvert?.find(
-        (step) => step.recID === event.recID
+    if(this.progressControl){
+
+    }else{
+      let listStepConvert = this.listSteps?.filter(
+        (step) => !step.isSuccessStep && !step.isFailStep
       );
-      if (stepFind) {
-        stepFind.progress = event?.progress || 0;
+      if (listStepConvert?.length <= 0) {
+        this.progress = '0';
+        return;
       }
+      if (event) {
+        let stepFind = listStepConvert?.find(
+          (step) => step.recID === event.recID
+        );
+        if (stepFind) {
+          stepFind.progress = event?.progress || 0;
+        }
+      }
+      let sumProgress = listStepConvert.reduce((sum, step) => {
+        return sum + (Number(step.progress) || 0);
+      }, 0);
+      this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
     }
-    let sumProgress = listStepConvert.reduce((sum, step) => {
-      return sum + (Number(step.progress) || 0);
-    }, 0);
-    this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
   }
 }

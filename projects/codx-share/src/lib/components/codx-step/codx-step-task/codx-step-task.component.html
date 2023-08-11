@@ -18,7 +18,9 @@
         </div>
         <!-- [ngStyle]="{color: currentStep?.iconColor}"
         [ngStyle]="{color: currentStep?.textColor}" -->
-        <span class="line-clamp line-clamp-1 fs-6 fw-bold text-primary step-name">
+        <span
+          class="line-clamp line-clamp-1 fs-6 fw-bold text-primary step-name"
+        >
           {{ currentStep.stepName || "" }}</span
         >
       </div>
@@ -75,32 +77,36 @@
         class="disabled-inline"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
         [ngClass]="
-        checkRoleUpdateProgress(currentStep, 'P')
+          checkRoleUpdateProgress(currentStep, 'P')
             ? 'cursor-pointer'
             : 'cursor-not-allowed'
         "
       >
-      <div class="progress mt-1 h-20px w-110px" [ngStyle]="setBackground(currentStep?.stepStatus)">
         <div
-        [ngStyle]="currentStep?.stepStatus == '2' ? { background: '#0078ff'} : {}"
-          class="progress-done"
-          role="progressbar"
-          [style.width]="currentStep?.stepStatus + '%'"
-          aria-valuenow="50"
-          aria-valuemin="0"
-          aria-valuemax="100"
+          class="progress mt-1 h-20px w-110px"
+          [ngStyle]="setBackground(currentStep?.stepStatus)"
         >
+          <div
+            [ngStyle]="
+              currentStep?.stepStatus == '2' ? { background: '#0078ff' } : {}
+            "
+            class="progress-done"
+            role="progressbar"
+            [style.width]="currentStep?.stepStatus + '%'"
+            aria-valuenow="50"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+          <span class="progress-text" *ngIf="currentStep?.stepStatus == '1'">
+            Mới
+          </span>
+          <span class="progress-text" *ngIf="currentStep?.stepStatus == '2'">
+            Đang thực hiện {{ currentStep?.progress || 0 }}%
+          </span>
+          <span class="progress-text" *ngIf="currentStep?.stepStatus == '3'">
+            Hoàn thành
+          </span>
         </div>
-        <span class="progress-text" *ngIf="currentStep?.stepStatus == '1'">
-          Mới
-        </span>
-        <span class="progress-text" *ngIf="currentStep?.stepStatus == '2'">
-          Đang thực hiện {{ currentStep?.progress || 0 }}%
-        </span>
-        <span class="progress-text" *ngIf="currentStep?.stepStatus == '3'">
-         Hoàn thành
-        </span>
-      </div>
         <!-- <codx-progressbar
           [progress]="currentStep?.progress || 0"
           #popoverDetails="ngbPopover"
@@ -136,7 +142,7 @@
       cdkDropList
       class="list"
       (cdkDropListDropped)="drop($event, listGroupTask, true)"
-      [ngStyle]="isShowStep && currentStep ? {'margin-right': '38px'} : {}"
+      [ngStyle]="isShowStep && currentStep ? { 'margin-right': '38px' } : {}"
     >
       <div cdkDropListGroup>
         <ng-container *ngFor="let groupTask of listGroupTask">
@@ -248,7 +254,7 @@
     style="flex-grow: 1"
   >
     <!-- show hiden group task -->
-    <span class="">
+    <span class>
       <button
         type="button"
         class="btn btn-icon btn-light-primary"
@@ -292,7 +298,9 @@
 </ng-template>
 
 <ng-template #taskTemplate let-data="value">
-  <div class="d-flex justify-content-start align-items-center has-action-menu task-hover">
+  <div
+    class="d-flex justify-content-start align-items-center has-action-menu task-hover"
+  >
     <codx-icon-step
       [typeTask]="data?.task?.taskType"
       [listTypeTask]="listTaskType"
@@ -301,11 +309,15 @@
     ></codx-icon-step>
     <div class="steplist-hearder">
       <div class="text-dark fw-bold d-flex justify-content-start">
-        <div class="task-name line-clamp line-clamp-1">{{ data?.task?.taskName }}</div>
+        <div class="task-name line-clamp line-clamp-1">
+          {{ data?.task?.taskName }}
+        </div>
         <div
           [ngClass]="checkExitsParentID(data?.group?.task, data?.task)"
           class="ms-1"
-        >*</div>
+        >
+          *
+        </div>
       </div>
       <!-- <div class="text-gray-500 fs-7" *ngIf="!isViewStep">
         <codx-label
@@ -443,17 +455,22 @@
         (mouseleave)="p.close()"
       ></codx-progressbar> -->
 
-      <div class="progress mt-1 h-20px w-110px" [ngStyle]="setBackground(data?.value?.status)">
+      <div
+        *ngIf="data?.group"
+        class="progress mt-1 h-20px w-110px"
+        [ngStyle]="setBackground(data?.value?.status)"
+      >
         <div
-        [ngStyle]="data?.value?.status == '2' ? { background: '#0078ff'} : {}"
+          [ngStyle]="
+            data?.value?.status == '2' ? { background: '#0078ff' } : {}
+          "
           class="progress-done"
           role="progressbar"
           [style.width]="data?.value?.progress + '%'"
           aria-valuenow="50"
           aria-valuemin="0"
           aria-valuemax="100"
-        >
-        </div>
+        ></div>
         <span class="progress-text" *ngIf="data?.value?.status == '1'">
           Mới
         </span>
@@ -461,10 +478,43 @@
           Đang thực hiện {{ data?.value?.progress || 0 }}%
         </span>
         <span class="progress-text" *ngIf="data?.value?.status == '3'">
-         Hoàn thành
+          Hoàn thành
+        </span>
+      </div>
+
+      <div
+        *ngIf="!data?.group"
+        class="progress mt-1 h-20px w-110px"
+        [ngStyle]="setBackgroundGroup(data?.value)"
+      >
+        <div
+          [ngStyle]="
+            data?.value?.progress < 100 && data?.value?.progress > 0
+              ? { background: '#0078ff' }
+              : {}
+          "
+          class="progress-done"
+          role="progressbar"
+          [style.width]="data?.value?.progress + '%'"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+        <span class="progress-text" *ngIf="data?.value?.progress == 0">
+          Mới
+        </span>
+        <span
+          class="progress-text"
+          *ngIf="data?.value?.progress < 100 && data?.value?.progress > 0"
+        >
+          Đang thực hiện {{ data?.value?.progress || 0 }}%
+        </span>
+        <span class="progress-text" *ngIf="data?.value?.progress == 100">
+          Hoàn thành
         </span>
       </div>
     </div>
+
     <!-- <div class="notify ms-3" *ngIf="isShowFile">
       <codx-attachment-temp
         [objectID]="data?.value.refID"
@@ -513,11 +563,9 @@
     style="max-height: 400px; overflow: auto"
     *ngIf="currentStep"
   >
-  <div
+    <div
       *ngIf="currentStep?.memo"
-      [innerHTML]="
-      currentStep?.memo | formatvalue : formModel : 'Memo' | async
-    "
+      [innerHTML]="currentStep?.memo | formatvalue : formModel : 'Memo' | async"
     ></div>
   </div>
 </ng-template>

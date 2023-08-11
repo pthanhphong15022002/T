@@ -183,7 +183,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       emitEvent: false,
     });
     this.setTabindex();
-    this.onFocus();
+    //this.onFocus();
   }
   //#endregion
 
@@ -296,7 +296,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e: any) {
-    if (e && e.data) {
+    if (e && e.data && this.cashpayment[e.field] != e.data) {
       this.cashpayment[e.field] = e.data;
       this.cashpayment.updateColumn = e.field;
       let preValue = null;

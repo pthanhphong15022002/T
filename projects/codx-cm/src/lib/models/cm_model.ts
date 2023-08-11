@@ -178,6 +178,7 @@ export class CM_Deals {
   consultantID: string;
   processID: string;
   startDate: Date;
+  permissions: CM_Permissions[];
   endDate: Date;
   // datas: Json; hỏi kiểu dữ liệu sau
   owner: string;
