@@ -45,6 +45,7 @@ export class TargetsComponent
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
   //schedule view
+  @ViewChild('codxInput') codxInput: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -427,6 +428,8 @@ export class TargetsComponent
       }
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
+      this.codxInput.crrValue = this.currencyID;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -682,6 +685,7 @@ export class TargetsComponent
         if (e != null && e?.event != null) {
           var data = e?.event[0];
           if (data.year == this.year) {
+
             var index = this.lstTreeSearchs.findIndex(
               (x) => x.businessLineID == data?.businessLineID
             );
@@ -746,6 +750,7 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             var data = e?.event[0];
             if (data.year == this.year) {
+              this.view.dataService.update(data).subscribe();
               var index = this.lstTreeSearchs.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
               );
