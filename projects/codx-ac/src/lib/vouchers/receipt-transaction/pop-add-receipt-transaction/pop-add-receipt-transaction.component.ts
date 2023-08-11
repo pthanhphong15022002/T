@@ -119,9 +119,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.formType = dialogData.data?.formType;
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
+    this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
     if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
       this.lockFields = [...dialogData?.data.lockFields];
+    }
+    if(this.journal)
+    {
+      this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
     this.cache
@@ -691,23 +696,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
-    this.loadJournal();
-  }
-
-  loadJournal(){
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.vouchers.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.modeGrid = this.journal.addNewMode;
-    });
   }
 
   loadTotal() {
