@@ -3,7 +3,7 @@
     <div *ngFor="let item of files" class="d-flex justify-content-between align-items-center mb-2">
       <div *ngIf="(item.data != null) then data else nodata"></div>
       <ng-template #data>
-        <div class="has-action-menu-1 d-flex align-items-center  w-100">
+        <div class="has-action-menu-1 d-flex align-items-center  w-100 position-relative">
           <div (dblclick)="openFile(item.data)" class="cursor-pointer">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <ng-template #simple>
@@ -90,7 +90,7 @@
       </ng-template>
       <ng-template #nodata>
         <div class="cursor-pointer d-flex justify-content-between align-items-center w-100">
-          <div class="has-action-menu-1 d-flex align-items-center w-100">
+          <div class="has-action-menu-1 d-flex align-items-center w-100 position-relative">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">
               <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="(hideDelete=='0' && !isReferType) || (isReferType && item.referType != 'source')"
