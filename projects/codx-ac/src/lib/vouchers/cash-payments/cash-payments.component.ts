@@ -291,11 +291,11 @@ export class CashPaymentsComponent extends UIComponent {
         .subscribe((res) => {
           if (res) {
             this.oCash.data.voucherNo = res;
-            this.openVoucher();
+            this.addNewVoucher();
           }
         });
     } else {
-      this.openVoucher();
+      this.addNewVoucher();
     }
   }
 
@@ -331,6 +331,8 @@ export class CashPaymentsComponent extends UIComponent {
         formType: 'copy',
         headerText: this.funcName,
         journal: { ...this.journal },
+        hideFields: [...this.hideFields],
+        baseCurr: this.baseCurr,
       };
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -886,7 +888,7 @@ export class CashPaymentsComponent extends UIComponent {
       opt
     );
   }
-  openVoucher() {
+  addNewVoucher() {
     this.headerText = this.funcName;
     this.view.dataService.dataSelected = { ...this.oCash.data };
     let obj = {
@@ -906,6 +908,9 @@ export class CashPaymentsComponent extends UIComponent {
       option,
       this.view.funcID
     );
+  }
+  copyVoucher(){
+
   }
   //#endregion
 }

@@ -183,8 +183,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.tab.hideTab(1, this.master.subType !== '2');
-
     // prevent readonly input and codx-tabs from being focused
     setTimeout(() => {
       const inputEls: HTMLInputElement[] = Array.from(
@@ -228,6 +226,10 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.copyRow(data, dataService, grid, dataSource);
         break;
     }
+  }
+
+  onTabCreated(e, tab: TabComponent): void {
+    tab.hideTab(1, this.master.subType !== '2');
   }
 
   /**
@@ -477,12 +479,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Event PurchaseInvoicesLines
   onEndAddNew(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    line.unbounds = {
-      invoiceForm: this.master.invoiceForm,
-      invoiceSeriNo: this.master.invoiceSeriNo,
-      invoiceNo: this.master.invoiceNo,
-      invoiceDate: this.master.invoiceDate,
-    };
+    // line.unbounds = {
+    //   invoiceForm: this.master.invoiceForm,
+    //   invoiceSeriNo: this.master.invoiceSeriNo,
+    //   invoiceNo: this.master.invoiceNo,
+    //   invoiceDate: this.master.invoiceDate,
+    // };
     this.purchaseInvoiceLineService.updateDatas.clear();
     this.purchaseInvoiceLineService.addDatas.set(line.recID, line); // ❓ wtf
     this.purchaseInvoiceLineService
@@ -499,12 +501,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndEdit(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    line.unbounds = {
-      invoiceForm: this.master.invoiceForm,
-      invoiceSeriNo: this.master.invoiceSeriNo,
-      invoiceNo: this.master.invoiceNo,
-      invoiceDate: this.master.invoiceDate,
-    };
+    // line.unbounds = {
+    //   invoiceForm: this.master.invoiceForm,
+    //   invoiceSeriNo: this.master.invoiceSeriNo,
+    //   invoiceNo: this.master.invoiceNo,
+    //   invoiceDate: this.master.invoiceDate,
+    // };
     this.purchaseInvoiceLineService.addDatas.clear();
     this.purchaseInvoiceLineService.updateDatas.set(line.recID, line);
     this.purchaseInvoiceLineService
