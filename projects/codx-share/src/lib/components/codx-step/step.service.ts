@@ -188,9 +188,9 @@ export class StepService {
         }
         return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
       } else {
-        if(dataUpdate?.status == "1"){
-          return false;
-        }
+        // if(dataUpdate?.status == "1"){
+        //   return false;
+        // }
         let isGroup = false;
         let isTask = false;
         if (!isRoleAll) {

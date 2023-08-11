@@ -231,9 +231,9 @@
      width: 10px;
      border-left: 1px var(--gray-300) dotted;
      position: absolute;
-     top: 35px;
+     top: 30px;
      left: 15px;
-     bottom: 25px;
+     bottom: 22px;
    }
    .cdk-drop-list.task .cdk-drag.drap-drop{
      position: relative;
@@ -244,7 +244,7 @@
      width: 20px;
      border-top: 1px var(--gray-300) dotted;
      position: absolute;
-     top: 20px;
+     top: 14px;
      left: -19px;
      height: 10px;
    }
@@ -298,4 +298,26 @@ li {
 
 .task-hover:hover > .steplist-hearder .task-name{
   color: var(--primary-dark)!important;
+}
+.progress{
+  border-radius: 10px;
+  // background-color: #d1d1d1;
+  position: relative;
+  .progress-done {
+    // background: linear-gradient(to left, #F2709C, #FF9472);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    transition: 1s ease 0.3s;
+  }
+  .progress-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    color: #fff;
+  }
 }
