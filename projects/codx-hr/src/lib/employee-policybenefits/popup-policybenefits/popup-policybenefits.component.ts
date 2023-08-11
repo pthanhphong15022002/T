@@ -33,6 +33,10 @@ implements OnInit{
   lstPolicyBeneficiariesApply: any = []
   lstPolicyBeneficiariesExclude: any = []
 
+  constraintKowDisabled = true;
+  constraintKow = false
+  expandContraintKow = false;
+
   lstOrgUnitID: any = []
   lstJobLevel: any = []
   lstPositionID: any = []
@@ -44,9 +48,17 @@ implements OnInit{
 
   lstSelectedObj: any = [];
   lstSelectedExcludeObj: any = [];
+  lstSelectedConstraintBy: any =[];
+
+  lstKow: any = [];
+  lstMinKows: any = [];
+  lstMaxKows: any = [];
 
   isHidden = true;
   isHidden2 = true;
+  isHidden3 = true;
+  isHiddenCbxMinKows = true;
+  isHiddenCbxMaxKows = true;
 
   fmPolicyBeneficiaries: FormModel = {
     formName: 'PolicyBeneficiaries',
@@ -54,8 +66,21 @@ implements OnInit{
     entityName: 'HR_PolicyBeneficiaries',
   };
 
+  fmPolicyConstraints: FormModel = {
+    formName: 'PolicyConstraints',
+    gridViewName: 'grvPolicyConstraints',
+    entityName: 'HR_PolicyConstraints',
+  };
+  
+  formGroupPolicyConstraints;
+
+  fmKow: FormModel = {
+
+  };
+
   grvSetup
   grvSetupPolicyDetail
+  grvSetupPolicyConstraint
   benefitFuncID = 'HRTEM0403'
 
   fieldHeaderTexts;
@@ -113,6 +138,16 @@ implements OnInit{
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('PolicyConstraints', 'grvPolicyConstraints').subscribe((res) => {
+      this.grvSetupPolicyConstraint = res;
+    })
+    this.hrSevice
+            .getFormGroup(this.fmPolicyConstraints.formName, this.fmPolicyConstraints.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroupPolicyConstraints = fg;
+              }
+            });
     if(!this.benefitFormModel){
       this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
         if(formModel){
@@ -152,12 +187,79 @@ implements OnInit{
     this.currentTab = event.nextId;
   }
 
+  onClickOpenVllIsConstraintOther(){
+    if(this.benefitPolicyObj.isConstraintOther){
+      let opt = new DialogModel();
+      let popup = this.callfunc.openForm(
+        PopupMultiselectvllComponent,
+        null,
+        400,
+        450,
+        null,
+        {
+          headerText: 'Chọn điều kiện áp dụng',
+          vllName : this.grvSetup.ConstraintBy.referedValue,
+          formModel: this.formModel,
+          dataSelected: this.benefitPolicyObj.constraintBy
+        },
+        null,
+        opt
+      );
+      popup.closed.subscribe((res) => {
+        if(res.event){
+          this.benefitPolicyObj.constraintBy = res.event
+          this.lstSelectedConstraintBy = res.event.split(';')
+          console.log('lst constraint', this.lstSelectedConstraintBy);
+          
+          this.df.detectChanges();
+        }
+      });
+    }
+  }
+
+  ValChangeIsAdjustKow(event){
+    let hasKow = event.data;
+
+    if(hasKow == false){
+      this.benefitPolicyObj.isAdjustKow = false;
+      this.isHidden = true;
+    }
+  }
+
+  ValChangeIsConstraintOther(event){
+    let constraintOther = event.data;
+
+    if(constraintOther == false){
+      this.benefitPolicyObj.isConstraintOther = false;
+    }
+    else{
+      this.benefitPolicyObj.isConstraintOther = true;
+    }
+  }
+
   ValChangeHasInclueObj(event){
     let flag = event.data;
 
     if(flag == false){
       this.benefitPolicyObj.hasIncludeObjects = false;
     }
+  }
+
+  ValChangeContraintKow(event){
+    
+    if(event.data == true){
+      this.expandContraintKow = true;
+      this.constraintKowDisabled = false;
+    }
+    else{
+      this.expandContraintKow = false;
+      this.constraintKowDisabled = true;
+    }
+    this.df.detectChanges();
+  }
+
+  onClickExpandConstaintKow(){
+    this.expandContraintKow = !this.expandContraintKow;
   }
 
   swap(afterIndex, lstData){
@@ -678,6 +780,75 @@ implements OnInit{
     this.detectorRef.detectChanges();
   }
 
+  onClickHideComboboxPopup3(e): void {
+    if(e == null){
+      this.isHidden3 = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.adjustKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.adjustKows = null;
+    }
+    this.isHidden3 = true;
+
+    if(this.benefitPolicyObj.adjustKows){
+      this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
+    }
+    else{
+      this.lstKow = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickHideComboboxMinKows(e): void {
+    if(e == null){
+      this.isHiddenCbxMinKows = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.minKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.minKows = null;
+    }
+    this.isHiddenCbxMinKows = true;
+
+    if(this.benefitPolicyObj.minKows){
+      this.lstMinKows = this.benefitPolicyObj.minKows.split(';')
+    }
+    else{
+      this.lstMinKows = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickHideComboboxMaxKows(e): void {
+    if(e == null){
+      this.isHiddenCbxMaxKows = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.maxKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.maxKows = null;
+    }
+    this.isHiddenCbxMaxKows = true;
+
+    if(this.benefitPolicyObj.maxKows){
+      this.lstMaxKows = this.benefitPolicyObj.maxKows.split(';')
+    }
+    else{
+      this.lstMaxKows = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
   onClickOpenSelectIncludeBenefits(){
     if(this.benefitPolicyObj.hasIncludeBenefits){
       this.isHidden2 = false;
@@ -925,6 +1096,23 @@ implements OnInit{
         })
       }
     }
+}
+onClickOpenCbxKow(){
+  if(this.benefitPolicyObj.isAdjustKow){
+    this.isHidden3 = false;
+  }
+}
+
+onClickOpenCbxMinKows(){
+  if(this.benefitPolicyObj.isConstraintKow){
+    this.isHiddenCbxMinKows = false;
+  }
+}
+
+onClickOpenCbxMaxKows(){
+  if(this.benefitPolicyObj.isConstraintKow){
+    this.isHiddenCbxMaxKows = false;
+  }
 }
 
   //#region apis
