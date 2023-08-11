@@ -78,7 +78,6 @@ export class PopupAddDealComponent
   listParticipants: any[] = [];
   listOrgs: any[] = [];
 
-
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -115,7 +114,7 @@ export class PopupAddDealComponent
   //type any
   gridViewSetup: any;
   listProcess: any;
-  user:any;
+  user: any;
   owner: any;
   dateMessage: any;
   dateMax: any;
@@ -144,8 +143,9 @@ export class PopupAddDealComponent
 
   // load data form DP
   isLoading: boolean = false;
-  isBlock:boolean = true;
+  isBlock: boolean = true;
   currencyIDOld: string;
+  idxCrr: any = -1;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -172,8 +172,10 @@ export class PopupAddDealComponent
         this.deal = dt?.data?.dataCM;
       }
     } else {
-      this.deal = this.action != this.actionAdd? JSON.parse(JSON.stringify(dialog.dataService.dataSelected)): this.deal;
-
+      this.deal =
+        this.action != this.actionAdd
+          ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
+          : this.deal;
     }
 
     if (dt?.data.processID) {
@@ -190,14 +192,24 @@ export class PopupAddDealComponent
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
     }
-    if(this.action === this.actionAdd)
-    {
-     this.currencyIDDefault = dt?.data?.currencyIDDefault;
-     this.deal.currencyID = this.currencyIDDefault;
+    if (this.action === this.actionAdd) {
+      this.currencyIDDefault = dt?.data?.currencyIDDefault;
+      this.deal.currencyID = this.currencyIDDefault;
     }
   }
 
   onInit(): void {}
+
+  ngAfterViewInit(): void {
+    if (this.action == 'add') {
+      this.tabInfo = [this.menuGeneralInfo, this.menuGeneralContact];
+      this.tabContent = [
+        this.tabGeneralInfoDetail,
+        this.tabGeneralContactDetail,
+      ];
+    }
+  }
+
   valueChange($event) {
     if ($event) {
       this.deal[$event.field] = $event.data;
@@ -208,7 +220,7 @@ export class PopupAddDealComponent
           this.customerOld = this.customerID;
           this.deal.customerID = this.customerID;
           this.customerName = $event.component.itemsSelected[0].CustomerName;
-          if(!this.deal.dealName?.trim()) {
+          if (!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerName;
           }
           this.getListContactByObjectID(this.customerID);
@@ -247,7 +259,7 @@ export class PopupAddDealComponent
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
 
-  lstContactDeleteEmit(e){
+  lstContactDeleteEmit(e) {
     this.lstContactDelete = e;
   }
 
@@ -386,7 +398,7 @@ export class PopupAddDealComponent
   }
 
   saveOpportunity() {
-    if(!this.isBlock) return;
+    if (!this.isBlock) return;
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -545,31 +557,40 @@ export class PopupAddDealComponent
     if ($event && $event.data) {
       this.deal.businessLineID = $event.data;
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-        if(!$event.component?.itemsSelected[0]?.ProcessID && !this.processIdDefault ){
+        if (
+          !$event.component?.itemsSelected[0]?.ProcessID &&
+          !this.processIdDefault
+        ) {
           this.getParamatersProcessDefault();
-        }
-        else {
-          var processId = !$event.component.itemsSelected[0].ProcessID && this.processIdDefault? this.processIdDefault: $event.component.itemsSelected[0].ProcessID;
+        } else {
+          var processId =
+            !$event.component.itemsSelected[0].ProcessID &&
+            this.processIdDefault
+              ? this.processIdDefault
+              : $event.component.itemsSelected[0].ProcessID;
           if (processId) {
             this.deal.processID = processId;
             var result = this.checkProcessInList(processId);
             if (result) {
               this.listParticipants = null;
               this.listInstanceSteps = result?.steps;
-              this.listParticipants = JSON.parse(JSON.stringify(result?.permissions));
+              this.listParticipants = JSON.parse(
+                JSON.stringify(result?.permissions)
+              );
               this.deal.dealID = result?.dealId;
               this.deal.endDate = this.HandleEndDate(
                 this.listInstanceSteps,
                 this.action,
                 null
               );
-              this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
-              if(this.listParticipants.length > 0 && this.listParticipants) {
-                var index = this.listParticipants.findIndex(x=>x.userID ===  this.user.userID);
-                if(index != -1) {
+              this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+              if (this.listParticipants.length > 0 && this.listParticipants) {
+                var index = this.listParticipants.findIndex(
+                  (x) => x.userID === this.user.userID
+                );
+                if (index != -1) {
                   this.owner = this.user.userID;
-                }
-                else {
+                } else {
                   this.owner = null;
                 }
               }
@@ -627,17 +648,13 @@ export class PopupAddDealComponent
     return true;
   }
 
-  ngAfterViewInit(): void {
-    this.tabInfo = [this.menuGeneralInfo, this.menuGeneralContact];
-    this.tabContent = [
-      this.tabGeneralInfoDetail,
-      this.tabGeneralContactDetail,
-      this.tabCustomFieldDetail,
-    ];
-  }
   async executeApiCalls() {
     try {
-      this.isLoading && (await this.getGridViewSetup(this.formModel.formName, this.formModel.gridViewName));
+      this.isLoading &&
+        (await this.getGridViewSetup(
+          this.formModel.formName,
+          this.formModel.gridViewName
+        ));
       if (this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
       }
@@ -654,9 +671,9 @@ export class PopupAddDealComponent
     } catch (error) {}
   }
   async getParamatersProcessDefault() {
-    this.codxCmService.getListProcessDefault(['1']).subscribe((res)=>{
-      if(res) {
-        this.processIdDefault = res.recID
+    this.codxCmService.getListProcessDefault(['1']).subscribe((res) => {
+      if (res) {
+        this.processIdDefault = res.recID;
         this.deal.processID = this.processIdDefault;
         this.getListInstanceSteps(this.processIdDefault);
       }
@@ -689,9 +706,7 @@ export class PopupAddDealComponent
                   this.action,
                   null
                 );
-                this.removeItemInTab(
-                  this.ischeckFields(this.listInstanceSteps)
-                );
+                this.itemTabs(this.ischeckFields(this.listInstanceSteps));
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.getListInstanceSteps(this.deal.processID);
@@ -704,7 +719,7 @@ export class PopupAddDealComponent
   async getListInstanceSteps(processId: any) {
     processId =
       this.action === this.actionCopy ? this.deal.processID : processId;
-      var data = [processId, this.deal?.refID, this.action, '1'];
+    var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
@@ -718,7 +733,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = null;
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
@@ -729,17 +744,17 @@ export class PopupAddDealComponent
             this.action,
             null
           );
-          if(this.listParticipants.length > 0 && this.listParticipants) {
-            var index = this.listParticipants.findIndex(x=>x.userID ===  this.user.userID);
-            if(index != -1) {
+          if (this.listParticipants.length > 0 && this.listParticipants) {
+            var index = this.listParticipants.findIndex(
+              (x) => x.userID === this.user.userID
+            );
+            if (index != -1) {
               this.owner = this.user.userID;
-            }
-            else {
+            } else {
               this.owner = null;
             }
           }
           this.deal.dealID = res[2];
-
         }
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
@@ -752,7 +767,7 @@ export class PopupAddDealComponent
   }
 
   async insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance ];
+    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
@@ -919,28 +934,49 @@ export class PopupAddDealComponent
     return this.gridViewSetup[field]?.h;
   }
 
+  // --------------------------lOad Tabs ----------------------- //
+  itemTabs(check: boolean): void {
+    if (check) {
+      this.tabInfo = [
+        this.menuGeneralInfo,
+        this.menuGeneralContact,
+        this.menuInputInfo,
+      ];
+      this.tabContent = [
+        this.tabGeneralInfoDetail,
+        this.tabGeneralContactDetail,
+        this.tabCustomFieldDetail,
+      ];
+    } else {
+      this.tabInfo = [this.menuGeneralInfo, this.menuGeneralContact];
+      this.tabContent = [
+        this.tabGeneralInfoDetail,
+        this.tabGeneralContactDetail,
+      ];
+    }
+  }
   ischeckFields(steps: any): boolean {
-    if (steps?.length > 0 && steps != null) {
-      for (let i = 0; i < steps.length; i++) {
-        if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
-          return true;
+    if (steps?.length > 0) {
+      if (this.action != 'edit') {
+        if (steps[0].fields?.length > 0) return true;
+        return false;
+      }
+      let check = false;
+      this.idxCrr = steps.findIndex((x) => x.stepID == this.deal.stepID);
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (steps[i]?.fields?.length > 0) {
+            check = true;
+            break;
+          }
         }
       }
+      return check;
     }
     return false;
   }
+  //----------------------------end---------------------------//
 
-  removeItemInTab(isRemove: boolean): void {
-    if (isRemove) {
-      if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) == -1) {
-        this.tabInfo.push(this.menuInputInfo);
-      }
-    } else {
-      if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) != -1) {
-        this.tabInfo.pop();
-      }
-    }
-  }
   setTitle(e: any) {
     this.title = this.titleAction;
     this.changeDetectorRef.detectChanges();
@@ -984,32 +1020,30 @@ export class PopupAddDealComponent
 
   loadExchangeRate() {
     let day = this.deal.createdOn ?? new Date();
-    if(this.deal.currencyID) {
+    if (this.deal.currencyID) {
       this.codxCmService
-      .getExchangeRate(this.deal.currencyID, day)
-      .subscribe((res) => {
-        let exchangeRateNew = res?.exchRate ?? 0;
-        if (exchangeRateNew == 0) {
-          this.notificationsService.notify(
-            'Tỷ giá tiền tệ "' +
-              this.deal.currencyID +
-              '" chưa thiết lập xin hay chọn lại !',
-            '3'
-          );
-          this.form.formGroup.patchValue(this.deal);
-          return;
-        }
-        else {
-          this.deal.exchangeRate = exchangeRateNew;
-        }
-      });
+        .getExchangeRate(this.deal.currencyID, day)
+        .subscribe((res) => {
+          let exchangeRateNew = res?.exchRate ?? 0;
+          if (exchangeRateNew == 0) {
+            this.notificationsService.notify(
+              'Tỷ giá tiền tệ "' +
+                this.deal.currencyID +
+                '" chưa thiết lập xin hay chọn lại !',
+              '3'
+            );
+            this.form.formGroup.patchValue(this.deal);
+            return;
+          } else {
+            this.deal.exchangeRate = exchangeRateNew;
+          }
+        });
     }
   }
   valueTagChange(e) {
     this.deal.tags = e.data;
   }
-  addFileCompleted(e){
+  addFileCompleted(e) {
     this.isBlock = e;
-
   }
 }
