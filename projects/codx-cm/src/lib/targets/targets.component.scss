@@ -27,13 +27,15 @@
 }
 
 .height-child-user{
-  height: 25px !important;
-  line-height: 25px;
+  height: 27px !important;
+  line-height: 27px;
+  .text-gray-800{
+    color: var(--gray-600)!important;
+  }
 }
 
 .height-child{
-  height: 50px !important;
-  border-bottom: 1px var(--gray-100) solid;
+  height: 45px !important;
 }
 .overflow-ellipsis {
   white-space: nowrap;
@@ -44,6 +46,9 @@
 .overflow-ellipsis:hover {
   white-space: normal;
   overflow: visible;
+}
+.pt-5px{
+  padding-top: 5px!important;
 }
 
 .view-switch .btn{
