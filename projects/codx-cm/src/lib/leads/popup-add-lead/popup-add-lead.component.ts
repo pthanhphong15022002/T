@@ -198,19 +198,7 @@ export class PopupAddLeadComponent
 
   onInit(): void {}
 
-  ngAfterViewInit(): void {
-    // this.tabInfo = [
-    //   this.menuGeneralInfo,
-    //   this.menuGeneralSystem,
-    //   this.menuGeneralContact,
-    // ];
-    // this.tabContent = [
-    //   this.tabGeneralInfoDetail,
-    //   this.tabGeneralSystemDetail,
-    //   this.tabGeneralContactDetail,
-    //   this.tabCustomFieldDetail,
-    // ];
-  }
+  ngAfterViewInit(): void {}
 
   valueChange($event) {
     if ($event && $event.data) {
@@ -348,8 +336,8 @@ export class PopupAddLeadComponent
       // this.itemTab(true);
     } else {
       this.getAutoNumber();
-      this.itemTab(false);
     }
+    this.itemTab(false);
     this.lead.applyProcess = check;
   }
   async getAutoNumber() {
@@ -451,29 +439,22 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-    try {
-      if (this.avatarChangeLead) {
-        await this.saveFileLead(this.leadId);
-      }
-      if (this.avatarChangeContact) {
-        await this.saveFileContact(this.contactId);
-      }
-      if (this.isLoading) {
+
+    if (this.avatarChangeLead) {
+      await this.saveFileLead(this.leadId);
+    }
+    if (this.avatarChangeContact) {
+      await this.saveFileContact(this.contactId);
+    }
+    if (this.isLoading) {
+    } else {
+      if (this.action !== this.actionEdit) {
+        this.lead.applyProcess && (await this.insertInstance());
+        await this.onAdd();
       } else {
-        if (this.action !== this.actionEdit) {
-          this.lead.applyProcess && (await this.insertInstance());
-          await this.onAdd();
-        } else {
-          this.lead.applyProcess && (await this.editInstance());
-          await this.onEdit();
-        }
+        this.lead.applyProcess && (await this.editInstance());
+        await this.onEdit();
       }
-    } catch (error) {
-      // if (this.action !== this.actionEdit) {
-      //   this.onAdd();
-      // } else {
-      //   this.onEdit();
-      // }
     }
   }
 
@@ -523,29 +504,26 @@ export class PopupAddLeadComponent
   }
 
   async executeApiCalls() {
-    try {
-      if (this.action === this.actionAdd) {
-        let res = await firstValueFrom(
-          this.codxCmService.getParam('CMParameters', '1')
-        );
-        if (res?.dataValue) {
-          let dataValue = JSON.parse(res?.dataValue);
-          this.currencyIDDefault = dataValue?.DefaultCurrency;
-          this.applyProcess = dataValue?.ProcessLead == '1';
-        }
-        this.lead.currencyID = this.currencyIDDefault;
-        this.lead.applyProcess = this.applyProcess;
-        this.checkApplyProcess(this.lead.applyProcess);
+    if (this.action === this.actionAdd) {
+      let res = await firstValueFrom(
+        this.codxCmService.getParam('CMParameters', '1')
+      );
+      if (res?.dataValue) {
+        let dataValue = JSON.parse(res?.dataValue);
+        this.currencyIDDefault = dataValue?.DefaultCurrency;
+        this.applyProcess = dataValue?.ProcessLead == '1';
       }
-
-      !this.lead.applyProcess &&
-        this.action !== this.actionEdit &&
-        this.getAutoNumber();
+      this.lead.currencyID = this.currencyIDDefault;
+      this.lead.applyProcess = this.applyProcess;
+      this.checkApplyProcess(this.lead.applyProcess);
+    } else {
+      if (!this.lead.applyProcess) {
+        if (this.action !== this.actionEdit) this.getAutoNumber();
+        this.itemTab(false);
+      }
 
       this.lead.applyProcess &&
         (await this.getListInstanceSteps(this.lead.processID));
-    } catch (error) {
-      console.error('Error executing API calls:', error);
     }
   }
   async getListInstanceSteps(processId: any) {
@@ -569,6 +547,7 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
+        debugger;
         this.itemTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
@@ -645,6 +624,7 @@ export class PopupAddLeadComponent
   }
   // an tat theo truong tuy chinh
   itemTab(check: boolean): void {
+    debugger;
     if (check) {
       this.tabInfo = [
         this.menuGeneralInfo,
@@ -708,10 +688,6 @@ export class PopupAddLeadComponent
   // covnert data CM -> data DP
 
   //#endregion
-
-  isRequired(field: string) {
-    return this.gridViewSetup[field]?.h;
-  }
 
   setTitle(e: any) {
     this.title = this.titleAction;
