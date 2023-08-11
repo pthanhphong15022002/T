@@ -154,6 +154,7 @@ export class PopupAddLeadComponent
   disabledShowInput: boolean = true;
   isExist: boolean = false;
   applyProcess: boolean = true;
+  idxCrr: any = -1;
 
   constructor(
     private inject: Injector,
@@ -196,6 +197,8 @@ export class PopupAddLeadComponent
   }
 
   onInit(): void {}
+
+  ngAfterViewInit(): void {}
 
   valueChange($event) {
     if ($event && $event.data) {
@@ -313,6 +316,7 @@ export class PopupAddLeadComponent
         permission.delete = true;
         permission.upload = true;
         permission.download = true;
+        permission.isActive = true;
         permission.memberType = '1';
         permission.allowPermit = true;
         permission.allowUpdateStatus = '1';
@@ -327,16 +331,15 @@ export class PopupAddLeadComponent
   }
 
   checkApplyProcess(check: boolean) {
-
     if (check) {
-      this.lead.leadID = this.leadNoProcess;
       this.planceHolderAutoNumber = this.leadNoProcess;
       this.disabledShowInput = true;
-      this.removeItemInTab(true);
+      // this.itemTab(true);
     } else {
       this.getAutoNumber();
-      this.removeItemInTab(false);
+      this.itemTab(false);
     }
+
     this.lead.applyProcess = check;
   }
   async getAutoNumber() {
@@ -438,29 +441,22 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-    try {
-      if (this.avatarChangeLead) {
-        await this.saveFileLead(this.leadId);
-      }
-      if (this.avatarChangeContact) {
-        await this.saveFileContact(this.contactId);
-      }
-      if (this.isLoading) {
+
+    if (this.avatarChangeLead) {
+      await this.saveFileLead(this.leadId);
+    }
+    if (this.avatarChangeContact) {
+      await this.saveFileContact(this.contactId);
+    }
+    if (this.isLoading) {
+    } else {
+      if (this.action !== this.actionEdit) {
+        this.lead.applyProcess && (await this.insertInstance());
+        await this.onAdd();
       } else {
-        if (this.action !== this.actionEdit) {
-          this.lead.applyProcess && (await this.insertInstance());
-          await this.onAdd();
-        } else {
-          this.lead.applyProcess && (await this.editInstance());
-          await this.onEdit();
-        }
+        this.lead.applyProcess && (await this.editInstance());
+        await this.onEdit();
       }
-    } catch (error) {
-      // if (this.action !== this.actionEdit) {
-      //   this.onAdd();
-      // } else {
-      //   this.onEdit();
-      // }
     }
   }
 
@@ -509,40 +505,28 @@ export class PopupAddLeadComponent
     return true;
   }
 
-  ngAfterViewInit(): void {
-    this.tabInfo = [
-      this.menuGeneralInfo,
-      this.menuGeneralSystem,
-      this.menuGeneralContact,
-    ];
-    this.tabContent = [
-      this.tabGeneralInfoDetail,
-      this.tabGeneralSystemDetail,
-      this.tabGeneralContactDetail,
-      this.tabCustomFieldDetail,
-    ];
-  }
   async executeApiCalls() {
-    try {
-      if (this.action === this.actionAdd) {
-        let res = await firstValueFrom(
-          this.codxCmService.getParam('CMParameters', '1')
-        );
-        if (res?.dataValue) {
-          let dataValue = JSON.parse(res?.dataValue);
-          this.currencyIDDefault = dataValue?.DefaultCurrency;
-          this.applyProcess = dataValue?.ProcessLead == '1';
-        }
-        this.lead.currencyID = this.currencyIDDefault;
-        this.lead.applyProcess = this.applyProcess;
-        this.checkApplyProcess(this.lead.applyProcess);
+    if (this.action === this.actionAdd) {
+      let res = await firstValueFrom(
+        this.codxCmService.getParam('CMParameters', '1')
+      );
+      if (res?.dataValue) {
+        let dataValue = JSON.parse(res?.dataValue);
+        this.currencyIDDefault = dataValue?.DefaultCurrency;
+        this.applyProcess = dataValue?.ProcessLead == '1';
       }
-      !this.lead.applyProcess && this.action !== this.actionEdit && this.getAutoNumber();
-      this.lead.applyProcess &&
-        (await this.getListInstanceSteps(this.lead.processID));
-    } catch (error) {
-      console.error('Error executing API calls:', error);
+      this.lead.currencyID = this.currencyIDDefault;
+      this.lead.applyProcess = this.applyProcess;
+      this.checkApplyProcess(this.lead.applyProcess);
     }
+
+    if (!this.lead.applyProcess) {
+      if (this.action !== this.actionEdit) this.getAutoNumber();
+      this.itemTab(false);
+    }
+
+    this.lead.applyProcess &&
+      (await this.getListInstanceSteps(this.lead.processID));
   }
   async getListInstanceSteps(processId: any) {
     processId =
@@ -562,7 +546,11 @@ export class PopupAddLeadComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
+        this.idxCrr = this.listInstanceSteps.findIndex(
+          (x) => x.stepID == this.lead.stepID
+        );
+        debugger;
+        this.itemTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
@@ -580,6 +568,7 @@ export class PopupAddLeadComponent
           this.action != this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -629,43 +618,78 @@ export class PopupAddLeadComponent
     return endDay;
   }
 
-  removeItemInTab(isRemove: boolean): void {
-    if (isRemove) {
-      if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) == -1) {
-        this.tabInfo.push(this.menuInputInfo);
-      }
-    } else {
-      if (this.tabInfo.findIndex((x) => x == this.menuInputInfo) != -1) {
-        this.tabInfo.pop();
-      }
-    }
-  }
-
   async getListPermission(permissions) {
     this.listParticipants = permissions.filter((x) => x.roleType === 'P');
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
   }
+  // an tat theo truong tuy chinh
+  itemTab(check: boolean): void {
+    debugger;
+    if (check) {
+      this.tabInfo = [
+        this.menuGeneralInfo,
+        this.menuGeneralSystem,
+        this.menuGeneralContact,
+        this.menuInputInfo,
+      ];
+      this.tabContent = [
+        this.tabGeneralInfoDetail,
+        this.tabGeneralSystemDetail,
+        this.tabGeneralContactDetail,
+        this.tabCustomFieldDetail,
+      ];
+    } else {
+      this.tabInfo = [
+        this.menuGeneralInfo,
+        this.menuGeneralSystem,
+        this.menuGeneralContact,
+      ];
+      this.tabContent = [
+        this.tabGeneralInfoDetail,
+        this.tabGeneralSystemDetail,
+        this.tabGeneralContactDetail,
+      ];
+    }
+  }
 
   ischeckFields(steps: any): boolean {
-    if (steps?.length > 0 && steps != null) {
-      for (let i = 0; i < steps.length; i++) {
-        if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
-          return true;
+    if (steps?.length > 0) {
+      if (this.action != 'edit') {
+        if (steps[0].fields?.length > 0) return true;
+        return false;
+      }
+      let check = false;
+
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (steps[i]?.fields?.length > 0) {
+            check = true;
+            break;
+          }
         }
       }
+      return check;
     }
     return false;
   }
 
+  checkAddField(stepCrr, idx) {
+    if (stepCrr) {
+      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+        return true;
+      }
+      if (idx == 0) return true;
+      return false;
+    }
+    return false;
+  }
+  // check
+
   // covnert data CM -> data DP
 
   //#endregion
-
-  isRequired(field: string) {
-    return this.gridViewSetup[field]?.h;
-  }
 
   setTitle(e: any) {
     this.title = this.titleAction;

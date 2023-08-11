@@ -179,7 +179,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group" >
+      <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="OccuredPlace">
         </codx-label>
 
@@ -214,7 +214,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group" *ngIf="cases.caseType == '1' ">
+      <div class="form-group" *ngIf="cases.caseType == '1'">
         <codx-label
           fiedName="OccuredOn"
           [formModel]="form.formModel"
@@ -253,7 +253,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group" *ngIf="cases.caseType == '1' ">
+      <div class="form-group" *ngIf="cases.caseType == '1'">
         <codx-label
           fiedName="DetectedOn"
           [formModel]="form.formModel"
@@ -417,10 +417,10 @@
 
 <ng-template #tabCustomFieldDetail let-form>
   <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
-    <ng-container *ngFor="let step of listInstanceSteps">
+    <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
-          <div class="form-group">
+          <div class="form-group" *ngIf="checkAddField(step, idx)">
             <codx-input-custom-field
               [customField]="item"
               [checkValid]="false"
