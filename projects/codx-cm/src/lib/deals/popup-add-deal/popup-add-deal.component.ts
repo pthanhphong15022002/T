@@ -104,7 +104,7 @@ export class PopupAddDealComponent
   };
 
   menuGeneralContact = {
-    icon: 'icon-reorder',
+    icon: 'icon-contact_phone',
     text: 'Người liên hệ',
     name: 'GeneralContact',
     subName: 'General contact',
@@ -972,6 +972,17 @@ export class PopupAddDealComponent
         }
       }
       return check;
+    }
+    return false;
+  }
+
+  checkAddField(stepCrr, idx) {
+    if (stepCrr) {
+      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+        return true;
+      }
+      if (idx == 0) return true;
+      return false;
     }
     return false;
   }
