@@ -348,6 +348,12 @@ export class CodxShareService {
         );
         break;
       }
+      //Đính kèm file
+      case 'SYS':
+      {
+        
+      }
+
     }
   }
 
