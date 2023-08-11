@@ -499,26 +499,5 @@ export class PopupJobComponent implements OnInit {
     });
   }
   //#endregion
-  // this.api.execSv<any>(
-  //   'HR',
-  //   'HR',
-  //   'EmployeesBusiness',
-  //   'GetUserLeader',
-  //   [idO]
-  // ).subscribe(result => {
-  //   if(result){
-  //     console.log(result);
-
-  //   }
-  // });
-  // this.api.execSv<any>(
-  //   'HR',
-  //   'HR',
-  //   'EmployeesBusiness',
-  //   'GetListUserByListOrgUnitIDAsync',
-  //   [[idO], type]
-  // ).subscribe(result => {
-  //   if(result){
-  //   }
-  // });
+  
 }

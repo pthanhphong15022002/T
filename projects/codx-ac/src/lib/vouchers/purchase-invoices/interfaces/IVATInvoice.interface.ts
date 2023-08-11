@@ -44,7 +44,7 @@ export interface IVATInvoice {
     cancelled: boolean;
     cancelledReason: string;
     cancelledNote: string;
-    createdOn: string;
+    createdOn: Date;
     createdBy: string;
     modifiedOn: string | null;
     modifiedBy: string;

@@ -248,7 +248,7 @@ export class QuotationsTabViewComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this
@@ -260,7 +260,23 @@ export class QuotationsTabViewComponent
   }
 
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus!=null &&  appoverStatus != this.itemSelected.approveStatus) {
+        this.itemSelected.approveStatus=appoverStatus
+        switch (appoverStatus) {
+          case '5':
+            this.itemSelected.status = '2';
+            break;
+          case '4':
+          case '2':
+            this.itemSelected.status = '3';
+            break;
+            
+        }      
+      } 
+      this.view.dataService.update(this.itemSelected).subscribe();
+    }
   }
 
   add() {

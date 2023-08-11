@@ -225,7 +225,7 @@
             </codx-input>
           </div>
 
-          <ng-template #ownerProcess>     
+          <ng-template #ownerProcess>
             <div>
               <ejs-combobox
                 [dataSource]="listParticipants"
@@ -235,7 +235,7 @@
                 [value]="contracts?.owner"
               ></ejs-combobox>
             </div>
-          </ng-template> 
+          </ng-template>
         </div>
       </div>
 
@@ -259,7 +259,7 @@
                 planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
               "
               (controlBlur)="changeAutoNum($event)"
-              [disabled]="disabledShowInput"
+              [disabled]="disabledShowInput || action === 'edit'"
             >
             </codx-input>
           </div>
@@ -438,9 +438,7 @@
                 fiedName="delContactID"
                 default="Liên hệ giao hàng"
               ></codx-label>
-              <button type="button"
-                class="btn btn-sm btn-light-primary"
-                >
+              <button type="button" class="btn btn-sm btn-light-primary">
                 <span class="icon-person_add_alt_1"></span>
               </button>
             </div>
@@ -1286,16 +1284,19 @@
       ></codx-label>
     </div>
     <div class="row">
-      <div *ngFor="let item of listField" class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-          <codx-input-custom-field
-            [customField]="item"
-            [checkValid]="false"
-            [objectId]="item.recID"
-            [objectType]="'DP_Instances_Steps_Fields'"
-            [formModel]="dialog.formModel"
-            (valueChangeCustom)="changeFields($event)"
-          >
-          </codx-input-custom-field>
+      <div
+        *ngFor="let item of listField"
+        class="col-xl-3 col-lg-4 col-md-6 col-sm-12"
+      >
+        <codx-input-custom-field
+          [customField]="item"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          (valueChangeCustom)="changeFields($event)"
+        >
+        </codx-input-custom-field>
       </div>
     </div>
   </div>

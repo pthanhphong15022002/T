@@ -382,6 +382,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       isEditTimeDefault: null,
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isSave: false,
+      isStart: true,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

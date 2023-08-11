@@ -60,6 +60,7 @@ export class DP_Processes {
   delete: boolean = true;
   deleted: boolean = false;
   stepsColorMode: boolean;
+  instanceProgressControl: boolean ;
 }
 
 export class DP_Processes_Permission {

@@ -178,7 +178,7 @@ export class ContractsComponent extends UIComponent {
     },
   ];
   //param
-  applyApprover = '0';
+  approveRule = '0';
   paramDefault: any;
 
   constructor(
@@ -384,7 +384,7 @@ export class ContractsComponent extends UIComponent {
       if (
         (data.closed && data.status != '1') ||
         ['1', '0'].includes(data.status) ||
-        (this.applyApprover != '1' && !data.applyProcess) ||
+        (this.approveRule != '1' && !data.applyProcess) ||
         (data.applyProcess && data?.approveRule != '1')
       ) {
         eventItem.disabled = true;
@@ -428,6 +428,7 @@ export class ContractsComponent extends UIComponent {
   changeDataMF(event, data) {
     if (event != null) {
       event.forEach((res) => {
+        res.isblur = data.approveStatus == '3';
         switch (res.functionID) {
           case 'SYS02':
             break;
@@ -445,8 +446,9 @@ export class ContractsComponent extends UIComponent {
             if (
               (data.closed && data.status != '1') ||
               data.status == '0' ||
-              (this.applyApprover != '1' && !data.applyApprover) ||
-              (data.applyApprover && data?.approveRule != '1')
+              (this.approveRule != '1' && !data.applyApprover) ||
+              (data.applyApprover && data?.approveRule != '1') ||
+              data?.approveStatus >= '3'
             ) {
               res.disabled = true;
             }
@@ -460,6 +462,7 @@ export class ContractsComponent extends UIComponent {
             ) {
               res.disabled = true;
             }
+            res.isblur = false;
             break;
 
           case 'CM0204_4':
@@ -544,7 +547,7 @@ export class ContractsComponent extends UIComponent {
       });
     }
   }
-  
+
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
@@ -611,7 +614,7 @@ export class ContractsComponent extends UIComponent {
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -624,7 +627,16 @@ export class ContractsComponent extends UIComponent {
   }
 
   afterSave(e?: any, that: any = null) {
-    //TODO: đợi core
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.itemSelected.approveStatus
+      ) {
+        this.itemSelected.approveStatus = appoverStatus;
+      }
+      this.view.dataService.update(this.itemSelected).subscribe();
+    }
   }
 
   async addContract() {
@@ -1197,7 +1209,7 @@ export class ContractsComponent extends UIComponent {
         let dataValue = JSON.parse(res.dataValue);
         if (Array.isArray(dataValue)) {
           let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
-          if (setting) this.applyApprover = setting['ApprovalRule'];
+          if (setting) this.approveRule = setting['ApprovalRule'];
         }
       }
     });

@@ -77,7 +77,7 @@ export class PopupAddJournalComponent
       name: 'Roles',
     },
   ];
-  fiscalYears: any[] = [];
+  fiscalYears: number[] = [];
   isEdit: boolean = false;
   hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
@@ -259,7 +259,9 @@ export class PopupAddJournalComponent
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
       .subscribe((periods) => {
-        this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
+        this.fiscalYears = [
+          ...new Set(periods.map((p) => Number(p.FiscalYear))),
+        ];
       });
 
     this.dialogRef.closed.subscribe((res) => {
@@ -319,7 +321,7 @@ export class PopupAddJournalComponent
     setTimeout(() => {
       let moreInfoLabel: Element = document.getElementById('moreInfo');
       let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
-      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;     
+      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;
     });
   }
   //#endregion
@@ -372,12 +374,6 @@ export class PopupAddJournalComponent
   onSelect(e): void {
     console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
-    // this.form.formGroup.controls.periodID.reset();
-    // (this.periodID.ComponentCurrent.dataService as CRUDService).data = [];
-    // (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
-    //   ['FiscalYear=@0'],
-    //   [e.itemData.value]
-    // );
   }
 
   async onClickSave(): Promise<void> {
@@ -768,7 +764,7 @@ export class PopupAddJournalComponent
       if (!oldJournal[k] && !newJournal[k]) {
         return false;
       }
-      return oldJournal[k] !== newJournal[k];
+      return oldJournal[k] != newJournal[k];
     });
   }
 

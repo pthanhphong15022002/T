@@ -15,6 +15,7 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  LayoutAddComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
@@ -392,6 +393,31 @@ export class PopupAddItemComponent
     this.title = this.dialogData.data?.title;
   }
   //#endregion
+
+  valueChange(evt: any, form: LayoutAddComponent) {
+    // var field = evt.field;
+    // let i = '';
+    // let itab = '';
+    // switch (field) {
+    //   case 'sales':
+    //     i = '4';
+    //     break;
+    //   case 'purchase':
+    //     i = '3';
+    //     break;
+    //   case 'production':
+    //     i = '5';
+    //     break;
+    // }
+    // if (!evt.data) {
+    //   if (itab && itab.includes(i)) return;
+    //   itab += i + ';';
+    // } else {
+    //   if (itab && itab.includes(i)) itab = itab.replace(i + ';', '');
+    // }
+    // form.setDisabled(itab);
+    // var a = evt;
+  }
 
   //#region Event
   onInputChange(e: any): void {

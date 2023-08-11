@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
+  AuthService,
   ButtonModel,
   DataRequest,
   DialogModel,
@@ -158,17 +159,22 @@ export class TargetsComponent
   exchangeRateSys: number;
   gridViewSetupTarget: any;
   countLoad = 0;
+  datasVll = [];
+  language: string;
+  search = '';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService,
+    private auth: AuthService,
     private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
@@ -194,9 +200,19 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    // this.gridViewSetupTarget = await firstValueFrom(
-    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    // );
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
+    ];
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
     this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
@@ -238,11 +254,12 @@ export class TargetsComponent
   //#endregion setting schedule
 
   //#region load tree
-  loadTreeData(year) {
+  loadTreeData(year, predicates = '', dataValues = '') {
     this.loadedTree = false;
     var resource = new DataRequest();
-    resource.predicates = 'Year=@0';
-    resource.dataValues = year;
+    resource.predicates =
+      predicates != '' ? 'Year=@0' + ' and ' + predicates : 'Year=@0';
+    resource.dataValues = dataValues != '' ? year + ';' + dataValues : year;
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
@@ -268,22 +285,6 @@ export class TargetsComponent
         })
       );
   }
-
-  viewBusinessLines(valueView) {
-    if (valueView != this.viewCurrent) {
-      this.lstDataTree = [];
-      this.countLoad++;
-      this.isShow = false;
-      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
-      this.view.button = this.showButtonAdd ? this.button : null;
-      this.currencyID = this.currencyIDSys;
-      this.exchangeRate = this.exchangeRateSys;
-      this.viewCurrent = valueView;
-      this.loadTreeData(this.year?.toString());
-    }
-    this.detectorRef.detectChanges();
-  }
-
   async loadCurrentID() {
     if (this.countLoad == 0) {
       var param = await firstValueFrom(
@@ -307,15 +308,42 @@ export class TargetsComponent
           }
           this.currencyIDSys = this.currencyID;
           this.exchangeRateSys = this.exchangeRate;
+          this.countLoad++;
         }
       }
     }
 
-    this.fetch().subscribe((item) => {
-      this.lstDataTree = item;
-      this.lstTreeSearchs = this.lstDataTree;
-      this.loadedTree = true;
-    });
+    this.lstDataTree = await firstValueFrom(this.fetch());
+    this.lstTreeSearchs = this.lstDataTree;
+    if (this.viewCurrent == '2') {
+      this.lstDataTree = this.lstTreeSearchs.filter(
+        (item) =>
+          (item?.title?.indexOf(this.search) >= 0 && item.year == this.year) ||
+          (item?.salespersonID?.indexOf(this.search) >= 0 &&
+            item.year == this.year) ||
+          item?.items?.some(
+            (x) =>
+              (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
+              (x?.businessLineID?.indexOf(this.search) >= 0 &&
+                x.year == this.year)
+          )
+      );
+    }
+    this.loadedTree = true;
+  }
+  viewBusinessLines(valueView) {
+    if (valueView != this.viewCurrent) {
+      this.lstDataTree = [];
+      this.countLoad++;
+      this.isShow = false;
+      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
+      this.view.button = this.showButtonAdd ? this.button : null;
+      this.currencyID = this.currencyIDSys;
+      this.exchangeRate = this.exchangeRateSys;
+      this.viewCurrent = valueView;
+      this.loadTreeData(this.year?.toString());
+    }
+    this.detectorRef.detectChanges();
   }
 
   isActive(item: any): boolean {
@@ -409,7 +437,10 @@ export class TargetsComponent
     this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
-  onLoading(e) {
+  async onLoading(e) {
+    // if(datasVll && datasVll.datas){
+    let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
+
     this.columnGrids = [
       {
         headerTemplate: this.headerBusinessLine,
@@ -420,142 +451,119 @@ export class TargetsComponent
       {
         headerTemplate: this.headerYear,
         template: this.templateYear,
-        width: 150,
+        width: 120,
       },
       //quý
       {
         headerTemplate: this.headerQuarter1,
         template: this.templateQuarter1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter2,
         template: this.templateQuarter2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter3,
         template: this.templateQuarter3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter4,
         template: this.templateQuarter4,
-        width: 150,
+        width: 120,
       },
       //Tháng
       {
         headerTemplate: this.headerMonth1,
         template: this.templateMonth1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth2,
         template: this.templateMonth2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth3,
         template: this.templateMonth3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth4,
         template: this.templateMonth4,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth5,
         template: this.templateMonth5,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth6,
         template: this.templateMonth6,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth7,
         template: this.templateMonth7,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth8,
         template: this.templateMonth8,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth9,
         template: this.templateMonth9,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth10,
         template: this.templateMonth10,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth11,
         template: this.templateMonth11,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth12,
         template: this.templateMonth12,
-        width: 150,
+        width: 120,
       },
     ];
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
+
+    let obj = {
+      type: ViewType.chart,
+      text: datasVll?.datas[1]?.text,
+      icon: datasVll?.datas[1]?.icon,
+      sameData: false,
+      active: false,
+      model: {
+        panelRightRef: this.panelRight,
       },
-      {
-        type: ViewType.chart,
-        sameData: false,
-        active: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
+    };
+    this.views.push(Object.assign({}, obj));
+    // }
   }
   searchChanged(e) {
-    this.loadedTree = false;
+    this.search = '';
     if (e == null || e?.trim() == '') {
-      this.loadedTree = true;
-      this.lstDataTree = this.lstTreeSearchs;
+      this.loadTreeData(this.year);
       return;
     }
-
-    let text = e.toLowerCase();
-    if (this.viewCurrent == '1') {
-      this.lstDataTree = this.lstTreeSearchs.filter(
-        (item) =>
-          (text == item?.businessLineID?.toLowerCase() && item.year == this.year) ||
-          (text == item?.title?.toLowerCase() && item.year == this.year) ||
-          item?.items?.some(
-            (x) =>
-              (text == x?.title?.toLowerCase() && x.year == this.year) ||
-              (text == x?.salespersonID?.toLowerCase() && x.year == this.year)
-          )
-      );
-    } else {
-      this.lstDataTree = this.lstTreeSearchs.filter(
-        (item) =>
-          (text == item?.title?.toLowerCase() && item.year == this.year) ||
-          (text == item?.salespersonID?.toLowerCase() && item.year == this.year) ||  item?.items?.some(
-            (x) =>
-              (text == x?.title?.toLowerCase() && x.year == this.year) ||
-              (text == x?.businessLineID?.toLowerCase() && x.year == this.year)
-          )
-      );
-    }
-    this.loadedTree = true;
+    const text = e;
+    this.search = text;
+    let predicates = '';
+    let dataValues = '';
+    predicates =
+      'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
+    dataValues = text;
+    this.loadTreeData(this.year, predicates, dataValues);
     this.detectorRef.detectChanges();
   }
 
@@ -674,18 +682,16 @@ export class TargetsComponent
         if (e != null && e?.event != null) {
           var data = e?.event[0];
           if (data.year == this.year) {
-            var index = this.lstDataTree.findIndex(
+            var index = this.lstTreeSearchs.findIndex(
               (x) => x.businessLineID == data?.businessLineID
             );
             if (index != -1) {
-              this.lstDataTree[index] = data;
+              this.lstTreeSearchs[index] = data;
               // this.lstDataTree.splice(index, 1);
             } else {
-              this.lstDataTree.push(Object.assign({}, data));
+              this.lstTreeSearchs.push(Object.assign({}, data));
             }
-            if (this.lstDataTree != null && this.viewMode == 9) {
-              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-            }
+            this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
           }
           this.isShow = false;
 
@@ -740,17 +746,17 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             var data = e?.event[0];
             if (data.year == this.year) {
-              var index = this.lstDataTree.findIndex(
+              var index = this.lstTreeSearchs.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
               );
               if (index != -1) {
-                this.lstDataTree[index] = data;
+                this.lstTreeSearchs[index] = data;
               } else {
-                this.lstDataTree.push(Object.assign({}, data));
+                this.lstTreeSearchs.push(Object.assign({}, data));
               }
-              if (this.lstDataTree != null && this.viewMode == 9) {
-                this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-              }
+              this.lstDataTree = JSON.parse(
+                JSON.stringify(this.lstTreeSearchs)
+              );
             }
             // this.lstDataTree.push(Object.assign({}, data));
             this.isShow = false;
@@ -843,23 +849,23 @@ export class TargetsComponent
     dialog.closed.subscribe((e) => {
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        let index = this.lstDataTree.findIndex(
+        let index = this.lstTreeSearchs.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
 
         if (index != -1) {
-          var data = this.lstDataTree[index]?.items;
+          var data = this.lstTreeSearchs[index]?.items;
           if (data != null) {
             var indexItem = data.findIndex(
               (x) => x.salespersonID == e?.event.salespersonID
             );
             if (indexItem != -1) {
               data[indexItem] = e.event;
-              this.lstDataTree[index].items = data;
+              this.lstTreeSearchs[index].items = data;
             }
           }
-          if (this.lstDataTree[index].targetsLines != null) {
-            const targetLines = this.lstDataTree[index].targetsLines;
+          if (this.lstTreeSearchs[index].targetsLines != null) {
+            const targetLines = this.lstTreeSearchs[index].targetsLines;
             const updatedItems = [];
 
             for (const item of targetLines) {
@@ -877,9 +883,9 @@ export class TargetsComponent
               updatedItems.push(item);
             }
 
-            this.lstDataTree[index].targetsLines = updatedItems;
+            this.lstTreeSearchs[index].targetsLines = updatedItems;
           }
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
         this.isShow = false;
         this.detectorRef.detectChanges();

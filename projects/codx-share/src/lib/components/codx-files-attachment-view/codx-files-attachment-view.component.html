@@ -1,0 +1,24 @@
+<codx-form
+    [headerText]="headerText"
+    [dialog]="dialog"
+    [body]="body"
+>
+</codx-form>
+
+<ng-template #body>
+    <codx-files-attachment
+    [entityName]="formModel?.entityName"
+    [objectID]="objectID"
+    [hideFolder]="1"
+    [isEdit]="true"
+    [formModel]="formModel"
+    [funcID]="formModel?.funcID"
+    [dataSelected]="dataSelected"
+    [referType]="!referType ? 'attach' : referType"
+    [addPermissions]="addPermissions"
+    [heightScroll]="500"
+  ></codx-files-attachment>
+</ng-template>
+
+<ng-template #footer>
+</ng-template>
