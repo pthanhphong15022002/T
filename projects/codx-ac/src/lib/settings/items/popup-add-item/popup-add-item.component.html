@@ -196,6 +196,7 @@
             field="sales"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            (valueChange)="valueChange($event, form)"
           ></codx-input>
           <codx-label
             fiedName="sales"
@@ -208,6 +209,7 @@
             field="purchase"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            (valueChange)="valueChange($event, form)"
           ></codx-input>
           <codx-label
             fiedName="purchase"
@@ -220,6 +222,7 @@
             field="production"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
+            (valueChange)="valueChange($event, form)"
           ></codx-input>
           <codx-label
             fiedName="production"

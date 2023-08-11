@@ -795,7 +795,7 @@ export class LeadsComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -1574,7 +1574,14 @@ export class LeadsComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
+        this.dataSelected.approveStatus=appoverStatus
+       
+      } 
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
 
   //export theo moreFun

@@ -30,7 +30,7 @@
       </codx-input>
     </div>
 
-    <div class="form-group d-flex justify-content-between">
+    <div class="form-group d-flex justify-content-between" *ngIf="isStart">
       <div class="me-4">
         <codx-label
           fiedName="startDate"
@@ -87,7 +87,7 @@
                 [crrValue]="taskGroup?.durationDay"
                 [showSpinButton]="false"
                 class="me-2"
-                [disabled]="true"
+                [disabled]="isStart"
               >
               </codx-input>
               <span
@@ -105,7 +105,7 @@
                 [crrValue]="taskGroup?.durationHour"
                 class="ms-2"
                 [showSpinButton]="false"
-                [disabled]="true"
+                [disabled]="isStart"
               >
               </codx-input>
               <span
@@ -137,6 +137,22 @@
           </codx-input>
         </div>
       </div>
+    </div>
+
+    <div class="form-group">
+      <codx-role
+        [fiedName]="'roles'"
+        [formModel]="grvTaskGroupsForm"
+        [default]="'Vai trò/bộ phận thực hiện'"
+        [dataSource]="taskGroup?.roles"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event)"
+        [vllShare]="'DP0331'"
+        [multiple]="false"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
     </div>
 
     <div class="form-group">
