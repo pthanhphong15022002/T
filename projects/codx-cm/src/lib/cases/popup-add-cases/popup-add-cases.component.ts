@@ -450,7 +450,7 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+        // this.itemTabs(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
