@@ -227,15 +227,15 @@ export class CodxShareService {
             dialogModel
           );
           dialogApprove.closed.subscribe((x) => {
-            if (x.event?.result) {
-              data.unbounds.statusApproval = x.event?.mode;
-              dataService.update(data).subscribe();
-            }
-            // if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
-            //   data.unbounds.statusApproval = x.event?.returnStatus;
-            //   data.unbounds.isLastStep = x.event?.isLastStep;
+            // if (x.event?.result) {
+            //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
+            if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
+              data.unbounds.statusApproval = x.event?.mode;
+              data.unbounds.isLastStep = x.event?.isLastStep;
+              dataService.update(data).subscribe();
+            }
           });
         } else {
           var status;
@@ -349,6 +349,12 @@ export class CodxShareService {
         );
         break;
       }
+      //Đính kèm file
+      case 'SYS':
+      {
+        
+      }
+
     }
   }
 
@@ -1495,6 +1501,7 @@ export class CodxShareService {
         refID: approveProcess.recID,
         editApprovers: approveProcess.category?.editApprovers,
         approvers: approveProcess.approvers,
+        approverProcess: approveProcess,
       },
       '',
       dialogModel
