@@ -71,6 +71,7 @@ export class PopupAddTargetComponent {
   businessLineID: any;
   exchangeRateSys: number;
   currencyIDSys: any;
+  isCheckSave = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -217,6 +218,7 @@ export class PopupAddTargetComponent {
         if (res) {
           this.dialog.close([res.save]);
         }
+        this.isCheckSave = false;
       });
   }
 
@@ -231,9 +233,11 @@ export class PopupAddTargetComponent {
 
           this.dialog.close([res.update]);
         }
+        this.isCheckSave = false;
       });
   }
   onSave() {
+    this.isCheckSave = true;
     if (this.action == 'add') this.data.businessLineID = this.businessLineID;
 
     if (
@@ -245,11 +249,14 @@ export class PopupAddTargetComponent {
         0,
         '"' + this.gridViewSetupTarget?.BusinessLineID?.headerText + '"'
       );
+      this.isCheckSave = false;
+
       return;
     }
 
     if (!this.checkTarget()) {
       this.notiService.notifyCode('CM032');
+      this.isCheckSave = false;
       return;
     }
 
