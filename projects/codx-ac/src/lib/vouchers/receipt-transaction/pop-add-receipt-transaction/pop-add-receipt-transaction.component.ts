@@ -203,9 +203,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case'warehouseid':
           {
             this.vouchers.warehouseID = e.data;
-            this.vouchers.warehouseName = e.component.itemsSelected[0].WarehouseName;
+            this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
             this.form.formGroup.patchValue({
-              warehouseID: this.vouchers.warehouseID,
               warehouseName: this.vouchers.warehouseName,
             });
           }
@@ -214,17 +213,20 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers.warehouseName = e.data;
           break;
 
-          case 'reasonid':
-            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
+        case 'reasonid':
+          this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
           let text = e?.component?.itemsSelected[0]?.ReasonName;
           this.setReason(field, text, 0);
           break;
         case 'objectid':
           this.vouchers.objectID = e.data;
-          let data = e.component.itemsSelected[0];
-          this.vouchers.objectType = data['ObjectType'];
-          this.vouchers.objectName = data['ObjectName'];
-          this.setReason(field, data['ObjectName'], 1);
+          if(e.component.itemsSelected.length > 0)
+          {
+            let data = e.component.itemsSelected[0];
+            this.vouchers.objectType = data['ObjectType'];
+            this.vouchers.objectName = data['ObjectName'];
+            this.setReason(field, data['ObjectName'], 1);
+          }
           break;
         case 'memo':
           this.vouchers.memo = e.data;
@@ -316,9 +318,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      // case 'itemID':
-      //   e.data['itemName'] = e.itemData.ItemName;
-      //   break;
+      case 'itemID':
+        e.data.itemName = e.itemData.ItemName;
+        break;
       
     }
   }
