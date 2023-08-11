@@ -1064,7 +1064,7 @@ export class AddContractsComponent implements OnInit {
 
   changeAutoNum(e) {
     // check trùm mã khi nhạp tay
-    if (!this.disabledShowInput && e) {
+    if (!this.disabledShowInput && this.action !== 'edit' && e) {
       this.contracts.contractID = e?.crrValue;
       if (
         this.contracts.contractID &&

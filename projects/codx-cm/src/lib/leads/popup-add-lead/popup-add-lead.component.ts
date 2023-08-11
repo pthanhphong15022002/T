@@ -316,6 +316,7 @@ export class PopupAddLeadComponent
         permission.delete = true;
         permission.upload = true;
         permission.download = true;
+        permission.isActive = true;
         permission.memberType = '1';
         permission.allowPermit = true;
         permission.allowUpdateStatus = '1';
