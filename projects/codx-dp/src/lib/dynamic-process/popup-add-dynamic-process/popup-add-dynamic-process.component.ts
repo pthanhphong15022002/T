@@ -2510,6 +2510,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['stepNo'] = countStep + 1;
       this.stepNew['createdBy'] = this.userId;
       this.stepNew['instanceProgress'] = this.stepList[countStep - 1]?.instanceProgress || 0;
+      this.stepNew['iconColor'] = "#808080";
+      this.stepNew['textColor'] = "#808080";
+      this.stepNew['backgroundColor'] = "#fff";
     } else if (type === 'copy') {
       this.stepNew = step;
     } else {
