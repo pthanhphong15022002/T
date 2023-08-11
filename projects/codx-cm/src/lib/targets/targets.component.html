@@ -168,7 +168,7 @@
       </div>
     </div>
 
-    <div class="mt-2 scroll-tree" *ngIf="viewMode === 16">
+    <div class="scroll-tree" *ngIf="viewMode === 16">
       <ng-container *ngIf="loadedTree">
         <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
           <div
@@ -188,7 +188,7 @@
         </div>
       </ng-container>
     </div>
-    <div class="mt-2 h-100" *ngIf="viewMode === 9">
+    <div class="h-100 scroll-grid" *ngIf="viewMode === 9">
       <codx-gridview-v2
         #gridBusiness
         [formName]="view.formModel?.formName"
