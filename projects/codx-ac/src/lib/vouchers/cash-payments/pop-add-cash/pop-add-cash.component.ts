@@ -183,7 +183,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       emitEvent: false,
     });
     this.setTabindex();
-    this.onFocus();
+    //this.onFocus();
   }
   //#endregion
 

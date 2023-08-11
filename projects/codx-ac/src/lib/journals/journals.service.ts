@@ -168,6 +168,18 @@ export class JournalService {
     if (journal?.loanControl === '0') {
     }
 
+    if (journal?.vatControl == '0') {
+      hiddenFields.push('VATID', 'VATBase', 'VATAmt');
+    }
+
+    if (!journal?.useDutyTax) {
+      hiddenFields.push('SalesTaxPct', 'SalesTaxAmt');
+    }
+
+    if (!journal?.useExciseTax) {
+      hiddenFields.push('ExciseTaxPct', 'ExciseTaxAmt');
+    }
+
     if (!journal.idimControl) {
       return hiddenFields;
     }

@@ -286,9 +286,9 @@ export class JournalsComponent extends UIComponent {
     console.log('edit', { data });
 
     let tempData = { ...data };
-    if (data.extras) {
-      tempData = { ...data, ...JSON.parse(data.extras) };
-    }
+    // if (data.extras) {
+    //   tempData = { ...data, ...JSON.parse(data.extras) };
+    // }
 
     this.view.dataService.dataSelected = tempData;
     this.view.dataService.edit(tempData).subscribe(() => {

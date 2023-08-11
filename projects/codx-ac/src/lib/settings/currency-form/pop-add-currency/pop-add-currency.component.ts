@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -7,6 +8,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -30,12 +32,13 @@ import { Currency } from '../../../models/Currency.model';
 @Component({
   selector: 'lib-pop-add-currency',
   templateUrl: './pop-add-currency.component.html',
-  styleUrls: ['./pop-add-currency.component.css'],
+  styleUrls: ['./pop-add-currency.component.css','../../../codx-ac.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('grid') public grid: CodxGridviewV2Component;
   @Input() headerText: string;
   currencies: Currency;
   exchangerate: ExchangeRates = new ExchangeRates();
