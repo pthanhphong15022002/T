@@ -3648,3 +3648,9 @@ codx-view-list-detail wp-appropval-news-detail .codx-detail-main {
 codx-view-tree-targets .menu-sub{
   padding-left: 30px!important;
 }
+
+.scroll-grid {
+   .e-gridcontent{
+     height: calc(100% - 40px)!important;
+   }
+}
