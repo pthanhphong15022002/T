@@ -37,6 +37,7 @@ import { ApprovalStepComponent } from '../../setting/approval-step/approval-step
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
+import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -121,6 +122,7 @@ export class PopupAddSignFileComponent implements OnInit {
   typeCategory: any;
   loadedTemplateFile = false;
   showAttachment = true;
+  approverProcess: ApproveProcess;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -160,7 +162,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType; //Dùng để lấy Category của Module
     this.editApprovers = data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
-
+    this.approverProcess = data?.data?.approverProcess ?? null;
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -650,9 +652,10 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.color = category?.Color;
                   this.data.processID = category?.RecID;
                   this.data.categoryName = category?.CategoryName;
-
+                  this.data.catagory =category?.category;
                   this.eSign = category?.ESign;
                   this.signatureType = category?.SignatureType;
+                  
                   this.afterCategoryChange();
                   this.cr.detectChanges();
 
@@ -740,6 +743,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.color = category?.Color;
               this.data.processID = category?.RecID;
               this.data.categoryName = category?.CategoryName;
+              this.data.catagory =category?.category;
               this.eSign = category?.ESign;
               this.signatureType = category?.SignatureType;
 
@@ -1365,13 +1369,13 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       this.codxShareService
         .codxRelease(
-          'ES',
+          this.approverProcess?.module !=null ? this.approverProcess?.module:'ES',
           this.data?.recID,
           this.data.approveControl == '1'
             ? this.data?.recID
             : this.data?.processID,
-          this.formModelCustom.entityName,
-          this.formModelCustom.funcID,
+          this.approverProcess?.entityName !=null ? this.approverProcess?.entityName:this.formModelCustom.entityName,
+          this.approverProcess?.funcID !=null ? this.approverProcess?.funcID:this.formModelCustom.funcID ,
           '',
           this.data?.title,
           this.data?.refType

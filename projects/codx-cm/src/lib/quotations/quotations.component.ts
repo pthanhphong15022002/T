@@ -56,6 +56,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   @Input() funcID: string;
   @Input() customerID: string;
+
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -409,9 +410,12 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval 
-      if (appoverStatus!=null &&  appoverStatus != this.itemSelected.approveStatus) {
-        this.itemSelected.approveStatus=appoverStatus
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.itemSelected.approveStatus
+      ) {
+        this.itemSelected.approveStatus = appoverStatus;
         switch (appoverStatus) {
           case '5':
             this.itemSelected.status = '2';
@@ -420,10 +424,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           case '2':
             this.itemSelected.status = '3';
             break;
-            
         }
-       
-      } 
+      }
       this.view.dataService.update(this.itemSelected).subscribe();
     }
   }
