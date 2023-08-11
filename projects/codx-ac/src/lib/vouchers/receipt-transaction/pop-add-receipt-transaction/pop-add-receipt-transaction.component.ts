@@ -159,24 +159,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
-
-    setTimeout(() => {
-      const inputEls: HTMLInputElement[] = Array.from(
-        document.querySelectorAll('codx-input input')
-      );
-      for (const el of inputEls) {
-        if (el.readOnly) {
-          el.setAttribute('tabindex', '-1');
-        }
-      }
-
-      const navLinkEls: HTMLAnchorElement[] = Array.from(
-        document.querySelectorAll('codx-tabs a.nav-link')
-      );
-      for (const el of navLinkEls) {
-        el.setAttribute('tabindex', '-1');
-      }
-    }, 1000);
+    this.setTabindex();
   }
 
   ngOnDestroy() {
@@ -1165,6 +1148,37 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
+  setTabindex() {
+    let ins = setInterval(() => {
+      let eleInput = document
+        ?.querySelector('.ac-form-master')
+        ?.querySelectorAll('codx-input');
+      if (eleInput) {
+        clearInterval(ins);
+        let tabindex = 0;
+        for (let index = 0; index < eleInput.length; index++) {
+          let elechildren = (
+            eleInput[index] as HTMLElement
+          ).getElementsByTagName('input')[0];
+          if (elechildren.readOnly) {
+            elechildren.setAttribute('tabindex', '-1');
+          } else {
+            tabindex++;
+            elechildren.setAttribute('tabindex', tabindex.toString());
+          }
+        }
+        // input refdoc
+        let ref = document
+          .querySelector('.ac-refdoc')
+          .querySelectorAll('input');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+      }
+    }, 200);
+    setTimeout(() => {
+      if (ins) clearInterval(ins);
+    }, 10000);
+  }
+
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     if (e.key == 'Tab') {
@@ -1175,23 +1189,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
     }
 
-    if (e.shiftKey) {
-      if (
-        document.activeElement.className === 'e-lastrowcell' ||
-        document.activeElement.id === 'gridViewV2'
-      ) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
-          .focus();
-
-        return;
-      }
-
-      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
-      if (nodes[nodes.length - 1] === document.activeElement) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
-          .focus();
+    if (e.key == 'Enter') {
+      if ((e.target as any).closest('codx-input') != null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
+        }
       }
     }
   }
