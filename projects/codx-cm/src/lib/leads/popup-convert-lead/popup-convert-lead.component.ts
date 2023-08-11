@@ -26,6 +26,7 @@ import {
   CM_Customers,
   CM_Deals,
   CM_Leads,
+  CM_Permissions,
 } from '../../models/cm_model';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxAddressCmComponent } from '../../cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
@@ -104,6 +105,7 @@ export class PopupConvertLeadComponent implements OnInit {
   dateMessage: string;
   gridViewSetup: any;
   radioCheckedCus = true;
+  lstPermissions: CM_Permissions[] = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -300,6 +302,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   //#region save
   async onSave() {
+    this.deal.permissions = this.lstPermissions;
     this.setRecIDConvert();
     this.convertDataInstanceAndDeal();
     this.countValidate = this.cmSv.checkValidate(
@@ -466,7 +469,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.instance.memo = this.deal?.memo;
     this.instance.endDate = this.deal?.endDate;
     this.instance.instanceNo = this.deal?.dealID;
-    this.instance.owner = this.deal?.salespersonID;
+    this.instance.owner = this.deal?.owner;
     this.instance.status = '1';
     this.instance.startDate = null;
     this.instance.processID = this.deal?.processID;
@@ -656,8 +659,14 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChangeOwner(e) {
-    this.deal.salespersonID = e;
-    this.deal.owner = e;
+    if (e != this.deal.owner) {
+      this.deal.owner = e;
+      this.deal.salespersonID = e;
+      this.setPermissions(
+        this.listParticipants.find((x) => x.userID == e),
+        'O'
+      );
+    }
   }
   valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
@@ -670,18 +679,24 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.deal[e.field] = e?.data;
-    if (e.field == 'customerID') {
-      this.customerID = e?.data ? e.data : null;
-      if (this.customerID) {
-        this.customerOld = this.customerID;
-        this.lead.customerID = this.customerID;
-        this.getListContactByObjectID(this.customerID);
+    if (e?.data != this.deal[e.field]) {
+      this.deal[e.field] = e?.data;
+      if (e.field == 'customerID') {
+        this.customerID = e?.data ? e.data : null;
+        if (this.customerID) {
+          this.customerOld = this.customerID;
+          this.lead.customerID = this.customerID;
+          this.getListContactByObjectID(this.customerID);
+        }
       }
-    }
 
-    if (e.field == 'currencyID') {
-      this.loadExchangeRate();
+      if (e.field == 'consultantID') {
+        this.setPermissions(e?.component?.itemsSelected[0], 'C');
+      }
+
+      if (e.field == 'currencyID') {
+        this.loadExchangeRate();
+      }
     }
   }
 
@@ -693,6 +708,44 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customer[e.field] = e?.data?.fromDate;
       }
     }
+  }
+
+  setPermissions(data, roleType) {
+    let index = -1;
+    if (this.lstPermissions != null) {
+      if (data != null && this.lstPermissions.length > 0) {
+        index = this.lstPermissions.findIndex((x) => x.roleType == roleType);
+      }
+    } else {
+      this.lstPermissions = [];
+    }
+
+    if (index == -1) {
+      var perm = new CM_Permissions();
+      perm.objectID = roleType == 'O' ? data?.userID : data?.UserID;
+      perm.objectName = roleType == 'O' ? data?.userName : data?.UserName;
+      perm.isActive = true;
+      perm.objectType = roleType == 'O' ? '1' : 'U';
+      perm.full = roleType == 'O' ? true : false;
+      perm.read = true;
+      perm.update = true;
+      perm.assign = roleType == 'O' ? true : false;
+      perm.delete = roleType == 'O' ? true : false;
+      perm.upload = true;
+      perm.download = true;
+      perm.allowPermit = roleType == 'O' ? true : false;
+      perm.roleType = roleType;
+      perm.allowUpdateStatus = '1';
+      perm.memberType = '1';
+      this.lstPermissions.push(perm);
+    } else {
+      this.lstPermissions[index].objectID =
+        roleType == 'O' ? data?.userID : data?.UserID;
+      this.lstPermissions[index].objectName =
+        roleType == 'O' ? data?.userName : data?.UserName;
+    }
+    this.changeDetectorRef.detectChanges();
+    console.log(this.lstPermissions);
   }
 
   checkFormat(field) {
