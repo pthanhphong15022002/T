@@ -20,6 +20,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupCommentComponent } from '../popup-comment/popup-comment.component';
+import { ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-popup-sign-for-approval',
@@ -356,24 +357,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
         if (this.pdfView.isAwait) {
           this.pdfView
             .signPDF(mode, this.dialogSignFile?.value?.comment)
-            .then((value) => {
-              if (value) {
-                let result = {
-                  result: true,
-                  mode: mode,
-                };
+            .then((resModel:ResponseModel) => {
+              if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                
                 this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
-                this.dialog && this.dialog.close(result);
               } else {
                 this.canOpenSubPopup = false;
-                let result = {
-                  result: false,
-                  mode: mode,
-                };
                 this.notify.notifyCode('SYS021');
-                this.dialog && this.dialog.close(result);
-              }
+              }              
+              this.dialog && this.dialog.close(resModel);
             });
         } else {
           this.esService
@@ -386,53 +378,43 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 // };
                 this.pdfView
                   .signPDF(mode, this.dialogSignFile.value.comment)
-                  .then((value) => {
-                    if (value) {
-                      let result = {
-                        result: true,
-                        mode: mode,
-                      };
+                  .then((resModel:ResponseModel) => {
+                    if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                      
                       this.esService.statusChange.next(mode);
                       this.esService.setupChange.next(true);
                       this.notify.notifyCode('SYS034');
                       this.canOpenSubPopup = false;
-                      this.dialog && this.dialog.close(result);
                     } else {
                       this.esService.setupChange.next(true);
                       this.canOpenSubPopup = false;
-                      let result = {
-                        result: false,
-                        mode: mode,
-                      };
+                      
                       this.esService
                         .updateTransAwaitingStatus(this.transRecID, true)
                         .subscribe((updateTransStatus) => {
                           //that bai
                           this.esService.setupChange.next(true);
                           this.esService.statusChange.next(3);
-                          this.notify.notifyCode('ES017');
                         });
                       this.notify.notifyCode('SYS021');
-                      this.dialog && this.dialog.close(result);
                     }
+                    this.dialog && this.dialog.close(resModel);
                   });
                 this.canOpenSubPopup = false;
                 
               } else {
                 this.canOpenSubPopup = false;
-                let result = {
-                  result: false,
-                  mode: mode,
-                };
+                let resModel = new ResponseModel();
+                resModel.rowCount=0;//ko thể cập nhật sang đang ký
+                resModel.msgCodeError='ES017';
                 this.esService
                   .updateTransAwaitingStatus(this.transRecID, true)
                   .subscribe((updateTransStatus) => {
                     //that bai
                     this.esService.setupChange.next(true);
                     this.esService.statusChange.next(3);
-                    this.notify.notifyCode('ES017');
+                    this.notify.notifyCode(resModel.msgCodeError);
                   });
-                this.dialog && this.dialog.close(result);
+                this.dialog && this.dialog.close(resModel);
               }
             });
         }
@@ -440,7 +422,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         break;
       }
       case '1': {
-        switch (this.signerInfo.supplier) {
+        switch (this.signerInfo?.supplier) {
           //usb
           case '5': {
             this.esService
@@ -458,53 +440,43 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     this.dialogSignFile.value.comment
                   );
                   if (finalContract) {
-                    let result = {
-                      result: true,
-                      mode: mode,
-                    };
+                    let resModel = new ResponseModel();
+                    resModel.rowCount=1;
+                    resModel.returnStatus='5';
                     this.notify.notifyCode('SYS034');
                     this.canOpenSubPopup = false;
-                    this.dialog && this.dialog.close(result);
+                    this.dialog && this.dialog.close(resModel);
                   } else {
                     this.canOpenSubPopup = false;
-                    let result = {
-                      result: false,
-                      mode: mode,
-                    };
+                    let resModel = new ResponseModel();
+                    resModel.rowCount=0;
                     this.notify.notifyCode('SYS021');
-                    this.dialog && this.dialog.close(result);
+                    this.dialog && this.dialog.close(resModel);
                   }
+                  
                 }
               });
             break;
           }
-
           //vnpt || ky noi bo
           default: {
-            this.pdfView.signPDF(mode, '').then((value) => {
-              if (value) {
-                let result = {
-                  result: true,
-                  mode: mode,
-                };
+            this.pdfView.signPDF(mode, '').then((resModel:ResponseModel) => {
+              if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                
                 this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
-                this.dialog && this.dialog.close(result);
               } else {
                 this.canOpenSubPopup = false;
-                let result = {
-                  result: false,
-                  mode: mode,
-                };
+                
                 this.notify.notifyCode('SYS021');
-                this.dialog && this.dialog.close(result);
-              }
+              }              
+              this.dialog && this.dialog.close(resModel);
             });
             break;
           }
         }
         break;
       }
+
     }
   }
 
