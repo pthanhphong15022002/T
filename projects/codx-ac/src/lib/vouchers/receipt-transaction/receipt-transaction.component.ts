@@ -242,6 +242,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
             lockFields: this.lockFields,
+            journal: this.journal,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -272,6 +273,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
             lockFields: this.lockFields,
+            journal: this.journal,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -312,6 +314,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
             lockFields: this.lockFields,
+            journal: this.journal,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
