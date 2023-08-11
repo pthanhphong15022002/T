@@ -32,6 +32,8 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   currencyID: string;
   exchangeRate: number;
   targetSys: number;
+  isCheckSave = false;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private decimalPipe: DecimalPipe,
@@ -158,8 +160,10 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   }
 
   onSave() {
+    this.isCheckSave = true;
     if (!this.checkTarget()) {
       this.notiService.notifyCode('CM032');
+      this.isCheckSave = false;
       return;
     }
 
@@ -181,11 +185,13 @@ export class PopupChangeAllocationRateComponent implements OnInit {
             this.notiService.notifyCode('SYS021');
             this.dialog.close();
           }
+          this.isCheckSave = false;
         });
     } else {
       this.notiService.notifyCode('SYS007');
       this.dialog.close();
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   outPutClosedSave(lstLinesBySales) {
@@ -249,10 +255,6 @@ export class PopupChangeAllocationRateComponent implements OnInit {
           this.data.titleMonth = titleMonth;
         }
       }
-      this.data.isCollapse = true;
-      lstLinesBySales.forEach((element) => {
-        element.isCollapse = true;
-      });
       this.data.targetsLines = lstLinesBySales;
       this.data.target = this.targetSys;
       this.data.currencyID = this.currencyID;

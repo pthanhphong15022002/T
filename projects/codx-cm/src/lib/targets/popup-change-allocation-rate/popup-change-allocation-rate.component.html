@@ -151,7 +151,7 @@
                           )
                         "
                         class="no-border w-100 text-gray-600 no-spinner"
-                    
+
                       />
                     </div>
                   </td>
@@ -489,7 +489,7 @@
           default="Khôi phục lại"
         ></codx-label>
       </button>
-      <button type="button" class="btn btn-primary" (click)="onSave()">
+      <button type="button" class="btn btn-primary" (click)="onSave()" [disabled]="isCheckSave">
         <codx-label
           name="lblSave"
           [formModel]="dialog.formModel"

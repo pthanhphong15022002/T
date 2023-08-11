@@ -120,7 +120,7 @@ export class PopupAddCasesComponent
   // load data form DP
   isLoading: boolean = false;
   processID: string = '';
-
+  funcID = '';
   applyProcess = false;
   idxCrr: any = -1;
 
@@ -141,7 +141,7 @@ export class PopupAddCasesComponent
     this.caseType = dt?.data?.caseType;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
-
+    this.funcID = dt?.data?.funcID;
     this.cases.status = '1';
 
     if (this.isLoading) {
@@ -708,11 +708,13 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.applyProcess = dataValue?.ProcessCaseUsed == '1';
-      this.cases.applyProcess = this.applyProcess;
-    } else {
-      this.applyProcess = false;
-      this.cases.applyProcess = this.applyProcess;
+      if(this.funcID == "CM0401"){
+        this.applyProcess = dataValue?.ProcessCase == '1';
+        this.cases.applyProcess = this.applyProcess;
+      }else if(this.funcID == "CM0402"){
+        this.applyProcess = dataValue?.ProcessRequest == '1';
+        this.cases.applyProcess = this.applyProcess;
+      }
     }
   }
 
