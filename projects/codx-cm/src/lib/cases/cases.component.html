@@ -77,7 +77,8 @@
 </ng-template>
 
 <!-- end kanban -->
-<ng-template #itemTemplate let-data>  <codx-temp-full
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
     [typeMF]="'hover'"
     [imageId]="data?.customerID"
     [imgOn]="data?.modifiedOn"
@@ -139,40 +140,52 @@
     <div class="d-flex align-items-center justify-content-start mb-1">
       <div>
         <div
-        *ngIf="data.status != '1'"
-        [ngStyle]="{
-          'background-color':
-            data.status == '3' || data.status == '4'
-              ? colorReasonSuccess?.color
-              : data.status == '5' || data.status == '6'
-              ? colorReasonFail?.color
-              : data?.steps['backgroundColor']
-        }"
-        class="me-2 badge badge-sm d-flex align-items-center"
-      >
-        <span
-          [ngClass]="data?.steps['icon']"
-          [ngStyle]="{ color: data?.steps['iconColor'] }"
-          class="me-1"
-        ></span>
-        <span
-          class="menu-title fw-bold line-clamp line-clamp-2"
-          [ngbTooltip]="data?.currentStepName"
-          [ngStyle]="{ color: data?.steps['textColor'] }"
-          >{{ data?.currentStepName }}</span
+          *ngIf="data.status != '1'"
+          [ngStyle]="{
+            'background-color':
+              data.status == '3' || data.status == '4'
+                ? colorReasonSuccess?.color
+                : data.status == '5' || data.status == '6'
+                ? colorReasonFail?.color
+                : data?.steps['backgroundColor']
+          }"
+          class="me-2 badge badge-sm d-flex align-items-center"
         >
-      </div>
-      <!-- {{data.status}} -->
-      <div *ngIf="data.status == '1'">
-        <codx-vll
-        [name]="'DP028'"
-          [field]="'Status'"
-          [value]="data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm"
-        >
-        </codx-vll>
+          <span
+            [ngClass]="data?.steps['icon']"
+            [ngStyle]="{ color: data?.steps['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="menu-title fw-bold line-clamp line-clamp-2"
+            [ngbTooltip]="data?.currentStepName"
+            [ngStyle]="{ color: data?.steps['textColor'] }"
+            >{{ data?.currentStepName }}</span
+          >
+        </div>
+        <!-- {{data.status}} -->
+        <div *ngIf="data.status == '1'">
+          <codx-vll
+            [name]="'DP028'"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+          <codx-vll
+            [name]="vllApprove"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
       </div>
       <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
         <codx-vll
@@ -185,7 +198,6 @@
         >
         </codx-vll>
       </ng-container>
-      </div>
       <div>
         <span class="icon-16 icon-av_timer me-1"></span>
         <span
@@ -199,13 +211,13 @@
 
       <div class="ms-auto">
         <codx-imgs
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="data.owner"
-        objectType="AD_Users"
-        [numberImages]="1"
-      >
-      </codx-imgs>
+          [isToolTip]="true"
+          [width]="25"
+          [objectId]="data.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
       </div>
 
       <!-- <div class="d-flex align-items-center text-gray-600">
@@ -223,12 +235,9 @@
       </div> -->
     </div>
   </div>
-
 </ng-template>
 
-<ng-template #footer let-data>
-
-</ng-template>
+<ng-template #footer let-data> </ng-template>
 <ng-template #baseHeaderRightTmp let-data>
   <span
     class="icon-18 me-1"
