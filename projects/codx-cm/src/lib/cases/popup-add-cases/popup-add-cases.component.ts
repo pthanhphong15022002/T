@@ -170,15 +170,13 @@ export class PopupAddCasesComponent
 
   async onInit(): Promise<void> {
     await this.getCurrentSetting();
-    if (this.action == 'add')
-      this.tabInfo = this.applyProcess
-        ? [this.menuGeneralInfo, this.menuInputInfo]
-        : [this.menuGeneralInfo];
+    this.tabInfo = this.applyProcess
+      ? [this.menuGeneralInfo, this.menuInputInfo]
+      : [this.menuGeneralInfo];
   }
   ngAfterViewInit(): void {
     // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
-    if (this.action == 'add')
-      this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
   }
   valueChange($event) {
     if ($event) {
@@ -708,10 +706,10 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      if(this.funcID == "CM0401"){
+      if (this.funcID == 'CM0401') {
         this.applyProcess = dataValue?.ProcessCase == '1';
         this.cases.applyProcess = this.applyProcess;
-      }else if(this.funcID == "CM0402"){
+      } else if (this.funcID == 'CM0402') {
         this.applyProcess = dataValue?.ProcessRequest == '1';
         this.cases.applyProcess = this.applyProcess;
       }
