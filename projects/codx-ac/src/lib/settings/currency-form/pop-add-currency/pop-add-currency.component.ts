@@ -28,11 +28,16 @@ import { PopAddExchangerateComponent } from '../pop-add-exchangerate/pop-add-exc
 import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting-exchange.component';
 import { ExchangeRates } from '../../../models/ExchangeRates.model';
 import { Currency } from '../../../models/Currency.model';
+import { CodxAcService } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-currency',
   templateUrl: './pop-add-currency.component.html',
-  styleUrls: ['./pop-add-currency.component.css','../../../codx-ac.component.css'],
+  styleUrls: [
+    './pop-add-currency.component.css',
+    '../../../codx-ac.component.css',
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,7 +49,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   exchangerate: ExchangeRates = new ExchangeRates();
   objectExchange: Array<ExchangeRates> = [];
   objectExchangeDelete: Array<ExchangeRates> = [];
-  formType: any;
+  action: any;
   dialog!: DialogRef;
   gridViewSetup: any;
   title: any;
@@ -53,11 +58,13 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   moreFuncNameAdd: any;
   moreFuncNameEdit: any;
   funcName: any;
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     override cache: CacheService,
     override api: ApiHttpService,
     private dt: ChangeDetectorRef,
+    private acService: CodxAcService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -65,7 +72,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
+    this.action = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
     this.keyField = dialog.dataService!.keyField;
     if (this.currencies.calculation == null) {
@@ -80,12 +87,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         if (edit) this.moreFuncNameEdit = edit.customName;
       }
     });
-    this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
-    if (this.formType == 'edit') {
+    if (this.action == 'edit') {
       if (this.currencies.currencyID != null) {
         this.api
           .exec(
@@ -105,14 +107,17 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache
-      .moreFunction('ExchangeRates', 'grvExchangeRates')
-      .subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'ACS20801');
-          if (m) this.funcName = m.defaultName;
-        }
-      });
+    this.acService.getMorefunction('ExchangeRates','grvExchangeRates')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20801');
+        if (m) this.funcName = m.defaultName;
+      }
+    });
+    setTimeout(() => {
+      this.dt.detectChanges();
+    }, 100);
   }
   //#endregion
 
@@ -150,6 +155,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       window.localStorage.removeItem('dataexchange');
     });
   }
+
   openPopup() {
     this.title = this.moreFuncNameAdd + ' ' + this.funcName;
     var obj = {
@@ -211,11 +217,13 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   deleteExchangerate(data: any) {
     let index = this.objectExchange.findIndex((x) => x.recID == data.recID);
     this.objectExchange.splice(index, 1);
     this.objectExchangeDelete.push(data);
   }
+
   editExchangerate(data: any) {
     this.title = this.moreFuncNameEdit + ' ' + this.funcName;
     var obj = {
@@ -258,43 +266,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         }
       });
   }
-  checkValidate() {
 
-    //Note
-    let ignoredFields: string[] = [];
-    if(this.keyField == 'CurrencyID')
-    {
-      ignoredFields.push(this.keyField);
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-    //End Note
-
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.currencies);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if(ignoredFields.includes(keygrid[index].toLowerCase()))
-        {
-          continue;
-        }
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.currencies[keymodel[i]] == null ||
-              String(this.currencies[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
   clearCurrencies() {
     this.objectExchange = [];
   }
@@ -302,136 +274,29 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
 
   //#region Method
   onSave() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
+    //Note
+    let ignoredFields: string[] = [];
+    if (this.keyField == 'CurrencyID') {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+    if (
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gridViewSetup,
+        [''],
+        ignoredFields)
+    ) {
       return;
-    } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.updateCurrencyIDBeforeSave();
-      }
-      if (this.formType == 'edit') {
-        this.dialog.dataService
-          .save((opt: RequestOption) => {
-            opt.methodName = 'UpdateAsync';
-            opt.className = 'CurrenciesBusiness';
-            opt.assemblyName = 'BS';
-            opt.service = 'BS';
-            opt.data = [this.currencies];
-            return true;
-          })
-          .subscribe((res) => {
-            if (res.save || res.update) {
-              this.api
-                .exec(
-                  'ERM.Business.BS',
-                  'ExchangeRatesBusiness',
-                  'UpdateAsync',
-                  [
-                    this.currencies.currencyID,
-                    this.objectExchange,
-                    this.objectExchangeDelete,
-                  ]
-                )
-                .subscribe((res: []) => {
-                  if (res) {
-                    this.dialog.close();
-                    this.dt.detectChanges();
-                  }
-                });
-            }
-          });
-      }
     }
-  }
-  onSaveAdd() {
-    this.checkValidate();
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      if(this.keyField == 'CurrencyID')
-      {
-        this.api.exec(
-          'ERM.Business.AC',
-          'CommonBusiness',
-          'GenerateAutoNumberAsync',
-        )
-        .subscribe((autoNumber: string) => {
-          if(autoNumber)
-          {
-            this.currencies.currencyID = autoNumber;
-            this.saveAdd();
-          }
-        });
-      }
-      else
-      {
-        this.saveAdd();
-      }
+    if (this.action == 'add' || this.action == 'copy') {
+      this.updateCurrencyIDBeforeSave();
     }
-  }
-
-  updateCurrencyIDBeforeSave()
-  {
-    if(this.keyField == 'CurrencyID')
-    {
-      this.api.exec(
-        'ERM.Business.AC',
-        'CommonBusiness',
-        'GenerateAutoNumberAsync',
-      )
-      .subscribe((autoNumber: string) => {
-        if(autoNumber)
-        {
-          this.currencies.currencyID = autoNumber;
-          this.save();
-        }
-      });
-    }
-    else
-    {
-      this.save();
-    }
-  }
-
-  save(){
-    this.dialog.dataService
-    .save((opt: RequestOption) => {
-      opt.methodName = 'AddAsync';
-      opt.className = 'CurrenciesBusiness';
-      opt.assemblyName = 'BS';
-      opt.service = 'BS';
-      opt.data = [this.currencies];
-      return true;
-    })
-    .subscribe((res) => {
-      if (res.save) {
-        this.api
-          .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
-            this.currencies.currencyID,
-            this.objectExchange,
-          ])
-          .subscribe((res: []) => {
-            if (res) {
-              this.dialog.close();
-            }
-          });
-      } else {
-        this.notification.notifyCode(
-          'SYS031',
-          0,
-          '"' + this.currencies.currencyID + '"'
-        );
-        return;
-      }
-    });
-  }
-
-  saveAdd(){
-    this.dialog.dataService
+    if (this.action == 'edit') {
+      this.dialog.dataService
         .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
+          opt.methodName = 'UpdateAsync';
           opt.className = 'CurrenciesBusiness';
           opt.assemblyName = 'BS';
           opt.service = 'BS';
@@ -439,31 +304,149 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           return true;
         })
         .subscribe((res) => {
-          if (res.save) {
+          if (res.save || res.update) {
             this.api
-              .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
-                this.currencies.currencyID,
-                this.objectExchange,
-              ])
+              .exec(
+                'ERM.Business.BS',
+                'ExchangeRatesBusiness',
+                'UpdateAsync',
+                [
+                  this.currencies.currencyID,
+                  this.objectExchange,
+                  this.objectExchangeDelete,
+                ]
+              )
               .subscribe((res: []) => {
                 if (res) {
-                  this.clearCurrencies();
-                  this.dialog.dataService.clear();
-                  this.dialog.dataService.addNew().subscribe((res) => {
-                    this.form.formGroup.patchValue(res);
-                    this.currencies = this.dialog.dataService!.dataSelected;
-                  });
+                  this.dialog.close();
+                  this.dt.detectChanges();
                 }
               });
-          } else {
-            this.notification.notifyCode(
-              'SYS031',
-              0,
-              '"' + this.currencies.currencyID + '"'
-            );
-            return;
           }
         });
+    }
+  }
+
+  onSaveAdd() {
+    //Note
+    let ignoredFields: string[] = [];
+    if (this.keyField == 'CurrencyID') {
+      ignoredFields.push(this.keyField);
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+    //End Note
+    if (
+      !this.acService.validateFormData(
+        this.form.formGroup,
+        this.gridViewSetup,
+        [''],
+        ignoredFields)
+    ) {
+      return;
+    }
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      if (this.keyField == 'CurrencyID') {
+        this.api
+          .exec('ERM.Business.AC', 'CommonBusiness', 'GenerateAutoNumberAsync')
+          .subscribe((autoNumber: string) => {
+            if (autoNumber) {
+              this.currencies.currencyID = autoNumber;
+              this.saveAdd();
+            }
+          });
+      } else {
+        this.saveAdd();
+      }
+    }
+  }
+
+  updateCurrencyIDBeforeSave() {
+    if (this.keyField == 'CurrencyID') {
+      this.api
+        .exec('ERM.Business.AC', 'CommonBusiness', 'GenerateAutoNumberAsync')
+        .subscribe((autoNumber: string) => {
+          if (autoNumber) {
+            this.currencies.currencyID = autoNumber;
+            this.save();
+          }
+        });
+    } else {
+      this.save();
+    }
+  }
+
+  save() {
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'CurrenciesBusiness';
+        opt.assemblyName = 'BS';
+        opt.service = 'BS';
+        opt.data = [this.currencies];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {
+          this.api
+            .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
+              this.currencies.currencyID,
+              this.objectExchange,
+            ])
+            .subscribe((res: []) => {
+              if (res) {
+                this.dialog.close();
+              }
+            });
+        } else {
+          this.notification.notifyCode(
+            'SYS031',
+            0,
+            '"' + this.currencies.currencyID + '"'
+          );
+          return;
+        }
+      });
+  }
+
+  saveAdd() {
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'CurrenciesBusiness';
+        opt.assemblyName = 'BS';
+        opt.service = 'BS';
+        opt.data = [this.currencies];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {
+          this.api
+            .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
+              this.currencies.currencyID,
+              this.objectExchange,
+            ])
+            .subscribe((res: []) => {
+              if (res) {
+                this.clearCurrencies();
+                this.dialog.dataService.clear();
+                this.dialog.dataService.addNew().subscribe((res) => {
+                  this.form.formGroup.patchValue(res);
+                  this.currencies = this.dialog.dataService!.dataSelected;
+                });
+              }
+            });
+        } else {
+          this.notification.notifyCode(
+            'SYS031',
+            0,
+            '"' + this.currencies.currencyID + '"'
+          );
+          return;
+        }
+      });
   }
   //#endregion
 }
