@@ -708,7 +708,6 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-<<<<<<< HEAD
       if(this.funcID == "CM0401"){
         this.applyProcess = dataValue?.ProcessCase == '1';
         this.cases.applyProcess = this.applyProcess;
@@ -716,13 +715,6 @@ export class PopupAddCasesComponent
         this.applyProcess = dataValue?.ProcessRequest == '1';
         this.cases.applyProcess = this.applyProcess;
       }
-=======
-      this.applyProcess = dataValue?.ProcessCaseUsed == '1';
-      this.cases.applyProcess = this.applyProcess;
-    } else {
-      this.applyProcess = false;
-      this.cases.applyProcess = this.applyProcess;
->>>>>>> 3b3c893ee69b0554ff63f0dfeec909b3ca4be1c2
     }
   }
 
