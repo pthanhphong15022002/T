@@ -45,6 +45,9 @@ export class PopupAddLeadComponent
   @ViewChild('tabGeneralContactDetail')
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+  @ViewChild('body') body: TemplateRef<any>;
+  @ViewChild('footer') footer: TemplateRef<any>;
+
   @ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
   @ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -192,13 +195,15 @@ export class PopupAddLeadComponent
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
-    this.executeApiCalls();
+    // this.executeApiCalls();
     this.isCategory = this.lead.category == '1';
   }
 
   onInit(): void {}
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.executeApiCalls();
+  }
 
   valueChange($event) {
     if ($event && $event.data) {
@@ -523,10 +528,7 @@ export class PopupAddLeadComponent
     if (!this.lead.applyProcess) {
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTab(false);
-    }
-
-    this.lead.applyProcess &&
-      (await this.getListInstanceSteps(this.lead.processID));
+    } else await this.getListInstanceSteps(this.lead.processID);
   }
   async getListInstanceSteps(processId: any) {
     processId =
