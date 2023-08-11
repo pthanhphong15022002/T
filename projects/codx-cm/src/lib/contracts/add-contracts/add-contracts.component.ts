@@ -167,6 +167,7 @@ export class AddContractsComponent implements OnInit {
     this.contractsInput = dt?.data?.contract;
 
     this.getFormModel();
+
     this.user = this.authStore.get();
     this.listTypeContract = contractService.listTypeContractAdd;
 
@@ -200,6 +201,10 @@ export class AddContractsComponent implements OnInit {
       this.contracts?.delStatus == '1'
         ? true
         : false;
+
+    this.action !== 'add' &&
+      this.contracts.applyProcess &&
+      this.getListInstanceSteps(this.contracts?.processID);
   }
 
   //#region setData
@@ -223,7 +228,8 @@ export class AddContractsComponent implements OnInit {
       this.contracts.contractType = this.contracts.contractType
         ? this.contracts.contractType
         : '1';
-      this.contracts.applyProcess = this.applyProcess || false;
+      this.contracts.applyProcess =
+        this.action !== 'add' ? this.applyProcess : this.contracts.applyProcess;
       this.contracts.currencyID = this.currnecyID;
       this.loadExchangeRate(this.contracts.currencyID);
       this.setContractByDataOutput();
@@ -927,8 +933,10 @@ export class AddContractsComponent implements OnInit {
           id: processID,
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
-          dealId: this.action !== 'edit' ? res[2] : this.contracts.dealID,
+          dealId: res[2],
         };
+        this.contracts.contractID =
+          this.action !== 'edit' ? obj.dealId : this.contracts.contractID;
         var isExist = this.listMemorySteps.some((x) => x.id === processID);
         if (!isExist) {
           this.listMemorySteps.push(obj);
