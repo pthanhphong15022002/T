@@ -824,6 +824,9 @@ export class PopupAddTargetComponent {
     this.data.period = year;
     this.data.year = year;
     this.text = e?.text;
+    if(this.businessLineID != null){
+      this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+    }
     this.changedetectorRef.detectChanges();
   }
 

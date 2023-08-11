@@ -109,7 +109,10 @@
                 type="button"
                 aria-expanded="false"
               >
-                {{ item.text }}
+              <span class="me-1">{{ item.text }}</span>
+              <span class=""  *ngIf="item.value == '1'">({{countTarget}})</span>
+              <span class=""  *ngIf="item.value == '2'">({{countPersons}})</span>
+
               </button>
             </div>
           </div>
