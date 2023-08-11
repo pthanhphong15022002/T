@@ -892,7 +892,6 @@ export class TargetsComponent
           }
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
-        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });

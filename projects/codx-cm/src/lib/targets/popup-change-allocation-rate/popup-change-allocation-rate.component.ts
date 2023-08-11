@@ -255,10 +255,6 @@ export class PopupChangeAllocationRateComponent implements OnInit {
           this.data.titleMonth = titleMonth;
         }
       }
-      this.data.isCollapse = true;
-      lstLinesBySales.forEach((element) => {
-        element.isCollapse = true;
-      });
       this.data.targetsLines = lstLinesBySales;
       this.data.target = this.targetSys;
       this.data.currencyID = this.currencyID;
