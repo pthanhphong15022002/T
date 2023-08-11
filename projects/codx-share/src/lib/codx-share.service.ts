@@ -50,6 +50,7 @@ import { CodxAddApproversComponent } from './components/codx-approval-procress/c
 import { ES_File } from './components/codx-approval-procress/model/codx-approval-process.model';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { tmpCopyFileInfo } from './models/fileInfo.model';
+import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 
 @Injectable({
   providedIn: 'root',
@@ -350,9 +351,17 @@ export class CodxShareService {
         break;
       }
       //Đính kèm file
-      case 'SYS':
+      case 'SYS003':
       {
-        
+        var datas = 
+        {
+          headerText : val?.data?.customName,
+          objectID : data?.recID,
+          dataSelected: data,
+          referType: customData?.referType,
+          addPermissions: customData?.addPermissions
+        };
+        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas)
       }
 
     }

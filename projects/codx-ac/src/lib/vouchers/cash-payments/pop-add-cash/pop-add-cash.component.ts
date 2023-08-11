@@ -183,7 +183,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       emitEvent: false,
     });
     this.setTabindex();
-    this.onFocus();
+    //this.onFocus();
   }
   //#endregion
 
@@ -296,7 +296,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e: any) {
-    if (e && e.data) {
+    if (e && e.data && this.cashpayment[e.field] != e.data) {
       this.cashpayment[e.field] = e.data;
       this.cashpayment.updateColumn = e.field;
       let preValue = null;
@@ -868,8 +868,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
               this.gridCash.refresh();
               break;
           }
+          this.loadTotal();
+          this.dialog.dataService.update(this.cashpayment).subscribe();
           this.api
             .exec('AC', this.classNameLine, 'UpdateAfterDelete', [
+              this.cashpayment,
               data,
               this.cashpaymentline,
             ])
@@ -1511,6 +1514,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
     switch (this.action) {
+      case 'copy':
+        if (this.journal.assignRule == '1') {
+          this.acService
+            .execApi(
+              'ERM.Business.AC',
+              'CommonBusiness',
+              'GenerateAutoNumberAsync',
+              this.journal.voucherFormat
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                this.cashpayment.voucherNo = res;
+                this.form.formGroup.patchValue(
+                  { voucherNo: this.cashpayment.voucherNo },
+                  {
+                    onlySelf: true,
+                    emitEvent: false,
+                  }
+                );
+              }
+            });
+        } 
+        break;
       case 'edit':
         this.hasSaved = true;
         switch (this.cashpayment.subType) {

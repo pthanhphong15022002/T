@@ -40,7 +40,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab>
+    <ejs-tab tabindex="-1" #tab>
       <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
@@ -140,7 +140,7 @@
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row mt-5">
+    <div class="row mt-5 ac-form-master">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
@@ -367,6 +367,8 @@
         [autoAddRow]="false"
         [showEmptyRecord]="false"
         [showRowNumber]="true"
+        [editOnClick]="true"
+        [isCustom]="false"
         (eventAction)="autoAddRow($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
@@ -378,6 +380,7 @@
         <button
           id="btnadd"
           type="button"
+          tabindex="8"
           class="btn btn-sm btn-light-primary"
           (keydown.enter)="addRow(); $event.preventDefault()"
           (click)="addRow()"
@@ -788,6 +791,7 @@
     >
       <button
         style="border: 1px solid"
+        tabindex="9"
         id="discard"
         type="button"
         class="btn btn-md btn-light-danger me-2"
@@ -804,6 +808,7 @@
       </button>
       <button
         style="border: 1px solid var(--primary-dark) !important"
+        tabindex="10"
         type="button"
         class="btn btn-md btn-light-primary me-2"
         (click)="onSaveAdd()"
@@ -819,6 +824,7 @@
       </button>
       <button
         id="save"
+        tabindex="11"
         type="button"
         class="btn btn-md btn-primary"
         style="min-width: 60px"

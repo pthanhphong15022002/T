@@ -55,7 +55,7 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'attachment'">
-      <codx-attachment
+      <!-- <codx-attachment
         #attachment
         [objectType]="entityName"
         [objectId]="objectID"
@@ -81,7 +81,25 @@
         [isReferType]="true"
         [pageLoading]="false"
       >
-      </codx-attachment>
+      </codx-attachment> -->
+      <codx-files-attachment
+        [entityName]="entityName"
+        [objectID]="objectID"
+        [hideFolder]="1"
+        [isEdit]="isEdit"
+        [hideFolder]="hideFolder"
+        [type]="type"
+        [allowMultiFile]="allowMultiFile"
+        [formModel]="formModel"
+        [funcID]="funcID"
+        [dataSelected]="dataSelected"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        (fileSave)="fileSave($event)"
+        [displayThumb]="displayThumb"
+        [referType]="!referType ? 'attach' : referType"
+        [addPermissions]="addPermissions"
+      ></codx-files-attachment>
       <!-- [allowExtensions]="allowExtensions" -->
     </ng-container>
     <ng-container *ngSwitchCase="'comment'">
