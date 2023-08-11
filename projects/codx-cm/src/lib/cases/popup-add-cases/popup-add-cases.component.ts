@@ -385,9 +385,10 @@ export class PopupAddCasesComponent
       await this.getGridView(this.formModel);
       if (this.processID) {
         await this.getListInstanceSteps(this.cases.processID);
-      } else {
-        this.itemTabs(false);
       }
+      //  else {
+      //   this.itemTabs(false);
+      // }
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
