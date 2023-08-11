@@ -942,7 +942,6 @@ export class AddContractsComponent implements OnInit {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.contracts.contractID = obj.dealId;
         this.getFields(this.listInstanceSteps);
       }
     });

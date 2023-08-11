@@ -62,7 +62,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vllIssue: any = 'AC117';
   funcID: any;
   loading: any = false;
-  loadingform: any = true;
   journal: IJournal;
   receiptsFormName: string = 'VouchersReceipts';
   receiptsGrvName: string = 'grvVouchersReceipts';
@@ -193,10 +192,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   {
     this.setVisibleColumn(columnsGrid);
     this.setHideColumns(columnsGrid);
-    setTimeout(() => {
-      this.loadingform = false;
-      this.dt.detectChanges();
-    }, 1000);
+    this.dt.detectChanges();
   }
 
   clickMF(e, data) {
