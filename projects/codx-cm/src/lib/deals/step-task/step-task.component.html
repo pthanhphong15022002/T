@@ -143,7 +143,7 @@
         [isShowStep]="true"
         [isStart]="dataSelected?.status == '2'"
         [isClose]="dataSelected?.closed"
-        [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+        [isRoleAll]="dataSelected?.full"
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
         [isTaskFirst]="i == 0 ? true : false"

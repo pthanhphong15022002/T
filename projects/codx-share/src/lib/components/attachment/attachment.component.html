@@ -153,7 +153,7 @@
                         </div>
                     </div>
                     <div [style]="{'display': (hideUploadBtn == '1' ? 'none' : '')}" class="control-section mb-3">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 uploadtemplate">
                             <div class="d-flex justify-content-between align-item-center dropzone dropzone-default dropzone-primary "
                                 id='dropArea'>
 
@@ -195,11 +195,28 @@
                                 </div> -->
                                 <!--begin::Controls-->
                                 <div class="dropzone-panel">
+                                    <div class="btn-attachment d-flex align-items-center py-3 px-6" (click)="uploadFile()">
+                                        <codx-label [formName]="'lblSeletedAttachment'" fiedName="SeletedAttachment" default="Chọn tệp tin"></codx-label>
+                                        <img src="../../assets/themes/sys/default/img/BrowseLocal.svg" class="text-white ms-6" title="Tải lên từ máy tính"/>
+                                        <img src="../../assets/themes/sys/default/img/BrowseCoDX.svg" class="img-attachment-codx ms-3" title="Tải lên từ phần mềm" (click)="openUploadForm()"/>
+                                    </div>
+                                    <ejs-uploader #templateupload 
+                                        id='templatefileupload'
+                                        [allowedExtensions]='allowExtensions' 
+                                        [multiple]='allowMultiple()'
+                                        [asyncSettings]='path' 
+                                        [dropArea]='dropElement'
+                                        (selected)='onFileSelect($event)'
+                                        >
+                                    </ejs-uploader>
+
+                                </div>
+                                <!-- <div class="dropzone-panel">
                                     <ejs-uploader #templateupload id='templatefileupload'
                                         [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                         [asyncSettings]='path' [dropArea]='dropElement'
                                         (selected)='onFileSelect($event)'></ejs-uploader>
-                                </div>
+                                </div> -->
                                 <!--end::Controls-->
                             </div>
                         </div>

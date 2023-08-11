@@ -326,6 +326,10 @@ export class CodxAcService {
     return this.cache.functionList(funcID);
   }
 
+  getMorefunction(formName,gridviewName){
+    return this.cache.moreFunction(formName,gridviewName);
+  }
+
   checkExistAccount(data: any): boolean {
     let result: boolean = true;
     this.api

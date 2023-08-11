@@ -373,10 +373,9 @@
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 showRowNumber="true" class="tabLine" #gridCash [allowRowDragAndDrop]="true"
         [formName]="fmCashLines.formName" [gridViewName]="fmCashLines.gridViewName"
-        [entityName]="fmCashLines.entityName" [editSettings]="modegrid == '1' ? editSettings : noEditSetting"
-        predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true" [templateMore]="morefunction"
-        [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC" [autoLoad]="false"
-        [editOnClick]="true" [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35"
+        [entityName]="fmCashLines.entityName" predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true"
+        [templateMore]="morefunction" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
+        [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35"
         [showEmptyRecord]="false" (onAddNew)="onAddNew($event)" (eventAction)="autoAddRow($event)"
         (onEdit)="onEdit($event)" (cellChanged)="lineChanged($event)" [isCustom]="false"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
@@ -419,7 +418,7 @@
     *ngIf="((cashpayment?.subType == '2') || cashpayment?.subType == '12' ||(cashpayment?.subType == '3' && subtypeRef == '2') || (cashpayment?.subType == '4' && subtypeRef == '2')  || (cashpayment?.subType == '9'))">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #gridSet formName="SettledInvoices" gridViewName="grvSettledInvoices" [showEmptyRecord]="false"
-        entityName="AC_SettledInvoices" showRowNumber="true" [editSettings]="editSettings" rowHeight="35"
+        entityName="AC_SettledInvoices" showRowNumber="true" rowHeight="35"
         [editOnClick]="true" [allowFiltering]="true" [autoAddRow]="true" (eventAction)="autoAddRowSet($event)"
         [allowSorting]="true" [hideMoreFunc]="true" [dataValues]="form.data.recID" service="AC" [autoLoad]="false"
         [autoFitColumns]="false" [dataSource]="settledInvoices" (gridInit)="gridInitSet($event)"
@@ -427,7 +426,8 @@
       </codx-gridview-v2>
       <div class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="action != 'edit' && (cashpayment?.subType == '2' || cashpayment?.subType == '9' || cashpayment?.subType == '12' )">
+          <div
+            *ngIf="action != 'edit' && (cashpayment?.subType == '2' || cashpayment?.subType == '9' || cashpayment?.subType == '12' )">
             <button style="border: 1px solid !important;" tabindex="14" id="btnset"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="settlement(0); $event.preventDefault();"
               (click)="settlement(0)">
@@ -436,7 +436,8 @@
                 default="Đề xuất thanh toán"></codx-label>
             </button>
           </div>
-          <div *ngIf="(cashpayment?.subType == '2') || (cashpayment?.subType == '9' || cashpayment?.subType == '12')" class="ms-2">
+          <div *ngIf="(cashpayment?.subType == '2') || (cashpayment?.subType == '9' || cashpayment?.subType == '12')"
+            class="ms-2">
             <button style="border: 1px solid !important;" tabindex="15" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="settlement(1); $event.preventDefault();" (click)="settlement(1)">
               <i class="icon-i-clipboard-plus icon-16"></i>
@@ -472,7 +473,7 @@
     *ngIf="(cashpayment?.subType == '9') && (form.formModel.funcID == 'ACT0410' || form.formModel.funcID == 'ACT0429')">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #gridVat formName="VATInvoices" gridViewName="grvVATInvoices" [showEmptyRecord]="false"
-        [editOnClick]="true" entityName="AC_VATInvoices" showRowNumber="true" [editSettings]="editSettings"
+        [editOnClick]="true" entityName="AC_VATInvoices" showRowNumber="true" 
         rowHeight="35" (cellChanged)="lineVatchange($event)" [allowFiltering]="true" [autoAddRow]="false"
         [allowSorting]="true" (onAddNew)="onAddNewVat($event)" (eventAction)="autoAddRowVat($event)"
         (onEdit)="onEditVat($event)" [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false"
@@ -616,7 +617,7 @@
         class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscard(); $event.preventDefault();"
         (click)="onDiscard()">
         <div class="d-flex align-items-center">
-          <i class="icon-delete_outline icon-16"></i>
+          <i class="icon-cancel icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
@@ -645,7 +646,7 @@
 <!-- Start: Tab Referen -->
 <ng-template #tabRef>
   <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="cashpayment?.recID"
-    [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+    [funcID]="form.formModel.funcID"></codx-tabs>
 </ng-template>
 <!-- End: Tab Referen -->
 

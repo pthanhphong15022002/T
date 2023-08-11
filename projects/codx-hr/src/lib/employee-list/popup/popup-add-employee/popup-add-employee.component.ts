@@ -178,11 +178,19 @@ export class PopupAddEmployeeComponent implements OnInit {
           this.data['wardID'] = null;
           this.form.formGroup.patchValue({ districtID: null, wardID: null });
           break;
+        case 'districtID':
+          this.data['wardID'] = null;
+          this.form.formGroup.patchValue({ wardID: null });
+          break;
         case 'tProvinceID':
           this.data['tDistrictID'] = null;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tDistrictID: null, tWardID: null });
           break;
+        case 'tDistrictID':
+          this.data['tWardID'] = null;
+          this.form.formGroup.patchValue({ tWardID: null });
+          break;;
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
@@ -351,7 +359,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.dialogRef.close(res ? res : null);
           });
       }
-    }else {
+    } else {
       this.notifySV.notifyCode('SYS007');
       this.dialogRef.close(null);
     }
