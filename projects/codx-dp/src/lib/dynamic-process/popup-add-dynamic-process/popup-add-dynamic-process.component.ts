@@ -214,7 +214,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isAddStage = true;
   headerText = '';
   headerFiedName = '';
-  groupTaskID = '';
+  groupTaskID = null;
   stepRoleOld: any;
   typeTask: any;
   actionStep = '';
@@ -2504,10 +2504,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.isEditReason = false;
     if (type === 'add') {
       this.stepNew = null;
+      let countStep = this.stepList?.length || 0;
       this.stepNew = new DP_Steps();
       this.stepNew['processID'] = this.process?.recID;
-      this.stepNew['stepNo'] = this.stepList.length + 1;
+      this.stepNew['stepNo'] = countStep + 1;
       this.stepNew['createdBy'] = this.userId;
+      this.stepNew['instanceProgress'] = this.stepList[countStep - 1]?.instanceProgress || 0;
     } else if (type === 'copy') {
       this.stepNew = step;
     } else {
@@ -2732,7 +2734,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
       taskGroup['indexNo'] = index + 1;
-      this.taskGroupList.splice(index - 1, 0, taskGroup);
+      let isGroupNull = this.taskGroupList?.some((taskGroup) => !taskGroup?.recID);
+      if(isGroupNull){ // nếu có group rỗng thì thêm sau nó
+        this.taskGroupList.splice(index - 1, 0, taskGroup);
+      }else{
+        this.taskGroupList.push(taskGroup);
+      }
+      
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
@@ -2880,12 +2888,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let index = this.taskGroupList.findIndex(
       (group) => group.recID == taskData.taskGroupID
     );
-    if (this.taskGroupList?.length == 0 && index < 0) {
+    if (this.taskGroupList?.length == 0 || (index < 0 && !this.taskGroupList?.some((group) => !group.recID))) {
       let taskGroupNull = new DP_Steps_TaskGroups();
-      taskGroupNull['task'] = [];
+      taskGroupNull['task'] = [taskData];
       taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
       this.taskGroupList.push(taskGroupNull);
-      this.taskGroupList[0]['task']?.push(taskData);
     } else {
       this.taskGroupList[index]['task']?.push(taskData);
     }
@@ -4353,6 +4360,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let countStep = this.stepList?.length || 0;
         let opacityDefault = Number((1 / countStep).toFixed(2));
         let opacity = opacityDefault * Number(step?.stepNo || 1);
+        opacity = opacity > 1 ? 1 : opacity;
         let color = this.hexToRGB(this.colorDefault, opacity);
         return color;
       }
@@ -4431,4 +4439,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupAddStage.close();
   }
   //#endregion
+
+  valueChangeChecked(event, data){
+    if(event){
+      data[event.field] = event?.data || false;
+    }
+  }
 }

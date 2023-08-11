@@ -49,18 +49,11 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   isEditMode = false;
 
   public chartData: Object[] = [
-    { month: 'Jan', sales: 35 },
-    { month: 'Feb', sales: 28 },
-    { month: 'Mar', sales: 34 },
-    { month: 'Apr', sales: 32 },
-    { month: 'May', sales: 40 },
-    { month: 'Jun', sales: 32 },
-    { month: 'Jul', sales: 35 },
-    { month: 'Aug', sales: 55 },
-    { month: 'Sep', sales: 38 },
-    { month: 'Oct', sales: 30 },
-    { month: 'Nov', sales: 25 },
-    { month: 'Dec', sales: 32 },
+    { month: 'Phòng kế toán', sales: 35 },
+    { month: 'Phòng nhân sự', sales: 28 },
+    { month: 'Ban giám đốc', sales: 34 },
+    { month: 'Phòng hành chính', sales: 32 },
+    { month: 'Phòng phát triển', sales: 40 },
   ];
 
   public primaryXAxis: Object = {
@@ -169,10 +162,6 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     },
   ];
 
-  public leafItemSettings: object = {
-    labelPath: 'State',
-  };
-
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -184,7 +173,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     this.panels1 = JSON.parse(
-      '[{"id":"0.9605255352952085_layout","row":0,"col":0,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê dung lượng tài liệu tải lên"},{"id":"0.47112877938374287_layout","row":0,"col":12,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header":"Tài liệu theo phân hệ"},{"id":"0.7647024471772221_layout","row":0,"col":24,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê tài liệu theo bộ phận"},{"id":"0.6213687501730532_layout","row":12,"col":12,"sizeX":24,"sizeY":12,"minSizeX":24,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header":"Thống kê mức độ sử dụng tài liệu theo bộ phận"},{"id":"0.7292886175486251_layout","row":0,"col":36,"sizeX":12,"sizeY":24,"minSizeX":12,"minSizeY":24,"maxSizeX":null,"maxSizeY":null, "header":"Top tài liệu"}]'
+      '[{"id":"0.9605255352952085_layout","row":0,"col":0,"sizeX":12,"sizeY":22,"minSizeX":12,"minSizeY":22,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê dung lượng tài liệu tải lên"},{"id":"0.47112877938374287_layout","row":0,"col":12,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header":"Tài liệu theo phân hệ"},{"id":"0.7647024471772221_layout","row":0,"col":24,"sizeX":12,"sizeY":12,"minSizeX":12,"minSizeY":12,"maxSizeX":null,"maxSizeY":null, "header": "Thống kê tài liệu theo bộ phận"},{"id":"0.6213687501730532_layout","row":12,"col":12,"sizeX":24,"sizeY":10,"minSizeX":24,"minSizeY":10,"maxSizeX":null,"maxSizeY":null, "header":"Thống kê mức độ sử dụng tài liệu theo bộ phận"},{"id":"0.7292886175486251_layout","row":0,"col":36,"sizeX":12,"sizeY":22,"minSizeX":12,"minSizeY":22,"maxSizeX":null,"maxSizeY":null, "header":"Top tài liệu"}]'
     );
     this.datas1 = JSON.parse(
       '[{"panelId":"0.9605255352952085_layout","data":"1"},{"panelId":"0.47112877938374287_layout","data":"2"},{"panelId":"0.7647024471772221_layout","data":"3"},{"panelId":"0.6213687501730532_layout","data":"4"},{"panelId":"0.7292886175486251_layout","data":"5"}]'
@@ -206,7 +195,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-
+    this.pageTitle.setBreadcrumbs([]);
     this.routerActive.queryParams.subscribe((res) => {
       if (res.reportID) {
         this.reportID = res.reportID;
@@ -238,7 +227,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     model.dataValues = dataValues;
 
     this.api
-      .exec('TM', 'TaskBusiness', 'GetDataMyDashboardAsync', [model, params])
+      .exec('DM', 'FileBussiness', 'GetDataDashboardAsync', [])
       .subscribe((res) => {
         this.dbData = res;
 
@@ -298,5 +287,59 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
 
   toFixed(value: number) {
     return value % 1 === 0 ? value : value.toFixed(2);
+  }
+
+  getAvatar(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
+    switch (ext) {
+      case '.txt':
+        return 'txt.svg';
+      case '.doc':
+      case '.docx':
+        return 'doc.svg';
+      case '.7z':
+      case '.rar':
+      case '.zip':
+        return 'zip.svg';
+      case '.jpg':
+      case '.jpeg':
+      case '.jfif':
+        return 'jpg.svg';
+      case '.mp4':
+        return 'mp4.svg';
+      case '.xls':
+      case '.xlsx':
+        return 'xls.svg';
+      case '.pdf':
+        return 'pdf.svg';
+      case '.png':
+        return 'png.svg';
+      case '.js':
+        return 'javascript.svg';
+      case '.apk':
+        return 'android.svg';
+      case '.ppt':
+        return 'ppt.svg';
+      case '.mp3':
+      case '.wma':
+      case '.wav':
+      case '.flac':
+      case '.ogg':
+      case '.aiff':
+      case '.aac':
+      case '.alac':
+      case '.lossless':
+      case '.wma9':
+      case '.aac+':
+      case '.ac3':
+        return 'audio.svg';
+      default:
+        return 'file.svg';
+    }
+  }
+
+  getThumbnail(data) {
+    return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;
   }
 }
