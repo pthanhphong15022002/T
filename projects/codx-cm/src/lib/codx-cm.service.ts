@@ -990,6 +990,15 @@ export class CodxCmService {
     );
   }
 
+  getListUserByBUID(data){
+    return this.api.exec<any>(
+      'AD',
+      'UsersBusiness',
+      'GetListUserByBUIDAsync',
+      data
+    );
+  }
+
   //#endregion -- Bao
 
   //contracts -- nvthuan

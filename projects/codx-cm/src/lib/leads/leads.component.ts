@@ -422,11 +422,7 @@ export class LeadsComponent
     let functionMappings;
     let isDisabled = (eventItem, data) => {
       // Mặc định
-      eventItem.disabled =
-        data?.alloweStatus == '1'
-          ? (data.closed && !['0', '1'].includes(data.status)) ||
-            ['0', '1'].includes(data.status) ||
-            this.checkMoreReason(data) ||
+      eventItem.disabled = data?.alloweStatus == '1'? (data.closed && !['0', '1'].includes(data.status)) ||  ['0', '1'].includes(data.status) ||   this.checkMoreReason(data) ||
             !data.applyProcess
           : true;
     };
@@ -1281,7 +1277,7 @@ export class LeadsComponent
   }
 
   openOrCloseLead(data, check) {
-    var datas = [data.recID, data.processID, check];
+    var datas = [data.recID, check];
     this.notificationsService
       .alertCode('DP018', null, this.titleAction, "'" + data.leadName + "'")
       .subscribe((info) => {
@@ -1299,17 +1295,17 @@ export class LeadsComponent
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();
               }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
+              // if (
+              //   data.showInstanceControl === '0' ||
+              //   data.showInstanceControl === '2'
+              // ) {
+              //   this.view.dataService.remove(this.dataSelected).subscribe();
+              //   this.dataSelected = this.view.dataService.data[0];
+              //   this.view.dataService.onAction.next({
+              //     type: 'delete',
+              //     data: data,
+              //   });
+              // }
               this.detectorRef.detectChanges();
             }
           });
