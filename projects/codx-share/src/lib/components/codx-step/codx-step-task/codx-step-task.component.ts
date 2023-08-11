@@ -2214,4 +2214,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   setBackground(status){
     return status == 1 ? { background: '#ef4023'} : (status == 2 ? { background: '#d1d1d1' } : { background: '#28a745'})
   }
+  setBackgroundGroup(group) {
+    return group?.progress == 0
+      ? { background: '#ef4023' }
+      : group?.progress < 100 && group?.progress > 0
+      ? { background: '#d1d1d1' }
+      : { background: '#28a745' };
+  }
 }
