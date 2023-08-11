@@ -337,8 +337,9 @@ export class PopupAddLeadComponent
       // this.itemTab(true);
     } else {
       this.getAutoNumber();
+      this.itemTab(false);
     }
-    this.itemTab(false);
+
     this.lead.applyProcess = check;
   }
   async getAutoNumber() {
@@ -517,15 +518,15 @@ export class PopupAddLeadComponent
       this.lead.currencyID = this.currencyIDDefault;
       this.lead.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.lead.applyProcess);
-    } else {
-      if (!this.lead.applyProcess) {
-        if (this.action !== this.actionEdit) this.getAutoNumber();
-        this.itemTab(false);
-      }
-
-      this.lead.applyProcess &&
-        (await this.getListInstanceSteps(this.lead.processID));
     }
+
+    if (!this.lead.applyProcess) {
+      if (this.action !== this.actionEdit) this.getAutoNumber();
+      this.itemTab(false);
+    }
+
+    this.lead.applyProcess &&
+      (await this.getListInstanceSteps(this.lead.processID));
   }
   async getListInstanceSteps(processId: any) {
     processId =
