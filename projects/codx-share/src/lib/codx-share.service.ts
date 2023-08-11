@@ -232,7 +232,7 @@ export class CodxShareService {
             //   dataService.update(data).subscribe();
             // }
             if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
-              data.unbounds.statusApproval = x.event?.mode;
+              data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
             }
