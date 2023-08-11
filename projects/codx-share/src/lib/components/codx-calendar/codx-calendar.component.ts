@@ -492,20 +492,21 @@ export class CodxCalendarComponent
       };
     }
     let calendarType = event.value;
-    if (calendarType == 'COT02') {
-      (this.calendarCenter.view.currentView as any).schedule.currentView =
-        'TimelineMonth';
-      (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
-        false;
-      this.detectorRef.detectChanges();
-    } else {
-      (this.calendarCenter.view.currentView as any).schedule.currentView =
-        'Month';
-      (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
-        true;
+    // if (calendarType == 'COT02') {
+    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
+    //     'TimelineMonth';
+    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
+    //     false;
+    //   this.detectorRef.detectChanges();
+    // } else {
+    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
+    //     'Month';
+    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
+    //     true;
 
-      this.detectorRef.detectChanges();
-    }
+    //   this.detectorRef.detectChanges();
+    // }
+
     //reset data
     this.calendarService.calendarData$.next([]);
     this.api

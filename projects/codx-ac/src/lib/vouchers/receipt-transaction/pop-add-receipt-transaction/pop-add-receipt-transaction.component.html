@@ -40,7 +40,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab>
+    <ejs-tab #tab>
       <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
@@ -367,6 +367,8 @@
         [autoAddRow]="false"
         [showEmptyRecord]="false"
         [showRowNumber]="true"
+        [editOnClick]="true"
+        [isCustom]="false"
         (eventAction)="autoAddRow($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"

@@ -102,6 +102,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.dataSelected;
     this.cache.valueList('DP032').subscribe((res) => {
       if (res?.datas) {
         this.status = res?.datas?.filter(
