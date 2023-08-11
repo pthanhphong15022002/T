@@ -209,7 +209,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            fiedName="SalespersonID"
+            fiedName="Owner"
             default="Nhân viên bán hàng"
             [formModel]="formModelDeals"
           >
@@ -217,8 +217,8 @@
           <ejs-combobox
             [dataSource]="listParticipants"
             [fields]="fieldCbxParticipants"
-            [value]="deal?.salespersonID"
-            [placeholder]="gridViewSetupDeal?.SalespersonID?.description"
+            [value]="deal?.owner"
+            [placeholder]="gridViewSetupDeal?.Owner?.description"
             (valueChange)="valueChangeOwner($event)"
           ></ejs-combobox>
         </div>
