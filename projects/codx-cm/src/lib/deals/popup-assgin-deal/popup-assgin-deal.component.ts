@@ -40,6 +40,7 @@ positionName: string = '';
 
 listParticipants = [];
 
+listUser:any[] = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID:string = 'ViewBUID';
 readonly viewDefault:string = 'ViewDefault';
@@ -63,7 +64,6 @@ constructor(
     this.processID = dialogData?.data.processID;
   }
   this.recID = dialogData?.data?.recID;
-  debugger;
   this.buid = dialogData?.data?.buid;
   this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
@@ -181,6 +181,12 @@ changeOwner(evt: any, view: any) {
     }
     else if(view === this.viewBUID) {
       this.buid =  evt.data;
+      var datas= [this.buid];
+      this.codxCmService.getListUserByBUID(datas).subscribe((res)=> {
+        if(res){
+         this.listUser = res;
+        }
+      })
       this.owner = evt.component.itemsSelected[0].Owner;
     }
 
@@ -207,12 +213,16 @@ assignTo(user:any){
   this.orgUnitName = user?.orgUnitName;
   this.positionName = user?.positionName;
 }
-deleteOrg() {
-  this.employeeName ='';
-  this.orgUnitName ='';
-  this.positionName ='';
-  this.objectID ='';
-  this.detectorRef.detectChanges();
+deleteOrg($event) {
+  if($event) {
+    let index = this.listUser.findIndex(x=>x.userID === $event );
+    this.listUser.splice(index, 1);
+
+    if(this.listUser.length < 0 && !this.listUser) {
+      this.owner = '';
+      this.buid = '';
+    }
+  }
 }
 
 

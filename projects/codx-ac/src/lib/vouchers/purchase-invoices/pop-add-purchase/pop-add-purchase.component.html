@@ -38,6 +38,7 @@
       heightAdjustMode="Fill"
       class="overflow-auto mb-4"
       id="styledTab"
+      (created)="onTabCreated($event, tab)"
       #tab
     >
       <e-tabitems>

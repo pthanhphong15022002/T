@@ -7,7 +7,6 @@
     [value]="deal?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
-
 </ng-template>
 <ng-template #body let-form>
   <div class="row">
@@ -36,34 +35,31 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           fiedName="BusinessLineID"
-
         >
         </codx-label>
-        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll ">
+        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll">
           <codx-input
-          [formModel]="form.formModel"
-          field="businessLineID"
-          [crrValue]="deal?.businessLineID"
-          [disabled]="deal?.processID || action === actionEdit "
-          [model]="{ProcessID: deal?.processID }"
-          (valueChange)="valueChangeBusinessLine($event)"
-        >
-        </codx-input>
+            [formModel]="form.formModel"
+            field="businessLineID"
+            [crrValue]="deal?.businessLineID"
+            [disabled]="deal?.processID || action === actionEdit"
+            [model]="{ ProcessID: deal?.processID }"
+            (valueChange)="valueChangeBusinessLine($event)"
+          >
+          </codx-input>
         </div>
         <ng-template #viewAll>
           <codx-input
-          [formModel]="form.formModel"
-          field="businessLineID"
-          [disabled]="action === actionEdit "
-          [crrValue]="deal?.businessLineID"
-          (valueChange)="valueChangeBusinessLine($event)"
-        >
-        </codx-input>
+            [formModel]="form.formModel"
+            field="businessLineID"
+            [disabled]="action === actionEdit"
+            [crrValue]="deal?.businessLineID"
+            (valueChange)="valueChangeBusinessLine($event)"
+          >
+          </codx-input>
         </ng-template>
-
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-6">
@@ -82,8 +78,6 @@
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-
-
       </div>
     </div>
 
@@ -95,17 +89,15 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-      <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="channelID"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
-
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="channelID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-12">
@@ -138,9 +130,8 @@
         </codx-label>
         <div class="d-flex flex-row">
           <div class="col-8 pe-2">
-
             <codx-input
-            type="number"
+              type="number"
               field="dealValue"
               [min]="0"
               [crrValue]="deal?.dealValue"
@@ -164,22 +155,21 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           fiedName="EndDate"
         >
         </codx-label>
         <codx-input
-        type="datetime"
-        field="endDate"
-        format="d"
-        [crrValue]="deal?.endDate"
-        (valueChange)="valueChangeDate($event)"
-      >
-      </codx-input>
+          type="datetime"
+          field="endDate"
+          format="d"
+          [crrValue]="deal?.endDate"
+          (valueChange)="valueChangeDate($event)"
+        >
+        </codx-input>
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-6">
@@ -191,15 +181,15 @@
         >
         </codx-label>
         <codx-input
-        type="number"
-        [min]="0"
-        [max]="100"
-        [placeholder]="gridViewSetup?.Probability?.description"
-        field="probability"
-        [crrValue]="deal?.probability"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+          type="number"
+          [min]="0"
+          [max]="100"
+          [placeholder]="gridViewSetup?.Probability?.description"
+          field="probability"
+          [crrValue]="deal?.probability"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
     <div class="col-6">
@@ -210,13 +200,16 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-    <ejs-combobox [dataSource]="listParticipants"
-    (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-    [placeholder]="gridViewSetup?.SalespersonID?.description"
-    [allowFiltering]='true' [value]="owner"></ejs-combobox>
+        <ejs-combobox
+          [dataSource]="listParticipants"
+          (valueChange)="valueChangeOwner($event)"
+          [fields]="fieldCbxParticipants"
+          [placeholder]="gridViewSetup?.SalespersonID?.description"
+          [allowFiltering]="true"
+          [value]="owner"
+        ></ejs-combobox>
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-6">
@@ -228,35 +221,34 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="expectedClosed"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="expectedClosed"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
 
     <div class="col-6">
       <div class="form-group">
         <codx-label
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           fiedName="ConsultantID"
         >
         </codx-label>
         <codx-input
-        field="consultantID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        [crrValue]="deal?.salespersonID"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+          field="consultantID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [crrValue]="deal?.salespersonID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
-
+    </div>
   </div>
-</div>
 
   <div class="row">
     <div class="col-12">
@@ -277,7 +269,6 @@
         </codx-input>
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-12">
@@ -298,7 +289,6 @@
         </codx-input>
       </div>
     </div>
-
   </div>
 </ng-template>
 
@@ -306,7 +296,8 @@
   <div class="d-flex justify-content-between">
     <div></div>
     <button
-      type="button"button
+      type="button"
+      button
       class="btn btn-primary ms-1"
       (click)="saveOpportunity()"
     >
@@ -316,11 +307,11 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty ">
-    <ng-container *ngFor="let step of listInstanceSteps">
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
+    <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
-          <div class="form-group">
+          <div class="form-group" *ngIf="checkAddField(step, idx)">
             <codx-input-custom-field
               [customField]="item"
               [checkValid]="false"
@@ -354,13 +345,15 @@
   ></codx-layout-add>
 
   <ng-template #tabGeneralInfoDetail>
-    <ng-container [ngTemplateOutlet]="body"
-    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
   <ng-template #tabInputInfo>
-    <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
-    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    <ng-container
+      [ngTemplateOutlet]="tabCustomFieldDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
 
@@ -373,9 +366,7 @@
 </ng-container>
 
 <ng-template #dataIsEmpty>
-<codx-no-data>
-
-</codx-no-data>
+  <codx-no-data> </codx-no-data>
 </ng-template>
 
 <ng-template #contact>

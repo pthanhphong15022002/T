@@ -35,6 +35,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('warehouse') warehouse: CodxInputComponent;
+  @ViewChild('tab') tab: TabComponent;
+  
   private destroy$ = new Subject<void>();
 
   keymodel: any = [];
@@ -53,7 +55,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
   lockFields = [];
-  tab: number = 0;
   total: any = 0;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -61,7 +62,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vllIssue: any = 'AC117';
   funcID: any;
   loading: any = false;
-  loadingform: any = true;
   journal: IJournal;
   receiptsFormName: string = 'VouchersReceipts';
   receiptsGrvName: string = 'grvVouchersReceipts';
@@ -119,9 +119,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.formType = dialogData.data?.formType;
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
+    this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
     if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
       this.lockFields = [...dialogData?.data.lockFields];
+    }
+    if(this.journal)
+    {
+      this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
     this.cache
@@ -154,6 +159,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
+    this.setTabindex();
   }
 
   ngOnDestroy() {
@@ -174,10 +180,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   {
     this.setVisibleColumn(columnsGrid);
     this.setHideColumns(columnsGrid);
-    setTimeout(() => {
-      this.loadingform = false;
-      this.dt.detectChanges();
-    }, 1000);
+    this.dt.detectChanges();
   }
 
   clickMF(e, data) {
@@ -203,9 +206,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         case'warehouseid':
           {
             this.vouchers.warehouseID = e.data;
-            this.vouchers.warehouseName = e.component.itemsSelected[0].WarehouseName;
+            this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
             this.form.formGroup.patchValue({
-              warehouseID: this.vouchers.warehouseID,
               warehouseName: this.vouchers.warehouseName,
             });
           }
@@ -214,17 +216,20 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers.warehouseName = e.data;
           break;
 
-          case 'reasonid':
-            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
+        case 'reasonid':
+          this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
           let text = e?.component?.itemsSelected[0]?.ReasonName;
           this.setReason(field, text, 0);
           break;
         case 'objectid':
           this.vouchers.objectID = e.data;
-          let data = e.component.itemsSelected[0];
-          this.vouchers.objectType = data['ObjectType'];
-          this.vouchers.objectName = data['ObjectName'];
-          this.setReason(field, data['ObjectName'], 1);
+          if(e.component.itemsSelected.length > 0)
+          {
+            let data = e.component.itemsSelected[0];
+            this.vouchers.objectType = data['ObjectType'];
+            this.vouchers.objectName = data['ObjectName'];
+            this.setReason(field, data['ObjectName'], 1);
+          }
           break;
         case 'memo':
           this.vouchers.memo = e.data;
@@ -316,9 +321,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      // case 'itemID':
-      //   e.data['itemName'] = e.itemData.ItemName;
-      //   break;
+      case 'itemID':
+        e.data.itemName = e.itemData.ItemName;
+        break;
       
     }
   }
@@ -674,23 +679,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
-    this.loadJournal();
-  }
-
-  loadJournal(){
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.vouchers.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.modeGrid = this.journal.addNewMode;
-    });
   }
 
   loadTotal() {
@@ -1160,6 +1148,37 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
+  setTabindex() {
+    let ins = setInterval(() => {
+      let eleInput = document
+        ?.querySelector('.ac-form-master')
+        ?.querySelectorAll('codx-input');
+      if (eleInput) {
+        clearInterval(ins);
+        let tabindex = 0;
+        for (let index = 0; index < eleInput.length; index++) {
+          let elechildren = (
+            eleInput[index] as HTMLElement
+          ).getElementsByTagName('input')[0];
+          if (elechildren.readOnly) {
+            elechildren.setAttribute('tabindex', '-1');
+          } else {
+            tabindex++;
+            elechildren.setAttribute('tabindex', tabindex.toString());
+          }
+        }
+        // input refdoc
+        let ref = document
+          .querySelector('.ac-refdoc')
+          .querySelectorAll('input');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+      }
+    }, 200);
+    setTimeout(() => {
+      if (ins) clearInterval(ins);
+    }, 10000);
+  }
+
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     if (e.key == 'Tab') {
@@ -1167,6 +1186,27 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       if (document.activeElement.className == 'e-tab-wrap') {
         element = document.getElementById('btnadd');
         element.focus();
+      }
+    }
+
+    if (e.key == 'Enter') {
+      if ((e.target as any).closest('codx-input') != null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
+        }
       }
     }
   }

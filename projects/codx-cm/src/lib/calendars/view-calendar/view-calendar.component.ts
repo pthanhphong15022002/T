@@ -200,7 +200,7 @@ export class ViewCalendarComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        // showFilter: true,
+        showFilter: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
