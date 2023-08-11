@@ -35,6 +35,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   @ViewChild('noteRef') noteRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('warehouse') warehouse: CodxInputComponent;
+  @ViewChild('tab') tab: TabComponent;
+  
   private destroy$ = new Subject<void>();
 
   keymodel: any = [];
@@ -53,7 +55,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
   lockFields = [];
-  tab: number = 0;
   total: any = 0;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -154,6 +155,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
+
+    setTimeout(() => {
+      const inputEls: HTMLInputElement[] = Array.from(
+        document.querySelectorAll('codx-input input')
+      );
+      for (const el of inputEls) {
+        if (el.readOnly) {
+          el.setAttribute('tabindex', '-1');
+        }
+      }
+
+      const navLinkEls: HTMLAnchorElement[] = Array.from(
+        document.querySelectorAll('codx-tabs a.nav-link')
+      );
+      for (const el of navLinkEls) {
+        el.setAttribute('tabindex', '-1');
+      }
+    }, 1000);
   }
 
   ngOnDestroy() {
@@ -1169,6 +1188,26 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       if (document.activeElement.className == 'e-tab-wrap') {
         element = document.getElementById('btnadd');
         element.focus();
+      }
+    }
+
+    if (e.shiftKey) {
+      if (
+        document.activeElement.className === 'e-lastrowcell' ||
+        document.activeElement.id === 'gridViewV2'
+      ) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
+          .focus();
+
+        return;
+      }
+
+      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
+      if (nodes[nodes.length - 1] === document.activeElement) {
+        document
+          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
+          .focus();
       }
     }
   }
