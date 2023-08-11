@@ -1023,77 +1023,84 @@ export class OrganizationOrgchartComponent {
     if (changes?.itemAdded?.currentValue != changes?.itemAdded?.previousValue) {
       const data = changes.itemAdded.currentValue;
 
-      this.items.forEach((e) => {
-        if (e.id == data.parentID && e.context.loadChildrent !== false) {
-          //Add to chart from parent
-          this.items.push(
-            new OrgItemConfig({
-              id: data.orgUnitID,
-              parent: data.parentID,
-              title: data.orgUnitName,
-              description: data.positionName,
-              label: data.orgUnitName,
-              templateName: 'contactTemplate',
-              itemTitleColor: String(this.getColorItem(data.orgUnitType)),
-              context: {
-                employeeID: data.employeeID,
-                employeeName: data.employeeName,
-                employeeManager: data.employeeManager,
-                orgUnitType: data.orgUnitType,
-                data: data,
-                isChildren: data.isChildren,
-                loadChildrent: data.loadChildrent,
-              },
-            })
-          );
-          e.context.isChildren = true;
-          e.context.loadChildrent = true;
-        } else {
-          this.api
-            .execSv(
-              'HR',
-              'ERM.Business.HR',
-              'OrganizationUnitsBusiness',
-              'GetChildChartAsync',
-              [data.parentID, this.selectedTeam.includes('No') ? false : true]
-            )
-            .subscribe((res: any) => {
-              if (res) {
-                res.map((item) => {
-                  this.items.push(
-                    new OrgItemConfig({
-                      id: item.orgUnitID,
-                      parent: item.parentID,
-                      title: item.orgUnitName,
-                      description: item.positionName,
-                      label: item.orgUnitName,
-                      templateName: 'contactTemplate',
-                      itemTitleColor: String(
-                        this.getColorItem(item.orgUnitType)
-                      ),
-                      context: {
-                        employeeID: item.employeeID,
-                        employeeName: item.employeeName,
-                        employeeManager: item.employeeManager,
-                        orgUnitType: item.orgUnitType,
-                        data: item,
-                        isChildren: item.isChildren,
-                        loadChildrent: item.loadChildrent,
-                      },
-                    })
-                  );
-                });
+      let checkSameTree = this.items.find((e) => e.id === data.parentID);
 
-                this.items.forEach((e) => {
+      if (!checkSameTree) {
+        this.orgUnitID = data.orgUnitID;
+        this.isGetManager(this.selectedTeam);
+      } else {
+        this.items.forEach((e) => {
+          if (e.id === data.parentID && e.context.loadChildrent !== false) {
+            //Add to chart from parent
+            this.items.push(
+              new OrgItemConfig({
+                id: data.orgUnitID,
+                parent: data.parentID,
+                title: data.orgUnitName,
+                description: data.positionName,
+                label: data.orgUnitName,
+                templateName: 'contactTemplate',
+                itemTitleColor: String(this.getColorItem(data.orgUnitType)),
+                context: {
+                  employeeID: data.employeeID,
+                  employeeName: data.employeeName,
+                  employeeManager: data.employeeManager,
+                  orgUnitType: data.orgUnitType,
+                  data: data,
+                  isChildren: data.isChildren,
+                  loadChildrent: data.loadChildrent,
+                },
+              })
+            );
+            e.context.isChildren = true;
+            e.context.loadChildrent = true;
+          } else {
+            this.api
+              .execSv(
+                'HR',
+                'ERM.Business.HR',
+                'OrganizationUnitsBusiness',
+                'GetChildChartAsync',
+                [data.parentID, this.selectedTeam.includes('No') ? false : true]
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  res.map((item) => {
+                    this.items.push(
+                      new OrgItemConfig({
+                        id: item.orgUnitID,
+                        parent: item.parentID,
+                        title: item.orgUnitName,
+                        description: item.positionName,
+                        label: item.orgUnitName,
+                        templateName: 'contactTemplate',
+                        itemTitleColor: String(
+                          this.getColorItem(item.orgUnitType)
+                        ),
+                        context: {
+                          employeeID: item.employeeID,
+                          employeeName: item.employeeName,
+                          employeeManager: item.employeeManager,
+                          orgUnitType: item.orgUnitType,
+                          data: item,
+                          isChildren: item.isChildren,
+                          loadChildrent: item.loadChildrent,
+                        },
+                      })
+                    );
+                  });
+
+                  // this.items.forEach((e) => {
                   if (e.id == data.parentID) {
                     e.context.isChildren = true;
                     e.context.loadChildrent = true;
                   }
-                });
-              }
-            });
-        }
-      });
+                  // });
+                }
+              });
+          }
+        });
+      }
 
       //CursorItem
       this.cursorItem = data.orgUnitID;
@@ -1224,9 +1231,7 @@ export class OrganizationOrgchartComponent {
         this.formModel.funcID
       );
 
-      const dataSelect = this.items.find(
-        (item) => data.parentID === item.parent
-      );
+      const dataSelect = this.items.find((item) => data.orgUnitID === item.id);
 
       popup.closed.subscribe((res: any) => {
         if (res.event) {
@@ -1257,25 +1262,31 @@ export class OrganizationOrgchartComponent {
               let oldDataParent = this.items.find(
                 (item) => item.id === this.items[index].parent
               );
-              console.log(oldDataParent);
               this.items[index] = dataUpdated;
 
-              if (oldDataParent) {
-                this.items.find((element) => {
-                  if (
-                    element.id === oldDataParent.id &&
-                    dataUpdated.parent !== oldDataParent.id
-                  ) {
-                    oldDataParent.context.isChildren = false;
-                    oldDataParent.context.loadChildrent = false;
+              if (oldDataParent && dataUpdated.parent !== oldDataParent.id) {
+                const checkChildExist = this.items.find(
+                  (element) => oldDataParent.id === element.parent
+                );
+                if (!checkChildExist) {
+                  oldDataParent.context.isChildren = false;
+                  oldDataParent.context.loadChildrent = false;
+                }
+                // this.items.find((element) => {
+                //   if (
+                //     element.id === oldDataParent.id &&
+                //     element.parent !== oldDataParent.id
+                //   ) {
+                //     oldDataParent.context.isChildren = false;
+                //     oldDataParent.context.loadChildrent = false;
 
-                    // this.items.forEach((element, index) => {
-                    //   if (element.id === oldDataParent.id) {
-                    //     this.items[index] = oldDataParent;
-                    //   }
-                    // });
-                  }
-                });
+                //     // this.items.forEach((element, index) => {
+                //     //   if (element.id === oldDataParent.id) {
+                //     //     this.items[index] = oldDataParent;
+                //     //   }
+                //     // });
+                //   }
+                // });
               }
             }
 
