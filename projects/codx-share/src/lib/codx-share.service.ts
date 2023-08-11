@@ -269,7 +269,8 @@ export class CodxShareService {
                   data.unbounds.statusApproval = status;
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
-                  //afterSave(data.statusApproval);
+                  //afterSave(data.statusApproval);// Chung CMT trước đo rồi
+                  afterSave(data);
                 } else this.notificationsService.notify(res2?.msgCodeError);
               });
             });
@@ -1327,29 +1328,46 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
-    if (template?.templateID == null && template?.templateType == null ) {
+    if (template?.templateID == null && template?.templateType == null) {
       //TemplateID null -> bật form kí số nhưng ko có file
       //Copy file từ template mẫu
       let tempCopyFile = new tmpCopyFileInfo();
-      tempCopyFile.objectID=approveProcess.recID;
-      tempCopyFile.objectType=approveProcess.entityName;
-      tempCopyFile.referType='source';
-      
-      this.copyFileByObjectID(template?.recID,approveProcess.recID,template?.refType,'source',tempCopyFile).subscribe((copied:any)=>{
-        if(copied){
-          this.getFileByObjectID(approveProcess.recID).subscribe((nFile:any)=>{
-            if(nFile){
-              let signFile = this.createSignFile(approveProcess,nFile);
-              this.openPopupSignFile(approveProcess,releaseCallback,signFile,nFile);
+      tempCopyFile.objectID = approveProcess.recID;
+      tempCopyFile.objectType = approveProcess.entityName;
+      tempCopyFile.referType = 'source';
+
+      this.copyFileByObjectID(
+        template?.recID,
+        approveProcess.recID,
+        template?.refType,
+        'source',
+        tempCopyFile
+      ).subscribe((copied: any) => {
+        if (copied) {
+          this.getFileByObjectID(approveProcess.recID).subscribe(
+            (nFile: any) => {
+              if (nFile) {
+                let signFile = this.createSignFile(approveProcess, nFile);
+                this.openPopupSignFile(
+                  approveProcess,
+                  releaseCallback,
+                  signFile,
+                  nFile
+                );
+              } else {
+                this.notificationsService.notify(
+                  'Không tìm thấy tài liệu trình kí',
+                  '2'
+                );
+                return;
+              }
             }
-            else{              
-              this.notificationsService.notify('Không tìm thấy tài liệu trình kí','2');
-              return;
-            }
-          });
-        }
-        else{
-          this.notificationsService.notify('Sao chép tài liệu từ mẫu thiết lập không thành công','2');
+          );
+        } else {
+          this.notificationsService.notify(
+            'Sao chép tài liệu từ mẫu thiết lập không thành công',
+            '2'
+          );
           return;
         }
       });
@@ -1411,7 +1429,10 @@ export class CodxShareService {
                   lstFile
                 );
               } else {
-                this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
+                this.notificationsService.notify(
+                  'Không tìm thấy tài liệu!',
+                  '2'
+                );
               }
             }
           );
@@ -1578,13 +1599,19 @@ export class CodxShareService {
     );
   }
 
-  copyFileByObjectID(oldRecID:string, newRecID:string,objectType:string,referType:string='',copyFileInfo:tmpCopyFileInfo = null): Observable<any> {
+  copyFileByObjectID(
+    oldRecID: string,
+    newRecID: string,
+    objectType: string,
+    referType: string = '',
+    copyFileInfo: tmpCopyFileInfo = null
+  ): Observable<any> {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
       'CopyFileByObjectIDAsync',
-      [oldRecID, newRecID,objectType , referType,copyFileInfo]
+      [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
 

@@ -299,3 +299,25 @@ li {
 .task-hover:hover > .steplist-hearder .task-name{
   color: var(--primary-dark)!important;
 }
+.progress{
+  border-radius: 10px;
+  // background-color: #d1d1d1;
+  position: relative;
+  .progress-done {
+    // background: linear-gradient(to left, #F2709C, #FF9472);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    transition: 1s ease 0.3s;
+  }
+  .progress-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    color: #fff;
+  }
+}
