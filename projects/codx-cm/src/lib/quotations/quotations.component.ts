@@ -56,6 +56,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
 
   @Input() funcID: string;
   @Input() customerID: string;
+
   views: Array<ViewModel> = [];
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -397,7 +398,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this
@@ -408,7 +409,25 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.itemSelected.approveStatus
+      ) {
+        this.itemSelected.approveStatus = appoverStatus;
+        switch (appoverStatus) {
+          case '5':
+            this.itemSelected.status = '2';
+            break;
+          case '4':
+          case '2':
+            this.itemSelected.status = '3';
+            break;
+        }
+      }
+      this.view.dataService.update(this.itemSelected).subscribe();
+    }
   }
 
   // region CRUD

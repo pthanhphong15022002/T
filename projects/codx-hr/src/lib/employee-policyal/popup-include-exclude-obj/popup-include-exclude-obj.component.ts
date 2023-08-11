@@ -88,15 +88,15 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
     )
   }
 
-  GetApplyObjs(){
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'PolicyALBusiness',
-      'GetApplyObjsAsync',
-      ['AL', this.alpolicyObj.policyID, 0]
-    );
-  }
+  // GetApplyObjs(){
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'HR',
+  //     'PolicyALBusiness',
+  //     'GetApplyObjsAsync',
+  //     ['AL', this.alpolicyObj.policyID, 0]
+  //   );
+  // }
 
   GetPolicyBeneficiaries(policyID){
     return this.api.execSv<any>(
@@ -191,9 +191,9 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
   }
 
   initForm() {
-        this.GetApplyObjs().subscribe((res) => {
-          this.lstPolicyBeneficiariesApply = res;
-        })
+        // this.GetApplyObjs().subscribe((res) => {
+        //   this.lstPolicyBeneficiariesApply = res;
+        // })
 
         if(this.alpolicyObj.hasIncludeObjects == true){
           if(this.alpolicyObj.includeObjects){
@@ -222,8 +222,6 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
         debugger
         this.cr.detectChanges();
         this.isAfterRender = true;
-    
-
   }
 
 }

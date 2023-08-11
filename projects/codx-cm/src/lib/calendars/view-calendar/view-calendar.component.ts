@@ -16,6 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxCmService } from '../../codx-cm.service';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -33,6 +34,7 @@ export class ViewCalendarComponent
   @ViewChild('headerTempContent') headerTempContent!: TemplateRef<any>; //temp Content
 
   @Input() funcID: any;
+  @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
@@ -57,24 +59,21 @@ export class ViewCalendarComponent
   vllTypeTask = 'DP050';
   dayoff: any;
   calendarID = 'STD';
-  // resourceField: {
-  //   Name: string;
-  //   Field: string;
-  //   IdField: string;
-  //   TextField: string;
-  //   Title: string;
-  // };
-  // funcID: any;
+
   user: any;
   crrFuncID: any;
-  viewActiveType = 7;
 
   formModelActivities: FormModel = {
     gridViewName: 'grvDPActivities',
     formName: 'DPActivities',
   };
+  viewCrr: any;
 
-  constructor(private inject: Injector, private authstore: AuthStore) {
+  constructor(
+    private inject: Injector,
+    private authstore: AuthStore,
+    private cmService: CodxCmService
+  ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
@@ -86,96 +85,14 @@ export class ViewCalendarComponent
   }
 
   ngOnChanges() {
+    this.getDayOff();
     this.afterLoad();
-    this.views = [
-      {
-        type: ViewType.calendar,
-        active: true,
-        sameData: false,
-        request: this.requestSchedule,
-        showSearchBar: false,
-        model: {
-          eventModel: this.fields,
-          // resourceModel: this.resourceField, //calendar  not take
-          // template4: this.resourceHeader,
-          template6: this.headerTempContent, //header morefun
-          //template7: this.footerNone, ///footer
-          template: this.eventTemplate,
-          //template2: this.headerTemp,
-          template3: this.cellTemplate,
-          template8: this.contentTmp, //content  nội dung chính
-          statusColorRef: this.vllTypeTask,
-        },
-      },
-      {
-        type: ViewType.schedule,
-        active: false,
-        sameData: false,
-        request: this.requestSchedule,
-        request2: this.modelResource,
-        showSearchBar: false,
-        // showFilter: true,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template4: this.resourceHeader, //temp ressources
-          template6: this.headerTempContent, //header // more
-          //template7: this.footerNone, ///footer
-          template: this.eventTemplate, //lấy event của temo
-          //template2: this.headerTemp,
-          template3: this.cellTemplate, //tem cell
-          template8: this.contentTmp, //content
-          statusColorRef: this.vllTypeTask,
-        },
-      },
-    ];
   }
   onInit(): void {
     this.getDayOff();
   }
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.calendar,
-        active: false,
-        sameData: false,
-        request: this.requestSchedule,
-        showSearchBar: false,
-        model: {
-          eventModel: this.fields,
-          // resourceModel: this.resourceField, //calendar  not take
-          // template4: this.resourceHeader,
-          template6: this.headerTempContent, //header morefun
-          //template7: this.footerNone, ///footer
-          template: this.eventTemplate,
-          //template2: this.headerTemp,
-          template3: this.cellTemplate,
-          template8: this.contentTmp, //content  nội dung chính
-          statusColorRef: this.vllTypeTask,
-        },
-      },
-      {
-        type: ViewType.schedule,
-        active: false,
-        sameData: false,
-        request: this.requestSchedule,
-        request2: this.modelResource,
-        showSearchBar: false,
-        // showFilter: true,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template4: this.resourceHeader, //temp ressources
-          template6: this.headerTempContent, //header // more
-          //template7: this.footerNone, ///footer
-          template: this.eventTemplate, //lấy event của temo
-          //template2: this.headerTemp,
-          template3: this.cellTemplate, //tem cell
-          template8: this.contentTmp, //content
-          statusColorRef: this.vllTypeTask,
-        },
-      },
-    ];
+    this.afterLoad();
   }
 
   getDayOff(id = null) {
@@ -255,6 +172,49 @@ export class ViewCalendarComponent
       this.modelResource.method = 'GetListUserByResourceAsync';
       this.modelResource.dataValue = this.user.userID;
     }
+
+    this.views = [
+      {
+        type: ViewType.calendar,
+        active: false,
+        sameData: false,
+        request: this.requestSchedule,
+        showSearchBar: false,
+        model: {
+          eventModel: this.fields,
+          // resourceModel: this.resourceField, //calendar  not take
+          // template4: this.resourceHeader,
+          template6: this.headerTempContent, //header morefun
+          //template7: this.footerNone, ///footer
+          template: this.eventTemplate,
+          //template2: this.headerTemp,
+          template3: this.cellTemplate,
+          template8: this.contentTmp, //content  nội dung chính
+          statusColorRef: this.vllTypeTask,
+        },
+      },
+      {
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request: this.requestSchedule,
+        request2: this.modelResource,
+        showSearchBar: false,
+        // showFilter: true,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template4: this.resourceHeader, //temp ressources
+          template6: this.headerTempContent, //header // more
+          //template7: this.footerNone, ///footer
+          template: this.eventTemplate, //lấy event của temo
+          //template2: this.headerTemp,
+          template3: this.cellTemplate, //tem cell
+          template8: this.contentTmp, //content
+          statusColorRef: this.vllTypeTask,
+        },
+      },
+    ];
   }
   //#endregion setting
 
@@ -271,6 +231,8 @@ export class ViewCalendarComponent
   }
 
   viewChanged(e) {
+    this.viewCrr = e?.view?.type ?? '7';
+    this.cmService.viewActiveType.next(this.viewCrr.toString());
     // this.viewCrr = evt?.view?.type;
     // this.funcID = this.router.snapshot.params['funcID'];
     // if (this.crrFuncID != this.funcID) {
@@ -280,4 +242,6 @@ export class ViewCalendarComponent
     //   this.view.currentView.refesh();
     // }
   }
+
+  settingViews() {}
 }

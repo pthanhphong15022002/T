@@ -213,6 +213,8 @@ import { CodxGetTemplateSignFileComponent } from './components/codx-approval-pro
 import { CodxInstancesComponent } from './components/codx-instances/codx-instances.component';
 import { NoteSliderComponent } from './layout/drawers/note/note-slider/note-slider.component';
 import { CodxNotesComponent } from './layout/drawers/note/codx-note/codx-notes.component';
+import { CodxFilesAttachmentComponent } from './components/codx-files-attachment/codx-files-attachment.component';
+import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -413,6 +415,8 @@ const T_Pipe: Type<any>[] = [
     AccessHistoryComponent,
     OrderHistoryComponent,
     CodxListReportsComponent,
+    CodxFilesAttachmentComponent,
+    CodxFilesAttachmentViewComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

@@ -32,7 +32,7 @@ export class CodxCmService {
   valueRadio = this.loadingSubject.asObservable();
 
   contactSubject = new BehaviorSubject<any>(null);
-  // valueContact = this.contactSubject.asObservable();
+  viewActiveType = new BehaviorSubject<any>(null);
 
   constructor(
     private api: ApiHttpService,

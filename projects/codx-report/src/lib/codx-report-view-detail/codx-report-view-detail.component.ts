@@ -113,12 +113,13 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       [recID])
       .subscribe((res: any) => {
       if (res) {
+        debugger
         this.data = res;
         this.reportID = res.reportID;
         this.isRunMode = res.runMode == "1";
         this.pageTitle.setRootNode(this.data.customName);
         this.getRootFunction(this.data.moduleID, this.data.reportType);
-        if(res.displayMode == "3"){
+        if(res.displayMode == "2" || res.displayMode == "3" || res.displayMode == "4"){
           this.getReportPDF(res.recID);
         }
       }
@@ -248,17 +249,10 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
       this._labelString = JSON.stringify(objLabel);
     }
-    if(this.data.displayMode == "3"){
+    if(this.data.displayMode == "2" || this.data.displayMode == "3" || this.data.displayMode == "4"){
       this.getReportPDF(this.data.recID);
     }
   }
-
-  
-  
-  
-
-
-  
   itemSelect(e:any){
     if(e){
       this.data = e;

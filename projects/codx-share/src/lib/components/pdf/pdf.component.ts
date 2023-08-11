@@ -45,6 +45,7 @@ import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signat
 import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { ResponseModel } from '../../models/ApproveProcess.model';
 import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'lib-pdf',
@@ -736,12 +737,8 @@ export class PdfComponent
         //   });
         this.codxShareService
           .codxApprove(this.transRecID, mode, null, comment, null)
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
+          .subscribe((res: ResponseModel) => {
+              resolve(res);
           });
       });
     }
