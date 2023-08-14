@@ -281,7 +281,8 @@ export class PopupAddLeadComponent
       if (view === this.viewOwnerDefault) {
         this.lead[$event.field] = $event.data;
         ownerName = $event.component.itemsSelected[0].UserName;
-      } else {
+      }
+      else {
         this.lead.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
@@ -537,16 +538,13 @@ export class PopupAddLeadComponent
         this.lead.applyProcess = this.applyProcess;
         this.checkApplyProcess(this.lead.applyProcess);
       }
-      !this.lead.applyProcess && this.action !== this.actionEdit && this.getAutoNumber();
-      this.lead.applyProcess &&
-        (await this.getListInstanceSteps(this.lead.processID));
+      !this.lead.applyProcess && this.action !== this.actionEdit  && this.getAutoNumber();
+      this.lead.applyProcess && (await this.getListInstanceSteps(this.lead.processID));
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.lead.processID : processId;
     var data = [processId, this.lead?.refID, this.action, '5'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
@@ -577,7 +575,7 @@ export class PopupAddLeadComponent
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.lead.createdOn
+          this.action !== this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
         this.changeDetectorRef.detectChanges();
@@ -674,14 +672,13 @@ export class PopupAddLeadComponent
 
   changeAvatarLead() {
     this.avatarChangeLead = true;
-
     if (this.action === this.actionCopy && !this.isCopyAvtLead) {
       this.lead.recID = Util.uid();
       this.leadId = this.lead.recID;
-
       this.isCopyAvtLead = true;
     }
   }
+
   changeAvatarContact() {
     this.avatarChangeContact = true;
     if (this.action === this.actionCopy && !this.isCopyAvtContact) {

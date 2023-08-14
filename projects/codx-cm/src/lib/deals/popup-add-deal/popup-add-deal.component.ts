@@ -561,7 +561,7 @@ export class PopupAddDealComponent
               this.deal.endDate = this.HandleEndDate(
                 this.listInstanceSteps,
                 this.action,
-                null
+                this.action !== this.actionEdit ? null:  this.deal.createdOn
               );
               this.removeItemInTab(this.ischeckFields(this.listInstanceSteps));
               if(this.listParticipants.length > 0 && this.listParticipants) {
@@ -687,7 +687,7 @@ export class PopupAddDealComponent
                 this.deal.endDate = this.HandleEndDate(
                   this.listInstanceSteps,
                   this.action,
-                  null
+                  this.action !== this.actionEdit ? null:  this.deal.createdOn
                 );
                 this.removeItemInTab(
                   this.ischeckFields(this.listInstanceSteps)
@@ -702,8 +702,6 @@ export class PopupAddDealComponent
       });
   }
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.deal.processID : processId;
       var data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
@@ -727,19 +725,13 @@ export class PopupAddDealComponent
           this.deal.endDate = this.HandleEndDate(
             this.listInstanceSteps,
             this.action,
-            null
+            this.action != this.actionEdit ? null : this.deal.createdOn
           );
           if(this.listParticipants.length > 0 && this.listParticipants) {
             var index = this.listParticipants.findIndex(x=>x.userID ===  this.user.userID);
-            if(index != -1) {
-              this.owner = this.user.userID;
-            }
-            else {
-              this.owner = null;
-            }
+            this.owner = index != -1 ?this.user.userID: null;
           }
           this.deal.dealID = res[2];
-
         }
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
@@ -852,10 +844,8 @@ export class PopupAddDealComponent
   }
 
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-    var dateNow =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-    var endDate =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var dateNow = action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    var endDate =action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
@@ -909,7 +899,6 @@ export class PopupAddDealComponent
     this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
     date1.setHours(0, 0, 0, 0);
     date2.setHours(0, 0, 0, 0);
-
     return date1 < date2;
   }
 
