@@ -69,4 +69,13 @@ export class ViewTreeTargetsComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
+
+  formatValue(data) {
+    let dataRt = data.toFixed(2);
+    return parseFloat(dataRt);
+  }
+
+  async delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
