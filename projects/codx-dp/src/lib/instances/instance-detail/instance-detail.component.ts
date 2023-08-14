@@ -68,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() hideFooter = false;
   @Input() hideMF = false;
   @Input() applyFor: any;
+  @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
@@ -825,9 +826,16 @@ export class InstanceDetailComponent implements OnInit {
         stepFind.progress = event?.progress || 0;
       }
     }
-    let sumProgress = listStepConvert.reduce((sum, step) => {
-      return sum + (Number(step.progress) || 0);
-    }, 0);
-    this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
+    if(this.progressControl){
+      let index =  this.listSteps?.findIndex((step) => step.stepStatus == '1');
+      let stepIns = index > 0 ? this.listSteps[index-1] : null;
+      let step = stepIns ? this.listStepsProcess?.find(step => step.recID == stepIns?.stepID) : null;
+      this.progress = index > 0 ? step?.instanceProgress.toString() : '0';
+    }else{
+      let sumProgress = listStepConvert.reduce((sum, step) => {
+        return sum + (Number(step.progress) || 0);
+      }, 0);
+      this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
+    }
   }
 }

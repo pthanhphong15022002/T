@@ -144,6 +144,7 @@ export class AddContractsComponent implements OnInit {
   currnecyID;
   applyProcess;
   leadNoSetting: any;
+  idxCrr: number = -1;
 
   constructor(
     private cache: CacheService,
@@ -942,7 +943,6 @@ export class AddContractsComponent implements OnInit {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.contracts.contractID = obj.dealId;
         this.getFields(this.listInstanceSteps);
       }
     });
@@ -954,16 +954,20 @@ export class AddContractsComponent implements OnInit {
     }
     return null;
   }
-  getFields(steps: any): boolean {
+  getFields(steps: any) {
     this.listField = [];
     if (steps?.length > 0 && steps != null) {
-      for (let i = 0; i < steps.length; i++) {
-        if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
-          this.listField.push(...steps[i].fields);
+      if (this.action == 'edit') {
+        this.idxCrr = steps.findIndex((x) => x.stepID == this.contracts.stepID);
+      } else this.idxCrr = 0;
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (steps[i]?.fields?.length > 0) {
+            this.listField.push(...steps[i].fields);
+          }
         }
       }
     }
-    return false;
   }
   async getListPermission(permissions) {
     this.listParticipants = permissions.filter((x) => x.roleType === 'P');
@@ -1065,7 +1069,7 @@ export class AddContractsComponent implements OnInit {
 
   changeAutoNum(e) {
     // check trùm mã khi nhạp tay
-    if (!this.disabledShowInput && e) {
+    if (!this.disabledShowInput && this.action !== 'edit' && e) {
       this.contracts.contractID = e?.crrValue;
       if (
         this.contracts.contractID &&
@@ -1115,4 +1119,5 @@ export class AddContractsComponent implements OnInit {
   // checkSpace(text: string) {
   //   return text.includes(' ');
   // }
+
 }

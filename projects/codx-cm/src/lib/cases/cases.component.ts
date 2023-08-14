@@ -143,9 +143,9 @@ export class CasesComponent
     private codxShareService: CodxShareService
   ) {
     super(inject);
-    // if (!this.funcID) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
+    this.router.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    })
     this.cache.functionList(this.funcID).subscribe((fun) => {
       if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
     });
@@ -153,6 +153,8 @@ export class CasesComponent
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+
+   
   }
 
   onInit(): void {
@@ -1046,6 +1048,7 @@ export class CasesComponent
       applyFor: this.applyFor,
       titleAction: this.titleAction,
       processID: this.processID,
+      funcID: this.funcID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,

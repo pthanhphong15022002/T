@@ -130,9 +130,9 @@ export class CurrencyFormComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      dialog.closed.subscribe((x) => {
-        if (x.event == null) this.view.dataService.clear();
-      });
+      // dialog.closed.subscribe((x) => {
+      //   if (x.event == null) this.view.dataService.clear();
+      // });
     });
   }
   edit(e, data) {

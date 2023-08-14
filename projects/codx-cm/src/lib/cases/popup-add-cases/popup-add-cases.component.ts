@@ -120,16 +120,15 @@ export class PopupAddCasesComponent
   // load data form DP
   isLoading: boolean = false;
   processID: string = '';
-
+  funcID = '';
   applyProcess = false;
+  idxCrr: any = -1;
 
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private authStore: AuthStore,
     private codxCmService: CodxCmService,
-    private activedRouter: ActivatedRoute,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -142,7 +141,7 @@ export class PopupAddCasesComponent
     this.caseType = dt?.data?.caseType;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
-
+    this.funcID = dt?.data?.funcID;
     this.cases.status = '1';
 
     if (this.isLoading) {
@@ -387,6 +386,9 @@ export class PopupAddCasesComponent
       if (this.processID) {
         await this.getListInstanceSteps(this.cases.processID);
       }
+      //  else {
+      //   this.itemTabs(false);
+      // }
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
@@ -397,17 +399,17 @@ export class PopupAddCasesComponent
       if (this.isLoading) {
         if (this.action !== this.actionEdit) {
           await this.addCasesForDP();
-          this.applyProcess && await this.insertInstance();
+          this.applyProcess && (await this.insertInstance());
         } else {
           //    await this.editDealForDP();
-          this.applyProcess && await this.editInstance();
+          this.applyProcess && (await this.editInstance());
         }
       } else {
         if (this.action !== this.actionEdit) {
-          this.applyProcess && await this.insertInstance();
+          this.applyProcess && (await this.insertInstance());
           await this.onAdd();
         } else {
-          this.applyProcess &&  await this.editInstance();
+          this.applyProcess && (await this.editInstance());
           await this.onEdit();
         }
       }
@@ -449,6 +451,7 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        // this.itemTabs(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
@@ -704,11 +707,13 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.applyProcess = dataValue?.ProcessCaseUsed == '1';
-      this.cases.applyProcess = this.applyProcess;
-    }else{
-      this.applyProcess = false;
-      this.cases.applyProcess = this.applyProcess;
+      if (this.funcID == 'CM0401') {
+        this.applyProcess = dataValue?.ProcessCase == '1';
+        this.cases.applyProcess = this.applyProcess;
+      } else if (this.funcID == 'CM0402') {
+        this.applyProcess = dataValue?.ProcessRequest == '1';
+        this.cases.applyProcess = this.applyProcess;
+      }
     }
   }
 
@@ -778,4 +783,48 @@ export class PopupAddCasesComponent
   //   }
   // }
   //#endregion
+
+  // --------------------------lOad Tabs ----------------------- //
+  itemTabs(check: boolean): void {
+    debugger;
+    if (check) {
+      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
+      this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+    } else {
+      this.tabInfo = [this.menuGeneralInfo];
+      this.tabContent = [this.tabGeneralInfoDetail];
+    }
+  }
+  ischeckFields(steps: any): boolean {
+    if (steps?.length > 0) {
+      if (this.action != 'edit') {
+        if (steps[0].fields?.length > 0) return true;
+        return false;
+      }
+      let check = false;
+      this.idxCrr = steps.findIndex((x) => x.stepID == this.cases.stepID);
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (steps[i]?.fields?.length > 0) {
+            check = true;
+            break;
+          }
+        }
+      }
+      return check;
+    }
+    return false;
+  }
+
+  checkAddField(stepCrr, idx) {
+    if (stepCrr) {
+      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+        return true;
+      }
+      if (idx == 0) return true;
+      return false;
+    }
+    return false;
+  }
+  //----------------------------end---------------------------//
 }

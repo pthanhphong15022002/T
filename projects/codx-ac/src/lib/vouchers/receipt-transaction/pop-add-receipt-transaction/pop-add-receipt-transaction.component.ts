@@ -62,7 +62,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vllIssue: any = 'AC117';
   funcID: any;
   loading: any = false;
-  loadingform: any = true;
   journal: IJournal;
   receiptsFormName: string = 'VouchersReceipts';
   receiptsGrvName: string = 'grvVouchersReceipts';
@@ -120,9 +119,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.formType = dialogData.data?.formType;
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
+    this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
     if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
       this.lockFields = [...dialogData?.data.lockFields];
+    }
+    if(this.journal)
+    {
+      this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
     this.cache
@@ -155,24 +159,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
-
-    setTimeout(() => {
-      const inputEls: HTMLInputElement[] = Array.from(
-        document.querySelectorAll('codx-input input')
-      );
-      for (const el of inputEls) {
-        if (el.readOnly) {
-          el.setAttribute('tabindex', '-1');
-        }
-      }
-
-      const navLinkEls: HTMLAnchorElement[] = Array.from(
-        document.querySelectorAll('codx-tabs a.nav-link')
-      );
-      for (const el of navLinkEls) {
-        el.setAttribute('tabindex', '-1');
-      }
-    }, 1000);
+    this.setTabindex();
   }
 
   ngOnDestroy() {
@@ -193,10 +180,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   {
     this.setVisibleColumn(columnsGrid);
     this.setHideColumns(columnsGrid);
-    setTimeout(() => {
-      this.loadingform = false;
-      this.dt.detectChanges();
-    }, 1000);
+    this.dt.detectChanges();
   }
 
   clickMF(e, data) {
@@ -695,23 +679,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
-    this.loadJournal();
-  }
-
-  loadJournal(){
-    const options = new DataRequest();
-    options.entityName = 'AC_Journals';
-    options.predicates = 'JournalNo=@0';
-    options.dataValues = this.vouchers.journalNo;
-    options.pageLoading = false;
-    this.acService.loadDataAsync('AC', options)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      this.journal = res[0]?.dataValue
-        ? { ...res[0], ...JSON.parse(res[0].dataValue) }
-        : res[0];
-      this.modeGrid = this.journal.addNewMode;
-    });
   }
 
   loadTotal() {
@@ -1181,6 +1148,37 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
+  setTabindex() {
+    let ins = setInterval(() => {
+      let eleInput = document
+        ?.querySelector('.ac-form-master')
+        ?.querySelectorAll('codx-input');
+      if (eleInput) {
+        clearInterval(ins);
+        let tabindex = 0;
+        for (let index = 0; index < eleInput.length; index++) {
+          let elechildren = (
+            eleInput[index] as HTMLElement
+          ).getElementsByTagName('input')[0];
+          if (elechildren.readOnly) {
+            elechildren.setAttribute('tabindex', '-1');
+          } else {
+            tabindex++;
+            elechildren.setAttribute('tabindex', tabindex.toString());
+          }
+        }
+        // input refdoc
+        let ref = document
+          .querySelector('.ac-refdoc')
+          .querySelectorAll('input');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+      }
+    }, 200);
+    setTimeout(() => {
+      if (ins) clearInterval(ins);
+    }, 10000);
+  }
+
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     if (e.key == 'Tab') {
@@ -1191,23 +1189,24 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
     }
 
-    if (e.shiftKey) {
-      if (
-        document.activeElement.className === 'e-lastrowcell' ||
-        document.activeElement.id === 'gridViewV2'
-      ) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
-          .focus();
-
-        return;
-      }
-
-      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
-      if (nodes[nodes.length - 1] === document.activeElement) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='voucherDate'] input")
-          .focus();
+    if (e.key == 'Enter') {
+      if ((e.target as any).closest('codx-input') != null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
+        }
       }
     }
   }

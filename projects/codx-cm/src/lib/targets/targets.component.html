@@ -86,8 +86,8 @@
 
 <!--Tree-->
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white rounded-2 pt-4 d-flex flex-column">
-    <div class="d-flex px-5 justify-content-between align-items-center mb-3">
+  <div class="w-100 h-100 bg-white rounded-2 d-flex flex-column">
+    <div class="d-flex p-3 justify-content-between align-items-center">
       <div class="d-flex align-items-center justify-content-start">
         <div class="d-flex flex-row">
           <!-- Lặp qua các item (ví dụ: item1 và item2) -->
@@ -109,7 +109,10 @@
                 type="button"
                 aria-expanded="false"
               >
-                {{ item.text }}
+              <span class="me-1">{{ item.text }}</span>
+              <span class=""  *ngIf="item.value == '1'">({{countTarget}})</span>
+              <span class=""  *ngIf="item.value == '2'">({{countPersons}})</span>
+
               </button>
             </div>
           </div>
@@ -157,6 +160,7 @@
         </div>
         <div class="w-75px ms-2 input-32px">
           <codx-input
+            #codxInput
             [formModel]="view.formModel"
             [crrValue]="currencyID"
             (valueChange)="valueChange($event)"
@@ -167,7 +171,7 @@
       </div>
     </div>
 
-    <div class="mt-2 scroll-tree" *ngIf="viewMode === 16">
+    <div class="scroll-tree" *ngIf="viewMode === 16">
       <ng-container *ngIf="loadedTree">
         <div *ngIf="lstDataTree != null && lstDataTree.length > 0; else noData">
           <div
@@ -187,7 +191,7 @@
         </div>
       </ng-container>
     </div>
-    <div class="mt-2 h-100" *ngIf="viewMode === 9">
+    <div class="h-100 scroll-grid" *ngIf="viewMode === 9">
       <codx-gridview-v2
         #gridBusiness
         [formName]="view.formModel?.formName"
@@ -513,7 +517,7 @@
 
 <ng-template #templateYear let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -551,7 +555,7 @@
 
 <ng-template #templateQuarter1 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -590,7 +594,7 @@
 
 <ng-template #templateQuarter2 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -629,7 +633,7 @@
 
 <ng-template #templateQuarter3 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -668,7 +672,7 @@
 
 <ng-template #templateQuarter4 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -707,7 +711,7 @@
 
 <ng-template #templateMonth1 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -746,7 +750,7 @@
 
 <ng-template #templateMonth2 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -785,7 +789,7 @@
 
 <ng-template #templateMonth3 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -824,7 +828,7 @@
 
 <ng-template #templateMonth4 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -863,7 +867,7 @@
 
 <ng-template #templateMonth5 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -901,7 +905,7 @@
 </ng-template>
 <ng-template #templateMonth6 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -939,7 +943,7 @@
 </ng-template>
 <ng-template #templateMonth7 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -978,7 +982,7 @@
 
 <ng-template #templateMonth8 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -1017,7 +1021,7 @@
 
 <ng-template #templateMonth9 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -1056,7 +1060,7 @@
 
 <ng-template #templateMonth10 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -1094,7 +1098,7 @@
 </ng-template>
 <ng-template #templateMonth11 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
@@ -1132,7 +1136,7 @@
 </ng-template>
 <ng-template #templateMonth12 let-item>
   <div
-    class="mt-1 mb-1 d-flex align-items-start justify-content-end"
+    class="pt-5px d-flex align-items-start justify-content-end"
     [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
   >
     <span
