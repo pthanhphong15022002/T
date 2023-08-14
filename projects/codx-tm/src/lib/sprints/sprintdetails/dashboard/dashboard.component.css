@@ -86,7 +86,18 @@
     overflow: auto;
     height: calc(100% - 32px)!important;
   }
-  .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-    margin-right: 0;
+  .e-tab .e-tab-header .e-toolbar-item{
+    &:not(.e-separator) {
+      margin-right: 0;
+      
+    }
+    .e-tab-wrap {
+      padding: 0 7px;
+      
+    }
+    &.e-active .e-tab-text{
+      font-weight: bold;
+    }
   }
+
 }
