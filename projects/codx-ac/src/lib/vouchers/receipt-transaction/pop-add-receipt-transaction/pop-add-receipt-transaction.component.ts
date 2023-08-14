@@ -172,14 +172,35 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.destroy$.complete();
   }
 
+  loadInit(){
+    if (this.formType == 'edit') {
+      this.api
+        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
+          this.vouchers.recID,
+        ])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.vouchersLines = res;
+            this.vouchersLines.forEach((element) => {
+              this.loadTotal();
+            });
+          }
+        });
+    }
+    if (this.vouchers.status == '0' && this.formType == 'edit') {
+      this.hasSaved = true;
+    }
+  }
+
   //#endregion
 
   //#region Event
 
   gridInit(columnsGrid)
   {
-    this.setVisibleColumn(columnsGrid);
-    this.setHideColumns(columnsGrid);
+    this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
 
@@ -630,56 +651,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     ]);
   }
 
-  loadInit(){
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
-          this.vouchers.recID,
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.vouchersLines = res;
-            this.vouchersLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
-
-    // if(this.vouchers.warehouseID)
-    // {
-    //   this.getWarehouseName(this.vouchers.warehouseID);
-    // }
-
-    // if (
-    //   this.vouchers &&
-    //   this.vouchers.unbounds &&
-    //   this.vouchers.unbounds.hideFields &&
-    //   this.vouchers.unbounds.hideFields.length
-    // ){
-    //   this.hideFields = this.vouchers.unbounds
-    //     .hideFields as Array<string>;
-    // }
-    // else{
-    //   this.api
-    //     .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
-    //       this.vouchers
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res.unbounds && res.unbounds.hideFields && res.unbounds.hideFields.length) {
-    //         this.vouchers.unbounds = res.unbounds;
-    //         this.hideFields = this.vouchers.unbounds
-    //           .hideFields as Array<string>;
-    //       }
-    //     });
-    // }
-    if (this.vouchers.status == '0' && this.formType == 'edit') {
-      this.hasSaved = true;
-    }
-  }
-
+  
+  //Bỏ
   loadTotal() {
     var totals = 0;
     this.vouchersLines.forEach((element) => {
@@ -690,7 +663,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.total = totals.toLocaleString('it-IT');
   }
 
-  addRow(){
+  addVoucherLine(){
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -709,7 +682,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
-                  this.loadModegrid();
+                  this.onAddLine();
                 }
               });
           } else {
@@ -728,7 +701,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     if (res && res.save.data != null) {
                       this.vouchers.voucherNo = res.save.data.voucherNo;
                       this.hasSaved = true;
-                      this.loadModegrid();
+                      this.onAddLine();
                     }
                   });
               }
@@ -745,7 +718,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res && res.update.data != false) {
-                this.loadModegrid();
+                this.onAddLine();
               }
             });
           break;
@@ -753,7 +726,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  loadModegrid() {
+  onAddLine() {
     let data = new VouchersLines();
     let idx;
     this.api
@@ -1043,25 +1016,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.vouchersLines = [];
   }
 
-  // setDataGrid(updateColumn, data) {
-  //   if (updateColumn) {
-  //     var arrColumn = [];
-  //     arrColumn = updateColumn.split(';');
-  //     if (arrColumn && arrColumn.length) {
-  //       arrColumn.forEach((e) => {
-  //         if (e) {
-  //           let field = Util.camelize(e);
-  //           this.gridVouchersLine.rowDataSelected[field] = data[field];
-  //           this.gridVouchersLine.rowDataSelected = {
-  //             ...data,
-  //           };
-  //           this.gridVouchersLine.rowDataSelected.updateColumns = '';
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
-
   setReason(field, text, idx) {
     if (!this.reason.some((x) => x.field == field)) {
       let transText = new Reason();
@@ -1082,19 +1036,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       memo: this.vouchers.memo,
     });
   }
-
-  // getWarehouseName(warehouseID: any){
-  //   this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
-  //   .pipe(takeUntil(this.destroy$))
-  //     .subscribe((res: any) => {
-  //       if (res.length > 0) {
-  //         this.vouchers.warehouseName = res;
-  //         this.form.formGroup.patchValue({
-  //           warehouseName: this.vouchers.warehouseName,
-  //         });
-  //       }
-  //     });
-  // }
 
   costPrice_Change(line: any)
   {
@@ -1125,14 +1066,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  autoAddRow(e: any) {
+  endEdit(e: any) {
     switch (e.type) {
       case 'autoAdd':
-        this.addRow();
+        this.addVoucherLine();
         break;
       case 'add':
         if (this.gridVouchersLine.autoAddRow) {
-          this.addRow();
+          this.addVoucherLine();
         }
         break;
       case 'endEdit':
@@ -1226,7 +1167,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  setVisibleColumn(columnsGrid)
+  showHideColumns(columnsGrid)
   {
     let arr = [
       'IDIM0',
@@ -1240,24 +1181,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'IDIM8',
       'IDIM9',
     ];
-    let visibleColumns = arr.filter((x) => !this.hideFields.includes(x));
-    if(visibleColumns.length > 0)
-    {
-      visibleColumns.forEach((fieldName) => {
+
+    arr.forEach((fieldName) => {
+      if(this.hideFields.includes(fieldName))
+      {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+        if (i > -1) {
+          columnsGrid[i].isVisible = false;
+        }
+      }
+      else
+      {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].isVisible = true;
         }
-      });
-    }
-  }
-
-  setHideColumns(columnsGrid)
-  {
-    this.hideFields.forEach((fieldName) => {
-      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-      if (i > -1) {
-        columnsGrid[i].isVisible = false;
       }
     });
   }
