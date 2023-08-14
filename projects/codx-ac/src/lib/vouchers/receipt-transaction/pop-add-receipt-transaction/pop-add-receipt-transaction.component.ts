@@ -57,16 +57,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   hideFields = [];
   total: any = 0;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
-  loading: any = false;
   journal: IJournal;
-  receiptsFormName: string = 'VouchersReceipts';
-  receiptsGrvName: string = 'grvVouchersReceipts';
-  issuesFormName: string = 'VouchersIssues';
-  issuesGrvName: string = 'grvVouchersIssues';
   voucherNoPlaceholderText$: Observable<string>;
   fmVouchers: FormModel = {
     formName: '',
@@ -153,7 +147,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onInit(): void {
     this.loadInit();
-    this.loadTotal();
   }
 
   ngAfterViewInit() {
@@ -183,9 +176,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           if (res.length > 0) {
             this.keymodel = Object.keys(res[0]);
             this.vouchersLines = res;
-            this.vouchersLines.forEach((element) => {
-              this.loadTotal();
-            });
           }
         });
     }
@@ -348,7 +338,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
     return true;
   }
-  onAddNew(e: any) {
+
+  onSaveLine(e: any, type: any)
+  {
     this.checkValidateLine(e);
     if (this.validate > 0) {
       this.validate = 0;
@@ -357,39 +349,32 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return;
     } else {
       this.updateFixedDims(e);
-      this.api
+
+      if(type == 'isAddNew')
+      {
+        this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
         .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
-            this.loadTotal();
           }
         });
-    }
-  }
-
-  onEdit(e: any) {
-    this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      this.notification.notifyCode('SYS021', 0, '');
-      return;
-    } else {
-      this.updateFixedDims(e);
-      this.api
+      }
+      else if(type == 'isEdit')
+      {
+        this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
         .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
-            this.loadTotal();
           }
         });
+      }
+      
     }
   }
 
@@ -436,9 +421,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (this.isSaveMaster ) {
-      this.onSaveMaster();
-    }
     if (this.hasSaved) {
       this.dialog.close({
         update: true,
@@ -491,34 +473,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  onSaveMaster(){
-    this.checkValidate();
-    this.checkTransLimit(false);
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.vouchers['_uuid'],
-        this.vouchers
-      );
-      this.dialog.dataService.save(null, 0, '', '', false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
-    }
-  }
-
   //#endregion
 
   //#region Function
 
   save(isclose: boolean)
   {
-    this.loading = true;
       switch (this.formType) {
         case 'add':
         case 'copy':
@@ -556,14 +516,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                       this.vouchers = res;
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
-                      this.isSaveMaster = false;
                       });
                       this.dt.detectChanges();
                   }
-                  this.loading = false;
-                }
-                else{
-                  this.loading = false;
                 }
               });
           } else {
@@ -604,7 +559,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     this.dt.detectChanges();
                   }
                   else {
-                    this.loading = false;
                     this.vouchers.unbounds.isAddNew = true;
                   }
                 });
@@ -649,18 +603,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
-  }
-
-  
-  //Bỏ
-  loadTotal() {
-    var totals = 0;
-    this.vouchersLines.forEach((element) => {
-      totals = totals + element.costAmt;
-    });
-    this.total = totals;
-    this.vouchers.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT');
   }
 
   addVoucherLine(){
@@ -795,8 +737,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.vouchersLines.push(dataline);
               }
               this.hasSaved = true;
-              this.isSaveMaster = true;
-              this.loadTotal();
             }
           });
         }
@@ -852,8 +792,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.vouchersLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
-                  this.loadTotal();
                 }
               });
             }
@@ -925,7 +863,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
@@ -936,7 +873,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res) => {
                   this.notification.notifyCode('SYS008', 0, '');
-                  this.loadTotal();
                 });
             }
           });
