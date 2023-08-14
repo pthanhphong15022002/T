@@ -28,13 +28,13 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from 'projects/codx-ac/src/lib/codx-ac.service';
 
 @Component({
-  selector: 'lib-voucher',
-  templateUrl: './voucher.component.html',
-  styleUrls: ['./voucher.component.css'],
+  selector: 'lib-settledinvoices-add',
+  templateUrl: './settledinvoices-add.component.html',
+  styleUrls: ['./settledinvoices-add.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.OnPush
 })
-export class VoucherComponent extends UIComponent implements OnInit {
+export class SettledInvoicesAdd extends UIComponent implements OnInit {
   //#region Constructor
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;

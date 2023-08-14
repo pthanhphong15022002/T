@@ -42,22 +42,22 @@ import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
-import { PopUpCashComponent } from '../pop-up-cash/pop-up-cash.component';
+import { CashpaymentSuggestion } from '../cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
 import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { VATInvoices } from '../../../models/VATInvoices.model';
 import { RoundService } from '../../../round.service';
-import { VoucherComponent } from '../pop-up-set/voucher/voucher.component';
+import { VatinvoicesAdd } from '../../../share/vatinvoices-add/vatinvoices-add.component';
 @Component({
-  selector: 'lib-pop-add-cash',
-  templateUrl: './pop-add-cash.component.html',
-  styleUrls: ['./pop-add-cash.component.css', '../../../codx-ac.component.css'],
+  selector: 'lib-cashpayments-add',
+  templateUrl: './cashpayments-add.component.html',
+  styleUrls: ['./cashpayments-add.component.css', '../../../codx-ac.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopAddCashComponent extends UIComponent implements OnInit {
+export class CashPaymentAdd extends UIComponent implements OnInit {
   focus: any;
   //#region Contructor
   @ViewChild('gridCash')
@@ -1163,7 +1163,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     dataModel.entityName = 'AC_CashPayments';
     opt.FormModel = dataModel;
     let cashdialog = this.callfc.openForm(
-      PopUpCashComponent,
+      CashpaymentSuggestion,
       '',
       null,
       null,
@@ -1635,7 +1635,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     dataModel.entityName = 'AC_SubInvoices';
     opt.FormModel = dataModel;
     let voucherDialog = this.callfc.openForm(
-      VoucherComponent,
+      VatinvoicesAdd,
       '',
       null,
       null,
