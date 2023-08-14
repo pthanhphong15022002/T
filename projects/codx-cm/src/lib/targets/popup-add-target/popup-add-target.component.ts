@@ -28,7 +28,8 @@ import { CodxCmService } from '../../codx-cm.service';
   providers: [DecimalPipe],
 })
 export class PopupAddTargetComponent {
-  @ViewChild('dropCalendar') dropCalendar: CodxDropdownCalendarComponent;
+  @ViewChild('dropCalendar') dropCalendar;
+  @ViewChild('codxInput') codxInput: any;
   dialog: any;
   data: CM_Targets;
   action = '';
@@ -110,9 +111,8 @@ export class PopupAddTargetComponent {
       this.data.year = data?.data?.year;
       this.data.period = data?.data?.year;
     }
-
     let date = new Date().setFullYear(this.data.year);
-    this.date = JSON.parse(JSON.stringify(new Date(date)));
+    this.date = new Date(date);
   }
 
   async ngOnInit() {
@@ -140,6 +140,7 @@ export class PopupAddTargetComponent {
     // this.gridViewSetupTarget = await firstValueFrom(
     //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     // );
+
     this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -623,7 +624,6 @@ export class PopupAddTargetComponent {
           }
         }
       }
-      console.log('lstTargetLines: ', this.lstTargetLines);
     }
   }
 
@@ -824,19 +824,32 @@ export class PopupAddTargetComponent {
   //#region calendar
   changeCalendar(e) {
     this.isPeriod = false;
-    this.startDate = new Date(e?.fromDate);
-    this.endDate = new Date(e?.toDate);
-    var month = parseInt(this.startDate?.getMonth() + 1);
-    this.month = month;
-    var year = parseInt(this.startDate.getFullYear());
-    this.data.category = '1'; //năm
-    this.data.period = year;
-    this.data.year = year;
-    this.text = e?.text;
-    if (this.businessLineID != null) {
-      this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+    if (e?.fromDate) {
+      this.startDate = new Date(e?.fromDate);
+      this.endDate = new Date(e?.toDate);
+      var month = parseInt(this.startDate?.getMonth() + 1);
+      this.month = month;
+      var year = parseInt(this.startDate.getFullYear());
+      this.data.category = '1'; //năm
+      this.data.period = year;
+      this.data.year = year;
+      this.text = e?.text;
+      if (this.businessLineID != null) {
+        this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+      }
+    } else {
+      this.lstTargetLines = [];
+      this.data = new CM_Targets();
+      this.data.category = '1';
+      this.isPeriod = false;
+      this.businessLineID = '';
+      this.codxInput.crrValue = this.businessLineID;
+      this.codxInput.value = this.businessLineID;
+      this.data.currencyID = this.currencyID;
+      this.lstTime.forEach((x) => (x.lines = []));
+      this.lstOwners = [];
+      this.isExitTarget = false;
     }
-
     this.changedetectorRef.detectChanges();
   }
 
@@ -870,7 +883,6 @@ export class PopupAddTargetComponent {
       lst.push(Object.assign({}, tmp));
     }
     this.lstTime = lst;
-    console.log('lstTime: ', this.lstTime);
   }
   //#endregion
 
@@ -1054,10 +1066,6 @@ export class PopupAddTargetComponent {
                 this.lstTargetLines.splice(i, 1);
               }
             }
-
-            console.log('delete ', this.lstTargetLinesDelete);
-
-            console.log('line ', this.lstTargetLines);
             let id = '';
             for (var j = 0; j < this.data?.owner?.split(';').length; j++) {
               let owner = this.data?.owner?.split(';')[j];
@@ -1082,7 +1090,6 @@ export class PopupAddTargetComponent {
             });
 
             this.lstOwners.splice(index, 1);
-            console.log('delete ', this.lstOwners);
             this.setListTargetLine();
           }
           this.changedetectorRef.detectChanges();

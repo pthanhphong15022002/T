@@ -254,7 +254,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-    if(!this.checkDataUpdate(e))
+    if(!this.checkDataUpdateFromBackEnd(e))
       return;
 
     const postFields: string[] = [
@@ -313,7 +313,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  checkDataUpdate(e: any): boolean
+  checkDataUpdateFromBackEnd(e: any): boolean
   {
     if(this.dataUpdate)
     {

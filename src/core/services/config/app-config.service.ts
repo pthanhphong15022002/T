@@ -1,4 +1,4 @@
-import { TenantStore } from 'codx-core';
+import { TenantStore, Util } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -14,7 +14,7 @@ export class AppConfigService extends AppConfig {
   }
 
   load() {
-    return this.http.get<AppConfig>('assets/cfg/_.cf').pipe(
+    return this.http.get<AppConfig>('assets/cfg/_.cf?_=' + Util.uid()).pipe(
       map((res) => {
         environment.apiUrl = res.apiUrl;
         environment.shopping = res.shopping;
