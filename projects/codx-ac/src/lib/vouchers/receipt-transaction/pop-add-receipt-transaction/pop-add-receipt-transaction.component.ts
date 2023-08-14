@@ -54,19 +54,13 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vouchersLines: Array<VouchersLines> = [];
   vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
-  lockFields = [];
+  hideFields = [];
   total: any = 0;
   hasSaved: any = false;
-  isSaveMaster: any = false;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
   funcID: any;
-  loading: any = false;
   journal: IJournal;
-  receiptsFormName: string = 'VouchersReceipts';
-  receiptsGrvName: string = 'grvVouchersReceipts';
-  issuesFormName: string = 'VouchersIssues';
-  issuesGrvName: string = 'grvVouchersIssues';
   voucherNoPlaceholderText$: Observable<string>;
   fmVouchers: FormModel = {
     formName: '',
@@ -85,12 +79,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     allowDeleting: true,
     mode: 'Normal',
   };
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
+  // tabInfo: TabModel[] = [
+  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  // ];
   key: any;
   columnChange: string = '';
   vllWarehouse: any;
@@ -121,8 +115,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
-      this.lockFields = [...dialogData?.data.lockFields];
+    if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
+      this.hideFields = [...dialogData?.data.hideFields];
     }
     if(this.journal)
     {
@@ -153,7 +147,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   onInit(): void {
     this.loadInit();
-    this.loadTotal();
   }
 
   ngAfterViewInit() {
@@ -172,14 +165,32 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.destroy$.complete();
   }
 
+  loadInit(){
+    if (this.formType == 'edit') {
+      this.api
+        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
+          this.vouchers.recID,
+        ])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            this.keymodel = Object.keys(res[0]);
+            this.vouchersLines = res;
+          }
+        });
+    }
+    if (this.vouchers.status == '0' && this.formType == 'edit') {
+      this.hasSaved = true;
+    }
+  }
+
   //#endregion
 
   //#region Event
 
   gridInit(columnsGrid)
   {
-    this.setVisibleColumn(columnsGrid);
-    this.setHideColumns(columnsGrid);
+    this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
 
@@ -254,23 +265,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-
-    if(this.dataUpdate)
-    {
-      if(this.dataUpdate.recID &&
-        this.dataUpdate.recID == e.data.recID &&
-        this.dataUpdate[e.field] == e.data[e.field]
-        )
-        {
-          return;
-        }
-    }
+    if(!this.checkDataUpdateFromBackEnd(e))
+      return;
 
     const postFields: string[] = [
       'itemID',
-      //'costPrice',
       'quantity',
-      //'costAmt',
       'lineType',
       'umid',
       'idiM0',
@@ -321,14 +321,26 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      case 'itemID':
-        e.data.itemName = e.itemData.ItemName;
-        break;
-      
     }
   }
 
-  onAddNew(e: any) {
+  checkDataUpdateFromBackEnd(e: any): boolean
+  {
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return false;
+        }
+    }
+    return true;
+  }
+
+  onSaveLine(e: any, type: any)
+  {
     this.checkValidateLine(e);
     if (this.validate > 0) {
       this.validate = 0;
@@ -337,39 +349,32 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       return;
     } else {
       this.updateFixedDims(e);
-      this.api
+
+      if(type == 'isAddNew')
+      {
+        this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
         .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS006', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
-            this.loadTotal();
           }
         });
-    }
-  }
-
-  onEdit(e: any) {
-    this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      this.notification.notifyCode('SYS021', 0, '');
-      return;
-    } else {
-      this.updateFixedDims(e);
-      this.api
+      }
+      else if(type == 'isEdit')
+      {
+        this.api
         .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
         .pipe(takeUntil(this.destroy$))
         .subscribe((save) => {
           if (save) {
             this.notification.notifyCode('SYS007', 0, '');
             this.hasSaved = true;
-            this.isSaveMaster = true;
-            this.loadTotal();
           }
         });
+      }
+      
     }
   }
 
@@ -416,9 +421,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   close() {
-    if (this.isSaveMaster ) {
-      this.onSaveMaster();
-    }
     if (this.hasSaved) {
       this.dialog.close({
         update: true,
@@ -471,34 +473,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  onSaveMaster(){
-    this.checkValidate();
-    this.checkTransLimit(false);
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      this.dialog.dataService.updateDatas.set(
-        this.vouchers['_uuid'],
-        this.vouchers
-      );
-      this.dialog.dataService.save(null, 0, '', '', false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res && res.update.data != null) {
-          this.dt.detectChanges();
-        }
-      });
-    }
-  }
-
   //#endregion
 
   //#region Function
 
   save(isclose: boolean)
   {
-    this.loading = true;
       switch (this.formType) {
         case 'add':
         case 'copy':
@@ -536,14 +516,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                       this.vouchers = res;
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
-                      this.isSaveMaster = false;
                       });
                       this.dt.detectChanges();
                   }
-                  this.loading = false;
-                }
-                else{
-                  this.loading = false;
                 }
               });
           } else {
@@ -584,7 +559,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     this.dt.detectChanges();
                   }
                   else {
-                    this.loading = false;
                     this.vouchers.unbounds.isAddNew = true;
                   }
                 });
@@ -631,67 +605,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     ]);
   }
 
-  loadInit(){
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
-          this.vouchers.recID,
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.vouchersLines = res;
-            this.vouchersLines.forEach((element) => {
-              this.loadTotal();
-            });
-          }
-        });
-    }
-
-    // if(this.vouchers.warehouseID)
-    // {
-    //   this.getWarehouseName(this.vouchers.warehouseID);
-    // }
-
-    // if (
-    //   this.vouchers &&
-    //   this.vouchers.unbounds &&
-    //   this.vouchers.unbounds.lockFields &&
-    //   this.vouchers.unbounds.lockFields.length
-    // ){
-    //   this.lockFields = this.vouchers.unbounds
-    //     .lockFields as Array<string>;
-    // }
-    // else{
-    //   this.api
-    //     .exec('IV', 'VouchersBusiness', 'SetUnboundsAsync', [
-    //       this.vouchers
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
-    //         this.vouchers.unbounds = res.unbounds;
-    //         this.lockFields = this.vouchers.unbounds
-    //           .lockFields as Array<string>;
-    //       }
-    //     });
-    // }
-    if (this.vouchers.status == '0' && this.formType == 'edit') {
-      this.hasSaved = true;
-    }
-  }
-
-  loadTotal() {
-    var totals = 0;
-    this.vouchersLines.forEach((element) => {
-      totals = totals + element.costAmt;
-    });
-    this.total = totals;
-    this.vouchers.totalAmt = totals;
-    this.total = totals.toLocaleString('it-IT');
-  }
-
-  addRow(){
+  addVoucherLine(){
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -710,7 +624,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
-                  this.loadModegrid();
+                  this.onAddLine();
                 }
               });
           } else {
@@ -729,7 +643,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                     if (res && res.save.data != null) {
                       this.vouchers.voucherNo = res.save.data.voucherNo;
                       this.hasSaved = true;
-                      this.loadModegrid();
+                      this.onAddLine();
                     }
                   });
               }
@@ -746,7 +660,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res && res.update.data != false) {
-                this.loadModegrid();
+                this.onAddLine();
               }
             });
           break;
@@ -754,7 +668,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  loadModegrid() {
+  onAddLine() {
     let data = new VouchersLines();
     let idx;
     this.api
@@ -787,7 +701,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       data: { ...data },
       dataline: this.vouchersLines,
       dataVouchers: this.vouchers,
-      lockFields: this.lockFields,
+      hideFields: this.hideFields,
       type: type,
       formModelLine: this.fmVouchersLines,
       funcID: this.funcID,
@@ -823,8 +737,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 this.vouchersLines.push(dataline);
               }
               this.hasSaved = true;
-              this.isSaveMaster = true;
-              this.loadTotal();
             }
           });
         }
@@ -846,7 +758,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           data: { ...data },
           dataVouchers: this.vouchers,
           type: 'edit',
-          lockFields: this.lockFields,
+          hideFields: this.hideFields,
           journal: this.journal,
           formModelLine: this.fmVouchersLines,
           funcID: this.funcID,
@@ -880,8 +792,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                   var dataline = res.event['data'];
                   this.vouchersLines[index] = dataline;
                   this.hasSaved = true;
-                  this.isSaveMaster = true;
-                  this.loadTotal();
                 }
               });
             }
@@ -953,7 +863,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               this.hasSaved = true;
-              this.isSaveMaster = true;
               this.api
                 .exec(
                   'IV',
@@ -964,7 +873,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res) => {
                   this.notification.notifyCode('SYS008', 0, '');
-                  this.loadTotal();
                 });
             }
           });
@@ -1044,25 +952,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.vouchersLines = [];
   }
 
-  // setDataGrid(updateColumn, data) {
-  //   if (updateColumn) {
-  //     var arrColumn = [];
-  //     arrColumn = updateColumn.split(';');
-  //     if (arrColumn && arrColumn.length) {
-  //       arrColumn.forEach((e) => {
-  //         if (e) {
-  //           let field = Util.camelize(e);
-  //           this.gridVouchersLine.rowDataSelected[field] = data[field];
-  //           this.gridVouchersLine.rowDataSelected = {
-  //             ...data,
-  //           };
-  //           this.gridVouchersLine.rowDataSelected.updateColumns = '';
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
-
   setReason(field, text, idx) {
     if (!this.reason.some((x) => x.field == field)) {
       let transText = new Reason();
@@ -1083,19 +972,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       memo: this.vouchers.memo,
     });
   }
-
-  // getWarehouseName(warehouseID: any){
-  //   this.api.exec('IV', 'VouchersBusiness', 'GetWarehouseNameAsync', [warehouseID])
-  //   .pipe(takeUntil(this.destroy$))
-  //     .subscribe((res: any) => {
-  //       if (res.length > 0) {
-  //         this.vouchers.warehouseName = res;
-  //         this.form.formGroup.patchValue({
-  //           warehouseName: this.vouchers.warehouseName,
-  //         });
-  //       }
-  //     });
-  // }
 
   costPrice_Change(line: any)
   {
@@ -1126,14 +1002,14 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  autoAddRow(e: any) {
+  endEdit(e: any) {
     switch (e.type) {
       case 'autoAdd':
-        this.addRow();
+        this.addVoucherLine();
         break;
       case 'add':
         if (this.gridVouchersLine.autoAddRow) {
-          this.addRow();
+          this.addVoucherLine();
         }
         break;
       case 'endEdit':
@@ -1227,7 +1103,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  setVisibleColumn(columnsGrid)
+  showHideColumns(columnsGrid)
   {
     let arr = [
       'IDIM0',
@@ -1241,24 +1117,21 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'IDIM8',
       'IDIM9',
     ];
-    let visibleColumns = arr.filter((x) => !this.lockFields.includes(x));
-    if(visibleColumns.length > 0)
-    {
-      visibleColumns.forEach((fieldName) => {
+
+    arr.forEach((fieldName) => {
+      if(this.hideFields.includes(fieldName))
+      {
+        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
+        if (i > -1) {
+          columnsGrid[i].isVisible = false;
+        }
+      }
+      else
+      {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].isVisible = true;
         }
-      });
-    }
-  }
-
-  setHideColumns(columnsGrid)
-  {
-    this.lockFields.forEach((fieldName) => {
-      let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-      if (i > -1) {
-        columnsGrid[i].isVisible = false;
       }
     });
   }

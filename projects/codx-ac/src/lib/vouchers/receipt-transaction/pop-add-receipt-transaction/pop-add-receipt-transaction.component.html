@@ -369,10 +369,10 @@
         [showRowNumber]="true"
         [editOnClick]="true"
         [isCustom]="false"
-        (eventAction)="autoAddRow($event)"
+        (eventAction)="endEdit($event)"
         (gridInit)="gridInit($event)"
-        (onAddNew)="onAddNew($event)"
-        (onEdit)="onEdit($event)"
+        (onAddNew)="onSaveLine($event, 'isAddNew')"
+        (onEdit)="onSaveLine($event, 'isEdit')"
         (cellChanged)="lineChanged($event)"
       ></codx-gridview-v2>
 
@@ -382,8 +382,8 @@
           type="button"
           tabindex="8"
           class="btn btn-sm btn-light-primary"
-          (keydown.enter)="addRow(); $event.preventDefault()"
-          (click)="addRow()"
+          (keydown.enter)="addVoucherLine(); $event.preventDefault()"
+          (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
           <codx-label
@@ -735,7 +735,7 @@
         <button
           type="button"
           class="btn btn-sm btn-light-primary"
-          (click)="addRow()"
+          (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
           <codx-label
@@ -852,7 +852,6 @@
     [formModel]="form.formModel"
     [objectID]="vouchers.recID"
     [funcID]="form.formModel.funcID"
-    [TabControl]="tabInfo"
   ></codx-tabs>
 </ng-template>
 <!-- End: Tab Referen -->

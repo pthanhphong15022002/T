@@ -393,13 +393,13 @@
       <div class="me-1 w-30px">
         <span
           (click)="clickShowGrid(item, !item.isCollapse)"
-          *ngIf="item.isCollapse == true"
+          *ngIf="item.isCollapse == false"
           class="i-collapse cursor-pointer icon-22 icon-arrow_right me-2"
         ></span>
 
         <span
           (click)="clickShowGrid(item, !item.isCollapse)"
-          *ngIf="item.isCollapse == false"
+          *ngIf="item.isCollapse == true"
           class="i-collapse cursor-pointer icon-22 icon-arrow_drop_down me-2"
         ></span>
       </div>
