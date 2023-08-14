@@ -679,6 +679,7 @@ export class TargetsComponent
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
         gridViewSetupTarget: this.gridViewSetupTarget,
+        year: this.year
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -715,8 +716,8 @@ export class TargetsComponent
               });
             });
             this.countPersons = lst.length;
+            this.isShow = false;
           }
-          this.isShow = false;
 
           this.detectorRef.detectChanges();
         }
@@ -791,9 +792,9 @@ export class TargetsComponent
                 });
               });
               this.countPersons = lst.length;
+              this.isShow = false;
             }
             // this.lstDataTree.push(Object.assign({}, data));
-            this.isShow = false;
 
             this.detectorRef.detectChanges();
           }
