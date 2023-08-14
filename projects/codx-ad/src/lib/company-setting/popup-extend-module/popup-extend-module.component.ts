@@ -68,28 +68,27 @@ export class PopupExtendModuleComponent extends UIComponent {
       this.months = Number(this.defaultSettings?.HireInervalNum);
       this.detectorRef.detectChanges();
     });
+  }
+
+  ngAfterViewInit() {
     this.clmnGrid = [
       {
         headerTemplate: this.moduleHT,
-        width: 90,
         template: this.moduleTmp,
         textAlign: 'center',
       },
       {
         headerTemplate: this.operatorHT,
-        width: 45,
         template: this.operatorTmp,
         textAlign: 'center',
       },
       {
         headerTemplate: this.employeeHT,
-        width: 45,
         template: this.emplTmp,
         textAlign: 'center',
       },
       {
         headerTemplate: this.totalHT,
-        width: 45,
         template: this.totalTmp,
         textAlign: 'center',
       },
