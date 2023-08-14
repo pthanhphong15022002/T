@@ -14,10 +14,23 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
+import { WarrantiesComponent } from './warranties/warranties.component';
 
-var routes: Routes = [{}];
+var routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'warranties/:funcID',
+        component: WarrantiesComponent,
+        data: { noReuse: true },
+      },
+    ],
+  },
+];
 @NgModule({
-  declarations: [LayoutComponent, CodxWrComponent],
+  declarations: [LayoutComponent, CodxWrComponent, WarrantiesComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
