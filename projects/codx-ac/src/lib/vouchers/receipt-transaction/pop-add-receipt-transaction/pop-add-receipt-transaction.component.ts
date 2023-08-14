@@ -54,7 +54,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   vouchersLines: Array<VouchersLines> = [];
   vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
-  lockFields = [];
+  hideFields = [];
   total: any = 0;
   hasSaved: any = false;
   isSaveMaster: any = false;
@@ -85,12 +85,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     allowDeleting: true,
     mode: 'Normal',
   };
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
+  // tabInfo: TabModel[] = [
+  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  // ];
   key: any;
   columnChange: string = '';
   vllWarehouse: any;
@@ -121,8 +121,8 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    if (dialogData?.data.lockFields && dialogData?.data.lockFields.length > 0) {
-      this.lockFields = [...dialogData?.data.lockFields];
+    if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
+      this.hideFields = [...dialogData?.data.hideFields];
     }
     if(this.journal)
     {
@@ -254,23 +254,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-
-    if(this.dataUpdate)
-    {
-      if(this.dataUpdate.recID &&
-        this.dataUpdate.recID == e.data.recID &&
-        this.dataUpdate[e.field] == e.data[e.field]
-        )
-        {
-          return;
-        }
-    }
+    if(!this.checkDataUpdate(e))
+      return;
 
     const postFields: string[] = [
       'itemID',
-      //'costPrice',
       'quantity',
-      //'costAmt',
       'lineType',
       'umid',
       'idiM0',
@@ -321,13 +310,23 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      case 'itemID':
-        e.data.itemName = e.itemData.ItemName;
-        break;
-      
     }
   }
 
+  checkDataUpdate(e: any): boolean
+  {
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return false;
+        }
+    }
+    return true;
+  }
   onAddNew(e: any) {
     this.checkValidateLine(e);
     if (this.validate > 0) {
@@ -657,11 +656,11 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     // if (
     //   this.vouchers &&
     //   this.vouchers.unbounds &&
-    //   this.vouchers.unbounds.lockFields &&
-    //   this.vouchers.unbounds.lockFields.length
+    //   this.vouchers.unbounds.hideFields &&
+    //   this.vouchers.unbounds.hideFields.length
     // ){
-    //   this.lockFields = this.vouchers.unbounds
-    //     .lockFields as Array<string>;
+    //   this.hideFields = this.vouchers.unbounds
+    //     .hideFields as Array<string>;
     // }
     // else{
     //   this.api
@@ -669,10 +668,10 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     //       this.vouchers
     //     ])
     //     .subscribe((res: any) => {
-    //       if (res.unbounds && res.unbounds.lockFields && res.unbounds.lockFields.length) {
+    //       if (res.unbounds && res.unbounds.hideFields && res.unbounds.hideFields.length) {
     //         this.vouchers.unbounds = res.unbounds;
-    //         this.lockFields = this.vouchers.unbounds
-    //           .lockFields as Array<string>;
+    //         this.hideFields = this.vouchers.unbounds
+    //           .hideFields as Array<string>;
     //       }
     //     });
     // }
@@ -787,7 +786,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       data: { ...data },
       dataline: this.vouchersLines,
       dataVouchers: this.vouchers,
-      lockFields: this.lockFields,
+      hideFields: this.hideFields,
       type: type,
       formModelLine: this.fmVouchersLines,
       funcID: this.funcID,
@@ -846,7 +845,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           data: { ...data },
           dataVouchers: this.vouchers,
           type: 'edit',
-          lockFields: this.lockFields,
+          hideFields: this.hideFields,
           journal: this.journal,
           formModelLine: this.fmVouchersLines,
           funcID: this.funcID,
@@ -1241,7 +1240,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       'IDIM8',
       'IDIM9',
     ];
-    let visibleColumns = arr.filter((x) => !this.lockFields.includes(x));
+    let visibleColumns = arr.filter((x) => !this.hideFields.includes(x));
     if(visibleColumns.length > 0)
     {
       visibleColumns.forEach((fieldName) => {
@@ -1255,7 +1254,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
 
   setHideColumns(columnsGrid)
   {
-    this.lockFields.forEach((fieldName) => {
+    this.hideFields.forEach((fieldName) => {
       let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
       if (i > -1) {
         columnsGrid[i].isVisible = false;

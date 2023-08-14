@@ -169,18 +169,13 @@ export class PurchaseinvoicesComponent
         ];
       });
 
-    this.getDefault().subscribe((res) => {
-      this.defaultSubject.next({
-        ...res,
-        recID: res.data.recID,
-      });
-    });
+    this.emitDefault();
 
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.purchaseInvoiceService.journal = this.journal = journal;
     });
 
-    // this.purchaseInvoiceService.getCache();
+    this.purchaseInvoiceService.initCache();
   }
 
   ngAfterViewInit() {
@@ -266,12 +261,7 @@ export class PurchaseinvoicesComponent
               this.view.funcID
             )
             .closed.subscribe(() => {
-              this.getDefault().subscribe((res) => {
-                this.defaultSubject.next({
-                  ...res,
-                  recID: res.data.recID,
-                });
-              });
+              this.emitDefault();
             });
         }
       })
@@ -467,6 +457,15 @@ export class PurchaseinvoicesComponent
   //#endregion
 
   //#region Function
+  emitDefault(): void {
+    this.getDefault().subscribe((res) => {
+      this.defaultSubject.next({
+        ...res,
+        recID: res.data.recID,
+      });
+    });
+  }
+
   groupBy(arr: any[], key: string): any[][] {
     return Object.values(
       arr.reduce((acc, current) => {

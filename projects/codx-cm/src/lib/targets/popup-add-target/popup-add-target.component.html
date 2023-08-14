@@ -17,11 +17,10 @@
             #dropCalendar
             cssPopup="h-350px w-550px"
             [value]="date"
-            [firstChange]="false"
+            [disabled]="action == 'edit'"
             [selectedType]="'y'"
             [displayOption]="ops"
             cssClass="w-100"
-            (valueChange)="changeCalendar($event)"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
         </div>
@@ -29,6 +28,7 @@
           <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
           </codx-label>
           <codx-input
+          #codxInput
             [disabled]="action == 'edit'"
             [formModel]="form.formModel"
             [crrValue]="businessLineID"

@@ -45,8 +45,8 @@ export class PopupAddSalesInvoiceComponent
   @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
   initialMaster: ISalesInvoice;
-  master: ISalesInvoice = {} as ISalesInvoice;
   prevMaster: ISalesInvoice;
+  master: ISalesInvoice = {} as ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
@@ -55,8 +55,6 @@ export class PopupAddSalesInvoiceComponent
   fmSalesInvoicesLines: FormModel;
 
   formTitle: string;
-  isEdit: boolean = false;
-  voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
@@ -72,6 +70,9 @@ export class PopupAddSalesInvoiceComponent
     allowDeleting: true,
     mode: 'Normal',
   };
+  voucherNoPlaceholderText$: Observable<string>;
+
+  isEdit: boolean = false;
   isReturnInvoice: boolean;
 
   constructor(
