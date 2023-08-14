@@ -221,7 +221,7 @@ export class TargetsComponent
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
@@ -662,9 +662,6 @@ export class TargetsComponent
           case 'SYS04':
             res.disabled = true;
             break;
-          case 'SYS02':
-            res.disabled = true;
-            break;
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;
@@ -808,7 +805,7 @@ export class TargetsComponent
                 this.lstTreeSearchs[index] = data;
               } else {
                 this.lstTreeSearchs.push(Object.assign({}, data));
-                this.countPersons++;
+                this.countTarget++;
               }
               this.lstDataTree = JSON.parse(
                 JSON.stringify(this.lstTreeSearchs)
@@ -837,6 +834,7 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
+    this.view.dataService.dataSelected = data;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
@@ -847,13 +845,37 @@ export class TargetsComponent
               'CM',
               'ERM.Business.CM',
               'TargetsBusiness',
-              'DeletedTargetLineAsync',
+              'DeletedTargetAsync',
               data.recID
             )
             .subscribe((res) => {
               if (res) {
-                data.target = 0;
-                this.view.dataService.update(data.target).subscribe();
+                var index = this.lstTreeSearchs.findIndex(
+                  (x) => x.recID == data.recID
+                );
+                if (index != -1) {
+                  this.lstTreeSearchs.splice(index, 1);
+                  this.countTarget--;
+                }
+                this.lstDataTree = JSON.parse(
+                  JSON.stringify(this.lstTreeSearchs)
+                );
+                let lst = [];
+                this.lstDataTree.forEach((res) => {
+                  res?.items?.forEach((element) => {
+                    if (
+                      !lst.some(
+                        (item) => item?.salespersonID == element?.salespersonID
+                      )
+                    ) {
+                      lst.push(Object.assign({}, element));
+                    }
+                  });
+                });
+                this.countPersons = lst.length;
+                // this.view.dataService
+                //   .delete([this.view.dataService.dataSelected], false)
+                //   .subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
@@ -865,7 +887,7 @@ export class TargetsComponent
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeletedTargetLineAsync';
+    opt.methodName = 'DeletedTargetAsync';
     opt.assemblyName = 'ERM.Business.CM';
     opt.className = 'TargetsBusiness';
     opt.service = 'CM';

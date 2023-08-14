@@ -79,12 +79,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     allowDeleting: true,
     mode: 'Normal',
   };
-  // tabInfo: TabModel[] = [
-  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
-  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  // ];
   key: any;
   columnChange: string = '';
   vllWarehouse: any;
