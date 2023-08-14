@@ -46,8 +46,6 @@ export class PopupModuleDetailComponent extends UIComponent {
       (md: TN_OrderModule) =>
         md.boughtModule?.refID == this.module?.boughtModule?.moduleID
     );
-
-
   }
 
   dialog;

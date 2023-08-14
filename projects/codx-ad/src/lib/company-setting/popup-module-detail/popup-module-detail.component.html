@@ -92,25 +92,6 @@
         [autoFitColumns]="false"
         rowHeight="40"
       ></codx-gridview-v2>
-      <ng-template #operRoleEndDate let-data>
-        <div
-          [innerHTML]="
-            data.operRoleEndDate
-              | formatvalue : grid.formModel : 'EndDate'
-              | async
-          "
-        ></div>
-      </ng-template>
-
-      <ng-template #emplRoleEndDate let-data>
-        <div
-          [innerHTML]="
-            data.emplRoleEndDate
-              | formatvalue : grid.formModel : 'EndDate'
-              | async
-          "
-        ></div>
-      </ng-template>
     </div>
   </div>
 </ng-template>
@@ -145,4 +126,19 @@
 <ng-template #employeeHT let-data>
   <codx-label [name]="'lblemployeeHeaderText'" [default]="'Nhân viên'">
   </codx-label>
+</ng-template>
+<ng-template #operRoleEndDate let-data>
+  <div
+    [innerHTML]="
+      data.operRoleEndDate | formatvalue : fmUserRole : 'EndDate' | async
+    "
+  ></div>
+</ng-template>
+
+<ng-template #emplRoleEndDate let-data>
+  <div
+    [innerHTML]="
+      data.emplRoleEndDate | formatvalue : fmUserRole : 'EndDate' | async
+    "
+  ></div>
 </ng-template>
