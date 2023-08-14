@@ -76,9 +76,7 @@
       <div class="d-flex align-items-end codx-badge">
         <div
           *ngIf="data.status == '2'; else statusDefault"
-          [ngStyle]="{
-            'background-color': data?.steps['backgroundColor']
-          }"
+          [ngStyle]="{'background-color': data?.steps['backgroundColor']}"
           class="me-1 badge badge-sm d-flex align-items-center mw-125px"
         >
           <span

@@ -276,15 +276,10 @@ export class CodxTasksComponent
     }
 
     this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();  //after onInit dont loaded
   }
 
   afterLoad() {
-    //cai này có thể gọi grvSetup
-    // if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
-    //   this.vllStatus = this.vllStatusAssignTasks;
-    // } else this.vllStatus = this.vllStatusTasks;
-
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {

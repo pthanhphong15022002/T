@@ -166,6 +166,8 @@ export class TargetsComponent
   search = '';
   countTarget = 0;
   countPersons = 0;
+  predicateSearch = '';
+  dataValueSearch = '';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -219,7 +221,7 @@ export class TargetsComponent
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
@@ -323,21 +325,21 @@ export class TargetsComponent
       this.countTarget = data[1];
       this.countPersons = data[2];
       this.lstTreeSearchs = this.lstDataTree;
-      if (this.viewCurrent == '2') {
-        this.lstDataTree = this.lstTreeSearchs.filter(
-          (item) =>
-            (item?.title?.indexOf(this.search) >= 0 &&
-              item.year == this.year) ||
-            (item?.salespersonID?.indexOf(this.search) >= 0 &&
-              item.year == this.year) ||
-            item?.items?.some(
-              (x) =>
-                (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
-                (x?.businessLineID?.indexOf(this.search) >= 0 &&
-                  x.year == this.year)
-            )
-        );
-      }
+      // if (this.viewCurrent == '2') {
+      //   this.lstDataTree = this.lstTreeSearchs.filter(
+      //     (item) =>
+      //       (item?.title?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       (item?.salespersonID?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       item?.items?.some(
+      //         (x) =>
+      //           (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
+      //           (x?.businessLineID?.indexOf(this.search) >= 0 &&
+      //             x.year == this.year)
+      //       )
+      //   );
+      // }
     }
 
     this.loadedTree = true;
@@ -351,8 +353,13 @@ export class TargetsComponent
       this.view.button = this.showButtonAdd ? this.button : null;
       this.currencyID = this.currencyIDSys;
       this.exchangeRate = this.exchangeRateSys;
+      this.search = '';
       this.viewCurrent = valueView;
-      this.loadTreeData(this.year?.toString());
+      this.loadTreeData(
+        this.year?.toString(),
+        this.predicateSearch,
+        this.dataValueSearch
+      );
     }
     this.detectorRef.detectChanges();
   }
@@ -566,6 +573,8 @@ export class TargetsComponent
   searchChanged(e) {
     this.search = '';
     if (e == null || e?.trim() == '') {
+      this.predicateSearch = '';
+      this.dataValueSearch = '';
       this.loadTreeData(this.year);
       return;
     }
@@ -573,11 +582,28 @@ export class TargetsComponent
     this.search = text;
     let predicates = '';
     let dataValues = '';
-    predicates =
-      'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
+    this.isShow = false;
+    let keySearch = Object.keys(this.gridViewSetupTarget);
+    let j = 0;
+    for (let i = 0; i < keySearch.length; i++) {
+      if (this.gridViewSetupTarget[keySearch[i]].isQuickSearch == true) {
+        let or = j > 0 ? ' or ' : '';
+        predicates += or + `${keySearch[i]}.Contains(@1)`;
+        j++;
+      }
+    }
+
+    // predicates =
+    //   'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
     dataValues = text;
+    this.predicateSearch = predicates;
+    this.dataValueSearch = dataValues;
     this.loadTreeData(this.year, predicates, dataValues);
     this.detectorRef.detectChanges();
+  }
+
+  convertToCamelCase(name: string): string {
+    return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
   }
 
   filterChange(e) {
@@ -636,9 +662,6 @@ export class TargetsComponent
           case 'SYS04':
             res.disabled = true;
             break;
-          case 'SYS02':
-            res.disabled = true;
-            break;
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;
@@ -679,7 +702,7 @@ export class TargetsComponent
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
         gridViewSetupTarget: this.gridViewSetupTarget,
-        year: this.year
+        year: this.year,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -709,8 +732,12 @@ export class TargetsComponent
             this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
             let lst = [];
             this.lstDataTree.forEach((res) => {
-              res?.items?.forEach(element => {
-                if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+              res?.items?.forEach((element) => {
+                if (
+                  !lst.some(
+                    (item) => item?.salespersonID == element?.salespersonID
+                  )
+                ) {
                   lst.push(Object.assign({}, element));
                 }
               });
@@ -778,15 +805,19 @@ export class TargetsComponent
                 this.lstTreeSearchs[index] = data;
               } else {
                 this.lstTreeSearchs.push(Object.assign({}, data));
-                this.countPersons++;
+                this.countTarget++;
               }
               this.lstDataTree = JSON.parse(
                 JSON.stringify(this.lstTreeSearchs)
               );
               let lst = [];
               this.lstDataTree.forEach((res) => {
-                res?.items?.forEach(element => {
-                  if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+                res?.items?.forEach((element) => {
+                  if (
+                    !lst.some(
+                      (item) => item?.salespersonID == element?.salespersonID
+                    )
+                  ) {
                     lst.push(Object.assign({}, element));
                   }
                 });
@@ -803,6 +834,7 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
+    this.view.dataService.dataSelected = data;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
@@ -813,13 +845,37 @@ export class TargetsComponent
               'CM',
               'ERM.Business.CM',
               'TargetsBusiness',
-              'DeletedTargetLineAsync',
+              'DeletedTargetAsync',
               data.recID
             )
             .subscribe((res) => {
               if (res) {
-                data.target = 0;
-                this.view.dataService.update(data.target).subscribe();
+                var index = this.lstTreeSearchs.findIndex(
+                  (x) => x.recID == data.recID
+                );
+                if (index != -1) {
+                  this.lstTreeSearchs.splice(index, 1);
+                  this.countTarget--;
+                }
+                this.lstDataTree = JSON.parse(
+                  JSON.stringify(this.lstTreeSearchs)
+                );
+                let lst = [];
+                this.lstDataTree.forEach((res) => {
+                  res?.items?.forEach((element) => {
+                    if (
+                      !lst.some(
+                        (item) => item?.salespersonID == element?.salespersonID
+                      )
+                    ) {
+                      lst.push(Object.assign({}, element));
+                    }
+                  });
+                });
+                this.countPersons = lst.length;
+                // this.view.dataService
+                //   .delete([this.view.dataService.dataSelected], false)
+                //   .subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
@@ -831,7 +887,7 @@ export class TargetsComponent
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeletedTargetLineAsync';
+    opt.methodName = 'DeletedTargetAsync';
     opt.assemblyName = 'ERM.Business.CM';
     opt.className = 'TargetsBusiness';
     opt.service = 'CM';
