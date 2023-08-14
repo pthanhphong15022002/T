@@ -37,7 +37,7 @@
                           [ngbPopover]="
                             perm.roleType != 'O' ? popupRoleType : null
                           "
-                          placement="right top"
+                          placement="right auto"
                           #p="ngbPopover"
                           (mouseenter)="showPopover(p, perm.objectID)"
                           autoClose="outside"

@@ -479,12 +479,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Event PurchaseInvoicesLines
   onEndAddNew(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    // line.unbounds = {
-    //   invoiceForm: this.master.invoiceForm,
-    //   invoiceSeriNo: this.master.invoiceSeriNo,
-    //   invoiceNo: this.master.invoiceNo,
-    //   invoiceDate: this.master.invoiceDate,
-    // };
     this.purchaseInvoiceLineService.updateDatas.clear();
     this.purchaseInvoiceLineService.addDatas.set(line.recID, line); // ❓ wtf
     this.purchaseInvoiceLineService
@@ -501,12 +495,6 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndEdit(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    // line.unbounds = {
-    //   invoiceForm: this.master.invoiceForm,
-    //   invoiceSeriNo: this.master.invoiceSeriNo,
-    //   invoiceNo: this.master.invoiceNo,
-    //   invoiceDate: this.master.invoiceDate,
-    // };
     this.purchaseInvoiceLineService.addDatas.clear();
     this.purchaseInvoiceLineService.updateDatas.set(line.recID, line);
     this.purchaseInvoiceLineService
@@ -674,7 +662,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         console.log(res);
 
-        this.master = Object.assign(this.master, res);
+        Object.assign(this.master, res);
         this.prevMaster = { ...this.master };
         this.form.formGroup.patchValue(res);
       });
@@ -741,6 +729,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
         this.lines = [];
       });
   }
+
   getDefaultPurchaseInvoiceLine(): Observable<any> {
     return this.api.exec<any>(
       'AC',
