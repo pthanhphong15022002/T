@@ -8,7 +8,7 @@
 >
 </codx-form>
 <ng-template #header>
-  <div class="row header">
+  <div class="row header w-100">
     <div class="close d-flex justify-content-end">
       <button
         type="button"
@@ -129,7 +129,7 @@
 
 <!-- Gridview -->
 <ng-template #gridModules>
-  <div class="row d-flex">
+  <div class="row d-flex" *ngIf="clmnGrid?.length">
     <codx-gridview-v2
       #grid
       [dataSource]="lstModule"
