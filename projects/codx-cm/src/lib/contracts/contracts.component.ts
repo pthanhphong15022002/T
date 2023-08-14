@@ -294,27 +294,14 @@ export class ContractsComponent extends UIComponent {
             break;
 
           case 'CM0204_9': // bắt đầu
-            if (data?.applyProcess) {
-              if (data?.status != '1') {
-                res.disabled = true;
-              }
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '1';
             break;
 
           case 'CM0204_10': // thành công
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '2';
             break;
-
           case 'CM0204_11': // thất bại
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '2';
             break;
 
           case 'CM0204_13': // thêm công việc
