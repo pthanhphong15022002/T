@@ -83,7 +83,7 @@ export class ReceiptTransactionComponent extends UIComponent {
   loading: any = false;
   loadingAcct: any = false;
   journal: IJournal;
-  lockFields: Array<any> = [];
+  hideFields: Array<any> = [];
   fmVouchers: FormModel = {
     formName: '',
     gridViewName: '',
@@ -95,16 +95,16 @@ export class ReceiptTransactionComponent extends UIComponent {
     entityName: 'IV_VouchersLines',
   };
   vouchersLines: Array<VouchersLines> = [];
-  tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
-  ];
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
+  // tabItem: any = [
+  //   { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
+  //   { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  // ];
+  // tabInfo: TabModel[] = [
+  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  // ];
   fmAccTrans: FormModel = {
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
@@ -134,7 +134,7 @@ export class ReceiptTransactionComponent extends UIComponent {
       }
     });
     this.funcID = this.routerActive.snapshot.params['funcID'];
-    this.loadLockFields();
+    this.loadhideFields();
   }
   //#endregion
 
@@ -241,7 +241,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.headerText,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
-            lockFields: this.lockFields,
+            hideFields: this.hideFields,
             journal: this.journal,
           };
           let option = new SidebarModel();
@@ -272,7 +272,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.funcName,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
-            lockFields: this.lockFields,
+            hideFields: this.hideFields,
             journal: this.journal,
           };
           let option = new SidebarModel();
@@ -313,7 +313,7 @@ export class ReceiptTransactionComponent extends UIComponent {
             headerText: this.funcName,
             formModelMaster: this.fmVouchers,
             formModelLine: this.fmVouchersLines,
-            lockFields: this.lockFields,
+            hideFields: this.hideFields,
             journal: this.journal,
           };
           let option = new SidebarModel();
@@ -473,13 +473,13 @@ export class ReceiptTransactionComponent extends UIComponent {
     return false;
   }
 
-  loadLockFields() {
+  loadhideFields() {
     this.acService
-      .execApi('AC', 'JournalsBusiness', 'GetJournalAsync', [this.journalNo])
+      .execApi('AC', 'CommonBusiness', 'GetDataVoucherDefaultAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.journal = res[0];
-        this.lockFields = res[2];
+      .subscribe((res: any) => {
+        this.journal = res.journal;
+        this.hideFields = res.hideFields;
       });
   }
 
