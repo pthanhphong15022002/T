@@ -48,7 +48,7 @@
                                 class="w-100 min-h-table d-flex justify-content-center align-items-center border-top border-bottom h-100">
                                 <codx-inplace type="text" field="okrName" [value]=""
                                     [class]="'om-input w-100 fw-bold'"
-                                    [cssClass]="'om-input w-100 fw-bold fs-4'" [id]="'ob'"
+                                    [cssClass]="'om-input w-100 fw-bold fs-4'" 
                                     [emptyText]="okrGrv?.obGrv?.okrName?.description"
                                     ></codx-inplace>
                             </div>
@@ -95,7 +95,7 @@
                                         <span class="w-100">
                                             <codx-inplace type="text" field="okrName" [value]=""
                                                 [class]="'w-90'" [id]="'ob'+'kr'"
-                                                [emptyText]="okrGrv?.krGrv?.okrName?.description"
+                                                [emptyText]="okrGrv?.krGrv?.okrName?.description"  refType="3"
                                                 ></codx-inplace>
                                         </span>
                                     </div>
@@ -106,7 +106,7 @@
                                     class="w-30 min-h-table d-flex justify-content-center align-items-center border-bottom  border-end">
                                     <span class="w-100">
                                         <codx-inplace type="valuelist"
-                                            [refValue]="okrGrv?.krGrv?.measurement?.referedValue"
+                                            [refValue]="okrGrv?.krGrv?.measurement?.referedValue"  refType="3"
                                             [emptyText]="okrGrv?.krGrv?.measurement?.headerText"
                                             field="measurement" [value]="" [class]="'w-80'"
                                             ></codx-inplace>
@@ -116,7 +116,7 @@
                                     class="w-30 min-h-table d-flex justify-content-center align-items-center  border-bottom border-end">
                                     <span class="w-100">
                                         <codx-inplace type="number"
-                                        [refValue]="okrGrv?.krGrv?.target?.referedValue"
+                                        [refValue]="okrGrv?.krGrv?.target?.referedValue"  refType="3"
                                         [emptyText]="okrGrv?.krGrv?.target?.headerText"
                                         field="target" [value]="" [class]="'w-80'"
                                         ></codx-inplace>
@@ -126,7 +126,7 @@
                                     class="w-30 min-h-table d-flex justify-content-center align-items-center  border-bottom border-end">
                                     <span class="w-100">
                                         <codx-inplace type="combobox"
-                                            [refValue]="okrGrv?.krGrv?.umid?.referedValue"
+                                            [refValue]="okrGrv?.krGrv?.umid?.referedValue" refType="3"
                                             [emptyText]="okrGrv?.krGrv?.umid?.headerText" field="umid"
                                             [value]="" [class]="'w-80'"
                                             ></codx-inplace>
@@ -155,7 +155,7 @@
                                         class="w-100 min-h-table d-flex justify-content-center align-items-center border-top border-bottom h-100">
                                         <codx-inplace type="text" field="okrName" [value]="ob?.okrName"
                                             [class]="'om-input w-100 fw-bold'"
-                                            [cssClass]="'om-input w-100 fw-bold fs-4'" [id]="'ob'+i"
+                                            [cssClass]="'om-input w-100 fw-bold fs-4'" [id]="'ob'+i"  refType="3"
                                             [emptyText]="okrGrv?.obGrv?.okrName?.description+ ' ' +(i+1)"
                                             (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -165,7 +165,7 @@
                                     <div
                                         class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
                                         <codx-inplace class="om-input w-100  fw-bold" field="okrGroupID" type="combobox"
-                                            [ngbTooltip]="'Nhóm mục tiêu'" [refValue]="'OKRGroups'" [class]="''"
+                                            [ngbTooltip]="'Nhóm mục tiêu'" [refValue]="'OKRGroups'" [class]="''"  refType="3"
                                             [cssClass]="'fw-bold'" [emptyText]="'Nhóm mục tiêu'"
                                             [value]="ob?.okrGroupID" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -173,7 +173,7 @@
                                         class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom  border-top vll-inplace">
                                         <codx-inplace class="om-input w-100  fw-bold" field="category" type="valuelist"
                                             [ngbTooltip]="okrGrv?.obGrv?.category?.headerText"
-                                            [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"
+                                            [refValue]="okrGrv?.obGrv?.category?.referedValue" [class]="''"  refType="3"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.category?.description"
                                             [value]="ob?.category" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -181,7 +181,7 @@
                                         class="w-30 min-h-table d-flex justify-content-center align-items-center  h-100 border-bottom border-top border-end vll-inplace">
                                         <codx-inplace class="om-input w-100  fw-bold" field="confidence"
                                             type="valuelist" [ngbTooltip]="okrGrv?.obGrv?.confidence?.headerText"
-                                            [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"
+                                            [refValue]="okrGrv?.obGrv?.confidence?.referedValue" [class]="''"  refType="3"
                                             [cssClass]="'fw-bold'" [emptyText]="okrGrv?.obGrv?.confidence?.description"
                                             [value]="ob?.confidence" (valueChange)="obChange($event,i)"></codx-inplace>
                                     </div>
@@ -206,7 +206,7 @@
                                                 class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center">
                                                 <span class="w-100">
                                                     <codx-inplace type="text" field="okrName" [value]="kr?.okrName"
-                                                        [class]="'w-90'" [id]="'ob'+i+'kr'+ii"
+                                                        [class]="'w-90'" [id]="'ob'+i+'kr'+ii"  refType="3"
                                                         [emptyText]="okrGrv?.krGrv?.okrName?.description+ ' ' +(ii+1)"
                                                         (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                                 </span>
@@ -219,7 +219,7 @@
                                             <span class="w-100">
                                                 <codx-inplace type="valuelist"
                                                     [refValue]="okrGrv?.krGrv?.measurement?.referedValue"
-                                                    [emptyText]="okrGrv?.krGrv?.measurement?.headerText"
+                                                    [emptyText]="okrGrv?.krGrv?.measurement?.headerText"  refType="3"
                                                     field="measurement" [value]="kr?.measurement" [class]="'w-80'"
                                                     (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                             </span>
@@ -229,7 +229,7 @@
                                             <span class="w-100">
                                                 <codx-inplace type="number"
                                                 [refValue]="okrGrv?.krGrv?.target?.referedValue"
-                                                [emptyText]="okrGrv?.krGrv?.target?.headerText"
+                                                [emptyText]="okrGrv?.krGrv?.target?.headerText"  refType="3"
                                                 field="target" [value]="kr?.target" [class]="'w-80'"
                                                 (valueChange)="krChange($event,i,ii)"></codx-inplace>
                                             </span>
@@ -238,7 +238,7 @@
                                             class="w-30 min-h-table d-flex justify-content-center align-items-center  border-bottom border-end">
                                             <span class="w-100">
                                                 <codx-inplace type="combobox"
-                                                    [refValue]="okrGrv?.krGrv?.umid?.referedValue"
+                                                    [refValue]="okrGrv?.krGrv?.umid?.referedValue"  refType="3"
                                                     [emptyText]="okrGrv?.krGrv?.umid?.headerText" field="umid"
                                                     [value]="kr?.umid" [class]="'w-80'"
                                                     (valueChange)="krChange($event,i,ii)"></codx-inplace>

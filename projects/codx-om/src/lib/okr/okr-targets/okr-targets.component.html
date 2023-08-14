@@ -446,9 +446,9 @@
             <span class="icon-i-clock-history text-hover-primary icon-20 text-gray-400"></span>
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-              *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
-              [ngClass]="item?.okrTasks && item?.okrTasks.length > 0 ? '' : ''">{{ item?.okrTasks ?
-              item?.okrTasks?.length
+              *ngIf="item?.checkIns != null && item?.checkIns.length > 0"
+              [ngClass]="item?.checkIns && item?.checkIns.length > 0 ? '' : ''">{{ item?.checkIns ?
+              item?.checkIns?.length
               : 0 }}</span>
           </div>
 
@@ -463,18 +463,18 @@
               : 0 }}</span>
           </div>
           <codx-comment-temp [objectID]="item?.recID" [viewType]="3" ngbTooltip="Bình luận"></codx-comment-temp>
-          <span class="me-2 d-flex justify-content-start align-items-start"
+          <div class="me-2 d-flex justify-content-start align-items-start"
             *ngIf="item?.okrType == krType && okrFM?.krFM && reloadedMF && showOKRMF">
             <codx-mfunc [formModel]="okrFM?.krFM " type="view" [dataItem]="item"
               (clickMF)="clickKRMF($event, item, false)"
               (changeDataMF)="changeDataKRMF($event, item, false)"></codx-mfunc>
-          </span>
-          <span class="me-2 d-flex justify-content-start align-items-start"
+          </div>
+          <div class="me-2 d-flex justify-content-start align-items-start"
             *ngIf="item?.okrType == skrType && okrFM?.skrFM && reloadedMF && showOKRMF">
             <codx-mfunc [formModel]="okrFM?.skrFM " type="view" [dataItem]="item"
               (clickMF)="clickKRMF($event, item, true)"
               (changeDataMF)="changeDataKRMF($event, item, false)"></codx-mfunc>
-          </span>
+          </div>
         </div>
 
       </div>
