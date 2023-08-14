@@ -117,9 +117,7 @@
         </ng-container>
       </div>
     </div>
-    <div
-      class="view-details-content rounded-2 bg-body scroll-y p-3 pb-0"
-    >
+    <div class="view-details-content rounded-2 bg-body scroll-y p-3 pb-0">
       <div
         class="sprints-task-detail"
         data-kt-scroll="true"
@@ -216,6 +214,7 @@
       [funcID]="functionParent"
       [vllControlShare]="'TM003'"
       [vllRose]="'TM002'"
+      (getContent)="getContent($event)"
     >
     </codx-note>
   </div>
