@@ -5,6 +5,7 @@ import {
   Injector,
   Optional,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
@@ -34,6 +35,7 @@ import { SalesInvoiceService } from '../sales-invoices.service';
   selector: 'lib-popup-add-sales-invoice',
   templateUrl: './popup-add-sales-invoice.component.html',
   styleUrls: ['./popup-add-sales-invoice.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddSalesInvoiceComponent
   extends UIComponent
@@ -47,6 +49,7 @@ export class PopupAddSalesInvoiceComponent
   initialMaster: ISalesInvoice;
   prevMaster: ISalesInvoice;
   master: ISalesInvoice = {} as ISalesInvoice;
+  prevLine: ISalesInvoicesLine;
   lines: ISalesInvoicesLine[] = [];
   masterService: CRUDService;
   detailService: CRUDService;
@@ -225,7 +228,7 @@ export class PopupAddSalesInvoiceComponent
         .subscribe((res: any) => {
           console.log(res);
 
-          this.master = Object.assign(this.master, res);
+          Object.assign(this.master, res);
           this.prevMaster = { ...this.master };
           this.form.formGroup.patchValue(res);
         });
@@ -279,7 +282,11 @@ export class PopupAddSalesInvoiceComponent
   onCellChange(e): void {
     console.log('onCellChange', e);
 
-    if (!e.data[e.field]) {
+    if (!this.master) {
+      return;
+    }
+
+    if (this.prevLine?.[e.field] == e.data[e.field]) {
       return;
     }
 
@@ -299,12 +306,15 @@ export class PopupAddSalesInvoiceComponent
       this.api
         .exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
+          this.master,
           e.data,
         ])
-        .subscribe((line) => {
+        .subscribe((line: any) => {
           console.log(line);
 
+          this.prevLine = { ...line };
           Object.assign(this.lines[e.idx], line);
+          this.detectorRef.markForCheck();
         });
     }
   }
@@ -390,6 +400,10 @@ export class PopupAddSalesInvoiceComponent
         .subscribe((res: ISalesInvoicesLine) => {
           this.grid.addRow(res, this.lines.length);
         });
+    }
+
+    if (e.type === 'beginEdit') {
+      this.prevLine = { ...e.data };
     }
   }
 

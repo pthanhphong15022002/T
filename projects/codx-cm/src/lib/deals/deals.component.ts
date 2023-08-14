@@ -338,6 +338,7 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
+
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         mappingFunction && mappingFunction(eventItem, data);
@@ -1009,8 +1010,6 @@ export class DealsComponent
   }
 
   popupOwnerRoles(data) {
-
-
     this.dataSelected = data;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
@@ -1031,7 +1030,7 @@ export class DealsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       startControl: data.steps.startControl,
-      applyProcess: data.applyProcess,
+      applyProcess: true,
       buid: data.buid,
     };
     var dialog = this.callfc.openForm(
