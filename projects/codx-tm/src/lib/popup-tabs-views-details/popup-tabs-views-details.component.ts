@@ -216,4 +216,8 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
     if (!this.loading) return;
     this.dialog.close(this.dataUp);
   }
+
+  getContent(e) {
+    this.data.contents = e;
+  }
 }

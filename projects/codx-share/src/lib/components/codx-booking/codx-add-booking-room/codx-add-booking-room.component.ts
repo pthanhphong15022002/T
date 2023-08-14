@@ -29,6 +29,7 @@ import {
 } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
+import { Approver } from '../../../models/ApproveProcess.model';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -448,7 +449,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         .subscribe((res: any) => {
           if (res) {
             this.roomCapacity = res?.capacity;
-            this.resourceOwner = [res?.owner];
+            
+            let tempApprover = new Approver ();
+            tempApprover.roleID=res?.owner;
+            this.resourceOwner = [tempApprover];
           }
         });
     }
@@ -1294,7 +1298,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       });
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
-        this.resourceOwner = [selectResource[0].owner];
+        let tempApprover = new Approver ();
+        tempApprover.roleID=selectResource[0]?.owner;
+        this.resourceOwner = [tempApprover];
         this.data.resourceID = evt;
         this.tmplstDevice = [];
         if (
@@ -1433,15 +1439,18 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                     });
                 });
             } else {
-              this.notificationsService.notifyCode('ES007');
-              this.codxBookingService
-                .afterApprovedManual(
-                  this.formModel.entityName,
-                  this.returnData.recID,
-                  '5'
-                )
-                .subscribe();
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
+                if(approveData!=null){
+                  this.returnData.approveStatus=approveData?.approveStatus;
+                  this.returnData.write = false;
+                  this.returnData.delete = false;
+                  this.notificationsService.notifyCode('SYS034');
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                }
+                else{
+                  return;
+                }
+              });
             }
 
             this.dialogRef && this.dialogRef.close(this.returnData);
@@ -1498,15 +1507,18 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             )
         });
     } else { 
-      this.notificationsService.notifyCode('ES007');
-      this.codxBookingService
-        .afterApprovedManual(
-          this.formModel.entityName,
-          this.returnData.recID,
-          '5'
-        )
-        .subscribe();
-      this.dialogRef && this.dialogRef.close(this.returnData);
+      this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
+        if(approveData!=null){
+          this.returnData.approveStatus=approveData?.approveStatus;
+          this.returnData.write = false;
+          this.returnData.delete = false;
+          this.notificationsService.notifyCode('SYS034');
+          this.dialogRef && this.dialogRef.close(this.returnData);
+        }
+        else{
+          return;
+        }
+      });
     }
   }
   //---------------------------------------------------------------------------------//
