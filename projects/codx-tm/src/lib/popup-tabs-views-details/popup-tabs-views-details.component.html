@@ -146,6 +146,7 @@
         </ng-container>
         <ng-container *ngIf="name == 'Tasks'">
           <ng-container *ngIf="dataObj">
+            <div class="tm-detail">
             <codx-tasks-share
               [dataObj]="dataObj"
               [showButtonAdd]="showButtonAdd"
@@ -154,6 +155,7 @@
               (resourceNew)="addNewResource($event)"
             >
             </codx-tasks-share>
+          </div>
           </ng-container>
         </ng-container>
 
