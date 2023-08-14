@@ -45,6 +45,7 @@ import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -294,7 +295,6 @@ export class DealsComponent
       this.kanban = (this.view?.currentView as any)?.kanban;
     }
 
-
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     else if (this.processIDKanban)
@@ -338,28 +338,22 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        eventItem.isblur = data.approveStatus == '3';
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
-        if (mappingFunction) {
-          mappingFunction(eventItem, data);
-        }
+        mappingFunction && mappingFunction(eventItem, data);
       }
     }
   }
   getRoleMoreFunction(type) {
     let functionMappings;
     let isDisabled = (eventItem, data) => {
-      eventItem.disabled =
-        data?.alloweStatus == '1'
-          ? (data.closed && data.status != '1') ||
+      eventItem.disabled = data?.alloweStatus == '1' ? (data.closed && data.status != '1') ||
             ['1', '0'].includes(data.status) ||
             this.checkMoreReason(data)
           : true;
     };
     let isDelete = (eventItem, data) => {
         eventItem.disabled = data.delete ? data.closed || this.checkMoreReason(data) || data.status == '0' : true;
-
     };
     let isCopy = (eventItem, data) => {
       eventItem.disabled = data.write
@@ -406,7 +400,6 @@ export class DealsComponent
           this.checkMoreReason(data)
         : true;
     };
-
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
@@ -436,29 +429,21 @@ export class DealsComponent
       eventItem.disabled =  true ;
     };
     functionMappings = {
-      CM0201_1: isDisabled, // chuyển tiếp
+      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce((acc, code) => ({ ...acc, [code]: isDisabled }), {}),
+      ...['CM0201_12', 'CM0201_13'].reduce((acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }), {}),
+      ...['SYS101', 'SYS103','SYS104','SYS102'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
+      ...['SYS003', 'SYS001'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
       CM0201_2: isStartDay, // bắt đầu
-      CM0201_3: isDisabled, // thành công
-      CM0201_4: isDisabled, // thất bại
-      CM0201_5: isDisabled, // xuất file
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
       CM0201_8: isClosed,
       CM0201_9: isOpened,
-      CM0201_12: isConfirmOrRefuse,
-      CM0201_13: isConfirmOrRefuse,
-      SYS101: isDisCRd,
-      SYS103: isDisCRd,
       SYS03: isEdit,
-      SYS104: isDisCRd,
       SYS04: isCopy,
-      SYS102: isDisCRd,
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
-      SYS003: isUpload,
       SYS004: isEmail,
-      SYS001: isUpload,
       SYS002: isDownload,
       CM0201_15: isPermission,
     };
@@ -600,10 +585,10 @@ export class DealsComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval 
+      let appoverStatus = e.unbounds.statusApproval
       if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
         this.dataSelected.approveStatus=appoverStatus
-      } 
+      }
       this.view.dataService.update(this.dataSelected).subscribe();
     }
   }
@@ -1024,46 +1009,48 @@ export class DealsComponent
   }
 
   popupOwnerRoles(data) {
+
+
     this.dataSelected = data;
-    this.cache.functionList('DPT0402').subscribe((fun) => {
-      var formMD = new FormModel();
-      let dialogModel = new DialogModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      dialogModel.zIndex = 999;
-      dialogModel.FormModel = formMD;
-      var obj = {
-        recID: data?.recID,
-        refID: data?.refID,
-        processID: data?.processID,
-        stepID: data?.stepID,
-        gridViewSetup: this.gridViewSetup,
-        formModel: this.view.formModel,
-        applyFor: '1',
-        titleAction: this.titleAction,
-        owner: data.owner,
-        startControl: data.steps.startControl,
-      };
-      var dialog = this.callfc.openForm(
-        PopupOwnerDealComponent,
-        '',
-        500,
-        280,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        if (e && e?.event != null) {
-          this.detailViewDeal.promiseAllAsync();
-          this.view.dataService.update(e?.event).subscribe();
-          this.notificationsService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
-      });
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    var obj = {
+      recID: data?.recID,
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      gridViewSetup: this.gridViewSetup,
+      formModel: this.view.formModel,
+      applyFor: '1',
+      titleAction: this.titleAction,
+      owner: data.owner,
+      startControl: data.steps.startControl,
+      applyProcess: data.applyProcess,
+      buid: data.buid,
+    };
+    var dialog = this.callfc.openForm(
+      PopupAssginDealComponent,
+      '',
+      750,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.detailViewDeal.promiseAllAsync();
+        this.view.dataService.update(e?.event).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
     });
   }
 

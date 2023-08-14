@@ -243,11 +243,11 @@ saveOwner(){
  this.applyProcess && this.setRoles();
   var datas = [this.recID, this.owner,this.ownerStep, this.startControl,this.buid];
   if(this.applyFor == "1"){
-  //   this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
-  //     if(res) {
-  //       this.dialogRef.close(res[0]);
-  //     }
-  // })
+    this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
+      if(res) {
+        this.dialogRef.close(res[0]);
+      }
+  })
   }
   else if (this.applyFor == "5") {
     this.codxCmService.updateOwnerLead(datas).subscribe((res)=> {

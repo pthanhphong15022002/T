@@ -322,7 +322,7 @@ export class CodxTasksComponent
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
     } else {
-      //xu ly khi truyeefn vao 1 list resourece
+      //request a list resource
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
@@ -338,23 +338,6 @@ export class CodxTasksComponent
     this.requestSchedule.idField = 'taskID';
     this.requestSchedule.dataObj = this.dataObj;
 
-    // if (
-    //   this.funcID != 'TMT0201' &&
-    //   this.funcID != 'TMT0206' &&
-    //   this.funcID != 'MWP0061' &&
-    //   this.funcID != 'MWP0063'
-    // ) {
-    //   if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
-    //     this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
-    //     this.requestSchedule.dataValue = '2;' + this.user.userID;
-    //   } else {
-    //     this.requestSchedule.predicate = 'Category=@0 or Category=@1';
-    //     this.requestSchedule.dataValue = '1;2';
-    //   }
-    // } else {
-    //   this.requestSchedule.predicate = '';
-    //   this.requestSchedule.dataValue = '';
-    // }
     //fix theo core mới schedule bỏ resoure
     switch (this.funcID) {
       case 'MWP0061':
@@ -1028,6 +1011,7 @@ export class CodxTasksComponent
               if (kanban) kanban.updateCard(obj);
             });
             this.itemSelected = res[0];
+            this.detail.getTaskDetail();
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
             if (this.itemSelected.status == '90')

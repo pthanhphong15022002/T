@@ -22,11 +22,11 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    this.policyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
   
   dialog: DialogRef;
-  alpolicyObj: any;
+  policyObj: any;
   funcID: string;
   headerText: string;
   formModel: FormModel;
@@ -94,7 +94,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
   //     'HR',
   //     'PolicyALBusiness',
   //     'GetApplyObjsAsync',
-  //     ['AL', this.alpolicyObj.policyID, 0]
+  //     ['AL', this.policyObj.policyID, 0]
   //   );
   // }
 
@@ -195,17 +195,17 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
         //   this.lstPolicyBeneficiariesApply = res;
         // })
 
-        if(this.alpolicyObj.hasIncludeObjects == true){
-          if(this.alpolicyObj.includeObjects){
-            this.lstSelectedObj = this.alpolicyObj.includeObjects.split(';')
+        if(this.policyObj.hasIncludeObjects == true){
+          if(this.policyObj.includeObjects){
+            this.lstSelectedObj = this.policyObj.includeObjects.split(';')
           }
         }
-        if(this.alpolicyObj.hasExcludeObjects == true){
-          if(this.alpolicyObj.excludeObjects){
-            this.lstSelectedExcludeObj = this.alpolicyObj.excludeObjects.split(';')
+        if(this.policyObj.hasExcludeObjects == true){
+          if(this.policyObj.excludeObjects){
+            this.lstSelectedExcludeObj = this.policyObj.excludeObjects.split(';')
           }
         }
-        this.GetPolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+        this.GetPolicyBeneficiaries(this.policyObj.policyID).subscribe((res) => {
           this.lstPolicyBeneficiariesApply = res.filter((obj) => obj.category == 0);
         this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
           this.SplitToSubList(this.lstPolicyBeneficiariesApply);
@@ -214,11 +214,11 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
         this.lstPolicyBeneficiariesExclude = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
 
           this.SplitToSubList(this.lstPolicyBeneficiariesExclude);
-          this.formGroup.patchValue(this.alpolicyObj);
-          this.formModel.currentData = this.alpolicyObj;
+          this.formGroup.patchValue(this.policyObj);
+          this.formModel.currentData = this.policyObj;
         })
-        this.formGroup.patchValue(this.alpolicyObj);
-        this.formModel.currentData = this.alpolicyObj;
+        this.formGroup.patchValue(this.policyObj);
+        this.formModel.currentData = this.policyObj;
         debugger
         this.cr.detectChanges();
         this.isAfterRender = true;
