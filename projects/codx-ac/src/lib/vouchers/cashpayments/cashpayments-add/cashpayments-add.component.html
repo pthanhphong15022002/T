@@ -372,7 +372,7 @@
     *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '11') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subtypeRef == '1') || (cashpayment?.subType == '4' && subtypeRef == '1'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 showRowNumber="true" class="tabLine" #gridCash [allowRowDragAndDrop]="true"
-        [formName]="fmCashLines.formName" [gridViewName]="fmCashLines.gridViewName"
+        [formName]="fmCashLines.formName" [gridViewName]="fmCashLines.gridViewName" [editSettings]="editSettings"
         [entityName]="fmCashLines.entityName" predicates="TransID=@0" [allowFiltering]="true" [allowSorting]="true"
         [templateMore]="morefunction" [dataValues]="form.data.recID" [dataSource]="cashpaymentline" service="AC"
         [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false" (gridInit)="gridInit($event)" rowHeight="35"

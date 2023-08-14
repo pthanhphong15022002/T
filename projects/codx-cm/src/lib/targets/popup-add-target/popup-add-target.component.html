@@ -15,12 +15,13 @@
           </codx-label>
           <codx-dropdown-calendar
             #dropCalendar
-            [disabled]="action == 'edit'"
             cssPopup="h-350px w-550px"
             [value]="date"
+            [firstChange]="false"
+            [selectedType]="'y'"
             [displayOption]="ops"
-            cssClass="w-100 om-calendar"
-            [selectedType]="selectedType"
+            cssClass="w-100"
+            (valueChange)="changeCalendar($event)"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
         </div>
@@ -83,9 +84,7 @@
               class="btn btn-sm btn-icon btn-light-primary"
               (click)="openPopup()"
             >
-              <span
-                class="icon-person_add_alt_1 icon-16"
-              ></span>
+              <span class="icon-person_add_alt_1 icon-16"></span>
             </button>
             <ng-container *ngIf="isPopup">
               <codx-combobox-popup
@@ -132,7 +131,12 @@
           default="Khôi phục lại"
         ></codx-label>
       </button>
-      <button type="button" class="btn btn-primary" (click)="onSave()" [disabled]="isCheckSave">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="onSave()"
+        [disabled]="isCheckSave"
+      >
         <codx-label
           name="lblSave"
           [formModel]="dialog.formModel"
@@ -175,7 +179,9 @@
                 <div class="action-menu-od me-1" (click)="removeUser(item)">
                   <i class="icon-close text-danger icon-16"></i>
                 </div>
-                <div class="d-flex align-items-center justify-content-between list-title">
+                <div
+                  class="d-flex align-items-center justify-content-between list-title"
+                >
                   <div class="d-flex align-items-top me-3">
                     <codx-img
                       [width]="30"

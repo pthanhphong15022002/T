@@ -3,7 +3,7 @@
   (selectedChange)="changeItemDetail($event)" [isSubView]="true">
 </codx-views>
 <!-- templateMore -->
-<ng-template #templateMore let-data>
+<ng-template #templateGrid let-data>
   <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event,data)" [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>

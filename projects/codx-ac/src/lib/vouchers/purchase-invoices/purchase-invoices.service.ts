@@ -29,7 +29,7 @@ export class PurchaseInvoiceService {
       .subscribe();
   }
 
-  getCache(): void {
+  initCache(): void {
     this.apiService
       .exec('IV', 'CommonBusiness', 'InitItemInfoListCacheAsync')
       .subscribe();
