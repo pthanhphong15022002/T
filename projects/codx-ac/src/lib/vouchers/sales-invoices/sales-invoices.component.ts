@@ -26,6 +26,8 @@ import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-a
 import { SalesInvoiceService } from './sales-invoices.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
+import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
+import { IPurchaseInvoice } from '../purchase-invoices/interfaces/IPurchaseInvoice.inteface';
 
 enum MF {
   GuiDuyet = 'ACT060504',
@@ -56,23 +58,25 @@ export class SalesInvoicesComponent
   btnAdd = {
     id: 'btnAdd',
   };
-  functionName: string;
-  journalNo: string;
-  master: ISalesInvoice;
-  lines: ISalesInvoicesLine[] = [];
-  acctTranLines: IAcctTran[][] = [[]];
-  gvsSalesInvoicesLines: any;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
+
+  functionName: string;
+  journalNo: string;
+  journal: IJournal;
+  master: ISalesInvoice;
+  lines: ISalesInvoicesLine[] = [];
+  acctTranLines: IAcctTran[][] = [[]];
+  columns: TableColumn[];
+
   loading: boolean = false;
   acctLoading: boolean = false;
   overflowed: boolean = false;
   expanding: boolean = false;
-  journal: IJournal;
   isFirstChange: boolean = true;
 
   fmSalesInvoicesLines: FormModel;
@@ -82,9 +86,11 @@ export class SalesInvoicesComponent
     gridViewName: 'grvAcctTrans',
     entityPer: 'AC_AcctTrans',
   };
+  gvsSalesInvoicesLines: any;
   gvsAcctTrans: any;
 
-  columns: TableColumn[];
+  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
+
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -160,14 +166,14 @@ export class SalesInvoicesComponent
         this.gvsAcctTrans = gvs;
       });
 
+    this.emitDefault();
+
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.salesInvoiceService.journal = this.journal = journal;
     });
   }
 
   ngAfterViewInit(): void {
-    console.log(this.view);
-
     this.views = [
       {
         type: ViewType.grid,
@@ -259,9 +265,9 @@ export class SalesInvoicesComponent
   onClickAdd(e): void {
     this.view.dataService
       .addNew(() =>
-        this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
-          this.journalNo,
-        ])
+        this.defaultSubject
+          .asObservable()
+          .pipe(distinctUntilKeyChanged('recID'))
       )
       .subscribe((res: any) => {
         if (res) {
@@ -270,17 +276,22 @@ export class SalesInvoicesComponent
           options.FormModel = this.view.formModel;
           options.isFull = true;
 
-          this.callfc.openSide(
-            PopupAddSalesInvoiceComponent,
-            {
-              formType: 'add',
-              formTitle: `${e.text} ${this.functionName}`,
-            },
-            options,
-            this.view.funcID
-          );
+          this.callfc
+            .openSide(
+              PopupAddSalesInvoiceComponent,
+              {
+                formType: 'add',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              options,
+              this.view.funcID
+            )
+            .closed.subscribe(() => {
+              this.emitDefault();
+            });
         }
-      });
+      })
+      .unsubscribe();
   }
 
   onClickMF(e, data) {
@@ -361,6 +372,12 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Method
+  getDefault(): Observable<any> {
+    return this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
+      this.journalNo,
+    ]);
+  }
+
   delete(data: ISalesInvoice): void {
     this.view.dataService.delete([data], true).subscribe();
   }
@@ -437,6 +454,15 @@ export class SalesInvoicesComponent
   //#endregion
 
   //#region Function
+  emitDefault(): void {
+    this.getDefault().subscribe((res) => {
+      this.defaultSubject.next({
+        ...res,
+        recID: res.data.recID,
+      });
+    });
+  }
+
   groupBy(arr: any[], key: string): any[][] {
     return Object.values(
       arr.reduce((acc, current) => {
