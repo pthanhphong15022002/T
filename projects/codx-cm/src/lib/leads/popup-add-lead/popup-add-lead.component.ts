@@ -45,6 +45,9 @@ export class PopupAddLeadComponent
   @ViewChild('tabGeneralContactDetail')
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+  @ViewChild('body') body: TemplateRef<any>;
+  @ViewChild('footer') footer: TemplateRef<any>;
+
   @ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
   @ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -192,24 +195,14 @@ export class PopupAddLeadComponent
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
-    this.executeApiCalls();
+    // this.executeApiCalls();
     this.isCategory = this.lead.category == '1';
   }
 
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    // this.tabInfo = [
-    //   this.menuGeneralInfo,
-    //   this.menuGeneralSystem,
-    //   this.menuGeneralContact,
-    // ];
-    // this.tabContent = [
-    //   this.tabGeneralInfoDetail,
-    //   this.tabGeneralSystemDetail,
-    //   this.tabGeneralContactDetail,
-    //   this.tabCustomFieldDetail,
-    // ];
+    this.executeApiCalls();
   }
 
   valueChange($event) {
@@ -296,7 +289,8 @@ export class PopupAddLeadComponent
       if (view === this.viewOwnerDefault) {
         this.lead[$event.field] = $event.data;
         ownerName = $event.component.itemsSelected[0].UserName;
-      } else {
+      }
+      else {
         this.lead.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
@@ -349,8 +343,9 @@ export class PopupAddLeadComponent
       // this.itemTab(true);
     } else {
       this.getAutoNumber();
-      this.itemTab(false);
+      // this.itemTab(false);
     }
+
     this.lead.applyProcess = check;
   }
   async getAutoNumber() {
@@ -452,29 +447,22 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-    try {
-      if (this.avatarChangeLead) {
-        await this.saveFileLead(this.leadId);
-      }
-      if (this.avatarChangeContact) {
-        await this.saveFileContact(this.contactId);
-      }
-      if (this.isLoading) {
+
+    if (this.avatarChangeLead) {
+      await this.saveFileLead(this.leadId);
+    }
+    if (this.avatarChangeContact) {
+      await this.saveFileContact(this.contactId);
+    }
+    if (this.isLoading) {
+    } else {
+      if (this.action !== this.actionEdit) {
+        this.lead.applyProcess && (await this.insertInstance());
+        await this.onAdd();
       } else {
-        if (this.action !== this.actionEdit) {
-          this.lead.applyProcess && (await this.insertInstance());
-          await this.onAdd();
-        } else {
-          this.lead.applyProcess && (await this.editInstance());
-          await this.onEdit();
-        }
+        this.lead.applyProcess && (await this.editInstance());
+        await this.onEdit();
       }
-    } catch (error) {
-      // if (this.action !== this.actionEdit) {
-      //   this.onAdd();
-      // } else {
-      //   this.onEdit();
-      // }
     }
   }
 
@@ -524,34 +512,26 @@ export class PopupAddLeadComponent
   }
 
   async executeApiCalls() {
-    try {
-      if (this.action === this.actionAdd) {
-        let res = await firstValueFrom(
-          this.codxCmService.getParam('CMParameters', '1')
-        );
-        if (res?.dataValue) {
-          let dataValue = JSON.parse(res?.dataValue);
-          this.currencyIDDefault = dataValue?.DefaultCurrency;
-          this.applyProcess = dataValue?.ProcessLead == '1';
-        }
-        this.lead.currencyID = this.currencyIDDefault;
-        this.lead.applyProcess = this.applyProcess;
-        this.checkApplyProcess(this.lead.applyProcess);
+    if (this.action === this.actionAdd) {
+      let res = await firstValueFrom(
+        this.codxCmService.getParam('CMParameters', '1')
+      );
+      if (res?.dataValue) {
+        let dataValue = JSON.parse(res?.dataValue);
+        this.currencyIDDefault = dataValue?.DefaultCurrency;
+        this.applyProcess = dataValue?.ProcessLead == '1';
       }
-
-      !this.lead.applyProcess &&
-        this.action !== this.actionEdit &&
-        this.getAutoNumber();
-
-      this.lead.applyProcess &&
-        (await this.getListInstanceSteps(this.lead.processID));
-    } catch (error) {
-      console.error('Error executing API calls:', error);
+      this.lead.currencyID = this.currencyIDDefault;
+      this.lead.applyProcess = this.applyProcess;
+      this.checkApplyProcess(this.lead.applyProcess);
     }
+
+    if (!this.lead.applyProcess) {
+      if (this.action !== this.actionEdit) this.getAutoNumber();
+      this.itemTab(false);
+    } else await this.getListInstanceSteps(this.lead.processID);
   }
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.lead.processID : processId;
     var data = [processId, this.lead?.refID, this.action, '5'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
@@ -570,6 +550,7 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
+        debugger;
         this.itemTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
@@ -585,7 +566,7 @@ export class PopupAddLeadComponent
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.lead.createdOn
+          this.action !== this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
 
@@ -646,6 +627,7 @@ export class PopupAddLeadComponent
   }
   // an tat theo truong tuy chinh
   itemTab(check: boolean): void {
+    debugger;
     if (check) {
       this.tabInfo = [
         this.menuGeneralInfo,
@@ -710,10 +692,6 @@ export class PopupAddLeadComponent
 
   //#endregion
 
-  isRequired(field: string) {
-    return this.gridViewSetup[field]?.h;
-  }
-
   setTitle(e: any) {
     this.title = this.titleAction;
     this.changeDetectorRef.detectChanges();
@@ -721,14 +699,13 @@ export class PopupAddLeadComponent
 
   changeAvatarLead() {
     this.avatarChangeLead = true;
-
     if (this.action === this.actionCopy && !this.isCopyAvtLead) {
       this.lead.recID = Util.uid();
       this.leadId = this.lead.recID;
-
       this.isCopyAvtLead = true;
     }
   }
+
   changeAvatarContact() {
     this.avatarChangeContact = true;
     if (this.action === this.actionCopy && !this.isCopyAvtContact) {
