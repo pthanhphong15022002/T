@@ -85,12 +85,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     allowDeleting: true,
     mode: 'Normal',
   };
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
+  // tabInfo: TabModel[] = [
+  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  // ];
   key: any;
   columnChange: string = '';
   vllWarehouse: any;
@@ -254,23 +254,12 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   }
 
   lineChanged(e: any) {
-
-    if(this.dataUpdate)
-    {
-      if(this.dataUpdate.recID &&
-        this.dataUpdate.recID == e.data.recID &&
-        this.dataUpdate[e.field] == e.data[e.field]
-        )
-        {
-          return;
-        }
-    }
+    if(!this.checkDataUpdate(e))
+      return;
 
     const postFields: string[] = [
       'itemID',
-      //'costPrice',
       'quantity',
-      //'costAmt',
       'lineType',
       'umid',
       'idiM0',
@@ -321,13 +310,23 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
-      case 'itemID':
-        e.data.itemName = e.itemData.ItemName;
-        break;
-      
     }
   }
 
+  checkDataUpdate(e: any): boolean
+  {
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
+        {
+          return false;
+        }
+    }
+    return true;
+  }
   onAddNew(e: any) {
     this.checkValidateLine(e);
     if (this.validate > 0) {

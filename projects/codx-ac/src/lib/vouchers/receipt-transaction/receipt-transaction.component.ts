@@ -95,16 +95,16 @@ export class ReceiptTransactionComponent extends UIComponent {
     entityName: 'IV_VouchersLines',
   };
   vouchersLines: Array<VouchersLines> = [];
-  tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
-  ];
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
+  // tabItem: any = [
+  //   { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
+  //   { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  // ];
+  // tabInfo: TabModel[] = [
+  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  // ];
   fmAccTrans: FormModel = {
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
