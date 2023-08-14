@@ -790,6 +790,7 @@
       class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
     >
       <button
+        *ngIf="formType != 'edit'"
         style="border: 1px solid"
         tabindex="9"
         id="discard"
@@ -807,6 +808,7 @@
         </div>
       </button>
       <button
+        *ngIf="formType != 'edit'"
         style="border: 1px solid var(--primary-dark) !important"
         tabindex="10"
         type="button"
