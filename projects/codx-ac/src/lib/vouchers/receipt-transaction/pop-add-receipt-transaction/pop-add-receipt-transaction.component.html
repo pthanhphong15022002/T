@@ -369,7 +369,7 @@
         [showRowNumber]="true"
         [editOnClick]="true"
         [isCustom]="false"
-        (eventAction)="autoAddRow($event)"
+        (eventAction)="endEdit($event)"
         (gridInit)="gridInit($event)"
         (onAddNew)="onAddNew($event)"
         (onEdit)="onEdit($event)"
@@ -382,8 +382,8 @@
           type="button"
           tabindex="8"
           class="btn btn-sm btn-light-primary"
-          (keydown.enter)="addRow(); $event.preventDefault()"
-          (click)="addRow()"
+          (keydown.enter)="addVoucherLine(); $event.preventDefault()"
+          (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
           <codx-label
@@ -735,7 +735,7 @@
         <button
           type="button"
           class="btn btn-sm btn-light-primary"
-          (click)="addRow()"
+          (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
           <codx-label
