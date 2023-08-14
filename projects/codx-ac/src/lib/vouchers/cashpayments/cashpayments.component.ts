@@ -27,7 +27,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
+import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../codx-ac.service';
@@ -41,9 +41,9 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { Subject, interval, takeUntil } from 'rxjs';
 import { RoundService } from '../../round.service';
 @Component({
-  selector: 'lib-cash-payments',
-  templateUrl: './cash-payments.component.html',
-  styleUrls: ['./cash-payments.component.css', '../../codx-ac.component.css'],
+  selector: 'lib-cashpayments',
+  templateUrl: './cashpayments.component.html',
+  styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -316,7 +316,7 @@ export class CashPaymentsComponent extends UIComponent {
         option.FormModel = this.view.formModel;
         option.isFull = true;
         var dialog = this.callfunc.openSide(
-          PopAddCashComponent,
+          CashPaymentAdd,
           obj,
           option,
           this.view.funcID
@@ -339,7 +339,7 @@ export class CashPaymentsComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       option.isFull = true;
       var dialog = this.callfunc.openSide(
-        PopAddCashComponent,
+        CashPaymentAdd,
         obj,
         option,
         this.view.funcID
@@ -903,7 +903,7 @@ export class CashPaymentsComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.isFull = true;
     let dialog = this.callfunc.openSide(
-      PopAddCashComponent,
+      CashPaymentAdd,
       obj,
       option,
       this.view.funcID
