@@ -421,6 +421,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   popupImg() {}
 
   addEmoji(event) {
+    debugger;
     if (this.id >= this.contents.length) this.id = this.contents.length - 1;
     this.listNoteTemp.memo = '';
     if (

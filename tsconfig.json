@@ -124,6 +124,10 @@
         "dist/codx-wp/codx-wp",
         "dist/codx-wp"
       ],
+      "codx-wr": [
+        "dist/codx-wr/codx-wr",
+        "dist/codx-wr"
+      ],
       "@shared/*": [
         "src/shared/*"
       ],
