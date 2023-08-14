@@ -45,6 +45,9 @@ export class PopupAddLeadComponent
   @ViewChild('tabGeneralContactDetail')
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+  @ViewChild('body') body: TemplateRef<any>;
+  @ViewChild('footer') footer: TemplateRef<any>;
+
   @ViewChild('imageUploadLead') imageUploadLead: ImageViewerComponent;
   @ViewChild('imageUploadContact') imageUploadContact: ImageViewerComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -192,13 +195,15 @@ export class PopupAddLeadComponent
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
-    this.executeApiCalls();
+    // this.executeApiCalls();
     this.isCategory = this.lead.category == '1';
   }
 
   onInit(): void {}
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.executeApiCalls();
+  }
 
   valueChange($event) {
     if ($event && $event.data) {
@@ -284,7 +289,8 @@ export class PopupAddLeadComponent
       if (view === this.viewOwnerDefault) {
         this.lead[$event.field] = $event.data;
         ownerName = $event.component.itemsSelected[0].UserName;
-      } else {
+      }
+      else {
         this.lead.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
@@ -523,14 +529,9 @@ export class PopupAddLeadComponent
     if (!this.lead.applyProcess) {
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTab(false);
-    }
-
-    this.lead.applyProcess &&
-      (await this.getListInstanceSteps(this.lead.processID));
+    } else await this.getListInstanceSteps(this.lead.processID);
   }
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.lead.processID : processId;
     var data = [processId, this.lead?.refID, this.action, '5'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
@@ -565,7 +566,7 @@ export class PopupAddLeadComponent
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.lead.createdOn
+          this.action !== this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
 
@@ -698,14 +699,13 @@ export class PopupAddLeadComponent
 
   changeAvatarLead() {
     this.avatarChangeLead = true;
-
     if (this.action === this.actionCopy && !this.isCopyAvtLead) {
       this.lead.recID = Util.uid();
       this.leadId = this.lead.recID;
-
       this.isCopyAvtLead = true;
     }
   }
+
   changeAvatarContact() {
     this.avatarChangeContact = true;
     if (this.action === this.actionCopy && !this.isCopyAvtContact) {

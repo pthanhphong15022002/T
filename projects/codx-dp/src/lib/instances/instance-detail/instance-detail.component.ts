@@ -811,24 +811,27 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   handleProgressInstance(event?) {
-    if(this.progressControl){
-
-    }else{
-      let listStepConvert = this.listSteps?.filter(
-        (step) => !step.isSuccessStep && !step.isFailStep
+    let listStepConvert = this.listSteps?.filter(
+      (step) => !step.isSuccessStep && !step.isFailStep
+    );
+    if (listStepConvert?.length <= 0) {
+      this.progress = '0';
+      return;
+    }
+    if (event) {
+      let stepFind = listStepConvert?.find(
+        (step) => step.recID === event.recID
       );
-      if (listStepConvert?.length <= 0) {
-        this.progress = '0';
-        return;
+      if (stepFind) {
+        stepFind.progress = event?.progress || 0;
       }
-      if (event) {
-        let stepFind = listStepConvert?.find(
-          (step) => step.recID === event.recID
-        );
-        if (stepFind) {
-          stepFind.progress = event?.progress || 0;
-        }
-      }
+    }
+    if(this.progressControl){
+      let index =  this.listSteps?.findIndex((step) => step.stepStatus == '1');
+      let stepIns = index > 0 ? this.listSteps[index-1] : null;
+      let step = stepIns ? this.listStepsProcess?.find(step => step.recID == stepIns?.stepID) : null;
+      this.progress = index > 0 ? step?.instanceProgress.toString() : '0';
+    }else{
       let sumProgress = listStepConvert.reduce((sum, step) => {
         return sum + (Number(step.progress) || 0);
       }, 0);

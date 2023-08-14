@@ -170,15 +170,13 @@ export class PopupAddCasesComponent
 
   async onInit(): Promise<void> {
     await this.getCurrentSetting();
-    if (this.action == 'add')
-      this.tabInfo = this.applyProcess
-        ? [this.menuGeneralInfo, this.menuInputInfo]
-        : [this.menuGeneralInfo];
+    this.tabInfo = this.applyProcess
+      ? [this.menuGeneralInfo, this.menuInputInfo]
+      : [this.menuGeneralInfo];
   }
   ngAfterViewInit(): void {
     // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
-    if (this.action == 'add')
-      this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
   }
   valueChange($event) {
     if ($event) {
@@ -387,9 +385,10 @@ export class PopupAddCasesComponent
       await this.getGridView(this.formModel);
       if (this.processID) {
         await this.getListInstanceSteps(this.cases.processID);
-      } else {
-        this.itemTabs(false);
       }
+      //  else {
+      //   this.itemTabs(false);
+      // }
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
@@ -452,7 +451,7 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+        // this.itemTabs(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
@@ -708,10 +707,10 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      if(this.funcID == "CM0401"){
+      if (this.funcID == 'CM0401') {
         this.applyProcess = dataValue?.ProcessCase == '1';
         this.cases.applyProcess = this.applyProcess;
-      }else if(this.funcID == "CM0402"){
+      } else if (this.funcID == 'CM0402') {
         this.applyProcess = dataValue?.ProcessRequest == '1';
         this.cases.applyProcess = this.applyProcess;
       }

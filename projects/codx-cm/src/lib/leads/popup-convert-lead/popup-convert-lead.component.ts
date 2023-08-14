@@ -164,7 +164,6 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   onSelect(e): void {
-    console.log('onSelect', e);
     this.deal.processID = e.itemData.value;
   }
 

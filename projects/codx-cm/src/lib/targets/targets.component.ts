@@ -45,6 +45,7 @@ export class TargetsComponent
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
   //schedule view
+  @ViewChild('codxInput') codxInput: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -127,8 +128,9 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = '';
+  method: string = 'GetListTargetAsync';
   idField: string = 'recID';
+
   //#endregion
   titleAction = '';
   dataSelected: any;
@@ -162,6 +164,8 @@ export class TargetsComponent
   datasVll = [];
   language: string;
   search = '';
+  countTarget = 0;
+  countPersons = 0;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -186,6 +190,7 @@ export class TargetsComponent
       id: this.btnAdd,
     };
     this.year = new Date().getFullYear();
+
     this.loadTreeData(this.year?.toString());
 
     this.cache.valueList('CRM050').subscribe((res) => {
@@ -281,7 +286,7 @@ export class TargetsComponent
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response ? response[0] : [];
+          return response ? response : null;
         })
       );
   }
@@ -312,23 +317,29 @@ export class TargetsComponent
         }
       }
     }
-
-    this.lstDataTree = await firstValueFrom(this.fetch());
-    this.lstTreeSearchs = this.lstDataTree;
-    if (this.viewCurrent == '2') {
-      this.lstDataTree = this.lstTreeSearchs.filter(
-        (item) =>
-          (item?.title?.indexOf(this.search) >= 0 && item.year == this.year) ||
-          (item?.salespersonID?.indexOf(this.search) >= 0 &&
-            item.year == this.year) ||
-          item?.items?.some(
-            (x) =>
-              (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
-              (x?.businessLineID?.indexOf(this.search) >= 0 &&
-                x.year == this.year)
-          )
-      );
+    let data = await firstValueFrom(this.fetch());
+    if (data != null) {
+      this.lstDataTree = data[0];
+      this.countTarget = data[1];
+      this.countPersons = data[2];
+      this.lstTreeSearchs = this.lstDataTree;
+      if (this.viewCurrent == '2') {
+        this.lstDataTree = this.lstTreeSearchs.filter(
+          (item) =>
+            (item?.title?.indexOf(this.search) >= 0 &&
+              item.year == this.year) ||
+            (item?.salespersonID?.indexOf(this.search) >= 0 &&
+              item.year == this.year) ||
+            item?.items?.some(
+              (x) =>
+                (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
+                (x?.businessLineID?.indexOf(this.search) >= 0 &&
+                  x.year == this.year)
+            )
+        );
+      }
     }
+
     this.loadedTree = true;
   }
   viewBusinessLines(valueView) {
@@ -427,6 +438,8 @@ export class TargetsComponent
       }
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
+      this.codxInput.crrValue = this.currencyID;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -690,8 +703,18 @@ export class TargetsComponent
               // this.lstDataTree.splice(index, 1);
             } else {
               this.lstTreeSearchs.push(Object.assign({}, data));
+              this.countTarget++;
             }
             this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+            let lst = [];
+            this.lstDataTree.forEach((res) => {
+              res?.items?.forEach(element => {
+                if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+                  lst.push(Object.assign({}, element));
+                }
+              });
+            });
+            this.countPersons = lst.length;
           }
           this.isShow = false;
 
@@ -746,6 +769,7 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             var data = e?.event[0];
             if (data.year == this.year) {
+              this.view.dataService.update(data).subscribe();
               var index = this.lstTreeSearchs.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
               );
@@ -753,10 +777,20 @@ export class TargetsComponent
                 this.lstTreeSearchs[index] = data;
               } else {
                 this.lstTreeSearchs.push(Object.assign({}, data));
+                this.countPersons++;
               }
               this.lstDataTree = JSON.parse(
                 JSON.stringify(this.lstTreeSearchs)
               );
+              let lst = [];
+              this.lstDataTree.forEach((res) => {
+                res?.items?.forEach(element => {
+                  if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+                    lst.push(Object.assign({}, element));
+                  }
+                });
+              });
+              this.countPersons = lst.length;
             }
             // this.lstDataTree.push(Object.assign({}, data));
             this.isShow = false;
@@ -887,7 +921,6 @@ export class TargetsComponent
           }
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
-        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });

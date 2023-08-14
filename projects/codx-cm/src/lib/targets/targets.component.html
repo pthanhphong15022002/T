@@ -109,7 +109,10 @@
                 type="button"
                 aria-expanded="false"
               >
-                {{ item.text }}
+              <span class="me-1">{{ item.text }}</span>
+              <span class=""  *ngIf="item.value == '1'">({{countTarget}})</span>
+              <span class=""  *ngIf="item.value == '2'">({{countPersons}})</span>
+
               </button>
             </div>
           </div>
@@ -157,6 +160,7 @@
         </div>
         <div class="w-75px ms-2 input-32px">
           <codx-input
+            #codxInput
             [formModel]="view.formModel"
             [crrValue]="currencyID"
             (valueChange)="valueChange($event)"

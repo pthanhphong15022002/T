@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPolicybenefitsComponent } from './popup-policybenefits/popup-policybenefits.component';
+import { PopupIncludeExcludeObjComponent } from '../employee-policyal/popup-include-exclude-obj/popup-include-exclude-obj.component';
 
 @Component({
   selector: 'lib-employee-policybenefits',
@@ -112,6 +113,27 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
 
   onClickOpenPopupDetailInfo(){
 
+  }
+
+  ViewIncludeExcludeObjects(data: any){
+    debugger
+    let option = new DialogModel();
+    option.zIndex = 999;
+    let popup = this.callfunc.openForm(
+      PopupIncludeExcludeObjComponent,
+      null,
+      550,
+      550,
+      this.view.funcID,
+      {
+        formModel: this.view.formModel,
+        headerText: '',
+        funcID: this.view.funcID,
+        dataObj: data,
+      },
+      null,
+      option
+    );
   }
 
   deleteFile(data){
