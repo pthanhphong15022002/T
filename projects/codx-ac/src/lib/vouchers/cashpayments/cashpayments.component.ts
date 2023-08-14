@@ -50,10 +50,10 @@ import { RoundService } from '../../round.service';
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
-  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>; // template listdetail left
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;// template listdetail right
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;// template of list 
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;// template of grid
   @ViewChild('accountRef') accountRef: ElementRef;
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('pgbAcctranst') pgbAcctranst: ProgressBar;
@@ -183,7 +183,7 @@ export class CashPaymentsComponent extends UIComponent {
         sameData: true,
         model: {
           frozenColumns: 1,
-          template2: this.templateMore,
+          template2: this.templateGrid,
         },
       },
     ];

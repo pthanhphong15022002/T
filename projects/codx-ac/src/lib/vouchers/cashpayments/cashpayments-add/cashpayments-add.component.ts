@@ -49,7 +49,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { VATInvoices } from '../../../models/VATInvoices.model';
 import { RoundService } from '../../../round.service';
-import { VatinvoicesAdd } from '../../../share/vatinvoices-add/vatinvoices-add.component';
+import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 @Component({
   selector: 'lib-cashpayments-add',
   templateUrl: './cashpayments-add.component.html',
@@ -1635,7 +1635,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     dataModel.entityName = 'AC_SubInvoices';
     opt.FormModel = dataModel;
     let voucherDialog = this.callfc.openForm(
-      VatinvoicesAdd,
+      SettledInvoicesAdd,
       '',
       null,
       null,
