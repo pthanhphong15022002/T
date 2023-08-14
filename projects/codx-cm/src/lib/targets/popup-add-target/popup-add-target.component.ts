@@ -101,21 +101,22 @@ export class PopupAddTargetComponent {
         this.currencyID = 'VND';
         this.exchangeRate = 1;
       }
-
-      let date = new Date().setFullYear(this.data.year);
-      this.date = new Date(date);
     } else {
       this.currencyID = this.currencyIDSys;
       this.data.currencyID = this.currencyID;
       this.exchangeRate = this.exchangeRateSys;
       this.data.exchangeRate = this.exchangeRate;
       this.data.status = '1';
+      this.data.year = data?.data?.year;
+      this.data.period = data?.data?.year;
     }
+
+    let date = new Date().setFullYear(this.data.year);
+    this.date = JSON.parse(JSON.stringify(new Date(date)));
   }
 
   async ngOnInit() {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
-
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.data.owner = null;
@@ -135,7 +136,7 @@ export class PopupAddTargetComponent {
 
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
-
+    // this.date = date;
     // this.gridViewSetupTarget = await firstValueFrom(
     //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     // );
@@ -180,6 +181,10 @@ export class PopupAddTargetComponent {
       this.data.currencyID = this.currencyID;
       this.data.exchangeRate = this.exchangeRate;
     }
+  }
+
+  convertDateCalendar(date) {
+    return new Date(date);
   }
   //#endregion
 
@@ -289,6 +294,8 @@ export class PopupAddTargetComponent {
         this.businessLineID = e?.data;
         if (e?.data?.trim() != '') {
           this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+          this.data.targetName =
+            e?.component?.itemsSelected[0]?.BusinessLineName;
         }
       }
     } else {
@@ -749,12 +756,14 @@ export class PopupAddTargetComponent {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
             let businessLine = this.data?.businessLineID;
+            let targetName = this.data.targetName;
             let year = this.data?.year;
             this.data = JSON.parse(JSON.stringify(this.dataOld));
             this.data.businessLineID = businessLine;
             this.data.owner = null;
             this.data.year = year;
             this.data.category = '1';
+            this.data.targetName = targetName;
             this.isPeriod = false;
             this.quarter1 = 0;
             this.quarter2 = 0;
@@ -824,9 +833,10 @@ export class PopupAddTargetComponent {
     this.data.period = year;
     this.data.year = year;
     this.text = e?.text;
-    if(this.businessLineID != null){
+    if (this.businessLineID != null) {
       this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
     }
+
     this.changedetectorRef.detectChanges();
   }
 
@@ -866,7 +876,6 @@ export class PopupAddTargetComponent {
 
   //#region dblick Edit targetLine
 
-  //#endregion
   onOutsideClick() {
     this.editingItem = null;
   }
