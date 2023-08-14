@@ -141,8 +141,6 @@ export class AddContractsComponent implements OnInit {
   grvSetup: any;
   isExitAutoNum: any = false;
 
-  currnecyID;
-  applyProcess;
   leadNoSetting: any;
   idxCrr: number = -1;
 
@@ -194,7 +192,6 @@ export class AddContractsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.getSettingContract();
     this.setDataContract(this.contractsInput);
     this.disabledDelActualDate =
       !this.contracts?.delStatus ||
@@ -210,62 +207,56 @@ export class AddContractsComponent implements OnInit {
 
   //#region setData
   async setDataContract(data) {
-    if (this.action == 'add') {
-      this.contracts = data ? data : new CM_Contracts();
-      this.contracts.recID = Util.uid();
-      this.contracts.projectID = this.projectID;
-      this.contracts.contractDate = new Date();
-      this.contracts.effectiveFrom = new Date();
-      this.contracts.paidAmt = 0;
-      this.contracts.status = '1';
-      this.contracts.remainAmt = 0;
-      this.contracts.useType = '1';
-      this.contracts.pmtStatus = '1';
-      this.contracts.delStatus = '1';
-      this.contracts.pmtMethodID = 'ATM';
-      this.contracts.pmtStatus = this.contracts.pmtStatus
-        ? this.contracts.pmtStatus
-        : '0';
-      this.contracts.contractType = this.contracts.contractType
-        ? this.contracts.contractType
-        : '1';
-      this.contracts.applyProcess =
-        this.action !== 'add' ? this.applyProcess : this.contracts.applyProcess;
-      this.contracts.currencyID = this.currnecyID;
-      this.loadExchangeRate(this.contracts.currencyID);
-      this.setContractByDataOutput();
-
-      if (!this.contracts.applyProcess) {
-        this.getAutoNumber();
-      } else {
-        this.disabledShowInput = true;
-      }
-    }
-
-    if (this.action == 'edit') {
-      this.contracts = data;
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
-      this.getPayMentByContractID(this.contracts?.recID);
-      this.getCustomersDefaults(this.contracts?.customerID);
-    }
-
-    if (this.action == 'copy') {
-      this.contracts = data;
-      delete this.contracts['id'];
-      this.contracts.recID = Util.uid();
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
-      this.getPayMentByContractID(this.contracts?.recID);
-      if (!this.contracts.applyProcess) {
-        this.getAutoNumber();
-      } else {
-        this.disabledShowInput = true;
-      }
+    switch (this.action) {
+      case "add":
+        this.contracts = data ? data : new CM_Contracts();
+        this.contracts.recID = Util.uid();
+        this.contracts.projectID = this.projectID;
+        this.contracts.contractDate = new Date();
+        this.contracts.effectiveFrom = new Date();
+        this.contracts.paidAmt = 0;
+        this.contracts.status = '1';
+        this.contracts.remainAmt = 0;
+        this.contracts.useType = '1';
+        this.contracts.pmtStatus = '1';
+        this.contracts.delStatus = '1';
+        this.contracts.pmtMethodID = 'ATM';
+        this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+        this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+        await this.getSettingContract();
+        this.loadExchangeRate(this.contracts.currencyID);
+        this.setContractByDataOutput();
+        if (!this.contracts.applyProcess) {
+          this.getAutoNumber();
+        } else {
+          this.disabledShowInput = true;
+        }
+        break;
+      case "edit":
+        this.contracts = data;
+        this.getQuotationsLinesInContract(
+          this.contracts?.recID,
+          this.contracts?.quotationID
+        );
+        this.getPayMentByContractID(this.contracts?.recID);
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
+      case "copy":
+        this.contracts = data;
+        delete this.contracts['id'];
+        this.contracts.recID = Util.uid();
+        this.getQuotationsLinesInContract(
+          this.contracts?.recID,
+          this.contracts?.quotationID
+        );
+        this.getPayMentByContractID(this.contracts?.recID);
+        if (!this.contracts.applyProcess) {
+          this.getAutoNumber();
+        } else {
+          this.disabledShowInput = true;
+        }
+        break;
+      default:
     }
   }
 
@@ -1018,14 +1009,13 @@ export class AddContractsComponent implements OnInit {
   //#endregion
   //#region setDefault
   async getSettingContract() {
-    // let res = await firstValueFrom(this.cache.viewSettingValues('CMParameters'));
     let res = await firstValueFrom(
       this.cmService.getParam('CMParameters', '1')
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.currnecyID = dataValue?.DefaultCurrency;
-      this.applyProcess = dataValue?.ProcessContract == '1';
+      this.contracts.currencyID = dataValue?.DefaultCurrency ;
+      this.contracts.applyProcess = dataValue?.ProcessContract == '1';;
     }
   }
 

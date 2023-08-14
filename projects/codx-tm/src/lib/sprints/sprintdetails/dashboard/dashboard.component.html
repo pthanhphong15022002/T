@@ -1,5 +1,5 @@
-<div class="page-content d-flex flex-row h-100">
-  <div class="col-9 me-4 scroll-y h-100">
+<div class="page-content d-flex flex-row h-100 border-top">
+  <div class="w-100 scroll-y h-100 pe-5">
     <div class="d-flex mb-3 mt-5">
       <div
         class="d-flex justify-content-between p-5 me-3"
@@ -156,7 +156,7 @@
               <span class="me-3">{{ item?.taskGroupName }}</span>
             </div>
             <div class="d-flex align-items-center mb-5">
-              <span class="fw-bold w-50px me-3 text-end">{{
+              <span class="fw-bold w-75px me-3 text-end">{{
                 item?.qtyTasks
               }}</span>
               <div class="progress w-100">
@@ -429,12 +429,12 @@
       </div>
     </div>
   </div>
-  <div class="col-3 min-w-350px">
-    <div class="rounded-2 bg-body p-5">
-      <div class="text-dark text-center fw-bold mb-3">
+  <div class="w-350px min-w-350px h-100 ps-3">
+    <div class="h-100">
+      <div class="text-primary text-center fw-bold py-2 border-bottom">
         Danh sách nhân viên thực hiện công việc
       </div>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between sprint-tab">
         <ejs-tab id="element">
           <e-tabitems>
             <e-tabitem
@@ -461,6 +461,7 @@
 
 <!-- Khối lượng công việc -->
 <ng-template #volumeWork>
+  <div class="pe-3 pt-3">
   <div class="d-flex justify-content-end">
     <button class="btn btn-icon btn-light" style="z-index: 99" (click)="sort()">
       <div *ngIf="isDesc; then Desc; else Asc"></div>
@@ -472,7 +473,7 @@
       </ng-template>
     </button>
   </div>
-  <div class="mt-2">
+  <div class="mt-3">
     <div class="d-flex flex-column" *ngFor="let item of vlWork">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center justify-content-end">
@@ -485,7 +486,7 @@
           ></codx-img>
         </div>
         <div class="d-flex align-items-center mb-5">
-          <span class="fw-bold w-50px me-3 text-end">{{ item?.qtyTasks }}</span>
+          <span class="fw-bold w-75px me-3 text-end">{{ item?.qtyTasks }}</span>
           <div class="progress w-100">
             <div
               class="progress-bar progress-bar-done"
@@ -513,10 +514,12 @@
       </div>
     </div>
   </div>
+</div>
 </ng-template>
 
 <!-- Thời gian thực hiện -->
 <ng-template #workHours>
+  <div class="pe-3 pt-3">
   <div class="d-flex justify-content-end">
     <button class="btn btn-icon btn-light" style="z-index: 99" (click)="sort()">
       <div *ngIf="isDesc; then Desc; else Asc"></div>
@@ -528,7 +531,7 @@
       </ng-template>
     </button>
   </div>
-  <div class="mt-2">
+  <div class="mt-3">
     <div class="d-flex flex-column" *ngFor="let item of hrWork">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center justify-content-end">
@@ -541,7 +544,7 @@
           ></codx-img>
         </div>
         <div class="d-flex align-items-center mb-5">
-          <span class="fw-bold w-50px me-3 text-end">{{
+          <span class="fw-bold w-75px me-3 text-end">{{
             item?.completed
           }}</span>
           <div class="progress w-100">
@@ -555,26 +558,27 @@
       </div>
     </div>
   </div>
+</div>
 </ng-template>
 
 <!-- Thời gian thực hiện -->
 <ng-template #workPerformance>
-  <div class="rounded-2 bg-body p-5 mb-3">
+  <div class="pe-3 pt-3">
     <div class="text-dark text-center fw-bold mb-3">
       Top 3 nhân viên hiệu quả làm việc cao nhất
     </div>
     <div>
       <ng-container *ngFor="let item of kpiTop; let i = index">
-        <div *ngIf="i <= top - 1" class="d-flex justify-content-between mt-4">
+        <div *ngIf="i <= top - 1" class="d-flex justify-content-between py-2 border-bottom">
           <codx-temp-full
             [imageId]="item.id"
-            [imageWidth]="35"
+            [imageWidth]="30"
             imgCss="me-3"
             imageObjType="AD_Users"
             [title]="item.employeeName"
             [subTitle]="item.positionName"
           ></codx-temp-full>
-          <div>{{ item?.kpi }}%</div>
+          <div class="text-primary fw-bold">{{ item?.kpi }}%</div>
         </div>
       </ng-container>
     </div>
