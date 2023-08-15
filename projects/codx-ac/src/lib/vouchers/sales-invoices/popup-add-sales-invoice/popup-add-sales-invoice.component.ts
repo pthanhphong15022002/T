@@ -1,11 +1,11 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   HostListener,
   Injector,
   Optional,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
@@ -19,6 +19,7 @@ import {
   FormModel,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, lastValueFrom } from 'rxjs';
@@ -78,6 +79,8 @@ export class PopupAddSalesInvoiceComponent
   isEdit: boolean = false;
   isReturnInvoice: boolean;
 
+  defaultLineData: ISalesInvoicesLine;
+
   constructor(
     injector: Injector,
     private acService: CodxAcService,
@@ -113,6 +116,15 @@ export class PopupAddSalesInvoiceComponent
 
   //#region Init
   override onInit(): void {
+    this.cache
+      .gridViewSetup(
+        this.dialogRef.formModel.formName,
+        this.dialogRef.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        this.gvsSalesInvoices = res;
+      });
+
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
@@ -138,17 +150,31 @@ export class PopupAddSalesInvoiceComponent
         );
     }
 
-    this.cache
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        this.gvsSalesInvoices = res;
-      });
+    this.getDefaultLine().subscribe((res) => {
+      this.defaultLineData = res.data;
+    });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    // prevent readonly input and codx-tabs from being focused
+    setTimeout(() => {
+      const inputEls: HTMLInputElement[] = Array.from(
+        document.querySelectorAll('codx-input input')
+      );
+      for (const el of inputEls) {
+        if (el.readOnly) {
+          el.setAttribute('tabindex', '-1');
+        }
+      }
+
+      const navLinkEls: HTMLAnchorElement[] = Array.from(
+        document.querySelectorAll('codx-tabs a.nav-link')
+      );
+      for (const el of navLinkEls) {
+        el.setAttribute('tabindex', '-1');
+      }
+    }, 1000);
+  }
   //#endregion
 
   //#region Event
@@ -291,18 +317,18 @@ export class PopupAddSalesInvoiceComponent
     }
 
     const postFields: string[] = [
-      'itemID',
-      'costPrice',
-      'salesPrice',
+      'itemid',
+      'costprice',
+      'salesprice',
       'quantity',
-      'netAmt',
+      'netamt',
       'vatid',
-      'vatAmt',
+      'vatamt',
       'umid',
-      'idiM1',
-      'discAmt',
+      'idim1',
+      'discamt',
     ];
-    if (postFields.includes(e.field)) {
+    if (postFields.includes(e.field.toLowerCase())) {
       this.api
         .exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
           e.field,
@@ -363,7 +389,8 @@ export class PopupAddSalesInvoiceComponent
     console.log('onEndAddNew', line);
 
     line.fixedDIMs = this.genFixedDims(line);
-
+    this.detailService.clear();
+    this.detailService.addDatas.set(line.recID, line);
     this.detailService
       .save(null, null, null, null, false)
       .subscribe((res: any) => {
@@ -378,7 +405,7 @@ export class PopupAddSalesInvoiceComponent
     console.log('onEndEdit', line);
 
     line.fixedDIMs = this.genFixedDims(line);
-
+    this.detailService.clear();
     this.detailService.updateDatas.set(line.recID, line);
     this.detailService
       .save(null, null, null, null, false)
@@ -395,15 +422,18 @@ export class PopupAddSalesInvoiceComponent
 
     // add a new row after pressing tab on the last column
     if (e.type === 'add' && this.grid.autoAddRow) {
-      this.detailService
-        .addNew(() => this.getDefaultLine())
-        .subscribe((res: ISalesInvoicesLine) => {
-          this.grid.addRow(res, this.lines.length);
-        });
+      const newLine: ISalesInvoicesLine = this.createNewSalesInvoiceLine();
+      this.detailService.clear();
+      this.detailService.addDatas.set(newLine.recID, newLine);
+      this.grid.addRow(newLine, this.lines.length);
     }
 
     if (e.type === 'beginEdit') {
       this.prevLine = { ...e.data };
+
+      this.api
+        .exec('AC', 'SalesInvoicesLinesBusiness', 'BeginEditAsync', e.data)
+        .subscribe();
     }
   }
 
@@ -492,7 +522,13 @@ export class PopupAddSalesInvoiceComponent
 
   /** Save master before adding a new row */
   async addRow(): Promise<void> {
-    if (JSON.stringify(this.master) !== JSON.stringify(this.initialMaster)) {
+    const { updateColumns: a, updateColumn: b, ...rest1 } = this.master as any;
+    const {
+      updateColumns: c,
+      updateColumn: d,
+      ...rest2
+    } = this.initialMaster as any;
+    if (JSON.stringify(rest1) !== JSON.stringify(rest2)) {
       if (this.masterService.hasSaved) {
         this.masterService.updateDatas.set(this.master.recID, this.master);
       }
@@ -509,42 +545,38 @@ export class PopupAddSalesInvoiceComponent
       this.initialMaster = { ...this.master };
     }
 
-    this.detailService
-      .addNew(() => this.getDefaultLine())
-      .subscribe((res: ISalesInvoicesLine) => {
-        console.log(res);
+    const newLine: ISalesInvoicesLine = this.createNewSalesInvoiceLine();
+    this.detailService.clear();
+    this.detailService.dataSelected = newLine;
+    this.detailService.addDatas.set(newLine.recID, newLine);
+    if (this.journal.addNewMode === '1') {
+      this.grid.addRow(newLine, this.lines.length);
+    } else {
+      // error ??
+      const dialogModel = new DialogModel();
+      dialogModel.FormModel = this.fmSalesInvoicesLines;
+      dialogModel.DataService = this.detailService;
 
-        let index = this.lines.length;
-        res.rowNo = index + 1;
-
-        if (this.editSettings.mode === 'Normal') {
-          this.grid.addRow(res, index);
-        } else {
-          const dialogModel = new DialogModel();
-          dialogModel.FormModel = this.fmSalesInvoicesLines;
-          dialogModel.DataService = this.detailService;
-
-          this.callfc
-            .openForm(
-              PopupAddSalesInvoicesLineComponent,
-              'This param is not working',
-              500,
-              700,
-              '',
-              {
-                formType: 'add',
-                index: index,
-              },
-              '',
-              dialogModel
-            )
-            .closed.subscribe(({ event }) => {
-              if (event?.length > 0) {
-                this.tableLineDetail.grid.refresh();
-              }
-            });
-        }
-      });
+      this.callfc
+        .openForm(
+          PopupAddSalesInvoicesLineComponent,
+          'This param is not working',
+          500,
+          700,
+          '',
+          {
+            formType: 'add',
+            index: this.lines.length,
+          },
+          '',
+          dialogModel
+        )
+        .closed.subscribe(({ event }) => {
+          if (event?.length > 0) {
+            this.tableLineDetail.grid.refresh();
+          }
+        });
+    }
   }
 
   deleteRow(data): void {
@@ -571,11 +603,8 @@ export class PopupAddSalesInvoiceComponent
     this.detailService.copy().subscribe((res: ISalesInvoicesLine) => {
       console.log(res);
 
-      let index = this.lines.length;
-      res.rowNo = index + 1;
       res.transID = this.master.recID;
-
-      this.grid.addRow(res, index);
+      this.grid.addRow(res, this.lines.length);
     });
   }
 
@@ -604,9 +633,7 @@ export class PopupAddSalesInvoiceComponent
         this.lines = [];
       });
   }
-  //#endregion
 
-  //#region Function
   getDefaultLine(): Observable<any> {
     return this.api.exec(
       'AC',
@@ -614,6 +641,17 @@ export class PopupAddSalesInvoiceComponent
       'GetDefaultAsync',
       [this.master]
     );
+  }
+  //#endregion
+
+  //#region Function
+  createNewSalesInvoiceLine(): ISalesInvoicesLine {
+    const line: ISalesInvoicesLine = { ...this.defaultLineData };
+    line.recID = Util.uid();
+    line.createdOn = new Date();
+    line.idiM4 = this.master.warehouseID;
+
+    return line;
   }
 
   genFixedDims(line: ISalesInvoicesLine): string {
