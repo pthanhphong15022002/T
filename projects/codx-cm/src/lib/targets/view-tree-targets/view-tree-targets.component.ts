@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
+import { SliderComponent } from '@syncfusion/ej2-angular-inputs';
 import { CodxTreeviewComponent, FormModel } from 'codx-core';
 
 @Component({
@@ -32,9 +33,7 @@ export class ViewTreeTargetsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log(this.formModel);
+    this;
   }
 
   clickTreeNode(evt: any) {
@@ -76,6 +75,6 @@ export class ViewTreeTargetsComponent implements OnInit {
   }
 
   async delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
