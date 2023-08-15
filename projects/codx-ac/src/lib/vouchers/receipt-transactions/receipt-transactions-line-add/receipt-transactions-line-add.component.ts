@@ -68,9 +68,15 @@ export class ReceiptTransactionsLineAddComponent extends UIComponent implements 
       });
   }
   onInit(): void {
-  }
-  ngAfterViewInit() {
     this.loadInit();
+  }
+
+  ngAfterViewInit() {
+  }
+
+  loadInit(){
+    this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.vouchersLine);
   }
 
   //region Event
@@ -242,18 +248,13 @@ export class ReceiptTransactionsLineAddComponent extends UIComponent implements 
 
   //region Function
 
-  loadControl(value) {
+  showHideField(value) {
     let index = this.hideFields.findIndex((x) => x == value);
     if (index == -1) {
       return true;
     } else {
       return false;
     }
-  }
-
-  loadInit(){
-    this.formModel = this.form?.formModel;
-    this.form.formGroup.patchValue(this.vouchersLine);
   }
 
   checkValidate() {
@@ -313,23 +314,23 @@ export class ReceiptTransactionsLineAddComponent extends UIComponent implements 
       });
   }
 
-  getUMIDAndItemName(itemID: any){
-    this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
-          .subscribe((res: any) => {
-            if (res)
-            {
-              this.vouchersLine.itemName = res.itemName;
-              this.vouchersLine.umid = res.umid;
-              this.form.formGroup.patchValue(this.vouchersLine);
-            }
-            else
-            {
-              this.vouchersLine.itemName = null;
-              this.vouchersLine.umid = null;
-              this.form.formGroup.patchValue(this.vouchersLine);
-            }
-          });
-  }
+  // getUMIDAndItemName(itemID: any){
+  //   this.api.exec('IV', 'ItemsBusiness', 'LoadDataAsync', [itemID])
+  //   .subscribe((res: any) => {
+  //     if (res)
+  //     {
+  //       this.vouchersLine.itemName = res.itemName;
+  //       this.vouchersLine.umid = res.umid;
+  //       this.form.formGroup.patchValue(this.vouchersLine);
+  //     }
+  //     else
+  //     {
+  //       this.vouchersLine.itemName = null;
+  //       this.vouchersLine.umid = null;
+  //       this.form.formGroup.patchValue(this.vouchersLine);
+  //     }
+  //   });
+  // }
 
   updateFixedDims(line: any) {
     let fixedDims: string[] = Array(10).fill('0');
