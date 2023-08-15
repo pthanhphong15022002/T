@@ -371,7 +371,6 @@ export class PopupPolicyalComponent
     )
     .subscribe((res) => {
       this.grvSetupPolicyDetail = res;
-
     });
 
 
@@ -723,7 +722,7 @@ export class PopupPolicyalComponent
       'HR',
       'HR',
       'PolicyALBusiness',
-      'GetPolicyDetailByFirstMonthTypeAsync',
+      'GetPolicyDetailByPredicateAsync',
       ['AL', this.alpolicyObj.policyID, 'ALFirstMonthType', data]
     );
   }
@@ -733,7 +732,7 @@ export class PopupPolicyalComponent
       'HR',
       'HR',
       'PolicyALBusiness',
-      'GetPolicyDetailBySeniorityTypeAsync',
+      'GetPolicyDetailByPredicateAsync',
       ['AL', this.alpolicyObj.policyID, 'ALSeniorityType', '1']
     );
   }
@@ -850,7 +849,7 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
-    
+    debugger
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -891,6 +890,7 @@ export class PopupPolicyalComponent
       }
       if(this.actionType === 'add' || this.actionType === 'copy'){
         this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
+          debugger
           if(res){
               this.notify.notifyCode('SYS006');
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
@@ -991,8 +991,6 @@ export class PopupPolicyalComponent
     else{
       this.notify.notifyCode('HR027');
     }
-
-
   }
 
   addRowGrid2(){
