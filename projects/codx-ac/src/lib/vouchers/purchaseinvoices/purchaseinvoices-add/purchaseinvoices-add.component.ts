@@ -30,15 +30,15 @@ import { JournalService } from '../../../journals/journals.service';
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { PurchaseInvoiceService } from '../purchase-invoices.service';
+import { PurchaseInvoiceService } from '../purchaseinvoices.service';
 
 @Component({
-  selector: 'lib-pop-add-purchase',
-  templateUrl: './pop-add-purchase.component.html',
-  styleUrls: ['./pop-add-purchase.component.scss'],
+  selector: 'lib-purchaseinvoices-add',
+  templateUrl: './purchaseinvoices-add.component.html',
+  styleUrls: ['./purchaseinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopAddPurchaseComponent extends UIComponent implements OnInit {
+export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit {
   //#region Constructor
   @ViewChild('gridPurchaseInvoiceLines')
   public gridPurchaseInvoiceLines: CodxGridviewV2Component;

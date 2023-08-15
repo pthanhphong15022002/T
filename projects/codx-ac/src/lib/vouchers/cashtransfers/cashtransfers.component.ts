@@ -18,18 +18,18 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
-import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
-import { CashTransferService } from './cash-transfers.service';
+import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
+import { CashTransferService } from './cashtransfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
-import { PopupAddCashTransferComponent } from './popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'lib-cash-transfers',
-  templateUrl: './cash-transfers.component.html',
-  styleUrls: ['./cash-transfers.component.scss'],
+  selector: 'lib-cashtransfers',
+  templateUrl: './cashtransfers.component.html',
+  styleUrls: ['./cashtransfers.component.scss'],
 })
-export class CashTransfersComponent
+export class CashtransfersComponent
   extends UIComponent
   implements AfterViewInit, AfterViewChecked
 {
@@ -210,7 +210,7 @@ export class CashTransfersComponent
         options.FormModel = this.view.formModel;
         options.isFull = true;
         let dialog = this.callfc.openSide(
-          PopupAddCashTransferComponent,
+          CashtransferAddComponent,
           {
             formType: 'add',
             journalNo: this.journalNo,
@@ -250,7 +250,7 @@ export class CashTransfersComponent
         .subscribe((res) => {
           if (res) {
             this.callfc.openSide(
-              PopupAddCashTransferComponent,
+              CashtransferAddComponent,
               {
                 formType: 'edit',
                 formTitle: `${e.text} ${this.functionName}`,
@@ -282,7 +282,7 @@ export class CashTransfersComponent
         .subscribe((res) => {
           if (res) {
             this.callfc.openSide(
-              PopupAddCashTransferComponent,
+              CashtransferAddComponent,
               {
                 formType: 'add',
                 formTitle: `${e.text} ${this.functionName}`,

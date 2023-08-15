@@ -22,15 +22,15 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
-import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
+import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
 import {
   SumFormat,
   TableColumn,
-} from '../sales-invoices/models/TableColumn.model';
+} from '../salesinvoices/models/TableColumn.model';
 import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from './interfaces/IPurchaseInvoiceLine.interface';
-import { PopAddPurchaseComponent } from './pop-add-purchase/pop-add-purchase.component';
-import { PurchaseInvoiceService } from './purchase-invoices.service';
+import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
+import { PurchaseInvoiceService } from './purchaseinvoices.service';
 
 enum MF {
   GuiDuyet = 'ACT060102',
@@ -42,9 +42,9 @@ enum MF {
 }
 
 @Component({
-  selector: 'lib-purchase-invoices',
-  templateUrl: './purchase-invoices.component.html',
-  styleUrls: ['./purchase-invoices.component.scss'],
+  selector: 'lib-purchaseinvoices',
+  templateUrl: './purchaseinvoices.component.html',
+  styleUrls: ['./purchaseinvoices.component.scss'],
 })
 export class PurchaseinvoicesComponent
   extends UIComponent
@@ -252,7 +252,7 @@ export class PurchaseinvoicesComponent
 
           this.callfc
             .openSide(
-              PopAddPurchaseComponent,
+              PurchaseinvoicesAddComponent,
               {
                 formType: 'add',
                 formTitle: `${e.text} ${this.funcName}`,
@@ -392,7 +392,7 @@ export class PurchaseinvoicesComponent
       options.isFull = true;
 
       this.callfc.openSide(
-        PopAddPurchaseComponent,
+        PurchaseinvoicesAddComponent,
         {
           formType: 'edit',
           formTitle: `${e.text} ${this.funcName}`,
@@ -418,7 +418,7 @@ export class PurchaseinvoicesComponent
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.callfc.openSide(
-            PopAddPurchaseComponent,
+            PurchaseinvoicesAddComponent,
             obj,
             option,
             this.view.funcID

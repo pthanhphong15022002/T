@@ -42,12 +42,12 @@ const irrPropNames: string[] = [
   'idimControl',
 ];
 @Component({
-  selector: 'lib-popup-add-journal',
-  templateUrl: './popup-add-journal.component.html',
-  styleUrls: ['./popup-add-journal.component.css'],
+  selector: 'lib-journals-add',
+  templateUrl: './journals-add.component.html',
+  styleUrls: ['./journals-add.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddJournalComponent
+export class JournalsAddComponent
   extends UIComponent
   implements AfterViewInit
 {

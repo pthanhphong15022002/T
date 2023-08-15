@@ -29,16 +29,16 @@ import { JournalService } from '../../../journals/journals.service';
 import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { PopupAddSalesInvoicesLineComponent } from '../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
-import { SalesInvoiceService } from '../sales-invoices.service';
+import { SalesinvoiceslinesAddComponent } from '../salesinvoiceslines-add/salesinvoiceslines-add.component';
+import { SalesInvoiceService } from '../salesinvoices.service';
 
 @Component({
-  selector: 'lib-popup-add-sales-invoice',
-  templateUrl: './popup-add-sales-invoice.component.html',
-  styleUrls: ['./popup-add-sales-invoice.component.scss'],
+  selector: 'lib-salesinvoices-add',
+  templateUrl: './salesinvoices-add.component.html',
+  styleUrls: ['./salesinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddSalesInvoiceComponent
+export class SalesinvoicesAddComponent
   extends UIComponent
   implements AfterViewInit
 {
@@ -559,7 +559,7 @@ export class PopupAddSalesInvoiceComponent
 
       this.callfc
         .openForm(
-          PopupAddSalesInvoicesLineComponent,
+          SalesinvoiceslinesAddComponent,
           'This param is not working',
           500,
           700,
