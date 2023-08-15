@@ -442,10 +442,7 @@
 <!-- BODYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY -->
 <ng-template #templateBusinessLine let-item>
   <div class="container">
-    <div
-      class="d-flex"
-      [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
-    >
+    <div class="d-flex" [ngClass]="'height-parent'">
       <codx-mfunc
         *ngIf="viewCurrent == '1'"
         [formModel]="view.formModel"
@@ -584,7 +581,7 @@
 <ng-template #templateYear let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
@@ -635,11 +632,12 @@
                   | async
               "
             ></span>
-            <span *ngIf="busi?.target === 0">0</span>
+            <span class="text-gray-800" *ngIf="busi?.target === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
               <span
+                class="text-gray-800"
                 *ngIf="busi.dealValue > 0"
                 [innerHTML]="
                   targetToFixed(busi?.dealValue)
@@ -647,10 +645,11 @@
                     | async
                 "
               ></span>
-              <span *ngIf="busi?.dealValue === 0">0</span>
+              <span class="text-gray-800" *ngIf="busi?.dealValue === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
               <span
+                class="text-gray-800"
                 [innerHTML]="
                   formatNumberWithoutTrailingZeros(busi?.probabilityDV) + '%'
                 "
@@ -666,12 +665,11 @@
 <ng-template #templateQuarter1 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="sumTargetQuarter(item.targetsLines, 1) > 0"
-        class="text-gray-800"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 1)
             | formatvalue : view.formModel : 'Target'
@@ -718,11 +716,16 @@
                   | async
               "
             ></span>
-            <span *ngIf="sumTargetQuarter(busi.targetsLines, 1) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="sumTargetQuarter(busi.targetsLines, 1) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
               <span
+                class="text-gray-800"
                 *ngIf="sumDealValueQuarter(busi?.deals, 1) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 1)
@@ -730,10 +733,15 @@
                     | async
                 "
               ></span>
-              <span *ngIf="sumDealValueQuarter(busi?.deals, 1) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="sumDealValueQuarter(busi?.deals, 1) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
               <span
+                class="text-gray-800"
                 [innerHTML]="
                   sumProbabilityDVQuarter(busi?.deals, busi.targetsLines, 1) +
                   '%'
@@ -750,12 +758,11 @@
 <ng-template #templateQuarter2 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="sumTargetQuarter(item.targetsLines, 2) > 0"
-        class="text-gray-800"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 2)
             | formatvalue : view.formModel : 'Target'
@@ -802,11 +809,16 @@
                   | async
               "
             ></span>
-            <span *ngIf="sumTargetQuarter(busi.targetsLines, 2) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="sumTargetQuarter(busi.targetsLines, 2) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
               <span
+                class="text-gray-800"
                 *ngIf="sumDealValueQuarter(busi?.deals, 2) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 2)
@@ -814,10 +826,15 @@
                     | async
                 "
               ></span>
-              <span *ngIf="sumDealValueQuarter(busi?.deals, 2) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="sumDealValueQuarter(busi?.deals, 2) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
               <span
+                class="text-gray-800"
                 [innerHTML]="
                   sumProbabilityDVQuarter(busi?.deals, busi.targetsLines, 2) +
                   '%'
@@ -834,12 +851,11 @@
 <ng-template #templateQuarter3 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="sumTargetQuarter(item.targetsLines, 3) > 0"
-        class="text-gray-800"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 3)
             | formatvalue : view.formModel : 'Target'
@@ -886,11 +902,16 @@
                   | async
               "
             ></span>
-            <span *ngIf="sumTargetQuarter(busi.targetsLines, 3) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="sumTargetQuarter(busi.targetsLines, 3) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
               <span
+                class="text-gray-800"
                 *ngIf="sumDealValueQuarter(busi?.deals, 3) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 3)
@@ -898,10 +919,15 @@
                     | async
                 "
               ></span>
-              <span *ngIf="sumDealValueQuarter(busi?.deals, 3) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="sumDealValueQuarter(busi?.deals, 3) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
               <span
+                class="text-gray-800"
                 [innerHTML]="
                   sumProbabilityDVQuarter(busi?.deals, busi.targetsLines, 3) +
                   '%'
@@ -918,12 +944,11 @@
 <ng-template #templateQuarter4 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="sumTargetQuarter(item.targetsLines, 4) > 0"
-        class="text-gray-800"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 4)
             | formatvalue : view.formModel : 'Target'
@@ -970,11 +995,16 @@
                   | async
               "
             ></span>
-            <span *ngIf="sumTargetQuarter(busi.targetsLines, 4) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="sumTargetQuarter(busi.targetsLines, 4) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
               <span
+                class="text-gray-800"
                 *ngIf="sumDealValueQuarter(busi?.deals, 4) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 4)
@@ -982,10 +1012,15 @@
                     | async
                 "
               ></span>
-              <span *ngIf="sumDealValueQuarter(busi?.deals, 4) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="sumDealValueQuarter(busi?.deals, 4) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
               <span
+                class="text-gray-800"
                 [innerHTML]="
                   sumProbabilityDVQuarter(busi?.deals, busi.targetsLines, 4) +
                   '%'
@@ -1002,12 +1037,11 @@
 <ng-template #templateMonth1 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 1) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 1)
             | formatvalue : view.formModel : 'Target'
@@ -1054,11 +1088,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 1) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 1) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 1) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 1)
@@ -1066,10 +1100,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 1) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 1) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 1) + '%'
                 "
@@ -1085,12 +1119,11 @@
 <ng-template #templateMonth2 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 2) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 2)
             | formatvalue : view.formModel : 'Target'
@@ -1137,11 +1170,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 2) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 2) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 2) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 2)
@@ -1149,10 +1182,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 2) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 2) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 2) + '%'
                 "
@@ -1168,12 +1201,11 @@
 <ng-template #templateMonth3 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 3) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 3)
             | formatvalue : view.formModel : 'Target'
@@ -1220,11 +1252,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 3) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 3) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 3) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 3)
@@ -1232,10 +1264,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 3) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 3) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 3) + '%'
                 "
@@ -1251,12 +1283,11 @@
 <ng-template #templateMonth4 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 4) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 4)
             | formatvalue : view.formModel : 'Target'
@@ -1303,11 +1334,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 4) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 4) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 4) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 4)
@@ -1315,10 +1346,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 4) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 4) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 4) + '%'
                 "
@@ -1334,12 +1365,11 @@
 <ng-template #templateMonth5 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 5) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 5)
             | formatvalue : view.formModel : 'Target'
@@ -1386,11 +1416,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 5) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 5) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 5) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 5)
@@ -1398,10 +1428,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 5) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 5) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 5) + '%'
                 "
@@ -1417,12 +1447,11 @@
 <ng-template #templateMonth6 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 6) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 6)
             | formatvalue : view.formModel : 'Target'
@@ -1469,11 +1498,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 6) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 6) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 6) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 6)
@@ -1481,10 +1510,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 6) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 6) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 6) + '%'
                 "
@@ -1496,15 +1525,15 @@
     </ng-container>
   </div>
 </ng-template>
+
 <ng-template #templateMonth7 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 7) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 7)
             | formatvalue : view.formModel : 'Target'
@@ -1551,11 +1580,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 7) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 7) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 7) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 7)
@@ -1563,10 +1592,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 7) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 7) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 7) + '%'
                 "
@@ -1582,12 +1611,11 @@
 <ng-template #templateMonth8 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 8) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 8)
             | formatvalue : view.formModel : 'Target'
@@ -1634,11 +1662,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 8) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 8) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 8) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 8)
@@ -1646,10 +1674,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 8) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 8) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 8) + '%'
                 "
@@ -1665,12 +1693,11 @@
 <ng-template #templateMonth9 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 9) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 9)
             | formatvalue : view.formModel : 'Target'
@@ -1717,11 +1744,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 9) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 9) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 9) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 9)
@@ -1729,10 +1756,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 9) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 9) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 9) + '%'
                 "
@@ -1748,12 +1775,11 @@
 <ng-template #templateMonth10 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 10) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 10)
             | formatvalue : view.formModel : 'Target'
@@ -1800,11 +1826,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 10) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 10) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 10) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 10)
@@ -1812,10 +1838,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 10) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 10) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 10) + '%'
                 "
@@ -1831,12 +1857,11 @@
 <ng-template #templateMonth11 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 11) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 11)
             | formatvalue : view.formModel : 'Target'
@@ -1883,11 +1908,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 11) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 11) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 11) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 11)
@@ -1895,10 +1920,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 11) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 11) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 11) + '%'
                 "
@@ -1914,12 +1939,11 @@
 <ng-template #templateMonth12 let-item>
   <div
     class="pt-5px d-flex align-items-start justify-content-end"
-    [ngClass]="viewCurrent == '1' ? 'height-parent' : 'height-parent'"
+    [ngClass]="'height-parent'"
   >
     <div *ngIf="viewDataValue == '1'">
       <span
         *ngIf="getTargetMonth(item.targetsLines, 12) > 0"
-        class="text-gray-800"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 12)
             | formatvalue : view.formModel : 'Target'
@@ -1966,11 +1990,11 @@
                   | async
               "
             ></span>
-            <span *ngIf="getTargetMonth(busi.targetsLines, 12) === 0">0</span>
+            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 12) === 0">0</span>
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span
+              <span  class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 12) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 12)
@@ -1978,10 +2002,10 @@
                     | async
                 "
               ></span>
-              <span *ngIf="getDealValueMonth(busi?.deals, 12) === 0">0</span>
+              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 12) === 0">0</span>
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span
+              <span  class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 12) + '%'
                 "
