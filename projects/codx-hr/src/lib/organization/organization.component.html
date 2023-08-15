@@ -40,6 +40,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"
+    [formModelEmployee]="formModelEmployee"
     [itemAdded]="itemAdded"
     (newIdItem)="getIdFromChild($event)"
   ></hr-organization-orgchart>
@@ -298,9 +299,15 @@
             </div>
             <div class="d-flex align-items-center flex-wrap fs-7">
               <ng-container *ngIf="item.employeeManager?.phone; else lblPhone">
-                <span class="text-gray-400">{{
-                  item.employeeManager?.phone
-                }}</span>
+                <span
+                  class="text-gray-400"
+                  [innerHTML]="
+                    item.employeeManager?.phone
+                      | formatvalue : formModelEmployee : 'phone'
+                      | async
+                  "
+                >
+                </span>
               </ng-container>
               <ng-template #lblPhone>
                 <codx-label
@@ -312,9 +319,14 @@
               </ng-template>
               <ng-container *ngIf="item.employeeManager?.email; else lblEmail">
                 <span class="mx-1 text-gray-400">|</span>
-                <span class="text-dark-700">{{
-                  item.employeeManager.email
-                }}</span>
+                <span
+                  class="text-dark-700"
+                  [innerHTML]="
+                    item.employeeManager.email
+                      | formatvalue : formModelEmployee : 'email'
+                      | async
+                  "
+                ></span>
               </ng-container>
               <ng-template #lblEmail>
                 <span class="mx-1 text-gray-400">|</span>

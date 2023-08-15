@@ -104,3 +104,9 @@
   color: #b4b6b8;
   font-style: italic;
 }
+.expand-button{
+  border-radius: 50%!important;
+  position: absolute;
+  bottom: -10px;
+  cursor: pointer;
+}

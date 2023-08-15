@@ -91,8 +91,11 @@
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
       </div>
-      <div class="h-50">
-        <div class="scroll-hover" style="max-height: 350px">
+      <div class="h-50 position-relative">
+        <div
+          class="scroll-hover position-absolute"
+          style="max-height: 100%; width: 100%"
+        >
           <div *ngFor="let item of dbData?.a1">
             <div class="card mx-2 mb-2" style="border: #f0f0f0 solid 1px">
               <div class="p-2">
@@ -144,7 +147,7 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="3">
-    <div class="p-2">
+    <div class="p-2 w-100 h-100">
       <div class="d-flex justify-content-center">
         <div id="group2" class="btn-group">
           <input
@@ -166,28 +169,33 @@
           <label class="btn btn-outline-primary" for="center2">Số lượng</label>
         </div>
       </div>
-      <div class="scroll-hover" style="max-height: 250px">
-        <div *ngFor="let item of dbData?.d">
-          <div class="m-2">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center">
-                <codx-img
-                  [objectId]="item.organizationName"
-                  [objectType]="'AD_Users'"
-                  [width]="25"
-                >
-                </codx-img>
-                <div class="ms-2">{{ item.organizationName }}</div>
+      <div class="position-relative" style="height: 80%">
+        <div
+          class="scroll-hover position-absolute"
+          style="max-height: 100%; width: 100%"
+        >
+          <div *ngFor="let item of dbData?.d">
+            <div class="m-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <codx-img
+                    [objectId]="item.organizationName"
+                    [objectType]="'AD_Users'"
+                    [width]="25"
+                  >
+                  </codx-img>
+                  <div class="ms-2">{{ item.organizationName }}</div>
+                </div>
+                <div class="fw-bold">{{ item.totalFileSize }} Byte</div>
               </div>
-              <div class="fw-bold">{{ item.totalFileSize }} Byte</div>
-            </div>
-            <div class="my-2">
-              <div class="progress border" style="height: 12px">
-                <div
-                  class="progress-bar"
-                  style="height: 12px"
-                  [style.width]="item.percentage + '%'"
-                ></div>
+              <div class="my-2">
+                <div class="progress border" style="height: 12px">
+                  <div
+                    class="progress-bar"
+                    style="height: 12px"
+                    [style.width]="item.percentage + '%'"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -285,8 +293,11 @@
         <label class="btn btn-outline-primary" for="right13">Download</label>
       </div>
     </div>
-    <div style="height: 90%">
-      <div class="scroll-hover" style="max-height: 650px">
+    <div class="position-relative" style="height: 90%">
+      <div
+        class="scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
         <div *ngFor="let item of dbData?.e">
           <div class="card mx-2 mb-2">
             <div class="card-body">

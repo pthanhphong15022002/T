@@ -3,7 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <div [innerHTML]="data.title"></div>
+          <div [innerHTML]="data?.title"></div>
         </h2>
       </div>
       <div class="d-flex justify-content-end">
@@ -16,9 +16,9 @@
             [disabled]="
               !canOpenSubPopup ||
               !isConfirm ||
-              (item.functionID != 'SYS206' && isInteractPDF) ||
-              (item.functionID != 'SYS206' &&
-                item.functionID != 'SYS208' &&
+              (item?.functionID != 'SYS206' && isInteractPDF) ||
+              (item?.functionID != 'SYS206' &&
+                item?.functionID != 'SYS208' &&
                 isEdited)
             "
             (click)="beforeOpenPopupADR(item)"

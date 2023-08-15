@@ -130,8 +130,8 @@ export class CodxAddTaskComponent implements OnInit {
       this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
 
-    this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
+    this.participant = this.roles?.filter((role) => role.roleType !== this.stepsTasks?.owner);
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
@@ -285,8 +285,12 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
 
-  changeRoler(e, type) {
-    if (!e || e?.length == 0) return;
+  changeRoler(e) {
+    if (!e || e?.length == 0){
+      this.participant = [];
+      return;
+    }
+      
     let listUser = e || [];
     let listRole = [];
     listUser.forEach((element) => {
@@ -294,17 +298,57 @@ export class CodxAddTaskComponent implements OnInit {
         objectID: element.objectID,
         objectName: element.objectName,
         objectType: element.objectType,
-        roleType: type,
+        roleType: element.roleType,
         taskID: this.stepsTasks['recID'],
       });
     });
-    if (type == 'P') {
-      this.participant = listRole;
-      this.removeRoleDuplicate();
-    } else if (type == 'O') {
-      this.owner = listRole;
-      this.stepsTasks['owner'] = this.owner?.[0]?.objectID;
-      this.removeRoleDuplicate();
+    this.participant = listRole;
+    this.removeRoleDuplicate();
+  }
+
+  changeRolerOwner(event){
+    let role = event[0];
+    if(role){
+      if(role?.roleType == "Users" || role?.roleType == "Owner"){
+        role['taskID'] = this.stepsTasks?.recID;
+        this.owner = [role];
+        this.stepsTasks.owner = role?.objectID;
+        this.removeRoleDuplicate();
+      }else{
+        let data = [];
+        switch (role?.roleType)
+        {
+          case "Departments":
+          case "OrgHierarchy":
+            data = [role?.objectID,this.step?.instanceID]
+            break;
+          case "Roles":
+          case "Positions":
+            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            break;
+        }
+        if(data?.length > 0){
+          this.api.exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetUserByOrgUnitIDAsync',
+            data
+          ).subscribe(res => {
+            if(res){     
+              let role = new DP_Instances_Steps_Tasks_Roles();   
+              role['objectID'] = res?.userID;
+              role['objectName'] =  res?.userName;
+              role['objectType'] = "U";
+              role['roleType'] = "Users";
+              role['taskID'] = this.stepsTasks?.recID;
+              this.owner = [role];
+              this.stepsTasks.owner = role?.objectID;
+            }
+          });
+        }
+      }
+    }else{
+      this.owner = [];
     }
   }
 

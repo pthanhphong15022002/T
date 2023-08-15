@@ -172,15 +172,19 @@ export class PopupChangeAllocationRateComponent implements OnInit {
         .execSv<any>(
           'CM',
           'ERM.Business.CM',
-          'TargetsLinesBusiness',
+          'TargetsBusiness',
           'UpdateListTargetLinesAsync',
-          [this.lstLinesBySales]
+          [
+            this.data?.parentID,
+            this.lstLinesBySales,
+            this.currencyID,
+            this.exchangeRate,
+          ]
         )
         .subscribe((res) => {
-          if (res && res.length > 0) {
-            this.outPutClosedSave(res);
+          if (res) {
             this.notiService.notifyCode('SYS007');
-            this.dialog.close(this.data);
+            this.dialog.close(res);
           } else {
             this.notiService.notifyCode('SYS021');
             this.dialog.close();
@@ -422,7 +426,8 @@ export class PopupChangeAllocationRateComponent implements OnInit {
               this.checkMonthQuarter(
                 parseInt(this.lstQuarters[indexQuarter].quarter),
                 monthNoExit
-              ) && parseInt(month) != monthNoExit
+              ) &&
+              parseInt(month) != monthNoExit
             ) {
               if (type == 'weight') {
                 targetNoExit += element.weight;
@@ -431,7 +436,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
               }
             }
           });
-          if ((targetNoExit + target) > main) {
+          if (targetNoExit + target > main) {
             this.editingItem = null;
             this.typeChange = '';
             this.notiService.notifyCode('CM035');
