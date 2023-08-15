@@ -50,7 +50,8 @@ export class OrgorganizationComponent extends UIComponent {
   viewActive: string = '';
   count: any;
   buttonAdd: ButtonModel;
-  activeMFC:boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
+  formModelEmployee;
+  activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
@@ -64,30 +65,30 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
 
-  constructor(
-    inject: Injector,
-    private hrService: CodxHrService,
-  ) 
-  {
+  constructor(inject: Injector, private hrService: CodxHrService) {
     super(inject);
   }
 
   onInit(): void {
-    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
-    this.router.params.subscribe((param:any) => {
-      let funcID = param["funcID"]; 
-      if (funcID.includes('WP')) {
-        this.buttonAdd = null; 
-        this.activeMFC = false;
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
       }
-      else
-      {
+    });
+
+    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
+    this.router.params.subscribe((param: any) => {
+      let funcID = param['funcID'];
+      if (funcID.includes('WP')) {
+        this.buttonAdd = null;
+        this.activeMFC = false;
+      } else {
         this.buttonAdd = {
           id: 'btnAdd',
         };
         this.activeMFC = true;
       }
-    this.detectorRef.detectChanges();
+      this.detectorRef.detectChanges();
     });
   }
 
@@ -101,7 +102,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.parentIDField = 'ParentID';
 
     this.views = [
-      
       {
         id: '2',
         type: ViewType.listtree,
@@ -146,7 +146,6 @@ export class OrgorganizationComponent extends UIComponent {
       //   },
       // },
     ];
-
   }
 
   //loadEmployList

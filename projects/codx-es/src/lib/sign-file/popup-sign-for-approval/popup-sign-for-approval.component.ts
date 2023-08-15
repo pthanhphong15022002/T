@@ -72,8 +72,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = dt.data;
-    this.lstMF = dt.data?.lstMF;
+    this.data = dt?.data;
+    this.lstMF = dt?.data?.lstMF;
 
     this.oApprovalTrans = dt?.data?.oTrans;
     if (this.oApprovalTrans?.confirmControl == '1') {
