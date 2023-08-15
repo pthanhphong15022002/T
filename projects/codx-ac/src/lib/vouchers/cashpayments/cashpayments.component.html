@@ -788,8 +788,7 @@
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                   <span #invoiceDate [innerHTML]="
                       item?.invoiceDate
-                | formatvalue : view.formModel : 'invoiceDate' : invoiceDate : 'VATInvoices' : 'grvVATInvoices'
-                | async
+                | formatvalue : fmVatInvoices : 'invoiceDate' : invoiceDate | async
             " class="text-gray-600"></span>
                 </ng-container>
               </div>
