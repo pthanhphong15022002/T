@@ -118,7 +118,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         active: true,
         model: {
           panelLeftRef: this.templateLeft,
-          widthLeft: '15%',
+          widthLeft: '22%',
           panelRightRef: this.templateRight,
         },
       },
