@@ -1,29 +1,29 @@
-<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="entityName"
-  (buttonClick)="toolBarClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
-  (selectedChange)="changeItemDetail($event)" [isSubView]="true">
+<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="btnAddClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
+  (selectedChange)="changeItemSelected($event)" [isSubView]="true">
 </codx-views>
-<!-- templateMore -->
+<!-- templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMF($event,data)" [formModel]="view.formModel"
-    (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeTmpGridMF($event,data)" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
-<!-- templateMore -->
+<!-- templateGrid -->
 
 <!-- template listdetail -->
-<ng-template #itemTemplate let-data>
+<ng-template #templateDetailLeft let-data>
   <ng-container *ngIf="journal">
-    <codx-temp-full [titleTmp]="titleTmp" [icoStyle]="setStyles((data?.subType | vll : 'AC100' : 'color' | async))"
+    <codx-temp-full [titleTmp]="titleTmp"
       cardCss="card-template border-bottom p-3" [formModel]="view.formModel" [modeImgs]="true" [titleLine]="2"
       [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-      (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
+      (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
     </codx-temp-full>
   </ng-container>
 </ng-template>
-<ng-template #templateDetail>
+<ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected && journal">
-    <codx-detail-tmp [header]="header" [body]="body" [hideMF]="false" [formModel]="view.formModel"
-      [dataItem]="itemSelected" (changeDataMF)="changeDataMF($event, itemSelected)" [footer]="footer"
-      (clickMF)="clickMF($event, itemSelected)">
+    <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="view.formModel"
+      [dataItem]="itemSelected" (changeDataMF)="changeTmpDetailMF($event, itemSelected)" [footer]="TmpFooterDetail"
+      (clickMF)="clickMoreFunction($event, itemSelected)">
     </codx-detail-tmp>
   </ng-container>
 </ng-template>
@@ -126,7 +126,7 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #header>
+<ng-template #TmpHeaderDetail>
   <ng-container *ngIf="itemSelected">
     <div style="position: relative;z-index: 1000;width: 50%;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
       <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
@@ -183,7 +183,7 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #body>
+<ng-template #TmpBodyDetail>
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
@@ -251,9 +251,9 @@
         "></span>
     </div>
     <div class="card-add mt-1" #cardbodyRef>
-      <ejs-tab #tabObj (created)="created($event, tabObj)">
+      <ejs-tab #elementTabDetail (created)="createTab($event, elementTabDetail)">
         <e-tabitems>
-          <!-- Tab thông tin chứng từ -->
+          <!--Start tab hạch toán -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
@@ -263,10 +263,13 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+              <ng-container *ngTemplateOutlet="tabAcctTrans"></ng-container>
             </ng-template>
           </e-tabitem>
-          <e-tabitem tabIndex="-1" aria-hidden="true">
+          <!--End tab hạch toán -->
+
+          <!--Start tab Thông tin hóa đơn -->
+          <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-format_list_bulleted icon-16 me-2"></i>
@@ -275,10 +278,13 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabSet"></ng-container>
+              <ng-container *ngTemplateOutlet="tabSettledInvoices"></ng-container>
             </ng-template>
           </e-tabitem>
-          <e-tabitem tabIndex="-1" aria-hidden="true">
+          <!--End tab Thông tin hóa đơn -->
+
+          <!--Start tab Hóa đơn GTGT -->
+          <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-i-graph-up icon-16 me-2"></i>
@@ -287,22 +293,22 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabVat"></ng-container>
+              <ng-container *ngTemplateOutlet="tabVatInvoices"></ng-container>
             </ng-template>
           </e-tabitem>
-          <!-- Tab Thông tin hóa đơn -->
+          <!-- Tab Hóa đơn GTGT -->
         </e-tabitems>
       </ejs-tab>
     </div>
   </ng-container>
 </ng-template>
-<ng-template #footer>
+<ng-template #TmpFooterDetail>
   <ng-container *ngIf="itemSelected">
     <codx-tabs [entityName]="view.formModel.entityName" [formModel]="view.formModel" [objectID]="itemSelected.recID"
       [funcID]="view.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </ng-container>
 </ng-template>
-<ng-template #tabBasic>
+<ng-template #tabAcctTrans>
   <ng-container *ngIf="acctTrans">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
@@ -357,9 +363,9 @@
             </th>
           </tr>
         </thead>
-        <tbody *ngIf="!isLoadDataAcct">
+        <tbody *ngIf="!isLoadData">
           <ng-container *ngFor="let item of acctTrans;trackBy: trackByFn">
-            <tr [style]="createLine(item) ? 'border-bottom: 1px solid var(--bs-border-color) !important;' : ''">
+            <tr [style]="item | tranformClassBorder : acctTrans">
               <td class="text-center">
                 <div class="d-flex justify-content-start ps-3">
                   <div class="w-100px min-w-100px">
@@ -465,11 +471,11 @@
                 <div *ngIf="!item.crediting" class="d-flex align-items-center justify-content-end ps-3">
                   <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                      | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
                   <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                      | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
                 </div>
               </td>
@@ -477,18 +483,18 @@
                 <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
                   <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                      | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
                   <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
                     <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt2
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                      | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
                   </ng-container>
                 </div>
               </td>
               <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-center">
                 <div class="d-flex align-items-center justify-content-end ps-3">
                   <span class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="item?.transAmt
-                      | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+                      | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
                 </div>
               </td>
               <td>
@@ -502,7 +508,7 @@
           </ng-container>
         </tbody>
       </table>
-      <div *ngIf="acctTrans.length == 0 && !isLoadDataAcct" class="ac-empty">
+      <div *ngIf="acctTrans && acctTrans.length == 0 && !isLoadData" class="ac-empty">
         <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
@@ -512,10 +518,10 @@
           </div>
         </div>
       </div>
-      <div *ngIf="isLoadDataAcct" style="background-color: white;" class="ac-empty">
+      <div *ngIf="isLoadData" style="background-color: white;" class="ac-empty">
         <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <ejs-progressbar #pgbAcctranst id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
+            <ejs-progressbar #progressbarTable id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
               [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
               <e-progressbar-annotations>
                 <e-progressbar-annotation content=" "> </e-progressbar-annotation>
@@ -530,15 +536,15 @@
         <td class="w-40"></td>
         <td class="w-15">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalacct
-                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaltransAmt1
+                    | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
         <td class="w-15">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaloff
-                    | formatvalue : fmAccTrans : 'transAmt' : transAmt | async"></span>
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaltransAmt2
+                    | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
@@ -548,7 +554,7 @@
     </table>
   </ng-container>
 </ng-template>
-<ng-template #tabSet>
+<ng-template #tabSettledInvoices>
   <ng-container *ngIf="settledInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
@@ -692,7 +698,7 @@
     </table>
   </ng-container>
 </ng-template>
-<ng-template #tabVat>
+<ng-template #tabVatInvoices>
   <ng-container *ngIf="vatInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
@@ -782,8 +788,7 @@
                 <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                   <span #invoiceDate [innerHTML]="
                       item?.invoiceDate
-                | formatvalue : view.formModel : 'invoiceDate' : invoiceDate : 'VATInvoices' : 'grvVATInvoices'
-                | async
+                | formatvalue : fmVatInvoices : 'invoiceDate' : invoiceDate | async
             " class="text-gray-600"></span>
                 </ng-container>
               </div>
@@ -874,7 +879,7 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'"
-    (changeDataMF)="changeDataMF($event, data)" (clickMF)="clickMF($event, data)">
+    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #listtitleTmp let-data>

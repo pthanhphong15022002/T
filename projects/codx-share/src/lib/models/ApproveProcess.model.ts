@@ -13,16 +13,20 @@ export class ApproveProcess {
   data :any ;     //Data của nghiệp vụ gốc
   tenant :string ;     //ProcessID của quy trình hiện hành
   comment :string ;     //Ghi chú
-  approvers : Array<string> ;     //Danh sách userID của Approver
+  approvers : Array<Approver> ;     //Danh sách userID của Approver
   category : any ;     //ES_Category của nghiệp vụ
-  title : any ;     //Tiêu đề
+  title : string ;     //Tiêu đề
   curComponent:any;
+}
+export class Approver {
+  roleID: string ;
+  roleType: string ='RO';
 }
 
 export class ResponseModel {
   rowCount: number;
   msgCodeError: string;
   returnStatus: string;
-  isLastStep:boolean;
-  
+  isLastStep:boolean;  
 }
+

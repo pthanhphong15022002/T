@@ -107,7 +107,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.oldPositionID = this.EAppointionObj.oldPositionID;
       this.oldLocationID = this.EAppointionObj.oldLocationID;
 
-      debugger;
       this.newOrgUnitID = this.EAppointionObj.orgUnitID;
       this.newJobLevelID = this.EAppointionObj.jobLevel;
       this.newPositionID = this.EAppointionObj.positionID;
@@ -165,8 +164,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.autoNumField = res.key ? res.key : null}
-        })
+            this.autoNumField = res.key ? res.key : null;
+          }
+        });
       if (this.EAppointionObj.signerID) {
         this.getEmployeeInfoById(this.EAppointionObj.signerID, 'SignerID');
       }
@@ -315,19 +315,25 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeJobLevel(event) {
+    let valueTmp;
     if (
       this.actionType == 'add' ||
       (this.actionType == 'edit' && !this.EAppointionObj.oldJobLevel)
     ) {
-      this.EAppointionObj.oldJobLevel = this.newJobLevelID;
+      valueTmp = this.newJobLevelID;
+      // this.EAppointionObj.oldJobLevel = this.newJobLevelID;
       this.newJobLevelID = event.data;
     } else if (this.actionType == 'edit' && this.oldJobLevelID) {
       if (event.data == this.EAppointionObj.oldJobLevel) {
-        this.EAppointionObj.oldJobLevel = null;
+        valueTmp = null;
+        // this.EAppointionObj.oldJobLevel = null;
       }
       this.newJobLevelID = event.data;
     }
-    this.formGroup.patchValue(this.EAppointionObj);
+    this.formGroup.patchValue({
+      oldJobLevel: valueTmp,
+    });
+    // this.formGroup.patchValue(this.EAppointionObj);
     this.detectorRef.detectChanges();
     // let viewMem = event.component?.setting.viewMember
     // let newVal = event.component.itemsSelected[0][viewMem]
@@ -371,23 +377,28 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangePosition(event) {
+    let valueTmp;
     if (
       this.actionType == 'add' ||
       (this.actionType == 'edit' && !this.EAppointionObj.oldPositionID)
     ) {
-      this.EAppointionObj.oldPositionID = this.newPositionID;
+      valueTmp = this.newPositionID;
+      // this.EAppointionObj.oldPositionID = this.newPositionID;
       this.newPositionID = event.data;
     } else if (this.actionType == 'edit' && this.oldPositionID) {
       if (event.data == this.EAppointionObj.oldPositionID) {
-        this.EAppointionObj.oldPositionID = null;
+        valueTmp = null;
+        // this.EAppointionObj.oldPositionID = null;
       }
       this.newPositionID = event.data;
     }
-    this.formGroup.patchValue(this.EAppointionObj);
+    this.formGroup.patchValue({
+      oldPositionID: valueTmp,
+    });
+    // this.formGroup.patchValue(this.EAppointionObj);
     this.detectorRef.detectChanges();
     // let viewMem = event.component?.setting.viewMember;
     // let newVal = event.component.itemsSelected[0][viewMem];
-
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
     //     this.eAppointionHeaderTexts.PositionID,
@@ -424,23 +435,27 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   onChangeLocation(event) {
+    let valueTmp;
     if (
       this.actionType == 'add' ||
       (this.actionType == 'edit' && !this.EAppointionObj.oldLocationID)
     ) {
-      this.EAppointionObj.oldLocationID = this.newLocationID;
+      valueTmp = this.newLocationID;
       this.newLocationID = event.data;
+      //this.EAppointionObj.oldLocationID = this.newLocationID;
     } else if (this.actionType == 'edit' && this.oldLocationID) {
       if (event.data == this.EAppointionObj.oldLocationID) {
-        this.EAppointionObj.oldLocationID = null;
+        valueTmp = null;
+        //this.EAppointionObj.oldLocationID = null;
       }
       this.newLocationID = event.data;
     }
-    this.formGroup.patchValue(this.EAppointionObj);
+    this.formGroup.patchValue({
+      oldLocationID: valueTmp,
+    });
     this.detectorRef.detectChanges();
     // let viewMem = event.component?.setting.viewMember;
     // let newVal = event.component.itemsSelected[0][viewMem];
-
     // if(this.actionType == 'edit'){
     //   this.notify.alertCode('HR027',null,...[
     //     this.eAppointionHeaderTexts.LocationID,

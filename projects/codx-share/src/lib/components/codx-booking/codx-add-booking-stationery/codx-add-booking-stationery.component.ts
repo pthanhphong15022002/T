@@ -22,6 +22,7 @@ import { CodxBookingService } from '../codx-booking.service';
 import { BookingItems, GridModels } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
+import { Approver } from '../../../models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-add-booking-stationery',
@@ -490,12 +491,14 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                     let curRO = null;
                     let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == item?.warehouseID);
                     if(curWarehourse?.length>0){
-                      curRO =curWarehourse[0]?.owner;
+                      curRO = new Approver()
+                      curRO.roleID= curWarehourse[0]?.owner;
                     }
                     else{
                       curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
                       if(curWarehourse?.length>0){
-                        curRO = curWarehourse[0]?.owner;
+                        curRO = new Approver()
+                        curRO.roleID= curWarehourse[0]?.owner;
                       }
                     }
                     this.codxShareService
@@ -530,28 +533,28 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                   });
                 });
             } else {
-              this.notificationsService.notifyCode('ES007');
-              this.returnData.forEach((item) => {
-                this.codxBookingService
-                  .afterApprovedManual(
-                    this.formModel.entityName,
-                    item.recID,
-                    '5'
-                  )
-                  .subscribe(res);
-                item.approveStatus = '5';
-                item.write = false;
-                item.delete = false;
-              });
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              for(let i=0; i<this.returnData?.length;i++){
+                this.codxBookingService.approvedManual(this.returnData[i]?.recID).subscribe((approveData:any)=>{
+                  if(approveData!=null){
+                    this.returnData[i].approveStatus=approveData?.approveStatus;
+                    this.returnData[i].write = false;
+                    this.returnData[i].delete = false;
+                    if(i==this.returnData?.length -1 ){                      
+                      this.notificationsService.notifyCode('SYS034');
+                      this.dialogRef && this.dialogRef.close(this.returnData);
+                    }
+                  }
+                  else{
+                    return;
+                  }
+                });
+              }
             }
-
-            this.dialogRef && this.dialogRef.close();
           } else {
-            this.dialogRef && this.dialogRef.close();
+            this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
-          this.dialogRef && this.dialogRef.close();
+          this.dialogRef && this.dialogRef.close(this.returnData);
           this.onSaving = false;
           return;
         }

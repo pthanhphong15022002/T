@@ -153,6 +153,9 @@
     <div class="disabled-inline cursor-pointer" (click)="openPopupUpdateProgress(data?.value, 'T')">
       <codx-progressbar
         [progress]="data?.value?.progress"
+        [stype]="3"
+        [vllData]="vllData"
+        [status]="data?.value?.status"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"

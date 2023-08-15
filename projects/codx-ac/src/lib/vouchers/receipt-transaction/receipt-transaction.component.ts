@@ -95,16 +95,6 @@ export class ReceiptTransactionComponent extends UIComponent {
     entityName: 'IV_VouchersLines',
   };
   vouchersLines: Array<VouchersLines> = [];
-  // tabItem: any = [
-  //   { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-  //   { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
-  // ];
-  // tabInfo: TabModel[] = [
-  //   { name: 'History', textDefault: 'Lịch sử', isActive: true },
-  //   { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-  //   { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-  //   { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  // ];
   fmAccTrans: FormModel = {
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
@@ -228,6 +218,7 @@ export class ReceiptTransactionComponent extends UIComponent {
       this.journalNo,
     ]);
   }
+
   add(e) {
     this.headerText = this.funcName;
     this.view.dataService
@@ -257,6 +248,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         }
       });
   }
+
   edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -298,6 +290,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         }
       });
   }
+
   copy(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -329,6 +322,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         }
       });
   }
+
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -337,6 +331,7 @@ export class ReceiptTransactionComponent extends UIComponent {
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {});
   }
+
   export(data) {
     var gridModel = new DataRequest();
     gridModel.formName = this.view.formModel.formName;
@@ -372,6 +367,7 @@ export class ReceiptTransactionComponent extends UIComponent {
     opt.data = data;
     return true;
   }
+
   loadDatadetail(data) {
     this.loading = true;
     this.loadingAcct = true;
@@ -404,6 +400,7 @@ export class ReceiptTransactionComponent extends UIComponent {
         this.detectorRef.detectChanges();
       });
   }
+  
   changeItemDetail(event) {
     if (event?.data == null)
       return;

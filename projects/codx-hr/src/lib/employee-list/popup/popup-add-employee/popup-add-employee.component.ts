@@ -60,6 +60,8 @@ export class PopupAddEmployeeComponent implements OnInit {
   // orgNote: string = '';
 
   hasChangedData: boolean = false;
+
+  onFirstInit: boolean = true;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -99,7 +101,6 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
         })
     }
-    // this.getOrgNote();
   }
 
   //get grvSetup
@@ -131,7 +132,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'positionID':
-          if (value) {
+          if (value && this.hasChangedData) {
             this.api
               .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
@@ -146,6 +147,7 @@ export class PopupAddEmployeeComponent implements OnInit {
                 }
               });
           }
+          this.onFirstInit = false;
           break;
         case 'orgUnitID':
           // this.getOrgNote();

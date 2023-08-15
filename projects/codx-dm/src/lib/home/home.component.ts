@@ -1040,7 +1040,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = '550px';
-
+    option.FormModel.entityName = "DM_FileInfo";
     this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
     this.dialog.closed.subscribe((e) => {
       console.log(e);

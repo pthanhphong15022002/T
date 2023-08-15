@@ -509,6 +509,8 @@
         [Group]="formGroup"
         [formModel]="formModel"
         field="provinceID"
+        (valueChange)="onChangeProvince($event)"
+
       ></codx-input>
     </div>
     <div class="col-6">
@@ -521,6 +523,7 @@
         [Group]="formGroup"
         [formModel]="formModel"
         [data]=""
+        (valueChange)="onChangeDistrict($event)"
         field="districtID"
       ></codx-input>
     </div>
@@ -599,6 +602,7 @@
         [Group]="formGroup"
         [formModel]="formModel"
         field="tProvinceID"
+        (valueChange)="onChangeTProvince($event)"
       ></codx-input>
     </div>
     <div class="col-6">
@@ -610,6 +614,7 @@
         [Group]="formGroup"
         [formModel]="formModel"
         field="tDistrictID"
+        (valueChange)="onChangeTDistrict($event)"
       ></codx-input>
     </div>
   </div>
