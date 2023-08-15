@@ -16,19 +16,19 @@ import { Observable, map } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { CashTransferService } from '../cash-transfers.service';
+import { CashTransferService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 import { dateToInt } from '@syncfusion/ej2-angular-spreadsheet';
 
 @Component({
-  selector: 'lib-popup-add-cash-transfer',
-  templateUrl: './popup-add-cash-transfer.component.html',
-  styleUrls: ['./popup-add-cash-transfer.component.css'],
+  selector: 'lib-cashtransfers-add',
+  templateUrl: './cashtransfers-add.component.html',
+  styleUrls: ['./cashtransfers-add.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddCashTransferComponent extends UIComponent {
+export class CashtransferAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
