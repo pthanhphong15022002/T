@@ -236,15 +236,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.fileUploadList = [];
     this.folderType = this.dmSV.idMenuActive;
-    if (this.folderType == null || this.folderType == '')
-      this.folderType = 'DMT02';
 
-    if (this.type == null || this.type == '') this.type = 'center';
+    if(this.dialog?.formModel) this.formModel = this.dialog?.formModel;
+    
+    if (!this.folderType == null) this.folderType = 'DMT02';
 
-    if (this.popup == null || this.popup == '') this.popup = '1';
+    if (!this.type) this.type = 'center';
 
-    if (this.hideBtnSave == null || this.hideBtnSave == '')
-      this.hideBtnSave = '0';
+    if (!this.popup) this.popup = '1';
+
+    if (!this.hideBtnSave) this.hideBtnSave = '0';
 
     this.dmSV.isFileUploadListAdd.subscribe((item) => {
       if (item == true) {
