@@ -179,3 +179,20 @@ input[type="checkbox"] {
 .showhim:hover .showme {
   display: block;
 }
+
+.c-detail {
+  position: absolute;
+  background: rgb(255, 255, 255);
+  border: 1px ridge gray;
+  right: -235px;
+  z-index: 10;
+  top: -45px;
+  width: 220px;
+  height: 220px;
+  border-radius: 10px;
+}
+
+.p-info {
+  border-top: 1px solid gray;
+  padding-top: 10px;
+}
