@@ -21,6 +21,7 @@ import {
   Util,
   CRUDService,
   CodxFormComponent,
+  CacheService,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads, CM_Permissions } from '../../models/cm_model';
@@ -91,7 +92,6 @@ export class PopupAddLeadComponent
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
   readonly actionEdit: string = 'edit';
-  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   readonly radioCategory: string = 'radioCategory';
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly radioCompany: string = 'company';
@@ -210,6 +210,24 @@ export class PopupAddLeadComponent
       this.lead[$event.field] = $event.data;
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
+      }
+      else if( $event.field == 'industries') {
+        let owner = $event.component.itemsSelected[0].Owner;
+        let ownerName = '';
+        if(this.applyProcess) {
+          let index = this.listParticipants.findIndex(x=>x.userID);
+
+          if(index != -1 ) {
+            this.lead.owner = owner;
+            ownerName = this.listParticipants[index].userName;
+          }
+        }
+        else {
+          this.lead.owner = owner;
+           ownerName = '';
+        }
+
+        this.checkOwner(this.lead.owner, ownerName);
       }
     }
   }
@@ -330,11 +348,11 @@ export class PopupAddLeadComponent
       }
     }
   }
-  valueChangeIndustries($event) {
-    if ($event && $event.data) {
-      this.listIndustries.push($event.data);
-    }
-  }
+  // valueChangeIndustries($event) {
+  //   if ($event && $event.data) {
+  //     this.listIndustries.push($event.data);
+  //   }
+  // }
 
   checkApplyProcess(check: boolean) {
     if (check) {
@@ -550,7 +568,6 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
-        debugger;
         this.itemTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
@@ -627,7 +644,6 @@ export class PopupAddLeadComponent
   }
   // an tat theo truong tuy chinh
   itemTab(check: boolean): void {
-    debugger;
     if (check) {
       this.tabInfo = [
         this.menuGeneralInfo,
