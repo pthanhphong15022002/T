@@ -105,9 +105,9 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.journal = dialogData.data?.journal;
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
-    this.journal = dialogData.data?.journal;
     this.fmVouchersLines = dialogData.data?.formModelLine;
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
@@ -138,7 +138,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
   //#endregion
 
   //#region Init
-
+  //Master
   onInit(): void {
     this.loadInit();
   }
@@ -177,31 +177,20 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       this.hasSaved = true;
     }
   }
+  //end Master
 
-  //#endregion
-
-  //#region Event
-
+  //Line
   gridInit(columnsGrid)
   {
     this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
+  //end Line
 
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deleteRow(data);
-        break;
-      case 'SYS03':
-        this.editRow(data);
-        break;
-      case 'SYS04':
-        this.copyRow(data);
-        break;
-    }
-  }
+  //#endregion
 
+  //#region Event
+  //Master
   valueChange(e: any){
     let field = e.field.toLowerCase();
     if(e.data)
@@ -255,6 +244,85 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           this.vouchers.requestDate = e.data;
           break;
       }
+    }
+  }
+  
+  onDiscard()
+  {
+    this.checkGridLineBeforeDiscard();
+  }
+
+  checkGridLineBeforeDiscard(){
+    if(this.modeGrid == 1)
+    {
+      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      {
+        this.discard();
+      }
+    }
+    else
+    {
+      this.discard();
+    }
+  }
+
+  discard()
+  {
+    this.dialog.dataService
+    .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res.data != null) {
+        this.dialog.close();
+        this.dt.detectChanges();
+      }
+    });
+  }
+
+  onClose()
+  {
+    this.checkGridLineBeforeClose();
+  }
+
+  checkGridLineBeforeClose()
+  {
+    if(this.modeGrid == 1)
+    {
+      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      {
+        this.close();
+      }
+    }
+    else
+    {
+      this.close();
+    }
+  }
+
+  close() {
+    if (this.hasSaved) {
+      this.dialog.close({
+        update: true,
+        data: this.vouchers,
+      });
+    } else {
+      this.dialog.close();
+    }
+  }
+  //end Master
+
+  //Line
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteRow(data);
+        break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
+      case 'SYS04':
+        this.copyRow(data);
+        break;
     }
   }
 
@@ -318,117 +386,32 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  checkDataUpdateFromBackEnd(e: any): boolean
-  {
-    if(this.dataUpdate)
-    {
-      if(this.dataUpdate.recID &&
-        this.dataUpdate.recID == e.data.recID &&
-        this.dataUpdate[e.field] == e.data[e.field]
-        )
-        {
-          return false;
+  endEdit(e: any) {
+    switch (e.type) {
+      case 'autoAdd':
+        this.addVoucherLine();
+        break;
+      case 'add':
+        if (this.gridVouchersLine.autoAddRow) {
+          this.addVoucherLine();
         }
-    }
-    return true;
-  }
-
-  onSaveLine(e: any, type: any)
-  {
-    this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      e.isAddNew = true;
-      this.notification.notifyCode('SYS023', 0, '');
-      return;
-    } else {
-      this.updateFixedDims(e);
-
-      if(type == 'isAddNew')
-      {
-        this.api
-        .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((save) => {
-          if (save) {
-            this.notification.notifyCode('SYS006', 0, '');
-            this.hasSaved = true;
-          }
-        });
-      }
-      else if(type == 'isEdit')
-      {
-        this.api
-        .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((save) => {
-          if (save) {
-            this.notification.notifyCode('SYS007', 0, '');
-            this.hasSaved = true;
-          }
-        });
-      }
-      
+        break;
+      case 'endEdit':
+        if (!this.gridVouchersLine.autoAddRow) 
+        {
+          setTimeout(() => {
+            let element = document.getElementById('btnadd');
+            element.focus();
+          }, 100); 
+        }
+      break;
     }
   }
-
-  onDiscard(){
-    if(this.modeGrid == 1)
-    {
-      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
-      {
-        this.discard();
-      }
-    }
-    else
-    {
-      this.discard();
-    }
-  }
-
-  discard()
-  {
-    this.dialog.dataService
-    .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res.data != null) {
-        this.dialog.close();
-        this.dt.detectChanges();
-      }
-    });
-  }
-
-  onClose()
-  {
-    if(this.modeGrid == 1)
-    {
-      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
-      {
-        this.close();
-      }
-    }
-    else
-    {
-      this.close();
-    }
-  }
-
-  close() {
-    if (this.hasSaved) {
-      this.dialog.close({
-        update: true,
-        data: this.vouchers,
-      });
-    } else {
-      this.dialog.close();
-    }
-  }
-
-  //#endregion
+  //end Line
+  //#endregion Event
 
   //#region Method
-
+  //Master
   onSaveAdd(){
     this.checkValidate();
     this.checkTransLimit(true);
@@ -466,10 +449,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
     }
   }
-
-  //#endregion
-
-  //#region Function
 
   save(isclose: boolean)
   {
@@ -592,13 +571,218 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           break;
       }
   }
+  //end Master
 
+  //Line
+  onSaveLine(e: any, type: any)
+  {
+    this.checkValidateLine(e);
+    if (this.validate > 0) {
+      this.validate = 0;
+      e.isAddNew = true;
+      this.notification.notifyCode('SYS023', 0, '');
+      return;
+    } else {
+      this.updateFixedDims(e);
+
+      if(type == 'isAddNew')
+      {
+        this.api
+        .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((save) => {
+          if (save) {
+            this.notification.notifyCode('SYS006', 0, '');
+            this.hasSaved = true;
+          }
+        });
+      }
+      else if(type == 'isEdit')
+      {
+        this.api
+        .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((save) => {
+          if (save) {
+            this.notification.notifyCode('SYS007', 0, '');
+            this.hasSaved = true;
+          }
+        });
+      }
+      
+    }
+  }
+  //end Line
+  //#endregion Method
+
+  //#region Function
+  //Master
   setDefault(o) {
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
 
+  checkValidate() {
+    // tu dong khi luu, khong check voucherNo
+    let ignoredFields: string[] = [];
+    if (this.journal.assignRule === '2') {
+      ignoredFields.push('VoucherNo');
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.vouchers);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
+
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.vouchers[keymodel[i]] == null ||
+              String(this.vouchers[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  checkTransLimit(isShowNotify : boolean){
+    if(this.journal.transLimit && this.vouchers.totalAmt > this.journal.transLimit)
+    {
+      if(isShowNotify)
+        this.notification.notifyCode('AC0016');
+      this.validate++ ;
+    }
+  }
+
+  clearVouchers() {
+    this.vouchersLines = [];
+  }
+
+  setReason(field, text, idx) {
+    if (!this.reason.some((x) => x.field == field)) {
+      let transText = new Reason();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.reason.push(transText);
+    } else {
+      let iTrans = this.reason.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.vouchers.memo = this.acService.setMemo(
+      this.vouchers,
+      this.reason
+    );
+    this.form.formGroup.patchValue({
+      memo: this.vouchers.memo,
+    });
+  }
+
+  updateFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
+  }
+
+  setTabindex() {
+    let ins = setInterval(() => {
+      let eleInput = document
+        ?.querySelector('.ac-form-master')
+        ?.querySelectorAll('codx-input');
+      if (eleInput) {
+        clearInterval(ins);
+        let tabindex = 0;
+        for (let index = 0; index < eleInput.length; index++) {
+          let elechildren = (
+            eleInput[index] as HTMLElement
+          ).getElementsByTagName('input')[0];
+          if (elechildren.readOnly) {
+            elechildren.setAttribute('tabindex', '-1');
+          } else {
+            tabindex++;
+            elechildren.setAttribute('tabindex', tabindex.toString());
+          }
+        }
+        // input refdoc
+        let ref = document
+          .querySelector('.ac-refdoc')
+          .querySelectorAll('input');
+        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+      }
+    }, 200);
+    setTimeout(() => {
+      if (ins) clearInterval(ins);
+    }, 10000);
+  }
+
+  @HostListener('keyup', ['$event'])
+  onKeyUp(e: KeyboardEvent): void {
+    if (e.key == 'Tab') {
+      let element;
+      if (document.activeElement.className == 'e-tab-wrap') {
+        element = document.getElementById('btnadd');
+        element.focus();
+      }
+    }
+
+    if (e.key == 'Enter') {
+      if ((e.target as any).closest('codx-input') != null) {
+        let eleInput = document
+          ?.querySelector('.ac-form-master')
+          ?.querySelectorAll('codx-input');
+        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+          for (let index = 0; index < eleInput.length; index++) {
+            let elechildren = (
+              eleInput[index] as HTMLElement
+            ).getElementsByTagName('input')[0];
+            if (elechildren.tabIndex == nextIndex) {
+              elechildren.focus();
+              elechildren.select();
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  @HostListener('click', ['$event'])
+  onClick(e) {
+    if(this.modeGrid != 1)
+      return;
+    if (
+      e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null
+    ) {
+      if (this.gridVouchersLine && this.gridVouchersLine.gridRef.isEdit) {
+        this.gridVouchersLine.autoAddRow = false;
+        this.gridVouchersLine.endEdit();
+      }
+    }
+  }
+  //end Master
+
+  //Line
   addVoucherLine(){
     this.checkValidate();
     if (this.validate > 0) {
@@ -874,41 +1058,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     });
   }
 
-  checkValidate() {
-    // tu dong khi luu, khong check voucherNo
-    let ignoredFields: string[] = [];
-    if (this.journal.assignRule === '2') {
-      ignoredFields.push('VoucherNo');
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.vouchers);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
-          continue;
-        }
-
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.vouchers[keymodel[i]] == null ||
-              String(this.vouchers[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
-
   checkValidateLine(e) {
     var keygrid = Object.keys(this.gridViewSetupLine);
     var keymodel = Object.keys(e);
@@ -931,40 +1080,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
         }
       }
     }
-  }
-
-  checkTransLimit(isShowNotify : boolean){
-    if(this.journal.transLimit && this.vouchers.totalAmt > this.journal.transLimit)
-    {
-      if(isShowNotify)
-        this.notification.notifyCode('AC0016');
-      this.validate++ ;
-    }
-  }
-
-  clearVouchers() {
-    this.vouchersLines = [];
-  }
-
-  setReason(field, text, idx) {
-    if (!this.reason.some((x) => x.field == field)) {
-      let transText = new Reason();
-      transText.field = field;
-      transText.value = text;
-      transText.index = idx;
-      this.reason.push(transText);
-    } else {
-      let iTrans = this.reason.find((x) => x.field == field);
-      if (iTrans) iTrans.value = text;
-    }
-
-    this.vouchers.memo = this.acService.setMemo(
-      this.vouchers,
-      this.reason
-    );
-    this.form.formGroup.patchValue({
-      memo: this.vouchers.memo,
-    });
   }
 
   costPrice_Change(line: any)
@@ -996,105 +1111,19 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
     }
   }
 
-  endEdit(e: any) {
-    switch (e.type) {
-      case 'autoAdd':
-        this.addVoucherLine();
-        break;
-      case 'add':
-        if (this.gridVouchersLine.autoAddRow) {
-          this.addVoucherLine();
-        }
-        break;
-      case 'endEdit':
-        if (!this.gridVouchersLine.autoAddRow) 
+  checkDataUpdateFromBackEnd(e: any): boolean
+  {
+    if(this.dataUpdate)
+    {
+      if(this.dataUpdate.recID &&
+        this.dataUpdate.recID == e.data.recID &&
+        this.dataUpdate[e.field] == e.data[e.field]
+        )
         {
-          setTimeout(() => {
-            let element = document.getElementById('btnadd');
-            element.focus();
-          }, 100); 
+          return false;
         }
-      break;
     }
-  }
-
-  setTabindex() {
-    let ins = setInterval(() => {
-      let eleInput = document
-        ?.querySelector('.ac-form-master')
-        ?.querySelectorAll('codx-input');
-      if (eleInput) {
-        clearInterval(ins);
-        let tabindex = 0;
-        for (let index = 0; index < eleInput.length; index++) {
-          let elechildren = (
-            eleInput[index] as HTMLElement
-          ).getElementsByTagName('input')[0];
-          if (elechildren.readOnly) {
-            elechildren.setAttribute('tabindex', '-1');
-          } else {
-            tabindex++;
-            elechildren.setAttribute('tabindex', tabindex.toString());
-          }
-        }
-        // input refdoc
-        let ref = document
-          .querySelector('.ac-refdoc')
-          .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
-      }
-    }, 200);
-    setTimeout(() => {
-      if (ins) clearInterval(ins);
-    }, 10000);
-  }
-
-  @HostListener('keyup', ['$event'])
-  onKeyUp(e: KeyboardEvent): void {
-    if (e.key == 'Tab') {
-      let element;
-      if (document.activeElement.className == 'e-tab-wrap') {
-        element = document.getElementById('btnadd');
-        element.focus();
-      }
-    }
-
-    if (e.key == 'Enter') {
-      if ((e.target as any).closest('codx-input') != null) {
-        let eleInput = document
-          ?.querySelector('.ac-form-master')
-          ?.querySelectorAll('codx-input');
-        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
-          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-          for (let index = 0; index < eleInput.length; index++) {
-            let elechildren = (
-              eleInput[index] as HTMLElement
-            ).getElementsByTagName('input')[0];
-            if (elechildren.tabIndex == nextIndex) {
-              elechildren.focus();
-              elechildren.select();
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  @HostListener('click', ['$event'])
-  onClick(e) {
-    if(this.modeGrid != 1)
-      return;
-    if (
-      e.target.closest('.e-grid') == null &&
-      e.target.closest('.e-popup') == null &&
-      e.target.closest('.edit-value') == null
-    ) {
-      if (this.gridVouchersLine && this.gridVouchersLine.gridRef.isEdit) {
-        this.gridVouchersLine.autoAddRow = false;
-        this.gridVouchersLine.endEdit();
-      }
-    }
+    return true;
   }
 
   showHideColumns(columnsGrid)
@@ -1129,15 +1158,6 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       }
     });
   }
-
-  updateFixedDims(line: any) {
-    let fixedDims: string[] = Array(10).fill('0');
-    for (let i = 0; i < 10; i++) {
-      if (line['idiM' + i]) {
-        fixedDims[i] = '1';
-      }
-    }
-    line.fixedDIMs = fixedDims.join('');
-  }
+  //end Line
   //#endregion
 }

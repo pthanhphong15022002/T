@@ -84,7 +84,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
     this.action = dt.data?.action;
     this.type = dt.data?.type;
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
@@ -243,10 +242,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
                 //Upload file
                 this.attachment2.saveFilesObservable().then(saveFile=>{
                   if(saveFile){
-                    saveFile.subscribe(saved=>{
-                      if(saved){
+                    saveFile.subscribe((saved:any)=>{
+                      if(saved)
+                      {
                         //Trả về thông tin khi upload file thành công
-                        this.dialog.close([item[1], this.type]);
+                        let fileName = saved.data?.fileName; // report cần trả về fileName để set reportName
+                        this.dialog.close([item[1], this.type,fileName]);
                       }
                       else{
                         this.notifySvr.notify('SYS023');

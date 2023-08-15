@@ -59,7 +59,7 @@ export class CodxHrService {
     private auth: AuthStore,
     private fb: FormBuilder,
     private notiService: NotificationsService
-  ) {}
+  ) { }
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
       .call(
@@ -2439,6 +2439,28 @@ export class CodxHrService {
       [formName, category]
     );
   }
+
+  //#region EAnnualLeave
+  getDaysOffByEAnnualLeaveAsync(employeeID: string, alYear: string, alYearMonth: string, isMonth: any, 
+    pageIndex: number, pageSize: number) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAnnualLeavesBusiness',
+      'GetDaysOffByEAnnualLeaveAsync',
+      [employeeID, alYear, alYearMonth, isMonth, pageIndex, pageSize]);
+  }
+  getEmployeeListByPopupCalculateAnnualLeaveAsync(alYear: string, alObjectIDList: any, orgUnitIDList: any, 
+    employeeIDList: any, calculateALBy: string, alMonth: string){
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAnnualLeavesBusiness',
+      'GetEmployeeListByPopupCalculateAnnualLeaveAsync',
+      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth]
+    )
+  }
+  //#endregion
 }
 
 import { Pipe, PipeTransform } from '@angular/core';
