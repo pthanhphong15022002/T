@@ -34,12 +34,9 @@ import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
-import { SosComponent } from '@pages/sos/sos.component';
 
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
-import { PrivacyComponent } from './pages/privacy/privacy.component';
-import { ContactComponent } from './pages/contact/contact.component';
-import { TermsComponent } from './pages/terms/terms.component';
+import { SosComponent } from '@pages/sos/sos.component';
 
 registerLocaleData(localeVi);
 
@@ -91,9 +88,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     FileComponent,
     SosComponent,
     LayoutTenantComponent,
-    PrivacyComponent,
-    ContactComponent,
-    TermsComponent,
   ],
   imports: [
     BrowserModule,

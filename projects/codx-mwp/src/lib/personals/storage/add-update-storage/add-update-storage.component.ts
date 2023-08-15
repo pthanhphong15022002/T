@@ -105,19 +105,16 @@ export class AddUpdateStorageComponent implements OnInit {
   //insert storage
   addStorage() {
     if(this.data){
-      this.imageUpload
-      .updateFileDirectReload(this.data.recID)
-      .subscribe((res) => {
-        if(res){
-          this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertAsync",[this.data])
-          .subscribe((res:boolean) => {
+      this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertAsync",[this.data])
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.imageUpload
+          .updateFileDirectReload(this.data.recID)
+          .subscribe(item=>{
             this.notifySV.notifyCode(res ? "SYS006" : "SYS023");
             this.dialogRef.close(res ? this.data : null);
           });
-        }
-        else
-        {
-          this.dialogRef.close(null);
         }
       });
     }
@@ -125,24 +122,19 @@ export class AddUpdateStorageComponent implements OnInit {
   }
   //edit storage
   editStorage() {
-    debugger
     if(this.data){
-      this.imageUpload
-      .updateFileDirectReload(this.data.recID)
-      .subscribe((res) => {
-        if(res){
-          this.api.execSv(
-          "WP","ERM.Business.WP","StoragesBusiness","UpdateAsync",[this.data])
-          .subscribe((res:boolean) => {
-            this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
-            this.dialogRef.close(res ? this.data : null);
-          });
-        }
-        else
-        {
-          this.dialogRef.close(null);
-        }
-      });
+      this.api.execSv(
+        "WP","ERM.Business.WP","StoragesBusiness","UpdateAsync",[this.data])
+        .subscribe((res:boolean) => {
+          if(res)
+          {
+            this.imageUpload
+            .updateFileDirectReload(this.data.recID).subscribe(item=>{
+              this.dialogRef.close(res ? this.data : null);
+              this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
+            });
+          }
+        });
     }
   }
 

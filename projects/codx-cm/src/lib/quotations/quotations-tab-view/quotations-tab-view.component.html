@@ -127,15 +127,28 @@
           ></span>
         </div>
         <div class="col-2 d-flex justify-content-end align-items-center">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light-primary badge-sm"
-          >
-          </codx-vll>
+          <ng-container *ngIf="!data.approveStatus">
+            <codx-vll
+              [name]="vllStatus"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-container *ngIf="data.approveStatus">
+            <codx-vll
+              [name]="vllApprove"
+              [field]="'ApproveStatus'"
+              [value]="data?.approveStatus"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-primary badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
         </div>
       </div>
       <codx-mfunc

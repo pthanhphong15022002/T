@@ -13,8 +13,6 @@ export class ContractsService {
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
     { name: 'steps', textDefault: 'Quy trình xử lý', icon: 'icon-more', isActive: false },
-    { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
-    // { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
   ];
   listTypeContractNoTask = [
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
@@ -22,14 +20,22 @@ export class ContractsService {
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
     { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
-    // { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
   ];
   listTypeContractAdd = [
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
     { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
     { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
     { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
-    // { name: 'extend', textDefault: 'Gia hạn', icon: 'icon-tune', isActive: false },
+  ];
+  footerTab = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    { template: null, isActive: false, name: 'Comment', textDefault: 'Thảo luận'},
+    { template: null, isActive: false, name: 'Attachment', textDefault: 'Đính kèm'},
+    { template: null, isActive: false, name: 'Task', textDefault: 'Công việc'},
+    { template: null, isActive: false, name: 'Approve', textDefault: 'Ký duyệt'},
+    { template: null, isActive: false, name: 'References', textDefault: 'Liên kết'},
+    { template: null, isActive: false, name: 'Quotations', textDefault: 'Báo giá'},
+    { template: null, isActive: false, name: 'Order', textDefault: 'Đơn hàng'},
   ];
   constructor(
     private cache: CacheService,

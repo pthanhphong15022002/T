@@ -3,7 +3,7 @@ import { type } from 'os';
 import { concat } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { AuthStore, ButtonModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DialogModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupCalculateAnnualLeaveComponent } from './popup-calculate-annual-leave/popup-calculate-annual-leave.component';
 
@@ -213,16 +213,19 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       headerText: this.headerText.length > 0 ? this.headerText : 'Tính phép tiêu chuẩn',
       btnCancel: this.btnCancel,
       btnCalculate: this.btnCalculate,
-      formModel: this.view.formModel ? this.view.formModel : null,
       grvSetup: this.grvSetup ? this.grvSetup : null,
     }
-
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
     let popup = this.callfc.openForm(PopupCalculateAnnualLeaveComponent,
       this.headerText,
-      800,
+      1000,
       600,
       this.funcID,
-      popupData);
+      popupData,
+      null,
+      option);
 
     popup.closed.subscribe(e => {
       if (e?.event) {
@@ -263,8 +266,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     if (this.listDaysOff?.length <= 0)
       this.popupLoading = true;
     //var item = this.view.dataService.data.findIndex(x => x.recID == data.recID);
-    this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness', 'GetDaysOffByEAnnualLeaveAsync',
-      [data.employeeID, data.alYear, data.alYearMonth, data.isMonth, this.pageIndex, this.pageSize]).subscribe((res: any) => {
+    this.hrService.getDaysOffByEAnnualLeaveAsync(data.employeeID, data.alYear, data.alYearMonth, 
+      data.isMonth, this.pageIndex, this.pageSize).subscribe((res: any) => {
         if (res && res.length > 0) {
           //this.view.dataService.data[item].listDaysOff = res;
           this.listDaysOff = this.listDaysOff.concat(res);

@@ -131,52 +131,8 @@ export class ContractsComponent extends UIComponent {
   columnGrids: any;
   arrFieldIsVisible = [];
   itemSelected: any;
-  button?: ButtonModel;
-  tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-    {
-      template: null,
-      isActive: false,
-      name: 'Comment',
-      textDefault: 'Thảo luận',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'Attachment',
-      textDefault: 'Đính kèm',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'Task',
-      textDefault: 'Công việc',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'Approve',
-      textDefault: 'Ký duyệt',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'References',
-      textDefault: 'Liên kết',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'Quotations',
-      textDefault: 'Báo giá',
-    },
-    {
-      template: null,
-      isActive: false,
-      name: 'Order',
-      textDefault: 'Đơn hàng',
-    },
-  ];
+  button?: ButtonModel = { id: 'btnAdd' };
+  tabControl = [];
   //param
   approveRule = '0';
   paramDefault: any;
@@ -210,37 +166,7 @@ export class ContractsComponent extends UIComponent {
 
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
-
-    this.button = {
-      id: 'btnAdd',
-    };
-    this.listClicked = [
-      {
-        name: 'general',
-        textDefault: 'Thông tin chung',
-        icon: 'icon-info',
-        isActive: true,
-      },
-      {
-        name: 'detailItem',
-        textDefault: 'Chi tiết mặt hàng',
-        icon: 'icon-link',
-        isActive: false,
-      },
-      {
-        name: 'pay',
-        textDefault: 'Phương thức và tiến độ thanh toán',
-        icon: 'icon-tune',
-        isActive: false,
-      },
-      {
-        name: 'termsAndRelated',
-        textDefault: 'Điều khoản và hồ sơ liên quan',
-        icon: 'icon-more',
-        isActive: false,
-      },
-    ];
-    this.getRoleMoreFunction();
+    this.tabControl = this.contractService?.footerTab;
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
   }
@@ -314,138 +240,16 @@ export class ContractsComponent extends UIComponent {
     this.changeDataMF(e.e, e.data);
   }
 
-  getRoleMoreFunction() {
-    var isDisabled = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        this.checkMoreReason(data)
-      ) {
-        eventItem.disabled = true;
-      }
-    };
-    var isDelete = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
-      //  eventItem.disabled = false;
-    };
-    var isCopy = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
-    };
-    var isEdit = (eventItem, data) => {
-      if (data.closed || this.checkMoreReason(data) || data.status == '0') {
-        eventItem.disabled = true;
-      }
-    };
-    var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || data.status == '0';
-    };
-    var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || data.status == '0';
-    };
-    var isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status) || data.closed;
-    };
-    var isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed;
-    };
-    var isConfirmOrRefuse = (eventItem, data) => {
-      eventItem.disabled = data.status != '0';
-    };
-
-    var isNew = (eventItem, data: CM_Contracts) => {
-      eventItem.disabled = data.status == '1';
-    };
-    var browser = (eventItem, data) => {
-      eventItem.disabled = data.status == '2';
-    };
-    var isNewOrStart = (eventItem, data) => {
-      eventItem.disabled = data.status != '1' || data.status != '2';
-    };
-    var isNewProcess = (eventItem, data: CM_Contracts) => {
-      eventItem.disabled = data?.applyProcess && data.status == '1';
-    };
-    var isStartProcess = (eventItem, data) => {
-      eventItem.disabled = data?.applyProcess && data.status == '2';
-    };
-    var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed;
-    };
-    var isOpen = (eventItem, data) => {
-      eventItem.disabled = !data.closed;
-    };
-    var disabled = (eventItem, data) => {
-      eventItem.disabled = true;
-    };
-    var isApprove = (eventItem, data) => {
-      if (
-        (data.closed && data.status != '1') ||
-        ['1', '0'].includes(data.status) ||
-        (this.approveRule != '1' && !data.applyProcess) ||
-        (data.applyProcess && data?.approveRule != '1')
-      ) {
-        eventItem.disabled = true;
-      }
-    };
-
-    this.functionMappings = {
-      SYS03: isEdit, // edit
-      SYS104: isCopy, // copy
-      SYS04: isCopy, // copy
-      SYS102: isDelete, //delete
-      SYS02: isDelete, // xóa
-      SYS004: isDisabled, // gởi mail
-
-      CM0204_1: isApprove, //Gửi duyệt
-      CM0204_2: isDisabled, // Hủy yêu cầu duyệt
-      CM0204_3: isDisabled, //tạo hợp đồng gia hạn
-      CM0204_4: isDisabled,
-      CM0204_5: isDisabled, // Đã giao hàng
-      CM0204_6: isDisabled, //hoàn tất hợp đồng
-      CM0204_7: disabled, // Xem chi tiết
-      CM0204_8: isStartProcess, // chuyển giai đoạn
-      CM0204_9: isStartProcess, // bắt đầu
-      CM0204_10: isNewProcess, // thành công
-      CM0204_11: isNewProcess, // thất bại
-      CM0204_13: isNewOrStart, // thêm công việc
-      CM0204_14: isNewOrStart, // phân công người phụ trách
-      CM0204_15: isClosed, // Đóng hợp đồng
-      CM0204_16: isOpen, // mở lại hợp đồng
-    };
-  }
-
-  checkMoreReason(tmpPermission) {
-    return (
-      !tmpPermission?.roleMore?.isReasonSuccess &&
-      !tmpPermission?.roleMore?.isReasonFail &&
-      !tmpPermission?.roleMore?.isMoveStage
-    );
-  }
-
   changeDataMF(event, data) {
     if (event != null) {
       event.forEach((res) => {
         res.isblur = data.approveStatus == '3';
         switch (res.functionID) {
-          case 'SYS02':
-            break;
-
-          case 'SYS03':
-            break;
-
-          case 'SYS04':
-            break;
-
-          case 'SYS004': // gởi mail
-            break;
           //Gửi duyệt
           case 'CM0204_1':
             if (
-              (data.closed && data.status != '1') ||
               data.status == '0' ||
+              (data.closed && data.status != '1') ||
               (this.approveRule != '1' && !data.applyApprover) ||
               (data.applyApprover && data?.approveRule != '1') ||
               data?.approveStatus >= '3'
@@ -499,27 +303,14 @@ export class ContractsComponent extends UIComponent {
             break;
 
           case 'CM0204_9': // bắt đầu
-            if (data?.applyProcess) {
-              if (data?.status != '1') {
-                res.disabled = true;
-              }
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '1';
             break;
 
           case 'CM0204_10': // thành công
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '2';
             break;
-
           case 'CM0204_11': // thất bại
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.status !== '2';
             break;
 
           case 'CM0204_13': // thêm công việc
@@ -641,8 +432,7 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      let contracts = new CM_Contracts();
-      let contractOutput = await this.openPopupContract(null, 'add', contracts);
+      await this.openPopupContract(null, 'add', res);
     });
   }
 
@@ -658,9 +448,12 @@ export class ContractsComponent extends UIComponent {
   }
 
   async editContract(contract) {
-    let dataEdit = JSON.parse(JSON.stringify(contract));
+    if (contract) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(contract));
+    }
+    let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      let dataOutput = await this.openPopupContract(null, 'edit', dataEdit);
+      await this.openPopupContract(null, 'edit', dataEdit);
     });
   }
 
@@ -868,7 +661,7 @@ export class ContractsComponent extends UIComponent {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if (dt.applyApprover) {
+        if (dt.applyProcess) {
           this.cmService.getProcess(dt.processID).subscribe((process) => {
             if (process) {
               this.cancelAction(dt, process.processNo);

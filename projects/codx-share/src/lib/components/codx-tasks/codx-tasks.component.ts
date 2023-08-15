@@ -68,6 +68,7 @@ export class CodxTasksComponent
   @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() sessionID?: any;
+  @Input() isResourceAssignSession = false; //resourec theo sessionID
   @Input() showButtonAdd = true;
   @Input() showMoreFunc = true;
   @Input() refID?: any;
@@ -83,6 +84,7 @@ export class CodxTasksComponent
   @Input() assemblyName = 'ERM.Business.TM';
   @Input() className = 'TaskBusiness';
   @Input() method = 'GetTasksAsync';
+
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -240,6 +242,22 @@ export class CodxTasksComponent
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 
+    //them prdicate vao loc
+    if (this.predicate && this.dataValue) {
+      let object = {
+        predicate: this.predicate,
+        dataValue: this.dataValue,
+      };
+      this.dataObj = Object.assign({}, this.dataObj, object);
+    }
+
+    if (this.isResourceAssignSession) {
+      let object = {
+        isResourceAssignSession: '1',
+      };
+      this.dataObj = Object.assign({}, this.dataObj, object);
+    }
+
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -266,25 +284,11 @@ export class CodxTasksComponent
     //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
 
-    //them prdicate vao loc
-    if (this.predicate && this.dataValue) {
-      let object = {
-        predicate: this.predicate,
-        dataValue: this.dataValue,
-      };
-      this.dataObj = Object.assign({}, this.dataObj, object);
-    }
-
     this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();  //after onInit dont loaded
   }
 
   afterLoad() {
-    //cai này có thể gọi grvSetup
-    // if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
-    //   this.vllStatus = this.vllStatusAssignTasks;
-    // } else this.vllStatus = this.vllStatusTasks;
-
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -316,18 +320,28 @@ export class CodxTasksComponent
     this.showMoreFunc = this.funcID != 'TMT0206' && this.funcID != 'MWP0063';
 
     this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+
+    if (this.isResourceAssignSession) {
+      //resouce tu cong viec dc giao
+      this.modelResource.assemblyName = 'TM';
+      this.modelResource.className = 'TaskBusiness';
+      this.modelResource.service = 'TM';
+      this.modelResource.method = 'GetResoucesScheduleAsync';
+      this.modelResource.dataValue = this.dataObj?.sessionID;
     } else {
-      //request a list resource
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataValue = this.dataObj?.resources;
+      if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
+        this.modelResource.assemblyName = 'HR';
+        this.modelResource.className = 'OrganizationUnitsBusiness';
+        this.modelResource.service = 'HR';
+        this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+      } else {
+        //request a list resource
+        this.modelResource.assemblyName = 'HR';
+        this.modelResource.className = 'OrganizationUnitsBusiness';
+        this.modelResource.service = 'HR';
+        this.modelResource.method = 'GetListUserByResourceAsync';
+        this.modelResource.dataValue = this.dataObj?.resources;
+      }
     }
 
     this.requestSchedule = new ResourceModel();
@@ -354,13 +368,19 @@ export class CodxTasksComponent
         break;
       case 'MWP0064':
       case 'TMT0202':
-        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+      case 'TMT03011':
+      case 'TMT05011':
+        this.requestSchedule.predicate = '( Category=@0 or Category=@1 )';
         this.requestSchedule.dataValue = '1;2';
         break;
       default:
         this.requestSchedule.predicate = '';
         this.requestSchedule.dataValue = '';
         break;
+    }
+    if (this.isResourceAssignSession) {
+      this.requestSchedule.predicate = 'Category=@0';
+      this.requestSchedule.dataValue = '2';
     }
   }
 

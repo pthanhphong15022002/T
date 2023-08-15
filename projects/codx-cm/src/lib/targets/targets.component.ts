@@ -154,6 +154,8 @@ export class TargetsComponent
   popoverList: any;
   viewMode = 9;
   viewCurrent = '1';
+  viewDataValue = '1';
+
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -166,6 +168,9 @@ export class TargetsComponent
   search = '';
   countTarget = 0;
   countPersons = 0;
+  predicateSearch = '';
+  dataValueSearch = '';
+  probability = '1';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -219,7 +224,7 @@ export class TargetsComponent
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
@@ -323,21 +328,21 @@ export class TargetsComponent
       this.countTarget = data[1];
       this.countPersons = data[2];
       this.lstTreeSearchs = this.lstDataTree;
-      if (this.viewCurrent == '2') {
-        this.lstDataTree = this.lstTreeSearchs.filter(
-          (item) =>
-            (item?.title?.indexOf(this.search) >= 0 &&
-              item.year == this.year) ||
-            (item?.salespersonID?.indexOf(this.search) >= 0 &&
-              item.year == this.year) ||
-            item?.items?.some(
-              (x) =>
-                (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
-                (x?.businessLineID?.indexOf(this.search) >= 0 &&
-                  x.year == this.year)
-            )
-        );
-      }
+      // if (this.viewCurrent == '2') {
+      //   this.lstDataTree = this.lstTreeSearchs.filter(
+      //     (item) =>
+      //       (item?.title?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       (item?.salespersonID?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       item?.items?.some(
+      //         (x) =>
+      //           (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
+      //           (x?.businessLineID?.indexOf(this.search) >= 0 &&
+      //             x.year == this.year)
+      //       )
+      //   );
+      // }
     }
 
     this.loadedTree = true;
@@ -351,15 +356,34 @@ export class TargetsComponent
       this.view.button = this.showButtonAdd ? this.button : null;
       this.currencyID = this.currencyIDSys;
       this.exchangeRate = this.exchangeRateSys;
+      this.search = '';
       this.viewCurrent = valueView;
-      this.loadTreeData(this.year?.toString());
+      this.loadTreeData(
+        this.year?.toString(),
+        this.predicateSearch,
+        this.dataValueSearch
+      );
     }
     this.detectorRef.detectChanges();
   }
 
-  isActive(item: any): boolean {
-    return this.viewCurrent === item;
+  viewDataValueGrid(view) {
+    if (view != this.viewDataValue) {
+      this.viewDataValue = view;
+    }
+    this.detectorRef.detectChanges();
   }
+
+  valueChangeProbability(e) {
+    if (e) {
+      this.probability = e?.data;
+    }
+  }
+
+  isActive(item: any, type): boolean {
+    return this[type] === item;
+  }
+
   clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -404,6 +428,8 @@ export class TargetsComponent
         this.lstDataTree.forEach((element) => {
           element.target =
             (element.target / exchangeRate?.exchRate) * element.exchangeRate;
+          element.dealValue =
+            (element.dealValue / exchangeRate?.exchRate) * element.exchangeRate;
           element.currencyID = currencyID;
           element.exchangeRate = exchangeRate?.exchRate ?? 1;
           if (element?.targetsLines != null) {
@@ -414,16 +440,41 @@ export class TargetsComponent
               line.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
+
+          if (element?.deals != null) {
+            element?.deals.forEach((deal) => {
+              deal.dealValue =
+                (deal.dealValue / exchangeRate?.exchRate) * deal.exchangeRate;
+              deal.currencyID = currencyID;
+              deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+            });
+          }
+
           if (element?.items != null) {
             element?.items.forEach((item) => {
               item.target =
                 (item.target / exchangeRate?.exchRate) * item.exchangeRate;
+              item.dealValue =
+                (item.dealValue / exchangeRate?.exchRate) * item.exchangeRate;
               if (item?.targetsLines != null) {
                 item?.targetsLines.forEach((line) => {
                   line.target =
                     (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+                  line.currencyID = currencyID;
+                  line.exchangeRate = exchangeRate?.exchRate ?? 1;
                 });
               }
+
+              if (item?.deals != null) {
+                item?.deals.forEach((deal) => {
+                  deal.dealValue =
+                    (deal.dealValue / exchangeRate?.exchRate) *
+                    deal.exchangeRate;
+                  deal.currencyID = currencyID;
+                  deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+                });
+              }
+
               item.currencyID = currencyID;
               item.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
@@ -566,6 +617,8 @@ export class TargetsComponent
   searchChanged(e) {
     this.search = '';
     if (e == null || e?.trim() == '') {
+      this.predicateSearch = '';
+      this.dataValueSearch = '';
       this.loadTreeData(this.year);
       return;
     }
@@ -573,11 +626,28 @@ export class TargetsComponent
     this.search = text;
     let predicates = '';
     let dataValues = '';
-    predicates =
-      'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
+    this.isShow = false;
+    let keySearch = Object.keys(this.gridViewSetupTarget);
+    let j = 0;
+    for (let i = 0; i < keySearch.length; i++) {
+      if (this.gridViewSetupTarget[keySearch[i]].isQuickSearch == true) {
+        let or = j > 0 ? ' or ' : '';
+        predicates += or + `${keySearch[i]}.Contains(@1)`;
+        j++;
+      }
+    }
+
+    // predicates =
+    //   'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
     dataValues = text;
+    this.predicateSearch = predicates;
+    this.dataValueSearch = dataValues;
     this.loadTreeData(this.year, predicates, dataValues);
     this.detectorRef.detectChanges();
+  }
+
+  convertToCamelCase(name: string): string {
+    return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
   }
 
   filterChange(e) {
@@ -637,8 +707,6 @@ export class TargetsComponent
             res.disabled = true;
             break;
           case 'SYS02':
-            res.disabled = true;
-            break;
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;
@@ -679,7 +747,7 @@ export class TargetsComponent
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
         gridViewSetupTarget: this.gridViewSetupTarget,
-        year: this.year
+        year: this.year,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -709,8 +777,12 @@ export class TargetsComponent
             this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
             let lst = [];
             this.lstDataTree.forEach((res) => {
-              res?.items?.forEach(element => {
-                if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+              res?.items?.forEach((element) => {
+                if (
+                  !lst.some(
+                    (item) => item?.salespersonID == element?.salespersonID
+                  )
+                ) {
                   lst.push(Object.assign({}, element));
                 }
               });
@@ -778,15 +850,19 @@ export class TargetsComponent
                 this.lstTreeSearchs[index] = data;
               } else {
                 this.lstTreeSearchs.push(Object.assign({}, data));
-                this.countPersons++;
+                this.countTarget++;
               }
               this.lstDataTree = JSON.parse(
                 JSON.stringify(this.lstTreeSearchs)
               );
               let lst = [];
               this.lstDataTree.forEach((res) => {
-                res?.items?.forEach(element => {
-                  if(!lst.some(item => item?.salespersonID == element?.salespersonID) ){
+                res?.items?.forEach((element) => {
+                  if (
+                    !lst.some(
+                      (item) => item?.salespersonID == element?.salespersonID
+                    )
+                  ) {
                     lst.push(Object.assign({}, element));
                   }
                 });
@@ -803,35 +879,46 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event && x.event?.status) {
-        if (x?.event?.status == 'Y') {
-          this.api
-            .execSv(
-              'CM',
-              'ERM.Business.CM',
-              'TargetsBusiness',
-              'DeletedTargetLineAsync',
-              data.recID
-            )
-            .subscribe((res) => {
-              if (res) {
-                data.target = 0;
-                this.view.dataService.update(data.target).subscribe();
-                this.notiService.notifyCode('SYS008');
-                this.detectorRef.detectChanges();
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+          var index = this.lstTreeSearchs.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (index != -1) {
+            this.lstTreeSearchs.splice(index, 1);
+            this.countTarget--;
+          }
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+          let lst = [];
+          this.lstDataTree.forEach((res) => {
+            res?.items?.forEach((element) => {
+              if (
+                !lst.some(
+                  (item) => item?.salespersonID == element?.salespersonID
+                )
+              ) {
+                lst.push(Object.assign({}, element));
               }
             });
+          });
+          this.countPersons = lst.length;
+          this.detectorRef.detectChanges();
         }
-      }
-    });
+      });
   }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeletedTargetLineAsync';
+    opt.methodName = 'DeletedTargetAsync';
     opt.assemblyName = 'ERM.Business.CM';
     opt.className = 'TargetsBusiness';
     opt.service = 'CM';
@@ -854,10 +941,7 @@ export class TargetsComponent
     );
     let dataEdit = JSON.parse(JSON.stringify(data));
     if (result != null) {
-      dataEdit.target = result[0];
-      dataEdit.currencyID = result[1];
-      dataEdit.exchangeRate = result[2];
-      lstLinesBySales = result[3];
+      lstLinesBySales = result;
     }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
@@ -887,41 +971,11 @@ export class TargetsComponent
         let index = this.lstTreeSearchs.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
-
         if (index != -1) {
-          var data = this.lstTreeSearchs[index]?.items;
-          if (data != null) {
-            var indexItem = data.findIndex(
-              (x) => x.salespersonID == e?.event.salespersonID
-            );
-            if (indexItem != -1) {
-              data[indexItem] = e.event;
-              this.lstTreeSearchs[index].items = data;
-            }
-          }
-          if (this.lstTreeSearchs[index].targetsLines != null) {
-            const targetLines = this.lstTreeSearchs[index].targetsLines;
-            const updatedItems = [];
-
-            for (const item of targetLines) {
-              let foundLineEv = e.event?.targetsLines.find(
-                (lineEv) =>
-                  new Date(item.startDate)?.getMonth() + 1 ===
-                    new Date(lineEv.startDate)?.getMonth() + 1 &&
-                  item.salespersonID == lineEv.salespersonID
-              );
-
-              if (foundLineEv) {
-                Object.assign(item, foundLineEv);
-              }
-
-              updatedItems.push(item);
-            }
-
-            this.lstTreeSearchs[index].targetsLines = updatedItems;
-          }
+          this.lstTreeSearchs[index] = e.event;
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
+        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -980,7 +1034,7 @@ export class TargetsComponent
     this.popupOld = p;
   }
 
-  sumQuarter(lstLines = [], i: number) {
+  sumTargetQuarter(lstLines = [], i: number) {
     var target = 0;
 
     if (lstLines != null && lstLines.length > 0) {
@@ -993,6 +1047,37 @@ export class TargetsComponent
     }
 
     return this.targetToFixed(target);
+  }
+
+  sumDealValueQuarter(lstDeal = [], i: number) {
+    var dealValue = 0;
+
+    if (lstDeal != null && lstDeal.length > 0) {
+      lstDeal.forEach((element) => {
+        if (
+          this.checkMonthQuarter(i, new Date(element.createdOn)?.getMonth() + 1)
+        )
+          dealValue += element.dealValue;
+      });
+    }
+
+    return this.targetToFixed(dealValue);
+  }
+
+  sumProbabilityDVQuarter(lstDeal = [], lstLines = [], i: number) {
+    let dealValue = 0;
+    let target = 0;
+
+    target = this.sumTargetQuarter(lstLines, i);
+    dealValue = this.sumDealValueQuarter(lstDeal, i);
+
+    let probability = 0;
+
+    if (target > 0) {
+      probability = (dealValue / target) * 100;
+    }
+
+    return this.formatNumberWithoutTrailingZeros(probability);
   }
 
   checkMonthQuarter(i, month) {
@@ -1027,6 +1112,42 @@ export class TargetsComponent
     }
 
     return this.targetToFixed(target);
+  }
+
+  getDealValueMonth(lstDeals = [], month: number) {
+    let dealValue = 0;
+
+    if (lstDeals != null && lstDeals.length > 0) {
+      lstDeals.forEach((element) => {
+        if (month === new Date(element.createdOn)?.getMonth() + 1)
+          dealValue += element.dealValue;
+      });
+    }
+
+    return this.targetToFixed(dealValue);
+  }
+
+  getProbabilityMonth(lstDeals = [], lstTargetLines = [], month: number) {
+    let dealValue = 0;
+    let target = 0;
+
+    dealValue = this.getDealValueMonth(lstDeals, month);
+    target = this.getTargetMonth(lstTargetLines, month);
+
+    let probability = 0;
+    if (target > 0) {
+      probability = (dealValue / target) * 100;
+    }
+
+    return this.formatNumberWithoutTrailingZeros(probability);
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    const roundedNum = parseFloat(num.toFixed(2));
+
+    const formattedNum = roundedNum.toString().replace(/(\.\d*?)0+$/, '$1');
+
+    return formattedNum;
   }
   //#endregion
 }

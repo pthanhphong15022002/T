@@ -32,7 +32,6 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
-  REQUIRESTART = ['taskName', 'endDate', 'startDate'];
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
@@ -130,8 +129,8 @@ export class CodxAddTaskComponent implements OnInit {
       this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
 
-    this.owner = this.roles?.filter((role) => role.roleType === 'O');
-    this.participant = this.roles?.filter((role) => role.roleType === 'P');
+    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
+    this.participant = this.roles?.filter((role) => role.roleType !== this.stepsTasks?.owner);
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
@@ -285,8 +284,12 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
 
-  changeRoler(e, type) {
-    if (!e || e?.length == 0) return;
+  changeRoler(e) {
+    if (!e || e?.length == 0){
+      this.participant = [];
+      return;
+    }
+      
     let listUser = e || [];
     let listRole = [];
     listUser.forEach((element) => {
@@ -294,17 +297,57 @@ export class CodxAddTaskComponent implements OnInit {
         objectID: element.objectID,
         objectName: element.objectName,
         objectType: element.objectType,
-        roleType: type,
+        roleType: element.roleType,
         taskID: this.stepsTasks['recID'],
       });
     });
-    if (type == 'P') {
-      this.participant = listRole;
-      this.removeRoleDuplicate();
-    } else if (type == 'O') {
-      this.owner = listRole;
-      this.stepsTasks['owner'] = this.owner?.[0]?.objectID;
-      this.removeRoleDuplicate();
+    this.participant = listRole;
+    this.removeRoleDuplicate();
+  }
+
+  changeRolerOwner(event){
+    let role = event[0];
+    if(role){
+      if(role?.roleType == "Users" || role?.roleType == "Owner"){
+        role['taskID'] = this.stepsTasks?.recID;
+        this.owner = [role];
+        this.stepsTasks.owner = role?.objectID;
+        this.removeRoleDuplicate();
+      }else{
+        let data = [];
+        switch (role?.roleType)
+        {
+          case "Departments":
+          case "OrgHierarchy":
+            data = [role?.objectID,this.step?.instanceID]
+            break;
+          case "Roles":
+          case "Positions":
+            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            break;
+        }
+        if(data?.length > 0){
+          this.api.exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetUserByOrgUnitIDAsync',
+            data
+          ).subscribe(res => {
+            if(res){     
+              let role = new DP_Instances_Steps_Tasks_Roles();   
+              role['objectID'] = res?.userID;
+              role['objectName'] =  res?.userName;
+              role['objectType'] = "U";
+              role['roleType'] = "Users";
+              role['taskID'] = this.stepsTasks?.recID;
+              this.owner = [role];
+              this.stepsTasks.owner = role?.objectID;
+            }
+          });
+        }
+      }
+    }else{
+      this.owner = [];
     }
   }
 
@@ -387,19 +430,29 @@ export class CodxAddTaskComponent implements OnInit {
       this.notiService.notifyCode('DP020');
       return;
     }
-    for (let key of this.REQUIRE) {
-      if (
-        (typeof this.stepsTasks[key] === 'string' &&
-          !this.stepsTasks[key].trim()) ||
-        !this.stepsTasks[key] ||
-        this.stepsTasks[key]?.length === 0
-      ) {
-        message.push(this.view[key]);
+    if(this.isStart){
+      for (let key of this.REQUIRE) {
+        if (
+          (typeof this.stepsTasks[key] === 'string' &&
+            !this.stepsTasks[key].trim()) ||
+          !this.stepsTasks[key] ||
+          this.stepsTasks[key]?.length === 0
+        ) {
+          message.push(this.view[key]);
+        }
+      }
+    }else{
+      if (!this.stepsTasks['taskName']?.trim()) {
+        message.push(this.view['taskName']);
+      }
+      if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+        message.push(this.view['durationDay']);
       }
     }
-    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
-      message.push(this.view['durationDay']);
-    }
+    
+    // if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+    //   message.push(this.view['durationDay']);
+    // }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
       return;

@@ -18,12 +18,6 @@
   height: 7px;
 }
 
-.e-content.e-lib {
-  max-height: 400px;
-  overflow: auto;
-  /* padding-right: 15px;
-  margin-right: -15px; */
-}
 
 .progress-bar-processing {
   background-color: #005DC7;
@@ -83,4 +77,27 @@
 
 .e-tab .e-tab-header:not(.e-vertical)::before {
   border-width: 0;
+}
+.sprint-tab{
+  height: calc(100% - 34px);
+  padding-top: 10px;
+  
+  .e-content.e-lib {
+    overflow: auto;
+    height: calc(100% - 32px)!important;
+  }
+  .e-tab .e-tab-header .e-toolbar-item{
+    &:not(.e-separator) {
+      margin-right: 0;
+      
+    }
+    .e-tab-wrap {
+      padding: 0 7px;
+      
+    }
+    &.e-active .e-tab-text{
+      font-weight: bold;
+    }
+  }
+
 }
