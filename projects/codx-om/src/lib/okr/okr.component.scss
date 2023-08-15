@@ -227,20 +227,19 @@
 }
 .okr-treeview{
   .content-tree{
-      padding: 0;
-      .menu-item div{
-        display: flex;
-        justify-content: start;
-      }
-      .nochild {
-          width: 22px;
-      }
+      // padding: 0;
+      // .menu-item div{
+      //   display: flex;
+      //   align-items: start !important;
+      // }
+      // .nochild {
+      //     width: 22px;
+      // }
       .collapse-conent{
           margin-top: 16px;
           margin-right: 2px;
       }
-  }
- 
+  } 
 }
 .progress-node{
   width: 13px !important;
