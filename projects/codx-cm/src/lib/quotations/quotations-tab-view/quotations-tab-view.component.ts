@@ -72,6 +72,7 @@ export class QuotationsTabViewComponent
   };
   grvSetup: any;
   vllStatus = '';
+  vllApprove = '';
   formModel: FormModel = {
     entityName: 'CM_Quotations',
     formName: 'CMQuotations',
@@ -113,6 +114,7 @@ export class QuotationsTabViewComponent
         if (res) {
           this.grvSetup = res;
           this.vllStatus = res['Status'].referedValue;
+          this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
         }
       });
 

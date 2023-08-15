@@ -1621,7 +1621,8 @@ export class LeadsComponent
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if (dt.applyApprover) {
+        debugger;
+        if (dt.applyProcess) {
           this.codxCmService.getProcess(dt.processID).subscribe((process) => {
             if (process) {
               this.cancelAction(dt, process.processNo);

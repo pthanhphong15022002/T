@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Codx</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <link rel="shortcut icon" href="/src/assets/static-pages/images/favicon.ico">
+
+    <!--Swiper slider css-->
+    <link href="/src/assets/static-pages/images/swiper-bundle.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Layout config Js -->
+    <script src="/src/assets/static-pages/images/layout.js"></script>
+    <!-- Bootstrap Css -->
+    <link href="/src/assets/static-pages/images/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!-- Icons Css -->
+    <link href="/src/assets/static-pages/images/icons.min.css" rel="stylesheet" type="text/css">
+    <!-- custom Css-->
+    <link href="/src/assets/static-pages/images/custom.min.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        @font-face {
+            font-family: "Roboto";
+            src: url("/src/assets/static-pages/fonts/Roboto-Regular.ttf") format("truetype");
+        }
+
+        @font-face {
+            font-family: "Roboto";
+            src: url("/src/assets/static-pages/fonts/Roboto-Medium.ttf") format("truetype");
+            font-weight: 450 500;
+        }
+
+        .img-fluid {
+            box-shadow: 0 3px 3px rgba(56, 65, 74, .1);
+            max-width: 320px;
+        }
+
+        .fixed-top {}
+
+        body {
+            background: rgba(245, 248, 250, 1);
+        }
+
+        .navbar-landing.is-sticky {
+            background-color: #fff;
+            -webkit-box-shadow: 0 1px 16px -2px rgba(56, 65, 74, .15);
+            box-shadow: 0 1px 16px -2px rgba(56, 65, 74, .15);
+        }
+
+        .navbar-nav .nav-link.active,
+        .navbar-nav .nav-link.show {
+            color: rgba(0, 120, 255, 1);
+        }
+
+        .text-success {
+            color: #005DC7 !important;
+        }
+
+        .nav-link {
+            color: #000;
+        }
+
+        .nav-link:hover {
+            color: #005DC7 !important;
+        }
+
+        .section {
+            padding: 60px 0 0px 0;
+            position: relative;
+            background: white !important;
+        }
+
+        .mx-auto {
+            margin-right: auto !important;
+            margin-left: auto !important;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 28px;
+            -webkit-transition: all .5s ease;
+            transition: all .5s ease;
+            display: none;
+            z-index: 1000;
+        }
+
+        .btn-icon {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: calc(1rem + 1.5em + 2px);
+            width: calc(1rem + 1.5em + 2px);
+            padding: 0;
+        }
+
+        .img-icon {
+            width: 16px;
+        }
+    </style>
+
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navbar-example">
+
+    <!-- Begin page -->
+    <div class="layout-wrapper landing">
+        <nav class="navbar navbar-expand-lg navbar-landing fixed-top" id="navbar">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="/src/assets/static-pages/images/logo-light.svg" class="card-logo card-logo-light"
+                        alt="logo light" height="30">
+                </a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto mt-2 mt-lg-0" id="navbar-example">
+                        <li class="nav-item">
+                            <a class="nav-link fs-14 active" href="#dangnhap">Đăng nhập</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fs-14" href="#mophong">Mô phỏng phần mền</a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link fs-14" href="#dangky">Đăng ký tài khoản</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link fs-14" href="#dangkymophong">Đăng ký mô phỏng</a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link fs-14" href="#taikhoan">Tài khoản</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link fs-14" href="#xoataikhoan">Xóa tài khoản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fs-14" href="#xacnhanxoataikhoan">Xác nhận xóa tài khoản</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <!-- end navbar -->
+        <div class="vertical-overlay" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent.show"></div>
+        <!-- start hero section -->
+        <section class="section hero-section">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-sm-10">
+                        <div class="text-center pt-3">
+                            <h1 class="display-6 fw-semibold mb-2 lh-base">Hướng dẫn sử dụng ứng dụng <span
+                                    class="text-success">CODX</span></h1>
+                            <!--<p class="lead text-muted lh-base">Ứng dụng CODX &amp; .</p>-->
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+        </section>
+        <!-- end hero section -->
+        <!-- start dang nhap -->
+        <section class="section" id="dangnhap">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <h3 class="mb-3 fw-semibold">Đăng nhập</h3>
+                            <p class="text-muted mb-4">Người dùng nhập thông tin tài khoản và mật khẩu vào biểu mẫu và
+                                chọn "Đăng nhập"</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-1.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section" id="mophong">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <h3 class="mb-3 fw-semibold">Mô phỏng phần mềm</h3>
+                            <p class="text-muted mb-4">Sau khi mở ứng dụng lần đầu, tại trang đăng nhập tài khoản, người
+                                dùng chọn nút "Mô tả phần mềm" nếu chưa có tài khoản sử dụng</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-2.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section" id="dangkymophong">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <h3 class="mb-3 fw-semibold">Đăng ký mô phỏng</h3>
+                            <p class="text-muted mb-4">1. Chọn đăng ký tài khoản</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-3.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <!-- <h3 class="mb-3 fw-semibold"></h3> -->
+                            <p class="text-muted mb-4">2. Nhập thông tin vào biểu mẫu và chọn "Đăng ký"</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-4.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section" id="xoataikhoan">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <h3 class="mb-3 fw-semibold">Chọn tab tài khoản</h3>
+                            <p class="text-muted mb-4"></p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-5.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section" id="">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <!-- <h3 class="mb-3 fw-semibold"></h3> -->
+                            <p class="text-muted mb-4">Chọn xóa tài khoản</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-6.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- start dang nhap -->
+        <section class="section" id="xacnhanxoataikhoan">
+            <div class="bg-overlay bg-overlay-pattern"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center mb-2 pt-3">
+                            <h3 class="mb-3 fw-semibold">Xác nhận xóa tài khoản</h3>
+                            <p class="text-muted mb-4">Tài khoản sau khi xóa dữ liệu sẽ bị xóa hoàn toàn khỏi hệ thống
+                                và khóa lại địa chỉ email hiện tại, người dùng sẽ không thể đăng nhập hay đăng ký tài
+                                khoản mới với địa chỉ email hiện tại đang sử dụng</p>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-sm-7 col-10 mx-auto">
+                        <div class="text-center mb-2 pt-3">
+                            <img src="/src/assets/static-pages/images/img-7.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!--end row-->
+            </div>
+
+            <!-- end container -->
+        </section>
+        <!-- end dang nhap -->
+        <!-- Start footer -->
+        <footer class="custom-footer  py-2 position-relative">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            © Copyright 2023 by Lạc Việt
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end footer -->
+        <!--start back-to-top-->
+        <button onclick="topFunction()" class="btn btn-danger btn-icon landing-back-top" id="back-to-top"
+            style="display: none;">
+            <img src="/src/assets/static-pages/images/icons8-top-30.png" alt="" class="img-icon">
+        </button>
+        <!--end back-to-top-->
+    </div>
+    <!-- end layout wrapper -->
+    <!-- JAVASCRIPT -->
+    <script src="/src/assets/static-pages/images/bootstrap.bundle.min.js"></script>
+    <script src="/src/assets/static-pages/images/simplebar.min.js"></script>
+    <script src="/src/assets/static-pages/images/waves.min.js"></script>
+    <script src="/src/assets/static-pages/images/feather.min.js"></script>
+    <script src="/src/assets/static-pages/images/lord-icon-2.1.0.js"></script>
+    <script type="text/javascript" src="/src/assets/static-pages/images/toastify-js"></script>
+    <script type="text/javascript" src="/src/assets/static-pages/images/choices.min.js"></script>
+    <script type="text/javascript" src="/src/assets/static-pages/images/flatpickr.min.js"></script>
+
+
+    <!--Swiper slider js-->
+    <script src="/src/assets/static-pages/images/swiper-bundle.min.js"></script>
+
+    <!-- landing init -->
+    <script src="/src/assets/static-pages/images/landing.init.js"></script>
+
+
+</body>
+
+</html>
