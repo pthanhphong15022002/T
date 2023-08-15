@@ -58,14 +58,10 @@ import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledin
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentAdd extends UIComponent implements OnInit {
-  focus: any;
   //#region Contructor
-  @ViewChild('gridCash')
-  public gridCash: CodxGridviewV2Component;
-  @ViewChild('gridSet')
-  public gridSet: CodxGridviewV2Component;
-  @ViewChild('gridVat')
-  public gridVat: CodxGridviewV2Component;
+  @ViewChild('gridCashPayment') gridCashPayment: CodxGridviewV2Component;
+  @ViewChild('gridSet') gridSet: CodxGridviewV2Component;
+  @ViewChild('gridVat') gridVat: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
   @ViewChild('cashRef') cashRef: ElementRef;
@@ -162,10 +158,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.dialogData = dialogData;
     this.headerText = dialogData.data?.headerText;
-    this.action = dialogData.data?.formType;
-    this.cashpayment = { ...dialog.dataService.dataSelected };
+    this.action = dialogData.data?.action;
+    this.cashpayment = { ...dialogData.data?.dataCashpayment };
     this.journal = { ...dialogData.data?.journal };
-    this.modegrid = this.journal.addNewMode;
     this.baseCurr = dialogData.data?.baseCurr;
   }
   //#endregion
