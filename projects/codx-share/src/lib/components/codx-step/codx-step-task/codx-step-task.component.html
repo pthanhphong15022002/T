@@ -238,21 +238,6 @@
       <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 group-name">
         {{ groupTask?.taskGroupName }}
       </div>
-      <!-- <div class="text-gray-500" *ngIf="!isViewStep">
-        <codx-label
-          class="title"
-          fiedName="updateTime"
-          default="Cập nhật:"
-          [formModel]="formModel"
-        >
-        </codx-label>
-        <span>
-          {{
-            groupTask?.modifiedOn || groupTask?.createdOn | date : dateTimeFomat
-          }}</span
-        >
-        <span>, {{ groupTask?.note || "" }}</span>
-      </div> -->
     </div>
     <codx-mfunc
       *ngIf="!isMoveStage && !isClose && !isViewStep"
@@ -289,21 +274,6 @@
           *
         </div>
       </div>
-      <!-- <div class="text-gray-500 fs-7" *ngIf="!isViewStep">
-        <codx-label
-          class="title"
-          fiedName="updateTime"
-          default="Cập nhật:"
-          [formModel]="formModel"
-        >
-        </codx-label>
-        <span
-          >{{
-            data?.task?.modifiedOn || data?.task?.createdOn
-              | date : dateTimeFomat
-          }}
-        </span>
-      </div> -->
     </div>
     <codx-mfunc
       *ngIf="!isMoveStage && !isClose && !isViewStep"
@@ -361,34 +331,6 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <!-- <codx-vll
-      *ngIf="data?.group && !isMoveStage && !isViewStep"
-      [name]="'DP048'"
-      [field]="'Status'"
-      [value]="data?.value?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-primary badge-sm w-95px"
-    >
-    </codx-vll> -->
-    <!-- <div class="text-nowrap text-gray-500" *ngIf="data?.value?.startDate && data?.value?.endDate">
-      <span
-        class="fs-7"
-        [innerHTML]="
-          data?.value?.startDate
-            | formatvalue : formModel : 'StartDate'
-            | async
-        "
-      ></span>
-      <span
-        class="fs-7"
-        [innerHTML]="
-          data?.value?.startDate
-            | formatvalue : formModel : 'EndDate'
-            | async
-        "
-      ></span>
-    </div> -->
     <span
       class="date text-nowrap text-gray-500"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
@@ -422,84 +364,13 @@
         [stype]="3"
         [isStep]="false"
         [vllData]="vllDataTask"
-        [status]="data?.value?.status"
+        [status]="data?.group ? data?.value?.status : setStatusGroup( data?.value)"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"
         (mouseleave)="p.close()"
       ></codx-progressbar>
-
-      <!-- <div
-        *ngIf="data?.group"
-        class="progress mt-1 h-20px w-110px"
-        [ngStyle]="setBackground(data?.value?.status)"
-      >
-        <div
-          [ngStyle]="
-            data?.value?.status == '2' ? { background: '#0078ff' } : {}
-          "
-          class="progress-done"
-          role="progressbar"
-          [style.width]="data?.value?.progress + '%'"
-          aria-valuenow="50"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-        <span class="progress-text" *ngIf="data?.value?.status == '1'">
-          Mới
-        </span>
-        <span class="progress-text" *ngIf="data?.value?.status == '2'">
-          Đang thực hiện {{ data?.value?.progress || 0 }}%
-        </span>
-        <span class="progress-text" *ngIf="data?.value?.status == '3'">
-          Hoàn thành
-        </span>
-      </div> -->
-
-      <div
-        *ngIf="!data?.group"
-        class="progress mt-1 h-20px w-110px"
-        [ngStyle]="setBackgroundGroup(data?.value)"
-      >
-        <div
-          [ngStyle]="
-            data?.value?.progress < 100 && data?.value?.progress > 0
-              ? { background: '#0078ff' }
-              : {}
-          "
-          class="progress-done"
-          role="progressbar"
-          [style.width]="data?.value?.progress + '%'"
-          aria-valuenow="50"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-        <span class="progress-text" *ngIf="data?.value?.progress == 0">
-          Mới
-        </span>
-        <span
-          class="progress-text"
-          *ngIf="data?.value?.progress < 100 && data?.value?.progress > 0"
-        >
-          Đang thực hiện {{ data?.value?.progress || 0 }}%
-        </span>
-        <span class="progress-text" *ngIf="data?.value?.progress == 100">
-          Hoàn thành
-        </span>
-      </div>
     </div>
-
-    <!-- <div class="notify ms-3" *ngIf="isShowFile">
-      <codx-attachment-temp
-        [objectID]="data?.value.refID"
-        [hideMoreF]="0"
-        [viewType]="'4'"
-        [hideDelete]="1"
-      ></codx-attachment-temp>
-    </div>
-    <div class="notify ms-3" *ngIf="isShowComment">
-      <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
-    </div> -->
   </div>
 </ng-template>
 
@@ -543,3 +414,42 @@
     ></div>
   </div>
 </ng-template>
+<!-- <codx-vll
+      *ngIf="data?.group && !isMoveStage && !isViewStep"
+      [name]="'DP048'"
+      [field]="'Status'"
+      [value]="data?.value?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-primary badge-sm w-95px"
+    >
+    </codx-vll> -->
+<!-- <div class="text-nowrap text-gray-500" *ngIf="data?.value?.startDate && data?.value?.endDate">
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.startDate
+            | formatvalue : formModel : 'StartDate'
+            | async
+        "
+      ></span>
+      <span
+        class="fs-7"
+        [innerHTML]="
+          data?.value?.startDate
+            | formatvalue : formModel : 'EndDate'
+            | async
+        "
+      ></span>
+    </div> -->
+<!-- <div class="notify ms-3" *ngIf="isShowFile">
+      <codx-attachment-temp
+        [objectID]="data?.value.refID"
+        [hideMoreF]="0"
+        [viewType]="'4'"
+        [hideDelete]="1"
+      ></codx-attachment-temp>
+    </div>
+    <div class="notify ms-3" *ngIf="isShowComment">
+      <codx-comment-temp [objectID]="data?.value.recID"></codx-comment-temp>
+    </div> -->
