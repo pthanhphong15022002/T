@@ -240,7 +240,9 @@
         >
         </codx-label>
         <div class="d-flex align-items-start" style="height: 0px !important">
-          <codx-progress-slider [progress]="item.probabilityDV"></codx-progress-slider>
+          <codx-progress-slider
+            [progress]="item.probabilityDV"
+          ></codx-progress-slider>
         </div>
         <!-- <div
           class="ms-2 text-gray-600 text-nowrap"
@@ -253,11 +255,7 @@
           style="margin-right: 32px !important"
         >
           <span
-            [ngStyle]="
-              item?.color != null && item?.color?.trim() != ''
-                ? { color: item?.color }
-                : { color: '#1d1f1f' }
-            "
+            class="text-gray-600"
             [innerHTML]="
               targetToFixed(item?.dealValue)
                 | formatvalue : formModel : 'Target'
