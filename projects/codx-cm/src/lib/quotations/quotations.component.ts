@@ -165,7 +165,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       if (res) {
         let dataValue = JSON.parse(res.dataValue);
         if (Array.isArray(dataValue)) {
-          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
           if (setting) this.applyApprover = setting['ApprovalRule'];
         }
       }
