@@ -516,8 +516,8 @@ export class LeadsComponent
         data.status == '0' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
         (data.applyProcess && data?.approveRule != '1') ||
-        data?.approveStatus >= '3' ||
-        this.checkMoreReason(data);
+        data?.approveStatus >= '3';
+      // || this.checkMoreReason(data);
     };
     let isPermission = (eventItem, data) => {
       // Phân quyền
@@ -802,7 +802,7 @@ export class LeadsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: this.titleAction,
+      titleAction: this.formatTitleMore(this.titleAction),
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
@@ -842,7 +842,7 @@ export class LeadsComponent
         var obj = {
           action: 'edit',
           formMD: formMD,
-          titleAction: this.titleAction,
+          titleAction: this.formatTitleMore(this.titleAction),
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
@@ -1621,7 +1621,8 @@ export class LeadsComponent
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if (dt.applyApprover) {
+        debugger;
+        if (dt.applyProcess) {
           this.codxCmService.getProcess(dt.processID).subscribe((process) => {
             if (process) {
               this.cancelAction(dt, process.processNo);
@@ -1673,10 +1674,13 @@ export class LeadsComponent
       if (res) {
         let dataValue = JSON.parse(res.dataValue);
         if (Array.isArray(dataValue)) {
-          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          let setting = dataValue.find((x) => x.Category == 'CM_Leads');
           if (setting) this.applyApprover = setting['ApprovalRule'];
         }
       }
     });
   }
+  formatTitleMore(titleAction){
+    return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
+   }
 }

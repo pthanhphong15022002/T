@@ -1090,7 +1090,6 @@ export class DealsComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
       var formMD = new FormModel();
       option.Width = '800px';
       option.zIndex = 1001;
@@ -1103,7 +1102,7 @@ export class DealsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
+      titleAction:this.formatTitleMore(this.titleAction),
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
@@ -1149,7 +1148,7 @@ export class DealsComponent
         var obj = {
           action: 'edit',
           formMD: formMD,
-          titleAction: 'Chỉnh sửa cơ hội',
+          titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
@@ -1817,4 +1816,8 @@ export class DealsComponent
       });
   }
   //#endregion
+
+  formatTitleMore(titleAction){
+   return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
+  }
 }

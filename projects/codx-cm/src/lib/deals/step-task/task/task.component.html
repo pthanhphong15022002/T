@@ -108,15 +108,6 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <codx-vll
-      [name]="'DP048'"
-      [field]="'Status'"
-      [value]="data?.value?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-primary badge-sm w-95px"
-    >
-    </codx-vll>
     <div
       class="date text-nowrap mx-2"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
@@ -150,12 +141,13 @@
       >
       </codx-imgs>
     </span>
-    <div class="disabled-inline cursor-pointer" (click)="openPopupUpdateProgress(data?.value, 'T')">
+    <div class="disabled-inline cursor-pointer ms-2" (click)="openPopupUpdateProgress(data?.value, 'T')">
       <codx-progressbar
         [progress]="data?.value?.progress"
         [stype]="3"
         [vllData]="vllData"
         [status]="data?.value?.status"
+        [isStep]="false"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"
