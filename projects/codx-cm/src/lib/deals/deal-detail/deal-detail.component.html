@@ -340,6 +340,22 @@
                       >
                       </codx-vll>
                     </ng-template>
+                    <ng-container
+                      *ngIf="
+                        dataSelected?.approveStatus &&
+                        dataSelected?.approveStatus != '1'
+                      "
+                    >
+                      <codx-vll
+                        [name]="gridViewSetup?.ApproveStatus.referedValue"
+                        [field]="'ApproveStatus'"
+                        [value]="dataSelected?.approveStatus"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-primary badge-sm"
+                      >
+                      </codx-vll>
+                    </ng-container>
                   </div>
                   <ng-template #tooltipSalesperson>
                     <div class="d-flex justify-content-center fw-bold fs-6">
@@ -835,7 +851,6 @@
                 ></span>
               </div>
               <div *ngIf="dataSelected?.steps?.isHaveField">
-
                 <div class="d-flex flex-column mt-5">
                   <ng-container *ngFor="let item of listSteps">
                     <codx-fields-detail-temp

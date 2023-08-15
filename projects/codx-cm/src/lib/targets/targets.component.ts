@@ -941,10 +941,7 @@ export class TargetsComponent
     );
     let dataEdit = JSON.parse(JSON.stringify(data));
     if (result != null) {
-      dataEdit.target = result[0];
-      dataEdit.currencyID = result[1];
-      dataEdit.exchangeRate = result[2];
-      lstLinesBySales = result[3];
+      lstLinesBySales = result;
     }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
