@@ -1261,7 +1261,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     return await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
       Data: {
-        FileName: uploadFile?.name,
+        FileName: (uploadFile?.name).toLowerCase(),
         ChunkSizeInKB: ChunkSizeInKB,
         FileSize: uploadFile?.size,
         thumbSize: {

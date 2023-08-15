@@ -219,7 +219,7 @@ export class PopupAddDealComponent
         if (this.customerID) {
           this.customerOld = this.customerID;
           this.deal.customerID = this.customerID;
-          this.customerName = $event.component.itemsSelected[0].CustomerName;
+          this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           if (!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerName;
           }
