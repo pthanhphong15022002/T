@@ -261,9 +261,12 @@ export class QuotationsTabViewComponent
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval 
-      if (appoverStatus!=null &&  appoverStatus != this.itemSelected.approveStatus) {
-        this.itemSelected.approveStatus=appoverStatus
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.itemSelected.approveStatus
+      ) {
+        this.itemSelected.approveStatus = appoverStatus;
         switch (appoverStatus) {
           case '5':
             this.itemSelected.status = '2';
@@ -272,9 +275,8 @@ export class QuotationsTabViewComponent
           case '2':
             this.itemSelected.status = '3';
             break;
-            
-        }      
-      } 
+        }
+      }
       this.view.dataService.update(this.itemSelected).subscribe();
     }
   }
@@ -531,7 +533,7 @@ export class QuotationsTabViewComponent
       if (res) {
         let dataValue = JSON.parse(res.dataValue);
         if (Array.isArray(dataValue)) {
-          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          let setting = dataValue.find((x) => x.Category == 'CM_Quotations');
           if (setting) this.applyApprover = setting['ApprovalRule'];
         }
       }
