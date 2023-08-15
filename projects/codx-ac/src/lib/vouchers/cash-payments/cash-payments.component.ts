@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
@@ -20,6 +20,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  TenantStore,
   UIComponent,
   Util,
   ViewModel,
@@ -120,6 +121,8 @@ export class CashPaymentsComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private tnStore: TenantStore,
+    private routers: Router,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -157,10 +160,10 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.listdetail,
         active: true,
         sameData: true,
-
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+          collapsed: true,
         },
       },
       {
@@ -848,10 +851,21 @@ export class CashPaymentsComponent extends UIComponent {
           if (res.length > 1) {
             this.openPopupCashReport(data, res);
           } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].recID}`
+            // window.open(
+            //   '/' +
+            //     this.tnStore.getName() +
+            //     '/ac/report/detail/' +
+            //     `${res[0].recID}`,
+            //   '_blank'
+            // );
+            const url = this.routers.serializeUrl(
+              this.routers.createUrlTree([`ac/report/detail/${res[0].recID}`])
             );
+            window.open(url, '_blank');
+            // this.codxService.navigate(
+            //   '',
+            //   'ac/report/detail/' + `${res[0].recID}`
+            // );
           }
         }
       });

@@ -40,6 +40,7 @@ import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.compo
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { TermsComponent } from './pages/terms/terms.component';
+import { InstructionComponent } from './pages/instruction/instruction.component';
 
 registerLocaleData(localeVi);
 
@@ -94,6 +95,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     PrivacyComponent,
     ContactComponent,
     TermsComponent,
+    InstructionComponent,
   ],
   imports: [
     BrowserModule,
