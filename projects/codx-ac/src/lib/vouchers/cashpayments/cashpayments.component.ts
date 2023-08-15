@@ -621,11 +621,10 @@ export class CashPaymentsComponent extends UIComponent {
         return;
       } else {
         this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);
         if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
           return;
-        } else {
-          this.getDatadetail(this.itemSelected);
-        }    
+        } 
       }
     }
   }

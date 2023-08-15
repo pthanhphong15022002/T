@@ -177,7 +177,7 @@
               <div class="d-flex flex-wrap">
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
-                    <div class="m-auto">
+                    <div *ngIf="data?.recID" class="m-auto">
                       <codx-img
                         #imgSignature1
                         class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -185,6 +185,7 @@
                         [width]="80"
                         referType="S1"
                         [objectId]="data?.recID"
+                        [objectName]="'S1'"
                         [objectType]="formModelES?.entityName"
                         data-kt-menu-trigger="click"
                         data-kt-menu-attach="parent"
@@ -205,7 +206,7 @@
                 </div>
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
-                    <div class="m-auto">
+                    <div *ngIf="data?.recID" class="m-auto">
                       <codx-img
                         #imgSignature2
                         referType="S2"
@@ -235,7 +236,7 @@
                 </div>
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
-                    <div class="m-auto">
+                    <div *ngIf="data?.recID" class="m-auto">
                       <codx-img
                         #imgStamp
                         referType="S3"
