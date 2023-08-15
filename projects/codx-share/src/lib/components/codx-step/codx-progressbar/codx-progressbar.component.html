@@ -1,5 +1,4 @@
-
-<div id="annotation" [ngClass]="class" style="margin: -8px;">
+<div id="annotation" [ngClass]="class" style="margin: -8px">
   <ejs-progressbar
     #annotation
     *ngIf="stype == 1"
@@ -27,7 +26,11 @@
     [ngTemplateOutlet]="progressCustom"
     [ngTemplateOutletContext]="{}"
   ></ng-container>
-  
+  <ng-container
+    *ngIf="stype == 3"
+    [ngTemplateOutlet]="progressLinear"
+    [ngTemplateOutletContext]="{}"
+  ></ng-container>
 </div>
 
 <ng-template #progressCustom let-data="value">
@@ -39,5 +42,27 @@
         >
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #progressLinear let-data="value">
+  <div
+    class="progress mt-1 h-20px w-110px"
+    [ngStyle]="{ background: '#ef4023' }"
+  >
+    <div
+      [ngStyle]="status == '2' ? { background: '#0078ff' } : {}"
+      class="progress-done"
+      role="progressbar"
+      [style.width]="progress + '%'"
+      aria-valuenow="50"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    ></div>
+    <span class="progress-text" *ngIf="status == '1'"> Mới </span>
+    <span class="progress-text" *ngIf="status == '2'">
+      Đang thực hiện {{ progress || 0 }}%
+    </span>
+    <span class="progress-text" *ngIf="status == '3'"> Hoàn thành </span>
   </div>
 </ng-template>

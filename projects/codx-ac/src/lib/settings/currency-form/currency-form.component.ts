@@ -72,12 +72,12 @@ export class CurrencyFormComponent extends UIComponent {
   //#region Init
   onInit(): void {}
   ngAfterViewInit(): void {
-    this.acService
-      .getFunctionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) this.funcName = res.defaultName;
-      });
+    // this.acService
+    //   .getFunctionList(this.view.funcID)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res) => {
+    //     if (res) this.funcName = res.defaultName;
+    //   });
     this.views = [
       {
         type: ViewType.grid,

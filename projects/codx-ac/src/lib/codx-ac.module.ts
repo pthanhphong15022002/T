@@ -78,6 +78,7 @@ import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.comp
 import { CashpaymentSuggestion } from './vouchers/cashpayments/cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
 import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
 import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
+import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 export const routes: Routes = [
   {
     path: '',
@@ -293,6 +294,7 @@ export const routes: Routes = [
     LayloutJournalComponent,
     TableAccountingComponent,
     TranformSubobjectPipe,
+    TranformClassBorderPipe,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
