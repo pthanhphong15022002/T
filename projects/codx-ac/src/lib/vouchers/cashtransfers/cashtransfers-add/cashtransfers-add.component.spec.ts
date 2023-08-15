@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddCashTransferComponent } from './popup-add-cash-transfer.component';
+import { CashtransferAddComponent } from './cashtransfers-add.component';
 
 describe('PopupAddCashTransferComponent', () => {
-  let component: PopupAddCashTransferComponent;
-  let fixture: ComponentFixture<PopupAddCashTransferComponent>;
+  let component: CashtransferAddComponent;
+  let fixture: ComponentFixture<CashtransferAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddCashTransferComponent ]
+      declarations: [ CashtransferAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddCashTransferComponent);
+    fixture = TestBed.createComponent(CashtransferAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -26,7 +26,7 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
-import { PopAddReceiptTransactionComponent } from './pop-add-receipt-transaction/pop-add-receipt-transaction.component';
+import { ReceiptTransactionsAddComponent } from './receipt-transactions-add/receipt-transactions-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -34,12 +34,12 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
-  selector: 'lib-receipt-transaction',
-  templateUrl: './receipt-transaction.component.html',
-  styleUrls: ['./receipt-transaction.component.css'],
+  selector: 'lib-receipt-transactions',
+  templateUrl: './receipt-transactions.component.html',
+  styleUrls: ['./receipt-transactions.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionComponent extends UIComponent {
+export class ReceiptTransactionsComponent extends UIComponent {
   //#region Constructor
 
   views: Array<ViewModel> = [];
@@ -69,10 +69,6 @@ export class ReceiptTransactionComponent extends UIComponent {
   oData: any;
   lsVatCode: any;
   entityName: any;
-  receiptsFormName: string = 'VouchersReceipts';
-  receiptsGrvName: string = 'grvVouchersReceipts';
-  issuesFormName: string = 'VouchersIssues';
-  issuesGrvName: string = 'grvVouchersIssues';
   funcID: any;
   acctTrans: any;
   vllReceipt: any = 'AC116';
@@ -135,6 +131,10 @@ export class ReceiptTransactionComponent extends UIComponent {
   ngAfterViewInit() {
 
     this.loadFormModel();
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      this.funcName = res.defaultName;
+    });
 
     this.views = [
       {
@@ -240,7 +240,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -272,7 +272,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -314,7 +314,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -496,56 +496,16 @@ export class ReceiptTransactionComponent extends UIComponent {
   {
     switch (this.funcID) {
       case 'ACT0708':
-        this.cache.moreFunction(this.receiptsFormName, this.receiptsGrvName)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res && res.length) {
-            let m = res.find((x) => x.functionID == 'ACT070801');
-            if (m)
-            {
-              this.fmVouchers.formName = m.formName;
-              this.fmVouchers.gridViewName = m.gridViewName;
-              this.view!.formModel.formName = m.formName;
-              this.view!.formModel.gridViewName = m.gridViewName;
-            }
-
-            let n = res.find((x) => x.functionID == 'ACT070800');
-            if (n) this.funcName = n.defaultName;
-
-            let o = res.find((x) => x.functionID == 'ACT070802');
-            if(o)
-            {
-              this.fmVouchersLines.formName = 'VouchersLinesReceipts';
-              this.fmVouchersLines.gridViewName = 'grvVouchersLinesReceipts';
-            }
-          }
-        });
+        this.fmVouchers.formName = 'VouchersReceipts'
+        this.fmVouchers.gridViewName = 'grvVouchersReceipts'
+        this.fmVouchersLines.formName = 'VouchersLinesReceipts';
+        this.fmVouchersLines.gridViewName = 'grvVouchersLinesReceipts'
         break;
       case 'ACT0714':
-        this.cache.moreFunction(this.issuesFormName, this.issuesGrvName)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res && res.length) {
-            let m = res.find((x) => x.functionID == 'ACT071401');
-            if (m)
-            {
-              this.fmVouchers.formName = m.formName;
-              this.fmVouchers.gridViewName = m.gridViewName;
-              this.view!.formModel.formName = m.formName;
-              this.view!.formModel.gridViewName = m.gridViewName;
-            }
-
-            let n = res.find((x) => x.functionID == 'ACT071400');
-            if (n) this.funcName = n.defaultName;
-
-            let o = res.find((x) => x.functionID == 'ACT071402');
-            if(o)
-            {
-              this.fmVouchersLines.formName = 'VouchersLinesIssues';
-              this.fmVouchersLines.gridViewName = 'grvVouchersLinesIssues';
-            }
-          }
-        });
+        this.fmVouchers.formName = 'VouchersIssues'
+        this.fmVouchers.gridViewName = 'grvVouchersIssues'
+        this.fmVouchersLines.formName = 'VouchersLinesIssues';
+        this.fmVouchersLines.gridViewName = 'grvVouchersLinesIssues'
         break;
     }
   }

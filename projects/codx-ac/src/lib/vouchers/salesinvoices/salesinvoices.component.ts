@@ -22,12 +22,12 @@ import { IAcctTran } from './interfaces/IAcctTran.interface';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from './models/TableColumn.model';
-import { PopupAddSalesInvoiceComponent } from './popup-add-sales-invoice/popup-add-sales-invoice.component';
-import { SalesInvoiceService } from './sales-invoices.service';
+import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
+import { SalesInvoiceService } from './salesinvoices.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
-import { IPurchaseInvoice } from '../purchase-invoices/interfaces/IPurchaseInvoice.inteface';
+import { IPurchaseInvoice } from '../purchaseinvoices/interfaces/IPurchaseInvoice.inteface';
 
 enum MF {
   GuiDuyet = 'ACT060504',
@@ -39,11 +39,11 @@ enum MF {
 }
 
 @Component({
-  selector: 'lib-sales-invoices',
-  templateUrl: './sales-invoices.component.html',
-  styleUrls: ['./sales-invoices.component.scss'],
+  selector: 'lib-salesinvoices',
+  templateUrl: './salesinvoices.component.html',
+  styleUrls: ['./salesinvoices.component.scss'],
 })
-export class SalesInvoicesComponent
+export class SalesinvoicesComponent
   extends UIComponent
   implements AfterViewInit, AfterViewChecked
 {
@@ -278,7 +278,7 @@ export class SalesInvoicesComponent
 
           this.callfc
             .openSide(
-              PopupAddSalesInvoiceComponent,
+              SalesinvoicesAddComponent,
               {
                 formType: 'add',
                 formTitle: `${e.text} ${this.functionName}`,
@@ -395,7 +395,7 @@ export class SalesInvoicesComponent
       options.isFull = true;
 
       this.callfc.openSide(
-        PopupAddSalesInvoiceComponent,
+        SalesinvoicesAddComponent,
         {
           formType: 'edit',
           formTitle: `${e.text} ${this.functionName}`,
@@ -417,7 +417,7 @@ export class SalesInvoicesComponent
       options.isFull = true;
 
       this.callfc.openSide(
-        PopupAddSalesInvoiceComponent,
+        SalesinvoicesAddComponent,
         {
           formType: 'add',
           formTitle: `${e.text} ${this.functionName}`,
