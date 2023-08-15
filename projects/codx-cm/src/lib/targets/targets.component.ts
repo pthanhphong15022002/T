@@ -154,6 +154,8 @@ export class TargetsComponent
   popoverList: any;
   viewMode = 9;
   viewCurrent = '1';
+  viewDataValue = '1';
+
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -168,6 +170,7 @@ export class TargetsComponent
   countPersons = 0;
   predicateSearch = '';
   dataValueSearch = '';
+  probability = '1';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -364,9 +367,23 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
 
-  isActive(item: any): boolean {
-    return this.viewCurrent === item;
+  viewDataValueGrid(view) {
+    if (view != this.viewDataValue) {
+      this.viewDataValue = view;
+    }
+    this.detectorRef.detectChanges();
   }
+
+  valueChangeProbability(e) {
+    if (e) {
+      this.probability = e?.data;
+    }
+  }
+
+  isActive(item: any, type): boolean {
+    return this[type] === item;
+  }
+
   clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -411,6 +428,8 @@ export class TargetsComponent
         this.lstDataTree.forEach((element) => {
           element.target =
             (element.target / exchangeRate?.exchRate) * element.exchangeRate;
+          element.dealValue =
+            (element.dealValue / exchangeRate?.exchRate) * element.exchangeRate;
           element.currencyID = currencyID;
           element.exchangeRate = exchangeRate?.exchRate ?? 1;
           if (element?.targetsLines != null) {
@@ -421,16 +440,41 @@ export class TargetsComponent
               line.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
           }
+
+          if (element?.deals != null) {
+            element?.deals.forEach((deal) => {
+              deal.dealValue =
+                (deal.dealValue / exchangeRate?.exchRate) * deal.exchangeRate;
+              deal.currencyID = currencyID;
+              deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+            });
+          }
+
           if (element?.items != null) {
             element?.items.forEach((item) => {
               item.target =
                 (item.target / exchangeRate?.exchRate) * item.exchangeRate;
+              item.dealValue =
+                (item.dealValue / exchangeRate?.exchRate) * item.exchangeRate;
               if (item?.targetsLines != null) {
                 item?.targetsLines.forEach((line) => {
                   line.target =
                     (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+                  line.currencyID = currencyID;
+                  line.exchangeRate = exchangeRate?.exchRate ?? 1;
                 });
               }
+
+              if (item?.deals != null) {
+                item?.deals.forEach((deal) => {
+                  deal.dealValue =
+                    (deal.dealValue / exchangeRate?.exchRate) *
+                    deal.exchangeRate;
+                  deal.currencyID = currencyID;
+                  deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+                });
+              }
+
               item.currencyID = currencyID;
               item.exchangeRate = exchangeRate?.exchRate ?? 1;
             });
@@ -662,6 +706,7 @@ export class TargetsComponent
           case 'SYS04':
             res.disabled = true;
             break;
+          case 'SYS02':
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;
@@ -943,41 +988,11 @@ export class TargetsComponent
         let index = this.lstTreeSearchs.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
-
         if (index != -1) {
-          var data = this.lstTreeSearchs[index]?.items;
-          if (data != null) {
-            var indexItem = data.findIndex(
-              (x) => x.salespersonID == e?.event.salespersonID
-            );
-            if (indexItem != -1) {
-              data[indexItem] = e.event;
-              this.lstTreeSearchs[index].items = data;
-            }
-          }
-          if (this.lstTreeSearchs[index].targetsLines != null) {
-            const targetLines = this.lstTreeSearchs[index].targetsLines;
-            const updatedItems = [];
-
-            for (const item of targetLines) {
-              let foundLineEv = e.event?.targetsLines.find(
-                (lineEv) =>
-                  new Date(item.startDate)?.getMonth() + 1 ===
-                    new Date(lineEv.startDate)?.getMonth() + 1 &&
-                  item.salespersonID == lineEv.salespersonID
-              );
-
-              if (foundLineEv) {
-                Object.assign(item, foundLineEv);
-              }
-
-              updatedItems.push(item);
-            }
-
-            this.lstTreeSearchs[index].targetsLines = updatedItems;
-          }
+          this.lstTreeSearchs[index] = e.event;
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
+        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -1036,7 +1051,7 @@ export class TargetsComponent
     this.popupOld = p;
   }
 
-  sumQuarter(lstLines = [], i: number) {
+  sumTargetQuarter(lstLines = [], i: number) {
     var target = 0;
 
     if (lstLines != null && lstLines.length > 0) {
@@ -1049,6 +1064,37 @@ export class TargetsComponent
     }
 
     return this.targetToFixed(target);
+  }
+
+  sumDealValueQuarter(lstDeal = [], i: number) {
+    var dealValue = 0;
+
+    if (lstDeal != null && lstDeal.length > 0) {
+      lstDeal.forEach((element) => {
+        if (
+          this.checkMonthQuarter(i, new Date(element.createdOn)?.getMonth() + 1)
+        )
+          dealValue += element.dealValue;
+      });
+    }
+
+    return this.targetToFixed(dealValue);
+  }
+
+  sumProbabilityDVQuarter(lstDeal = [], lstLines = [], i: number) {
+    let dealValue = 0;
+    let target = 0;
+
+    target = this.sumTargetQuarter(lstLines, i);
+    dealValue = this.sumDealValueQuarter(lstDeal, i);
+
+    let probability = 0;
+
+    if (target > 0) {
+      probability = (dealValue / target) * 100;
+    }
+
+    return this.formatNumberWithoutTrailingZeros(probability);
   }
 
   checkMonthQuarter(i, month) {
@@ -1083,6 +1129,42 @@ export class TargetsComponent
     }
 
     return this.targetToFixed(target);
+  }
+
+  getDealValueMonth(lstDeals = [], month: number) {
+    let dealValue = 0;
+
+    if (lstDeals != null && lstDeals.length > 0) {
+      lstDeals.forEach((element) => {
+        if (month === new Date(element.createdOn)?.getMonth() + 1)
+          dealValue += element.dealValue;
+      });
+    }
+
+    return this.targetToFixed(dealValue);
+  }
+
+  getProbabilityMonth(lstDeals = [], lstTargetLines = [], month: number) {
+    let dealValue = 0;
+    let target = 0;
+
+    dealValue = this.getDealValueMonth(lstDeals, month);
+    target = this.getTargetMonth(lstTargetLines, month);
+
+    let probability = 0;
+    if (target > 0) {
+      probability = (dealValue / target) * 100;
+    }
+
+    return this.formatNumberWithoutTrailingZeros(probability);
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    const roundedNum = parseFloat(num.toFixed(2));
+
+    const formattedNum = roundedNum.toString().replace(/(\.\d*?)0+$/, '$1');
+
+    return formattedNum;
   }
   //#endregion
 }

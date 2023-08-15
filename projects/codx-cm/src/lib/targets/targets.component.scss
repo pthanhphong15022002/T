@@ -37,6 +37,9 @@
 }
 
 .height-child{
+  .text-gray-800{
+    color: var(--gray-600)!important;
+  }
   height: 45px !important;
 }
 .overflow-ellipsis {

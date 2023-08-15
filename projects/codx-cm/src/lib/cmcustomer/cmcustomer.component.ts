@@ -206,8 +206,6 @@ export class CmCustomerComponent
           });
       }
     });
-
-    this.detectorRef.detectChanges();
   }
 
   click(evt: ButtonModel) {

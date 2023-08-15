@@ -240,21 +240,14 @@
         >
         </codx-label>
         <div class="d-flex align-items-start" style="height: 0px !important">
-          <ejs-slider
-            type="MinRange"
-            style="height: 0px !important"
-            [min]="0"
-            [width]="250"
-            [height]="0"
-            [max]="100"
-            [value]="formatValue(item.probabilityDV) > 100 ? 0 : formatValue(item.probabilityDV)"
-            [readonly]="true"
-          >
-          </ejs-slider>
+          <codx-progress-slider
+            [progress]="item.probabilityDV"
+          ></codx-progress-slider>
         </div>
-        <div class="ms-2 text-gray-600 text-nowrap" [innerHTML]="formatValue(item.probabilityDV)">
-        </div>
-        <span class="text-gray-600 text-nowrap">%</span>
+        <!-- <div
+          class="ms-2 text-gray-600 text-nowrap"
+          [innerHTML]="formatValue(item.probabilityDV)"
+        ></div> -->
       </div>
       <div class="w-250px min-w-250px d-flex justify-content-end">
         <div
@@ -262,11 +255,7 @@
           style="margin-right: 32px !important"
         >
           <span
-            [ngStyle]="
-              item?.color != null && item?.color?.trim() != ''
-                ? { color: item?.color }
-                : { color: '#1d1f1f' }
-            "
+            class="text-gray-600"
             [innerHTML]="
               targetToFixed(item?.dealValue)
                 | formatvalue : formModel : 'Target'
