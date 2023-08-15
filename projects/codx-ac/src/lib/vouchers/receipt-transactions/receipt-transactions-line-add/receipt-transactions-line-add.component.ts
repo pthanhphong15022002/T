@@ -4,11 +4,11 @@ import { Vouchers } from '../../../models/Vouchers.model';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 
 @Component({
-  selector: 'lib-pop-add-line-receipt-transaction',
-  templateUrl: './pop-add-line-receipt-transaction.component.html',
-  styleUrls: ['./pop-add-line-receipt-transaction.component.css']
+  selector: 'lib-receipt-transactions-line-add',
+  templateUrl: './receipt-transactions-line-add.component.html',
+  styleUrls: ['./receipt-transactions-line-add.component.css']
 })
-export class PopAddLineReceiptTransactionComponent extends UIComponent implements OnInit{
+export class ReceiptTransactionsLineAddComponent extends UIComponent implements OnInit{
 
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('idiM0') idiM0: CodxInputComponent;

@@ -26,7 +26,7 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
-import { PopAddReceiptTransactionComponent } from './pop-add-receipt-transaction/pop-add-receipt-transaction.component';
+import { ReceiptTransactionsAddComponent } from './receipt-transactions-add/receipt-transactions-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -34,12 +34,12 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
-  selector: 'lib-receipt-transaction',
-  templateUrl: './receipt-transaction.component.html',
-  styleUrls: ['./receipt-transaction.component.css'],
+  selector: 'lib-receipt-transactions',
+  templateUrl: './receipt-transactions.component.html',
+  styleUrls: ['./receipt-transactions.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionComponent extends UIComponent {
+export class ReceiptTransactionsComponent extends UIComponent {
   //#region Constructor
 
   views: Array<ViewModel> = [];
@@ -240,7 +240,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -272,7 +272,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -314,7 +314,7 @@ export class ReceiptTransactionComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            PopAddReceiptTransactionComponent,
+            ReceiptTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
