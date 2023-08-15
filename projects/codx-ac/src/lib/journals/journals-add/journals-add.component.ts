@@ -42,12 +42,12 @@ const irrPropNames: string[] = [
   'idimControl',
 ];
 @Component({
-  selector: 'lib-popup-add-journal',
-  templateUrl: './popup-add-journal.component.html',
-  styleUrls: ['./popup-add-journal.component.css'],
+  selector: 'lib-journals-add',
+  templateUrl: './journals-add.component.html',
+  styleUrls: ['./journals-add.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddJournalComponent
+export class JournalsAddComponent
   extends UIComponent
   implements AfterViewInit
 {
@@ -61,6 +61,7 @@ export class PopupAddJournalComponent
     autoPost: false,
   } as IJournal;
   oldJournal: IJournal;
+  prevJournal: IJournal;
   dataService: CRUDService;
   formTitle: string;
   gvs: any;
@@ -78,10 +79,11 @@ export class PopupAddJournalComponent
     },
   ];
   fiscalYears: number[] = [];
-  isEdit: boolean = false;
-  hasVouchers: boolean = false;
   tempIDIMControls: any[] = [];
   arrowColorStyle: string;
+
+  isEdit: boolean = false;
+  hasVouchers: boolean = false;
 
   isHidden: boolean = true;
   isMultiple: boolean = true;
@@ -131,6 +133,7 @@ export class PopupAddJournalComponent
     this.journal.vatControl = this.journal.vatControl === '1';
 
     this.oldJournal = { ...this.journal };
+    this.prevJournal = { ...this.journal };
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
@@ -317,7 +320,7 @@ export class PopupAddJournalComponent
 
   ngAfterViewInit(): void {
     this.formTitle = this.dialogData.data?.formTitle;
-    this.detectorRef.detectChanges();
+    this.detectorRef.markForCheck();
     setTimeout(() => {
       let moreInfoLabel: Element = document.getElementById('moreInfo');
       let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
@@ -345,6 +348,12 @@ export class PopupAddJournalComponent
     if (!e.data) {
       return;
     }
+
+    if (this.journal[e.field] == this.prevJournal[e.field]) {
+      return;
+    }
+
+    this.prevJournal[e.field] = e.data;
 
     if (e.field === 'periodID') {
       this.journal.fiscalYear = e.data.substring(0, 4);

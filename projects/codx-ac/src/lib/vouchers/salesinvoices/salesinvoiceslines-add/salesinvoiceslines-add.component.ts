@@ -20,14 +20,14 @@ import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/nameById.pipe';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { SalesInvoiceService } from '../sales-invoices.service';
+import { SalesInvoiceService } from '../salesinvoices.service';
 
 @Component({
-  selector: 'lib-popup-add-sales-invoices-line',
-  templateUrl: './popup-add-sales-invoices-line.component.html',
-  styleUrls: ['./popup-add-sales-invoices-line.component.css'],
+  selector: 'lib-salesinvoiceslines-add',
+  templateUrl: './salesinvoiceslines-add.component.html',
+  styleUrls: ['./salesinvoiceslines-add.component.css'],
 })
-export class PopupAddSalesInvoicesLineComponent
+export class SalesinvoiceslinesAddComponent
   extends UIComponent
   implements AfterViewInit
 {

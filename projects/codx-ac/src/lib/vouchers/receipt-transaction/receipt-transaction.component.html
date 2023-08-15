@@ -1127,14 +1127,9 @@
         </div>
       </div>
     </div>
-    <table
-      style="
-        table-layout: fixed;
-        border: 1px solid var(--bs-border-color) !important;
-      "
-      class="table mb-0"
-    >
+    <table *ngIf="!loading" class="table table-hover table-row-bordered" style="border: 1px solid var(--bs-border-color) !important;">
       <tfoot class="bg-light" style="position: sticky">
+        <td class="min-w-50px" style="width: 50px"></td>
         <td class="w-50 min-w-350px bg-gray-100"></td>
         <td class="min-w-100px bg-gray-100">
           <div class="d-flex align-items-center">

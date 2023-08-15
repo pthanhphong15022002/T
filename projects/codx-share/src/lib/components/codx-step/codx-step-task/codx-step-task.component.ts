@@ -116,6 +116,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
   dialogGuide: DialogRef;
+  vllDataTask;
+  vllDataStep;
 
   moreDefaut = {
     share: true,
@@ -145,6 +147,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTaskType = res?.datas;
+      }
+    });
+    this.cache.valueList('DP048').subscribe((res) => {
+      if (res.datas) {
+        this.vllDataTask = res?.datas;
+      }
+    });
+    this.cache.valueList('DP032').subscribe((res) => {
+      if (res.datas) {
+        this.vllDataStep = res?.datas;
       }
     });
     this.frmModelInstancesGroup = {
