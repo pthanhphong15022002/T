@@ -271,7 +271,7 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
-            debugger
+            debugger;
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
             this.df.detectChanges();
@@ -310,8 +310,9 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
-            this.autoNumField = res.key ? res.key : null}
-        })
+            this.autoNumField = res.key ? res.key : null;
+          }
+        });
       this.loadedAutoField = true;
       if (this.actionType == 'copy') {
         if (this.data.signedDate == '0001-01-01T00:00:00') {
