@@ -210,17 +210,17 @@ export class AddContractsComponent implements OnInit {
     switch (this.action) {
       case "add":
         this.contracts = data ? data : new CM_Contracts();
-        this.contracts.recID = Util.uid();
-        this.contracts.projectID = this.projectID;
-        this.contracts.contractDate = new Date();
-        this.contracts.effectiveFrom = new Date();
         this.contracts.paidAmt = 0;
         this.contracts.status = '1';
         this.contracts.remainAmt = 0;
         this.contracts.useType = '1';
         this.contracts.pmtStatus = '1';
         this.contracts.delStatus = '1';
+        this.contracts.recID = Util.uid();
         this.contracts.pmtMethodID = 'ATM';
+        this.contracts.projectID = this.projectID;
+        this.contracts.contractDate = new Date();
+        this.contracts.effectiveFrom = new Date();
         this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
         this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
         await this.getSettingContract();

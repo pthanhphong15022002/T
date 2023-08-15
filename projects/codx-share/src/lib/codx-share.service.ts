@@ -39,7 +39,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-import { ApproveProcess, ResponseModel } from './models/ApproveProcess.model';
+import { ApproveProcess, Approver, ResponseModel } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -1156,7 +1156,7 @@ export class CodxShareService {
     userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     customEntityName: string, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    approvers: Array<string> = null //Danh sách userID của RO
+    approvers: Array<Approver> = null //Danh sách userID của RO
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
@@ -1188,7 +1188,7 @@ export class CodxShareService {
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-    approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
+    approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null //biến this: tại component gọi hàm
@@ -1423,7 +1423,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel, component: any) => void,
     exportUpload: ExportUpload
   ) {
-    let signFile = this.createSignFile(approveProcess);
+    
     this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
       (exportedFile: any) => {
         if (exportedFile) {

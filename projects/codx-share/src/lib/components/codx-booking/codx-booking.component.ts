@@ -39,6 +39,7 @@ import { ɵglobal as global } from '@angular/core';
 import { CodxBookingService } from './codx-booking.service';
 import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
+import { Approver } from '../../models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-booking',
@@ -763,19 +764,22 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.resourceOwner=null;
         let curRes = this.lstResourceOwner.filter(x=>x.resourceID == data.resourceID);
         if(curRes?.length>0){
-          this.resourceOwner = curRes[0]?.owner;
+          this.resourceOwner = new Approver();
+          this.resourceOwner.roleID = curRes[0]?.owner;
         }
       }
       else{
         this.resourceOwner=null;
         let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == data?.warehouseID);
         if(curWarehourse?.length>0){
-          this.resourceOwner =curWarehourse[0]?.owner;
+          this.resourceOwner = new Approver();
+          this.resourceOwner.roleID = curWarehourse[0]?.owner;
         }
         else{
           curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
           if(curWarehourse?.length>0){
-            this.resourceOwner = curWarehourse[0]?.owner;
+            this.resourceOwner = new Approver();
+            this.resourceOwner.roleID = curWarehourse[0]?.owner;
           }
         }
       }
@@ -825,18 +829,18 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             )
           });
       } else {
-        data.approveStatus = EPCONST.A_STATUS.Approved;
-        data.write = false;
-        data.delete = false;
-        this.view.dataService.update(data).subscribe();
-        this.notificationsService.notifyCode('ES007');
-        this.codxBookingService
-          .afterApprovedManual(
-            this.formModel.entityName,
-            data.recID,
-            EPCONST.A_STATUS.Approved
-          )
-          .subscribe();
+        this.codxBookingService.approvedManual(data?.recID).subscribe((approveData:any)=>{
+          if(approveData!=null){
+            data.approveStatus=approveData?.approveStatus;
+            data.write = false;
+            data.delete = false;
+            this.view.dataService.update(data).subscribe();
+            this.notificationsService.notifyCode('SYS034');
+          }
+          else{
+            return;
+          }
+        });
       }
     } else {
       this.notificationsService.notifyCode('SYS032');
