@@ -59,7 +59,7 @@ import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledin
 })
 export class CashPaymentAdd extends UIComponent implements OnInit {
   //#region Contructor
-  @ViewChild('gridCashPayment') gridCashPayment: CodxGridviewV2Component;
+  @ViewChild('gridCash') gridCash: CodxGridviewV2Component;
   @ViewChild('gridSet') gridSet: CodxGridviewV2Component;
   @ViewChild('gridVat') gridVat: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
