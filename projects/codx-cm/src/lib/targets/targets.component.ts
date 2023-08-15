@@ -880,54 +880,40 @@ export class TargetsComponent
 
   deleteTargetLine(data) {
     this.view.dataService.dataSelected = data;
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService.alertCode('SYS030').subscribe((x) => {
-      if (x.event && x.event?.status) {
-        if (x?.event?.status == 'Y') {
-          this.api
-            .execSv(
-              'CM',
-              'ERM.Business.CM',
-              'TargetsBusiness',
-              'DeletedTargetAsync',
-              data.recID
-            )
-            .subscribe((res) => {
-              if (res) {
-                var index = this.lstTreeSearchs.findIndex(
-                  (x) => x.recID == data.recID
-                );
-                if (index != -1) {
-                  this.lstTreeSearchs.splice(index, 1);
-                  this.countTarget--;
-                }
-                this.lstDataTree = JSON.parse(
-                  JSON.stringify(this.lstTreeSearchs)
-                );
-                let lst = [];
-                this.lstDataTree.forEach((res) => {
-                  res?.items?.forEach((element) => {
-                    if (
-                      !lst.some(
-                        (item) => item?.salespersonID == element?.salespersonID
-                      )
-                    ) {
-                      lst.push(Object.assign({}, element));
-                    }
-                  });
-                });
-                this.countPersons = lst.length;
-                // this.view.dataService
-                //   .delete([this.view.dataService.dataSelected], false)
-                //   .subscribe();
-                this.notiService.notifyCode('SYS008');
-                this.detectorRef.detectChanges();
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+          var index = this.lstTreeSearchs.findIndex(
+            (x) => x.recID == data.recID
+          );
+          if (index != -1) {
+            this.lstTreeSearchs.splice(index, 1);
+            this.countTarget--;
+          }
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+          let lst = [];
+          this.lstDataTree.forEach((res) => {
+            res?.items?.forEach((element) => {
+              if (
+                !lst.some(
+                  (item) => item?.salespersonID == element?.salespersonID
+                )
+              ) {
+                lst.push(Object.assign({}, element));
               }
             });
+          });
+          this.countPersons = lst.length;
+          this.detectorRef.detectChanges();
         }
-      }
-    });
+      });
   }
 
   beforeDel(opt: RequestOption) {
