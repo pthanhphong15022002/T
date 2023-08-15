@@ -154,6 +154,8 @@ export class TargetsComponent
   popoverList: any;
   viewMode = 9;
   viewCurrent = '1';
+  viewDataValue = '1';
+
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -168,6 +170,8 @@ export class TargetsComponent
   countPersons = 0;
   predicateSearch = '';
   dataValueSearch = '';
+  isCbxValue = false;
+  probability = '1';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -364,9 +368,24 @@ export class TargetsComponent
     this.detectorRef.detectChanges();
   }
 
-  isActive(item: any): boolean {
-    return this.viewCurrent === item;
+  viewDataValueGrid(view) {
+    if (view != this.viewDataValue) {
+      this.viewDataValue = view;
+    }
+    this.isCbxValue = this.viewDataValue == '2' ? true : false;
+    this.detectorRef.detectChanges();
   }
+
+  valueChangeProbability(e) {
+    if (e) {
+      this.probability = e?.data;
+    }
+  }
+
+  isActive(item: any, type): boolean {
+    return this[type] === item;
+  }
+
   clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -662,6 +681,7 @@ export class TargetsComponent
           case 'SYS04':
             res.disabled = true;
             break;
+          case 'SYS02':
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;

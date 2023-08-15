@@ -90,7 +90,6 @@
     <div class="d-flex p-3 justify-content-between align-items-center">
       <div class="d-flex align-items-center justify-content-start">
         <div class="d-flex flex-row">
-          <!-- Lặp qua các item (ví dụ: item1 và item2) -->
           <div
             *ngFor="let item of lstCurrentView"
             class="w-130px text-center"
@@ -102,17 +101,73 @@
             (click)="viewBusinessLines(item.value)"
           >
             <div
-              [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
+              [ngClass]="
+                isActive(item.value, 'viewCurrent')
+                  ? 'cm-bg-primary'
+                  : 'view-switch'
+              "
             >
               <button
                 class="btn btn-32px min-w-60px"
                 type="button"
                 aria-expanded="false"
               >
-              <span class="me-1">{{ item.text }}</span>
-              <span class=""  *ngIf="item.value == '1'">({{countTarget}})</span>
-              <span class=""  *ngIf="item.value == '2'">({{countPersons}})</span>
+                <span class="me-1">{{ item.text }}</span>
+                <span class="" *ngIf="item.value == '1'"
+                  >({{ countTarget }})</span
+                >
+                <span class="" *ngIf="item.value == '2'"
+                  >({{ countPersons }})</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
 
+        <div class="d-flex flex-row ms-4" *ngIf="this.viewMode == 9">
+          <div
+            class="w-130px text-center"
+            [ngClass]="'cm-rounded-pill-left'"
+            (click)="viewDataValueGrid('1')"
+          >
+            <div
+              [ngClass]="viewDataValue == '1' ? 'cm-bg-primary' : 'view-switch'"
+            >
+              <button
+                class="btn btn-32px min-w-60px"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="me-1"
+                  ><codx-label
+                    name="lblViewTarget"
+                    [formModel]="view.formModel"
+                    default="Xem theo chỉ tiêu"
+                  ></codx-label
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="w-130px text-center"
+            [ngClass]="'cm-rounded-pill-right'"
+            (click)="viewDataValueGrid('2')"
+          >
+            <div
+              [ngClass]="viewDataValue == '2' ? 'cm-bg-primary' : 'view-switch'"
+            >
+              <button
+                class="btn btn-32px min-w-60px"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="me-1"
+                  ><codx-label
+                    name="lblViewDataValue"
+                    [formModel]="view.formModel"
+                    default="Xem theo doanh số thực tế"
+                  ></codx-label
+                ></span>
               </button>
             </div>
           </div>
@@ -157,6 +212,17 @@
             (valueChange)="changeCalendar($event)"
             (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
+        </div>
+        <div class="w-75px ms-2 input-32px" *ngIf="isCbxValue">
+          <codx-input
+            #codxInput
+            type="valuelist"
+            refValue="CRM055"
+            [crrValue]="probability"
+            (valueChange)="valueChangeProbability($event)"
+            field="probability"
+          >
+          </codx-input>
         </div>
         <div class="w-75px ms-2 input-32px">
           <codx-input
