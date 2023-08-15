@@ -85,10 +85,11 @@
     <codx-gridview-v2
       #grid
       funcId="ACS250"
-      [dataService]="view.dataService"
+      [dataSource]="view.dataService.data"
       entityName="AC_FAPostingAccounts"
       idField="recID"
       [templateMore]="templateMore"
+      [autoLoad]="false"
     ></codx-gridview-v2>
   </div>
 </ng-template>
