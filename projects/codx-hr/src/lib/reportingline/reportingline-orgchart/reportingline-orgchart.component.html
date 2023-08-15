@@ -127,7 +127,11 @@
       </div>
     </ng-template>
     <div *ngIf="data.isChildrent" class="d-flex mt-auto justify-content-center">
-      <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+      <span #icon class="expand-button"
+        [ngClass]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+        [ngStyle]=" { background: haveHighLight?(data?.positionID == positionID? 'var(--primary-lighter)': 'white') : 'white', 
+                      color: haveHighLight?(data?.positionID == positionID? 'var(--primary)': null) : 'black'                   
+                    }"
         (click)="loadDataChild(data,icon , $event)"></span>
     </div>
   </div>
