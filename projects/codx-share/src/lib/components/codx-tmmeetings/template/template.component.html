@@ -1,5 +1,11 @@
-<codx-form headerText="{{title}}" [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
-  [dialog]="dialog">
+<codx-form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
   <ng-template #body>
     <!-- <codx-searchbar (searchEvent)="search($event)"></codx-searchbar> -->
     <ejs-tab headerPlacement="Left">
@@ -7,25 +13,38 @@
         <e-tabitem *ngFor="let item of template">
           <ng-template #headerText class="">
             <div>
-              <span class="fw-bolder text-red" (click)="toggleDocuments(item)">{{item.templateName}}</span>
+              <span
+                class="fw-bolder text-red"
+                (click)="toggleDocuments(item)"
+                >{{ item.templateName }}</span
+              >
             </div>
-            <div><br>
-              <span>{{item.descriptions}}</span>
+            <div>
+              <br />
+              <span>{{ item.descriptions }}</span>
             </div>
           </ng-template>
           <ng-template #content>
             <div class="form-group mt-3">
               <div class="text-dark fw-bolder d-flex justify-content-start">
-                {{item.templateName}}
+                {{ item.templateName }}
               </div>
-              <div class="text-dark  d-flex justify-content-start">
-                {{item.descriptions}}
+              <div class="text-dark d-flex justify-content-start">
+                {{ item.descriptions }}
               </div>
             </div>
             <div class="body_detail p-6">
-              <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO"
-                className="MeetingsBusiness" method="UpdateContentMeetingAsync"
-                [data]="data.contents" (getContent)="getContent($event)">
+              <codx-note
+                [showMenu]="true"
+                [showMF]="true"
+                service="CO"
+                assembly="ERM.Business.CO"
+                className="MeetingsBusiness"
+                method="UpdateContentMeetingAsync"
+                [objectParentID]="data.meetingID"
+                [data]="data.contents"
+                (getContent)="getContent($event)"
+              >
               </codx-note>
             </div>
           </ng-template>
@@ -60,7 +79,6 @@
 
       </ejs-splitter>
     </ng-container> -->
-
   </ng-template>
 
   <ng-template #footer>
@@ -70,5 +88,4 @@
       </button>
     </div>
   </ng-template>
-
 </codx-form>

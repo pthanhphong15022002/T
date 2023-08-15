@@ -45,6 +45,7 @@ readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID:string = 'ViewBUID';
 readonly viewDefault:string = 'ViewDefault';
 readonly viewGroupUser:string = 'viewGroupUser';
+
 constructor(
   private injector: Injector,
   private notificationsService: NotificationsService,
@@ -131,6 +132,7 @@ getStepByStepIDAndInID(insID, stepID) {
       }
     });
 }
+
 async getListUserByOrg(lstRoles, objectType) {
   var owner = '';
   if (lstRoles != null && lstRoles.length > 0) {
@@ -208,6 +210,11 @@ cbxEmpChange(evt: any) {
     this.owner = evt;
   }
 }
+valueChangeOwnerStep($event){
+  if($event) {
+    this.ownerStep = $event;
+  }
+}
 assignTo(user:any){
   this.employeeName = user?.employeeName;
   this.orgUnitName = user?.orgUnitName;
@@ -228,7 +235,7 @@ deleteOrg($event) {
 
 
 onSaveForm() {
-  if(!this.owner?.trim() && !this.owner) {
+  if(!this.owner?.trim() && !this.owner && this.applyFor == '1') {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -291,8 +298,5 @@ setRoles() {
     this.step.roles.push(u);
   }
 }
-
-
-
 
 }
