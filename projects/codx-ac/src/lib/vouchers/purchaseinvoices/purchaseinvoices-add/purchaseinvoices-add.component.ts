@@ -30,15 +30,15 @@ import { JournalService } from '../../../journals/journals.service';
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { PurchaseInvoiceService } from '../purchase-invoices.service';
+import { PurchaseInvoiceService } from '../purchaseinvoices.service';
 
 @Component({
-  selector: 'lib-pop-add-purchase',
-  templateUrl: './pop-add-purchase.component.html',
-  styleUrls: ['./pop-add-purchase.component.scss'],
+  selector: 'lib-purchaseinvoices-add',
+  templateUrl: './purchaseinvoices-add.component.html',
+  styleUrls: ['./purchaseinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopAddPurchaseComponent extends UIComponent implements OnInit {
+export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit {
   //#region Constructor
   @ViewChild('gridPurchaseInvoiceLines')
   public gridPurchaseInvoiceLines: CodxGridviewV2Component;
@@ -479,7 +479,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
   //#region Event PurchaseInvoicesLines
   onEndAddNew(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    this.purchaseInvoiceLineService.updateDatas.clear();
+    this.purchaseInvoiceLineService.clear();
     this.purchaseInvoiceLineService.addDatas.set(line.recID, line); // ❓ wtf
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
@@ -495,7 +495,7 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   onEndEdit(line: IPurchaseInvoiceLine): void {
     line.fixedDIMs = this.genFixedDims(line);
-    this.purchaseInvoiceLineService.addDatas.clear();
+    this.purchaseInvoiceLineService.clear();
     this.purchaseInvoiceLineService.updateDatas.set(line.recID, line);
     this.purchaseInvoiceLineService
       .save(null, null, null, null, false)
@@ -564,22 +564,12 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
     if (e.type === 'beginEdit') {
       this.prevLine = { ...e.data };
 
-      if (!e.data.isAddNew) {
-        this.api
-          .exec(
-            'AC',
-            'PurchaseInvoicesLinesBusiness',
-            'BeforeEditAsync',
-            e.data
-          )
-          .subscribe();
-      }
+      this.api
+        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'BeginEditAsync', e.data)
+        .subscribe();
     }
 
     if (e.type === 'closeEdit') {
-      this.api
-        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'CloseEdit')
-        .subscribe();
     }
   }
   //#endregion
@@ -670,7 +660,13 @@ export class PopAddPurchaseComponent extends UIComponent implements OnInit {
 
   async addRow(): Promise<void> {
     // check if master data is changed
-    if (JSON.stringify(this.master) !== JSON.stringify(this.initialMaster)) {
+    const { updateColumns: a, updateColumn: b, ...rest1 } = this.master as any;
+    const {
+      updateColumns: c,
+      updateColumn: d,
+      ...rest2
+    } = this.initialMaster as any;
+    if (JSON.stringify(rest1) !== JSON.stringify(rest2)) {
       if (this.masterService.hasSaved) {
         this.masterService.updateDatas.set(this.master.recID, this.master);
       }

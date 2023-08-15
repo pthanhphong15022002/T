@@ -19,11 +19,11 @@ import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.mod
 import { PurchaseInvoices } from '../../../models/PurchaseInvoices.model';
 
 @Component({
-  selector: 'lib-pop-add-line',
-  templateUrl: './pop-add-line.component.html',
-  styleUrls: ['./pop-add-line.component.css'],
+  selector: 'lib-purchaseinvoiceslines-add',
+  templateUrl: './purchaseinvoiceslines-add.component.html',
+  styleUrls: ['./purchaseinvoiceslines-add.component.css'],
 })
-export class PopAddLineComponent extends UIComponent implements OnInit {
+export class PurchaseinvoiceslinesAddComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('idiM0') idiM0: CodxInputComponent;
   @ViewChild('idiM1') idiM1: CodxInputComponent;

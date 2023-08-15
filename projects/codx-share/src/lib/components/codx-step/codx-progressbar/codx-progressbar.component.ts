@@ -32,6 +32,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   @Input() class = '';
   @Input() status = "";
   @Input() vllData;
+  @Input() isStep = false;
 
   id = Util.uid();
   HTMLProgress = '';
@@ -49,6 +50,11 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   sizeCustom = '';
   sizespan = '';
 
+  text = '';
+  texColor = '#FFFFFF'
+  background = '#d1d1d1';
+  backgroundProgress = '';
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.progress){
       this.progressChange = JSON.parse(JSON.stringify(this.progress));
@@ -56,7 +62,10 @@ export class ProgressbarComponent implements OnInit, OnChanges {
         this.onLoad();
         this.load(Math.floor(this.progress));
       },100);
-    }    
+    } 
+    if(changes?.status || changes?.vllData){
+      this.setProgressLinear();
+    }   
   }
   ngOnInit(): void {
     this.HTMLProgress = `<div style="font-size:12px;font-weight:600;color:${this.color};fill:${this.color};margin-top: 2px;"><span></span></div>`;
@@ -110,4 +119,39 @@ export class ProgressbarComponent implements OnInit, OnChanges {
 
     }
   }
+
+  setProgressLinear(){
+    let value = this.vllData.find(vll => vll.value == this.status);
+    if(!value){return;}
+    if(this.isStep){
+      switch(this.status){
+        case "1":
+          this.text = value?.text + " " + this.progress.toFixed(0) + "%";
+          this.texColor = value?.textColor || '#FFFFFF';
+          this.background = '#d1d1d1';
+          this.backgroundProgress = value?.color;
+          break;
+        default:
+          this.text = value?.text ;
+          this.texColor = value?.textColor || '#FFFFFF';
+          this.background = value?.color || '#d1d1d1';
+          this.backgroundProgress = value?.color;
+      }
+    }else{
+      switch(this.status){
+        case "2":
+          this.text = value?.text + " " + this.progress.toFixed(0) + "%";
+          this.texColor = value?.textColor;
+          this.background = '#d1d1d1';
+          this.backgroundProgress = value?.color;
+          break;
+        default:
+          this.text = value?.text;
+          this.texColor = value?.textColor || '#FFFFFF';
+          this.background = value?.color || '#d1d1d1';
+          this.backgroundProgress = value?.color;
+      }
+    }
+  }
+
 }

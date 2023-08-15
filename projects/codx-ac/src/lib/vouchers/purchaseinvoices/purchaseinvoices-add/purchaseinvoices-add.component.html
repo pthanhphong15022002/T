@@ -82,8 +82,11 @@
 
               <button
                 id="btnAddLine"
-                class="btn btn-light-primary btn-sm d-flex align-items-center position-absolute end-0"
-                style="top: -28px"
+                class="btn btn-light-primary btn-sm rounded-5 d-flex align-items-center position-absolute end-0"
+                style="
+                  top: -32px;
+                  border: 1px solid var(--bs-primary) !important;
+                "
                 (click)="onClickAddRow()"
               >
                 <i class="icon-playlist_add icon-16"></i>
@@ -490,7 +493,8 @@
       style="top: 4px"
     >
       <button
-        class="btn btn-md btn-light-danger"
+        style="border: 1px solid var(--bs-danger) !important"
+        class="btn btn-md btn-light-danger rounded-5"
         (click)="onDiscard()"
         *ngIf="masterService.hasSaved && master.status == '0'"
       >
@@ -505,7 +509,8 @@
       <button
         *ngIf="!isEdit"
         type="button"
-        class="btn btn-md btn-light-primary"
+        style="border: 1px solid var(--bs-primary) !important"
+        class="btn btn-md btn-light-primary rounded-5"
         (click)="onClickSave(false)"
       >
         <codx-label
@@ -518,8 +523,8 @@
 
       <button
         type="button"
-        style="min-width: 60px"
-        class="btn btn-md btn-light-primary"
+        style="min-width: 60px; border: 1px solid var(--bs-primary) !important"
+        class="btn btn-md btn-light-primary rounded-5"
         (click)="onClickSave(true)"
       >
         <codx-label

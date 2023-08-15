@@ -17,8 +17,8 @@ import {
   UIComponent,
 } from 'codx-core';
 import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
-import { PopupAddSalesInvoicesLineComponent } from '../../popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
-import { SalesInvoiceService } from '../../sales-invoices.service';
+import { SalesinvoiceslinesAddComponent } from '../../salesinvoiceslines-add/salesinvoiceslines-add.component';
+import { SalesInvoiceService } from '../../salesinvoices.service';
 
 @Component({
   selector: 'lib-table-line-detail',
@@ -124,7 +124,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
 
       this.callfc
         .openForm(
-          PopupAddSalesInvoicesLineComponent,
+          SalesinvoiceslinesAddComponent,
           'This param is not working',
           500,
           700,
@@ -159,7 +159,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
 
       this.callfc
         .openForm(
-          PopupAddSalesInvoicesLineComponent,
+          SalesinvoiceslinesAddComponent,
           'This param is not working',
           500,
           700,

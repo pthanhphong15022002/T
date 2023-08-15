@@ -113,7 +113,6 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       [recID])
       .subscribe((res: any) => {
       if (res) {
-        debugger
         this.data = res;
         this.reportID = res.reportID;
         this.isRunMode = res.runMode == "1";
@@ -132,6 +131,9 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     .subscribe((res:any)=>{
       if(res){
         this.rootFunction = res;
+        this.viewBase.formModel.funcID = this.rootFunction?.functionID;
+        this.viewBase.formModel.formName = this.rootFunction?.formName;
+        this.viewBase.formModel.gridViewName = this.rootFunction?.gridViewName;
         this.pageTitle.setRootNode(this.rootFunction.customName);
         let parent: PageLink = {
           title: this.rootFunction.customName,
