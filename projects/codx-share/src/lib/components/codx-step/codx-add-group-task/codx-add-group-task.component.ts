@@ -275,6 +275,9 @@ export class CodxAddGroupTaskComponent implements OnInit {
           });
         }
       }
+    }else{
+      this.taskGroup.roles = [];
+      this.taskGroup.owner = null;
     }
   }
 }
