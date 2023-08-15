@@ -35,6 +35,8 @@ export class CodxRoleComponent implements OnInit {
   ngOnInit(): void {
   }
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.dataSource);
+    
   }
   
   shareUser(share) {

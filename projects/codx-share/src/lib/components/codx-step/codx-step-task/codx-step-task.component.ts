@@ -421,10 +421,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return { 'background-color': color?.color };
   }
 
-  getRole(task, type) {
+  getRole(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return type == 'ID' ? role?.objectID : role?.objectName;
+      task?.roles.find((role) => role.objectID == task?.owner) || task?.roles[0];
+    return role?.objectName;
   }
   //#endregion
 
