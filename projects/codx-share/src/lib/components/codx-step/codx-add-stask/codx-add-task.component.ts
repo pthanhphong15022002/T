@@ -32,7 +32,6 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
-  REQUIRESTART = ['taskName', 'endDate', 'startDate'];
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
@@ -431,19 +430,29 @@ export class CodxAddTaskComponent implements OnInit {
       this.notiService.notifyCode('DP020');
       return;
     }
-    for (let key of this.REQUIRE) {
-      if (
-        (typeof this.stepsTasks[key] === 'string' &&
-          !this.stepsTasks[key].trim()) ||
-        !this.stepsTasks[key] ||
-        this.stepsTasks[key]?.length === 0
-      ) {
-        message.push(this.view[key]);
+    if(this.isStart){
+      for (let key of this.REQUIRE) {
+        if (
+          (typeof this.stepsTasks[key] === 'string' &&
+            !this.stepsTasks[key].trim()) ||
+          !this.stepsTasks[key] ||
+          this.stepsTasks[key]?.length === 0
+        ) {
+          message.push(this.view[key]);
+        }
+      }
+    }else{
+      if (!this.stepsTasks['taskName']?.trim()) {
+        message.push(this.view['taskName']);
+      }
+      if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+        message.push(this.view['durationDay']);
       }
     }
-    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
-      message.push(this.view['durationDay']);
-    }
+    
+    // if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+    //   message.push(this.view['durationDay']);
+    // }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
       return;
