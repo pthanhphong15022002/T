@@ -145,7 +145,7 @@ export class CasesComponent
     super(inject);
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
-    })
+    });
     this.cache.functionList(this.funcID).subscribe((fun) => {
       if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
     });
@@ -153,8 +153,6 @@ export class CasesComponent
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-
-   
   }
 
   onInit(): void {
@@ -591,10 +589,13 @@ export class CasesComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval 
-      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
-        this.dataSelected.approveStatus=appoverStatus
-      } 
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.dataSelected.approveStatus
+      ) {
+        this.dataSelected.approveStatus = appoverStatus;
+      }
       this.view.dataService.update(this.dataSelected).subscribe();
     }
   }
@@ -1531,7 +1532,7 @@ export class CasesComponent
       if (res) {
         let dataValue = JSON.parse(res.dataValue);
         if (Array.isArray(dataValue)) {
-          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          let setting = dataValue.find((x) => x.Category == 'CM_Cases');
           if (setting) this.applyApprover = setting['ApprovalRule'];
         }
       }

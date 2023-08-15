@@ -15,7 +15,7 @@ import { CodxAcService } from '../codx-ac.service';
 import { NameByIdPipe } from '../pipes/nameById.pipe';
 import { IJournalPermission } from './interfaces/IJournalPermission.interface';
 import { JournalService } from './journals.service';
-import { PopupAddJournalComponent } from './popup-add-journal/popup-add-journal.component';
+import { JournalsAddComponent } from './journals-add/journals-add.component';
 import { IJournal } from './interfaces/IJournal.interface';
 
 @Component({
@@ -271,7 +271,7 @@ export class JournalsComponent extends UIComponent {
         options.FormModel = this.view.formModel;
 
         this.callfc.openSide(
-          PopupAddJournalComponent,
+          JournalsAddComponent,
           {
             formType: 'add',
             formTitle: `${e.text} ${this.functionName}`,
@@ -299,7 +299,7 @@ export class JournalsComponent extends UIComponent {
 
       this.callfc
         .openSide(
-          PopupAddJournalComponent,
+          JournalsAddComponent,
           {
             formType: 'edit',
             formTitle: `${e.text} ${this.functionName}`,
@@ -329,7 +329,7 @@ export class JournalsComponent extends UIComponent {
       options.FormModel = this.view.formModel;
 
       this.callfc.openSide(
-        PopupAddJournalComponent,
+        JournalsAddComponent,
         {
           formType: 'add',
           formTitle: `${e.text} ${this.functionName}`,

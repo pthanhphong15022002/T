@@ -116,6 +116,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
   dialogGuide: DialogRef;
+  vllDataTask;
+  vllDataStep;
 
   moreDefaut = {
     share: true,
@@ -147,6 +149,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listTaskType = res?.datas;
       }
     });
+    let DP048 = await firstValueFrom(this.cache.valueList('DP048'));
+    if (DP048.datas) {
+      this.vllDataTask = DP048?.datas;
+    }
+    let DP032 = await firstValueFrom(this.cache.valueList('DP032'));
+    if (DP048.datas) {
+      this.vllDataStep = DP032?.datas;
+    }
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
       entityName: 'DP_Instances_Steps_TaskGroups',
@@ -2211,14 +2221,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  setBackground(status){
-    return status == 1 ? { background: '#ef4023'} : (status == 2 ? { background: '#d1d1d1' } : { background: '#28a745'})
-  }
-  setBackgroundGroup(group) {
-    return group?.progress == 0
-      ? { background: '#ef4023' }
-      : group?.progress < 100 && group?.progress > 0
-      ? { background: '#d1d1d1' }
-      : { background: '#28a745' };
+  setStatusGroup(group){
+    if(!group){
+      return '1';
+    }
+    if(group?.task?.length > 0){
+      let check = group?.task?.some(task => task?.status != '1');
+      if(check || (group?.progress > 0 && group?.progress < 100)) {
+        return '2';
+      }else{
+        return group?.progress <= 0 ? "1" : "3";
+      }
+    }else{
+      return group?.progress > 0 && group?.progress < 100 ? "2" : (group?.progress <= 0 ? "1" : "3");
+    }
   }
 }

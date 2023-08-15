@@ -15,25 +15,6 @@
     </div>
   </div>
   <div>
-    <!-- <ng-container  *ngIf=" isPopupUserCbb"> 
-      <codx-combobox-popup
-      [comboboxName]="'Users'"
-      [field]="'cbbUser'"
-      [multiple]="multiple"
-      [width]="700"
-      [height]="600"
-      [value]=""
-      (clickSave)="applyUser($event, dataSource)"
-    >
-    </codx-combobox-popup>
-    <codx-input
-      type="combobox"
-      [refValue]="'Users'"
-      [multiple]="false"
-      [showInput]="false"
-    >
-    </codx-input>
-    </ng-container> -->
     <ng-container
       *ngIf="dataSource.length > 0"
       [ngTemplateOutlet]="showUser"
@@ -101,3 +82,23 @@
   >
   </codx-combobox-popup>
 </ng-template>
+
+    <!-- <ng-container  *ngIf=" isPopupUserCbb"> 
+      <codx-combobox-popup
+      [comboboxName]="'Users'"
+      [field]="'cbbUser'"
+      [multiple]="multiple"
+      [width]="700"
+      [height]="600"
+      [value]=""
+      (clickSave)="applyUser($event, dataSource)"
+    >
+    </codx-combobox-popup>
+    <codx-input
+      type="combobox"
+      [refValue]="'Users'"
+      [multiple]="false"
+      [showInput]="false"
+    >
+    </codx-input>
+    </ng-container> -->

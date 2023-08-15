@@ -47,11 +47,11 @@
 
 <ng-template #progressLinear let-data="value">
   <div
-    class="progress mt-1 h-20px w-110px"
-    [ngStyle]="{ background: '#ef4023' }"
+    class="progress mt-1 ms-1 h-20px w-110px"
+    [ngStyle]="{ background: background}"
   >
     <div
-      [ngStyle]="status == '2' ? { background: '#0078ff' } : {}"
+      [ngStyle]="{ background: backgroundProgress}"
       class="progress-done"
       role="progressbar"
       [style.width]="progress + '%'"
@@ -59,10 +59,6 @@
       aria-valuemin="0"
       aria-valuemax="100"
     ></div>
-    <span class="progress-text" *ngIf="status == '1'"> Mới </span>
-    <span class="progress-text" *ngIf="status == '2'">
-      Đang thực hiện {{ progress || 0 }}%
-    </span>
-    <span class="progress-text" *ngIf="status == '3'"> Hoàn thành </span>
+    <span class="progress-text" [ngStyle]="{color: texColor}"> {{text}} </span>
   </div>
 </ng-template>
