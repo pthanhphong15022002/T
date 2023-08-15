@@ -63,7 +63,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
         this.load(Math.floor(this.progress));
       },100);
     } 
-    if(changes?.status){
+    if(changes?.status || changes?.vllData){
       this.setProgressLinear();
     }   
   }
