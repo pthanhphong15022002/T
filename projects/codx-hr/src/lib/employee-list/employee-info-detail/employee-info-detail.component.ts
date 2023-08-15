@@ -132,7 +132,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   formModel;
 
   employeeID;
-  crrTab: number = 0;
+  //crrTab: number = 0;
 
   lstAsset: any;
 
@@ -721,6 +721,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   pageNum: number = 0;
   maxPageNum: number = 0;
   crrIndex: number = 0;
+  totalCount: number = 0;
+  fromView: string = '';
 
   currentDate = new Date();
   passPortIsExpired = false;
@@ -892,6 +894,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   onInit(): void {
     //ẩn logo
     this.layout.setLogo(null);
+    debugger
 
     //ẩn số đếm tổng nhân viên
     this.pageTitle.setBreadcrumbs([]);
@@ -899,315 +902,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
-        this.clickTab(this.lstTab[this.crrTab]);
-        // this.crrFuncTab = this.lstTab[this.crrTab + 4]?.functionID;
-        // this.hrService.getFunctionList(this.crrFuncTab).subscribe((res)=>{
-        //   switch(this.crrFuncTab){
-        //     case this.curriculumVitaeFuncID:
-        //       this.lstFuncCurriculumVitae = res;
-        //       this.lstBtnAdd = []
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eInfoFuncID:
-        //             this.curriculumVitaePermission.eInfoFuncID.view = true;
-        //             this.curriculumVitaePermission.eInfoFuncID.write = res[i].write;
-        //             this.curriculumVitaePermission.eInfoFuncID.delete = res[i].delete;
-        //             break;
-
-        //           case this.legalInfoFuncID:
-        //             this.curriculumVitaePermission.legalInfoFuncID.view = true;
-        //             this.curriculumVitaePermission.legalInfoFuncID.write = res[i].write;
-        //             this.curriculumVitaePermission.legalInfoFuncID.delete = res[i].delete;
-        //             this.hrService.getFunctionList(this.legalInfoFuncID).subscribe((res) => {
-        //               for(let i = 0; i < res.length; i++){
-        //                 if(res[i].functionID == this.ePassportFuncID){
-        //                   this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.view = true;
-        //                   this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.write = res[i].write;
-        //                   this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.delete = res[i].delete;
-        //                   if(res[i].write == true){
-        //                     this.lstBtnAdd.push(res[i]);
-        //                   }
-        //                 }
-        //                 else if(res[i].functionID == this.eVisaFuncID){
-        //                   this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.view = true;
-        //                   this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.write = res[i].write;
-        //                   this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.delete = res[i].delete;
-        //                   if(res[i].write == true){
-        //                     this.lstBtnAdd.push(res[i]);
-        //                   }
-        //                 }
-        //               }
-        //             })
-        //             break;
-
-        //             case this.foreignWorkerFuncID:
-        //               this.curriculumVitaePermission.foreignWorkerFuncID.view = true;
-        //               this.curriculumVitaePermission.foreignWorkerFuncID.write = res[i].write;
-        //               this.curriculumVitaePermission.foreignWorkerFuncID.delete = res[i].delete;
-        //               this.hrService.getFunctionList(this.foreignWorkerFuncID).subscribe((res) => {
-        //                 debugger
-        //                 for(let i = 0; i < res.length; i++){
-        //                   if(res[i].functionID == this.eWorkPermitFuncID){
-        //                     this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view = true;
-        //                     this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write = res[i].write;
-        //                     this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.delete = res[i].delete;
-        //                     if(res[i].write == true){
-        //                       this.lstBtnAdd.push(res[i]);
-        //                     }
-        //                   }
-        //                 }
-        //               })
-        //               break;
-                  
-        //           case this.ePartyFuncID:
-        //             this.curriculumVitaePermission.ePartyFuncID.view = true;
-        //             this.curriculumVitaePermission.ePartyFuncID.write = res[i].write;
-        //             this.curriculumVitaePermission.ePartyFuncID.delete = res[i].delete;
-        //             break;
-                  
-        //           case this.eFamiliesFuncID:
-        //             this.curriculumVitaePermission.eFamiliesFuncID.view = true;
-        //             this.curriculumVitaePermission.eFamiliesFuncID.write = res[i].write;
-        //             this.curriculumVitaePermission.eFamiliesFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-
-        //           case this.eExperienceFuncID:
-        //             this.curriculumVitaePermission.eExperienceFuncID.view = true;
-        //             this.curriculumVitaePermission.eExperienceFuncID.write = res[i].write;
-        //             this.curriculumVitaePermission.eExperienceFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //         }
-        //       }
-        //       // this.lstBtnAdd = this.hrService.sortAscByProperty(this.lstBtnAdd, 'sorting');
-        //       debugger
-        //       break;
-
-        //     case this.jobInfoFuncID:
-        //       this.lstFuncJobInfo = res;
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.jobGeneralFuncID:
-        //             this.jobInfoPer.jobGeneralFuncID.view = true;
-        //             this.jobInfoPer.jobGeneralFuncID.write = res[i].write;
-        //             this.jobInfoPer.jobGeneralFuncID.delete = res[i].delete;
-        //             break;
-        //           case this.eTimeCardFuncID:
-        //             this.jobInfoPer.eTimeCardFuncID.view = true;
-        //             this.jobInfoPer.eTimeCardFuncID.write = res[i].write;
-        //             this.jobInfoPer.eTimeCardFuncID.delete = res[i].delete;
-        //             break;
-        //           case this.eCalSalaryFuncID:
-        //             this.jobInfoPer.eCalSalaryFuncID.view = true;
-        //             this.jobInfoPer.eCalSalaryFuncID.write = res[i].write;
-        //             this.jobInfoPer.eCalSalaryFuncID.delete = res[i].delete;
-        //             break;
-        //         }
-        //       }
-        //       break;
-        //     case this.salaryBenefitInfoFuncID:
-        //       this.lstBtnAdd = []
-        //       this.lstFuncSalaryBenefit = res;
-        //       debugger
-        //       for(let i = 0; i< res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eBasicSalaryFuncID:
-        //             this.salaryBenefitInfoPer.eBasicSalaryFuncID.view = true;
-        //             this.salaryBenefitInfoPer.eBasicSalaryFuncID.write = res[i].write;
-        //             this.salaryBenefitInfoPer.eBasicSalaryFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.benefitFuncID:
-        //             this.salaryBenefitInfoPer.benefitFuncID.view = true;
-        //             this.salaryBenefitInfoPer.benefitFuncID.write = res[i].write;
-        //             this.salaryBenefitInfoPer.benefitFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //         }
-        //       }
-        //       this.initEmpSalary();
-        //       break;
-        //     case this.workingProcessInfoFuncID:
-        //       this.lstBtnAdd = []
-        //       this.lstFuncHRProcess = res;
-        //       debugger
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eContractFuncID:
-        //             this.workingProcessInfoPer.eContractFuncID.view = true;
-        //             this.workingProcessInfoPer.eContractFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.eContractFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.appointionFuncID:
-        //             this.workingProcessInfoPer.appointionFuncID.view = true;
-        //             this.workingProcessInfoPer.appointionFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.appointionFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.dayoffFuncID:
-        //             this.workingProcessInfoPer.dayoffFuncID.view = true;
-        //             this.workingProcessInfoPer.dayoffFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.dayoffFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eBusinessTravelFuncID:
-        //             this.workingProcessInfoPer.eBusinessTravelFuncID.view = true;
-        //             this.workingProcessInfoPer.eBusinessTravelFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.eBusinessTravelFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.awardFuncID:
-        //             this.workingProcessInfoPer.awardFuncID.view = true;
-        //             this.workingProcessInfoPer.awardFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.awardFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eDisciplineFuncID:
-        //             this.workingProcessInfoPer.eDisciplineFuncID.view = true;
-        //             this.workingProcessInfoPer.eDisciplineFuncID.write = res[i].write;
-        //             this.workingProcessInfoPer.eDisciplineFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //         }
-        //       }
-        //       // this.lstBtnAdd = this.hrService.sortAscByProperty(this.lstBtnAdd, 'sorting');
-        //       this.initEmpProcess();
-        //       break;
-        //     case this.knowledgeInfoFuncID:
-        //       this.lstBtnAdd = []
-        //       this.lstFuncKnowledge = res;
-        //       debugger
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eDegreeFuncID:
-        //             this.knowledgeInfoPer.eDegreeFuncID.view = true;
-        //             this.knowledgeInfoPer.eDegreeFuncID.write = res[i].write;
-        //             this.knowledgeInfoPer.eDegreeFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eCertificateFuncID:
-        //             this.knowledgeInfoPer.eCertificateFuncID.view = true;
-        //             this.knowledgeInfoPer.eCertificateFuncID.write = res[i].write;
-        //             this.knowledgeInfoPer.eCertificateFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eSkillFuncID:
-        //             this.knowledgeInfoPer.eSkillFuncID.view = true;
-        //             this.knowledgeInfoPer.eSkillFuncID.write = res[i].write;
-        //             this.knowledgeInfoPer.eSkillFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eTrainCourseFuncID:
-        //             this.knowledgeInfoPer.eTrainCourseFuncID.view = true;
-        //             this.knowledgeInfoPer.eTrainCourseFuncID.write = res[i].write;
-        //             this.knowledgeInfoPer.eTrainCourseFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //         }
-        //       }
-        //       this.initEmpKnowledge();
-        //       break;
-        //     case this.healthInfoFuncID:
-        //       this.lstBtnAdd = []
-        //       this.lstFuncHealth = res;
-        //       debugger
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eHealthFuncID:
-        //             this.healthInfoPer.eHealthFuncID.view = true;
-        //             this.healthInfoPer.eHealthFuncID.write = res[i].write;
-        //             this.healthInfoPer.eHealthFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eDiseasesFuncID:
-        //             this.healthInfoPer.eDiseasesFuncID.view = true;
-        //             this.healthInfoPer.eDiseasesFuncID.write = res[i].write;
-        //             this.healthInfoPer.eDiseasesFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eVaccinesFuncID:
-        //             this.healthInfoPer.eVaccinesFuncID.view = true;
-        //             this.healthInfoPer.eVaccinesFuncID.write = res[i].write;
-        //             this.healthInfoPer.eVaccinesFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //           case this.eAccidentsFuncID:
-        //             this.healthInfoPer.eAccidentsFuncID.view = true;
-        //             this.healthInfoPer.eAccidentsFuncID.write = res[i].write;
-        //             this.healthInfoPer.eAccidentsFuncID.delete = res[i].delete;
-        //             if(res[i].write == true){
-        //               this.lstBtnAdd.push(res[i]);
-        //             }
-        //             break;
-        //         }
-        //       }
-        //       this.initEmpHealth();
-        //       break;
-        //     case this.quitJobInfoFuncID:
-        //       this.lstFuncQuitJob = res;
-        //       debugger
-        //       for(let i = 0; i < res.length; i++){
-        //         switch(res[i].functionID){
-        //           case this.eQuitJobFuncID:
-        //             this.quitjobInfoPer.eQuitJobFuncID.view = true;
-        //             this.quitjobInfoPer.eQuitJobFuncID.write = res[i].write;
-        //             this.quitjobInfoPer.eQuitJobFuncID.delete = res[i].delete;
-        //             break;
-        //         }
-        //       }
-        //       this.lstBtnAdd = null;
-        //       break;
-        //   }
-        //   // if(this.crrFuncTab == this.curriculumVitaeFuncID){
-        //   //   this.lstFuncCurriculumVitae = res;
-        //   // }
-        //   // else if(this.crrFuncTab == this.jobInfoFuncID){
-        //   //   this.lstFuncJobInfo = res;
-        //   // }
-        // })
+        this.clickTab(this.lstTab[0]);
       });
     }
     this.routeActive.queryParams.subscribe((params) => {
+      if(this.crrFuncTab){
+        this.clickTab({functionID: this.crrFuncTab});
+      }
       this.employeeID = params['employeeID'];
       this.pageNum = params['page'];
-      this.maxPageNum = params['totalPage']
-
+      // this.maxPageNum = params['totalPage']
+      // this.totalCount = params['totalCount']
+      // this.fromView = params['from']
       if(this.employeeID){
         // Load full thong tin employee
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
@@ -1245,13 +951,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.loadedESalary = true;
             this.listCrrBenefit = res[6];
             this.loadEBenefit = true;
-            this.crrEContract = res[7]
-            debugger
+            this.crrEContract = res[7];
           }
+          this.getManagerEmployeeInfoById();
         })
       }
       if (this.employeeID) {
         if (history.state) {
+          this.totalCount = history.state.totalCount;
+          this.maxPageNum = history.state.totalPage;
+          this.fromView = history.state.from;
           this.listEmp = history.state.data;
           if(history.state.request)
           {
@@ -1523,7 +1232,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.HandleEVaccinesInfo('Xem chi tiết', 'view', data);
         break;
     }
-    debugger
   }
 
   initSortModel() {
@@ -3393,10 +3101,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           // this.lstBtnAdd = this.hrService.sortAscByProperty(this.lstBtnAdd, 'sorting');
-          debugger
           break;
 
         case this.jobInfoFuncID:
+          debugger
+          this.lineManager = null;
+          this.indirectManager = null;
           this.lstBtnAdd = []
           this.lstFuncJobInfo = res;
           for(let i = 0; i < res.length; i++){
@@ -3422,7 +3132,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         case this.salaryBenefitInfoFuncID:
           this.lstBtnAdd = []
           this.lstFuncSalaryBenefit = res;
-          debugger
           for(let i = 0; i< res.length; i++){
             switch(res[i].functionID){
               case this.eBasicSalaryFuncID:
@@ -3448,7 +3157,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         case this.workingProcessInfoFuncID:
           this.lstBtnAdd = []
           this.lstFuncHRProcess = res;
-          debugger
           for(let i = 0; i < res.length; i++){
             switch(res[i].functionID){
               case this.eContractFuncID:
@@ -3507,7 +3215,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         case this.knowledgeInfoFuncID:
           this.lstBtnAdd = []
           this.lstFuncKnowledge = res;
-          debugger
           for(let i = 0; i < res.length; i++){
             switch(res[i].functionID){
               case this.eDegreeFuncID:
@@ -3549,7 +3256,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         case this.healthInfoFuncID:
           this.lstBtnAdd = []
           this.lstFuncHealth = res;
-          debugger
           for(let i = 0; i < res.length; i++){
             switch(res[i].functionID){
               case this.eHealthFuncID:
@@ -3590,7 +3296,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           break;
         case this.quitJobInfoFuncID:
           this.lstFuncQuitJob = res;
-          debugger
           for(let i = 0; i < res.length; i++){
             switch(res[i].functionID){
               case this.eQuitJobFuncID:
@@ -3685,7 +3390,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
     option.Width = '550px';
-    debugger
     let dialogAdd = this.callfunc.openSide(
       PopupEAssurTaxBankComponent,
       {
@@ -3706,7 +3410,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   editEmployeeSelfInfo(actionHeaderText) {
-    debugger
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
     option.Width = '850px';
@@ -3735,6 +3438,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.eInfoFormModel;
     option.Width = '550px';
+    let oldManagerID = this.infoPersonal.lineManager
+    let indirectManagerID = this.infoPersonal.indirectManager
     let dialogEdit = this.callfunc.openSide(
       PopupJobGeneralInfoComponent,
       {
@@ -3757,7 +3462,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             });
         }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
-        // this.getManagerEmployeeInfoById();
+        if(oldManagerID != res.event.lineManager || indirectManagerID != res.event.indirectManager){
+          this.getManagerEmployeeInfoById();
+        }
         this.df.detectChanges();
       }
     });
@@ -4322,7 +4029,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.updateGridView(this.appointionGridView, actionType, res.event);
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
           if(res){
-            debugger
             this.infoPersonal = res[0];
             this.infoPersonal.PositionName = res[1]
             // this.lstOrg = res[2]
@@ -4480,7 +4186,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    debugger
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.eContractFormModel;
@@ -4782,38 +4487,81 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
 
   nextEmp() {
-    if (this.listEmp) {
+    if (this.listEmp.length <= this.totalCount) {
       // console.log('vi tri tim trong mang', this.listEmp.findIndex(
-      //   (x: any) => this.employeeID == x['EmployeeID']
-      // ))
-      this.crrIndex += 1;
-      if(this.crrIndex == this.listEmp.length - 1){
-        // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
-        
-        // let requestNewEmpPage = new DataRequest();
-        // requestNewEmpPage.entityName = this.request.entityName;
-        // requestNewEmpPage.gridViewName = this.request.gridViewName;
-        // requestNewEmpPage.page = this.request.page + 1;
-        // requestNewEmpPage.predicate = this.request.predicate;
-        // requestNewEmpPage.dataValue = this.request.dataValue;
-        // requestNewEmpPage.selector = "EmployeeID;";
-        // requestNewEmpPage.pageSize = this.request.pageSize;
-        this.request.page += 1;
-
-
-        this.hrService.loadData('HR', this.request).subscribe((res) =>{
-          if(res && res[0].length > 0){
-            this.listEmp.push(...res[0])
-            this.navigateEmp(0, true);
+        //   (x: any) => this.employeeID == x['EmployeeID']
+        // ))
+        this.crrIndex += 1;
+      if(this.fromView == 'listView'){
+        if(this.crrIndex == this.listEmp.length - 1 || (this.crrIndex == this.listEmp.length && this.crrIndex < this.totalCount -1)){
+          if(this.crrIndex == this.listEmp.length && this.crrIndex < this.totalCount -1){
+            this.request.page = this.request.page;
           }
           else{
-            this.navigateEmp(0);
+            this.request.page += 1;
           }
-        })
+
+          this.hrService.loadData('HR', this.request).subscribe((res) =>{
+            if(res && res[0].length > 0){
+              this.listEmp.push(...res[0])
+              this.navigateEmp(0, true);
+            }
+            else{
+              this.navigateEmp(0);
+            }
+          })
+        }
+        else{
+          this.navigateEmp(0);
+        }
+        // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
+        //   this.navigateEmp(0);
+        // }
+      }else if(this.fromView == 'gridView'){
+        if(this.crrIndex == this.listEmp.length){
+
+          this.request.page += 1;
+          this.hrService.loadData('HR', this.request).subscribe((res) =>{
+            if(res && res[0].length > 0){
+              this.listEmp.push(...res[0])
+              this.navigateEmp(0, true);
+            }
+            else{
+              this.navigateEmp(0);
+            }
+          })
+        }
+        if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length) {
+          this.navigateEmp(0);
+        }
       }
-      if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
-        this.navigateEmp(0);
-      }
+      // if(this.crrIndex == this.listEmp.length - 1){
+      //   // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
+        
+      //   // let requestNewEmpPage = new DataRequest();
+      //   // requestNewEmpPage.entityName = this.request.entityName;
+      //   // requestNewEmpPage.gridViewName = this.request.gridViewName;
+      //   // requestNewEmpPage.page = this.request.page + 1;
+      //   // requestNewEmpPage.predicate = this.request.predicate;
+      //   // requestNewEmpPage.dataValue = this.request.dataValue;
+      //   // requestNewEmpPage.selector = "EmployeeID;";
+      //   // requestNewEmpPage.pageSize = this.request.pageSize;
+      //   this.request.page += 1;
+
+
+      //   this.hrService.loadData('HR', this.request).subscribe((res) =>{
+      //     if(res && res[0].length > 0){
+      //       this.listEmp.push(...res[0])
+      //       this.navigateEmp(0, true);
+      //     }
+      //     else{
+      //       this.navigateEmp(0);
+      //     }
+      //   })
+      // }
+      // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
+      //   this.navigateEmp(0);
+      // }
       this.loadDataWhenChangeEmp();
       this.refreshGridViews();
     }
@@ -4832,11 +4580,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         {
           employeeID: this.listEmp[this.crrIndex + isNextEmp]?.EmployeeID,
           page: this.pageNum.toString(),
-          totalPage: this.maxPageNum
+          // totalPage: this.maxPageNum,
+          // totalCount: this.totalCount,
+          // from: this.fromView
         },
         {
           data: this.listEmp,
           request: this.request,
+          totalPage: this.maxPageNum,
+          totalCount: this.totalCount,
+          from: this.fromView,
         }
       );
     }
@@ -6028,35 +5781,31 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialog.close();
   }
 
-  // getManagerEmployeeInfoById() {
-  //   if (this.infoPersonal?.lineManager) {
-  //     let empRequest = new DataRequest();
-  //     empRequest.entityName = 'HR_Employees';
-  //     empRequest.dataValues = this.infoPersonal.lineManager;
-  //     empRequest.predicates = 'EmployeeID=@0';
-  //     empRequest.pageLoading = false;
-  //     this.hrService.loadData('HR', empRequest).subscribe((res: any) => {
-  //       if (Array.isArray(res) && res[1] > 0) {
-  //         this.lineManager = res[0][0];
-  //       }
-  //     });
-  //   }
-    // if (this.infoPersonal?.indirectManager) {
-    //   let empRequest = new DataRequest();
-    //   empRequest.entityName = 'HR_Employees';
-    //   empRequest.dataValues = this.infoPersonal.indirectManager;
-    //   empRequest.predicates = 'EmployeeID=@0';
-    //   empRequest.pageLoading = false;
-    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-    //     if (emp[1] > 0) {
-    //       this.indirectManager = emp[0][0];
-    //     }
-    //   });
-    //   this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-    //     if (emp[1] > 0) {
-    //       this.indirectManager = emp[0][0];
-    //     }
-    //   });
-    // }
+  getManagerEmployeeInfoById() {
+    if (this.infoPersonal?.lineManager) {
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.infoPersonal.lineManager;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((res: any) => {
+        if (Array.isArray(res) && res[1] > 0) {
+          this.lineManager = res[0][0];
+        }
+      });
+    }
+    if (this.infoPersonal?.indirectManager) {
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.infoPersonal.indirectManager;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.indirectManager = emp[0][0];
+        }
+      });
+    }
   }
+}
 

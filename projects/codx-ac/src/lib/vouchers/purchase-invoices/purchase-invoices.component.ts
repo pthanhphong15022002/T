@@ -5,7 +5,7 @@ import {
   ElementRef,
   Injector,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -19,7 +19,7 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { IAcctTran } from '../sales-invoices/interfaces/IAcctTran.interface';
@@ -89,6 +89,8 @@ export class PurchaseinvoicesComponent
   };
   gvsAcctTrans: any;
   journal: IJournal;
+
+  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
 
   constructor(
     inject: Injector,
@@ -167,11 +169,13 @@ export class PurchaseinvoicesComponent
         ];
       });
 
+    this.emitDefault();
+
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.purchaseInvoiceService.journal = this.journal = journal;
     });
 
-    // this.purchaseInvoiceService.getCache();
+    this.purchaseInvoiceService.initCache();
   }
 
   ngAfterViewInit() {
@@ -233,25 +237,35 @@ export class PurchaseinvoicesComponent
 
   onClickAdd(e) {
     this.view.dataService
-      .addNew(() => this.getDefault())
+      .addNew(() =>
+        this.defaultSubject
+          .asObservable()
+          .pipe(distinctUntilKeyChanged('recID'))
+      )
       .subscribe((res: any) => {
+        console.log('onClickAdd', res);
         if (res) {
           let options = new SidebarModel();
           options.DataService = this.view.dataService;
           options.FormModel = this.view.formModel;
           options.isFull = true;
 
-          this.callfc.openSide(
-            PopAddPurchaseComponent,
-            {
-              formType: 'add',
-              formTitle: `${e.text} ${this.funcName}`,
-            },
-            options,
-            this.view.funcID
-          );
+          this.callfc
+            .openSide(
+              PopAddPurchaseComponent,
+              {
+                formType: 'add',
+                formTitle: `${e.text} ${this.funcName}`,
+              },
+              options,
+              this.view.funcID
+            )
+            .closed.subscribe(() => {
+              this.emitDefault();
+            });
         }
-      });
+      })
+      .unsubscribe();
   }
 
   onSelectChange(e) {
@@ -443,6 +457,15 @@ export class PurchaseinvoicesComponent
   //#endregion
 
   //#region Function
+  emitDefault(): void {
+    this.getDefault().subscribe((res) => {
+      this.defaultSubject.next({
+        ...res,
+        recID: res.data.recID,
+      });
+    });
+  }
+
   groupBy(arr: any[], key: string): any[][] {
     return Object.values(
       arr.reduce((acc, current) => {

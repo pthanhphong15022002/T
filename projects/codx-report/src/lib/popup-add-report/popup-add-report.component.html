@@ -24,62 +24,130 @@
       ></codx-label>
     </h6>
     <div class="container" id="reportInfo" *ngIf="data">
+      <!-- uploader template -->
       <div class="row mt-5">
-        <div class="col-12">
-          <div class="border border-secondary h-100">
-            <!-- <div *ngIf="!checkFile" class="ms-3 mt-2">
-              <span >{{data?.reportName}}</span>
-            </div> -->
-
-            <div class="m-3">
-              <!-- <codx-attachment
-                #attachment
-                [objectType]="'SYS_ReportList'"
-                hideBtnSave="1"
-                hideFolder="1"
-                hideUploadBtn="1"
-                hideDes="1"
-                hideImageUpload="0"
-                hideImageThumb="0"
-                [functionID]="rootFunction"
-                [objectId]="data.recID"
-                [allowMultiFile]="'0'"
-                [idBrowse]="'add'"
-                [allowExtensions]="'.rdl, .rdlc'"
-              >
-              </codx-attachment> -->
-
-              <ejs-uploader
-                #uploader
-                id="preloadfileupload"
-                [autoUpload]="false"
-                [multiple]="false"
-                locale="vi"
-                [allowedExtensions]="'.rdl,.rdlc'"
-                (selected)="fileSelected($event)"
-                (removing)="onFileRemove($event)"
-                (beforeUpload)="beforeUpload($event)"
-                (uploading)="uploading($event)"
-                [files]="files"
-                (fileListRendering)="fileRendering($event)"
-              >
-              </ejs-uploader>
+        <!-- template -->
+        <div class="col-4">
+          <div class="rp_template-item rp_template-seleted">
+            <div class="container py-2">
+              <div class="row ">
+                <div class="d-flex align-items-center">
+                  <img src="../../../assets/codx/dms/file.svg" class="rp_template-item_rdl">
+                  <ng-container *ngIf="displayMode != '3' && displayMode != '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-light-primary" (click)="clickUpload('0')">
+                      <i class="icon-cloud_upload i-14"></i>
+                      <span>Upload</span>
+                    </button>
+                    <button class="btn btn-light-primary" (click)="clickDowload('0')">
+                      <i class="icon-cloud_download i-14"></i>
+                      <span>Dowload</span>
+                    </button>
+                  </div>
+                  <div class="d-none">
+                    <ejs-uploader
+                      #uploader
+                      id="preloadfileupload"
+                      [autoUpload]="false"
+                      [multiple]="false"
+                      locale="vi"
+                      [allowedExtensions]="'.rdl,.rdlc'"
+                      (selected)="fileSelected($event)"
+                      (removing)="onFileRemove($event)"
+                      (beforeUpload)="beforeUpload($event)"
+                      (uploading)="uploading($event)"
+                      [files]="files"
+                      (fileListRendering)="fileRendering($event)"
+                    >
+                    </ejs-uploader>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- <div class="col-2 d-flex justify-content-end">
-          <button
-            type="button"
-            class="btn btn-light-primary float-right h-40px"
-            (click)="popup()"
-          >
-            <i class="icon-cloud_upload fs-5"></i
-            ><span>
-              <codx-label name="UploadFile" default="Upload File"></codx-label>
-            </span>
-          </button>
-        </div> -->
+        <div class="col-4">
+          <div class="rp_template-item">
+            <div class="container py-2">
+              <div class="row">
+                <div class="d-flex align-items-center">
+                  <img src="../../../assets/codx/dms/xls.svg" class="rp_template-item_rdl">
+                  <ng-container *ngIf="displayMode == '3';else tmpDefaultName">
+                      <span class="ms-2">{{data.reportName}}</span>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-light-primary" (click)="clickUpload('3')">
+                      <i class="icon-cloud_upload i-14"></i>
+                      <span>Upload</span>
+                    </button>
+                    <button class="btn btn-light-primary" (click)="clickDowload('3')">
+                      <i class="icon-cloud_download i-14"></i>
+                      <span>Dowload</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="rp_template-item">
+            <div class="container py-2">
+              <div class="row">
+                <div class="d-flex align-items-center">
+                  <img src="../../../assets/codx/dms/doc.svg" class="rp_template-item_rdl">
+                  <ng-container *ngIf="displayMode == '4';else tmpDefaultName">
+                    <span class="ms-2">{{data.reportName}}</span>
+                </ng-container>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-light-primary" (click)="clickUpload('4')">
+                      <i class="icon-cloud_upload i-14"></i>
+                      <span>Upload</span>
+                    </button>
+                    <button class="btn btn-light-primary" (click)="clickDowload('4')">
+                      <i class="icon-cloud_download i-14"></i>
+                      <span>Dowload</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- radio button -->
+      <div class="row mt-5">
+        <div class="col">
+          <codx-input crrValue="0" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem mẫu báo cáo gốc" [checked]="!displayMode || displayMode == '' || displayMode == '0'" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col">
+          <codx-input crrValue="1" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem trang in báo cáo" [checked]="displayMode == '1'" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col">
+          <codx-input crrValue="2" [disabled]="displayMode == '3' || displayMode == '4'" field="displayMode" type="radio" name="rdReport" label="Xem dạng PDF" [checked]="displayMode == '2'" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col">
+          <codx-input crrValue="3" [disabled]="displayMode != '3'" field="displayMode" type="radio" name="rdReport" label="Mẫu excel" [checked]="displayMode == '3'" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col">
+          <codx-input crrValue="4" [disabled]="displayMode != '4'" field="displayMode" type="radio" name="rdReport" label="Mẫu word" [checked]="displayMode == '4'" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+      <!-- report infor -->
       <div class="row mt-5">
         <div class="col-12">
           <codx-label
@@ -171,6 +239,9 @@
       </div>
     </div>
   </div>
+  <ng-template #tmpDefaultName>
+    <span class="ms-2">Mẫu báo cáo</span>
+  </ng-template>
 </ng-template>
 
 <ng-template #tabParam>
@@ -570,14 +641,13 @@
     <div class="d-flex justify-content-start w-50">
       <button type="button" class="btn btn-light-info me-3" (click)="download()" *ngIf="data?.reportID">
         <i class="icon-i-cloud-download fs-5"></i><span>
-          <codx-label name="DownloadRoot" formName="sys" default="Tải tệp gốc"></codx-label>
+          <codx-label name="lblDownloadRoot" formName="sys" default="Tải mẫu báo cáo gốc"></codx-label>
         </span>
       </button>
     </div>
     <div class="d-flex justify-content-end w-50">
-
       <button [disabled]="isBlockBtn" type="button" class="btn btn-primary ms-1" (click)="saveForm()">
-        <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+        <codx-label name="lblSave" formName="sys" default="Lưu"></codx-label>
       </button>
     </div>
   </div>

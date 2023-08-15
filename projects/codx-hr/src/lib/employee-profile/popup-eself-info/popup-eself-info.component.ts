@@ -25,6 +25,11 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
   data;
+  oldDistrictID: any;
+  oldTDistrictID: any;
+
+  oldProvinceID: any;
+  oldTProvinceID: any;
   saveflag = false;
   isAfterRender = false;
   action: '';
@@ -64,13 +69,57 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
   initForm() {
     this.formGroup.patchValue(this.data);
+    this.oldDistrictID = this.data.districtID;
+    this.oldTDistrictID = this.data.tDistrictID;
+    this.oldProvinceID = this.data.provinceID;
+    this.oldTProvinceID = this.data.tProvinceID;
     this.formModel.currentData = this.data;
     this.cr.detectChanges();
     this.isAfterRender = true;
   }
 
+  onChangeProvince(evt){
+    let newVal = evt.data
+    if(newVal != this.oldProvinceID){
+      this.oldProvinceID = newVal;
+      this.data.districtID = null;
+      this.data.wardID = null;
+      this.formGroup.patchValue(this.data);
+    }
+  }
+
+  onChangeTProvince(evt){
+    let newVal = evt.data
+    if(newVal != this.oldTProvinceID){
+      this.oldTProvinceID = newVal;
+      this.data.tDistrictID = null;
+      this.data.tWardID = null;
+      this.formGroup.patchValue(this.data);
+    }
+  }
+
+  onChangeDistrict(evt){
+    debugger
+    let newVal = evt.data
+    if(newVal != this.oldDistrictID){
+      this.oldDistrictID = newVal;
+      this.data.wardID = null;
+      this.formGroup.patchValue(this.data);
+    }
+  }
+
+  onChangeTDistrict(evt){
+    debugger
+    let newVal = evt.data
+    if(newVal != this.oldTDistrictID){
+      this.oldTDistrictID = newVal;
+      this.data.tWardID = null;
+      this.formGroup.patchValue(this.data);
+    }
+  }
+
   renderTrainFieldID(event){
-    this.trainFieldStr = event.component.itemsSelected[0].TrainFieldName;
+    this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
   }
 
   renderTrainLevel(event){
@@ -100,7 +149,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   valChangeTrainFieldId(event){
-    this.trainFieldStr = event.component.itemsSelected[0].TrainFieldName;
+    this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
 
     let trainFieldId = this.data.trainFieldID;
     let trainLev = this.data.trainLevel;

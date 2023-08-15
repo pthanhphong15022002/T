@@ -327,9 +327,6 @@
     <div class="showme">{{ scaleNumber * 100 + " %" }}</div>
   </div> -->
 
-  <button class="btn btn-primary btn-sm me-2" (click)="clearSetting()">
-    <i class="icon-clear_all icon-16"></i> Cài đặt lại
-  </button>
   <button class="btn btn-primary btn-sm" (click)="openSetting()">
     <i class="icon-settings icon-16"></i> Thiết lập
   </button>
@@ -2699,24 +2696,36 @@
       </div> -->
     <!-- #endregion-->
     <!-- </div> -->
-    <button
-      class="ms-auto btn btn-primary w-20 my-4 me-2"
-      (click)="onSaveForm()"
-      [disabled]="disableEdit"
-    >
-      <i class="icon-save"></i>
-      <codx-label
-        default="Lưu"
-        name="lblSave"
-        [formModel]="formModel"
-      ></codx-label>
-    </button>
+    <div class="d-flex justify-content-end h-60px">
+      <button class="btn btn-primary my-4 me-2" (click)="clearSetting()">
+        <!-- <i class="icon-clear_all icon-16"></i> -->
+        <codx-label
+          default="Cài đặt lại"
+          name="lblReset"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+
+      <button
+        class="btn btn-primary my-4 me-2"
+        (click)="onSaveForm()"
+        [disabled]="disableEdit"
+      >
+        <!-- <i class="icon-save"></i> -->
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
   </div>
 </ng-template>
-
+<!-- [highlightItem]="'C01'"
+[selectedItems]="'C01'" -->
 <div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
-    [cursorItem]="0"
+    [cursorItem]="cursorItem"
     [navigationMode]="navigationMode"
     [items]="items"
     [annotations]="annotations"
@@ -2818,7 +2827,7 @@
       (click)="clickActive(itemConfig.id)"
     >
       <div
-        class="d-flex align-items-center p-2 w-100"
+        class="d-flex align-items-center ps-3 pe-1 w-100"
         [style.background-color]="item.color"
         data-bs-toggle="tooltip"
         data-bs-placement="top"
@@ -2828,16 +2837,13 @@
             : ''
         "
       >
-        <i class="text-white me-2" [ngClass]="item.icon"></i>
-        <div>
-          <span
-            #departmentField2
-            class="line-clamp line-clamp-1 text-white fs-6"
-          >
+        <i class="text-white me-2 fs-8" [ngClass]="item.icon"></i>
+        <div class="w-100">
+          <span #departmentField2 class="line-clamp line-clamp-1 text-white">
             {{ itemConfig.title }}
           </span>
         </div>
-        <div class="ms-auto">
+        <div class="w-20px h-30px org-mfunc">
           <codx-mfunc
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, itemConfig.context.data)"
@@ -2848,10 +2854,10 @@
           </codx-mfunc>
         </div>
       </div>
-      <ng-container class="p-1 mb-1" *ngIf="!selectedTeam.includes('No')">
-        <div class="d-flex flex-column flex-grow-1 align-items-center mt-1">
+      <ng-container class="px-2" *ngIf="!selectedTeam.includes('No')">
+        <div class="d-flex flex-column flex-grow-1 align-items-center mt-5">
           <codx-img
-            class="symbol symbol-60 symbol-circle me-2"
+            class="symbol symbol-35 symbol-circle"
             [width]="35"
             [objectId]="
               itemConfig.context.employeeManager &&
@@ -2864,56 +2870,58 @@
             [objectType]="'HR_Employees'"
           >
           </codx-img>
-          <div class="text-dark fs-6 fw-bold mt-2 mb-2">
-            <span>
-              {{
+          <div class="px-2 text-center">
+            <div class="text-dark fw-bold mt-3">
+              <span class="">
+                {{
+                  (itemConfig.context.employeeManager &&
+                    itemConfig.context.employeeManager.employeeName) ||
+                    "Tên Nhân Viên"
+                }}
+              </span>
+              <!-- <codx-label
+              [formModel]="formModel"
+              name="lblEmployeeName"
+              [default]="
                 (itemConfig.context.employeeManager &&
                   itemConfig.context.employeeManager.employeeName) ||
-                  "Tên Nhân Viên"
-              }}
-            </span>
-            <!-- <codx-label
-            [formModel]="formModel"
-            name="lblEmployeeName"
-            [default]="
-              (itemConfig.context.employeeManager &&
-                itemConfig.context.employeeManager.employeeName) ||
-              'Tên Nhân Viên'
-            "
-              [ngbTooltip]="
-              departmentField1.scrollHeight > departmentField1.clientHeight
-                ? departmentTooltip1
-                : null
-            "
-          ></codx-label> -->
-          </div>
-          <div
-            class="text-gray-600 mb-1 fs-6 h-100"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            [title]="
-              departmentField1.scrollHeight > departmentField1.clientHeight
-                ? itemConfig.context.employeeManager &&
-                  itemConfig.context.employeeManager.positionName
-                : 'Chức vụ'
-            "
-          >
-            <span #departmentField1 class="line-clamp line-clamp-1">
-              {{
+                'Tên Nhân Viên'
+              "
+                [ngbTooltip]="
+                departmentField1.scrollHeight > departmentField1.clientHeight
+                  ? departmentTooltip1
+                  : null
+              "
+            ></codx-label> -->
+            </div>
+            <div
+              class="text-gray-600 fs-7"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              [title]="
+                departmentField1.scrollHeight > departmentField1.clientHeight
+                  ? itemConfig.context.employeeManager &&
+                    itemConfig.context.employeeManager.positionName
+                  : 'Chức vụ'
+              "
+            >
+              <span #departmentField1 class="line-clamp line-clamp-1">
+                {{
+                  (itemConfig.context.employeeManager &&
+                    itemConfig.context.employeeManager.positionName) ||
+                    "Chức vụ"
+                }}
+              </span>
+              <!-- <codx-label
+              [formModel]="formModel"
+              name="txtPositionName"
+              [default]="
                 (itemConfig.context.employeeManager &&
                   itemConfig.context.employeeManager.positionName) ||
-                  "Chức vụ"
-              }}
-            </span>
-            <!-- <codx-label
-            [formModel]="formModel"
-            name="txtPositionName"
-            [default]="
-              (itemConfig.context.employeeManager &&
-                itemConfig.context.employeeManager.positionName) ||
-              'Chức vụ'
-            "
-          ></codx-label> -->
+                'Chức vụ'
+              "
+            ></codx-label> -->
+            </div>
           </div>
 
           <!-- <div class="d-flex align-items-center mt-2">

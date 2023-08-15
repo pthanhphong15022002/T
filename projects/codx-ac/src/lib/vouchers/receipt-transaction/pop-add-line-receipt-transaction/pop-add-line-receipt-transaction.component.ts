@@ -28,7 +28,7 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
   lsVatCode: any;
   journals: any;
   objectIdim: any;
-  lockFields: any;
+  hideFields: any;
   itemName: any;
   funcID: any;
   vouchersLine: VouchersLines;
@@ -52,10 +52,10 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
     this.vouchers = dialogData.data?.dataVouchers;
     this.objectVouchersLines = dialogData.data?.dataline;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    this.lockFields = dialogData.data?.lockFields;
+    this.hideFields = dialogData.data?.hideFields;
     this.funcID = dialogData.data?.funcID;
-    if (this.lockFields == null) {
-      this.lockFields = [];
+    if (this.hideFields == null) {
+      this.hideFields = [];
     }
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
@@ -243,7 +243,7 @@ export class PopAddLineReceiptTransactionComponent extends UIComponent implement
   //region Function
 
   loadControl(value) {
-    let index = this.lockFields.findIndex((x) => x == value);
+    let index = this.hideFields.findIndex((x) => x == value);
     if (index == -1) {
       return true;
     } else {

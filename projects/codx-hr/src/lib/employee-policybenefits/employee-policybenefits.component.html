@@ -44,7 +44,7 @@
 
     <div class="w-20 min-w-150px px-2">
       {{ data.percentage }}
-      <button class="text-primary" *ngIf="data.hasIncludeBenefits == 1">
+      <button class="text-primary border-0" *ngIf="data.hasIncludeBenefits == 1">
         <i class="icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
       </button>
     </div>
@@ -79,7 +79,7 @@
           <i class="icon-calendar_today icon-14 text-dark"></i>
           {{ data.activeOn | fmDT }}
         </span>
-        <span class="ms-10">
+        <span class="ms-10 btn btn-icon" (click)="ViewIncludeExcludeObjects(data)">
           <button
             class="btn btn-icon"
             *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 0"

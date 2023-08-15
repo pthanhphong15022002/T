@@ -584,6 +584,24 @@
         </div>
       </div>
 
+      <div class="form-group row">
+        <div class="col-6 d-flex flex-column">
+          <codx-label fiedName="IsIncreaseSeniorityOnMonth" [formModel]="formModel"></codx-label>
+          <codx-label
+            [name]="'IsIncreaseSeniorityOnMonth'"
+            [default]="grvSetup.IsIncreaseSeniorityOnMonth.headerNote"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="col-6">
+          <codx-input
+            field="isIncreaseSeniorityOnMonth"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
       <!-- <div class="fs-5 fw-bold text-primary mt-6 mb-3">
         <codx-label
         [formModel]="formModel"
@@ -1017,7 +1035,7 @@
 >
 </codx-combobox-popup>
 
-<div class="d-flex justify-content-end mt-3">
+<div class="d-flex justify-content-end mt-3" *ngIf="alpolicyObj.hasIncludeObjects" >
   <button
     type="button"
     class="btn btn-sm btn-light-primary"
@@ -1031,19 +1049,6 @@
     ></codx-label>
   </button>
 </div>
-
-    <!-- <codx-combobox-popup
-    *ngIf="!isHidden && alpolicyObj.hasIncludeObjects"
-    [comboboxName]="'HRObject'"
-    [multiple]="true"
-    [width]="600"
-    [height]="500"
-    [value]="alpolicyObj.includeObjects"
-    (clickSave)="onClickHideComboboxPopup($event)"
-    >
-    </codx-combobox-popup> -->
-
-
 </ng-template>
 
 <ng-template #subtractObj> 
@@ -1392,7 +1397,7 @@
 >
 </codx-combobox-popup> -->
 
-<div class="d-flex justify-content-end mt-3">
+<div class="d-flex justify-content-end mt-3" *ngIf="alpolicyObj.hasExcludeObjects">
   <button
     type="button"
     class="btn btn-sm btn-light-primary"

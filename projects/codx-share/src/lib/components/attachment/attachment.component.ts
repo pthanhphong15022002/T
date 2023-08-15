@@ -236,15 +236,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.fileUploadList = [];
     this.folderType = this.dmSV.idMenuActive;
-    if (this.folderType == null || this.folderType == '')
-      this.folderType = 'DMT02';
 
-    if (this.type == null || this.type == '') this.type = 'center';
+    if(this.dialog?.formModel) this.formModel = this.dialog?.formModel;
+    
+    if (!this.folderType == null) this.folderType = 'DMT02';
 
-    if (this.popup == null || this.popup == '') this.popup = '1';
+    if (!this.type) this.type = 'center';
 
-    if (this.hideBtnSave == null || this.hideBtnSave == '')
-      this.hideBtnSave = '0';
+    if (!this.popup) this.popup = '1';
+
+    if (!this.hideBtnSave) this.hideBtnSave = '0';
 
     this.dmSV.isFileUploadListAdd.subscribe((item) => {
       if (item == true) {
@@ -841,7 +842,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.addPermissionA();
       let total = this.fileUploadList.length;
 
-      var data = JSON.parse(JSON.stringify(this.fileUploadList));
+      var data = this.fileUploadList;
       //  var that = this;
       //await this.dmSV.getToken();
       for (var i = 0; i < total; i++) {
@@ -1261,7 +1262,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     return await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
       Data: {
-        FileName: uploadFile?.name,
+        FileName: (uploadFile?.name).toLowerCase(),
         ChunkSizeInKB: ChunkSizeInKB,
         FileSize: uploadFile?.size,
         thumbSize: {

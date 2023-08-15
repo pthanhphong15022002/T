@@ -72,6 +72,12 @@ export class CalendarCenterComponent
           template8: this.contentTmp,
         },
       },
+      {
+        type: ViewType.schedule,
+        active: true,
+        sameData: true,
+        model: {},
+      },
     ];
     this.detectorRef.detectChanges();
   }

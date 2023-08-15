@@ -15,34 +15,34 @@
       <div class="col-6">
         <div class="form-group">
           <codx-input
-          [name]="radioCategory"
-          type="radio"
-          style="width: 100%"
-          [field]="radioCompany"
-          [label]="'Công ty'"
-          [checked]="isCategory"
-          [disabled]="action === actionEdit"
-          [crrValue]="isCategory"
-          (valueChange)="valueChangeCategory($event,radioCompany)"
-        >
-        </codx-input>
+            [name]="radioCategory"
+            type="radio"
+            style="width: 100%"
+            [field]="radioCompany"
+            [label]="'Công ty'"
+            [checked]="isCategory"
+            [disabled]="action === actionEdit"
+            [crrValue]="isCategory"
+            (valueChange)="valueChangeCategory($event, radioCompany)"
+          >
+          </codx-input>
         </div>
       </div>
 
       <div class="col-6">
         <div class="form-group">
           <codx-input
-          [name]="radioCategory"
-          type="radio"
-          style="width: 100%"
-          [field]="radioCustomer"
-          [label]="'Cá nhân'"
-          [disabled]="action === actionEdit"
-          [checked]="!isCategory"
-          [crrValue]="isCategory"
-          (valueChange)="valueChangeCategory($event,radioCustomer)"
-        >
-        </codx-input>
+            [name]="radioCategory"
+            type="radio"
+            style="width: 100%"
+            [field]="radioCustomer"
+            [label]="'Cá nhân'"
+            [disabled]="action === actionEdit"
+            [checked]="!isCategory"
+            [crrValue]="isCategory"
+            (valueChange)="valueChangeCategory($event, radioCustomer)"
+          >
+          </codx-input>
         </div>
       </div>
     </div>
@@ -89,20 +89,20 @@
           ></codx-label>
           <div>
             <codx-img
-            #imageUploadLead
-            class="image-inpt-wrapper fullImage"
-            [referType]="'avt'"
-            [width]="90"
-            [funcId]="funcID"
-            [objectId]="leadId"
-            [objectType]="form.formModel.entityName"
-            [objectName]="lead?.leadName"
-            [isAllowEdit]="true"
-            [isDefaulImg]="true"
-            [imgOn]="lead?.modifiedOn"
-            (handleInput)="changeAvatarLead()"
-          >
-          </codx-img>
+              #imageUploadLead
+              class="image-inpt-wrapper fullImage"
+              [referType]="'avt'"
+              [width]="90"
+              [funcId]="funcID"
+              [objectId]="leadId"
+              [objectType]="form.formModel.entityName"
+              [objectName]="lead?.leadName"
+              [isAllowEdit]="true"
+              [isDefaulImg]="true"
+              [imgOn]="lead?.modifiedOn"
+              (handleInput)="changeAvatarLead()"
+            >
+            </codx-img>
           </div>
         </div>
       </div>
@@ -165,11 +165,19 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
           field="companyPhone"
           type="text"
           [placeholder]="gridViewSetup?.CompanyPhone?.description"
           [crrValue]="lead?.companyPhone"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input> -->
+
+        <codx-input
+          field="companyPhone"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -185,11 +193,19 @@
           default="Fax"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
           type="text"
           [placeholder]="gridViewSetup?.FaxNo?.description"
           [crrValue]="lead?.faxNo"
           field="faxNo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input> -->
+
+        <codx-input
+          field="faxNo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -213,7 +229,6 @@
   </div>
 
   <div class="row" *ngIf="isCategory">
-
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -249,7 +264,6 @@
         </codx-input>
       </div>
     </div>
-
   </div>
   <div class="row" *ngIf="isCategory">
     <div class="col-12">
@@ -261,13 +275,12 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="industries"
-        (valueChange)="valueChangeIndustries($event)"
-      >
-      </codx-input>
-
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="industries"
+          (valueChange)="valueChangeIndustries($event)"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
@@ -282,13 +295,12 @@
         >
         </codx-label>
         <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="jobTitle"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="jobTitle"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
@@ -297,19 +309,18 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-        fiedName="BusinessLineID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-label>
-      <codx-input
-      [formModel]="form.formModel"
-      field="businessLineID"
-      [crrValue]="lead?.businessLineID"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
-
+          fiedName="BusinessLineID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          field="businessLineID"
+          [crrValue]="lead?.businessLineID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
     <div class="col-6">
@@ -323,12 +334,12 @@
         <div class="d-flex flex-row">
           <div class="col-8 pe-2">
             <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="dealValue"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="dealValue"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
           </div>
           <div class="col-4">
             <codx-input
@@ -352,29 +363,31 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <div  *ngIf="!lead.applyProcess; else ownerProcess">
+        <div *ngIf="!lead.applyProcess; else ownerProcess">
           <codx-input
             field="owner"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>
         </div>
         <ng-template #ownerProcess>
-          <ejs-combobox [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event)" [fields]="fieldCbxParticipants"
-          [placeholder]="gridViewSetup?.Owner?.description"
-          [allowFiltering]='true' [value]="owner"></ejs-combobox>
+          <ejs-combobox
+            [dataSource]="listParticipants"
+            (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+            [fields]="fieldCbxParticipants"
+            [placeholder]="gridViewSetup?.Owner?.description"
+            [allowFiltering]="true"
+            [value]="owner"
+          ></ejs-combobox>
         </ng-template>
-
       </div>
     </div>
   </div>
 
-
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Note" > </codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
@@ -396,11 +409,7 @@
 <ng-template #footer let-form>
   <div class="d-flex justify-content-between">
     <div></div>
-    <button
-      type="button"
-      class="btn btn-primary ms-1"
-      (click)="saveLead()"
-    >
+    <button type="button" class="btn btn-primary ms-1" (click)="saveLead()">
       <codx-label default="Lưu"></codx-label>
     </button>
   </div>
@@ -443,11 +452,11 @@
   </ng-template>
 
   <ng-template #tabInputInfo>
-    <ng-container [ngTemplateOutlet]="tabCustomFieldDetail"
-    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    <ng-container
+      [ngTemplateOutlet]="tabCustomFieldDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
-
 </ng-container>
 
 <ng-template #dataIsEmpty>
@@ -494,44 +503,44 @@
 </ng-template>
 
 <ng-template #contact let-form>
-    <div class="contaner">
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              fiedName="ContactName"
-              [Group]="form.formGroup"
-            >
-            </codx-label>
-            <codx-input
-              field="ContactName"
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              (valueChange)="valueChange($event)"
-            ></codx-input>
-          </div>
-          <div class="form-group">
-            <codx-label [formModel]="form.formModel" fiedName="JobTitle">
-            </codx-label>
-            <codx-input
-              field="jobTitle"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
+  <div class="contaner">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="ContactName"
+            [Group]="form.formGroup"
+          >
+          </codx-label>
+          <codx-input
+            field="ContactName"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              [formModel]="form.formModel"
-              name="lblAvatar"
-              default="Ảnh đại diện"
-            ></codx-label>
-            <div>
-              <codx-img
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="JobTitle">
+          </codx-label>
+          <codx-input
+            field="jobTitle"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            name="lblAvatar"
+            default="Ảnh đại diện"
+          ></codx-label>
+          <div>
+            <codx-img
               #imageUploadContact
               class="image-inpt-wrapper fullImage"
               [referType]="'avt'"
@@ -546,60 +555,59 @@
               (handleInput)="changeAvatarContact()"
             >
             </codx-img>
-            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            fiedName="Phone"
-            default="Phone"
-          >
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="phone"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="Phone"
+          default="Phone"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="phone"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            fiedName="Email"
-          >
-          </codx-label>
-          <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            field="email"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="Email"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="email"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty ">
-    <ng-container *ngFor="let step of listInstanceSteps">
+  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
+    <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
-          <div class="form-group">
+          <div class="form-group" *ngIf="checkAddField(step, idx)">
             <codx-input-custom-field
               [customField]="item"
               [checkValid]="false"

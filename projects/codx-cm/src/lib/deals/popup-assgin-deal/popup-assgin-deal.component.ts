@@ -40,9 +40,12 @@ positionName: string = '';
 
 listParticipants = [];
 
+listUser:any[] = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID:string = 'ViewBUID';
 readonly viewDefault:string = 'ViewDefault';
+readonly viewGroupUser:string = 'viewGroupUser';
+
 constructor(
   private injector: Injector,
   private notificationsService: NotificationsService,
@@ -62,6 +65,7 @@ constructor(
     this.processID = dialogData?.data.processID;
   }
   this.recID = dialogData?.data?.recID;
+  this.buid = dialogData?.data?.buid;
   this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
@@ -128,6 +132,7 @@ getStepByStepIDAndInID(insID, stepID) {
       }
     });
 }
+
 async getListUserByOrg(lstRoles, objectType) {
   var owner = '';
   if (lstRoles != null && lstRoles.length > 0) {
@@ -178,7 +183,13 @@ changeOwner(evt: any, view: any) {
     }
     else if(view === this.viewBUID) {
       this.buid =  evt.data;
-      this.owner = evt.itemsSelected[0].Owner;
+      var datas= [this.buid];
+      this.codxCmService.getListUserByBUID(datas).subscribe((res)=> {
+        if(res){
+         this.listUser = res;
+        }
+      })
+      this.owner = evt.component.itemsSelected[0].Owner;
     }
 
   }
@@ -199,23 +210,32 @@ cbxEmpChange(evt: any) {
     this.owner = evt;
   }
 }
+valueChangeOwnerStep($event){
+  if($event) {
+    this.ownerStep = $event;
+  }
+}
 assignTo(user:any){
   this.employeeName = user?.employeeName;
   this.orgUnitName = user?.orgUnitName;
   this.positionName = user?.positionName;
 }
-deleteOrg() {
-  this.employeeName ='';
-  this.orgUnitName ='';
-  this.positionName ='';
-  this.objectID ='';
-  this.detectorRef.detectChanges();
+deleteOrg($event) {
+  if($event) {
+    let index = this.listUser.findIndex(x=>x.userID === $event );
+    this.listUser.splice(index, 1);
+
+    if(this.listUser.length < 0 && !this.listUser) {
+      this.owner = '';
+      this.buid = '';
+    }
+  }
 }
 
 
 
 onSaveForm() {
-  if(!this.owner?.trim() && !this.owner) {
+  if(!this.owner?.trim() && !this.owner && this.applyFor == '1') {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -230,11 +250,11 @@ saveOwner(){
  this.applyProcess && this.setRoles();
   var datas = [this.recID, this.owner,this.ownerStep, this.startControl,this.buid];
   if(this.applyFor == "1"){
-  //   this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
-  //     if(res) {
-  //       this.dialogRef.close(res[0]);
-  //     }
-  // })
+    this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
+      if(res) {
+        this.dialogRef.close(res[0]);
+      }
+  })
   }
   else if (this.applyFor == "5") {
     this.codxCmService.updateOwnerLead(datas).subscribe((res)=> {
@@ -278,8 +298,5 @@ setRoles() {
     this.step.roles.push(u);
   }
 }
-
-
-
 
 }

@@ -58,6 +58,26 @@
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/fonts",
                 "output": "assets/fonts"
+              },
+              {
+                "glob": "user-manual.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "privacy.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "terms.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "about.html",
+                "input": "src/static-pages/",
+                "output": "/us"
               }
             ],
             "styles": [
@@ -806,6 +826,39 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/codx-co/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "codx-wr": {
+      "projectType": "library",
+      "root": "projects/codx-wr",
+      "sourceRoot": "projects/codx-wr/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-wr/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-wr/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-wr/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/codx-wr/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

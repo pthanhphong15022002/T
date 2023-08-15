@@ -40,6 +40,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"
+    [itemAdded]="itemAdded"
     (newIdItem)="getIdFromChild($event)"
   ></hr-organization-orgchart>
 </ng-template>
@@ -57,35 +58,34 @@
 <!--template sài tạm mode view list -->
 
 <ng-template #templateList let-item>
-  <div class="d-flex flex-column px-6 py-4 border-bottom">
-    <div class="d-flex align-items-center org-header mb-2">
-      <div class="text-dark fw-bold fs-6 me-3">
-        {{ item.orgUnitName }}
+  <div
+    class="d-flex justify-content-between align-items-top px-6 py-4 border-bottom list-action-menu"
+  >
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-items-center org-header mb-2">
+        <div class="text-dark fw-bold fs-6 me-3">
+          {{ item.orgUnitName }}
+        </div>
+        <codx-vll
+          [name]="'L0605'"
+          [value]="item.orgUnitType"
+          [showText]="true"
+          [showBgColor]="true"
+          [showIcon]="true"
+          class="badge badge-light badge-md me-2"
+        >
+        </codx-vll>
+        <div *ngIf="item.parentID" class="text-gray-600 me-2">
+          <codx-label
+            [formModel]="view.formModel"
+            default="Trực thuộc:"
+          ></codx-label>
+          <span class="text-dark">
+            {{ item.parentName }}
+          </span>
+        </div>
       </div>
-      <codx-vll
-        [name]="'L0605'"
-        [value]="item.orgUnitType"
-        [showText]="true"
-        [showBgColor]="true"
-        [showIcon]="true"
-        class="badge badge-light badge-md me-2"
-      >
-      </codx-vll>
-      <div *ngIf="item.parentID" class="text-gray-600 me-2">
-        <codx-label
-          [formModel]="view.formModel"
-          default="Trực thuộc:"
-        ></codx-label>
-        <span class="text-dark">
-          {{ item.parentName }}
-        </span>
-      </div>
-    </div>
-    <div
-      class="d-flex justify-content-between align-items-top list-action-menu"
-    >
-    <div class="d-flex flex-column me-6"></div>
-    
+
       <div class="d-flex align-items-top justify-content-between pe-9">
         <div class="me-3">
           <codx-img
@@ -160,59 +160,61 @@
           </div>
         </div>
       </div>
-      <div class="d-flex">
-        <!-- <div #h class="mx-6 d-flex flex-column align-items-center" (click)="loadEmployList(h, item.departmentCode, '')">
-          <div class="fs-2 fw-bold text-dark mb-2 number-users">
-            {{ item.headcounts ? item.headcounts : 0 }}
-          </div>
-          <span class="text-gray-500">
-            <codx-label [formModel]="view.formModel" name="lblBoundary" default="Định biên">
-            </codx-label>
-          </span>
-        </div> -->
-        <div #c class="mx-6 d-flex flex-column align-items-center">
-          <span class="text-gray-500">
-            <codx-label
-              [formModel]="view.formModel"
-              name="lblStaff"
-              default="Nhân viên"
-            >
-            </codx-label>
-          </span>
-          <div class="fs-2 fw-bold mb-2 text-primary number-users">
-            {{ item?.counts ? item?.counts : 0 }}
-          </div>
-          <div class="org-imgs">
-            <ng-container *ngIf="item.staffEmp?.length > 0">
-              <ng-container
-                *ngTemplateOutlet="
-                  templateListEmployee;
-                  context: { $implicit: item.staffEmp }
-                "
-              >
-              </ng-container>
-            </ng-container>
-          </div>
-        </div>
-        <!-- <div #o class="mx-6 d-flex flex-column align-items-center"
-          (click)="loadEmployList(o, item.departmentCode, '30')">
-          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard ? item.onboard : 0 }}</div>
-          <span class="text-gray-500">
-            <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
-            </codx-label>
-          </span>
-        </div> -->
-        <!-- <div #f class="mx-6 d-flex flex-column align-items-center"
-          (click)="loadEmployList(f, item.departmentCode, '70')">
-          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{item.offboard ? item.offboard : 0 }}</div>
-          <span class="text-gray-500">
-            <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
-            </codx-label>
-          </span>
-        </div> -->
-      </div>
     </div>
-    <div>
+
+    <div class="d-flex w-200px">
+      <!-- <div #h class="mx-6 d-flex flex-column align-items-center" (click)="loadEmployList(h, item.departmentCode, '')">
+        <div class="fs-2 fw-bold text-dark mb-2 number-users">
+          {{ item.headcounts ? item.headcounts : 0 }}
+        </div>
+        <span class="text-gray-500">
+          <codx-label [formModel]="view.formModel" name="lblBoundary" default="Định biên">
+          </codx-label>
+        </span>
+      </div> -->
+      <div #c class="mx-6 d-flex flex-column align-items-center">
+        <span class="text-gray-500">
+          <codx-label
+            [formModel]="view.formModel"
+            name="lblStaff"
+            default="Nhân viên"
+          >
+          </codx-label>
+        </span>
+        <div class="fs-3 fw-bold my-1 text-primary number-users">
+          {{ item?.counts ? item?.counts : 0 }}
+        </div>
+        <div class="org-imgs">
+          <ng-container *ngIf="item.staffEmp?.length > 0">
+            <ng-container
+              *ngTemplateOutlet="
+                templateListEmployee;
+                context: { $implicit: item.staffEmp }
+              "
+            >
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+      <!-- <div #o class="mx-6 d-flex flex-column align-items-center"
+        (click)="loadEmployList(o, item.departmentCode, '30')">
+        <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard ? item.onboard : 0 }}</div>
+        <span class="text-gray-500">
+          <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
+          </codx-label>
+        </span>
+      </div> -->
+      <!-- <div #f class="mx-6 d-flex flex-column align-items-center"
+        (click)="loadEmployList(f, item.departmentCode, '70')">
+        <div class="fs-2 fw-bold mb-2 text-danger number-users">{{item.offboard ? item.offboard : 0 }}</div>
+        <span class="text-gray-500">
+          <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
+          </codx-label>
+        </span>
+      </div> -->
+    </div>
+
+    <div class="w-100px" *ngIf="activeMFC">
       <codx-mfunc
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"

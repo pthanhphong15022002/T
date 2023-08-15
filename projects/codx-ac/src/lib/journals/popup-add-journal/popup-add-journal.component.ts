@@ -61,6 +61,7 @@ export class PopupAddJournalComponent
     autoPost: false,
   } as IJournal;
   oldJournal: IJournal;
+  prevJournal: IJournal;
   dataService: CRUDService;
   formTitle: string;
   gvs: any;
@@ -77,11 +78,12 @@ export class PopupAddJournalComponent
       name: 'Roles',
     },
   ];
-  fiscalYears: any[] = [];
-  isEdit: boolean = false;
-  hasVouchers: boolean = false;
+  fiscalYears: number[] = [];
   tempIDIMControls: any[] = [];
   arrowColorStyle: string;
+
+  isEdit: boolean = false;
+  hasVouchers: boolean = false;
 
   isHidden: boolean = true;
   isMultiple: boolean = true;
@@ -131,6 +133,7 @@ export class PopupAddJournalComponent
     this.journal.vatControl = this.journal.vatControl === '1';
 
     this.oldJournal = { ...this.journal };
+    this.prevJournal = { ...this.journal };
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
@@ -259,7 +262,9 @@ export class PopupAddJournalComponent
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
       .subscribe((periods) => {
-        this.fiscalYears = [...new Set(periods.map((p) => p.FiscalYear))];
+        this.fiscalYears = [
+          ...new Set(periods.map((p) => Number(p.FiscalYear))),
+        ];
       });
 
     this.dialogRef.closed.subscribe((res) => {
@@ -315,11 +320,11 @@ export class PopupAddJournalComponent
 
   ngAfterViewInit(): void {
     this.formTitle = this.dialogData.data?.formTitle;
-    this.detectorRef.detectChanges();
+    this.detectorRef.markForCheck();
     setTimeout(() => {
       let moreInfoLabel: Element = document.getElementById('moreInfo');
       let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
-      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;     
+      this.arrowColorStyle = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='${arrowColor}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>")`;
     });
   }
   //#endregion
@@ -343,6 +348,12 @@ export class PopupAddJournalComponent
     if (!e.data) {
       return;
     }
+
+    if (this.journal[e.field] == this.prevJournal[e.field]) {
+      return;
+    }
+
+    this.prevJournal[e.field] = e.data;
 
     if (e.field === 'periodID') {
       this.journal.fiscalYear = e.data.substring(0, 4);
@@ -372,12 +383,6 @@ export class PopupAddJournalComponent
   onSelect(e): void {
     console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
-    // this.form.formGroup.controls.periodID.reset();
-    // (this.periodID.ComponentCurrent.dataService as CRUDService).data = [];
-    // (this.periodID.ComponentCurrent.dataService as CRUDService).setPredicates(
-    //   ['FiscalYear=@0'],
-    //   [e.itemData.value]
-    // );
   }
 
   async onClickSave(): Promise<void> {
@@ -768,7 +773,7 @@ export class PopupAddJournalComponent
       if (!oldJournal[k] && !newJournal[k]) {
         return false;
       }
-      return oldJournal[k] !== newJournal[k];
+      return oldJournal[k] != newJournal[k];
     });
   }
 

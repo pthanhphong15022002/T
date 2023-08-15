@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
     [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
     [selectedFirst]="true" (selectedChange)="selectedChange($event)" (viewChanging)="viewChanging($event)"
-    (viewChanged)="viewChanged($event)">
+    (viewChanged)="viewChanged($event)" (buttonClick)="clickButton($event)">
 </codx-views>
 
 
@@ -203,7 +203,7 @@
         <div class="w-10 p-3">
             <div class="d-flex flex-column">
                 <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
-                [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
+                    [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
                     <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                         {{data.alYearMonth}}
                     </span>
@@ -369,7 +369,8 @@
     <span class="data-text-color fs-5 fw-bold">{{grvSetup['DaysOff'].headerText}}</span>
     <hr />
     <ng-container *ngIf="!popupLoading">
-        <div #listDataDaysOff class="list-days-off" *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
+        <div #listDataDaysOff class="list-days-off"
+            *ngIf="listDaysOff?.length > 0 && popupLoading ==false ; else noDataNotification"
             (scroll)="onScrollList(listDataDaysOff)">
             <div *ngFor="let item of listDaysOff" class="d-flex flex-column days-off-item">
                 <div class="d-flex align-items-center mb-1 mt-1">
@@ -387,18 +388,23 @@
                         [innerHTML]="item?.totalDaysOff | daysPipe"></span>
                 </div>
                 <div class="d-flex align-items-center ms-6">
-                    <span #reasonField1 class="data-text-color line-clamp line-clamp-2" [ngbTooltip]="reasonToolTip">
+                    <span #reasonField1 *ngIf="item?.reason; else noReason"
+                        class="data-text-color line-clamp line-clamp-2" [ngbTooltip]="reasonToolTip">
                         {{item?.reason}}
+                        <ng-template #reasonToolTip>
+                            <div class="d-flex flex-column">
+                                <span class="label-text-color">{{grvEDaysOff['Reason'].headerText}}</span>
+                                <span class="data-text-color"
+                                    *ngIf="reasonField1.scrollHeight > reasonField1.clientHeight">
+                                    {{item?.reason}}
+                                </span>
+                            </div>
+                        </ng-template>
                     </span>
+                    <ng-template #noReason>
+                        <span class="place-holder">{{grvEDaysOff['Reason'].headerText}}</span>
+                    </ng-template>
                 </div>
-                <ng-template #reasonToolTip>
-                    <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvEDaysOff['Reason'].headerText}}</span>
-                        <span class="data-text-color" *ngIf="reasonField1.scrollHeight > reasonField1.clientHeight">
-                            {{item?.reason}}
-                        </span>
-                    </div>
-                </ng-template>
             </div>
         </div>
     </ng-container>

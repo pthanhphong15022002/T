@@ -45,6 +45,7 @@ import { firstValueFrom } from 'rxjs';
 import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 
 @Component({
   selector: 'lib-deals',
@@ -332,48 +333,59 @@ export class DealsComponent
     this.clickMF(e.e, e.data);
   }
   changeDataMF($event, data, type = null) {
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     if (mappingFunction) {
-    //       mappingFunction(eventItem, data);
-    //     }
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
+
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        mappingFunction && mappingFunction(eventItem, data);
+      }
+    }
   }
   getRoleMoreFunction(type) {
     let functionMappings;
     let isDisabled = (eventItem, data) => {
-        eventItem.disabled = (data.closed && data.status != '1') || ['1', '0'].includes(data.status) || this.checkMoreReason(data);
+      eventItem.disabled = data?.alloweStatus == '1' ? (data.closed && data.status != '1') ||
+            ['1', '0'].includes(data.status) ||
+            this.checkMoreReason(data)
+          : true;
     };
     let isDelete = (eventItem, data) => {
-        //eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
-        eventItem.disabled = false;
+        eventItem.disabled = data.delete ? data.closed || this.checkMoreReason(data) || data.status == '0' : true;
     };
     let isCopy = (eventItem, data) => {
-        eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
+      eventItem.disabled = data.write
+        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        : true;
     };
     let isEdit = (eventItem, data) => {
-        eventItem.disabled = data.closed || this.checkMoreReason(data) || data.status == '0';
+      eventItem.disabled = data.write
+        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        : true;
     };
     let isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || data.status == '0';
+      eventItem.disabled =
+        data?.alloweStatus == '1' ? data.closed || data.status == '0' : true;
     };
     let isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || data.status == '0';
+      eventItem.disabled =
+        data?.alloweStatus == '1' ? !data.closed || data.status == '0' : true;
     };
     let isStartDay = (eventItem, data) => {
-      eventItem.disabled = !['1'].includes(data.status) || data.closed;
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? !['1'].includes(data.status) || data.closed
+          : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = !['1', '2'].includes(data.status) || data.closed;
+      eventItem.disabled = data.full ? !['1', '2'].includes(data.status) || data.closed : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
-      eventItem.disabled = data.status != '0';
+      //Xác nhận từ chối
+      eventItem.disabled = data.full ? data.status != '0' : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -383,40 +395,58 @@ export class DealsComponent
         data?.approveStatus >= '3';
     };
     let isUpdateBANT = (eventItem, data) => {
-      eventItem.disabled =
-        (data.closed && data.status != '1') ||
-        data.status == '0' ||
-        this.checkMoreReason(data);
+      eventItem.disabled = data.write
+        ? (data.closed && data.status != '1') ||
+          data.status == '0' ||
+          this.checkMoreReason(data)
+        : true;
     };
-
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
+        eventItem.isblur = false;
+    };
+    let isPermission = (eventItem, data) => {
+      // Phân quyền
+      eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
+    };
+    let isUpload = (eventItem, data) => {
+      // ĐÍnh kèm file, nhập khẩu dữ liệu
+      eventItem.disabled = !data.upload ? true : false;
+    };
+    let isEmail = (eventItem, data) => {
+      // Gửi mail
+      eventItem.disabled = !data.write ? true : false;
+    };
+    let isDownload = (eventItem, data) => {
+      // Nhập khẩu dữ liệu
+      eventItem.disabled = !data.download ? true : false;
     };
 
+    let isDisCRd = (eventItem, data) => {
+      // Nhập khẩu dữ liệu
+      eventItem.disabled =  true ;
+    };
     functionMappings = {
-      CM0201_1: isDisabled,
-      CM0201_2: isStartDay,
-      CM0201_3: isDisabled,
-      CM0201_4: isDisabled,
-      CM0201_5: isDisabled,
+      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce((acc, code) => ({ ...acc, [code]: isDisabled }), {}),
+      ...['CM0201_12', 'CM0201_13'].reduce((acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }), {}),
+      ...['SYS101', 'SYS103','SYS104','SYS102'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
+      ...['SYS003', 'SYS001'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
+      CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
       CM0201_8: isClosed,
       CM0201_9: isOpened,
-      CM0201_12: isConfirmOrRefuse,
-      CM0201_13: isConfirmOrRefuse,
-      SYS101: isDisabled,
-      SYS103: isEdit,
       SYS03: isEdit,
-      SYS104: isCopy,
       SYS04: isCopy,
-      SYS102: isDelete,
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
+      SYS004: isEmail,
+      SYS002: isDownload,
+      CM0201_15: isPermission,
     };
 
     return functionMappings[type];
@@ -544,7 +574,7 @@ export class DealsComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -555,7 +585,13 @@ export class DealsComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval
+      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
+        this.dataSelected.approveStatus=appoverStatus
+      }
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
@@ -975,45 +1011,45 @@ export class DealsComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
-    this.cache.functionList('DPT0402').subscribe((fun) => {
-      var formMD = new FormModel();
-      let dialogModel = new DialogModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      dialogModel.zIndex = 999;
-      dialogModel.FormModel = formMD;
-      var obj = {
-        recID: data?.recID,
-        refID: data?.refID,
-        processID: data?.processID,
-        stepID: data?.stepID,
-        gridViewSetup: this.gridViewSetup,
-        formModel: this.view.formModel,
-        applyFor: '1',
-        titleAction: this.titleAction,
-        owner: data.owner,
-        startControl: data.steps.startControl,
-      };
-      var dialog = this.callfc.openForm(
-        PopupOwnerDealComponent,
-        '',
-        500,
-        280,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        if (e && e?.event != null) {
-          this.detailViewDeal.promiseAllAsync();
-          this.view.dataService.update(e?.event).subscribe();
-          this.notificationsService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
-      });
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    var obj = {
+      recID: data?.recID,
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      gridViewSetup: this.gridViewSetup,
+      formModel: this.view.formModel,
+      applyFor: '1',
+      titleAction: this.titleAction,
+      owner: data.owner,
+      startControl: data.steps.startControl,
+      applyProcess: true,
+      buid: data.buid,
+    };
+    var dialog = this.callfc.openForm(
+      PopupAssginDealComponent,
+      '',
+      750,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.detailViewDeal.promiseAllAsync();
+        this.view.dataService.update(e?.event).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
@@ -1748,8 +1784,8 @@ export class DealsComponent
     });
   }
 
-   //#region Permissons
-   popupPermissions(data) {
+  //#region Permissons
+  popupPermissions(data) {
     let dialogModel = new DialogModel();
     let formModel = new FormModel();
     formModel.formName = 'CMPermissions';
@@ -1760,8 +1796,8 @@ export class DealsComponent
     let obj = {
       data: data,
       title: this.titleAction,
-      entityName: this.view.formModel.entityName
-    }
+      entityName: this.view.formModel.entityName,
+    };
     this.callfc
       .openForm(
         PopupPermissionsComponent,

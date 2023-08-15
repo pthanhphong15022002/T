@@ -32,8 +32,7 @@ import { OrganizationOrgchartComponent } from './organization-orgchart/organizat
 })
 export class OrgorganizationComponent extends UIComponent {
   console = console;
-  views: Array<ViewModel> = [];
-  button: ButtonModel;
+  views: Array<ViewModel>;
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
@@ -43,7 +42,6 @@ export class OrgorganizationComponent extends UIComponent {
   currView?: TemplateRef<any>;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: string;
   codxTreeView: CodxTreeviewComponent = null;
   dataService: CRUDService = null;
   templateActive: number = 0;
@@ -51,9 +49,8 @@ export class OrgorganizationComponent extends UIComponent {
   request: any = null;
   viewActive: string = '';
   count: any;
-  buttonAdd: ButtonModel = {
-    id: 'btnAdd',
-  };
+  buttonAdd: ButtonModel;
+  activeMFC:boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
@@ -61,23 +58,38 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  @ViewChild(OrganizationOrgchartComponent)
-  child: OrganizationOrgchartComponent;
+  // @ViewChild(OrganizationOrgchartComponent)
+  // child: OrganizationOrgchartComponent;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
 
   constructor(
     inject: Injector,
-    private activedRouter: ActivatedRoute,
     private hrService: CodxHrService,
-
-    private df: ChangeDetectorRef
-  ) {
+  ) 
+  {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
+    this.router.params.subscribe((param:any) => {
+      let funcID = param["funcID"]; 
+      if (funcID.includes('WP')) {
+        this.buttonAdd = null; 
+        this.activeMFC = false;
+      }
+      else
+      {
+        this.buttonAdd = {
+          id: 'btnAdd',
+        };
+        this.activeMFC = true;
+      }
+    this.detectorRef.detectChanges();
+    });
+  }
 
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
@@ -89,14 +101,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.parentIDField = 'ParentID';
 
     this.views = [
-      {
-        id: '1',
-        type: ViewType.list,
-        sameData: true,
-        model: {
-          template: this.templateList,
-        },
-      },
+      
       {
         id: '2',
         type: ViewType.listtree,
@@ -107,8 +112,29 @@ export class OrgorganizationComponent extends UIComponent {
           // resourceModel: { parentIDField: 'ParentID' },
         },
       },
+      {
+        id: '3',
+        type: ViewType.tree_orgchart,
+        sameData: false,
+        request: this.request,
+        model: {
+          template: this.tempTree,
+          panelRightRef: this.tmpOrgChart,
+          // panelRightRef: this.panelRightLef,
+          // template2: this.tmpOrgChart,
+          // resourceModel: { parentIDField: 'ParentID' },
+        },
+      },
+      {
+        id: '1',
+        type: ViewType.list,
+        sameData: true,
+        model: {
+          template: this.templateList,
+        },
+      },
       // {
-      //   id: '3',
+      //   id: '4',
       //   type: ViewType.tree_masterdetail,
       //   // active: false,
       //   sameData: false,
@@ -119,23 +145,8 @@ export class OrgorganizationComponent extends UIComponent {
       //     panelRightRef: this.tmpMasterDetail,
       //   },
       // },
-      {
-        id: '4',
-        type: ViewType.tree_orgchart,
-        sameData: false,
-        request: this.request,
-        model: {
-          resizable: true,
-          template: this.tempTree,
-          panelRightRef: this.tmpOrgChart,
-          // panelRightRef: this.panelRightLef,
-          // template2: this.tmpOrgChart,
-          // resourceModel: { parentIDField: 'ParentID' },
-        },
-      },
     ];
 
-    // this.detectorRef.detectChanges();
   }
 
   //loadEmployList
@@ -274,6 +285,8 @@ export class OrgorganizationComponent extends UIComponent {
   getIdFromChild(e) {
     this.selectItemFromChild = e;
   }
+
+  itemAdded;
   // button add toolbar
   btnClick(e) {
     if (this.view) {
@@ -305,7 +318,8 @@ export class OrgorganizationComponent extends UIComponent {
             if (res.event) {
               this.view.dataService.add(res.event, 0).subscribe();
               //Update view chart diagram
-              this.child.GetChartDiagram();
+              this.itemAdded = res.event;
+              // this.child.GetChartDiagram();
               this.flagLoaded = true;
             }
           });
@@ -428,4 +442,5 @@ export class OrgorganizationComponent extends UIComponent {
     this.pageIndex = 2;
     event.stopPropagation();
   }
+  
 }

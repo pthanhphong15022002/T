@@ -28,7 +28,8 @@ import { CodxCmService } from '../../codx-cm.service';
   providers: [DecimalPipe],
 })
 export class PopupAddTargetComponent {
-  @ViewChild('dropCalendar') dropCalendar: CodxDropdownCalendarComponent;
+  @ViewChild('dropCalendar') dropCalendar;
+  @ViewChild('codxInput') codxInput: any;
   dialog: any;
   data: CM_Targets;
   action = '';
@@ -71,6 +72,7 @@ export class PopupAddTargetComponent {
   businessLineID: any;
   exchangeRateSys: number;
   currencyIDSys: any;
+  isCheckSave = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -88,7 +90,7 @@ export class PopupAddTargetComponent {
     this.headerText = data?.data?.title;
     this.currencyIDSys = data?.data?.currencyID;
     this.exchangeRateSys = data?.data?.exchangeRate;
-    // this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
+    this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
@@ -96,25 +98,25 @@ export class PopupAddTargetComponent {
       this.lstTargetLines = data?.data?.lstTargetLines;
       this.currencyID = this.data.currencyID;
       this.exchangeRate = this.data.exchangeRate;
-      if(this.exchangeRate <= 0){
+      if (this.exchangeRate <= 0) {
         this.currencyID = 'VND';
         this.exchangeRate = 1;
       }
-
-      let date = new Date().setFullYear(this.data.year);
-      this.date = new Date(date);
     } else {
       this.currencyID = this.currencyIDSys;
       this.data.currencyID = this.currencyID;
       this.exchangeRate = this.exchangeRateSys;
       this.data.exchangeRate = this.exchangeRate;
       this.data.status = '1';
+      this.data.year = data?.data?.year;
+      this.data.period = data?.data?.year;
     }
+    let date = new Date().setFullYear(this.data.year);
+    this.date = new Date(date);
   }
 
   async ngOnInit() {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
-
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
       this.data.owner = null;
@@ -134,10 +136,11 @@ export class PopupAddTargetComponent {
 
   async ngAfterViewInit() {
     this.businessLineID = this.data?.businessLineID;
+    // this.date = date;
+    // this.gridViewSetupTarget = await firstValueFrom(
+    //   this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    // );
 
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
     this.gridViewSetupTargetLine = await firstValueFrom(
       this.cache.gridViewSetup('CMTargetsLines', 'grvCMTargetsLines')
     );
@@ -153,7 +156,7 @@ export class PopupAddTargetComponent {
         this.cmSv.getExchangeRate(currencyID, day)
       );
 
-      if (this.exchangeRate > 0) {
+      if (exchangeRate?.exchRate > 0) {
         this.data.target =
           (this.data.target / exchangeRate?.exchRate) * this.exchangeRate;
         this.lstOwners.forEach((element) => {
@@ -168,14 +171,21 @@ export class PopupAddTargetComponent {
       if (exchangeRate?.exchRate > 0) {
         this.exchangeRate = exchangeRate?.exchRate;
       } else {
-        this.exchangeRate = 1;
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
       }
-      this.currencyID = 'VND';
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate.exchRate;
       this.currencyIDSys = this.currencyID;
       this.exchangeRateSys = this.exchangeRate;
 
       this.data.currencyID = this.currencyID;
+      this.data.exchangeRate = this.exchangeRate;
     }
+  }
+
+  convertDateCalendar(date) {
+    return new Date(date);
   }
   //#endregion
 
@@ -184,7 +194,6 @@ export class PopupAddTargetComponent {
     var data = [];
     this.data.exchangeRate = this.exchangeRate ?? 0;
     if (this.action === 'add') {
-      this.data.businessLineID = this.businessLineID;
       op.method = 'AddTargetAndTargetLineAsync';
       data = [
         this.data,
@@ -215,6 +224,7 @@ export class PopupAddTargetComponent {
         if (res) {
           this.dialog.close([res.save]);
         }
+        this.isCheckSave = false;
       });
   }
 
@@ -229,9 +239,13 @@ export class PopupAddTargetComponent {
 
           this.dialog.close([res.update]);
         }
+        this.isCheckSave = false;
       });
   }
   onSave() {
+    this.isCheckSave = true;
+    if (this.action == 'add') this.data.businessLineID = this.businessLineID;
+
     if (
       this.data?.businessLineID == null ||
       this.data?.businessLineID?.trim() == ''
@@ -241,11 +255,14 @@ export class PopupAddTargetComponent {
         0,
         '"' + this.gridViewSetupTarget?.BusinessLineID?.headerText + '"'
       );
+      this.isCheckSave = false;
+
       return;
     }
 
     if (!this.checkTarget()) {
       this.notiService.notifyCode('CM032');
+      this.isCheckSave = false;
       return;
     }
 
@@ -278,13 +295,13 @@ export class PopupAddTargetComponent {
         this.businessLineID = e?.data;
         if (e?.data?.trim() != '') {
           this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+          this.data.targetName =
+            e?.component?.itemsSelected[0]?.BusinessLineName;
         }
       }
     } else {
       if (this.data[e?.field] != e?.data) {
         this.exChangeRate(this.data.currencyID, e?.data);
-
-        this.data[e.field] = e.data;
       }
     }
 
@@ -400,13 +417,14 @@ export class PopupAddTargetComponent {
         if (res.isExit) weightExit += res.weight;
       });
       for (var item of this.lstOwners) {
-        if (!item.isExit && this.action == 'add') {
+        if (!item.isExit) {
           if (type == 'user') {
             item.weight = 100 / this.lstOwners.length;
           } else {
-            item.weight =
-              (100 - weightExit) /
-              this.lstOwners.filter((x) => !x.isExit).length;
+            let all = this.lstOwners.filter((x) => !x.isExit).length;
+            if (all > 0) {
+              item.weight = (100 - weightExit) / all;
+            }
           }
         }
         item.target = (this.data.target * item.weight) / 100;
@@ -606,7 +624,6 @@ export class PopupAddTargetComponent {
           }
         }
       }
-      console.log('lstTargetLines: ', this.lstTargetLines);
     }
   }
 
@@ -739,12 +756,14 @@ export class PopupAddTargetComponent {
           if (this.isExitTarget) {
             this.lstTargetLines = [];
             let businessLine = this.data?.businessLineID;
+            let targetName = this.data.targetName;
             let year = this.data?.year;
             this.data = JSON.parse(JSON.stringify(this.dataOld));
             this.data.businessLineID = businessLine;
             this.data.owner = null;
             this.data.year = year;
             this.data.category = '1';
+            this.data.targetName = targetName;
             this.isPeriod = false;
             this.quarter1 = 0;
             this.quarter2 = 0;
@@ -805,15 +824,32 @@ export class PopupAddTargetComponent {
   //#region calendar
   changeCalendar(e) {
     this.isPeriod = false;
-    this.startDate = new Date(e?.fromDate);
-    this.endDate = new Date(e?.toDate);
-    var month = parseInt(this.startDate?.getMonth() + 1);
-    this.month = month;
-    var year = parseInt(this.startDate.getFullYear());
-    this.data.category = '1'; //năm
-    this.data.period = year;
-    this.data.year = year;
-    this.text = e?.text;
+    if (e?.fromDate) {
+      this.startDate = new Date(e?.fromDate);
+      this.endDate = new Date(e?.toDate);
+      var month = parseInt(this.startDate?.getMonth() + 1);
+      this.month = month;
+      var year = parseInt(this.startDate.getFullYear());
+      this.data.category = '1'; //năm
+      this.data.period = year;
+      this.data.year = year;
+      this.text = e?.text;
+      if (this.businessLineID != null) {
+        this.getTargetAndLinesAsync(this.businessLineID, this.data.year);
+      }
+    } else {
+      this.lstTargetLines = [];
+      this.data = new CM_Targets();
+      this.data.category = '1';
+      this.isPeriod = false;
+      this.businessLineID = '';
+      this.codxInput.crrValue = this.businessLineID;
+      this.codxInput.value = this.businessLineID;
+      this.data.currencyID = this.currencyID;
+      this.lstTime.forEach((x) => (x.lines = []));
+      this.lstOwners = [];
+      this.isExitTarget = false;
+    }
     this.changedetectorRef.detectChanges();
   }
 
@@ -847,13 +883,11 @@ export class PopupAddTargetComponent {
       lst.push(Object.assign({}, tmp));
     }
     this.lstTime = lst;
-    console.log('lstTime: ', this.lstTime);
   }
   //#endregion
 
   //#region dblick Edit targetLine
 
-  //#endregion
   onOutsideClick() {
     this.editingItem = null;
   }
@@ -1032,10 +1066,6 @@ export class PopupAddTargetComponent {
                 this.lstTargetLines.splice(i, 1);
               }
             }
-
-            console.log('delete ', this.lstTargetLinesDelete);
-
-            console.log('line ', this.lstTargetLines);
             let id = '';
             for (var j = 0; j < this.data?.owner?.split(';').length; j++) {
               let owner = this.data?.owner?.split(';')[j];
@@ -1060,7 +1090,6 @@ export class PopupAddTargetComponent {
             });
 
             this.lstOwners.splice(index, 1);
-            console.log('delete ', this.lstOwners);
             this.setListTargetLine();
           }
           this.changedetectorRef.detectChanges();

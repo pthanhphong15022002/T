@@ -346,13 +346,21 @@
                 </div>
               </div>
               <div class="w-30px min-w-30px">
-              <span *ngIf="pageNum <= maxPageNum && crrIndex < listEmp.length - 1"
+              <!-- cũ của hiệp -->
+              <span *ngIf="(crrIndex < totalCount -1) || (pageNum <= maxPageNum && crrIndex < listEmp.length - 1)"
                 type="button"
                 class="btn btn-icon btn-light-primary rounded-circle"
                 (click)="nextEmp()"
               >
                 <i class="icon-arrow_forward_ios icon-16"></i>
               </span>
+              <!-- tiến fix bug mất nút next khi từ view grid qua -->
+              <!-- <span *ngIf="(pageNum < maxPageNum - 1) || ((pageNum == maxPageNum - 1 || pageNum == maxPageNum) && crrIndex < listEmp.length - 1)"
+              type="button"
+              class="btn btn-icon btn-light-primary rounded-circle"
+              (click)="nextEmp()">
+              <i class="icon-arrow_forward_ios icon-16"></i>
+            </span> -->
             </div>
             </div>
             <div class="d-flex flex-center">
@@ -387,7 +395,7 @@
               [title]="eInfoHeaderText?.DepartmentID"
             class="text-gray-500 mb-1"
             *ngIf="infoPersonal && orgUnitStr != DepartmentStr"
-              >{{DepartmentStr}}</div>,
+              >{{DepartmentStr}}</div>
             </div>
               <!-- <div style="line-height: 20px;" class="text-dark d-flex flex-wrap h-40px border-gray-150 line-clamp line-clamp-2"> -->
                 <!-- <div

@@ -28,6 +28,7 @@ import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
 import { CodxShareService } from '../../../codx-share.service';
+import { Approver } from '../../../models/ApproveProcess.model';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -444,7 +445,9 @@ export class CodxAddBookingCarComponent
           if (res) {
             this.useCard = res?.useCard;
             this.carCapacity = res?.capacity;
-            this.resourceOwner = [res?.owner];
+            let tempApprover = new Approver ();
+            tempApprover.roleID=res?.owner;
+            this.resourceOwner = [tempApprover];
           } else {
             this.carCapacity = 0;
           }
@@ -581,7 +584,10 @@ export class CodxAddBookingCarComponent
       });
       if (selectResource) {
         this.carCapacity = selectResource[0]?.capacity;
-        this.resourceOwner = [selectResource[0]?.owner];
+        
+        let tempApprover = new Approver ();
+        tempApprover.roleID=selectResource[0]?.owner;
+        this.resourceOwner = [tempApprover];
         this.useCard = selectResource[0]?.useCard;
         this.tmplstDevice = [];
         if (selectResource[0].equipments != null) {
@@ -1058,15 +1064,18 @@ export class CodxAddBookingCarComponent
                   )
                 });
             } else {
-              this.notificationsService.notifyCode('ES007');
-              this.codxBookingService
-                .afterApprovedManual(
-                  this.formModel.entityName,
-                  this.returnData.recID,
-                  '5'
-                )
-                .subscribe();
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
+                if(approveData!=null){
+                  this.returnData.approveStatus=approveData?.approveStatus;
+                  this.returnData.write = false;
+                  this.returnData.delete = false;
+                  this.notificationsService.notifyCode('SYS034');
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                }
+                else{
+                  return;
+                }
+              });
             }
 
           } else {
@@ -1121,15 +1130,18 @@ export class CodxAddBookingCarComponent
                     });
                 });
             } else {
-              this.notificationsService.notifyCode('ES007');
-              this.codxBookingService
-                .afterApprovedManual(
-                  this.formModel.entityName,
-                  this.returnData.recID,
-                  '5'
-                )
-                .subscribe();
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
+                if(approveData!=null){
+                  this.returnData.approveStatus=approveData?.approveStatus;
+                  this.returnData.write = false;
+                  this.returnData.delete = false;
+                  this.notificationsService.notifyCode('SYS034');
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                }
+                else{
+                  return;
+                }
+              });
             }
 
             this.dialogRef && this.dialogRef.close(this.returnData);
@@ -1207,11 +1219,16 @@ export class CodxAddBookingCarComponent
           });
           let resourceStillAvailable = false;
           if (this.data.resourceID != null) {
-            this.cbbResource.forEach((item) => {
-              if (item.resourceID == this.data.resourceID) {
+            for(let i=0;i<this.cbbResource?.length;i++){
+              if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
                 resourceStillAvailable = true;
               }
-            });
+            }
+            // this.cbbResource.forEach((item) => {
+            //   if (item.resourceID == this.data.resourceID) {
+            //     resourceStillAvailable = true;
+            //   }
+            // });
             if (!resourceStillAvailable) {
               this.data.resourceID = null;
               this.tmplstDevice = [];

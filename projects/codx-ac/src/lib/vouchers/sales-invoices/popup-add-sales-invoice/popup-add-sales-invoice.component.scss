@@ -1,8 +1,15 @@
 :host ::ng-deep {
-  .codx-form .card-body {
-    padding-bottom: 0 !important;
+  .codx-form {
+    .card-body {
+      padding-bottom: 0 !important;
+    }
+
+    .card-header {
+      margin-bottom: 10px !important;
+      padding-bottom: 0 !important;
+    }
   }
-  
+
   #gridViewV2 {
     height: 100%;
     display: flex;

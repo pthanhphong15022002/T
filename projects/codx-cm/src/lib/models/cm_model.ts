@@ -178,6 +178,7 @@ export class CM_Deals {
   consultantID: string;
   processID: string;
   startDate: Date;
+  permissions: CM_Permissions[];
   endDate: Date;
   // datas: Json; hỏi kiểu dữ liệu sau
   owner: string;
@@ -230,6 +231,7 @@ export class CM_Permissions {
   approvedOn: Date;
   autoCreate: string;
   allowUpdateStatus: string;
+  memberType: string;
 }
 
 export class CM_Customers {
@@ -266,7 +268,6 @@ export class CM_Customers {
   stop: boolean;
   stopReason: string;
   customerFrom: Date;
-  customerResource: string;
   bankAccount: string;
   bankID: string;
   memo: string;
@@ -750,6 +751,7 @@ export class CM_Leads {
   currencyID: string;
   exchangeRate: number;
   dealValue: number = 0;
+  permissions: CM_Permissions[] = [];
 }
 
 export class CM_Targets {

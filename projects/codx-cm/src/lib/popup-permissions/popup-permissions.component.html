@@ -37,7 +37,7 @@
                           [ngbPopover]="
                             perm.roleType != 'O' ? popupRoleType : null
                           "
-                          placement="bottom right top"
+                          placement="right auto"
                           #p="ngbPopover"
                           (mouseenter)="showPopover(p, perm.objectID)"
                           autoClose="outside"
@@ -82,7 +82,7 @@
                           style="position: relative"
                           popoverClass="popoverClass"
                           [ngbPopover]="popupRoleType"
-                          placement="bottom right top"
+                          placement="right top"
                           #p="ngbPopover"
                           (mouseenter)="showPopover(p, perm.objectID)"
                           autoClose="outside"
@@ -203,6 +203,35 @@
                     field="full"
                     (valueChange)="valueChange($event, 'full')"
                     (focus)="controlFocus(true)"
+                    [disabled]="checkAdminUpdate()"
+                  >
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label
+                    [default]="'Xem'"
+                    [formModel]="dialog.formModel"
+                    [fiedName]="'Read'"
+                  ></codx-label>
+                </td>
+                <td>
+                  <codx-label
+                    [default]="'Người dùng có quyền xem'"
+                    [formModel]="dialog.formModel"
+                    [name]="'lblDescriptionRead'"
+                  >
+                  </codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input
+                    class="test-check"
+                    type="switch"
+                    style="width: 100%"
+                    [crrValue]="read"
+                    field="read"
+                    (valueChange)="valueChange($event, 'read')"
                     [disabled]="checkAdminUpdate()"
                   >
                   </codx-input>

@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
+  AuthService,
   ButtonModel,
   DataRequest,
   DialogModel,
@@ -44,6 +45,7 @@ export class TargetsComponent
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
   //schedule view
+  @ViewChild('codxInput') codxInput: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -101,6 +103,7 @@ export class TargetsComponent
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
 
   lstDataTree = [];
+  lstTreeSearchs = [];
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -125,8 +128,9 @@ export class TargetsComponent
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
   className: string = 'TargetsBusiness';
-  method: string = '';
+  method: string = 'GetListTargetAsync';
   idField: string = 'recID';
+
   //#endregion
   titleAction = '';
   dataSelected: any;
@@ -155,17 +159,28 @@ export class TargetsComponent
   exchangeRate: number;
   currencyIDSys: any;
   exchangeRateSys: number;
+  gridViewSetupTarget: any;
+  countLoad = 0;
+  datasVll = [];
+  language: string;
+  search = '';
+  countTarget = 0;
+  countPersons = 0;
+  predicateSearch = '';
+  dataValueSearch = '';
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService,
+    private auth: AuthService,
     private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
@@ -177,6 +192,7 @@ export class TargetsComponent
       id: this.btnAdd,
     };
     this.year = new Date().getFullYear();
+
     this.loadTreeData(this.year?.toString());
 
     this.cache.valueList('CRM050').subscribe((res) => {
@@ -190,9 +206,22 @@ export class TargetsComponent
     }
     // this.getSchedule();
   }
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
+        },
+      },
+    ];
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
     this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetAsync';
     this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
 
     this.detectorRef.checkNoChanges();
@@ -232,11 +261,12 @@ export class TargetsComponent
   //#endregion setting schedule
 
   //#region load tree
-  loadTreeData(year) {
+  loadTreeData(year, predicates = '', dataValues = '') {
     this.loadedTree = false;
     var resource = new DataRequest();
-    resource.predicates = 'Year=@0';
-    resource.dataValues = year;
+    resource.predicates =
+      predicates != '' ? 'Year=@0' + ' and ' + predicates : 'Year=@0';
+    resource.dataValues = dataValues != '' ? year + ';' + dataValues : year;
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
@@ -258,52 +288,80 @@ export class TargetsComponent
           this.loaded = true; */
         }),
         map((response: any) => {
-          return response ? response[0] : [];
+          return response ? response : null;
         })
       );
   }
+  async loadCurrentID() {
+    if (this.countLoad == 0) {
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          if (exchangeRateCurrent?.exchRate > 0) {
+            this.exchangeRate = exchangeRateCurrent?.exchRate;
+          } else {
+            this.exchangeRate = 1;
+            this.currencyID = 'VND';
+          }
+          this.currencyIDSys = this.currencyID;
+          this.exchangeRateSys = this.exchangeRate;
+          this.countLoad++;
+        }
+      }
+    }
+    let data = await firstValueFrom(this.fetch());
+    if (data != null) {
+      this.lstDataTree = data[0];
+      this.countTarget = data[1];
+      this.countPersons = data[2];
+      this.lstTreeSearchs = this.lstDataTree;
+      // if (this.viewCurrent == '2') {
+      //   this.lstDataTree = this.lstTreeSearchs.filter(
+      //     (item) =>
+      //       (item?.title?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       (item?.salespersonID?.indexOf(this.search) >= 0 &&
+      //         item.year == this.year) ||
+      //       item?.items?.some(
+      //         (x) =>
+      //           (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
+      //           (x?.businessLineID?.indexOf(this.search) >= 0 &&
+      //             x.year == this.year)
+      //       )
+      //   );
+      // }
+    }
 
+    this.loadedTree = true;
+  }
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
       this.lstDataTree = [];
+      this.countLoad++;
       this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? false : true;
       this.view.button = this.showButtonAdd ? this.button : null;
       this.currencyID = this.currencyIDSys;
       this.exchangeRate = this.exchangeRateSys;
+      this.search = '';
       this.viewCurrent = valueView;
-      this.loadTreeData(this.year?.toString());
+      this.loadTreeData(
+        this.year?.toString(),
+        this.predicateSearch,
+        this.dataValueSearch
+      );
     }
     this.detectorRef.detectChanges();
-  }
-
-  async loadCurrentID() {
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-        let exchangeRateCurrent = await firstValueFrom(
-          this.cmSv.getExchangeRate(this.currencyID, new Date())
-        );
-        if (exchangeRateCurrent?.exchRate > 0) {
-          this.exchangeRate = exchangeRateCurrent?.exchRate;
-        } else {
-          this.exchangeRate = 1;
-          this.currencyID = 'VND';
-        }
-        this.currencyIDSys = this.currencyID;
-        this.exchangeRateSys = this.exchangeRate;
-      }
-    }
-    this.fetch().subscribe((item) => {
-      this.lstDataTree = item;
-
-      this.loadedTree = true;
-    });
   }
 
   isActive(item: any): boolean {
@@ -337,7 +395,6 @@ export class TargetsComponent
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
-      this.currencyID = e.data;
     }
     this.detectorRef.detectChanges();
   }
@@ -349,7 +406,7 @@ export class TargetsComponent
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
-      this.exchangeRate = exchangeRate?.exchRate;
+
       if (exchangeRate?.exchRate > 0) {
         this.lstDataTree.forEach((element) => {
           element.target =
@@ -382,11 +439,14 @@ export class TargetsComponent
         if (this.lstDataTree != null && this.viewMode == 9) {
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
-      }else{
-        this.exchangeRate = 1;
-        this.currencyID = 'VND';
+      } else {
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
       }
-
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate?.exchRate;
+      this.codxInput.crrValue = this.currencyID;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -397,7 +457,10 @@ export class TargetsComponent
     this.viewMode = e?.view?.type;
     this.detectorRef.detectChanges();
   }
-  onLoading(e) {
+  async onLoading(e) {
+    // if(datasVll && datasVll.datas){
+    let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
+
     this.columnGrids = [
       {
         headerTemplate: this.headerBusinessLine,
@@ -408,111 +471,148 @@ export class TargetsComponent
       {
         headerTemplate: this.headerYear,
         template: this.templateYear,
-        width: 150,
+        width: 120,
       },
       //quý
       {
         headerTemplate: this.headerQuarter1,
         template: this.templateQuarter1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter2,
         template: this.templateQuarter2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter3,
         template: this.templateQuarter3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerQuarter4,
         template: this.templateQuarter4,
-        width: 150,
+        width: 120,
       },
       //Tháng
       {
         headerTemplate: this.headerMonth1,
         template: this.templateMonth1,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth2,
         template: this.templateMonth2,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth3,
         template: this.templateMonth3,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth4,
         template: this.templateMonth4,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth5,
         template: this.templateMonth5,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth6,
         template: this.templateMonth6,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth7,
         template: this.templateMonth7,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth8,
         template: this.templateMonth8,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth9,
         template: this.templateMonth9,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth10,
         template: this.templateMonth10,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth11,
         template: this.templateMonth11,
-        width: 150,
+        width: 120,
       },
       {
         headerTemplate: this.headerMonth12,
         template: this.templateMonth12,
-        width: 150,
+        width: 120,
       },
     ];
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
+
+    let obj = {
+      type: ViewType.chart,
+      text: datasVll?.datas[1]?.text,
+      icon: datasVll?.datas[1]?.icon,
+      sameData: false,
+      active: false,
+      model: {
+        panelRightRef: this.panelRight,
       },
-      {
-        type: ViewType.chart,
-        sameData: false,
-        active: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
+    };
+    this.views.push(Object.assign({}, obj));
+    // }
   }
-  searchChanged(e) {}
+  searchChanged(e) {
+    this.search = '';
+    if (e == null || e?.trim() == '') {
+      this.predicateSearch = '';
+      this.dataValueSearch = '';
+      this.loadTreeData(this.year);
+      return;
+    }
+    const text = e;
+    this.search = text;
+    let predicates = '';
+    let dataValues = '';
+    this.isShow = false;
+    let keySearch = Object.keys(this.gridViewSetupTarget);
+    let j = 0;
+    for (let i = 0; i < keySearch.length; i++) {
+      if (this.gridViewSetupTarget[keySearch[i]].isQuickSearch == true) {
+        let or = j > 0 ? ' or ' : '';
+        predicates += or + `${keySearch[i]}.Contains(@1)`;
+        j++;
+      }
+    }
+
+    // predicates =
+    //   'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
+    dataValues = text;
+    this.predicateSearch = predicates;
+    this.dataValueSearch = dataValues;
+    this.loadTreeData(this.year, predicates, dataValues);
+    this.detectorRef.detectChanges();
+  }
+
+  convertToCamelCase(name: string): string {
+    return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
+  }
+
+  filterChange(e) {
+    console.log('filter: ', e);
+  }
+
+  filterReportChange(e) {
+    console.log('filterReport: ', e);
+  }
   selectedChange(e) {}
   //#endregion
 
@@ -562,9 +662,6 @@ export class TargetsComponent
           case 'SYS04':
             res.disabled = true;
             break;
-          case 'SYS02':
-            res.disabled = true;
-            break;
           case 'SYS03':
             if (data.parentID != null) res.disabled = true;
             break;
@@ -604,6 +701,8 @@ export class TargetsComponent
         title: this.titleAction,
         currencyID: this.currencyID,
         exchangeRate: this.exchangeRate,
+        gridViewSetupTarget: this.gridViewSetupTarget,
+        year: this.year,
       };
       var dialog = this.callfc.openForm(
         PopupAddTargetComponent,
@@ -620,20 +719,32 @@ export class TargetsComponent
         if (e != null && e?.event != null) {
           var data = e?.event[0];
           if (data.year == this.year) {
-            var index = this.lstDataTree.findIndex(
+            var index = this.lstTreeSearchs.findIndex(
               (x) => x.businessLineID == data?.businessLineID
             );
             if (index != -1) {
-              this.lstDataTree[index] = data;
+              this.lstTreeSearchs[index] = data;
               // this.lstDataTree.splice(index, 1);
             } else {
-              this.lstDataTree.push(Object.assign({}, data));
+              this.lstTreeSearchs.push(Object.assign({}, data));
+              this.countTarget++;
             }
-            if (this.lstDataTree != null && this.viewMode == 9) {
-              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-            }
+            this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+            let lst = [];
+            this.lstDataTree.forEach((res) => {
+              res?.items?.forEach((element) => {
+                if (
+                  !lst.some(
+                    (item) => item?.salespersonID == element?.salespersonID
+                  )
+                ) {
+                  lst.push(Object.assign({}, element));
+                }
+              });
+            });
+            this.countPersons = lst.length;
+            this.isShow = false;
           }
-          this.isShow = false;
 
           this.detectorRef.detectChanges();
         }
@@ -669,6 +780,7 @@ export class TargetsComponent
           lstTargetLines: lstTargetLines,
           currencyID: this.currencyID,
           exchangeRate: this.exchangeRate,
+          gridViewSetupTarget: this.gridViewSetupTarget,
         };
         var dialog = this.callfc.openForm(
           PopupAddTargetComponent,
@@ -685,20 +797,35 @@ export class TargetsComponent
           if (e != null && e?.event != null) {
             var data = e?.event[0];
             if (data.year == this.year) {
-              var index = this.lstDataTree.findIndex(
+              this.view.dataService.update(data).subscribe();
+              var index = this.lstTreeSearchs.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
               );
               if (index != -1) {
-                this.lstDataTree[index] = data;
+                this.lstTreeSearchs[index] = data;
               } else {
-                this.lstDataTree.push(Object.assign({}, data));
+                this.lstTreeSearchs.push(Object.assign({}, data));
+                this.countTarget++;
               }
-              if (this.lstDataTree != null && this.viewMode == 9) {
-                this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-              }
+              this.lstDataTree = JSON.parse(
+                JSON.stringify(this.lstTreeSearchs)
+              );
+              let lst = [];
+              this.lstDataTree.forEach((res) => {
+                res?.items?.forEach((element) => {
+                  if (
+                    !lst.some(
+                      (item) => item?.salespersonID == element?.salespersonID
+                    )
+                  ) {
+                    lst.push(Object.assign({}, element));
+                  }
+                });
+              });
+              this.countPersons = lst.length;
+              this.isShow = false;
             }
             // this.lstDataTree.push(Object.assign({}, data));
-            this.isShow = false;
 
             this.detectorRef.detectChanges();
           }
@@ -707,6 +834,7 @@ export class TargetsComponent
   }
 
   deleteTargetLine(data) {
+    this.view.dataService.dataSelected = data;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
@@ -717,13 +845,37 @@ export class TargetsComponent
               'CM',
               'ERM.Business.CM',
               'TargetsBusiness',
-              'DeletedTargetLineAsync',
+              'DeletedTargetAsync',
               data.recID
             )
             .subscribe((res) => {
               if (res) {
-                data.target = 0;
-                this.view.dataService.update(data.target).subscribe();
+                var index = this.lstTreeSearchs.findIndex(
+                  (x) => x.recID == data.recID
+                );
+                if (index != -1) {
+                  this.lstTreeSearchs.splice(index, 1);
+                  this.countTarget--;
+                }
+                this.lstDataTree = JSON.parse(
+                  JSON.stringify(this.lstTreeSearchs)
+                );
+                let lst = [];
+                this.lstDataTree.forEach((res) => {
+                  res?.items?.forEach((element) => {
+                    if (
+                      !lst.some(
+                        (item) => item?.salespersonID == element?.salespersonID
+                      )
+                    ) {
+                      lst.push(Object.assign({}, element));
+                    }
+                  });
+                });
+                this.countPersons = lst.length;
+                // this.view.dataService
+                //   .delete([this.view.dataService.dataSelected], false)
+                //   .subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
@@ -735,7 +887,7 @@ export class TargetsComponent
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeletedTargetLineAsync';
+    opt.methodName = 'DeletedTargetAsync';
     opt.assemblyName = 'ERM.Business.CM';
     opt.className = 'TargetsBusiness';
     opt.service = 'CM';
@@ -747,23 +899,33 @@ export class TargetsComponent
   //#region Month
   async popupChangeAllocationRate(data) {
     var lstLinesBySales = [];
-    lstLinesBySales = await firstValueFrom(
+    let result = await firstValueFrom(
       this.api.execSv<any>(
         'CM',
         'ERM.Business.CM',
         'TargetsLinesBusiness',
         'GetSalesPersonsByBusinessIDAsync',
-        [data?.businessLineID, data?.salespersonID]
+        [data?.businessLineID, data?.salespersonID, this.year]
       )
     );
+    let dataEdit = JSON.parse(JSON.stringify(data));
+    if (result != null) {
+      dataEdit.target = result[0];
+      dataEdit.currencyID = result[1];
+      dataEdit.exchangeRate = result[2];
+      lstLinesBySales = result[3];
+    }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view?.formModel;
     dialogModel.zIndex = 999;
     var obj = {
-      data: data,
+      data: dataEdit,
       title: this.titleAction,
       lstLinesBySales: lstLinesBySales,
+      currencyID: this.currencyID,
+      exchangeRate: this.exchangeRate,
+      targetSys: data.target,
     };
     var dialog = this.callfc.openForm(
       PopupChangeAllocationRateComponent,
@@ -778,23 +940,23 @@ export class TargetsComponent
     dialog.closed.subscribe((e) => {
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        let index = this.lstDataTree.findIndex(
+        let index = this.lstTreeSearchs.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
 
         if (index != -1) {
-          var data = this.lstDataTree[index]?.items;
+          var data = this.lstTreeSearchs[index]?.items;
           if (data != null) {
             var indexItem = data.findIndex(
               (x) => x.salespersonID == e?.event.salespersonID
             );
             if (indexItem != -1) {
               data[indexItem] = e.event;
-              this.lstDataTree[index].items = data;
+              this.lstTreeSearchs[index].items = data;
             }
           }
-          if (this.lstDataTree[index].targetsLines != null) {
-            const targetLines = this.lstDataTree[index].targetsLines;
+          if (this.lstTreeSearchs[index].targetsLines != null) {
+            const targetLines = this.lstTreeSearchs[index].targetsLines;
             const updatedItems = [];
 
             for (const item of targetLines) {
@@ -812,15 +974,10 @@ export class TargetsComponent
               updatedItems.push(item);
             }
 
-            this.lstDataTree[index].targetsLines = updatedItems;
+            this.lstTreeSearchs[index].targetsLines = updatedItems;
           }
-          this.exChangeRate(
-            this.lstDataTree[index].currencyID,
-            this.currencyID
-          );
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
-        this.isShow = false;
         this.detectorRef.detectChanges();
       }
     });
@@ -843,8 +1000,8 @@ export class TargetsComponent
       });
       if (this.viewMode == 9)
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+      this.isShow = isShow;
     }
-    this.isShow = isShow;
     this.detectorRef.detectChanges();
   }
 

@@ -1,9 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ButtonModel,
@@ -17,11 +19,15 @@ import {
   RequestOption,
 } from 'codx-core';
 import { PopAddAccountsComponent } from './pop-add-accounts/pop-add-accounts.component';
+import { CodxAcService } from '../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-chart-of-accounts',
   templateUrl: './chart-of-accounts.component.html',
-  styleUrls: ['./chart-of-accounts.component.css'],
+  styleUrls: ['./chart-of-accounts.component.css','../../codx-ac.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartOfAccountsComponent extends UIComponent {
   //#region Contructor
@@ -31,12 +37,14 @@ export class ChartOfAccountsComponent extends UIComponent {
   columnsGrid = [];
   headerText: any;
   dialog: DialogRef;
+  private destroy$ = new Subject<void>();
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   //#region Contructor
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private acService: CodxAcService,
   ) {
     super(inject);
     this.dialog = this.dialog;
@@ -47,12 +55,12 @@ export class ChartOfAccountsComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.cache.moreFunction('ChartOfAccounts', 'grvChartOfAccounts').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20100');
-        if (m) this.funcName = m.defaultName;
-      }
-    });
+    // this.acService
+    //   .getFunctionList(this.view.funcID)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res) => {
+    //     if (res) this.funcName = res.defaultName;
+    //   });
     this.views = [
       {
         type: ViewType.grid,
@@ -61,10 +69,11 @@ export class ChartOfAccountsComponent extends UIComponent {
         model: {
           resources: this.columnsGrid,
           template2: this.templateMore,
-          frozenColumns: 1,
+          
         },
       },
     ];
+    this.dt.detectChanges();
     // this.view.dataService.methodSave = 'AddAsync';
     // this.view.dataService.methodUpdate = 'EditAsync';
     // this.view.dataService.methodDelete = 'DeleteAsync';

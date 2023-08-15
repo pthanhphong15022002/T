@@ -45,6 +45,7 @@ import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signat
 import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { ResponseModel } from '../../models/ApproveProcess.model';
 import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'lib-pdf',
@@ -128,6 +129,7 @@ export class PdfComponent
   showHand = true;
 
   //highlight
+  canHighLight = false;
   isInteractPDF = false;
   lstHighlightTextArea: Array<highLightTextArea> = [];
   lstKey: Array<string> = [];
@@ -295,6 +297,12 @@ export class PdfComponent
         this.labels = res?.Label?.filter((label) => {
           return label.Language == this.user.language;
         });
+        this.canHighLight =
+          res.AllowHighlight == null
+            ? false
+            : res.AllowHighlight == '0'
+            ? false
+            : true;
         this.detectorRef.detectChanges();
       });
 
@@ -311,7 +319,7 @@ export class PdfComponent
           let sf = res?.signFile;
           if (sf) {
             sf.files.forEach((file: any, index) => {
-              if(file?.eSign){
+              if (file?.eSign) {
                 this.lstFiles.push({
                   fileName: file.fileName,
                   fileRefNum: sf.refNo,
@@ -322,7 +330,6 @@ export class PdfComponent
                   fileIdx: index,
                 });
               }
-
             });
             this.lstSigners = res.approvers;
             this.lstSigners.forEach((signer) => {
@@ -736,12 +743,8 @@ export class PdfComponent
         //   });
         this.codxShareService
           .codxApprove(this.transRecID, mode, null, comment, null)
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null) {
-              resolve(true);
-            } else {
-              resolve(false);
-            }
+          .subscribe((res: ResponseModel) => {
+            resolve(res);
           });
       });
     }

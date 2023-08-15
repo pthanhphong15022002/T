@@ -58,7 +58,7 @@
 <ng-template #templateRight>
   <div class="tabline-content ms-5 h-100">
     <codx-gridview-v2 #grid funcId="ACS250" [dataSource]="view.dataService.data" entityName="AC_FAPostingAccounts"
-      idField="recID" [templateMore]="templateMore"></codx-gridview-v2>
+      idField="recID" [templateMore]="templateMore" [autoLoad]="false"></codx-gridview-v2>
   </div>
 </ng-template>
 

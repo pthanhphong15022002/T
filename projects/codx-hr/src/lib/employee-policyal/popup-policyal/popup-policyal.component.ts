@@ -324,7 +324,7 @@ export class PopupPolicyalComponent
   }
   
   // checkExistInEmptyRec(lst, rec){
-  //   debugger
+  //   
   //   if(lst.includes(rec)){
   //     return true;
   //   }
@@ -433,7 +433,7 @@ export class PopupPolicyalComponent
           }
         }
         this.GetPolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
-          debugger
+          
           this.lstPolicyBeneficiariesApply = res.filter((obj) => obj.category == 0);
         this.lstPolicyBeneficiariesApply = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesApply, 'priority');
           this.SplitToSubList(this.lstPolicyBeneficiariesApply);
@@ -778,13 +778,13 @@ export class PopupPolicyalComponent
     );
   }
 
-  AddPolicyBeneficiaries(policyID){
+  AddPolicyBeneficiaries(obj){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'PolicyBeneficiariesBusiness',
       'AddPolicyBeneficiariesAsync',
-      policyID
+      obj
     );
   }
 
@@ -850,7 +850,7 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
-    debugger
+    
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -894,7 +894,7 @@ export class PopupPolicyalComponent
           if(res){
               this.notify.notifyCode('SYS006');
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                debugger
+                
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   
                 })
@@ -912,20 +912,19 @@ export class PopupPolicyalComponent
         })
       }
       else if(this.actionType === 'edit'){
-      debugger
         if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
           this.EditPolicyALPolicyIDChanged().subscribe((res) => {
             if(res){
               this.notify.notifyCode('SYS007');
               this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                  debugger
+                  
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                     
                   })
                 }
                 for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                  debugger
+                  
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                     
                   })

@@ -141,9 +141,8 @@ export class AddContractsComponent implements OnInit {
   grvSetup: any;
   isExitAutoNum: any = false;
 
-  currnecyID;
-  applyProcess;
   leadNoSetting: any;
+  idxCrr: number = -1;
 
   constructor(
     private cache: CacheService,
@@ -167,6 +166,7 @@ export class AddContractsComponent implements OnInit {
     this.contractsInput = dt?.data?.contract;
 
     this.getFormModel();
+
     this.user = this.authStore.get();
     this.listTypeContract = contractService.listTypeContractAdd;
 
@@ -192,7 +192,6 @@ export class AddContractsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.getSettingContract();
     this.setDataContract(this.contractsInput);
     this.disabledDelActualDate =
       !this.contracts?.delStatus ||
@@ -200,65 +199,64 @@ export class AddContractsComponent implements OnInit {
       this.contracts?.delStatus == '1'
         ? true
         : false;
+
+    this.action !== 'add' &&
+      this.contracts.applyProcess &&
+      this.getListInstanceSteps(this.contracts?.processID);
   }
 
   //#region setData
   async setDataContract(data) {
-    if (this.action == 'add') {
-      this.contracts = data ? data : new CM_Contracts();
-      this.contracts.recID = Util.uid();
-      this.contracts.projectID = this.projectID;
-      this.contracts.contractDate = new Date();
-      this.contracts.effectiveFrom = new Date();
-      this.contracts.paidAmt = 0;
-      this.contracts.status = '1';
-      this.contracts.remainAmt = 0;
-      this.contracts.useType = '1';
-      this.contracts.pmtStatus = '1';
-      this.contracts.delStatus = '1';
-      this.contracts.pmtMethodID = 'ATM';
-      this.contracts.pmtStatus = this.contracts.pmtStatus
-        ? this.contracts.pmtStatus
-        : '0';
-      this.contracts.contractType = this.contracts.contractType
-        ? this.contracts.contractType
-        : '1';
-      this.contracts.applyProcess = this.applyProcess || false;
-      this.contracts.currencyID = this.currnecyID;
-      this.loadExchangeRate(this.contracts.currencyID);
-      this.setContractByDataOutput();
-
-      if (!this.contracts.applyProcess) {
-        this.getAutoNumber();
-      } else {
-        this.disabledShowInput = true;
-      }
-    }
-
-    if (this.action == 'edit') {
-      this.contracts = data;
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
-      this.getPayMentByContractID(this.contracts?.recID);
-      this.getCustomersDefaults(this.contracts?.customerID);
-    }
-
-    if (this.action == 'copy') {
-      this.contracts = data;
-      delete this.contracts['id'];
-      this.contracts.recID = Util.uid();
-      this.getQuotationsLinesInContract(
-        this.contracts?.recID,
-        this.contracts?.quotationID
-      );
-      this.getPayMentByContractID(this.contracts?.recID);
-      if (!this.contracts.applyProcess) {
-        this.getAutoNumber();
-      } else {
-        this.disabledShowInput = true;
-      }
+    switch (this.action) {
+      case "add":
+        this.contracts = data ? data : new CM_Contracts();
+        this.contracts.paidAmt = 0;
+        this.contracts.status = '1';
+        this.contracts.remainAmt = 0;
+        this.contracts.useType = '1';
+        this.contracts.pmtStatus = '1';
+        this.contracts.delStatus = '1';
+        this.contracts.recID = Util.uid();
+        this.contracts.pmtMethodID = 'ATM';
+        this.contracts.projectID = this.projectID;
+        this.contracts.contractDate = new Date();
+        this.contracts.effectiveFrom = new Date();
+        this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+        this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+        await this.getSettingContract();
+        this.loadExchangeRate(this.contracts.currencyID);
+        this.setContractByDataOutput();
+        if (!this.contracts.applyProcess) {
+          this.getAutoNumber();
+        } else {
+          this.disabledShowInput = true;
+        }
+        break;
+      case "edit":
+        this.contracts = data;
+        this.getQuotationsLinesInContract(
+          this.contracts?.recID,
+          this.contracts?.quotationID
+        );
+        this.getPayMentByContractID(this.contracts?.recID);
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
+      case "copy":
+        this.contracts = data;
+        delete this.contracts['id'];
+        this.contracts.recID = Util.uid();
+        this.getQuotationsLinesInContract(
+          this.contracts?.recID,
+          this.contracts?.quotationID
+        );
+        this.getPayMentByContractID(this.contracts?.recID);
+        if (!this.contracts.applyProcess) {
+          this.getAutoNumber();
+        } else {
+          this.disabledShowInput = true;
+        }
+        break;
+      default:
     }
   }
 
@@ -927,14 +925,15 @@ export class AddContractsComponent implements OnInit {
           id: processID,
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
-          dealId: this.action !== 'edit' ? res[2] : this.contracts.dealID,
+          dealId: res[2],
         };
+        this.contracts.contractID =
+          this.action !== 'edit' ? obj.dealId : this.contracts.contractID;
         var isExist = this.listMemorySteps.some((x) => x.id === processID);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.contracts.contractID = obj.dealId;
         this.getFields(this.listInstanceSteps);
       }
     });
@@ -946,16 +945,20 @@ export class AddContractsComponent implements OnInit {
     }
     return null;
   }
-  getFields(steps: any): boolean {
+  getFields(steps: any) {
     this.listField = [];
     if (steps?.length > 0 && steps != null) {
-      for (let i = 0; i < steps.length; i++) {
-        if (steps[i]?.fields.length > 0 && steps[i].fields != null) {
-          this.listField.push(...steps[i].fields);
+      if (this.action == 'edit') {
+        this.idxCrr = steps.findIndex((x) => x.stepID == this.contracts.stepID);
+      } else this.idxCrr = 0;
+      if (this.idxCrr != -1) {
+        for (let i = 0; i <= this.idxCrr; i++) {
+          if (steps[i]?.fields?.length > 0) {
+            this.listField.push(...steps[i].fields);
+          }
         }
       }
     }
-    return false;
   }
   async getListPermission(permissions) {
     this.listParticipants = permissions.filter((x) => x.roleType === 'P');
@@ -1007,15 +1010,12 @@ export class AddContractsComponent implements OnInit {
   //#region setDefault
   async getSettingContract() {
     let res = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
+      this.cmService.getParam('CMParameters', '1')
     );
-    if (res?.length > 0) {
-      let dataParam = res.find((x) => x.category == '1' && !x.transType);
-      if (dataParam) {
-        let dataValue = JSON.parse(dataParam.dataValue);
-        this.currnecyID = dataValue?.DefaultCurrency;
-        this.applyProcess = dataValue?.ProcessContractUsed == '1';
-      }
+    if (res?.dataValue) {
+      let dataValue = JSON.parse(res?.dataValue);
+      this.contracts.currencyID = dataValue?.DefaultCurrency ;
+      this.contracts.applyProcess = dataValue?.ProcessContract == '1';;
     }
   }
 
@@ -1059,7 +1059,7 @@ export class AddContractsComponent implements OnInit {
 
   changeAutoNum(e) {
     // check trùm mã khi nhạp tay
-    if (!this.disabledShowInput && e) {
+    if (!this.disabledShowInput && this.action !== 'edit' && e) {
       this.contracts.contractID = e?.crrValue;
       if (
         this.contracts.contractID &&
@@ -1109,4 +1109,5 @@ export class AddContractsComponent implements OnInit {
   // checkSpace(text: string) {
   //   return text.includes(' ');
   // }
+
 }

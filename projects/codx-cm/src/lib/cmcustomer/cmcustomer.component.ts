@@ -93,8 +93,7 @@ export class CmCustomerComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
-    private codxShareService: CodxShareService,
-
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
@@ -180,7 +179,8 @@ export class CmCustomerComponent
     //     : this.funcID == 'CM0103'
     //     ? 'CM_Partners'
     //     : 'CM_Competitors';
-    this.cache.functionList(this.funcID).subscribe(async (fun) => {
+    let funcID = this.funcID == 'CM0105' ? 'CM0101' : this.funcID;
+    this.cache.functionList(funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
       this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
       // formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
@@ -188,7 +188,7 @@ export class CmCustomerComponent
       // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
       // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
       // this.view.formModel = formMD;
-      if (this.funcID == 'CM0101') {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.lstCustGroups = await firstValueFrom(
           this.api.execSv<any>(
             'CM',
@@ -232,21 +232,26 @@ export class CmCustomerComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'CM0105_1':
       case 'CM0101_1':
         this.setIsBlackList(data, true);
         break;
+      case 'CM0105_3':
       case 'CM0101_3':
         this.setIsBlackList(data, false);
         break;
       case 'CM0102_3':
+      case 'CM0105_1':
       case 'CM0102_2':
         this.deleteContactToCM(data);
         break;
       //tạm ngưng
+      case 'CM0105_4':
       case 'CM0101_4':
         this.updateStatusCustomer('99', data);
         break;
       //mở lại
+      case 'CM0105_5':
       case 'CM0101_5':
         this.updateStatusCustomer('2', data);
         break;
@@ -277,10 +282,11 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-
+          case 'CM0105_1':
           case 'CM0101_1':
             if (data.isBlackList) res.disabled = true;
             break;
+          case 'CM0105_3':
           case 'CM0101_3':
             if (!data.isBlackList) res.disabled = true;
             break;
@@ -300,9 +306,11 @@ export class CmCustomerComponent
             )
               res.disabled = true;
             break;
+          case 'CM0105_4':
           case 'CM0101_4':
             if (data.status === '99') res.disabled = true;
             break;
+          case 'CM0105_5':
           case 'CM0101_5':
             if (data.status !== '99') res.disabled = true;
             break;
@@ -339,7 +347,7 @@ export class CmCustomerComponent
           .getAutonumber(
             this.funcID,
             fun.entityName,
-            this.funcID == 'CM0101'
+            this.funcID == 'CM0101' || this.funcID == 'CM0105'
               ? 'CustomerID'
               : this.funcID == 'CM0102'
               ? 'ContactID'
@@ -438,7 +446,7 @@ export class CmCustomerComponent
           .getAutonumber(
             this.funcID,
             fun.entityName,
-            this.funcID == 'CM0101'
+            this.funcID == 'CM0101' || this.funcID == 'CM0105'
               ? 'CustomerID'
               : this.funcID == 'CM0102'
               ? 'ContactID'
@@ -480,7 +488,7 @@ export class CmCustomerComponent
   async delete(data: any) {
     this.view.dataService.dataSelected = data;
     var check = false;
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       check = await firstValueFrom(
         this.cmSv.checkCustomerIDByDealsAsync(data?.recID)
       );
@@ -715,7 +723,7 @@ export class CmCustomerComponent
 
   getNameCrm(data) {
     var name = '';
-    if (this.funcID == 'CM0101') {
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
       name = data?.customerName;
     } else if (this.funcID == 'CM0102') {
       name = data.contactName;

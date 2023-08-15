@@ -2,6 +2,8 @@ import { Component, Injector, OnInit, Optional } from '@angular/core';
 import { CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxExportAddComponent } from '../codx-export/codx-export-add/codx-export-add.component';
 import { CodxReportAddComponent } from './popup/codx-report-add/codx-report-add.component';
+import { PopupShowDatasetComponent } from 'projects/codx-report/src/lib/popup-show-dataset/popup-show-dataset.component';
+import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 @Component({
   selector: 'lib-codx-list-reports',
@@ -21,12 +23,12 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   dataSelected:any = null;
   entityName:string = "RP_ReportList";
   jsParameters:string = "";
-  loading:boolean = false;
+  loading:boolean = true;
   loaded:boolean = false;
 
   constructor(
     inject: Injector,
-    private notification: NotificationsService,
+    private notificationSV: NotificationsService,
     private callfunc:CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -55,8 +57,12 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
       this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
         if(res)
+        {
           this.lstReport = res;
+          this.dataSelected = res[0];
+        }
         this.loaded = true;
+        this.loading = false;
       });
     }
   }
@@ -67,7 +73,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
       if(mfc?.length > 0)
       {
         this.sysMoreFC = mfc.filter(element => {
-          return element.functionID == "SYS02" || element.functionID == "SYS03";
+          return element.functionID == "SYS03";
         }).sort((x,y) => (x.sorting - y.sorting));
       }
     });
@@ -77,7 +83,30 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     this.dialog.close();
   }
 
-  clickMF(event:any,data:any){
+  clickMF(e:any,report:any){
+    switch(e.functionID){
+      case"SYS02": //xóa
+        break;
+      case"SYS03": // sửa
+        let option = new DialogModel();
+        option.DataService = this.dialog.dataService;
+        option.FormModel = this.dialog.formModel;
+        let data = {
+          module:report.moduleID,
+          reportID:report.recID,
+        }
+        this.callfc.openForm(
+          PopupAddReportComponent,
+          '',
+          screen.width,
+          screen.height,
+          " ",
+          data,
+          '',
+          option
+        );
+      break;
+    }
   }
   //seletecd item
   selectedItem(data:any){
@@ -87,7 +116,6 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   clickExport(){
     if(!this.loading)
     {
-      debugger
       this.loading = true;
       this.api.execSv(this.dataSelected.service,"Codx.RptBusiness","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
       .subscribe((res:any) => {
@@ -98,7 +126,12 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
             fileName = this.dataSelected.reportName.split(".")[0];
           this.downloadFile(res,fileName);
           this.dialog.close(); 
-        };
+        }
+        else
+        {
+          this.notificationSV.notify("Hệ thống thực thi không thành công","2");
+          this.dialog.close(); 
+        }
         this.loading = false; 
       });
     }

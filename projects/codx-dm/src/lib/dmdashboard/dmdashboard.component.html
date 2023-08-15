@@ -10,7 +10,11 @@
 </codx-views>
 
 <ng-template #template>
-  <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+  <div *ngIf="isLoaded">
+    <div *ngIf="reportID == 'DMD001'">
+      <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #dashboard1>
@@ -25,8 +29,8 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="1">
-    <div class="p-2">
-      <div class="d-flex justify-content-center">
+    <div class="p-2 w-100 h-100">
+      <div class="d-flex justify-content-center h-10">
         <div id="group1" class="btn-group">
           <input
             class="btn-check"
@@ -55,7 +59,7 @@
           <label class="btn btn-outline-primary" for="right1">Phân loại</label>
         </div>
       </div>
-      <div id="column">
+      <div id="column" style="height: 40%">
         <ejs-accumulationchart
           id="pie"
           class="d-block"
@@ -70,15 +74,52 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="data1"
-              xName="Product"
-              yName="Percentage"
+              [dataSource]="dbData?.a1"
+              xName="extension"
+              yName="totalFileSize"
               innerRadius="70%"
               [border]="{ width: 3 }"
+              [palettes]="[
+                '#005dc7',
+                '#21b3d2',
+                '#06ddb8',
+                '#00f5e9',
+                '#a6dff5'
+              ]"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
+      </div>
+      <div class="h-50">
+        <div class="scroll-hover" style="max-height: 350px">
+          <div *ngFor="let item of dbData?.a1">
+            <div class="card mx-2 mb-2" style="border: #f0f0f0 solid 1px">
+              <div class="p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <img
+                      [src]="getThumbnail(item)"
+                      class="me-2"
+                      style="width: 30px; height: 30px"
+                    />
+                    <div>
+                      <h5 class="card-title">{{ item.extension }}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">
+                        {{ item.totalFile }} files
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <h5 class="fw-bold">{{ item.totalFileSize }} Byte</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -90,9 +131,12 @@
       id="treemap"
       style="display: block"
       height="350px"
-      [dataSource]="data"
-      weightValuePath="Count"
-      [leafItemSettings]="leafItemSettings"
+      [dataSource]="dbData?.b"
+      weightValuePath="percentage"
+      [leafItemSettings]="{
+        labelPath: 'moduleID',
+      }"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
     >
     </ejs-treemap>
   </div>
@@ -122,81 +166,31 @@
           <label class="btn btn-outline-primary" for="center2">Số lượng</label>
         </div>
       </div>
-      <div>
-        <div class="m-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <codx-img
-                [objectId]="'AD_Users'"
-                [objectType]="'AD_Users'"
-                [width]="25"
-              >
-              </codx-img>
-              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
+      <div class="scroll-hover" style="max-height: 250px">
+        <div *ngFor="let item of dbData?.d">
+          <div class="m-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                <codx-img
+                  [objectId]="item.organizationName"
+                  [objectType]="'AD_Users'"
+                  [width]="25"
+                >
+                </codx-img>
+                <div class="ms-2">{{ item.organizationName }}</div>
+              </div>
+              <div class="fw-bold">{{ item.totalFileSize }} Byte</div>
             </div>
-            <div>23MB</div>
-          </div>
-          <ejs-progressbar
-            #linear
-            id="linear1"
-            [type]="'Linear'"
-            [maximum]="100"
-            [minimum]="0"
-            [value]="80"
-            [width]="'100%'"
-            [height]="'60'"
-          >
-          </ejs-progressbar>
-        </div>
-        <div class="m-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <codx-img
-                [objectId]="'AD_Users'"
-                [objectType]="'AD_Users'"
-                [width]="25"
-              >
-              </codx-img>
-              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
+            <div class="my-2">
+              <div class="progress border" style="height: 12px">
+                <div
+                  class="progress-bar"
+                  style="height: 12px"
+                  [style.width]="item.percentage + '%'"
+                ></div>
+              </div>
             </div>
-            <div>23MB</div>
           </div>
-          <ejs-progressbar
-            #linear
-            id="linear2"
-            [type]="'Linear'"
-            [maximum]="100"
-            [minimum]="0"
-            [value]="80"
-            [width]="'100%'"
-            [height]="'60'"
-          >
-          </ejs-progressbar>
-        </div>
-        <div class="m-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <codx-img
-                [objectId]="'AD_Users'"
-                [objectType]="'AD_Users'"
-                [width]="25"
-              >
-              </codx-img>
-              <div class="ms-2">Nhóm kiểm tra chất lượng</div>
-            </div>
-            <div>23MB</div>
-          </div>
-          <ejs-progressbar
-            #linear
-            id="linear3"
-            [type]="'Linear'"
-            [maximum]="100"
-            [minimum]="0"
-            [value]="80"
-            [width]="'100%'"
-            [height]="'60'"
-          >
-          </ejs-progressbar>
         </div>
       </div>
     </div>
@@ -205,21 +199,47 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="4">
-    <ejs-chart id="chart-container" [primaryXAxis]="primaryXAxis">
+    <ejs-chart
+      id="chart-container"
+      [primaryXAxis]="primaryXAxis"
+      [legendSettings]="{ visible: true }"
+    >
       <e-series-collection>
         <e-series
           [dataSource]="chartData"
-          type="Column"
-          xName="month"
-          yName="sales"
-          name="Sales"
+          type="StackingColumn"
+          xName="orgUnitID"
+          yName="pdf"
+          name="pdf"
+          fill="#0e68c6"
+          columnWidth="0.25"
         ></e-series>
         <e-series
           [dataSource]="chartData"
-          type="Line"
-          xName="month"
-          yName="sales"
-          name="Sales"
+          type="StackingColumn"
+          xName="orgUnitID"
+          yName="docx"
+          name="docx"
+          fill="#0e68c6"
+          columnWidth="0.25"
+        ></e-series>
+        <e-series
+          [dataSource]="chartData"
+          type="StackingColumn"
+          xName="orgUnitID"
+          yName="xlsx"
+          name="xlsx"
+          fill="#0e68c6"
+          columnWidth="0.25"
+        ></e-series>
+        <e-series
+          [dataSource]="chartData"
+          type="StackingColumn"
+          xName="orgUnitID"
+          yName="exe"
+          name="exe"
+          fill="#0e68c6"
+          columnWidth="0.25"
         ></e-series>
       </e-series-collection>
     </ejs-chart>
@@ -228,42 +248,70 @@
 
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="5">
-    <div class="p-2">
-      <div class="d-flex justify-content-center">
-        <div id="group3" class="btn-group">
-          <input
-            class="btn-check"
-            type="radio"
-            id="left3"
-            name="align3"
-            value="left"
-            checked
-          />
-          <label class="btn btn-outline-primary" for="left3">Xem</label>
-          <input
-            class="btn-check"
-            type="radio"
-            id="center3"
-            name="align3"
-            value="center"
-          />
-          <label class="btn btn-outline-primary" for="center3">Mới</label>
-          <input
-            class="btn-check"
-            type="radio"
-            id="right3"
-            name="align3"
-            value="right"
-          />
-          <label class="btn btn-outline-primary" for="right3">Chia sẻ</label>
-          <input
-            class="btn-check"
-            type="radio"
-            id="right13"
-            name="align3"
-            value="right"
-          />
-          <label class="btn btn-outline-primary" for="right13">Download</label>
+    <div class="d-flex justify-content-center">
+      <div id="group3" class="btn-group">
+        <input
+          class="btn-check"
+          type="radio"
+          id="left3"
+          name="align3"
+          value="left"
+          checked
+        />
+        <label class="btn btn-outline-primary" for="left3">Xem</label>
+        <input
+          class="btn-check"
+          type="radio"
+          id="center3"
+          name="align3"
+          value="center"
+        />
+        <label class="btn btn-outline-primary" for="center3">Mới</label>
+        <input
+          class="btn-check"
+          type="radio"
+          id="right3"
+          name="align3"
+          value="right"
+        />
+        <label class="btn btn-outline-primary" for="right3">Chia sẻ</label>
+        <input
+          class="btn-check"
+          type="radio"
+          id="right13"
+          name="align3"
+          value="right"
+        />
+        <label class="btn btn-outline-primary" for="right13">Download</label>
+      </div>
+    </div>
+    <div style="height: 90%">
+      <div class="scroll-hover" style="max-height: 650px">
+        <div *ngFor="let item of dbData?.e">
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                  <img
+                    [src]="getThumbnail(item)"
+                    class="me-2"
+                    style="width: 30px; height: 30px"
+                  />
+                  <div>
+                    <h5 class="card-title">{{ item.fileName }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      {{ item.extension }} |
+                      {{ item.createdOn | fmDT : "dmy" }} |
+                      {{ item.createdBy }}
+                    </h6>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <h5 class="fw-bold">{{ item.countView }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -731,13 +731,13 @@ export class CodxEpService {
       listGroupID
     );
   }
-  afterApprovedManual(entity: string, recID: string, status: string) {
+  approvedManual(recID: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'ApprovedAsync',
-      [entity, recID, status]
+      'ApproveManualAsync',
+      [recID]
     );
   }
   //#endregion

@@ -129,6 +129,17 @@
             </codx-vll>
           </div>
         </ng-template>
+        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+          <codx-vll
+            [name]="vllApprove"
+            [field]="'ApproveStatus'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
         <div class="d-flex align-items-center text-gray-600">
           <span
             class="text-gray-700 fs-7 line-clamp-menu"
@@ -332,6 +343,19 @@
             >
             </codx-vll>
           </div>
+          <ng-container
+            *ngIf="data?.approveStatus && data?.approveStatus != '1'"
+          >
+            <codx-vll
+              [name]="vllApprove"
+              [field]="'ApproveStatus'"
+              [value]="data?.approveStatus"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-primary badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
         </ng-template>
       </div>
     </div>

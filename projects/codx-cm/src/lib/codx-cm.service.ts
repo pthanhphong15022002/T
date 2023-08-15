@@ -32,7 +32,7 @@ export class CodxCmService {
   valueRadio = this.loadingSubject.asObservable();
 
   contactSubject = new BehaviorSubject<any>(null);
-  // valueContact = this.contactSubject.asObservable();
+  viewActiveType = new BehaviorSubject<any>(null);
 
   constructor(
     private api: ApiHttpService,
@@ -987,6 +987,15 @@ export class CodxCmService {
       'InstanceStepsBusiness',
       'GetStepByStepIDAndInIDAsync',
       [insID, stepID]
+    );
+  }
+
+  getListUserByBUID(data){
+    return this.api.exec<any>(
+      'AD',
+      'UsersBusiness',
+      'GetListUserByBUIDAsync',
+      data
     );
   }
 

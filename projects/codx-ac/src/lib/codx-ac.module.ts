@@ -40,17 +40,8 @@ import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/nameById.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
-import { VoucherComponent } from './popup/voucher/voucher.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
-import { CashPaymentsComponent } from './vouchers/cash-payments/cash-payments.component';
-import { PopAddCashComponent } from './vouchers/cash-payments/pop-add-cash/pop-add-cash.component';
-import { PopAddLinecashComponent } from './vouchers/cash-payments/pop-add-linecash/pop-add-linecash.component';
-import { PopUpCashComponent } from './vouchers/cash-payments/pop-up-cash/pop-up-cash.component';
-import { PopUpVatComponent } from './vouchers/cash-payments/pop-up-vat/pop-up-vat.component';
-import { CashReceiptsComponent } from './vouchers/cash-receipts/cash-receipts.component';
-import { PopAddLinereceiptsComponent } from './vouchers/cash-receipts/pop-add-linereceipts/pop-add-linereceipts.component';
-import { PopAddReceiptsComponent } from './vouchers/cash-receipts/pop-add-receipts/pop-add-receipts.component';
 import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
 import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
 import { PopAddLineReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
@@ -83,6 +74,11 @@ import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-clos
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
+import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
+import { CashpaymentSuggestion } from './vouchers/cashpayments/cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
+import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
+import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
+import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 export const routes: Routes = [
   {
     path: '',
@@ -243,21 +239,17 @@ export const routes: Routes = [
     CodxAcComponent,
     LayoutComponent,
     CashPaymentsComponent,
-    PopAddCashComponent,
+    CashPaymentAdd,
     JournalsComponent,
     CashTransfersComponent,
     PopupAddCashTransferComponent,
-    CashReceiptsComponent,
-    PopAddReceiptsComponent,
     PurchaseinvoicesComponent,
     PopAddPurchaseComponent,
     PopupAddJournalComponent,
     DropdownDetailComponent,
     PopAddLineComponent,
     MultiSelectPopupComponent,
-    VoucherComponent,
-    PopAddLinecashComponent,
-    PopAddLinereceiptsComponent,
+    SettledInvoicesAdd,
     DashboardComponent,
     PeriodicComponent,
     SalesInvoicesComponent,
@@ -274,14 +266,13 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    PopUpCashComponent,
+    CashpaymentSuggestion,
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,
     PopupPermissionComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,
-    PopUpVatComponent,
     AllocateToolsComponent,
     PopAddAllocateToolsComponent,
     DeductPrepaidExpensesComponent,
@@ -303,6 +294,7 @@ export const routes: Routes = [
     LayloutJournalComponent,
     TableAccountingComponent,
     TranformSubobjectPipe,
+    TranformClassBorderPipe,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

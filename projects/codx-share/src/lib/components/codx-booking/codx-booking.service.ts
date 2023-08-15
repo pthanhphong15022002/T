@@ -352,7 +352,7 @@ export class CodxBookingService {
       'BS',
       'ERM.Business.BS',
       'UnitsOfMearsureBusiness',
-      'GetAsync',
+      'GetListAsync',
       []
     );
   }
@@ -740,13 +740,13 @@ export class CodxBookingService {
       listGroupID
     );
   }
-  afterApprovedManual(entity: string, recID: string, status: string) {
+  approvedManual(recID: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
-      'ApprovedAsync',
-      [entity, recID, status]
+      'ApproveManualAsync',
+      [recID]
     );
   }
   //#endregion
@@ -800,25 +800,7 @@ export class CodxBookingService {
     );
   }
 
-  getEPRoomSetting(category: any) {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleWithCategoryAsync',
-      ['EPRoomParameters', category]
-    );
-  }
 
-  getEPCarSetting(category: any) {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleWithCategoryAsync',
-      ['EPCarParameters', category]
-    );
-  }
 
   getEPStationerySetting(category: any) {
     return this.api.execSv(

@@ -43,7 +43,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   grvMoreFunction: FormModel;
   isNoData = false;
   titleName = '';
-
+  vllData;
   moreDefaut = {
     share: true,
     write: true,
@@ -71,6 +71,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTaskType = res?.datas;
+      }
+    });
+    this.cache.valueList('DP048').subscribe((res) => {
+      if (res.datas) {
+        this.vllData = res?.datas;
       }
     });
   }
@@ -382,6 +387,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       isEditTimeDefault: null,
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isSave: false,
+      isStart: true,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

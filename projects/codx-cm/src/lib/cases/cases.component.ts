@@ -34,6 +34,7 @@ import { PopupAddCasesComponent } from './popup-add-cases/popup-add-cases.compon
 import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'lib-cases',
@@ -142,9 +143,9 @@ export class CasesComponent
     private codxShareService: CodxShareService
   ) {
     super(inject);
-    // if (!this.funcID) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // }
+    this.router.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    })
     this.cache.functionList(this.funcID).subscribe((fun) => {
       if (fun) this.getGridViewSetup(fun.formName, fun.gridViewName);
     });
@@ -152,6 +153,8 @@ export class CasesComponent
     this.executeApiCalls();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
+
+   
   }
 
   onInit(): void {
@@ -561,6 +564,9 @@ export class CasesComponent
       case 'SYS002':
         this.exportFiles(e, data);
         break;
+      case 'CM0401_10':
+        this.popupPermissions(data);
+        break;
       default: {
         var customData: any = null;
         // var customData = {
@@ -572,7 +578,7 @@ export class CasesComponent
         this.codxShareService.defaultMoreFunc(
           e,
           data,
-          this.afterSave,
+          this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
           this,
@@ -584,7 +590,13 @@ export class CasesComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //TODO: đợi core
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval 
+      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
+        this.dataSelected.approveStatus=appoverStatus
+      } 
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
 
   moveStage(data: any) {
@@ -1036,6 +1048,7 @@ export class CasesComponent
       applyFor: this.applyFor,
       titleAction: this.titleAction,
       processID: this.processID,
+      funcID: this.funcID,
     };
     let dialogCustomcases = this.callfc.openSide(
       PopupAddCasesComponent,
@@ -1524,4 +1537,38 @@ export class CasesComponent
       }
     });
   }
+
+  //#region Permissons
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }

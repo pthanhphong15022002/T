@@ -3,15 +3,23 @@ import { DynamicFormComponent } from './../../projects/codx-share/src/lib/compon
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, LayoutBaseComponent } from 'codx-core';
-import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
+import { SosComponent } from '@pages/sos/sos.component';
 
 var childAuthRoutes: Routes = [
+  {
+    path: 'wr',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-wr/src/lib/codx-wr.module').then(
+        (m) => m.CodxWrModule
+      ),
+  },
   {
     path: 'cm',
     canActivate: [AuthGuard],

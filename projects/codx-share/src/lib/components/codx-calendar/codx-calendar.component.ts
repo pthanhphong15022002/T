@@ -380,10 +380,10 @@ export class CodxCalendarComponent
       else value = '1';
 
       this.calendarParams[transType].ShowEvent = value;
-      let isRoomShow = this.calendarParams["EP_BookingRooms"].ShowEvent == '1';
+      let isRoomShow = this.calendarParams['EP_BookingRooms'].ShowEvent == '1';
       if (value === '0') {
         this.calendarTempData = this.calendarTempData.filter((x) => {
-          if (transType == 'CO_Meetings' && !isRoomShow && x.isRef){
+          if (transType == 'CO_Meetings' && !isRoomShow && x.isRef) {
             return false;
           }
           return x.transType !== transType;
@@ -492,6 +492,21 @@ export class CodxCalendarComponent
       };
     }
     let calendarType = event.value;
+    // if (calendarType == 'COT02') {
+    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
+    //     'TimelineMonth';
+    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
+    //     false;
+    //   this.detectorRef.detectChanges();
+    // } else {
+    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
+    //     'Month';
+    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
+    //     true;
+
+    //   this.detectorRef.detectChanges();
+    // }
+
     //reset data
     this.calendarService.calendarData$.next([]);
     this.api

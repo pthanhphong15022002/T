@@ -18,7 +18,7 @@
                 <span>
                   <codx-label
                     class="fw-bold"
-                    default="Thông tin chung"
+                    default="Nhân viên"
                     [formModel]="formModel"
                     name="lblEmployee"
                   ></codx-label>
@@ -33,7 +33,7 @@
                       <codx-input
                         field="owner"
                         [formModel]="formModel"
-                        (valueChange)="changeOwner($event,'buid')"
+                        (valueChange)="changeOwner($event,viewDefault)"
                         [crrValue]="owner"
                       >
                       </codx-input>
@@ -45,8 +45,25 @@
                         [fields]="fieldCbxParticipants"
                         [placeholder]="gridViewSetup?.Owner?.description"
                         [allowFiltering]="true"
-                        [value]="owner"
+                        [value]="buid ?'':owner"
                       ></ejs-combobox>
+
+                      <div class="fw-bold mb-1 mt-5">
+                        <codx-label
+                        fiedName="Owner"
+                        formName="DPInstancesSteps"
+                        gridViewName="grvDPInstancesSteps"
+                        default="Người phụ trách nhiệm vụ tại giai đoạn"
+                      ></codx-label>
+
+                        </div>
+
+                        <ejs-combobox [dataSource]="listParticipants"
+                        (valueChange)="valueChangeOwnerStep($event)" [fields]="fieldCbxParticipants"
+                        [placeholder]="gridViewSetup?.SalespersonID?.description"
+                        [allowFiltering]='true' [value]="ownerStep"
+                        ></ejs-combobox>
+
                     </ng-template>
 
                     <div
@@ -70,14 +87,6 @@
                           }}</span>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-icon btn-light-danger"
-                        role="button"
-                        (click)="deleteOrg()"
-                      >
-                        <i class="icon-close"></i>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -106,7 +115,65 @@
                     <codx-input
                       field="buid"
                       [formModel]="formModel"
+                      [crrValue]="buid"
                       (valueChange)="changeOwner($event,viewBUID)"
+                    >
+                    </codx-input>
+                    <div
+                      class="d-flex justify-content-between align-items-center w-100 pt-5" *ngFor="let item of listUser"
+                    >
+                      <div class="d-flex flex-row w-75" >
+                        <span class="me-4">
+                          <codx-img
+                            [objectId]="item.userID"
+                            [objectType]="'AD_Users'"
+                          ></codx-img>
+                        </span>
+                        <div class="d-flex flex-column">
+                          <span class="fs-6 text-dark fw-bold">{{
+                            item.userName
+                          }}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-icon btn-light-danger"
+                        role="button"
+                        (click)="deleteOrg(item.userID)"
+                      >
+                        <i class="icon-close"></i>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top">
+                <span class="icon-info icon-16 me-2"></span>
+                <span>
+                  <codx-label
+                    class="fw-bold"
+                    default="Nhóm người dùng dữ liệu"
+                    [formModel]="formModel"
+                    name="lblInformation"
+                  ></codx-label>
+                </span>
+              </div>
+            </ng-template>
+
+            <ng-template #content>
+              <div class="d-flex justify-content-center pb-3">
+                <div class="mt-5 w-100 d-flex justify-content-center">
+                  <div class="w-75">
+                    <codx-input
+                      field="buid"
+                      [formModel]="formModel"
+                      [crrValue]="buid"
+                      (valueChange)="changeOwner($event,viewGroupUser)"
                     >
                     </codx-input>
 
@@ -131,20 +198,21 @@
                           }}</span>
                         </div>
                       </div>
-                      <button
+                      <!-- <button
                         type="button"
                         class="btn btn-sm btn-icon btn-light-danger"
                         role="button"
                         (click)="deleteOrg()"
                       >
                         <i class="icon-close"></i>
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </div>
               </div>
             </ng-template>
           </e-tabitem>
+
         </e-tabitems>
       </ejs-tab>
     </div>
