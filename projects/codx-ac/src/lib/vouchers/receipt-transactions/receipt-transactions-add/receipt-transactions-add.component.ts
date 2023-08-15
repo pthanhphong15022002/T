@@ -10,20 +10,20 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { PopAddLineReceiptTransactionComponent } from '../pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
+import { ReceiptTransactionsLineAddComponent } from '../receipt-transactions-line-add/receipt-transactions-line-add.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 
 
 @Component({
-  selector: 'lib-pop-add-receipt-transaction',
-  templateUrl: './pop-add-receipt-transaction.component.html',
-  styleUrls: ['./pop-add-receipt-transaction.component.css'],
+  selector: 'lib-receipt-transactions-add',
+  templateUrl: './receipt-transactions-add.component.html',
+  styleUrls: ['./receipt-transactions-add.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.OnPush,
 })
-export class PopAddReceiptTransactionComponent extends UIComponent implements OnInit{
+export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit{
 
   //#region Constructor
 
@@ -896,7 +896,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
-            PopAddLineReceiptTransactionComponent,
+            ReceiptTransactionsLineAddComponent,
             '',
             900,
             850,
@@ -954,7 +954,7 @@ export class PopAddReceiptTransactionComponent extends UIComponent implements On
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
-                PopAddLineReceiptTransactionComponent,
+                ReceiptTransactionsLineAddComponent,
                 '',
                 650,
                 600,

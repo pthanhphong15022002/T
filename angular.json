@@ -58,6 +58,26 @@
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/fonts",
                 "output": "assets/fonts"
+              },
+              {
+                "glob": "user-manual.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "privacy.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "terms.html",
+                "input": "src/static-pages/",
+                "output": "/us"
+              },
+              {
+                "glob": "about.html",
+                "input": "src/static-pages/",
+                "output": "/us"
               }
             ],
             "styles": [

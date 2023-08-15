@@ -2227,7 +2227,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     if(group?.task?.length > 0){
       let check = group?.task?.some(task => task?.status != '1');
-      if(check) {
+      if(check || (group?.progress > 0 && group?.progress < 100)) {
         return '2';
       }else{
         return group?.progress <= 0 ? "1" : "3";

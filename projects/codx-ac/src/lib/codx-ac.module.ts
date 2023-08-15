@@ -43,9 +43,9 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
-import { PopAddLineReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
-import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
-import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
+import { ReceiptTransactionsLineAddComponent } from './vouchers/receipt-transactions/receipt-transactions-line-add/receipt-transactions-line-add.component';
+import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
+import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { TableLineDetailStaticComponent } from './vouchers/salesinvoices/components/table-line-detail-static/table-line-detail-static.component';
 import { TableLineDetailComponent } from './vouchers/salesinvoices/components/table-line-detail/table-line-detail.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
@@ -150,12 +150,12 @@ export const routes: Routes = [
       },
       {
         path: 'receipttransaction/:funcID',
-        component: ReceiptTransactionComponent,
+        component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {
         path: 'issuetransaction/:funcID',
-        component: ReceiptTransactionComponent,
+        component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {
@@ -257,11 +257,11 @@ export const routes: Routes = [
     SalesinvoiceslinesAddComponent,
     SearchingComponent,
     TableLineDetailComponent,
-    ReceiptTransactionComponent,
-    PopAddReceiptTransactionComponent,
+    ReceiptTransactionsComponent,
+    ReceiptTransactionsAddComponent,
     ReportsComponent,
     ApprovalsComponent,
-    PopAddLineReceiptTransactionComponent,
+    ReceiptTransactionsLineAddComponent,
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
