@@ -1,4 +1,4 @@
-import { TemplateRef } from '@angular/core';
+import { OnChanges, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -30,7 +30,7 @@ import { FileComponent } from './file/file.component';
   templateUrl: './codx-note.component.html',
   styleUrls: ['./codx-note.component.scss'],
 })
-export class CodxNoteComponent implements OnInit, AfterViewInit {
+export class CodxNoteComponent implements OnInit, AfterViewInit, OnChanges {
   currentElement: HTMLElement;
   currentElementColor: HTMLElement;
   icon = '';
@@ -158,9 +158,20 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.headerComment = this.gridViewSetupComment.Comments.headerText;
       }
     });
+
     this.route.queryParams.subscribe((params) => {
-      if (params) this.objectParentID = params.meetingID;
+      if (params && params?.meetingID) this.objectParentID = params?.meetingID;
     });
+  }
+
+  ngOnChanges() {
+    if (this.data?.length > 0) {
+      this.contents = this.data;
+      this.id = this.contents.length - 1;
+      this.dt.detectChanges();
+      this.setPropertyForView();
+      this.getImageVideo();
+    }
   }
 
   ngOnInit(): void {
@@ -181,13 +192,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       ) as HTMLElement;
       input.focus();
       this.currentElement.id = '0';
-    }
-    if (this.data?.length > 0) {
-      this.contents = this.data;
-      this.id = this.contents.length - 1;
-      this.dt.detectChanges();
-      this.setPropertyForView();
-      this.getImageVideo();
     }
   }
 
@@ -421,6 +425,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   popupImg() {}
 
   addEmoji(event) {
+    debugger;
     if (this.id >= this.contents.length) this.id = this.contents.length - 1;
     this.listNoteTemp.memo = '';
     if (

@@ -107,6 +107,21 @@
           </codx-combobox-popup>
         </ng-container>
       </div>
+      <ng-container
+        *ngIf="lstRoleTypes && lstRoleTypes.length > 0"
+        class="d-flex"
+      >
+        <div class="d-flex align-items-center">
+          <div *ngFor="let roleType of lstRoleTypes" class="pe-2">
+            <span
+              [inlineSVG]="'./assets/themes/ad/default/img/' + roleType?.icon"
+            ></span>
+            <span>
+              {{ roleType?.text }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
       <div class="form-group">
         <ng-container *ngFor="let item of members">
           <div

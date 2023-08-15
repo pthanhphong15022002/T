@@ -17,7 +17,7 @@
               <div
                 *ngIf="
                   dataSelected?.custGroupID != null &&
-                    dataSelected?.custGroupID?.trim() != ''
+                    dataSelected?.custGroupID?.trim() != '';
                   then thenData;
                   else noData
                 "
@@ -51,9 +51,7 @@
                 </ng-container>
               </ng-template>
               <ng-template #noData>
-                <div
-                  class="d-flex align-items-center"
-                >
+                <div class="d-flex align-items-center">
                   <span
                     class="icon-corporate_fare icon-16 me-2"
                     [ngbTooltip]="popupCustGroupID"
@@ -73,7 +71,6 @@
                     "
                   ></span>
                 </div>
-
               </ng-template>
               <!-- <input type="file" (change)="ReadExcel($event)"> -->
             </div>
@@ -111,7 +108,7 @@
                 <div class="d-flex flex-column">
                   <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
                     {{
-                      funcID == "CM0101" || funcID == 'CM0105'
+                      funcID == "CM0101" || funcID == "CM0105"
                         ? dataSelected.customerName
                         : funcID == "CM0102"
                         ? dataSelected.contactName
@@ -258,10 +255,15 @@
           </div>
           <div
             [ngClass]="
-              funcID == 'CM0101' || funcID == 'CM0105' ? 'd-flex flex-wrap align-items-start' : ''
+              funcID == 'CM0101' || funcID == 'CM0105'
+                ? 'd-flex flex-wrap align-items-start'
+                : ''
             "
           >
-            <div class="w-100" *ngIf="dataSelected?.category == '1' && dataSelected?.industries">
+            <div
+              class="w-100"
+              *ngIf="dataSelected?.category == '1' && dataSelected?.industries"
+            >
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -532,9 +534,7 @@
                     <div class="mt-5">
                       <codx-quotations-tab-view
                         [funcID]="'CM0202'"
-                        [showButton]="
-                          dataSelected.status == '99' ? false : true
-                        "
+                        [showButton]="false"
                         [customerID]="dataSelected.recID"
                         [predicates]="'CustomerID==@0'"
                         [dataValues]="dataSelected.recID"
@@ -567,9 +567,7 @@
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem
-                  *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
-                >
+                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
@@ -729,7 +727,7 @@
             <ng-container *ngIf="name == 'Quotations'">
               <codx-quotations-tab-view
                 [funcID]="'CM0202'"
-                [showButton]="true"
+                [showButton]="false"
                 [customerID]="dataSelected.recID"
                 [predicates]="'CustomerID==@0'"
                 [dataValues]="dataSelected.recID"
@@ -812,6 +810,7 @@
     [dataValues]="dataSelected?.recID"
     [type]="'customer'"
     [isPause]="dataSelected?.status == '99'"
+    [isAddTask]="false"
   ></list-contracts>
 </ng-template>
 <ng-template #taskTemplate let-data>

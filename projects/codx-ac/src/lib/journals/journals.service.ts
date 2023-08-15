@@ -53,21 +53,6 @@ export class JournalService {
       'GetAsync',
       journalNo
     );
-
-    // const journalOptions = new DataRequest();
-    // journalOptions.entityName = 'AC_Journals';
-    // journalOptions.predicates = 'JournalNo=@0';
-    // journalOptions.dataValues = journalNo;
-    // journalOptions.pageLoading = false;
-    // return this.acService
-    //   .loadDataAsync('AC', journalOptions)
-    //   .pipe(
-    //     map((res) =>
-    //       res[0]?.dataValue
-    //         ? { ...JSON.parse(res[0].dataValue), ...res[0] }
-    //         : res[0]
-    //     )
-    //   );
   }
 
   /**
@@ -166,6 +151,18 @@ export class JournalService {
     }
 
     if (journal?.loanControl === '0') {
+    }
+
+    if (journal?.vatControl == '0') {
+      hiddenFields.push('VATID', 'VATBase', 'VATAmt');
+    }
+
+    if (!journal?.useDutyTax) {
+      hiddenFields.push('SalesTaxPct', 'SalesTaxAmt');
+    }
+
+    if (!journal?.useExciseTax) {
+      hiddenFields.push('ExciseTaxPct', 'ExciseTaxAmt');
     }
 
     if (!journal.idimControl) {

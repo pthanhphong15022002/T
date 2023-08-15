@@ -317,13 +317,9 @@ export class CodxAcService {
       map((data) => JSON.parse(data.dataValue))
     );
   }
-  
-  getCompanySetting(){
-    return this.cache.companySetting();
-  }
 
-  getFunctionList(funcID){
-    return this.cache.functionList(funcID);
+  getMorefunction(formName,gridviewName){
+    return this.cache.moreFunction(formName,gridviewName);
   }
 
   checkExistAccount(data: any): boolean {

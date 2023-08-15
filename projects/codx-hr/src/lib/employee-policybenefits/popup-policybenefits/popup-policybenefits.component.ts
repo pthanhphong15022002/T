@@ -33,6 +33,10 @@ implements OnInit{
   lstPolicyBeneficiariesApply: any = []
   lstPolicyBeneficiariesExclude: any = []
 
+  constraintKowDisabled = true;
+  constraintKow = false
+  expandContraintKow = false;
+
   lstOrgUnitID: any = []
   lstJobLevel: any = []
   lstPositionID: any = []
@@ -41,9 +45,20 @@ implements OnInit{
   lstEmployeeID: any = []
   lstEmpStatus: any = []
   lstLabourType: any = []
+
   lstSelectedObj: any = [];
+  lstSelectedExcludeObj: any = [];
+  lstSelectedConstraintBy: any =[];
+
+  lstKow: any = [];
+  lstMinKows: any = [];
+  lstMaxKows: any = [];
+
   isHidden = true;
   isHidden2 = true;
+  isHidden3 = true;
+  isHiddenCbxMinKows = true;
+  isHiddenCbxMaxKows = true;
 
   fmPolicyBeneficiaries: FormModel = {
     formName: 'PolicyBeneficiaries',
@@ -51,8 +66,21 @@ implements OnInit{
     entityName: 'HR_PolicyBeneficiaries',
   };
 
+  fmPolicyConstraints: FormModel = {
+    formName: 'PolicyConstraints',
+    gridViewName: 'grvPolicyConstraints',
+    entityName: 'HR_PolicyConstraints',
+  };
+  
+  formGroupPolicyConstraints;
+
+  fmKow: FormModel = {
+
+  };
+
   grvSetup
   grvSetupPolicyDetail
+  grvSetupPolicyConstraint
   benefitFuncID = 'HRTEM0403'
 
   fieldHeaderTexts;
@@ -110,6 +138,16 @@ implements OnInit{
   }
 
   onInit(): void {
+    this.cache.gridViewSetup('PolicyConstraints', 'grvPolicyConstraints').subscribe((res) => {
+      this.grvSetupPolicyConstraint = res;
+    })
+    this.hrSevice
+            .getFormGroup(this.fmPolicyConstraints.formName, this.fmPolicyConstraints.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroupPolicyConstraints = fg;
+              }
+            });
     if(!this.benefitFormModel){
       this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
         if(formModel){
@@ -149,12 +187,79 @@ implements OnInit{
     this.currentTab = event.nextId;
   }
 
+  onClickOpenVllIsConstraintOther(){
+    if(this.benefitPolicyObj.isConstraintOther){
+      let opt = new DialogModel();
+      let popup = this.callfunc.openForm(
+        PopupMultiselectvllComponent,
+        null,
+        400,
+        450,
+        null,
+        {
+          headerText: 'Chọn điều kiện áp dụng',
+          vllName : this.grvSetup.ConstraintBy.referedValue,
+          formModel: this.formModel,
+          dataSelected: this.benefitPolicyObj.constraintBy
+        },
+        null,
+        opt
+      );
+      popup.closed.subscribe((res) => {
+        if(res.event){
+          this.benefitPolicyObj.constraintBy = res.event
+          this.lstSelectedConstraintBy = res.event.split(';')
+          console.log('lst constraint', this.lstSelectedConstraintBy);
+          
+          this.df.detectChanges();
+        }
+      });
+    }
+  }
+
+  ValChangeIsAdjustKow(event){
+    let hasKow = event.data;
+
+    if(hasKow == false){
+      this.benefitPolicyObj.isAdjustKow = false;
+      this.isHidden = true;
+    }
+  }
+
+  ValChangeIsConstraintOther(event){
+    let constraintOther = event.data;
+
+    if(constraintOther == false){
+      this.benefitPolicyObj.isConstraintOther = false;
+    }
+    else{
+      this.benefitPolicyObj.isConstraintOther = true;
+    }
+  }
+
   ValChangeHasInclueObj(event){
     let flag = event.data;
 
     if(flag == false){
       this.benefitPolicyObj.hasIncludeObjects = false;
     }
+  }
+
+  ValChangeContraintKow(event){
+    
+    if(event.data == true){
+      this.expandContraintKow = true;
+      this.constraintKowDisabled = false;
+    }
+    else{
+      this.expandContraintKow = false;
+      this.constraintKowDisabled = true;
+    }
+    this.df.detectChanges();
+  }
+
+  onClickExpandConstaintKow(){
+    this.expandContraintKow = !this.expandContraintKow;
   }
 
   swap(afterIndex, lstData){
@@ -239,6 +344,32 @@ implements OnInit{
           this.lstSelectedObj = res.event.split(';')
           this.df.detectChanges();
         }
+      });
+    }
+  }
+
+  onClickOpenSelectExcludeObj(){
+    if(this.benefitPolicyObj.hasExcludeObjects){
+      let opt = new DialogModel();
+      let popup = this.callfunc.openForm(
+        PopupMultiselectvllComponent,
+        null,
+        400,
+        450,
+        null,
+        {
+          headerText: 'Chọn đối tượng áp dụng',
+          vllName : 'HRObject',
+          formModel: this.formModel,
+          dataSelected: this.benefitPolicyObj.excludeObjects
+        },
+        null,
+        opt
+      );
+      popup.closed.subscribe((res) => {
+        this.benefitPolicyObj.excludeObjects = res.event
+        this.lstSelectedExcludeObj = res.event.split(';')
+        this.df.detectChanges();
       });
     }
   }
@@ -357,6 +488,101 @@ implements OnInit{
     }
   }
 
+  onClickOpenSelectExcludeObjDetail(detail, obj){
+    
+    this.currentRec = obj.recID;
+    if(this.benefitPolicyObj.hasExcludeObjects){
+      if(detail == '5' || detail == '8'){
+        let vll = detail == '5' ? 'HR022':'HR003'
+          let dtSelected = [];
+          let fil = [];
+          if(vll == 'HR022'){
+            fil = this.lstLabourType.filter((obj) => obj.rec == this.currentRec);
+          }
+          else if(vll == 'HR003'){
+            fil = this.lstEmpStatus.filter((obj) => obj.rec == this.currentRec);
+          }
+          for(let i = 0; i < fil.length; i++){
+            dtSelected.push(fil[i].id);
+          }
+          let dtSelectedStr = dtSelected.join(';')
+          let opt = new DialogModel();
+          let popup = this.callfunc.openForm(
+            PopupMultiselectvllComponent,
+            null,
+            400,
+            450,
+            null,
+            {
+              headerText: 'Chọn đối tượng',
+              vllName : vll,
+              formModel: this.formModel,
+              dataSelected: dtSelectedStr
+            },
+            null,
+            opt
+          );
+          popup.closed.subscribe((res) => {
+            let index = this.lstPolicyBeneficiariesExclude.findIndex((x: any) => this.currentRec == x['recID'])
+            let lstId = res.event.split(';');
+            if(vll  == 'HR022'){
+              this.lstPolicyBeneficiariesExclude[index].labourType = res.event;
+              this.lstLabourType = this.lstLabourType.filter((obj) => obj.rec != this.currentRec);
+              for(let i = 0; i < lstId.length; i++){
+                this.lstLabourType.push({
+                  rec:this.lstPolicyBeneficiariesExclude[index].recID,
+                  id:lstId[i]
+                });
+              }
+            }
+            else if(vll = 'HR003'){
+              this.lstPolicyBeneficiariesExclude[index].employeeStatus = res.event;
+              this.lstEmpStatus = this.lstEmpStatus.filter((obj) => obj.rec != this.currentRec);
+              for(let i = 0; i < lstId.length; i++){
+                this.lstEmpStatus.push({
+                  rec:this.lstPolicyBeneficiariesExclude[index].recID,
+                  id:lstId[i]
+                });
+              }
+            }
+            
+            this.df.detectChanges();
+          });
+      }
+      else{
+        switch(detail){
+          case '1':
+            
+            this.currentCbxName = 'HRDepts';
+            this.currentCbxValue = obj.orgUnitID;
+            break; 
+          case '2':
+            this.currentCbxName = 'JobLevels';
+            this.currentCbxValue = obj.jobLevel;
+            break; 
+          case '3':
+            this.currentCbxName = 'PositionsName';
+            this.currentCbxValue = obj.positionID;
+            break; 
+          case '4':
+            this.currentCbxName = 'EmployeeTypes';
+            this.currentCbxValue = obj.employeeTypeID;
+            break; 
+          case '6':
+            this.currentCbxName = 'ContractTypes';
+            this.currentCbxValue = obj.contractTypeID;
+            break; 
+          case '7':
+            this.currentCbxName = 'Employees';
+            this.currentCbxValue = obj.employeeID;
+            break; 
+        }
+        this.isHidden = false;
+        this.df.detectChanges();
+      }
+    }
+  }
+
   onInputPolicyID(evt){
     if(this.actionType == 'edit'){
       this.policyIdEdited = true;
@@ -435,6 +661,57 @@ implements OnInit{
     }
   }
 
+  ValChangeHasExcludeObj(event){
+    let flag = event.data;
+
+    if(flag == false){
+      this.benefitPolicyObj.hasExcludeObjects = false;
+    }
+  }
+
+  addExcludeObj(){
+    let newObj = {}
+    newObj['recID'] = Util.uid();
+    newObj['policyID'] = this.benefitPolicyObj.policyID;
+    newObj['priority'] = this.lstPolicyBeneficiariesExclude.length + 1;
+    newObj['policyType'] = 'Benefit';
+    newObj['category'] = '1';
+
+    for (let i = 0; i < this.lstSelectedExcludeObj.length; i++) {
+      let fieldName: any;
+      switch(this.lstSelectedExcludeObj[i]){
+        case '1':
+          fieldName = 'orgUnitID'
+          break;
+        case '2':
+          fieldName = 'jobLevel'
+          break;
+        case '3':
+          fieldName = 'positionID'
+          break;
+        case '4':
+          fieldName = 'employeeTypeID'
+          break;
+        case '5':
+          fieldName = 'labourType'
+          break;
+        case '6':
+          fieldName = 'contractTypeID'
+          break;
+        case '7':
+          fieldName = 'employeeID'
+          break;
+        case '8':
+          fieldName = 'employeeStatus'
+          break;
+      }
+      newObj[fieldName] = '';
+    }
+    this.lstPolicyBeneficiariesExclude.push(newObj)
+    
+    this.df.detectChanges()
+  }
+
   addApplyObj(){
     let newObj = {}
     newObj['recID'] = Util.uid();
@@ -499,6 +776,75 @@ implements OnInit{
     }
     else{
       this.lstSelectedBenefits = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickHideComboboxPopup3(e): void {
+    if(e == null){
+      this.isHidden3 = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.adjustKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.adjustKows = null;
+    }
+    this.isHidden3 = true;
+
+    if(this.benefitPolicyObj.adjustKows){
+      this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
+    }
+    else{
+      this.lstKow = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickHideComboboxMinKows(e): void {
+    if(e == null){
+      this.isHiddenCbxMinKows = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.minKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.minKows = null;
+    }
+    this.isHiddenCbxMinKows = true;
+
+    if(this.benefitPolicyObj.minKows){
+      this.lstMinKows = this.benefitPolicyObj.minKows.split(';')
+    }
+    else{
+      this.lstMinKows = [];
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  onClickHideComboboxMaxKows(e): void {
+    if(e == null){
+      this.isHiddenCbxMaxKows = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+        this.benefitPolicyObj.maxKows = e.id;
+    }
+    else{
+      this.benefitPolicyObj.maxKows = null;
+    }
+    this.isHiddenCbxMaxKows = true;
+
+    if(this.benefitPolicyObj.maxKows){
+      this.lstMaxKows = this.benefitPolicyObj.maxKows.split(';')
+    }
+    else{
+      this.lstMaxKows = [];
     }
     this.detectorRef.detectChanges();
   }
@@ -645,9 +991,6 @@ implements OnInit{
       if(objAfterIndex > 0){
         this.lstPolicyBeneficiariesApply[objAfterIndex].priority -= 1;
         this.swap(objAfterIndex, this.lstPolicyBeneficiariesApply);
-        // let temp = this.lstPolicyBeneficiariesApply[objAfterIndex]
-        // this.lstPolicyBeneficiariesApply[objAfterIndex] = this.lstPolicyBeneficiariesApply[objAfterIndex-1]
-        // this.lstPolicyBeneficiariesApply[objAfterIndex-1] = temp;
       }
     }
     else if(this.currentTab == 'subtractObj'){
@@ -694,15 +1037,14 @@ implements OnInit{
                 
               })
             }
-            // for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-            //   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+            for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+              this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                 
-            //   })
-            // }
+              })
+            }
           this.dialog && this.dialog.close(this.benefitPolicyObj);
         }
         else{
-          // this.notify.notifyCode('SYS023');
         }
       })
     }
@@ -713,13 +1055,11 @@ implements OnInit{
             this.notify.notifyCode('SYS007');
             this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                debugger
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   
                 })
               }
               for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                debugger
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                   
                 })
@@ -736,19 +1076,19 @@ implements OnInit{
         this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
           if(res){
             this.notify.notifyCode('SYS007');
-            // this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
-            //   for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-            //     this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+            this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
+              for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   
-            //     })
-            //   }
-            //   for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-            //     this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                })
+              }
+              for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                   
-            //     })
-            //   }
-            //   this.dialog && this.dialog.close(this.benefitPolicyObj);
-            // })
+                })
+              }
+              this.dialog && this.dialog.close(this.benefitPolicyObj);
+            })
           }
           else{
             this.notify.notifyCode('SYS023');
@@ -756,6 +1096,23 @@ implements OnInit{
         })
       }
     }
+}
+onClickOpenCbxKow(){
+  if(this.benefitPolicyObj.isAdjustKow){
+    this.isHidden3 = false;
+  }
+}
+
+onClickOpenCbxMinKows(){
+  if(this.benefitPolicyObj.isConstraintKow){
+    this.isHiddenCbxMinKows = false;
+  }
+}
+
+onClickOpenCbxMaxKows(){
+  if(this.benefitPolicyObj.isConstraintKow){
+    this.isHiddenCbxMaxKows = false;
+  }
 }
 
   //#region apis

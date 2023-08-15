@@ -106,6 +106,8 @@ export class LeadsComponent
   //endregion
 
   titleAction = '';
+  vllApprove = 'DP043';
+  vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
   viewMode = 2;
@@ -220,7 +222,7 @@ export class LeadsComponent
     try {
       this.getFuncID(this.funcID);
       this.getColorReason();
-    // this.getCurrentSetting();
+      // this.getCurrentSetting();
       this.getValuelistStatus();
     } catch (error) {}
   }
@@ -236,20 +238,6 @@ export class LeadsComponent
       }
     });
   }
-  // async getCurrentSetting() {
-  //   this.cache.viewSettingValues('CMParameters').subscribe((res) => {
-  //     if (res?.length > 0) {
-  //       let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
-  //       if (dataParam) {
-  //         var applyProcessSetting = JSON.parse(dataParam.dataValue);
-  //         // applyProcess
-  //         this.applyProcess = applyProcessSetting['ProcessLead'] == '1';
-  //         // currnecy
-  //         this.currencyIDDefault = applyProcessSetting['DefaultCurrency'];
-  //       }
-  //     }
-  //   });
-  // }
   async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
@@ -314,6 +302,10 @@ export class LeadsComponent
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.vllStatus =
+          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+        this.vllApprove =
+          this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
       }
     });
   }
@@ -451,11 +443,13 @@ export class LeadsComponent
     };
     let isClosed = (eventItem, data) => {
       //Đóng tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? data.closed : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? data.closed : true;
     };
     let isOpened = (eventItem, data) => {
       // Mở tiềm năng
-      eventItem.disabled = data?.alloweStatus == '1' && data?.read ? !data.closed : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? !data.closed : true;
     };
     let isStartDay = (eventItem, data) => {
       // Bắt đầu ngay
@@ -475,7 +469,7 @@ export class LeadsComponent
     let isMergeLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['0', '1'].includes(data.status) || data.closed || !data.applyProcess
+        ? !['0', '1'].includes(data.status) || data.closed
         : true;
     };
 
@@ -494,10 +488,6 @@ export class LeadsComponent
             (data.status != '13' && this.checkMoreReason(data)) ||
             !data.applyProcess
           : true;
-    };
-    let isDisabledDefault = (eventItem, data) => {
-      // Mặc định tắt hết
-      eventItem.disabled = true;
     };
     let isStartFirst = (eventItem, data) => {
       // Làm lại khi tiềm năng đã thành công or thất bại
@@ -553,25 +543,28 @@ export class LeadsComponent
       // Nhập khẩu dữ liệu
       eventItem.disabled = !data.download ? true : false;
     };
-
+    let isDisabledDefault = (eventItem, data) => {
+      eventItem.disabled = true;
+    };
     functionMappings = {
+      ...['SYS101', 'SYS102', 'SYS103', 'SYS104'].reduce(
+        (fundID, more) => ({ ...fundID, [more]: isDisabledDefault }),
+        {}
+      ),
+      ...['CM0205_3', 'CM0205_5', 'CM0205_7'].reduce(
+        (fundID, more) => ({ ...fundID, [more]: isDisabled }),
+        {}
+      ),
       CM0205_1: isConvertLead, // convertLead
       CM0205_2: isMergeLead, // mergeLead
-      CM0205_3: isDisabled,
       CM0205_4: isStartDay, // startyDay
-      CM0205_5: isDisabled, // success
       CM0205_6: isFailReason, // fail
-      CM0205_7: isDisabled,
       CM0205_8: isApprover,
       CM0205_9: isOwner,
       CM0205_10: isClosed, // close lead
       CM0205_11: isOpened, // open lead
-      SYS101: isDisabledDefault,
-      SYS103: isDisabledDefault,
       SYS03: isEdit,
-      SYS104: isDisabledDefault,
       SYS04: isCopy,
-      SYS102: isDisabledDefault,
       SYS02: isDelete,
       CM0205_13: isStartFirst, // tiep tup van,
       CM0205_12: isChangeStatus,
@@ -620,7 +613,7 @@ export class LeadsComponent
 
   dropLeads(data) {
     data.stepID = this.crrStepID;
-    if (!data?.roles?.isOnwer) {
+    if (!data?.full) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
@@ -707,101 +700,47 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-
-      case 'SYS04':
-        this.copy(data);
-        break;
-
-      case 'SYS02':
-        this.delete(data);
-        break;
-
-      case 'CM0205_1':
-        this.convertLead(data);
-        break;
-
-      case 'CM0205_2':
-        this.mergeLead(data);
-        break;
-
-      case 'CM0205_4':
-        this.startDay(data);
-        break;
-
-      case 'CM0205_10':
-        this.openOrCloseLead(data, true);
-        break;
-
-      case 'CM0205_11':
-        this.openOrCloseLead(data, false);
-        break;
-
-      case 'CM0205_3':
-        this.moveStage(data);
-        break;
-
-      case 'CM0205_5':
-        this.moveReason(data, true);
-        break;
-
-      case 'CM0205_6':
-        this.moveReason(data, false);
-        break;
-      //ki duyet
-      case 'CM0205_8':
-        this.approvalTrans(data);
-        break;
-      case 'CM0205_9':
-        this.popupOwnerRoles(data);
-        break;
-
-      case 'CM0205_12':
-        this.openFormChangeStatus(data);
-        break;
-
-      case 'CM0205_13':
-        this.startFirst(data);
-        break;
-
-      case 'CM0205_14':
-        this.updateProcess(data, true);
-        break;
-
-      case 'CM0205_15':
-        this.updateProcess(data, false);
-        break;
-      case 'CM0205_16':
-        this.popupPermissions(data);
-        break;
-
-      case 'SYS002':
-        this.exportFiles(e, data);
-        break;
-      //cancel Aprover
-      case 'CM0205_17':
-        this.cancelApprover(data);
-        break;
-      default:
-        var customData: any = null;
-        // var customData = {
-        //   refID: data.processID,
-        //   refType: 'DP_Processes',
-        //   dataSource: '', // truyen sau
-        // };
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave,
-          this.view.formModel,
-          this.view.dataService,
-          this,
-          customData
-        );
-        break;
+    const functionMappings = {
+      SYS03: () => this.edit(data),
+      SYS04: () => this.copy(data),
+      SYS02: () => this.delete(data),
+      CM0205_1: () => this.convertLead(data),
+      CM0205_2: () => this.mergeLead(data),
+      CM0205_4: () => this.startDay(data),
+      CM0205_10: () => this.openOrCloseLead(data, true),
+      CM0205_11: () => this.openOrCloseLead(data, false),
+      CM0205_3: () => this.moveStage(data),
+      CM0205_5: () => this.moveReason(data, true),
+      CM0205_6: () => this.moveReason(data, false),
+      CM0205_8: () => this.approvalTrans(data),
+      CM0205_9: () => this.popupOwnerRoles(data),
+      CM0205_12: () => this.openFormChangeStatus(data),
+      CM0205_13: () => this.startFirst(data),
+      CM0205_14: () => this.updateProcess(data, true),
+      CM0205_15: () => this.updateProcess(data, false),
+      CM0205_16: () => this.popupPermissions(data),
+      SYS002: () => this.exportFiles(e, data),
+      CM0205_17: () => this.cancelApprover(data),
+    };
+    const executeFunction = functionMappings[e.functionID];
+    if (executeFunction) {
+      executeFunction();
+    } else {
+      var customData: any = null;
+      // var customData = {
+      //   refID: data.processID,
+      //   refType: 'DP_Processes',
+      //   dataSource: '', // truyen sau
+      // };
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave.bind(this),
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
     }
   }
 
@@ -863,7 +802,7 @@ export class LeadsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: action === 'add' ? 'Thêm tiềm năng' : 'Sao chép tiềm năng',
+      titleAction: this.titleAction,
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
@@ -903,7 +842,7 @@ export class LeadsComponent
         var obj = {
           action: 'edit',
           formMD: formMD,
-          titleAction: 'Chỉnh sửa tiềm năng',
+          titleAction: this.titleAction,
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
@@ -1281,7 +1220,7 @@ export class LeadsComponent
   }
 
   openOrCloseLead(data, check) {
-    var datas = [data.recID, data.processID, check];
+    var datas = [data.recID, check];
     this.notificationsService
       .alertCode('DP018', null, this.titleAction, "'" + data.leadName + "'")
       .subscribe((info) => {
@@ -1299,17 +1238,17 @@ export class LeadsComponent
               if (data.showInstanceControl === '1') {
                 this.view.dataService.update(this.dataSelected).subscribe();
               }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
+              // if (
+              //   data.showInstanceControl === '0' ||
+              //   data.showInstanceControl === '2'
+              // ) {
+              //   this.view.dataService.remove(this.dataSelected).subscribe();
+              //   this.dataSelected = this.view.dataService.data[0];
+              //   this.view.dataService.onAction.next({
+              //     type: 'delete',
+              //     data: data,
+              //   });
+              // }
               this.detectorRef.detectChanges();
             }
           });
@@ -1559,7 +1498,7 @@ export class LeadsComponent
     }
   }
   openFormChangeStatus(data) {
-    this.dataSelected = data
+    this.dataSelected = data;
     this.statusDefault = data.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
@@ -1574,7 +1513,16 @@ export class LeadsComponent
     }
   }
   afterSave(e?: any, that: any = null) {
-    //đợi xem chung sửa sao rồi làm tiếp
+    if (e) {
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.dataSelected.approveStatus
+      ) {
+        this.dataSelected.approveStatus = appoverStatus;
+      }
+      this.view.dataService.update(this.dataSelected).subscribe();
+    }
   }
 
   //export theo moreFun

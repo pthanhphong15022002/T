@@ -59,4 +59,23 @@ export class ViewTreeTargetsComponent implements OnInit {
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data, type: 'tree' });
   }
+
+  clickShowGrid(item, isShow: boolean) {
+    item.isCollapse = isShow;
+    if (item != null && item?.items != null) {
+      item?.items.forEach((res) => {
+        res.isCollapse = isShow;
+      });
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  formatValue(data) {
+    let dataRt = data.toFixed(2);
+    return parseFloat(dataRt);
+  }
+
+  async delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }

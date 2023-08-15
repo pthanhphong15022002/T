@@ -30,7 +30,9 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   @Input() size = 36;
   @Input() stype = 1;
   @Input() class = '';
-  // @Input() type = 1;
+  @Input() status = "";
+  @Input() vllData;
+
   id = Util.uid();
   HTMLProgress = '';
   type: string = 'Circular';

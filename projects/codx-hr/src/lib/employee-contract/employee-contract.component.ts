@@ -440,7 +440,6 @@ export class EmployeeContractComponent extends UIComponent {
             this.view.formModel.funcID,
             this.view.function.description + ' - ' + this.itemDetail.contractNo,
             (res: any) => {
-              console.log(res);
               if (res?.msgCodeError == null && res?.rowCount) {
                 //this.notify.notifyCode('ES007');
                 this.itemDetail.status = '3';

@@ -39,7 +39,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-import { ApproveProcess, ResponseModel } from './models/ApproveProcess.model';
+import { ApproveProcess, Approver, ResponseModel } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -50,6 +50,7 @@ import { CodxAddApproversComponent } from './components/codx-approval-procress/c
 import { ES_File } from './components/codx-approval-procress/model/codx-approval-process.model';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { tmpCopyFileInfo } from './models/fileInfo.model';
+import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 
 @Injectable({
   providedIn: 'root',
@@ -227,15 +228,15 @@ export class CodxShareService {
             dialogModel
           );
           dialogApprove.closed.subscribe((x) => {
-            if (x.event?.result) {
-              data.unbounds.statusApproval = x.event?.mode;
-              dataService.update(data).subscribe();
-            }
-            // if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
-            //   data.unbounds.statusApproval = x.event?.returnStatus;
-            //   data.unbounds.isLastStep = x.event?.isLastStep;
+            // if (x.event?.result) {
+            //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
+            if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
+              data.unbounds.statusApproval = x.event?.returnStatus;
+              data.unbounds.isLastStep = x.event?.isLastStep;
+              dataService.update(data).subscribe();
+            }
           });
         } else {
           var status;
@@ -269,7 +270,8 @@ export class CodxShareService {
                   data.unbounds.statusApproval = status;
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
-                  //afterSave(data.statusApproval);
+                  //afterSave(data.statusApproval);// Chung CMT trước đo rồi
+                  afterSave(data);
                 } else this.notificationsService.notify(res2?.msgCodeError);
               });
             });
@@ -285,7 +287,7 @@ export class CodxShareService {
                 data.unbounds.statusApproval = status;
                 dataService.update(data).subscribe();
                 this.notificationsService.notifyCode('SYS007');
-                afterSave(data.statusApproval);
+                afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
             });
           }
@@ -348,6 +350,20 @@ export class CodxShareService {
         );
         break;
       }
+      //Đính kèm file
+      case 'SYS003':
+      {
+        var datas = 
+        {
+          headerText : val?.data?.customName,
+          objectID : data?.recID,
+          dataSelected: data,
+          referType: customData?.referType,
+          addPermissions: customData?.addPermissions
+        };
+        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas)
+      }
+
     }
   }
 
@@ -1140,7 +1156,7 @@ export class CodxShareService {
     userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     customEntityName: string, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
-    approvers: Array<string> = null //Danh sách userID của RO
+    approvers: Array<Approver> = null //Danh sách userID của RO
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
@@ -1172,7 +1188,7 @@ export class CodxShareService {
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
-    approvers: Array<string> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
+    approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null //biến this: tại component gọi hàm
@@ -1321,29 +1337,46 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
-    if (template?.templateID == null && template?.templateType == null ) {
+    if (template?.templateID == null && template?.templateType == null) {
       //TemplateID null -> bật form kí số nhưng ko có file
       //Copy file từ template mẫu
       let tempCopyFile = new tmpCopyFileInfo();
-      tempCopyFile.objectID=approveProcess.recID;
-      tempCopyFile.objectType=approveProcess.entityName;
-      tempCopyFile.referType='source';
-      
-      this.copyFileByObjectID(template?.recID,approveProcess.recID,template?.refType,'source',tempCopyFile).subscribe((copied:any)=>{
-        if(copied){
-          this.getFileByObjectID(approveProcess.recID).subscribe((nFile:any)=>{
-            if(nFile){
-              let signFile = this.createSignFile(approveProcess,nFile);
-              this.openPopupSignFile(approveProcess,releaseCallback,signFile,nFile);
+      tempCopyFile.objectID = approveProcess.recID;
+      tempCopyFile.objectType = approveProcess.entityName;
+      tempCopyFile.referType = 'source';
+
+      this.copyFileByObjectID(
+        template?.recID,
+        approveProcess.recID,
+        template?.refType,
+        'source',
+        tempCopyFile
+      ).subscribe((copied: any) => {
+        if (copied) {
+          this.getFileByObjectID(approveProcess.recID).subscribe(
+            (nFile: any) => {
+              if (nFile) {
+                let signFile = this.createSignFile(approveProcess, nFile);
+                this.openPopupSignFile(
+                  approveProcess,
+                  releaseCallback,
+                  signFile,
+                  nFile
+                );
+              } else {
+                this.notificationsService.notify(
+                  'Không tìm thấy tài liệu trình kí',
+                  '2'
+                );
+                return;
+              }
             }
-            else{              
-              this.notificationsService.notify('Không tìm thấy tài liệu trình kí','2');
-              return;
-            }
-          });
-        }
-        else{
-          this.notificationsService.notify('Sao chép tài liệu từ mẫu thiết lập không thành công','2');
+          );
+        } else {
+          this.notificationsService.notify(
+            'Sao chép tài liệu từ mẫu thiết lập không thành công',
+            '2'
+          );
           return;
         }
       });
@@ -1390,7 +1423,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel, component: any) => void,
     exportUpload: ExportUpload
   ) {
-    let signFile = this.createSignFile(approveProcess);
+    
     this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
       (exportedFile: any) => {
         if (exportedFile) {
@@ -1405,7 +1438,10 @@ export class CodxShareService {
                   lstFile
                 );
               } else {
-                this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
+                this.notificationsService.notify(
+                  'Không tìm thấy tài liệu!',
+                  '2'
+                );
               }
             }
           );
@@ -1474,6 +1510,7 @@ export class CodxShareService {
         refID: approveProcess.recID,
         editApprovers: approveProcess.category?.editApprovers,
         approvers: approveProcess.approvers,
+        approverProcess: approveProcess,
       },
       '',
       dialogModel
@@ -1572,13 +1609,19 @@ export class CodxShareService {
     );
   }
 
-  copyFileByObjectID(oldRecID:string, newRecID:string,objectType:string,referType:string='',copyFileInfo:tmpCopyFileInfo = null): Observable<any> {
+  copyFileByObjectID(
+    oldRecID: string,
+    newRecID: string,
+    objectType: string,
+    referType: string = '',
+    copyFileInfo: tmpCopyFileInfo = null
+  ): Observable<any> {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
       'CopyFileByObjectIDAsync',
-      [oldRecID, newRecID,objectType , referType,copyFileInfo]
+      [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
 

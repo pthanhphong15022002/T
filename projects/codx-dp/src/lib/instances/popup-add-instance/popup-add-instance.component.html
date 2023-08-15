@@ -315,10 +315,10 @@
 
 <ng-template #tabInputInfoDetail>
   <ng-container *ngIf="listStep?.length > 0; else dataIsEmpty">
-    <ng-container *ngFor="let step of listStep">
+    <ng-container *ngFor="let step of listStep; let idx = index">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
-          <div class="form-group">
+          <div class="form-group" *ngIf="checkAddField(step, idx)">
             <codx-input-custom-field
               [customField]="item"
               [checkValid]="false"
@@ -344,23 +344,20 @@
   ></codx-popup-participants>
 </ng-template>
 
-
 <ng-template #dataIsEmpty>
   <div class="empty-data">
     <div class="container h-100">
-       <div class="list-empty card card-flush h-100">
-       <div class="d-flex flex-column flex-center justify-content-center">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
           <img
-             src="../assets/themes/sys/default/img/DataEmpty.svg"
-             class="w-200px"
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
           />
           <div class="fs-5 text-dark fw-bold mt-2 text-center">
-             {{ "SYS011" | mssg | async }}
+            {{ "SYS011" | mssg | async }}
           </div>
-       </div>
-       </div>
+        </div>
+      </div>
     </div>
- </div>
-
+  </div>
 </ng-template>
-

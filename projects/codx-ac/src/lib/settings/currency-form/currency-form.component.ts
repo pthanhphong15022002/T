@@ -1,10 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -19,10 +21,14 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.component';
+import { CodxAcService } from '../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-currency-form',
   templateUrl: './currency-form.component.html',
-  styleUrls: ['./currency-form.component.css'],
+  styleUrls: ['./currency-form.component.css','../../codx-ac.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyFormComponent extends UIComponent {
   //#region Contructor
@@ -33,8 +39,9 @@ export class CurrencyFormComponent extends UIComponent {
   funcName: any;
   views: Array<ViewModel> = [];
   itemSelected: any;
-  dialog: DialogRef;
-  button?: ButtonModel;
+  button?: ButtonModel = {
+    id: 'btnAdd',
+  };;
   headerText = '';
   moreFunction = [
     {
@@ -50,35 +57,27 @@ export class CurrencyFormComponent extends UIComponent {
       textColor: '#F54E60',
     },
   ];
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
+    private acService: CodxAcService,
     private callfunc: CallFuncService
   ) {
     super(inject);
-    this.dialog = this.dialog;
-    this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
   }
 
   //#endregion
 
   //#region Init
-  onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-  }
+  onInit(): void {}
   ngAfterViewInit(): void {
-    this.cache.moreFunction('Currencies', 'grvCurrencies').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20800');
-        if (m) this.funcName = m.defaultName;
-      }
-    });
+    // this.acService
+    //   .getFunctionList(this.view.funcID)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res) => {
+    //     if (res) this.funcName = res.defaultName;
+    //   });
     this.views = [
       {
         type: ViewType.grid,
@@ -86,7 +85,6 @@ export class CurrencyFormComponent extends UIComponent {
         active: true,
         model: {
           template2: this.itemTemplate,
-          frozenColumns: 1,
         },
       },
     ];
@@ -126,15 +124,15 @@ export class CurrencyFormComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(
+      let dialog = this.callfunc.openSide(
         PopAddCurrencyComponent,
         obj,
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event == null) this.view.dataService.clear();
-      });
+      // dialog.closed.subscribe((x) => {
+      //   if (x.event == null) this.view.dataService.clear();
+      // });
     });
   }
   edit(e, data) {
@@ -152,7 +150,7 @@ export class CurrencyFormComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
+        let dialog = this.callfunc.openSide(
           PopAddCurrencyComponent,
           obj,
           option
@@ -174,7 +172,7 @@ export class CurrencyFormComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
+        let dialog = this.callfunc.openSide(
           PopAddCurrencyComponent,
           obj,
           option

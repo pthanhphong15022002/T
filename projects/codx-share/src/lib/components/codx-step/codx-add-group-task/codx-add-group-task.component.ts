@@ -1,16 +1,19 @@
-import { Component, OnInit, Optional } from '@angular/core';
+
 import {
-  ApiHttpService,
-  AuthStore,
-  CacheService,
-  DialogData,
-  DialogRef,
   FormModel,
+  DialogRef,
+  AuthStore,
+  DialogData,
+  CacheService,
+  ApiHttpService,
   NotificationsService,
   Util,
 } from 'codx-core';
-import { DP_Instances_Steps_TaskGroups, DP_Instances_Steps_TaskGroups_Roles } from 'projects/codx-dp/src/lib/models/models';
-
+import { 
+  DP_Instances_Steps_TaskGroups, 
+  DP_Instances_Steps_TaskGroups_Roles 
+} from 'projects/codx-dp/src/lib/models/models';
+import { Component, OnInit, Optional } from '@angular/core';
 @Component({
   selector: 'codx-add-group-task',
   templateUrl: './codx-add-group-task.component.html',
@@ -20,14 +23,23 @@ export class CodxAddGroupTaskComponent implements OnInit {
   dialog!: DialogRef;
   grvTaskGroupsForm: FormModel;
   taskGroup: DP_Instances_Steps_TaskGroups;
-  view = {};
   REQUIRE = ['endDate', 'startDate', 'taskGroupName'];
-  isSave = true;
-  isEditTime = false;
-  checkShow = false;
-  action = '';
+  view = {};
+  step;
   user;
+  action = '';
+  isSave = true;
+  isStart = false;
+  checkShow = false;
+  isEditTime = false;
   minHourGroups = 0;
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -40,6 +52,8 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.taskGroup = dt?.data?.dataGroup;
     this.isEditTime = dt?.data?.isEditTime;
     this.action = dt?.data?.action;
+    this.isStart = dt?.data?.isStart;
+    this.step = dt?.data?.step;
     this.user = this.authStore.get();
     this.grvTaskGroupsForm = {
       entityName: 'DP_Instances_Steps_TaskGroups',
@@ -153,11 +167,21 @@ export class CodxAddGroupTaskComponent implements OnInit {
 
   handleSave() {
     let message = [];
-    for (let key of this.REQUIRE) {
-      if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
-        message.push(this.view[key]);
+    if(this.isStart){
+      for (let key of this.REQUIRE) {
+        if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
+          message.push(this.view[key]);
+        }
+      }
+    }else{
+      if (!this.taskGroup['taskGroupName']?.trim()) {
+        message.push(this.view['taskGroupName']);
+      }
+      if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
+        message.push(this.view['durationDay']);
       }
     }
+   
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else if (!this.isSave) {
@@ -211,5 +235,46 @@ export class CodxAddGroupTaskComponent implements OnInit {
         this.dialog.close({ groupTask:res[0],listTask: res[1], progressStep: res[2]});
       }
     });
+  }
+
+  changeRoler(event){
+    let role = event[0];
+    if(role){
+      if(role?.roleType == "Users" || role?.roleType == "Owner"){
+        this.taskGroup.roles = [role];
+        this.taskGroup.owner = role?.objectID;
+      }else{
+        let data = [];
+        switch (role?.roleType)
+        {
+          case "Departments":
+          case "OrgHierarchy":
+            data = [role?.objectID,this.step?.instanceID]
+            break;
+          case "Roles":
+          case "Positions":
+            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            break;
+        }
+        if(data?.length > 0){
+          this.api.exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetUserByOrgUnitIDAsync',
+            data
+          ).subscribe(res => {
+            if(res){     
+              let role = new DP_Instances_Steps_TaskGroups_Roles();   
+              role['objectID'] = res?.userID;
+              role['objectName'] =  res?.userName;
+              role['objectType'] = "U";
+              role['roleType'] = "Users";
+              this.taskGroup.roles = [role];
+              this.taskGroup.owner = role?.objectID;
+            }
+          });
+        }
+      }
+    }
   }
 }

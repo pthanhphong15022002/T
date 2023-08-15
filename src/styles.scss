@@ -109,7 +109,7 @@ codx-view-list-detail {
   font-size: 1.275rem !important;
 }
 .fs-5-sm {
-  font-size: 1.15rem !important;
+  font-size: 1.135rem !important;
 }
 .fs-6 {
   font-size: var(--fs-6) !important;
@@ -2166,7 +2166,13 @@ codx-calendar {
     //margin-left: 140px;
   }
 }
-
+.w-550px.dropdown-menu{
+  codx-calendar {
+    .e-tab .e-tab-header.e-vertical {
+      width: 125px !important;
+    }
+  }
+}
 erm-quick-links-inner .dropdown-menu {
   max-height: calc(100vh - 55px);
   margin-top: 7px !important;
@@ -2206,6 +2212,10 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
 .e-dlg-target .e-tab .e-content.e-lib {
   padding-left: 0;
 }
+.e-dlg-target #calendarTab.e-tab .e-content.e-lib {
+  padding-left: 20px;
+}
+
 .input-sm .e-input-group.e-ddl {
   border-radius: 26px !important;
   padding-left: 5px !important;
@@ -3589,8 +3599,8 @@ codx-view-tree-detail .e-splitter{
   }
 }
 .target-treeview .menu-item{
-  padding-top: 5px;
-  padding-bottom: 7px;
+  padding-top: 2px;
+  padding-bottom: 8px;
 }
 
 .template{
@@ -3634,4 +3644,13 @@ codx-view-list-detail wp-appropval-news-detail .codx-detail-main {
 .btn-32px.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   padding: 0.35rem calc(0.85rem + 1px) !important;
   height: 32px;
+}
+codx-view-tree-targets .menu-sub{
+  padding-left: 30px!important;
+}
+
+.scroll-grid {
+   .e-gridcontent{
+     height: calc(100% - 40px)!important;
+   }
 }

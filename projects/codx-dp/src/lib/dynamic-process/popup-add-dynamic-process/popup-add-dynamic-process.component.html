@@ -1714,21 +1714,39 @@
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px">
-        <div
-          class="py-2 px-3 border-bottom stage-header d-flex align-items-center justify-content-between"
-        >
-          <span class="fw-bold fs-5 text-dark">
-            <codx-label fiedName="step" default="Giai đoạn"></codx-label
-          ></span>
-          <button
-            type="button"
-            class="btn btn-sm btn-light-primary"
-            (click)="openPopupStep('add')"
+        <div class="border-bottom">
+          <div
+            class="py-2 px-3 stage-header d-flex align-items-center justify-content-between"
           >
-            <i class="icon-add icon-14 ms-n1"></i>
-            <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
-          </button>
+            <span class="fw-bold fs-5 text-dark">
+              <codx-label fiedName="step" default="Giai đoạn"></codx-label
+            ></span>
+            <button
+              type="button"
+              class="btn btn-sm btn-light-primary"
+              (click)="openPopupStep('add')"
+            >
+              <i class="icon-add icon-14 ms-n1"></i>
+              <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
+            </button>
+          </div>
+          <div class="px-3">
+            <codx-input
+              type="checkbox"
+              field="instanceProgressControl"
+              style="width: 100%"
+              [checked]="process?.instanceProgressControl"
+              (valueChange)="valueChangeChecked($event,process)"
+            >
+            </codx-input>
+            <codx-label
+              class="ms-1"
+              fiedName="instanceProgressControl"
+              [formModel]="dialog.formModel"
+            ></codx-label>
+          </div>
         </div>
+
         <div
           class="example-list stage-body-left-main"
           cdkDropList
@@ -1813,14 +1831,16 @@
                     ></codx-label>
                     <span class="fw-bold">{{ itemStep?.tasks?.length }}</span>
                   </div>
-                  <div class="fs-7">
+                  <div class="fs-7" *ngIf="process?.instanceProgressControl">
                     <codx-label
                       class="label-colon"
                       fiedName="InstanceProgress"
                       [formModel]="grvStep"
                       [setRequire]="false"
                     ></codx-label>
-                    <span class="fw-bold">{{itemStep?.instanceProgress || 0 }}%</span>
+                    <span class="fw-bold"
+                      >{{ itemStep?.instanceProgress || 0 }}%</span
+                    >
                   </div>
                 </div>
                 <codx-mfunc
@@ -2326,7 +2346,7 @@
       [formModel]="grvStep"
       type="text"
       [crrValue]="stepNew?.stepName"
-      (valueChange)="changeNameStep($event,stepNew)"
+      (valueChange)="changeNameStep($event, stepNew)"
       [disabled]="isEditReason"
     >
     </codx-input>
@@ -2340,7 +2360,10 @@
     </div>
   </div>
 
-  <div class="form-group mt-5" *ngIf="!stepNew?.isSuccessStep && !stepNew?.isFailStep">
+  <div
+    class="form-group mt-5"
+    *ngIf="!stepNew?.isSuccessStep && !stepNew?.isFailStep && process?.instanceProgressControl"
+  >
     <div class="fw-bold text-dark mb-1">
       <codx-label
         fiedName="InstanceProgress"
@@ -3588,7 +3611,7 @@
         field="reasonName"
         type="text"
         [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event,reason.recID)"
+        (valueChange)="changeValueReaName($event, reason.recID)"
       >
       </codx-input>
     </div>
