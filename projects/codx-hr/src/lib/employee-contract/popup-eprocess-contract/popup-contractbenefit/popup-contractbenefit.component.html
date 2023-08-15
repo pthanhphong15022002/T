@@ -1,0 +1,69 @@
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+
+</codx-form>
+
+<ng-template #body>
+    <div class="form-group row">
+        <codx-label
+          fiedName="BenefitID"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="BenefitID"
+          [formModel]="formModel"
+          [crrValue]="actionType == 'edit' ? data.benefitID:null"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <div class="d-flex flex-column">
+            <codx-label
+              fiedName="BenefitAmt"
+              [formModel]="formModel"
+            ></codx-label>
+
+            <codx-input
+              field="BenefitAmt"
+              [formModel]="formModel"
+          [crrValue]="actionType == 'edit' ? data.benefitAmt:null"
+              [Group]="formGroup"
+              [showSpinButton]="false"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="d-flex flex-column">
+            <codx-label
+              fiedName="BenefitNorm"
+              [formModel]="formModel"
+            ></codx-label>
+            <!-- [disabled]="disabledInput" -->
+            <codx-input
+              field="BenefitNorm"
+          [crrValue]="actionType == 'edit' ? data.benefitNorm:null"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+  </ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
+        <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData?.updateColumn">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>

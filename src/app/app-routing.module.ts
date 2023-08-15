@@ -16,6 +16,14 @@ import { TermsComponent } from '@pages/terms/terms.component';
 
 var childAuthRoutes: Routes = [
   {
+    path: 'wr',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-wr/src/lib/codx-wr.module').then(
+        (m) => m.CodxWrModule
+      ),
+  },
+  {
     path: 'cm',
     canActivate: [AuthGuard],
     loadChildren: () =>

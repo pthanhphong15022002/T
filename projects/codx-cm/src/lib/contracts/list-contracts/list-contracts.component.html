@@ -12,7 +12,7 @@
 
   <div class="d-flex justify-content-center align-items-center">
     <button
-    *ngIf="!isPause"
+    *ngIf="!isPause && isAddTask"
     type="button"
     class="btn btn-sm btn btn-primary d-flex align-items-center"
     (click)="addContract()"
