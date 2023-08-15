@@ -442,4 +442,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.pageIndex = 2;
     event.stopPropagation();
   }
+  initCacheBUHierachy(){
+    this.api.execSv("HR","HR","OrganizationUnitsBusiness","InitOrgHierarchyAsync").subscribe();
+  }
 }

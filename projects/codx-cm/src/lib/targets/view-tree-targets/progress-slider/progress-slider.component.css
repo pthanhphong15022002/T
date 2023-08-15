@@ -1,0 +1,12 @@
+.kr-process {
+  position: relative;
+}
+
+.bg-danger{
+  background-color: red;
+}
+
+/* Áp dụng màu cho phần progress */
+.rounded-4.h-5px {
+  background-size: 100% 100%; /* Tùy chỉnh kích thước cho mỗi phần */
+}
