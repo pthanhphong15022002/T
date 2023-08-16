@@ -1,0 +1,53 @@
+<!-- <ejs-slider
+  #slider
+  type="MinRange"
+  style="height: 0px !important"
+  [min]="0"
+  [width]="250"
+  [height]="0"
+  [max]=" progressOut > 100 ? 0 : 100"
+  [value]="
+  progressOut > 100 ? 0 : progressOut
+  "
+  [readonly]="true"
+>
+</ejs-slider> -->
+<div
+  class="d-flex flex-row align-items-center kr-process"
+>
+  <div
+    class="h-5px position-relative  rounded-4 w-250px"
+    [ngClass]="progressOut > 100 ? 'bg-danger' : 'bg-gray-200'"
+  >
+    <div
+      class="rounded-4 h-5px"
+      [ngClass]="
+        formatNumberWithout(progressOut) <= 100 ? 'bg-success' : 'bg-danger'
+      "
+      role="progressbar"
+      [style.width]="
+        progressOut <= 100
+          ? progressOut + '%'
+          : formatNumberWithout(progressOut) + '%'
+      "
+      aria-valuenow="50"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    ></div>
+    <!-- <span *ngIf="item?.notiCheckIn" class="icon-notifications noti-checkin text-warning position-absolute "
+      [ngbTooltip]="'Trễ hạn cập nhật'" [style.left]="item?.progress - 3 + '%'">
+    </span> -->
+  </div>
+  <span class="ps-4 col-3">
+    <span
+      class="mb-1"
+      *ngIf="progressOut != 0"
+      [innerHTML]="progressOut + '%'"
+    ></span>
+    <span
+      class="mb-1"
+      *ngIf="progressOut == 0"
+      [innerHTML]="progressOut + '%'"
+    ></span>
+  </span>
+</div>

@@ -246,19 +246,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   async download(file: any): Promise<void> {
     this.fileService.getFile(file.recID).subscribe((item) => {
       if (item && item.download) {
-        this.fileService.downloadFile(file.recID).subscribe(async (res) => {
-          if (res) {
-            fetch(environment.urlUpload + '/' + res)
-              .then((response) => response.blob())
-              .then((blob) => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = file.fileName;
-                link.click();
-              })
-              .catch(console.error);
-          }
-        });
+        window.location.href = environment.urlUpload + '/' + item?.pathDisk+"?download=1";
       } else this.notificationsService.notifyCode('DM060');
     });
   }

@@ -281,7 +281,7 @@
                 align="Left"
               ></e-item>
               <e-item
-                *ngIf="isApprover && isEditable"
+                *ngIf="isApprover && isEditable && canHighLight"
                 (click)="changeEditMode()"
                 prefixIcon="e-icons e-repeat"
                 tooltipText="Edit"
@@ -289,18 +289,22 @@
                 align="Left"
               ></e-item>
               <e-item
-                *ngIf="isApprover && isEditable"
+                *ngIf="isApprover && isEditable && canHighLight"
                 (click)="changeRemoveHLAMode()"
                 prefixIcon="e-erase e-icons"
               >
               </e-item>
               <e-item
-                *ngIf="isApprover && isEditable"
+                *ngIf="isApprover && isEditable && canHighLight"
                 prefixIcon="e-icons e-circle-check"
                 (click)="confirmHighlightText(false)"
               >
               </e-item>
 
+              <e-item id="pageRotateCcw" prefixIcon="e-icons e-transform-left">
+              </e-item>
+              <e-item id="pageRotateCw" prefixIcon="e-icons e-transform-right">
+              </e-item>
               <e-item
                 *ngIf="isEditable"
                 [prefixIcon]="
@@ -310,10 +314,6 @@
                 "
                 (click)="changeShowActionsState()"
               ></e-item>
-              <e-item id="pageRotateCcw" prefixIcon="e-icons e-transform-left">
-              </e-item>
-              <e-item id="pageRotateCw" prefixIcon="e-icons e-transform-right">
-              </e-item>
               <!-- <e-item prefixIcon="e-icons e-location" (click)="testCreateCA()">
               </e-item> -->
             </e-items>

@@ -40,7 +40,6 @@ export class LeadDetailComponent implements OnInit {
   @Input() action: any;
   @Input() applyProcess: any;
 
-
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
@@ -55,7 +54,7 @@ export class LeadDetailComponent implements OnInit {
   tmpDeal: any;
   oCountFooter: any = {};
   contactPerson: any;
-  gridViewSetupDeal:any;
+  gridViewSetupDeal: any;
   request: ResourceModel;
   formModelDeal: FormModel;
 
@@ -69,13 +68,10 @@ export class LeadDetailComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
-    private codxCmService: CodxCmService,
-
+    private codxCmService: CodxCmService
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
-
-
   }
 
   ngOnInit(): void {
@@ -114,16 +110,14 @@ export class LeadDetailComponent implements OnInit {
     ];
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
   ngAfterViewChecked() {
-    if(!this.hasRunOnce) {
+    if (!this.hasRunOnce) {
       this.resetTab(this.dataSelected.applyProcess);
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-
       if (
         changes['dataSelected'].currentValue != null &&
         changes['dataSelected'].currentValue?.recID
@@ -141,22 +135,23 @@ export class LeadDetailComponent implements OnInit {
           icon: 'icon-i-link',
         };
 
-        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID && this.oldRecId){
+        if (
+          this.oldRecId !== changes['dataSelected'].currentValue?.recID &&
+          this.oldRecId
+        ) {
           this.hasRunOnce = true;
           this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
         }
-        !this.hasRunOnce &&  this.promiseAllLoad();
+        !this.hasRunOnce && this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.tabControl.push(references);
-      }else {
+      } else {
         this.tmpDeal = null;
       }
       this.getTags(this.dataSelected);
-
     }
   }
-
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
@@ -170,15 +165,14 @@ export class LeadDetailComponent implements OnInit {
   }
 
   changeFooter(e) {}
-  resetTab(data){
-    if(this.tabObj) {
+  resetTab(data) {
+    if (this.tabObj) {
       this.isBool = data;
-      if(this.isBool) {
+      if (this.isBool) {
         (this.tabObj as TabComponent).hideTab(1, true);
-        (this.tabObj as TabComponent).hideTab(2,false);
-      }
-      else {
-        (this.tabObj as TabComponent).hideTab(1, false );
+        (this.tabObj as TabComponent).hideTab(2, false);
+      } else {
+        (this.tabObj as TabComponent).hideTab(1, false);
         (this.tabObj as TabComponent).hideTab(2, true);
       }
     }
@@ -186,15 +180,15 @@ export class LeadDetailComponent implements OnInit {
 
   async promiseAllLoad() {
     this.isDataLoading = true;
-    this.dataSelected.applyProcess && await this.getListInstanceStep();
+    this.dataSelected.applyProcess && (await this.getListInstanceStep());
     await this.getTmpDeal();
   }
-  async executeApiCalls(){
+  async executeApiCalls() {
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
   }
 
-  async getGridViewSetupDeal(){
+  async getGridViewSetupDeal() {
     this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup(
@@ -204,7 +198,7 @@ export class LeadDetailComponent implements OnInit {
     );
   }
 
-  async getValueListRole(){
+  async getValueListRole() {
     this.cache.valueList('CRM040').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -216,15 +210,14 @@ export class LeadDetailComponent implements OnInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
-      '5'
+      '5',
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
-      }
-      else {
+      } else {
         this.listSteps = null;
       }
     });
@@ -238,13 +231,13 @@ export class LeadDetailComponent implements OnInit {
     listStep.pop();
     listStep.pop();
   }
-  checkHaveField(listStep: any){
+  checkHaveField(listStep: any) {
     var isCheck = false;
-    for(let item of listStep) {
-        if(item?.fields?.length > 0 && item?.fields) {
-          isCheck = true;
-          return isCheck;
-        }
+    for (let item of listStep) {
+      if (item?.fields?.length > 0 && item?.fields) {
+        isCheck = true;
+        return isCheck;
+      }
     }
     return isCheck;
   }
@@ -259,23 +252,20 @@ export class LeadDetailComponent implements OnInit {
       });
   }
 
-  getIcon($event){
-    if($event == '1') {
-      return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
+  getIcon($event) {
+    if ($event == '1') {
+      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    } else if ($event == '5') {
+      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
+    } else if ($event == '3') {
+      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
     }
-    else if($event == '5') {
-      return this.listRoles.filter(x=>x.value == '5')[0]?.icon ?? null;
-    }
-    else if($event == '3') {
-      return this.listRoles.filter(x=>x.value == '3')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter(x=>x.value == '1')[0]?.icon ?? null;
-
+    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
   }
-  getTags(data){
+  getTags(data) {
     this.viewTag = '';
     setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags
+      this.viewTag = this.dataSelected?.tags;
     }, 100);
   }
   showColumnControl(stepID) {
@@ -293,8 +283,7 @@ export class LeadDetailComponent implements OnInit {
     let transferControl = this.dataSelected.steps.transferControl;
     if (transferControl == '0') return;
   }
-  saveAssignTask(e) {
-  }
+  saveAssignTask(e) {}
   changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
@@ -302,7 +291,7 @@ export class LeadDetailComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  reloadListStep(listSteps:any) {
+  reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
     this.isDataLoading = false;

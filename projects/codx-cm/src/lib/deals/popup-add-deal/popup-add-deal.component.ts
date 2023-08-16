@@ -27,7 +27,7 @@ import {
   DialogModel,
   CodxFormComponent,
 } from 'codx-core';
-import { CM_Contacts, CM_Deals } from '../../models/cm_model';
+import { CM_Contacts, CM_Deals, CM_Permissions } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
@@ -551,6 +551,43 @@ export class PopupAddDealComponent
     if ($event) {
       this.owner = $event;
       this.deal.owner = this.owner;
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.deal.owner
+        )[0].userName;
+      }
+      this.checkOwner(this.deal.owner,ownerName);
+    }
+  }
+
+  checkOwner(owner: any, ownerName: any) {
+    if (owner) {
+      let index = this.deal.permissions.findIndex(
+        (x) => x.objectType === 'U' && x.roleType === 'O'
+      );
+      if (index !== -1) {
+        this.deal.permissions[index].objectID = owner;
+        this.deal.permissions[index].objectName = ownerName;
+      } else {
+        var permission = new CM_Permissions();
+        permission.objectID = owner;
+        permission.objectName = ownerName;
+        permission.objectType = '1';
+        permission.roleType = 'O';
+        permission.full = true;
+        permission.read = true;
+        permission.update = true;
+        permission.assign = true;
+        permission.delete = true;
+        permission.upload = true;
+        permission.download = true;
+        permission.isActive = true;
+        permission.memberType = '1';
+        permission.allowPermit = true;
+        permission.allowUpdateStatus = '1';
+        this.deal.permissions.push(permission);
+      }
     }
   }
   valueChangeBusinessLine($event) {

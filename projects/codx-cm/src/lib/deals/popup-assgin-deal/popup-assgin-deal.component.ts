@@ -97,7 +97,6 @@ cancel() {
 }
 async promiseAll(){
   await this.getListPermission(this.processID,this.applyFor,this.stepID);
-  await this.getStepByStepIDAndInID(this.refID, this.stepID);
 }
 async getListPermission(processId, applyFor,stepID) {
 var data = [processId,applyFor,stepID]
@@ -113,25 +112,6 @@ async getListPermissionInGroup(permissions) {
     : permissions;
 }
 
-getStepByStepIDAndInID(insID, stepID) {
-  this.codxCmService
-    .getStepByStepIDAndInID(insID, stepID)
-    .subscribe(async (res) => {
-      if (res) {
-        this.step = res;
-        if(this.step.roles != null && this.step.roles.length > 0){
-          var tmpOwner = this.step.roles.filter(x => x.roleType == "S" && x.objectType != "U" && x.objectType != "1");
-          if(tmpOwner != null && tmpOwner.length > 0){
-            this.ownerStep = await this.getListUserByOrg(tmpOwner.map(x => x.objectID), tmpOwner[0].objectType);
-          }else{
-            this.ownerStep = this.step?.owner;
-          }
-        }else{
-          this.ownerStep = '';
-        }
-      }
-    });
-}
 
 async getListUserByOrg(lstRoles, objectType) {
   var owner = '';
@@ -210,11 +190,6 @@ cbxEmpChange(evt: any) {
     this.owner = evt;
   }
 }
-valueChangeOwnerStep($event){
-  if($event) {
-    this.ownerStep = $event;
-  }
-}
 assignTo(user:any){
   this.employeeName = user?.employeeName;
   this.orgUnitName = user?.orgUnitName;
@@ -248,7 +223,7 @@ onSaveForm() {
 
 saveOwner(){
  this.applyProcess && this.setRoles();
-  var datas = [this.recID, this.owner,this.ownerStep, this.startControl,this.buid];
+  var datas = [this.recID, this.owner, this.startControl,this.buid];
   if(this.applyFor == "1"){
     this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
       if(res) {

@@ -131,7 +131,7 @@ export class ContractsComponent extends UIComponent {
   columnGrids: any;
   arrFieldIsVisible = [];
   itemSelected: any;
-  button?: ButtonModel = {id: 'btnAdd'};
+  button?: ButtonModel = { id: 'btnAdd' };
   tabControl = [];
   //param
   approveRule = '0';
@@ -152,11 +152,15 @@ export class ContractsComponent extends UIComponent {
 
   async onInit(): Promise<void> {
     this.loadParam();
-    this.grvSetup = await firstValueFrom(this.cache.gridViewSetup('CMContracts', 'grvCMContracts'));
+    this.grvSetup = await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
 
     let arrField = Object.values(this.grvSetup).filter((x: any) => x.isVisible);
     if (Array.isArray(arrField)) {
-      this.arrFieldIsVisible = arrField.sort((x: any, y: any) => x.columnOrder - y.columnOrder).map((x: any) => x.fieldName);
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
       this.getColumsGrid(this.grvSetup);
     }
 
@@ -244,17 +248,22 @@ export class ContractsComponent extends UIComponent {
           //Gửi duyệt
           case 'CM0204_1':
             if (
-              (data.status == '0' ||data.closed && data.status != '1') ||
+              data.status == '0' ||
+              (data.closed && data.status != '1') ||
               (this.approveRule != '1' && !data.applyApprover) ||
               (data.applyApprover && data?.approveRule != '1') ||
-              data?.approveStatus >= '3') 
-            {
+              data?.approveStatus >= '3'
+            ) {
               res.disabled = true;
             }
             break;
           //Hủy yêu cầu duyệt
           case 'CM0204_2':
-            if ((data.closed && data.status != '1') || data.status == '0' || data.approveStatus != '3'){
+            if (
+              (data.closed && data.status != '1') ||
+              data.status == '0' ||
+              data.approveStatus != '3'
+            ) {
               res.disabled = true;
             }
             res.isblur = false;
@@ -446,7 +455,6 @@ export class ContractsComponent extends UIComponent {
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
       await this.openPopupContract(null, 'edit', dataEdit);
     });
-    
   }
 
   async copyContract(contract) {
@@ -653,7 +661,7 @@ export class ContractsComponent extends UIComponent {
   cancelApprover(dt) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        if (dt.applyApprover) {
+        if (dt.applyProcess) {
           this.cmService.getProcess(dt.processID).subscribe((process) => {
             if (process) {
               this.cancelAction(dt, process.processNo);

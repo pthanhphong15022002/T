@@ -17,7 +17,7 @@ import {
   CodxGridviewV2Component,
   ScrollComponent,
 } from 'codx-core';
-import { PopupAddJournalComponent } from '../journals/popup-add-journal/popup-add-journal.component';
+import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
 import { NameByIdPipe } from '../pipes/nameById.pipe';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
@@ -305,7 +305,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
         options.FormModel = this.view.formModel;
 
         this.callfc.openSide(
-          PopupAddJournalComponent,
+          JournalsAddComponent,
           {
             formType: 'add',
             formTitle: `${e.text} ${this.functionName}`,
@@ -333,7 +333,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
       this.callfc
         .openSide(
-          PopupAddJournalComponent,
+          JournalsAddComponent,
           {
             formType: 'edit',
             formTitle: `${e.text} ${this.functionName}`,
@@ -363,7 +363,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
       options.FormModel = this.view.formModel;
 
       this.callfc.openSide(
-        PopupAddJournalComponent,
+        JournalsAddComponent,
         {
           formType: 'add',
           formTitle: `${e.text} ${this.functionName}`,

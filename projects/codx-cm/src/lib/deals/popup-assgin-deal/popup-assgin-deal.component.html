@@ -48,22 +48,6 @@
                         [value]="buid ?'':owner"
                       ></ejs-combobox>
 
-                      <div class="fw-bold mb-1 mt-5">
-                        <codx-label
-                        fiedName="Owner"
-                        formName="DPInstancesSteps"
-                        gridViewName="grvDPInstancesSteps"
-                        default="Người phụ trách nhiệm vụ tại giai đoạn"
-                      ></codx-label>
-
-                        </div>
-
-                        <ejs-combobox [dataSource]="listParticipants"
-                        (valueChange)="valueChangeOwnerStep($event)" [fields]="fieldCbxParticipants"
-                        [placeholder]="gridViewSetup?.SalespersonID?.description"
-                        [allowFiltering]='true' [value]="ownerStep"
-                        ></ejs-combobox>
-
                     </ng-template>
 
                     <div
