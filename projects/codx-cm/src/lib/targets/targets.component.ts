@@ -410,11 +410,9 @@ export class TargetsComponent
   }
 
   filterChange(e) {
-    console.log('filter: ', e);
   }
 
   filterReportChange(e) {
-    console.log('filterReport: ', e);
   }
   selectedChange(e) {}
   //#endregion
