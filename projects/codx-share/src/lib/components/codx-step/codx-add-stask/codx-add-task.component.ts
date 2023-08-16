@@ -58,8 +58,8 @@ export class CodxAddTaskComponent implements OnInit {
   view = [];
   dataCombobox = [];
   litsParentID = [];
-
   user;
+  ownerParenr;
   groupTask;
   isSave = true;
   groupTaskID = null;
@@ -102,6 +102,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.ownerParenr = dt?.data?.owner;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave =
@@ -327,11 +328,11 @@ export class CodxAddTaskComponent implements OnInit {
         {
           case "Departments":
           case "OrgHierarchy":
-            data = [role?.objectID,this.step?.instanceID]
+            data = [role?.objectID,this.step?.instanceID,this.ownerParenr]
             break;
           case "Roles":
           case "Positions":
-            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            data = [role?.objectID,this.step?.instanceID, this.ownerParenr, role?.objectType]
             break;
         }
         if(data?.length > 0){
