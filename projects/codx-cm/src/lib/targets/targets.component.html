@@ -7,7 +7,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="!viewCalendar && showButtonAdd ? button : null"
+  [button]="!viewDashboard && showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
@@ -76,7 +76,7 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
-      [hideMF]="viewCalendar"
+      [hideMF]="viewDashboard"
       (clickMF)="clickMF($event, data)"
       type="hover"
       (changeDataMF)="changeDataMF($event, data)"
@@ -252,7 +252,7 @@
               [fmTargetLines]="fmTargetLines"
               [formModel]="view.formModel"
               [viewCurrent]="viewCurrent"
-              [hidenMF]="viewCalendar"
+              [hidenMF]="viewDashboard"
               (clickMoreFunc)="clickMoreFunc($event)"
               (changeMoreMF)="changeMoreMF($event)"
             ></codx-view-tree-targets>
@@ -447,7 +447,7 @@
   <div class="container">
     <div class="d-flex" [ngClass]="'height-parent'">
       <codx-mfunc
-        *ngIf="viewCurrent == '1' && !viewCalendar"
+        *ngIf="viewCurrent == '1' && !viewDashboard"
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
         (changeDataMF)="changeDataMF($event, item)"
@@ -522,7 +522,7 @@
             "
           >
             <codx-mfunc
-              *ngIf="!viewCalendar"
+              *ngIf="!viewDashboard"
               [formModel]="view.formModel"
               (clickMF)="clickMF($event, busi)"
               (changeDataMF)="changeDataMF($event, busi)"
