@@ -44,7 +44,7 @@ export class TargetsComponent
 {
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
-  @Input() viewCalendar = false;
+  @Input() viewDashboard = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
   @ViewChild('calendarDrop') calendarDrop: any;
@@ -191,8 +191,8 @@ export class TargetsComponent
   }
 
   async onInit() {
-    // this.viewCalendar = true;
-    if (this.viewCalendar) this.viewDataValue = '2';
+    // this.viewDashboard = true;
+    if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
@@ -297,7 +297,7 @@ export class TargetsComponent
         width: 120,
       },
     ];
-    if (!this.viewCalendar) {
+    if (!this.viewDashboard) {
       this.views = [
         {
           type: ViewType.content,
