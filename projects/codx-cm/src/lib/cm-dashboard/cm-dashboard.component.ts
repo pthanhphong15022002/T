@@ -11,6 +11,7 @@ import { Layout } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   AuthService,
+  PageTitleService,
   UIComponent,
   ViewModel,
   ViewType,
@@ -30,9 +31,10 @@ import {
   styleUrls: ['./cm-dashboard.component.scss'],
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
+  @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('noData') noData: TemplateRef<any>;
-  @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
+  @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
   funcID = 'DPT01';
   views: Array<ViewModel> = [];
   button = {
@@ -224,12 +226,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       fontWeight: '600',
     },
   };
+  vllData: any = [];
+  filterData: any = [];
+  reportID: any;
   //end
 
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
-    private auth: AuthService
+    private auth: AuthService,
+    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.language = this.auth.userValue?.language?.toLowerCase();
@@ -252,27 +258,58 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         active: true,
         sameData: false,
         reportType: 'D',
-        // reportView: true,
+        reportView: true,
         showFilter: true,
         model: {
           panelRightRef: this.template,
         },
       },
     ];
-
-    this.getDataDashboard();
+    this.pageTitle.setBreadcrumbs([]);
+    this.router.queryParams.subscribe((res) => {
+      if (res.reportID) {
+        this.reportID = res.reportID;
+        this.isLoaded = false;
+        switch (this.reportID) {
+          // nhom chua co tam
+          case '1':
+            this.getDataDashboard();
+            break;
+          //ca nha chua co ne de vay
+          case '3':
+            this.getDataDashboard();
+            break;
+          // target
+          case '5':
+            this.isLoaded = true;
+            break;
+        }
+      }
+    });
   }
 
   filterChange(e: any) {
     this.isLoaded = false;
     const { predicates, dataValues } = e[0];
+    debugger;
     const param = e[1];
-    this.getDataDashboard(predicates, dataValues, param);
 
+    switch (this.reportID) {
+      // nhom chua co tam
+      case '1':
+        this.getDataDashboard(predicates, dataValues, param);
+        break;
+      //ca nha chua co ne de vay
+      case '3':
+        this.getDataDashboard(predicates, dataValues, param);
+        break;
+      // target
+      case '5':
+        this.isLoaded = true;
+        break;
+    }
     this.detectorRef.detectChanges();
   }
-
-  onActions(e) {}
 
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
@@ -455,5 +492,30 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
       }
     });
+
+    this.cache.valueList('CRM057').subscribe((vl) => {
+      debugger;
+      if (vl) {
+        this.vllData = vl.datas;
+        this.filterData = this.vllData.map((x) => {
+          return {
+            title: x.text,
+            path: 'cm/dashboard/CMD01?reportID=' + x.value,
+          };
+        });
+      }
+    });
+  }
+  //--------------Change Filter--------------//
+  valueChangeFilter(e) {}
+  //--------------end Change Filter--------------//
+
+  onActions(e) {
+    if (e.type == 'reportLoaded') {
+      this.pageTitle.setSubTitle(this.filterData[0].title);
+      this.pageTitle.setChildren(this.filterData);
+      this.codxService.navigate('', this.filterData[0].path);
+      this.isLoaded = false;
+    }
   }
 }

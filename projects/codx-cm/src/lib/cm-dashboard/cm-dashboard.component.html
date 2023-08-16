@@ -9,7 +9,7 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100" *ngIf="isLoaded">
+  <div class="w-100 h-100" *ngIf="isLoaded && reportID != '5'">
     <codx-dashboard
       [templates]="dashBoardDeals"
       [panels]="panelsDeals"
@@ -20,6 +20,10 @@
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
     <div id="loader"></div>
+  </div>
+
+  <div class="w-100 h-100" *ngIf="isLoaded && reportID != '5'">
+    <cm-targets [viewDashboard]="true"></cm-targets>
   </div>
 </ng-template>
 
@@ -551,4 +555,17 @@
 
 <ng-template #noData>
   <codx-no-data></codx-no-data>
+</ng-template>
+
+<!-- temp filter -->
+<ng-template #filterTemplate>
+  <!-- <codx-input
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    type="valuelist"
+    [crrValue]="'2'"
+    refValue="AC083"
+    field="payType"
+    (valueChange)="valueChangeFilter($event)"
+  ></codx-input> -->
 </ng-template>
