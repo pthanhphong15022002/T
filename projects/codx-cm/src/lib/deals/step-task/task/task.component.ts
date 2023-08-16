@@ -35,6 +35,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
+  @Input() owner: string;
   @Input() isPause = false;
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
@@ -154,15 +155,19 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             break;
           //tajo cuoc hop
           case 'DP24':
-            if (task.taskType != 'M') res.disabled = true;
+            if (task.taskType != 'M'){
+              res.disabled = true;
+            }else{
+              task?.status == '1' && (res.isblur = true);
+            } 
             break;
 
-            case 'DP27': // đặt xe
-            if (
-              task?.taskType != 'B' ||
-              (task?.taskType == 'B' && task?.actionStatus == '2')
-            )
+          case 'DP27': // đặt xe
+            if (task?.taskType != 'B' ||(task?.taskType == 'B' && task?.actionStatus == '2')){
               res.disabled = true;
+            }else{
+              task?.status == '1' && (res.isblur = true);
+            }
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
@@ -392,6 +397,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isSave: false,
       isStart: true,
+      owner: this.owner,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
