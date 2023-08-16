@@ -348,8 +348,10 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    this.formModel = await this.cmSv.getFormModel('CM0601');
-    if (!this.viewDashboard) {
+    if (this.viewDashboard) {
+      this.formModel = await this.cmSv.getFormModel('CM0601');
+    } else {
+      this.formModel = this.view.formModel;
       this.gridViewSetupTarget = await firstValueFrom(
         this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
       );
@@ -358,7 +360,6 @@ export class TargetsComponent
       this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
       this.changeDetec.detectChanges();
     }
-
   }
 
   //#region event codx-view
@@ -409,11 +410,9 @@ export class TargetsComponent
     return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
   }
 
-  filterChange(e) {
-  }
+  filterChange(e) {}
 
-  filterReportChange(e) {
-  }
+  filterReportChange(e) {}
   selectedChange(e) {}
   //#endregion
 
@@ -919,7 +918,8 @@ export class TargetsComponent
     );
     let dataEdit = JSON.parse(JSON.stringify(data));
     if (result != null) {
-      lstLinesBySales = result;
+      lstLinesBySales = result[0];
+      dataEdit.target = result[1];
     }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;

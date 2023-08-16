@@ -565,7 +565,10 @@ export class PurchaseinvoicesAddComponent
         .subscribe();
     }
 
-    if (e.type === 'closeEdit') {
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.lines[e.data._rowIndex] = e.data;
     }
   }
   //#endregion
@@ -605,6 +608,12 @@ export class PurchaseinvoicesAddComponent
       this.vatInvoiceService.clear();
       this.vatInvoiceService.addDatas.set(newVatInvoice.recID, newVatInvoice);
       this.gridVatInvoices.addRow(newVatInvoice, this.vatInvoices.length);
+    }
+
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.vatInvoices[e.data._rowIndex] = e.data;
     }
   }
   //#endregion
