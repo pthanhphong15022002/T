@@ -234,34 +234,11 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
   async download(): Promise<void> {
     var id = this.id;
-    var that = this;
-    
     if (this.checkDownloadRight()) {   
       this.fileService.downloadFile(id).subscribe(async res => {
         if (res) {                   
-          let blob = await fetch(environment.urlUpload+ "/" + res).then(r => r.blob());                
-          let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", this.fullName);
-          link.style.display = "none";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          window.location.href = environment.urlUpload + '/' + res+"?download=1";
         }
-        // if (res) {
-        //   let json = JSON.parse(res.content);
-        //   var bytes = that.base64ToArrayBuffer(json);
-        //   let blob = new Blob([bytes], { type: res.mimeType });
-        //   let url = window.URL.createObjectURL(blob);
-        //   var link = document.createElement("a");
-        //   link.setAttribute("href", url);
-        //   link.setAttribute("download", res.fileName);
-        //   link.style.display = "none";
-        //   document.body.appendChild(link);
-        //   link.click();
-        //   document.body.removeChild(link);
-        // }
       });
     }
     else {
