@@ -180,13 +180,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               res.disabled = true;
             }
             break;
-          // case 'DP30': //Khôi phục
-          //   if (['B', 'M'].includes(task.taskType)) {
-          //     this.convertMoreFunctions(event, res, task.taskType);
-          //   } else {
-          //     res.disabled = true;
-          //   }
-          //   break;
+          case 'DP30': //Khôi phục
+            res.disabled = true;
+            break;
           case 'DP31': //Bắt đầu
             if (task?.status != '1') {
               res.disabled = true;

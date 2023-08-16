@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -44,7 +45,7 @@ export class TargetsComponent
 {
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
-  @Input() viewCalendar = false;
+  @Input() viewDashboard = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
   @ViewChild('calendarDrop') calendarDrop: any;
@@ -125,7 +126,7 @@ export class TargetsComponent
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
-  funcID = '';
+  funcID = 'CM0601';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
@@ -172,18 +173,20 @@ export class TargetsComponent
   predicateSearch = '';
   dataValueSearch = '';
   probability = '1';
+  formModel: FormModel;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
+    private changeDetec: ChangeDetectorRef,
     private cmSv: CodxCmService,
     private auth: AuthService,
     private codxShareService: CodxShareService
   ) {
     super(inject);
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (!this.funcID)
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
@@ -191,12 +194,13 @@ export class TargetsComponent
   }
 
   async onInit() {
-    // this.viewCalendar = true;
-    if (this.viewCalendar) this.viewDataValue = '2';
+    // this.viewDashboard = true;
+    if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
     };
+
     this.year = new Date().getFullYear();
 
     this.loadTreeData(this.year?.toString());
@@ -297,11 +301,12 @@ export class TargetsComponent
         width: 120,
       },
     ];
-    if (!this.viewCalendar) {
+    if (!this.viewDashboard) {
       this.views = [
         {
           type: ViewType.content,
           sameData: false,
+          active: true,
           model: {
             panelRightRef: this.panelRight,
           },
@@ -311,6 +316,7 @@ export class TargetsComponent
           text: datasVll?.datas[1]?.text,
           icon: datasVll?.datas[1]?.icon,
           sameData: false,
+          active: false,
           model: {
             panelRightRef: this.panelRight,
           },
@@ -336,27 +342,30 @@ export class TargetsComponent
       }
     });
 
-    if (this.queryParams == null) {
-      this.queryParams = this.router.snapshot.queryParams;
-    }
+    // if (this.queryParams == null) {
+    //   this.queryParams = this.router.snapshot.queryParams;
+    // }
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
-    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetAsync';
-    this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
+    this.formModel = await this.cmSv.getFormModel('CM0601');
+    if (!this.viewDashboard) {
+      this.gridViewSetupTarget = await firstValueFrom(
+        this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+      );
+      this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
+      this.view.dataService.methodDelete = 'DeletedTargetAsync';
+      this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
+      this.changeDetec.detectChanges();
+    }
 
-    this.detectorRef.checkNoChanges();
   }
 
   //#region event codx-view
   viewChanged(e) {
     this.clickShow(false);
     this.viewMode = e?.view?.type;
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
   async onLoading(e) {
     // if(datasVll && datasVll.datas){
@@ -393,7 +402,7 @@ export class TargetsComponent
     this.predicateSearch = predicates;
     this.dataValueSearch = dataValues;
     this.loadTreeData(this.year, predicates, dataValues);
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   convertToCamelCase(name: string): string {
@@ -401,11 +410,9 @@ export class TargetsComponent
   }
 
   filterChange(e) {
-    console.log('filter: ', e);
   }
 
   filterReportChange(e) {
-    console.log('filterReport: ', e);
   }
   selectedChange(e) {}
   //#endregion
@@ -481,7 +488,6 @@ export class TargetsComponent
       this.countLoad++;
       this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? false : true;
-      this.view.button = this.showButtonAdd ? this.button : null;
       this.currencyID = this.currencyIDSys;
       this.exchangeRate = this.exchangeRateSys;
       this.search = '';
@@ -492,14 +498,14 @@ export class TargetsComponent
         this.dataValueSearch
       );
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   viewDataValueGrid(view) {
     if (view != this.viewDataValue) {
       this.viewDataValue = view;
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   valueChangeProbability(e) {
@@ -539,14 +545,14 @@ export class TargetsComponent
       this.loadTreeData(year?.toString());
     }
 
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
     }
-    this.detectorRef.detectChanges();
+    // this.changeDetec.detectChanges();
   }
 
   async exChangeRate(currencyIDOld, currencyID) {
@@ -626,7 +632,7 @@ export class TargetsComponent
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
 
-      this.detectorRef.detectChanges();
+      this.changeDetec.detectChanges();
     }
   }
 
@@ -763,7 +769,7 @@ export class TargetsComponent
             this.isShow = false;
           }
 
-          this.detectorRef.detectChanges();
+          this.changeDetec.detectChanges();
         }
       });
     });
@@ -844,7 +850,7 @@ export class TargetsComponent
             }
             // this.lstDataTree.push(Object.assign({}, data));
 
-            this.detectorRef.detectChanges();
+            this.changeDetec.detectChanges();
           }
         });
       });
@@ -883,7 +889,7 @@ export class TargetsComponent
             });
           });
           this.countPersons = lst.length;
-          this.detectorRef.detectChanges();
+          this.changeDetec.detectChanges();
         }
       });
   }
@@ -948,7 +954,7 @@ export class TargetsComponent
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
         this.isShow = false;
-        this.detectorRef.detectChanges();
+        this.changeDetec.detectChanges();
       }
     });
   }
@@ -972,7 +978,7 @@ export class TargetsComponent
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
       this.isShow = isShow;
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   //#region setting grid
@@ -984,7 +990,7 @@ export class TargetsComponent
       });
     }
     this.isShow = isShow;
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   PopoverDetail(e, p: any, emp) {

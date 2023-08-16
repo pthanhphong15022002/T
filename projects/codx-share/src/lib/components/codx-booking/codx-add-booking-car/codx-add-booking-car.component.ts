@@ -28,7 +28,7 @@ import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
 import { CodxShareService } from '../../../codx-share.service';
-import { Approver } from '../../../models/ApproveProcess.model';
+import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -1043,15 +1043,13 @@ export class CodxAddBookingCarComponent
                     'EP_Bookings',
                     this.formModel.funcID,
                     this.returnData?.title,
-                    (res) => {
+                    (res: ResponseModel) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
-                        this.notificationsService.notifyCode('ES007');
-                        this.returnData.approveStatus = '3';
+                        this.returnData.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                         this.returnData.write = false;
                         this.returnData.delete = false;
-                        (this.dialogRef.dataService as CRUDService)
-                          .update(this.returnData)
-                          .subscribe();
+                        (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+                        this.notificationsService.notifyCode('SYS034');
                         this.dialogRef && this.dialogRef.close(this.returnData);
                       } else {
                         this.notificationsService.notifyCode(res?.msgCodeError);

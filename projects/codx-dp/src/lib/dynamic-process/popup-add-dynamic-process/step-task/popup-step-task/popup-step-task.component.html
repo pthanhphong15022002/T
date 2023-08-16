@@ -281,17 +281,14 @@
       </div>
       <div>
         <ejs-multiselect
+          #multiselect 
           [dataSource]="listTaskLink"
           [mode]="'Default'"
           [fields]="fieldsTask"
           [value]="listParentID"
           (valueChange)="parentIDChange($event)"
         ></ejs-multiselect>
-
-        <!-- <ng-container
-          [ngTemplateOutlet]="comboboxMulti"
-          [ngTemplateOutletContext]="{ dataSource: dataCombobox }"
-        ></ng-container> -->
+        <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
     </div>
 
