@@ -239,6 +239,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //data test Thao
   isChange = false;
   formModelField: FormModel;
+  formModelGroup: FormModel;
   fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
   isHover = '';
@@ -372,8 +373,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.loadDefault();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loading();
+    this.formModelGroup = await this.getFormModel('DPS0105');
   }
 
   async loading(): Promise<void> {
@@ -2661,7 +2663,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //taskGroup
   async openTaskGroup(data?: any, type?: string) {
-    let formModelGroup = await this.getFormModel('DPS0105');
     let taskGroup = new DP_Steps_TaskGroups();
     let timeStep = this.dayStep * 24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
@@ -2688,7 +2689,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         taskGroup: taskGroup,
         differenceTime,
         step: this.step,
-        form: formModelGroup,
+        form: this.formModelGroup,
       }
     );
     this.popupGroupJob.closed.subscribe((res) => {
@@ -3526,7 +3527,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
-    let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
+    let model = this.dialog?.formModel;
+    let formModel = JSON.parse(JSON.stringify(model));
     formModel.formName = f?.formName;
     formModel.gridViewName = f?.gridViewName;
     formModel.entityName = f?.entityName;

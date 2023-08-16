@@ -11,6 +11,8 @@ import { Layout } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   AuthService,
+  AuthStore,
+  PageTitleService,
   UIComponent,
   ViewModel,
   ViewType,
@@ -30,9 +32,10 @@ import {
   styleUrls: ['./cm-dashboard.component.scss'],
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
+  @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('noData') noData: TemplateRef<any>;
-  @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
+  @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
   funcID = 'DPT01';
   views: Array<ViewModel> = [];
   button = {
@@ -224,14 +227,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       fontWeight: '600',
     },
   };
+  vllData: any = [];
+  filterData: any = [];
+  reportID: any;
+  user: any;
   //end
 
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
-    private auth: AuthService
+    private auth: AuthService,
+    private pageTitle: PageTitleService,
+    private authstore: AuthStore
   ) {
     super(inject);
+    this.user = this.authstore.get();
     this.language = this.auth.userValue?.language?.toLowerCase();
     this.funcID = this.router.snapshot.params['funcID'];
     this.loadChangeDefault();
@@ -252,27 +262,68 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         active: true,
         sameData: false,
         reportType: 'D',
-        // reportView: true,
+        reportView: true,
         showFilter: true,
         model: {
           panelRightRef: this.template,
         },
       },
     ];
-
-    this.getDataDashboard();
+    this.pageTitle.setBreadcrumbs([]);
+    this.router.queryParams.subscribe((res) => {
+      if (res.reportID) {
+        this.reportID = res.reportID;
+        this.isLoaded = false;
+        switch (this.reportID) {
+          // nhom chua co tam
+          case '1':
+            this.getDataDashboard();
+            break;
+          //ca nha chua co ne de vay
+          case '3':
+            let predicates = 'Owner =@0';
+            let dataValues = this.user.userID;
+            this.getDataDashboard(predicates, dataValues);
+            break;
+          // target
+          case '5':
+            this.isLoaded = true;
+            break;
+        }
+      }
+    });
   }
 
   filterChange(e: any) {
     this.isLoaded = false;
-    const { predicates, dataValues } = e[0];
+    let { predicates, dataValues } = e[0];
+    debugger;
     const param = e[1];
-    this.getDataDashboard(predicates, dataValues, param);
 
+    switch (this.reportID) {
+      // nhom chua co tam
+      case '1':
+        this.getDataDashboard(predicates, dataValues, param);
+        break;
+      //ca nha chua co ne de vay
+      case '3':
+        let lenght = dataValues.split(';')?.length ?? 0;
+
+        let predicate =
+          lenght == 0 ? 'Owner =@' + lenght : ' and ' + 'Owner =@' + lenght;
+        let dataValue = lenght == 0 ? this.user.userID : ';' + this.user.userID;
+
+        predicates += predicate;
+        dataValues += dataValue;
+        this.getDataDashboard(predicates, dataValues, param);
+        break;
+      // target
+      case '5':
+        this.isLoaded = true;
+        break;
+    }
     this.detectorRef.detectChanges();
   }
-
-  onActions(e) {}
 
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
@@ -289,49 +340,57 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
       .subscribe((res) => {
         this.dataDashBoard = res;
-        if (this.dataDashBoard.countsBussinessLines) {
-          this.palette = this.dataDashBoard.countsBussinessLines?.map(
-            (x) => x.color
-          );
-          this.dataSourceBussnessLine =
-            this.dataDashBoard.countsBussinessLines?.map((x) => {
-              let data = {
-                color: x.color,
-                businessLineName: x.businessLineName,
-                quantity: x.quantity,
-                percentage: x.percentage,
-              };
-              return data;
-            });
-          //chart
-        }
-        this.dataStatisticTarget =
-          this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
-        if (this.dataStatisticTarget.length > 0) {
-          let maxTarget = Math.max(
-            ...this.dataStatisticTarget.map((o) => o.totalTarget)
-          );
-          this.primaryXAxisRatio.maximum =
-            maxTarget + 2 * Math.floor(maxTarget / 10);
-          this.primaryXAxisRatio.interval = Math.floor(
-            this.primaryXAxisRatio.maximum / 10
-          );
+        if (res) {
+          if (this.dataDashBoard.countsBussinessLines) {
+            this.palette = this.dataDashBoard.countsBussinessLines?.map(
+              (x) => x.color
+            );
+            this.dataSourceBussnessLine =
+              this.dataDashBoard.countsBussinessLines?.map((x) => {
+                let data = {
+                  color: x.color,
+                  businessLineName: x.businessLineName,
+                  quantity: x.quantity,
+                  percentage: x.percentage,
+                };
+                return data;
+              });
+            //chart
+          }
+          this.dataStatisticTarget =
+            this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
+          if (this.dataStatisticTarget.length > 0) {
+            let maxTarget = Math.max(
+              ...this.dataStatisticTarget.map((o) => o.totalTarget)
+            );
+            this.primaryXAxisRatio.maximum =
+              maxTarget + 2 * Math.floor(maxTarget / 10);
+            this.primaryXAxisRatio.interval = Math.floor(
+              this.primaryXAxisRatio.maximum / 10
+            );
 
-          let maxDealValue = Math.max(
-            ...this.dataStatisticTarget.map((o) => o.totalDealValue)
-          );
+            let maxDealValue = Math.max(
+              ...this.dataStatisticTarget.map((o) => o.totalDealValue)
+            );
 
-          this.primaryYAxisRatio.maximum =
-            maxDealValue + 2 * Math.floor(maxDealValue / 10);
-          this.primaryYAxisRatio.interval = Math.floor(
-            this.primaryYAxisRatio.maximum / 10
-          );
+            this.primaryYAxisRatio.maximum =
+              maxDealValue + 2 * Math.floor(maxDealValue / 10);
+            this.primaryYAxisRatio.interval = Math.floor(
+              this.primaryYAxisRatio.maximum / 10
+            );
+          }
+          this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
+          this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
+          this.productivityOwner =
+            this.dataDashBoard.countsProductivityOwner ?? [];
+          this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
+        } else {
+          this.dataStatisticTarget = [];
+          this.maxOwners = [];
+          this.minOwners = [];
+          this.productivityOwner = [];
+          this.dataSourcePy = [];
         }
-        this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
-        this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
-        this.productivityOwner =
-          this.dataDashBoard.countsProductivityOwner ?? [];
-        this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
         setTimeout(() => {
           this.isLoaded = true;
         }, 500);
@@ -386,11 +445,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //load default
   loadChangeDefault() {
-    if (this.language == 'en') {
-      this.primaryXAxis.title = 'Deployment month';
-      this.primaryYAxis.title = 'Ratio(%)';
-    }
-
     this.cache.valueList('DP036').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.colorReasonSuscess = vll?.datas.filter(
@@ -401,6 +455,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         )[0]?.color;
       }
     });
+
+    // this.cache.valueList('CRM057').subscribe((vl) => {
+    //   if (vl) {
+    //     this.vllData = vl.datas;
+    //     this.filterData = this.vllData.map((x) => {
+    //       return {
+    //         title: x.text,
+    //         path: 'cm/dashboard/CMD01?reportID=' + x.value,
+    //       };
+    //     });
+    //   }
+    // });
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
         this.vllStatus = grv['Status'].referedValue;
@@ -421,6 +487,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       //    '-(${percentage} %)',
       // };
     });
+    if (this.language == 'en') {
+      this.primaryXAxis.title = 'Deployment month';
+      this.primaryYAxis.title = 'Ratio(%)';
+    }
     this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
@@ -455,5 +525,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
       }
     });
+  }
+  //--------------Change Filter--------------//
+  valueChangeFilter(e) {}
+  //--------------end Change Filter--------------//
+
+  onActions(e) {
+    if (e.type == 'reportLoaded') {
+      this.cache.valueList('CRM057').subscribe((vl) => {
+        if (vl) {
+          this.vllData = vl.datas;
+          this.filterData = this.vllData.map((x) => {
+            return {
+              title: x.text,
+              path: 'cm/dashboard/CMD01?reportID=' + x.value,
+            };
+          });
+        }
+        this.pageTitle.setSubTitle(this.filterData[0].title);
+        this.pageTitle.setChildren(this.filterData);
+        this.codxService.navigate('', this.filterData[0].path);
+        this.isLoaded = false;
+      });
+    }
   }
 }

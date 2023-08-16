@@ -107,13 +107,21 @@
           </codx-label>
         </div>
         <div>
-          <ejs-dropdownlist
+          <!-- <ejs-dropdownlist
             [dataSource]="listGroup"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
             [readonly]="stepsTasks?.isTaskDefault || groupTaskID"
-          ></ejs-dropdownlist>
+          ></ejs-dropdownlist> -->
+          <ejs-combobox
+            #sample
+            [dataSource]="listGroup"
+            [fields]="fieldsGroup"
+            [value]="stepsTasks?.taskGroupID"
+            (change)="filterText($event, 'taskGroupID')"
+            [allowCustom]="false"
+          ></ejs-combobox>
           <!-- [readonly]="groupTaskID" -->
         </div>
       </div>

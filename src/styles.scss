@@ -245,7 +245,7 @@ textarea:focus,
   border-color: var(--gray-700)!important;
 }
 .e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
-  border-color: var(--gray-150);
+  border-color: var(--gray-200);
 }
 .codx-search.codx-focus {
   border-color: $primary !important;
@@ -1633,7 +1633,7 @@ codx-processsteps .e-card-wrapper {
   .e-header-title
   .header-template-wrap
   .header-text {
-  width: 100%;
+  width: unset;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;

@@ -788,6 +788,7 @@ export class CM_TargetsLines {
   endDate: Date;
   currencyID: number;
   target: number = 0;
+  exchangeRate: number = 0;
   note: string;
   createdOn: Date = new Date();
   createdBy: string;
