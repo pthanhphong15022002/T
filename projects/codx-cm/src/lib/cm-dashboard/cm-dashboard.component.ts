@@ -339,8 +339,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.api
       .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
       .subscribe((res) => {
+        this.dataDashBoard = res;
         if (res) {
-          this.dataDashBoard = res;
           if (this.dataDashBoard.countsBussinessLines) {
             this.palette = this.dataDashBoard.countsBussinessLines?.map(
               (x) => x.color
@@ -384,6 +384,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.productivityOwner =
             this.dataDashBoard.countsProductivityOwner ?? [];
           this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
+        } else {
+          this.dataStatisticTarget = [];
+          this.maxOwners = [];
+          this.minOwners = [];
+          this.productivityOwner = [];
+          this.dataSourcePy = [];
         }
         setTimeout(() => {
           this.isLoaded = true;
