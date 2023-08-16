@@ -402,6 +402,7 @@ export class TargetsComponent
       ? parseInt(data?.fromDate?.getFullYear())
       : new Date().getFullYear();
     if (year != this.year) {
+      this.isShow = false;
       this.year = year;
       this.loadTreeData(year?.toString());
     }
@@ -486,10 +487,13 @@ export class TargetsComponent
       } else {
         exchangeRate.exchRate = this.exchangeRate;
         currencyID = this.currencyID;
+        this.currencyID = null;
+        this.codxInput.crrValue = null;
+        this.codxInput.value = null;
       }
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
-      this.codxInput.crrValue = this.currencyID;
+
       this.detectorRef.detectChanges();
     }
   }
