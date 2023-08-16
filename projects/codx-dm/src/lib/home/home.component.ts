@@ -864,7 +864,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   onScrollSearch(event)
   {
-    debugger
     if(!this.isScrollSearch) return;
     
     const dcScroll = event.srcElement;
