@@ -44,9 +44,10 @@ export class TargetsComponent
 {
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
-  @Input() viewCalendar = false;
+  @Input() viewDashboard = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
+  @ViewChild('calendarDrop') calendarDrop: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -190,8 +191,8 @@ export class TargetsComponent
   }
 
   async onInit() {
-    // this.viewCalendar = true;
-    if (this.viewCalendar) this.viewDataValue = '2';
+    // this.viewDashboard = true;
+    if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
@@ -296,11 +297,10 @@ export class TargetsComponent
         width: 120,
       },
     ];
-    if (!this.viewCalendar) {
+    if (!this.viewDashboard) {
       this.views = [
         {
           type: ViewType.content,
-          active: true,
           sameData: false,
           model: {
             panelRightRef: this.panelRight,
@@ -311,7 +311,6 @@ export class TargetsComponent
           text: datasVll?.datas[1]?.text,
           icon: datasVll?.datas[1]?.icon,
           sameData: false,
-          active: false,
           model: {
             panelRightRef: this.panelRight,
           },
@@ -527,6 +526,10 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
+    if (!data?.fromDate) {
+      this.date = new Date();
+      this.calendarDrop.value = this.date;
+    }
     var year = data?.fromDate
       ? parseInt(data?.fromDate?.getFullYear())
       : new Date().getFullYear();
