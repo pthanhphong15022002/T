@@ -454,9 +454,15 @@ export class SalesinvoicesAddComponent
         .exec('AC', 'SalesInvoicesLinesBusiness', 'BeginEditAsync', e.data)
         .subscribe();
     }
+
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.lines[e.data._rowIndex] = e.data;
+    }
   }
 
-  // ❌❌
+  // ❌❌ bùa tab
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     console.log(e);
