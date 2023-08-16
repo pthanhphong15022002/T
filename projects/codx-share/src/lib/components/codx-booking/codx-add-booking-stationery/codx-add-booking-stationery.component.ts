@@ -578,7 +578,10 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       ])
       .subscribe((res: any) => {
         this.listView.dataService.data = [];
-        this.listView.dataService.add(res[0]).subscribe();
+        if(res?.length>0 && res[0]!=null){          
+          this.listView.dataService.add(res[0]).subscribe();
+
+        }
       });
     this.detectorRef.detectChanges();
   }

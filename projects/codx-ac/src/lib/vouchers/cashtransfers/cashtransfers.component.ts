@@ -180,21 +180,21 @@ export class CashtransfersComponent
 
     this.loading = true;
     this.lines = [];
-    // this.api
-    //   .exec(
-    //     'AC',
-    //     'AcctTransBusiness',
-    //     'LoadDataAsync',
-    //     'e973e7b7-10a1-11ee-94b4-00155d035517'
-    //   )
-    //   .subscribe((res: IAcctTran[]) => {
-    //     console.log(res);
-    //     if (res) {
-    //       this.lines = this.groupBy(res, 'entryID');
-    //     }
+    this.api
+      .exec(
+        'AC',
+        'AcctTransBusiness',
+        'GetListDataDetailAsync',
+        'e973e7b7-10a1-11ee-94b4-00155d035517'
+      )
+      .subscribe((res: IAcctTran[]) => {
+        console.log(res);
+        if (res) {
+          this.lines = this.groupBy(res, 'entryID');
+        }
 
-    //     this.loading = false;
-    //   });
+        this.loading = false;
+      });
   }
 
   onClickAdd(e): void {
