@@ -10,7 +10,7 @@
   [tabContent]="[selfInfo, contactInfo]"
   (setTitle)="setTitle($event)"
   [data]="data"
-  *ngIf="isAfterRender"
+  *ngIf="isAfterRender && formGroup"
 >
 
 </codx-layout-add>

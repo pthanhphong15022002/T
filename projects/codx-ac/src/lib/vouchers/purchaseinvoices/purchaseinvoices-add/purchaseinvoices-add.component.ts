@@ -5,8 +5,7 @@ import {
   Injector,
   OnInit,
   Optional,
-  TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -38,13 +37,15 @@ import { PurchaseInvoiceService } from '../purchaseinvoices.service';
   styleUrls: ['./purchaseinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit {
+export class PurchaseinvoicesAddComponent
+  extends UIComponent
+  implements OnInit
+{
   //#region Constructor
   @ViewChild('gridPurchaseInvoiceLines')
   public gridPurchaseInvoiceLines: CodxGridviewV2Component;
   @ViewChild('gridVatInvoices') public gridVatInvoices: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('tab') tab: TabComponent;
 
   initialMaster: IPurchaseInvoice;
@@ -53,25 +54,20 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   prevLine: IPurchaseInvoiceLine;
   lines: IPurchaseInvoiceLine[] = [];
   vatInvoices: IVATInvoice[] = [];
+
   masterService: CRUDService;
   purchaseInvoiceLineService: CRUDService;
   vatInvoiceService: CRUDService;
+
   grvPurchaseInvoices: any;
+  fmVATInvoices: FormModel;
+  fmPurchaseInvoicesLines: FormModel;
 
   isEdit: boolean = false;
   journal: IJournal;
   ignoredFields: string[] = [];
   hiddenFields: string[] = [];
   formTitle: string;
-  hasSaved: any = false;
-  isSaveMaster: any = false;
-  fmVATInvoices: FormModel = {
-    entityName: 'AC_VATInvoices',
-    formName: 'VATInvoices',
-    gridViewName: 'grvVATInvoices',
-    entityPer: 'AC_VATInvoices',
-  };
-  fmPurchaseInvoicesLines: FormModel;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
@@ -84,7 +80,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  lockFields: string[];
   voucherNoPlaceholderText$: Observable<string>;
   acParams: any;
 
@@ -228,6 +223,14 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
   }
 
+  onChangeMF(e): void {
+    for (const mf of e) {
+      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
+        mf.disabled = true;
+      }
+    }
+  }
+
   onTabCreated(e, tab: TabComponent): void {
     tab.hideTab(1, this.master.subType !== '2');
   }
@@ -274,28 +277,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           c.predicate = '@0.Contains(CostItemID)';
           c.dataValue = `[${this.journal.diM3}]`;
         }
-      }
-    }
-  }
-
-  onClickClose(): void {
-    this.dialog.close();
-  }
-
-  onDiscard(): void {
-    this.dialog.dataService
-      .delete([this.master], true, null, '', 'AC0010', null, null, false)
-      .subscribe((res) => {
-        if (!res.error) {
-          this.resetForm();
-        }
-      });
-  }
-
-  onChangeMF(e): void {
-    for (const mf of e) {
-      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
-        mf.disabled = true;
       }
     }
   }
@@ -368,6 +349,20 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         });
       }
     );
+  }
+
+  onClickClose(): void {
+    this.dialog.close();
+  }
+
+  onClickDiscard(): void {
+    this.dialog.dataService
+      .delete([this.master], true, null, '', 'AC0010', null, null, false)
+      .subscribe((res) => {
+        if (!res.error) {
+          this.resetForm();
+        }
+      });
   }
 
   // ❌❌
@@ -470,7 +465,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
   }
 
-  onSelectChange(e: any): void {
+  onSubTypeChange(e: any): void {
     this.master.subType = e.data[0];
     this.tab.hideTab(1, this.master.subType !== '2');
   }
@@ -529,6 +524,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       'discamt',
       'vatbase',
       'vatamt',
+      "miscprice",
       'miscamt',
       'salestaxpct',
       'salestaxamt',
@@ -569,7 +565,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         .subscribe();
     }
 
-    if (e.type === 'closeEdit') {
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.lines[e.data._rowIndex] = e.data;
     }
   }
   //#endregion
@@ -609,6 +608,12 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       this.vatInvoiceService.clear();
       this.vatInvoiceService.addDatas.set(newVatInvoice.recID, newVatInvoice);
       this.gridVatInvoices.addRow(newVatInvoice, this.vatInvoices.length);
+    }
+
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.vatInvoices[e.data._rowIndex] = e.data;
     }
   }
   //#endregion

@@ -78,6 +78,10 @@ implements OnInit{
   lstEmpStatus: any = []
   lstLabourType: any = []
 
+  lstSelectedConstraintTrainLevel : any = []
+  lstSelectedConstraintTrainField : any = []
+  lstSelectedConstraintCertificate : any = []
+
   lstSelectedObj: any = [];
   lstSelectedExcludeObj: any = [];
   lstSelectedConstraintBy: any =[];
@@ -118,6 +122,19 @@ implements OnInit{
   };
   
   formGroupPolicyConstraints;
+  constraintsObj = {
+    policyID: '',
+    gender: '',
+    ageFrom: 0,
+    policyType: 'Benefit',
+    ageTo: 0,
+    relative: '',
+    relativeAgeFrom: 0,
+    relativeAgeTo: 0,
+    trainLevel: '',
+    trainField: '',
+    certificate: ''
+  };
 
   fmKow: FormModel = {
 
@@ -127,6 +144,10 @@ implements OnInit{
   grvSetupPolicyDetail
   grvSetupPolicyConstraint
   benefitFuncID = 'HRTEM0403'
+
+  isHiddenCbxConstraint = true;
+  cbxConstraintCbxName : any;
+  cbxConstraintCbxValue: any;
 
   fieldHeaderTexts;
   policyIdEdited = false;
@@ -216,6 +237,8 @@ implements OnInit{
     }
     this.cache.gridViewSetup('PolicyConstraints', 'grvPolicyConstraints').subscribe((res) => {
       this.grvSetupPolicyConstraint = res;
+      console.log('contraints grv', this.grvSetupPolicyConstraint);
+      
     })
     this.hrSevice
             .getFormGroup(this.fmPolicyConstraints.formName, this.fmPolicyConstraints.gridViewName)
@@ -427,8 +450,10 @@ implements OnInit{
         if(res.event){
           this.benefitPolicyObj.constraintBy = res.event
           this.lstSelectedConstraintBy = res.event.split(';')
-          console.log('lst constraint', this.lstSelectedConstraintBy);
-          
+          this.lstSelectedConstraintBy.sort((a, b) => {
+            return parseInt(a) - parseInt(b);
+          });
+          debugger
           this.df.detectChanges();
         }
       });
@@ -858,17 +883,33 @@ implements OnInit{
             
             this.formModel.currentData = this.benefitPolicyObj;
             this.formGroup.patchValue(this.benefitPolicyObj);
+            this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
+            this.fmPolicyConstraints.currentData = this.constraintsObj;
             this.df.detectChanges();
             this.isAfterRender = true;
           }
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        debugger
+        if(this.benefitPolicyObj.isConstraintOther){
+          this.lstSelectedConstraintBy = this.benefitPolicyObj.constraintBy.split(';')
+          this.lstSelectedConstraintBy.sort((a, b) => {
+            return parseInt(a) - parseInt(b);
+          });
+          this.GetPolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+            this.constraintsObj = res;
+            this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
+            this.fmPolicyConstraints.currentData = this.constraintsObj;
+            this.SplitConstraint();
+          })
+        }
         this.GetPolicyDetailByAjustBy(this.benefitPolicyObj.adjustBy).subscribe((res) => {
           this.dataSourceGridView1 = res;
         });
         if(this.benefitPolicyObj.hasIncludeBenefits == true){
           // this.bene = false;
+          this.lstSelectedBenefits = this.benefitPolicyObj.includeBenefits.split(';')
         }
         if(this.benefitPolicyObj.isAdjustKow == true){
           // this.bene = false;
@@ -919,6 +960,20 @@ implements OnInit{
       }
     }
     this.loadGridview1 = true;
+  }
+
+  SplitConstraint(){
+    if(this.constraintsObj){
+      if(this.constraintsObj.trainLevel && this.constraintsObj.trainLevel != ''){
+        this.lstSelectedConstraintTrainLevel = this.constraintsObj.trainLevel.split(';')
+      }
+      if(this.constraintsObj.trainField && this.constraintsObj.trainField != ''){
+        this.lstSelectedConstraintTrainField = this.constraintsObj.trainField.split(';')
+      }
+      if(this.constraintsObj.certificate && this.constraintsObj.certificate != ''){
+        this.lstSelectedConstraintCertificate = this.constraintsObj.certificate.split(';')
+      }
+    }
   }
 
   SplitToSubList(lstData){
@@ -1154,6 +1209,81 @@ implements OnInit{
     this.detectorRef.detectChanges();
   }
 
+  onClickOpenComboboxConstraint(target){
+    debugger
+    if(target == 'trainLevel'){
+      // value list
+
+      let opt = new DialogModel();
+      let popup = this.callfunc.openForm(
+        PopupMultiselectvllComponent,
+        null,
+        400,
+        450,
+        null,
+        {
+          headerText: 'Chọn đối tượng',
+          vllName : this.grvSetupPolicyConstraint.TrainLevel.referedValue,
+          formModel: this.fmPolicyConstraints,
+          dataSelected: this.constraintsObj?.trainLevel
+        },
+        null,
+        opt
+      );
+      popup.closed.subscribe((res) => {
+        this.constraintsObj.trainLevel = res.event
+        this.lstSelectedConstraintTrainLevel = res.event.split(';')
+        this.df.detectChanges();
+      });
+    }
+    else if(target == 'trainField'){
+      //cbx
+      this.cbxConstraintCbxName = this.grvSetupPolicyConstraint.TrainField.referedValue;
+      this.cbxConstraintCbxValue = this.constraintsObj.trainField
+      this.isHiddenCbxConstraint = false;
+      debugger
+    }
+    else if(target == 'certificate'){
+      //cbx
+      this.cbxConstraintCbxName = this.grvSetupPolicyConstraint.Certificate.referedValue;
+      this.cbxConstraintCbxValue = this.constraintsObj.certificate
+      this.isHiddenCbxConstraint = false;
+      debugger
+    }
+  }
+
+  onClickHideComboboxConstraint(e): void {
+    if(e == null){
+      this.isHiddenCbxConstraint = true;
+    this.detectorRef.detectChanges();
+      return;
+    }
+    if(e.id){
+      debugger
+      if(this.cbxConstraintCbxName == this.grvSetupPolicyConstraint.TrainField.referedValue){
+        this.constraintsObj.trainField = e.id;
+        this.lstSelectedConstraintTrainField = this.constraintsObj.trainField.split(';');
+      }
+      else if(this.cbxConstraintCbxName == this.grvSetupPolicyConstraint.Certificate.referedValue){
+        this.constraintsObj.certificate = e.id;
+        this.lstSelectedConstraintCertificate = this.constraintsObj.certificate.split(';');
+      }
+    }
+    else{
+      debugger
+      if(this.cbxConstraintCbxName == this.grvSetupPolicyConstraint.TrainField.referedValue){
+        this.constraintsObj.trainField = null;
+        this.lstSelectedConstraintTrainField = []
+      }
+      else if(this.cbxConstraintCbxName == this.grvSetupPolicyConstraint.Certificate.referedValue){
+        this.constraintsObj.certificate = null;
+        this.lstSelectedConstraintCertificate = []
+      }
+    }
+    this.isHiddenCbxConstraint = true;
+    this.detectorRef.detectChanges();
+  }
+
   onClickHideComboboxMinKows(e): void {
     if(e == null){
       this.isHiddenCbxMinKows = true;
@@ -1378,6 +1508,7 @@ implements OnInit{
       this.notify.notifyCode('HR018')
     }
 
+
     if(this.actionType === 'add' || this.actionType === 'copy'){
       this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
         if(res){
@@ -1390,6 +1521,13 @@ implements OnInit{
             }
             for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                
+              })
+            }
+
+            if(this.benefitPolicyObj.isConstraintOther){
+              this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+              this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 
               })
             }
@@ -1415,6 +1553,15 @@ implements OnInit{
                   
                 })
               }
+              this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+                debugger
+              })
+              if(this.benefitPolicyObj.isConstraintOther){
+                this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+                  debugger
+                })
+              }
               this.dialog && this.dialog.close(this.benefitPolicyObj);
             })
           }
@@ -1436,6 +1583,15 @@ implements OnInit{
               for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                   
+                })
+              }
+              this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+                debugger
+              })
+              if(this.benefitPolicyObj.isConstraintOther){
+                this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+                  debugger
                 })
               }
               this.dialog && this.dialog.close(this.benefitPolicyObj);
@@ -1467,6 +1623,37 @@ onClickOpenCbxMaxKows(){
 }
 
   //#region apis
+  AddPolicyConstraint(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBenefitsBusiness',
+      'AddPolicyConstraintsAsync',
+      data
+    );
+  }
+
+  GetPolicyConstraint(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBenefitsBusiness',
+      'GetPolicyConstraintsByPolicyIDAsync',
+      policyID
+    );
+  }
+
+  DeletePolicyConstraint(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBenefitsBusiness',
+      'DeletePolicyConstraintsByPolicyIDAsync',
+      policyID
+    );
+  }
+
+
   GetPolicyBeneficiaries(policyID){
     return this.api.execSv<any>(
       'HR',

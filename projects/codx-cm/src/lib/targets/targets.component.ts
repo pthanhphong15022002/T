@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -125,7 +126,7 @@ export class TargetsComponent
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
-  funcID = '';
+  funcID = 'CM0601';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
@@ -172,18 +173,20 @@ export class TargetsComponent
   predicateSearch = '';
   dataValueSearch = '';
   probability = '1';
+  formModel: FormModel;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private decimalPipe: DecimalPipe,
+    private changeDetec: ChangeDetectorRef,
     private cmSv: CodxCmService,
     private auth: AuthService,
     private codxShareService: CodxShareService
   ) {
     super(inject);
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (!this.funcID)
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
@@ -197,6 +200,7 @@ export class TargetsComponent
     this.button = {
       id: this.btnAdd,
     };
+
     this.year = new Date().getFullYear();
 
     this.loadTreeData(this.year?.toString());
@@ -338,27 +342,31 @@ export class TargetsComponent
       }
     });
 
-    if (this.queryParams == null) {
-      this.queryParams = this.router.snapshot.queryParams;
-    }
+    // if (this.queryParams == null) {
+    //   this.queryParams = this.router.snapshot.queryParams;
+    // }
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
-    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetAsync';
-    this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
-
-    this.detectorRef.checkNoChanges();
+    if (this.viewDashboard) {
+      this.formModel = await this.cmSv.getFormModel('CM0601');
+    } else {
+      this.formModel = this.view.formModel;
+      this.gridViewSetupTarget = await firstValueFrom(
+        this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+      );
+      this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
+      this.view.dataService.methodDelete = 'DeletedTargetAsync';
+      this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
+      this.changeDetec.detectChanges();
+    }
   }
 
   //#region event codx-view
   viewChanged(e) {
     this.clickShow(false);
     this.viewMode = e?.view?.type;
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
   async onLoading(e) {
     // if(datasVll && datasVll.datas){
@@ -395,20 +403,16 @@ export class TargetsComponent
     this.predicateSearch = predicates;
     this.dataValueSearch = dataValues;
     this.loadTreeData(this.year, predicates, dataValues);
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   convertToCamelCase(name: string): string {
     return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
   }
 
-  filterChange(e) {
-    console.log('filter: ', e);
-  }
+  filterChange(e) {}
 
-  filterReportChange(e) {
-    console.log('filterReport: ', e);
-  }
+  filterReportChange(e) {}
   selectedChange(e) {}
   //#endregion
 
@@ -483,7 +487,6 @@ export class TargetsComponent
       this.countLoad++;
       this.isShow = false;
       this.showButtonAdd = this.viewCurrent == '1' ? false : true;
-      this.view.button = this.showButtonAdd ? this.button : null;
       this.currencyID = this.currencyIDSys;
       this.exchangeRate = this.exchangeRateSys;
       this.search = '';
@@ -494,14 +497,14 @@ export class TargetsComponent
         this.dataValueSearch
       );
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   viewDataValueGrid(view) {
     if (view != this.viewDataValue) {
       this.viewDataValue = view;
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   valueChangeProbability(e) {
@@ -541,14 +544,14 @@ export class TargetsComponent
       this.loadTreeData(year?.toString());
     }
 
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   async valueChange(e) {
     if (e?.data != this.currencyID) {
       this.exChangeRate(this.currencyID, e?.data);
     }
-    this.detectorRef.detectChanges();
+    // this.changeDetec.detectChanges();
   }
 
   async exChangeRate(currencyIDOld, currencyID) {
@@ -628,7 +631,7 @@ export class TargetsComponent
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate?.exchRate;
 
-      this.detectorRef.detectChanges();
+      this.changeDetec.detectChanges();
     }
   }
 
@@ -765,7 +768,7 @@ export class TargetsComponent
             this.isShow = false;
           }
 
-          this.detectorRef.detectChanges();
+          this.changeDetec.detectChanges();
         }
       });
     });
@@ -846,7 +849,7 @@ export class TargetsComponent
             }
             // this.lstDataTree.push(Object.assign({}, data));
 
-            this.detectorRef.detectChanges();
+            this.changeDetec.detectChanges();
           }
         });
       });
@@ -885,7 +888,7 @@ export class TargetsComponent
             });
           });
           this.countPersons = lst.length;
-          this.detectorRef.detectChanges();
+          this.changeDetec.detectChanges();
         }
       });
   }
@@ -915,7 +918,8 @@ export class TargetsComponent
     );
     let dataEdit = JSON.parse(JSON.stringify(data));
     if (result != null) {
-      lstLinesBySales = result;
+      lstLinesBySales = result[0];
+      dataEdit.target = result[1];
     }
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
@@ -950,7 +954,7 @@ export class TargetsComponent
           this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
         }
         this.isShow = false;
-        this.detectorRef.detectChanges();
+        this.changeDetec.detectChanges();
       }
     });
   }
@@ -974,7 +978,7 @@ export class TargetsComponent
         this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
       this.isShow = isShow;
     }
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   //#region setting grid
@@ -986,7 +990,7 @@ export class TargetsComponent
       });
     }
     this.isShow = isShow;
-    this.detectorRef.detectChanges();
+    this.changeDetec.detectChanges();
   }
 
   PopoverDetail(e, p: any, emp) {

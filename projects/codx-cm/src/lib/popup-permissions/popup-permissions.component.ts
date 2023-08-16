@@ -366,7 +366,7 @@ export class PopupPermissionsComponent implements OnInit {
         'ERM.Business.CM',
         'LeadsBusiness',
         'UpdatePermissionsAsync',
-        [this.data, this.entityName]
+        [this.data, this.lstDeletePermissions, this.entityName]
       )
       .subscribe((res) => {
         if (res) {
