@@ -239,7 +239,7 @@ export class OrgorganizationComponent extends UIComponent {
           //     'OrgUnitID'
           //   )
           //   .subscribe((res) => {
-
+          res.orgUnitID = '';
           if (res) {
             let object = {
               data: res,
@@ -441,5 +441,8 @@ export class OrgorganizationComponent extends UIComponent {
     this.pageIndex = 2;
     event.stopPropagation();
   }
-  
+
+  preventDedefault(e) {
+    e.stopPropagation();
+  }
 }
