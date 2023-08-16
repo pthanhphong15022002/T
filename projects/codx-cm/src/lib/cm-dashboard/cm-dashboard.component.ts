@@ -417,6 +417,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.checkBtnMin = false;
         this.checkBtnMax = true;
         break;
+      case 'btSuccess':
+        this.checkBtnSuscess = true;
+        this.checkBtnMax = false;
+        break;
+      case 'btFail':
+        this.checkBtnSuscess = false;
+        this.checkBtnFail = true;
+        break;
     }
     this.detectorRef.detectChanges();
   }
