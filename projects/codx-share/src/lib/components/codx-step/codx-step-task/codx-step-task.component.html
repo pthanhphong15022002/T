@@ -345,8 +345,8 @@
         ojectType="AD_Users"
         [numberImages]="1"
         [isToolTip]="true"
-        [objectId]="getRole(data?.value, 'ID')"
-        [objectName]="getRole(data?.value, 'name')"
+        [objectId]="data?.value?.owner"
+        [objectName]="getRole(data?.value)"
       >
       </codx-imgs>
     </span>

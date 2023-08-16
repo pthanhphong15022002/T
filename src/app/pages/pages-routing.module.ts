@@ -1,5 +1,3 @@
-import { SosComponent } from './sos/sos.component';
-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
@@ -12,7 +10,7 @@ const routes: Routes = [
     children: [
       {
         path: 'portal/:funcID',
-        component: HomeComponent
+        component: HomeComponent,
       },
       {
         path: '',
@@ -31,4 +29,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {}

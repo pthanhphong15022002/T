@@ -93,6 +93,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listActivitie = res;
           this.isNoData = false;
         } else {
+          this.listActivitie = [];
           this.isNoData = true;
         }
       });
@@ -156,12 +157,17 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             if (task.taskType != 'M') res.disabled = true;
             break;
 
-          case 'DP27': // đặt xe
-            if (task.taskType != 'B') res.disabled = true;
+            case 'DP27': // đặt xe
+            if (
+              task?.taskType != 'B' ||
+              (task?.taskType == 'B' && task?.actionStatus == '2')
+            )
+              res.disabled = true;
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -169,17 +175,18 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
             break;
-          case 'DP30': //Khôi phục
-            if (['B', 'M'].includes(task.taskType)) {
-              this.convertMoreFunctions(event, res, task.taskType);
-            } else {
-              res.disabled = true;
-            }
-            break;
+          // case 'DP30': //Khôi phục
+          //   if (['B', 'M'].includes(task.taskType)) {
+          //     this.convertMoreFunctions(event, res, task.taskType);
+          //   } else {
+          //     res.disabled = true;
+          //   }
+          //   break;
           case 'DP31': //Bắt đầu
             if (task?.status != '1') {
               res.disabled = true;
@@ -222,6 +229,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP31':
         this.startActivitie(task);
         break;
+        
     }
   }
   convertMoreFunctions(listMore, more, type) {

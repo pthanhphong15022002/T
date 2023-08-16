@@ -194,35 +194,6 @@
           </codx-input>
         </div>
       </div>
-      <!-- End cuoc hop -->
-      <!-- Gui mail -->
-      <!-- TODO: mail chưa có tài liệu -->
-      <!-- <div
-        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
-        class=""
-        style="flex-basis: 10%"
-      >
-        <div>
-          <codx-label></codx-label>
-        </div>
-        <div
-          *ngIf="typeTask?.value === 'E'"
-          class="d-flex justify-content-end"
-          style="margin-top: 2px"
-        >
-          <button
-            class="button-mail"
-            *ngIf="typeTask?.value == 'E'"
-            (click)="handelMail()"
-            [disabled]="stepsTasks?.isTaskDefault"
-          >
-            <span
-              class="icon-email icon-20 text-primary-600 py-2 text-muted"
-            ></span>
-          </button>
-        </div>
-      </div> -->
-      <!-- End gui mail -->
     </div>
     <!--End ten Cong Viec -->
 
@@ -263,28 +234,6 @@
         </codx-input>
       </div>
     </div>
-
-    <!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
-      <div class="d-flex justify-content-between align-items-center mail">
-        <codx-label name="Reference" default="Tên khảo sát"></codx-label>
-        <a class="d-flex justify-content-end align-items-center cursor-pointer">
-          <span
-            class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
-          ></span>
-        </a>
-      </div>
-      <codx-input
-        field="stepName"
-        [formModel]="dialog?.formModel"
-        type="text"
-        [Group]=""
-        (valueChange)="valueChangeText($event)"
-         [disabled]="stepsTasks?.isTaskDefault"
-      >
-      </codx-input>
-      <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
-    </div> -->
-
     <div class="form-group">
       <div class="d-flex justify-content-between row">
         <div class="col-6">
@@ -371,7 +320,7 @@
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'O')"
+        (valueList)="changeRolerOwner($event)"
         [vllShare]="'DP0331'"
         [multiple]="false"
         [listCombobox]="listCombobox"
@@ -384,15 +333,15 @@
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="
-          typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'
-        "
+        [default]="typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'"
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'O')"
+        (valueList)="changeRolerOwner($event)"
         [multiple]="false"
-        [type]="'user'"
+        [vllShare]="'DP0331'"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
       ></codx-role>
     </div>
 
@@ -404,31 +353,13 @@
         [dataSource]="participant"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'P')"
+        (valueList)="changeRoler($event)"
         [vllShare]="'DP0331'"
         [multiple]="true"
         [listCombobox]="listCombobox"
         [type]="'all'"
       ></codx-role>
     </div>
-
-    <!-- <div class="form-group" *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'">
-      <codx-role
-        [fiedName]="'roles'"
-        [formModel]="form?.formModel"
-        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
-        [dataSource]="participant"
-        [icon]="'icon-connection-point'"
-        [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'P')"
-        [vllShare]="'DP0331'"
-        [multiple]="true"
-        [listCombobox]="listCombobox"
-        [type]="'all'"
-        [disabled]="stepsTasks?.isTaskDefault"
-      ></codx-role>
-    </div> -->
-
     <div class="form-group">
       <div>
         <codx-label
@@ -532,3 +463,70 @@
     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
   </button>
 </ng-template>
+
+ <!-- End cuoc hop -->
+      <!-- Gui mail -->
+      <!-- TODO: mail chưa có tài liệu -->
+      <!-- <div
+        *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
+        class=""
+        style="flex-basis: 10%"
+      >
+        <div>
+          <codx-label></codx-label>
+        </div>
+        <div
+          *ngIf="typeTask?.value === 'E'"
+          class="d-flex justify-content-end"
+          style="margin-top: 2px"
+        >
+          <button
+            class="button-mail"
+            *ngIf="typeTask?.value == 'E'"
+            (click)="handelMail()"
+            [disabled]="stepsTasks?.isTaskDefault"
+          >
+            <span
+              class="icon-email icon-20 text-primary-600 py-2 text-muted"
+            ></span>
+          </button>
+        </div>
+      </div> -->
+      <!-- End gui mail -->
+       <!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
+      <div class="d-flex justify-content-between align-items-center mail">
+        <codx-label name="Reference" default="Tên khảo sát"></codx-label>
+        <a class="d-flex justify-content-end align-items-center cursor-pointer">
+          <span
+            class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
+          ></span>
+        </a>
+      </div>
+      <codx-input
+        field="stepName"
+        [formModel]="dialog?.formModel"
+        type="text"
+        [Group]=""
+        (valueChange)="valueChangeText($event)"
+         [disabled]="stepsTasks?.isTaskDefault"
+      >
+      </codx-input>
+      <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
+    </div> -->
+
+    <!-- <div class="form-group" *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'">
+      <codx-role
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
+        [dataSource]="participant"
+        [icon]="'icon-connection-point'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event, 'P')"
+        [vllShare]="'DP0331'"
+        [multiple]="true"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+        [disabled]="stepsTasks?.isTaskDefault"
+      ></codx-role>
+    </div> -->

@@ -376,42 +376,40 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private loginAfter(data: any) {
-    if (data) {
-      if (!data.isError) {
-        if (this.signalRService.logOut) {
-          this.signalRService.createConnection();
-        }
-        this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-        if (this.returnUrl) {
-          this.returnUrl = decodeURIComponent(this.returnUrl);
-        }
-
-        if (
-          this.returnUrl.indexOf('http://') == 0 ||
-          this.returnUrl.indexOf('https://') == 0
-        ) {
-          this.iParams = UrlUtil.getUrl('i') || '';
-
-          if (this.iParams.toLocaleLowerCase() == 'hcs') {
-            this.shareService.redirect(this.iParams, this.returnUrl);
-          } else window.location.href = this.returnUrl;
-        } else {
-          if (this.returnUrl.indexOf(data.tenant) > 0)
-            return this.router.navigate([`${this.returnUrl}`]);
-          else if (environment.saas == 1) {
-            if (!data.tenant) return this.router.navigate(['/tenants']);
-            else
-              return this.router.navigate([
-                `${this.returnUrl ? this.returnUrl : data.tenant}`,
-              ]);
-          }
-          window.location.href = this.returnUrl ? this.returnUrl : data.tenant;
-        }
-      } else {
-        this.notificationsService.notify(data.error);
-        return false;
+    if (!data.error) {
+      const user = data.data;
+      if (this.signalRService.logOut) {
+        this.signalRService.createConnection();
       }
-      return this.router.navigate([this.returnUrl]);
+      this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+      if (this.returnUrl) {
+        this.returnUrl = decodeURIComponent(this.returnUrl);
+      }
+
+      if (
+        this.returnUrl.indexOf('http://') == 0 ||
+        this.returnUrl.indexOf('https://') == 0
+      ) {
+        this.iParams = UrlUtil.getUrl('i') || '';
+
+        if (this.iParams.toLocaleLowerCase() == 'hcs') {
+          this.shareService.redirect(this.iParams, this.returnUrl);
+        } else window.location.href = this.returnUrl;
+      } else {
+        if (this.returnUrl.indexOf(user.tenant) > 0)
+          return this.router.navigate([`${this.returnUrl}`]);
+        else if (environment.saas == 1) {
+          if (!user.tenant) return this.router.navigate(['/tenants']);
+          else
+            return this.router.navigate([
+              `${this.returnUrl ? this.returnUrl : user.tenant}`,
+            ]);
+        }
+        window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
+      }
+    } else {
+      if (data.error.errorCode === 'AD027') return this.router.navigate(['/']);
+      this.notificationsService.notify(data.error.errorMessage);
     }
     return false;
   }

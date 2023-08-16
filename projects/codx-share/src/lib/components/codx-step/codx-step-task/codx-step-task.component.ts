@@ -421,10 +421,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return { 'background-color': color?.color };
   }
 
-  getRole(task, type) {
+  getRole(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return type == 'ID' ? role?.objectID : role?.objectName;
+      task?.roles.find((role) => role.objectID == task?.owner) || task?.roles[0];
+    return role?.objectName;
   }
   //#endregion
 
@@ -2227,7 +2227,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     if(group?.task?.length > 0){
       let check = group?.task?.some(task => task?.status != '1');
-      if(check) {
+      if(check || (group?.progress > 0 && group?.progress < 100)) {
         return '2';
       }else{
         return group?.progress <= 0 ? "1" : "3";
