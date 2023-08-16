@@ -15,7 +15,7 @@
       [panels]="panelsDeals"
       [datas]="datasDeals"
       [isEditMode]="isEditMode"
-      [cellSpacing]="[22, 20]"
+      [cellSpacing]="[20, 20]"
     ></codx-dashboard>
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
@@ -392,7 +392,10 @@
       gridViewName="grvCMMyDashboard"
       default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
     ></codx-label>
-    <div style="height: 100% !important" *ngIf="true; else noData">
+    <div
+      style="height: 100% !important"
+      *ngIf="dataSourcePy?.length > 0; else noData"
+    >
       <!-- <div class="control-section">
         <div> -->
       <ejs-accumulationchart
@@ -554,7 +557,7 @@
 </ng-template>
 
 <ng-template #noData>
-  <codx-no-data></codx-no-data>
+  <codx-no-data [size]="150"></codx-no-data>
 </ng-template>
 
 <!-- temp filter -->
