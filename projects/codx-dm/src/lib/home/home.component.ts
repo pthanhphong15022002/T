@@ -862,6 +862,18 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     // }
   }
 
+  onScrollSearch(event)
+  {
+    if(!this.isScrollSearch) return;
+    
+    const dcScroll = event.srcElement;
+    if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
+    
+    this.dmSV.isSearchView = true;
+    this.currView = this.templateSearch;
+    this.modelSearch.page ++;
+    this.search();
+  }
   openItem(data: any) {
     //  alert(1);
   }
@@ -1301,7 +1313,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   search() {
     this.setHideModeView(true);
     this.modelSearch.funcID = this.view.formModel.funcID;
-    this.modelSearch.page = 1;
     this.modelSearch.entityName = this.view.formModel.entityPer;
     this.isScrollSearch = true;
     this.getDataSearch();
@@ -1310,11 +1321,16 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   {
     this.fileService.searchFile(this.textSearchAll, this.modelSearch).subscribe((item) => {
       if (item && item.data) {
-        if(item.data.length <= 0 || item.data.length < this.modelSearch.pageSize)
-          this.isScrollSearch = false;
-        this.data = this.data.concat(item.data);
-        if(this.data && this.data.length == 0) this.loaded = true;
-      } 
+        if(item.data && item.data.length > 0)
+        {
+          this.isScrollSearch = true;
+          this.data = this.data.concat(item.data);
+        }
+        else this.isScrollSearch = false;
+      }
+      else  this.isScrollSearch = false;
+
+      if(this.data && this.data.length == 0) this.loaded = true;
     });
   }
   filterChange(e:any) {
@@ -1374,12 +1390,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       } else {
         this.dmSV.isSearchView = true;
         this.currView = this.templateSearch;
+        this.modelSearch.page = 1;
         this.search();
       }
     } catch (ex) {
       this.totalSearch = 0;
       this.changeDetectorRef.detectChanges();
-      console.log(ex);
     }
   }
 

@@ -33,7 +33,7 @@ import { PopupChangeAllocationRateComponent } from './popup-change-allocation-ra
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
-  selector: 'lib-targets',
+  selector: 'cm-targets',
   templateUrl: './targets.component.html',
   styleUrls: ['./targets.component.scss'],
   providers: [DecimalPipe],
@@ -44,8 +44,10 @@ export class TargetsComponent
 {
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
+  @Input() viewCalendar = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
+  @ViewChild('calendarDrop') calendarDrop: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -152,10 +154,9 @@ export class TargetsComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
-  viewMode = 9;
   viewCurrent = '1';
   viewDataValue = '1';
-
+  viewMode = 9;
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -190,6 +191,8 @@ export class TargetsComponent
   }
 
   async onInit() {
+    // this.viewCalendar = true;
+    if (this.viewCalendar) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
@@ -197,6 +200,135 @@ export class TargetsComponent
     this.year = new Date().getFullYear();
 
     this.loadTreeData(this.year?.toString());
+    let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
+
+    this.columnGrids = [
+      {
+        headerTemplate: this.headerBusinessLine,
+        template: this.templateBusinessLine,
+        width: 350,
+      },
+      //năm
+      {
+        headerTemplate: this.headerYear,
+        template: this.templateYear,
+        width: 120,
+      },
+      //quý
+      {
+        headerTemplate: this.headerQuarter1,
+        template: this.templateQuarter1,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerQuarter2,
+        template: this.templateQuarter2,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerQuarter3,
+        template: this.templateQuarter3,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerQuarter4,
+        template: this.templateQuarter4,
+        width: 120,
+      },
+      //Tháng
+      {
+        headerTemplate: this.headerMonth1,
+        template: this.templateMonth1,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth2,
+        template: this.templateMonth2,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth3,
+        template: this.templateMonth3,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth4,
+        template: this.templateMonth4,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth5,
+        template: this.templateMonth5,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth6,
+        template: this.templateMonth6,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth7,
+        template: this.templateMonth7,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth8,
+        template: this.templateMonth8,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth9,
+        template: this.templateMonth9,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth10,
+        template: this.templateMonth10,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth11,
+        template: this.templateMonth11,
+        width: 120,
+      },
+      {
+        headerTemplate: this.headerMonth12,
+        template: this.templateMonth12,
+        width: 120,
+      },
+    ];
+    if (!this.viewCalendar) {
+      this.views = [
+        {
+          type: ViewType.content,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+        {
+          type: ViewType.chart,
+          text: datasVll?.datas[1]?.text,
+          icon: datasVll?.datas[1]?.icon,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+      ];
+    } else {
+      this.views = [
+        {
+          type: ViewType.chart,
+          text: datasVll?.datas[1]?.text,
+          icon: datasVll?.datas[1]?.icon,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+      ];
+    }
 
     this.cache.valueList('CRM050').subscribe((res) => {
       if (res && res.datas) {
@@ -210,16 +342,6 @@ export class TargetsComponent
     // this.getSchedule();
   }
   async ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
     this.gridViewSetupTarget = await firstValueFrom(
       this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
     );
@@ -230,41 +352,66 @@ export class TargetsComponent
     this.detectorRef.checkNoChanges();
   }
 
-  //#region setting schedule
-  getSchedule() {
-    //lấy list target để vẽ schedule
-    this.schedules = new ResourceModel();
-    this.schedules.assemblyName = 'CM';
-    this.schedules.className = 'TargetsBusiness';
-    this.schedules.service = 'CM';
-    this.schedules.method = 'GetListTargetLineAsync';
-    this.schedules.idField = 'recID';
-    //lấy list user vẽ header schedule
-    this.scheduleHeader = new ResourceModel();
-    this.scheduleHeader.assemblyName = 'CM';
-    this.scheduleHeader.className = 'TargetsBusiness';
-    this.scheduleHeader.service = 'CM';
-    this.scheduleHeader.method = 'GetListUserAsync';
-    this.scheduleModel = {
-      id: 'recID',
-      subject: { name: 'target' },
-      startTime: { name: 'startDate' },
-      endTime: { name: 'endDate' },
-      resourceId: { name: 'salespersonID' },
-    };
-
-    this.scheduleHeaderModel = {
-      Name: 'Owners',
-      Field: 'salespersonID',
-      IdField: 'salespersonID',
-      TextField: 'userName',
-      Title: 'Owners',
-    };
+  //#region event codx-view
+  viewChanged(e) {
+    this.clickShow(false);
+    this.viewMode = e?.view?.type;
+    this.detectorRef.detectChanges();
   }
-  //#endregion setting schedule
+  async onLoading(e) {
+    // if(datasVll && datasVll.datas){
+    // let obj =
+    // this.views.push(Object.assign({}, obj));
+    // }
+  }
+  searchChanged(e) {
+    this.search = '';
+    if (e == null || e?.trim() == '') {
+      this.predicateSearch = '';
+      this.dataValueSearch = '';
+      this.loadTreeData(this.year);
+      return;
+    }
+    const text = e;
+    this.search = text;
+    let predicates = '';
+    let dataValues = '';
+    this.isShow = false;
+    let keySearch = Object.keys(this.gridViewSetupTarget);
+    let j = 0;
+    for (let i = 0; i < keySearch.length; i++) {
+      if (this.gridViewSetupTarget[keySearch[i]].isQuickSearch == true) {
+        let or = j > 0 ? ' or ' : '';
+        predicates += or + `${keySearch[i]}.Contains(@1)`;
+        j++;
+      }
+    }
+
+    // predicates =
+    //   'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
+    dataValues = text;
+    this.predicateSearch = predicates;
+    this.dataValueSearch = dataValues;
+    this.loadTreeData(this.year, predicates, dataValues);
+    this.detectorRef.detectChanges();
+  }
+
+  convertToCamelCase(name: string): string {
+    return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
+  }
+
+  filterChange(e) {
+    console.log('filter: ', e);
+  }
+
+  filterReportChange(e) {
+    console.log('filterReport: ', e);
+  }
+  selectedChange(e) {}
+  //#endregion
 
   //#region load tree
-  loadTreeData(year, predicates = '', dataValues = '') {
+  async loadTreeData(year, predicates = '', dataValues = '') {
     this.loadedTree = false;
     var resource = new DataRequest();
     resource.predicates =
@@ -273,29 +420,6 @@ export class TargetsComponent
     resource.funcID = 'CM0601';
     resource.pageLoading = false;
     this.requestTree = resource;
-    this.loadCurrentID();
-  }
-
-  private fetch(): Observable<any[]> {
-    return this.api
-      .execSv<Array<any>>(
-        this.serviceTree,
-        this.assemblyNameTree,
-        this.classNameTree,
-        this.methodTree,
-        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
-      )
-      .pipe(
-        finalize(() => {
-          /*  this.onScrolling = this.loading = false;
-          this.loaded = true; */
-        }),
-        map((response: any) => {
-          return response ? response : null;
-        })
-      );
-  }
-  async loadCurrentID() {
     if (this.countLoad == 0) {
       var param = await firstValueFrom(
         this.cache.viewSettingValues('CMParameters')
@@ -328,24 +452,28 @@ export class TargetsComponent
       this.countTarget = data[1];
       this.countPersons = data[2];
       this.lstTreeSearchs = this.lstDataTree;
-      // if (this.viewCurrent == '2') {
-      //   this.lstDataTree = this.lstTreeSearchs.filter(
-      //     (item) =>
-      //       (item?.title?.indexOf(this.search) >= 0 &&
-      //         item.year == this.year) ||
-      //       (item?.salespersonID?.indexOf(this.search) >= 0 &&
-      //         item.year == this.year) ||
-      //       item?.items?.some(
-      //         (x) =>
-      //           (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
-      //           (x?.businessLineID?.indexOf(this.search) >= 0 &&
-      //             x.year == this.year)
-      //       )
-      //   );
-      // }
     }
-
     this.loadedTree = true;
+  }
+
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTree,
+        this.assemblyNameTree,
+        this.classNameTree,
+        this.methodTree,
+        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response : null;
+        })
+      );
   }
   viewBusinessLines(valueView) {
     if (valueView != this.viewCurrent) {
@@ -398,6 +526,10 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
+    if (!data?.fromDate) {
+      this.date = new Date();
+      this.calendarDrop.value = this.date;
+    }
     var year = data?.fromDate
       ? parseInt(data?.fromDate?.getFullYear())
       : new Date().getFullYear();
@@ -498,170 +630,6 @@ export class TargetsComponent
     }
   }
 
-  //#endregion
-  //#region event codx-view
-  viewChanged(e) {
-    this.clickShow(false);
-    this.viewMode = e?.view?.type;
-    this.detectorRef.detectChanges();
-  }
-  async onLoading(e) {
-    // if(datasVll && datasVll.datas){
-    let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
-
-    this.columnGrids = [
-      {
-        headerTemplate: this.headerBusinessLine,
-        template: this.templateBusinessLine,
-        width: 350,
-      },
-      //năm
-      {
-        headerTemplate: this.headerYear,
-        template: this.templateYear,
-        width: 120,
-      },
-      //quý
-      {
-        headerTemplate: this.headerQuarter1,
-        template: this.templateQuarter1,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerQuarter2,
-        template: this.templateQuarter2,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerQuarter3,
-        template: this.templateQuarter3,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerQuarter4,
-        template: this.templateQuarter4,
-        width: 120,
-      },
-      //Tháng
-      {
-        headerTemplate: this.headerMonth1,
-        template: this.templateMonth1,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth2,
-        template: this.templateMonth2,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth3,
-        template: this.templateMonth3,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth4,
-        template: this.templateMonth4,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth5,
-        template: this.templateMonth5,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth6,
-        template: this.templateMonth6,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth7,
-        template: this.templateMonth7,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth8,
-        template: this.templateMonth8,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth9,
-        template: this.templateMonth9,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth10,
-        template: this.templateMonth10,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth11,
-        template: this.templateMonth11,
-        width: 120,
-      },
-      {
-        headerTemplate: this.headerMonth12,
-        template: this.templateMonth12,
-        width: 120,
-      },
-    ];
-
-    let obj = {
-      type: ViewType.chart,
-      text: datasVll?.datas[1]?.text,
-      icon: datasVll?.datas[1]?.icon,
-      sameData: false,
-      active: false,
-      model: {
-        panelRightRef: this.panelRight,
-      },
-    };
-    this.views.push(Object.assign({}, obj));
-    // }
-  }
-  searchChanged(e) {
-    this.search = '';
-    if (e == null || e?.trim() == '') {
-      this.predicateSearch = '';
-      this.dataValueSearch = '';
-      this.loadTreeData(this.year);
-      return;
-    }
-    const text = e;
-    this.search = text;
-    let predicates = '';
-    let dataValues = '';
-    this.isShow = false;
-    let keySearch = Object.keys(this.gridViewSetupTarget);
-    let j = 0;
-    for (let i = 0; i < keySearch.length; i++) {
-      if (this.gridViewSetupTarget[keySearch[i]].isQuickSearch == true) {
-        let or = j > 0 ? ' or ' : '';
-        predicates += or + `${keySearch[i]}.Contains(@1)`;
-        j++;
-      }
-    }
-
-    // predicates =
-    //   'BusinessLineID.Contains(@1) or TargetName.Contains(@1) or Owner.Contains(@1)';
-    dataValues = text;
-    this.predicateSearch = predicates;
-    this.dataValueSearch = dataValues;
-    this.loadTreeData(this.year, predicates, dataValues);
-    this.detectorRef.detectChanges();
-  }
-
-  convertToCamelCase(name: string): string {
-    return name.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
-  }
-
-  filterChange(e) {
-    console.log('filter: ', e);
-  }
-
-  filterReportChange(e) {
-    console.log('filterReport: ', e);
-  }
-  selectedChange(e) {}
   //#endregion
 
   //#region more

@@ -50,70 +50,64 @@ import { RoundService } from '../../round.service';
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
-  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; // template view danh sách chi tiết (trái)
-  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; // template view danh sách chi tiết (phải)
-  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; // template view danh sách
-  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; // template view lưới
-  @ViewChild('elementTabDetail') elementTabDetail: TabComponent; // element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-  @ViewChild('progressbarTable') progressbarTable: ProgressBar; // progressBar của table
-  headerText: any; // tên tiêu đề truyền cho form thêm mới
-  journalNo: string; // số của sổ nhật kí
-  itemSelected: any; // data của view danh sách chi tiết khi được chọn
-  userID: any; //  tên user đăng nhập
-  dataCategory: any; // data của category
-  journal: IJournal; // data sổ nhật kí
-  totaltransAmt1: any = 0; // tổng tiền nợ tab hạch toán
-  totaltransAmt2: any = 0; // tông tiền có tab hạch toán
-  totalsettledAmt: any = 0; // tổng tiền thanh toán tab thông tin hóa đơn
-  totalbalAmt: any = 0; // tổng tiền số dư tab thông tin hóa đơn
-  totalVatBase: any = 0; // tổng tiền số tiền tab hóa đơn GTGT
-  totalVatAtm: any = 0; // tổng tiền thuế tab hóa đơn GTGT
-  settledInvoices: any; // data của tab thông tin hóa đơn
-  vatInvoices: any; // data của tab hóa đợn GTGT
-  acctTrans: any; // data của tab hạch toán
-  baseCurr: any; // đồng tiền hạch toán
-  dataDefaultCashpayment: any; // data default của phiếu
-  isLoadData: any = true; // trạng thái load data
-  hideFields: Array<any> = []; // array field được ẩn lấy từ journal
-  fmCashPaymentsLines: FormModel = {
-    // formModel của cashpaymentlines
+  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
+  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
+  @ViewChild('progressbarTable') progressbarTable: ProgressBar; //? progressBar của table
+  headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  journalNo: string; //? số của sổ nhật kí
+  itemSelected: any; //? data của view danh sách chi tiết khi được chọn
+  userID: any; //?  tên user đăng nhập
+  dataCategory: any; //? data của category
+  journal: IJournal; //? data sổ nhật kí
+  totaltransAmt1: any = 0; //? tổng tiền nợ tab hạch toán
+  totaltransAmt2: any = 0; //? tông tiền có tab hạch toán
+  totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
+  totalbalAmt: any = 0; //? tổng tiền số dư tab thông tin hóa đơn
+  totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
+  totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
+  settledInvoices: any; //? data của tab thông tin hóa đơn
+  vatInvoices: any; //? data của tab hóa đợn GTGT
+  acctTrans: any; //? data của tab hạch toán
+  baseCurr: any; //? đồng tiền hạch toán
+  dataDefaultCashpayment: any; //? data default của phiếu
+  isLoadData: any = true; //? trạng thái load data
+  hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
+  fmCashPaymentsLines: FormModel = { //? formModel của cashpaymentlines
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-  fmAcctTrans: FormModel = {
-    // formModel của acctTrans
+  fmAcctTrans: FormModel = { //? formModel của acctTrans
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
     entityName: 'AC_AcctTrans',
   };
-  fmSettledInvoices: FormModel = {
-    // formModel của settledInvoices
+  fmSettledInvoices: FormModel = { //? formModel của settledInvoices
     formName: 'SettledInvoices',
     gridViewName: 'grvSettledInvoices',
     entityName: 'AC_SettledInvoices',
   };
-  fmVatInvoices: FormModel = {
-    // formModel của vatInvoices
+  fmVatInvoices: FormModel = { //? formModel của vatInvoices
     formName: 'VATInvoices',
     gridViewName: 'grvVATInvoices',
     entityName: 'AC_VATInvoices',
   };
-  tabInfo: TabModel[] = [
-    // danh sách các tab footer
+  tabInfo: TabModel[] = [ //? danh sách các tab footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  button: ButtonModel = {
-    // nút thêm phiếu
+  button: ButtonModel = { //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
   optionSidebar: SidebarModel = new SidebarModel;
-  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; // animation của progressbar table
-  private destroy$ = new Subject<void>(); // list observable hủy các subscribe api
+  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar table
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -124,17 +118,17 @@ export class CashPaymentsComponent extends UIComponent {
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
-    this.userID = this.authStore.get().userID; // get tên user đăng nhập
+    this.userID = this.authStore.get().userID; //? get tên user đăng nhập
     this.cache
       .companySetting()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.baseCurr = res[0].baseCurr; // get đồng tiền hạch toán
+        this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
       });
     this.router.queryParams
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
-        this.journalNo = params?.journalNo; // get số journal từ router
+        this.journalNo = params?.journalNo; //? get số journal từ router
       });
   }
   //#endregion
