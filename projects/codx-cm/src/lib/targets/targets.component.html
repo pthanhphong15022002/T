@@ -7,7 +7,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd ? button : null"
+  [button]="!viewCalendar && showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
@@ -76,6 +76,7 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
+      [hideMF]="viewCalendar"
       (clickMF)="clickMF($event, data)"
       type="hover"
       (changeDataMF)="changeDataMF($event, data)"
@@ -250,6 +251,7 @@
               [fmTargetLines]="fmTargetLines"
               [formModel]="view.formModel"
               [viewCurrent]="viewCurrent"
+              [hidenMF]="viewCalendar"
               (clickMoreFunc)="clickMoreFunc($event)"
               (changeMoreMF)="changeMoreMF($event)"
             ></codx-view-tree-targets>
@@ -444,7 +446,7 @@
   <div class="container">
     <div class="d-flex" [ngClass]="'height-parent'">
       <codx-mfunc
-        *ngIf="viewCurrent == '1'"
+        *ngIf="viewCurrent == '1' && !viewCalendar"
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
         (changeDataMF)="changeDataMF($event, item)"
@@ -519,6 +521,7 @@
             "
           >
             <codx-mfunc
+              *ngIf="!viewCalendar"
               [formModel]="view.formModel"
               (clickMF)="clickMF($event, busi)"
               (changeDataMF)="changeDataMF($event, busi)"
@@ -1088,11 +1091,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 1) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 1) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 1) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 1)
@@ -1100,10 +1108,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 1) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 1) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 1) + '%'
                 "
@@ -1170,11 +1183,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 2) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 2) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 2) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 2)
@@ -1182,10 +1200,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 2) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 2) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 2) + '%'
                 "
@@ -1252,11 +1275,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 3) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 3) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 3) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 3)
@@ -1264,10 +1292,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 3) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 3) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 3) + '%'
                 "
@@ -1334,11 +1367,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 4) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 4) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 4) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 4)
@@ -1346,10 +1384,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 4) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 4) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 4) + '%'
                 "
@@ -1416,11 +1459,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 5) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 5) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 5) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 5)
@@ -1428,10 +1476,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 5) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 5) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 5) + '%'
                 "
@@ -1498,11 +1551,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 6) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 6) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 6) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 6)
@@ -1510,10 +1568,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 6) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 6) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 6) + '%'
                 "
@@ -1580,11 +1643,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 7) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 7) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 7) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 7)
@@ -1592,10 +1660,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 7) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 7) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 7) + '%'
                 "
@@ -1662,11 +1735,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 8) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 8) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 8) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 8)
@@ -1674,10 +1752,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 8) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 8) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 8) + '%'
                 "
@@ -1744,11 +1827,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 9) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 9) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 9) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 9)
@@ -1756,10 +1844,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 9) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 9) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 9) + '%'
                 "
@@ -1826,11 +1919,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 10) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 10) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 10) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 10)
@@ -1838,10 +1936,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 10) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 10) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 10) + '%'
                 "
@@ -1908,11 +2011,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 11) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 11) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 11) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 11)
@@ -1920,10 +2028,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 11) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 11) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 11) + '%'
                 "
@@ -1990,11 +2103,16 @@
                   | async
               "
             ></span>
-            <span  class="text-gray-800" *ngIf="getTargetMonth(busi.targetsLines, 12) === 0">0</span>
+            <span
+              class="text-gray-800"
+              *ngIf="getTargetMonth(busi.targetsLines, 12) === 0"
+              >0</span
+            >
           </div>
           <div *ngIf="viewDataValue == '2'">
             <ng-container *ngIf="probability == '1'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 *ngIf="getDealValueMonth(busi?.deals, 12) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 12)
@@ -2002,10 +2120,15 @@
                     | async
                 "
               ></span>
-              <span  class="text-gray-800" *ngIf="getDealValueMonth(busi?.deals, 12) === 0">0</span>
+              <span
+                class="text-gray-800"
+                *ngIf="getDealValueMonth(busi?.deals, 12) === 0"
+                >0</span
+              >
             </ng-container>
             <ng-container *ngIf="probability == '2'">
-              <span  class="text-gray-800"
+              <span
+                class="text-gray-800"
                 [innerHTML]="
                   getProbabilityMonth(busi?.deals, busi.targetsLines, 12) + '%'
                 "

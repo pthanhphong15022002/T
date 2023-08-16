@@ -23,6 +23,7 @@ export class ViewTreeTargetsComponent implements OnInit {
   @Input() fmTargetLines: any;
   @Input() formModel: FormModel;
   @Input() viewCurrent: any;
+  @Input() hidenMF = false;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() eventClickShow = new EventEmitter<any>();
