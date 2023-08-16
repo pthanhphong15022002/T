@@ -1633,7 +1633,7 @@ codx-processsteps .e-card-wrapper {
   .e-header-title
   .header-template-wrap
   .header-text {
-  width: 100%;
+  width: unset;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;

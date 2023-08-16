@@ -39,7 +39,7 @@ import { ɵglobal as global } from '@angular/core';
 import { CodxBookingService } from './codx-booking.service';
 import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
-import { Approver } from '../../models/ApproveProcess.model';
+import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-booking',
@@ -811,14 +811,22 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               'EP_Bookings',
               this.formModel?.funcID,
               data?.title,
-              (res:any) => {
+              (res:ResponseModel) => {
                 if (res?.msgCodeError == null && res?.rowCount) {
-                  this.notificationsService.notifyCode('ES007');
-                  data.approveStatus = EPCONST.A_STATUS.Released;
+                  data.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                   data.write = false;
                   data.delete = false;
                   this.view.dataService.update(data).subscribe();
-                  this.updateData(data);
+                  this.notificationsService.notifyCode('SYS034');
+                  if(data?.approveStatus == EPCONST.A_STATUS.Approved && data.items?.length>0 && data?.resourceType==EPCONST.VLL.ResourceType.Room){
+                    //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
+                    if(this.autoApproveItem=='1' || this.stationeryAR=='0'){
+                      this.codxBookingService.autoApproveStationery(null,data.recID).subscribe(result=>{});
+                    }
+                    else{
+                      this.codxBookingService.releaseStationeryOfRoom(null,data.recID,null).subscribe(result=>{})
+                    }                    
+                  }
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);
                 }
@@ -959,7 +967,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           );
           dialogStationery.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              this.updateData(returnData?.event);
+              //this.updateData(returnData?.event);
             }
             else{
               this.view.dataService.clear();
@@ -977,7 +985,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           );
           dialogAdd.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              this.updateData(returnData?.event);
+              //this.updateData(returnData?.event);
             }
             else{
               this.view.dataService.clear();
@@ -1020,7 +1028,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   );
                   dialogStationery.closed.subscribe((returnData) => {
                     if (returnData?.event) {
-                      this.updateData(returnData?.event);
+                      //this.updateData(returnData?.event);
                     }
                     else{
                       this.view.dataService.clear();
@@ -1043,7 +1051,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   );
                   dialogEdit.closed.subscribe((returnData) => {
                     if (returnData?.event) {
-                      this.updateData(returnData?.event);
+                      //this.updateData(returnData?.event);
                     }
                     else{
                       this.view.dataService.clear();
@@ -1089,7 +1097,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     );
                     dialogStationery.closed.subscribe((returnData) => {
                       if (returnData?.event) {
-                        this.updateData(returnData?.event);
+                        //this.updateData(returnData?.event);
                       }
                       else{
                         this.view.dataService.clear();
@@ -1107,7 +1115,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     );
                     dialogCopy.closed.subscribe((returnData) => {
                       if (returnData?.event) {
-                        this.updateData(returnData?.event);
+                        //this.updateData(returnData?.event);
                       }
                       else{
                         this.view.dataService.clear();
@@ -1122,26 +1130,26 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  updateData(data){
-    this.codxBookingService.getBookingByRecID(data?.recID).subscribe(newData=>{
-      if(newData){
-        data=newData;
-        this.view?.dataService.update(data).subscribe();
-        this.detectorRef.detectChanges();
-        if(this.approvalRule== EPCONST.APPROVALRULE.Haved && data?.resourceType==EPCONST.VLL.ResourceType.Room && data?.approveStatus==EPCONST.A_STATUS.Approved && data?.items?.length>0){
-          //Trường hợp đặc biệt khi đặt phòng có theo quy trình duyệt nhưng được duyệt tự động(người gửi == người duyệt : VPP chưa kịp tạo ra khi gửi duyệt)          
-          if(this.autoApproveItem ==EPCONST.APPROVALRULE.Haved ){
-            //Tự duyệt & cấp phát Vpp của phòng họp
-            this.codxBookingService.autoApproveStationery(null,data?.recID).subscribe();
-          }
-          else{
-            //Gửi duyệt Vpp của phòng họp
-            this.codxBookingService.releaseStationeryOfRoom(null,data?.recID,null).subscribe();
-          }
-        }
-      }
-    })
-  }
+  // updateData(data){
+  //   this.codxBookingService.getBookingByRecID(data?.recID).subscribe(newData=>{
+  //     if(newData){
+  //       data=newData;
+  //       this.view?.dataService.update(data).subscribe();
+  //       this.detectorRef.detectChanges();
+  //       if(this.approvalRule== EPCONST.APPROVALRULE.Haved && data?.resourceType==EPCONST.VLL.ResourceType.Room && data?.approveStatus==EPCONST.A_STATUS.Approved && data?.items?.length>0){
+  //         //Trường hợp đặc biệt khi đặt phòng có theo quy trình duyệt nhưng được duyệt tự động(người gửi == người duyệt : VPP chưa kịp tạo ra khi gửi duyệt)          
+  //         if(this.autoApproveItem ==EPCONST.APPROVALRULE.Haved ){
+  //           //Tự duyệt & cấp phát Vpp của phòng họp
+  //           this.codxBookingService.autoApproveStationery(null,data?.recID).subscribe();
+  //         }
+  //         else{
+  //           //Gửi duyệt Vpp của phòng họp
+  //           this.codxBookingService.releaseStationeryOfRoom(null,data?.recID,null).subscribe();
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
 
   delete(data?) {
     if ( this.curUser?.userID == data?.createdBy || this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin) ) {

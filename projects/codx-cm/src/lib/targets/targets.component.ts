@@ -33,7 +33,7 @@ import { PopupChangeAllocationRateComponent } from './popup-change-allocation-ra
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
-  selector: 'lib-targets',
+  selector: 'cm-targets',
   templateUrl: './targets.component.html',
   styleUrls: ['./targets.component.scss'],
   providers: [DecimalPipe],
@@ -44,8 +44,10 @@ export class TargetsComponent
 {
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
+  @Input() viewDashboard = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
+  @ViewChild('calendarDrop') calendarDrop: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -152,10 +154,9 @@ export class TargetsComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
-  viewMode = 9;
   viewCurrent = '1';
   viewDataValue = '1';
-
+  viewMode = 9;
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -190,6 +191,8 @@ export class TargetsComponent
   }
 
   async onInit() {
+    // this.viewDashboard = true;
+    if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
     this.button = {
       id: this.btnAdd,
@@ -197,312 +200,6 @@ export class TargetsComponent
     this.year = new Date().getFullYear();
 
     this.loadTreeData(this.year?.toString());
-
-    this.cache.valueList('CRM050').subscribe((res) => {
-      if (res && res.datas) {
-        this.lstCurrentView = res.datas;
-      }
-    });
-
-    if (this.queryParams == null) {
-      this.queryParams = this.router.snapshot.queryParams;
-    }
-    // this.getSchedule();
-  }
-  async ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
-    this.gridViewSetupTarget = await firstValueFrom(
-      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-    );
-    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
-    this.view.dataService.methodDelete = 'DeletedTargetAsync';
-    this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
-
-    this.detectorRef.checkNoChanges();
-  }
-
-  //#region setting schedule
-  getSchedule() {
-    //lấy list target để vẽ schedule
-    this.schedules = new ResourceModel();
-    this.schedules.assemblyName = 'CM';
-    this.schedules.className = 'TargetsBusiness';
-    this.schedules.service = 'CM';
-    this.schedules.method = 'GetListTargetLineAsync';
-    this.schedules.idField = 'recID';
-    //lấy list user vẽ header schedule
-    this.scheduleHeader = new ResourceModel();
-    this.scheduleHeader.assemblyName = 'CM';
-    this.scheduleHeader.className = 'TargetsBusiness';
-    this.scheduleHeader.service = 'CM';
-    this.scheduleHeader.method = 'GetListUserAsync';
-    this.scheduleModel = {
-      id: 'recID',
-      subject: { name: 'target' },
-      startTime: { name: 'startDate' },
-      endTime: { name: 'endDate' },
-      resourceId: { name: 'salespersonID' },
-    };
-
-    this.scheduleHeaderModel = {
-      Name: 'Owners',
-      Field: 'salespersonID',
-      IdField: 'salespersonID',
-      TextField: 'userName',
-      Title: 'Owners',
-    };
-  }
-  //#endregion setting schedule
-
-  //#region load tree
-  loadTreeData(year, predicates = '', dataValues = '') {
-    this.loadedTree = false;
-    var resource = new DataRequest();
-    resource.predicates =
-      predicates != '' ? 'Year=@0' + ' and ' + predicates : 'Year=@0';
-    resource.dataValues = dataValues != '' ? year + ';' + dataValues : year;
-    resource.funcID = 'CM0601';
-    resource.pageLoading = false;
-    this.requestTree = resource;
-    this.loadCurrentID();
-  }
-
-  private fetch(): Observable<any[]> {
-    return this.api
-      .execSv<Array<any>>(
-        this.serviceTree,
-        this.assemblyNameTree,
-        this.classNameTree,
-        this.methodTree,
-        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
-      )
-      .pipe(
-        finalize(() => {
-          /*  this.onScrolling = this.loading = false;
-          this.loaded = true; */
-        }),
-        map((response: any) => {
-          return response ? response : null;
-        })
-      );
-  }
-  async loadCurrentID() {
-    if (this.countLoad == 0) {
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      if (param?.length > 0) {
-        let dataParam = param.filter(
-          (x) => x.category == '1' && !x.transType
-        )[0];
-        if (dataParam) {
-          let paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-          let exchangeRateCurrent = await firstValueFrom(
-            this.cmSv.getExchangeRate(this.currencyID, new Date())
-          );
-          if (exchangeRateCurrent?.exchRate > 0) {
-            this.exchangeRate = exchangeRateCurrent?.exchRate;
-          } else {
-            this.exchangeRate = 1;
-            this.currencyID = 'VND';
-          }
-          this.currencyIDSys = this.currencyID;
-          this.exchangeRateSys = this.exchangeRate;
-          this.countLoad++;
-        }
-      }
-    }
-    let data = await firstValueFrom(this.fetch());
-    if (data != null) {
-      this.lstDataTree = data[0];
-      this.countTarget = data[1];
-      this.countPersons = data[2];
-      this.lstTreeSearchs = this.lstDataTree;
-      // if (this.viewCurrent == '2') {
-      //   this.lstDataTree = this.lstTreeSearchs.filter(
-      //     (item) =>
-      //       (item?.title?.indexOf(this.search) >= 0 &&
-      //         item.year == this.year) ||
-      //       (item?.salespersonID?.indexOf(this.search) >= 0 &&
-      //         item.year == this.year) ||
-      //       item?.items?.some(
-      //         (x) =>
-      //           (x?.title?.indexOf(this.search) >= 0 && x.year == this.year) ||
-      //           (x?.businessLineID?.indexOf(this.search) >= 0 &&
-      //             x.year == this.year)
-      //       )
-      //   );
-      // }
-    }
-
-    this.loadedTree = true;
-  }
-  viewBusinessLines(valueView) {
-    if (valueView != this.viewCurrent) {
-      this.lstDataTree = [];
-      this.countLoad++;
-      this.isShow = false;
-      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
-      this.view.button = this.showButtonAdd ? this.button : null;
-      this.currencyID = this.currencyIDSys;
-      this.exchangeRate = this.exchangeRateSys;
-      this.search = '';
-      this.viewCurrent = valueView;
-      this.loadTreeData(
-        this.year?.toString(),
-        this.predicateSearch,
-        this.dataValueSearch
-      );
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  viewDataValueGrid(view) {
-    if (view != this.viewDataValue) {
-      this.viewDataValue = view;
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  valueChangeProbability(e) {
-    if (e) {
-      this.probability = e?.data;
-    }
-  }
-
-  isActive(item: any, type): boolean {
-    return this[type] === item;
-  }
-
-  clickTreeNode(evt: any) {
-    evt.stopPropagation();
-    evt.preventDefault();
-  }
-
-  selectionChange(parent) {
-    if (parent.isItem) {
-      parent.data.items = parent?.data?.items;
-    }
-  }
-  //#endregion
-
-  //#region change Calendar ejs
-  changeCalendar(data: any) {
-    var year = data?.fromDate
-      ? parseInt(data?.fromDate?.getFullYear())
-      : new Date().getFullYear();
-    if (year != this.year) {
-      this.year = year;
-      this.loadTreeData(year?.toString());
-    }
-
-    this.detectorRef.detectChanges();
-  }
-
-  async valueChange(e) {
-    if (e?.data != this.currencyID) {
-      this.exChangeRate(this.currencyID, e?.data);
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  async exChangeRate(currencyIDOld, currencyID) {
-    if (currencyIDOld !== currencyID) {
-      let day = new Date();
-
-      let exchangeRate = await firstValueFrom(
-        this.cmSv.getExchangeRate(currencyID, day)
-      );
-
-      if (exchangeRate?.exchRate > 0) {
-        this.lstDataTree.forEach((element) => {
-          element.target =
-            (element.target / exchangeRate?.exchRate) * element.exchangeRate;
-          element.dealValue =
-            (element.dealValue / exchangeRate?.exchRate) * element.exchangeRate;
-          element.currencyID = currencyID;
-          element.exchangeRate = exchangeRate?.exchRate ?? 1;
-          if (element?.targetsLines != null) {
-            element?.targetsLines.forEach((line) => {
-              line.target =
-                (line.target / exchangeRate?.exchRate) * line.exchangeRate;
-              line.currencyID = currencyID;
-              line.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-
-          if (element?.deals != null) {
-            element?.deals.forEach((deal) => {
-              deal.dealValue =
-                (deal.dealValue / exchangeRate?.exchRate) * deal.exchangeRate;
-              deal.currencyID = currencyID;
-              deal.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-
-          if (element?.items != null) {
-            element?.items.forEach((item) => {
-              item.target =
-                (item.target / exchangeRate?.exchRate) * item.exchangeRate;
-              item.dealValue =
-                (item.dealValue / exchangeRate?.exchRate) * item.exchangeRate;
-              if (item?.targetsLines != null) {
-                item?.targetsLines.forEach((line) => {
-                  line.target =
-                    (line.target / exchangeRate?.exchRate) * line.exchangeRate;
-                  line.currencyID = currencyID;
-                  line.exchangeRate = exchangeRate?.exchRate ?? 1;
-                });
-              }
-
-              if (item?.deals != null) {
-                item?.deals.forEach((deal) => {
-                  deal.dealValue =
-                    (deal.dealValue / exchangeRate?.exchRate) *
-                    deal.exchangeRate;
-                  deal.currencyID = currencyID;
-                  deal.exchangeRate = exchangeRate?.exchRate ?? 1;
-                });
-              }
-
-              item.currencyID = currencyID;
-              item.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-        });
-        if (this.lstDataTree != null && this.viewMode == 9) {
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-        }
-      } else {
-        exchangeRate.exchRate = this.exchangeRate;
-        currencyID = this.currencyID;
-      }
-      this.currencyID = currencyID;
-      this.exchangeRate = exchangeRate?.exchRate;
-      this.codxInput.crrValue = this.currencyID;
-      this.detectorRef.detectChanges();
-    }
-  }
-
-  //#endregion
-  //#region event codx-view
-  viewChanged(e) {
-    this.clickShow(false);
-    this.viewMode = e?.view?.type;
-    this.detectorRef.detectChanges();
-  }
-  async onLoading(e) {
-    // if(datasVll && datasVll.datas){
     let datasVll = await firstValueFrom(this.cache.valueList('CRM054'));
 
     this.columnGrids = [
@@ -600,18 +297,73 @@ export class TargetsComponent
         width: 120,
       },
     ];
+    if (!this.viewDashboard) {
+      this.views = [
+        {
+          type: ViewType.content,
+          sameData: false,
+          active: true,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+        {
+          type: ViewType.chart,
+          text: datasVll?.datas[1]?.text,
+          icon: datasVll?.datas[1]?.icon,
+          sameData: false,
+          active: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+      ];
+    } else {
+      this.views = [
+        {
+          type: ViewType.chart,
+          text: datasVll?.datas[1]?.text,
+          icon: datasVll?.datas[1]?.icon,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+      ];
+    }
 
-    let obj = {
-      type: ViewType.chart,
-      text: datasVll?.datas[1]?.text,
-      icon: datasVll?.datas[1]?.icon,
-      sameData: false,
-      active: false,
-      model: {
-        panelRightRef: this.panelRight,
-      },
-    };
-    this.views.push(Object.assign({}, obj));
+    this.cache.valueList('CRM050').subscribe((res) => {
+      if (res && res.datas) {
+        this.lstCurrentView = res.datas;
+      }
+    });
+
+    if (this.queryParams == null) {
+      this.queryParams = this.router.snapshot.queryParams;
+    }
+    // this.getSchedule();
+  }
+  async ngAfterViewInit() {
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
+    this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
+    this.view.dataService.methodDelete = 'DeletedTargetAsync';
+    this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
+
+    this.detectorRef.checkNoChanges();
+  }
+
+  //#region event codx-view
+  viewChanged(e) {
+    this.clickShow(false);
+    this.viewMode = e?.view?.type;
+    this.detectorRef.detectChanges();
+  }
+  async onLoading(e) {
+    // if(datasVll && datasVll.datas){
+    // let obj =
+    // this.views.push(Object.assign({}, obj));
     // }
   }
   searchChanged(e) {
@@ -658,6 +410,228 @@ export class TargetsComponent
     console.log('filterReport: ', e);
   }
   selectedChange(e) {}
+  //#endregion
+
+  //#region load tree
+  async loadTreeData(year, predicates = '', dataValues = '') {
+    this.loadedTree = false;
+    var resource = new DataRequest();
+    resource.predicates =
+      predicates != '' ? 'Year=@0' + ' and ' + predicates : 'Year=@0';
+    resource.dataValues = dataValues != '' ? year + ';' + dataValues : year;
+    resource.funcID = 'CM0601';
+    resource.pageLoading = false;
+    this.requestTree = resource;
+    if (this.countLoad == 0) {
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          if (exchangeRateCurrent?.exchRate > 0) {
+            this.exchangeRate = exchangeRateCurrent?.exchRate;
+          } else {
+            this.exchangeRate = 1;
+            this.currencyID = 'VND';
+          }
+          this.currencyIDSys = this.currencyID;
+          this.exchangeRateSys = this.exchangeRate;
+          this.countLoad++;
+        }
+      }
+    }
+    let data = await firstValueFrom(this.fetch());
+    if (data != null) {
+      this.lstDataTree = data[0];
+      this.countTarget = data[1];
+      this.countPersons = data[2];
+      this.lstTreeSearchs = this.lstDataTree;
+    }
+    this.loadedTree = true;
+  }
+
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTree,
+        this.assemblyNameTree,
+        this.classNameTree,
+        this.methodTree,
+        [this.requestTree, this.viewCurrent, this.currencyID, this.exchangeRate]
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response : null;
+        })
+      );
+  }
+  viewBusinessLines(valueView) {
+    if (valueView != this.viewCurrent) {
+      this.lstDataTree = [];
+      this.countLoad++;
+      this.isShow = false;
+      this.showButtonAdd = this.viewCurrent == '1' ? false : true;
+      this.view.button = this.showButtonAdd ? this.button : null;
+      this.currencyID = this.currencyIDSys;
+      this.exchangeRate = this.exchangeRateSys;
+      this.search = '';
+      this.viewCurrent = valueView;
+      this.loadTreeData(
+        this.year?.toString(),
+        this.predicateSearch,
+        this.dataValueSearch
+      );
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  viewDataValueGrid(view) {
+    if (view != this.viewDataValue) {
+      this.viewDataValue = view;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  valueChangeProbability(e) {
+    if (e) {
+      this.probability = e?.data;
+    }
+  }
+
+  isActive(item: any, type): boolean {
+    return this[type] === item;
+  }
+
+  clickTreeNode(evt: any) {
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
+  selectionChange(parent) {
+    if (parent.isItem) {
+      parent.data.items = parent?.data?.items;
+    }
+  }
+  //#endregion
+
+  //#region change Calendar ejs
+  changeCalendar(data: any) {
+    if (!data?.fromDate) {
+      this.date = new Date();
+      this.calendarDrop.value = this.date;
+    }
+    var year = data?.fromDate
+      ? parseInt(data?.fromDate?.getFullYear())
+      : new Date().getFullYear();
+    if (year != this.year) {
+      this.isShow = false;
+      this.year = year;
+      this.loadTreeData(year?.toString());
+    }
+
+    this.detectorRef.detectChanges();
+  }
+
+  async valueChange(e) {
+    if (e?.data != this.currencyID) {
+      this.exChangeRate(this.currencyID, e?.data);
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  async exChangeRate(currencyIDOld, currencyID) {
+    if (currencyIDOld !== currencyID) {
+      let day = new Date();
+
+      let exchangeRate = await firstValueFrom(
+        this.cmSv.getExchangeRate(currencyID, day)
+      );
+
+      if (exchangeRate?.exchRate > 0) {
+        this.lstDataTree.forEach((element) => {
+          element.target =
+            (element.target / exchangeRate?.exchRate) * element.exchangeRate;
+          element.dealValue =
+            (element.dealValue / exchangeRate?.exchRate) * element.exchangeRate;
+          element.currencyID = currencyID;
+          element.exchangeRate = exchangeRate?.exchRate ?? 1;
+          if (element?.targetsLines != null) {
+            element?.targetsLines.forEach((line) => {
+              line.target =
+                (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+              line.currencyID = currencyID;
+              line.exchangeRate = exchangeRate?.exchRate ?? 1;
+            });
+          }
+
+          if (element?.deals != null) {
+            element?.deals.forEach((deal) => {
+              deal.dealValue =
+                (deal.dealValue / exchangeRate?.exchRate) * deal.exchangeRate;
+              deal.currencyID = currencyID;
+              deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+            });
+          }
+
+          if (element?.items != null) {
+            element?.items.forEach((item) => {
+              item.target =
+                (item.target / exchangeRate?.exchRate) * item.exchangeRate;
+              item.dealValue =
+                (item.dealValue / exchangeRate?.exchRate) * item.exchangeRate;
+              if (item?.targetsLines != null) {
+                item?.targetsLines.forEach((line) => {
+                  line.target =
+                    (line.target / exchangeRate?.exchRate) * line.exchangeRate;
+                  line.currencyID = currencyID;
+                  line.exchangeRate = exchangeRate?.exchRate ?? 1;
+                });
+              }
+
+              if (item?.deals != null) {
+                item?.deals.forEach((deal) => {
+                  deal.dealValue =
+                    (deal.dealValue / exchangeRate?.exchRate) *
+                    deal.exchangeRate;
+                  deal.currencyID = currencyID;
+                  deal.exchangeRate = exchangeRate?.exchRate ?? 1;
+                });
+              }
+
+              item.currencyID = currencyID;
+              item.exchangeRate = exchangeRate?.exchRate ?? 1;
+            });
+          }
+        });
+        if (this.lstDataTree != null && this.viewMode == 9) {
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+        }
+      } else {
+        exchangeRate.exchRate = this.exchangeRate;
+        currencyID = this.currencyID;
+        this.currencyID = null;
+        this.codxInput.crrValue = null;
+        this.codxInput.value = null;
+      }
+      this.currencyID = currencyID;
+      this.exchangeRate = exchangeRate?.exchRate;
+
+      this.detectorRef.detectChanges();
+    }
+  }
+
   //#endregion
 
   //#region more

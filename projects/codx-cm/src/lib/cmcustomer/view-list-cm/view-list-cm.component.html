@@ -95,12 +95,15 @@
       </ng-template>
     </div>
     <div class="w-250px min-w-250px pe-6" *ngIf="funcID == 'CM0102'">
-      <div class="col-6 d-flex align-items-center" *ngIf="data?.mobile">
+      <div
+        class="col-6 d-flex align-items-center"
+        [ngbTooltip]="popupAllowCall"
+        *ngIf="data?.mobile"
+      >
         <span
-          [ngbTooltip]="popupAllowCall"
           [ngClass]="
             data?.allowCall
-              ? 'icon-phone_android text-primary'
+              ? 'text-primary text-hover-primary'
               : 'icon-phonelink_erase'
           "
           class="icon-16 me-2"
@@ -116,16 +119,25 @@
             ></codx-label> </ng-template
         ></span>
         <span
-          [ngClass]="data?.allowCall ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data?.mobile }}</span
+          *ngIf="data?.allowCall"
+          class="text-gray-900 text-primary"
+          [innerHTML]="data?.mobile | formatvalue : formModel : 'mobile' | async"
+          ></span
         >
+        <span *ngIf="!data?.allowCall" class="text-gray-900">{{
+          data?.mobile
+        }}</span>
       </div>
-      <div class="col-6 d-flex align-items-center" *ngIf="data?.personalEmail">
+      <div
+        class="col-6 d-flex align-items-center"
+        *ngIf="data?.personalEmail"
+        [ngbTooltip]="popupAllowEmail"
+      >
         <span
-          [ngbTooltip]="popupAllowEmail"
           [ngClass]="
-            data?.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
+            data?.allowEmail
+              ? 'text-primary text-hover-primary'
+              : 'icon-print_disabled'
           "
           class="icon-16 me-2 text-gray-900"
           ><ng-template #popupAllowEmail>
@@ -140,10 +152,17 @@
             ></codx-label> </ng-template
         ></span>
         <span
-          [ngClass]="data?.allowEmail ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data?.personalEmail }}</span
-        >
+          *ngIf="data?.allowEmail"
+          class="text-gray-900 text-primary text-hover-primary"
+          [innerHTML]="
+            data?.personalEmail
+              | formatvalue : formModel : 'personalEmail'
+              | async
+          "
+        ></span>
+        <span *ngIf="!data?.allowEmail" class="text-gray-900">{{
+          data?.personalEmail
+        }}</span>
       </div>
     </div>
     <div *ngIf="funcID != 'CM0102'" class="w-250px min-w-250px">
@@ -300,7 +319,10 @@
         >
       </div>
 
-      <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="d-flex align-items-center me-4">
+      <div
+        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+        class="d-flex align-items-center me-4"
+      >
         <span
           class="icon-add_shopping_cart icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountDeal"
@@ -314,7 +336,10 @@
         <span class="text-gray-900">{{ countDeal }}</span>
       </div>
 
-      <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="d-flex align-items-center me-4">
+      <div
+        *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+        class="d-flex align-items-center me-4"
+      >
         <span
           class="icon-shopping_bag icon-18 text-gray-500 me-2"
           [ngbTooltip]="popupCountContract"
