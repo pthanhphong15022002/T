@@ -47,6 +47,7 @@ export class TargetsComponent
   @Input() viewCalendar = false;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
+  @ViewChild('calendarDrop') calendarDrop: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
@@ -525,6 +526,10 @@ export class TargetsComponent
 
   //#region change Calendar ejs
   changeCalendar(data: any) {
+    if (!data?.fromDate) {
+      this.date = new Date();
+      this.calendarDrop.value = this.date;
+    }
     var year = data?.fromDate
       ? parseInt(data?.fromDate?.getFullYear())
       : new Date().getFullYear();
