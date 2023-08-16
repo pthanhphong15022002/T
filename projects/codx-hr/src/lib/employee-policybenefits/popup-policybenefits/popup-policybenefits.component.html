@@ -288,6 +288,60 @@
 <ng-template #setting>
   <div class="form-group row">
     <div class="col-6 d-flex flex-column">
+      <codx-label fiedName="AdjustBy" [formModel]="formModel"></codx-label>
+      <codx-label
+        [name]="'AdjustBy'"
+        [default]="grvSetup.AdjustBy.headerNote"
+        [formModel]="formModel"
+      ></codx-label>
+    </div>
+    <div class="col-6">
+      <codx-input
+        field="adjustBy"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        (valueChange)="onChangeAdjustBy($event)"
+      ></codx-input>
+    </div>
+  </div>
+
+<div class="form-group row ms-6" *ngIf="loadGridview1 == true">
+  <codx-gridview-v2
+  #gridView1
+  [columnsGrid]="columnGrid1"
+  [formModel]="fmPolicyDetail"
+  [formName]="fmPolicyDetail.formName"
+  [gridViewName]="fmPolicyDetail.gridViewName"
+  [entityName]="fmPolicyDetail.entityName"
+  [hideMoreFunc]="true"
+  [editSettings]="editSettings"
+  [autoFitColumns]="false"
+  [dataSource]="dataSourceGridView1"
+  rowHeight="35"
+  (onAddNew)="onAddNewGrid1($event)"
+  [autoAddRow]="true"
+  (onEdit)="onEditGrid1($event)"
+  (onDelete)="onDeleteGrid1($event)"
+  >
+    </codx-gridview-v2>
+    <div class="d-flex justify-content-end mt-5">
+      <button
+      class="btn btn-sm btn-light-primary"
+      (click)="addRowGrid1()"
+    >
+<i class="icon-add icon-16 ms-n1"></i>
+    <codx-label
+    name="lblAddBtnGrid1"
+    default="Thêm"
+    [formModel]="formModel"
+  >
+</codx-label>
+    </button>
+    </div>
+</div>
+
+  <div class="form-group row">
+    <div class="col-6 d-flex flex-column">
         <codx-label
             fiedName="IsAdjustKow"
             [formModel]="formModel"
@@ -1374,4 +1428,71 @@
     ></codx-label>
     </button>
 </div>
+</ng-template>
+
+<ng-template #headTmpGrid1Col1>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol1'"
+    default="Từ (>=)"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #headTmpGrid1Col2>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol2'"
+    default="Số tiền cố định tăng thêm"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #headTmpGrid1Col3>
+  <codx-label
+    [formModel]="formModel"
+    [name]="'lblGridCol3'"
+    default="Tỷ lệ (%) tăng thêm"
+    class="fw-bold fs-6 text-gray-800"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #tmpGrid1Col1 let-data>
+  <div class="d-flex align-items-center mb-2">
+    {{data.fromValue}}
+  </div>
+</ng-template>
+
+<ng-template #tmpGrid1Col2 let-data>
+  <div class="d-flex align-items-center mb-2 has-action-menu">
+    <span
+    [innerHTML]="data.amt
+    | formatvalue : fmPolicyDetail : 'Amt'
+    | async"
+    >
+    </span>
+    <!-- {{data.amt}} -->
+  </div>
+</ng-template>
+
+<ng-template #tmpGrid1Col3 let-data>
+  <div class="d-flex align-items-center mb-2 has-action-menu">
+    <span
+    [innerHTML]="data.pct
+    | formatvalue : fmPolicyDetail : 'Pct'
+    | async"
+    >
+    </span>
+    <!-- {{data.pct}} -->
+    <codx-mfunc
+    [dataItem]="data"
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event)"
+    type="hover"
+  ></codx-mfunc>
+  </div>
 </ng-template>

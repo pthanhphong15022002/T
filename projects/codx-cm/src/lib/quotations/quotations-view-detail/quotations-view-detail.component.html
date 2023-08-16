@@ -108,16 +108,28 @@
                 ></span>
               </div>
               <div class="d-flex align-items-top justify-content-end mt-1">
-                <codx-vll
-                  *ngIf="vllStatus"
-                  [name]="vllStatus"
-                  [field]="'Status'"
-                  [value]="itemSelected?.status"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-sm"
-                >
-                </codx-vll>
+                <ng-container *ngIf="!itemSelected.approveStatus">
+                  <codx-vll
+                    [name]="vllStatus"
+                    [field]="'Status'"
+                    [value]="itemSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm"
+                  >
+                  </codx-vll>
+                </ng-container>
+                <ng-container *ngIf="itemSelected.approveStatus">
+                  <codx-vll
+                    [name]="vllApprove"
+                    [field]="'ApproveStatus'"
+                    [value]="itemSelected?.approveStatus"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-primary badge-sm"
+                  >
+                  </codx-vll>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -213,7 +225,7 @@
               <div class="me-3">
                 <codx-img
                   [referType]="'avt'"
-                  [width]="30"
+                  [width]="40"
                   [objectId]="itemSelected?.contactID"
                   objectType="CM_Contacts"
                   [imgOn]="contact?.modifiedOn"
@@ -432,18 +444,18 @@
       </div>
       <div class="d-flex justify-content-between">
         <div class="first-div d-flex align-items-start">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="dataRef?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-          <ng-container
-            *ngIf="data?.approveStatus && data?.approveStatus != '1'"
-          >
+          <ng-container *ngIf="!data.approveStatus">
+            <codx-vll
+              [name]="vllStatus"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-container *ngIf="data.approveStatus">
             <codx-vll
               [name]="vllApprove"
               [field]="'ApproveStatus'"

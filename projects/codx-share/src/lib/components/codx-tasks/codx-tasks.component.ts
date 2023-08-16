@@ -370,7 +370,7 @@ export class CodxTasksComponent
       case 'TMT0202':
       case 'TMT03011':
       case 'TMT05011':
-        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+        this.requestSchedule.predicate = '( Category=@0 or Category=@1 )';
         this.requestSchedule.dataValue = '1;2';
         break;
       default:
@@ -379,8 +379,8 @@ export class CodxTasksComponent
         break;
     }
     if (this.isResourceAssignSession) {
-      this.requestSchedule.predicate = 'Category=@0 or Category=@1';
-      this.requestSchedule.dataValue = '1;2';
+      this.requestSchedule.predicate = 'Category=@0';
+      this.requestSchedule.dataValue = '2';
     }
   }
 

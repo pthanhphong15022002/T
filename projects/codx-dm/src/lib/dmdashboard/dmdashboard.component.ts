@@ -49,25 +49,16 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   isEditMode = false;
 
   public chartData: Object[] = [
-    { month: 'Phòng kế toán', sales: 35 },
-    { month: 'Phòng nhân sự', sales: 28 },
-    { month: 'Ban giám đốc', sales: 34 },
-    { month: 'Phòng hành chính', sales: 32 },
-    { month: 'Phòng phát triển', sales: 40 },
+    { orgUnitID: 'ORG-0000', pdf: 35, docx: 10, xlsx: 15 },
+    { orgUnitID: 'ORG-0001', pdf: 28, docx: 20 },
+    { orgUnitID: 'ORG-0002', pdf: 34, docx: 30 },
+    { orgUnitID: 'ORG-0003', pdf: 32, docx: 40 },
+    { orgUnitID: 'ORG-0001', exe: 16 },
   ];
 
   public primaryXAxis: Object = {
     valueType: 'Category',
   };
-
-  public lineData: any[] = [
-    { x: 2013, y: 28 },
-    { x: 2014, y: 25 },
-    { x: 2015, y: 26 },
-    { x: 2016, y: 27 },
-    { x: 2017, y: 32 },
-    { x: 2018, y: 35 },
-  ];
 
   public data: object[] = [
     {

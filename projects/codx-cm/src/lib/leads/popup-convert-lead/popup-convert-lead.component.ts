@@ -105,6 +105,8 @@ export class PopupConvertLeadComponent implements OnInit {
   dateMessage: string;
   gridViewSetup: any;
   radioCheckedCus = true;
+  disabledShowInput = false;
+  planceHolderAutoNumber = '';
   lstPermissions: CM_Permissions[] = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -184,7 +186,7 @@ export class PopupConvertLeadComponent implements OnInit {
   async getProcessIDBybusinessLineID(businessLineID) {
     var options = new DataRequest();
     options.entityName = 'CM_BusinessLines';
-    options.predicates = 'RecID=@0';
+    options.predicates = 'BusinessLineID=@0';
     options.dataValues = businessLineID;
     options.pageLoading = false;
     this.businessLine = await firstValueFrom(
@@ -619,6 +621,26 @@ export class PopupConvertLeadComponent implements OnInit {
         this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
       );
       this.radioChecked = false;
+      this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        ['CM0101', 'CM_Customers']
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          // this.getAutoNumber(this.autoNumber);
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = false;
+        }
+      });
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;

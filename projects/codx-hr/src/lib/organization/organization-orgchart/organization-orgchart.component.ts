@@ -117,8 +117,8 @@ export class OrganizationOrgchartComponent {
   showFrame: boolean = false;
   maximumColumnsInMatrix: number;
   minimumVisibleLevels: number;
-  markerWidth: number;
-  markerHeight: number;
+  markerWidth: number = 8;
+  markerHeight: number = 8;
   minimizedItemCornerRadius: number;
   selectCheckBoxLabel: string;
   hightlightleft: number;
@@ -130,7 +130,7 @@ export class OrganizationOrgchartComponent {
   normalLevelShift: number = 50;
   dotLevelShift: number = 30;
   lineLevelShift: number;
-  normalItemsInterval: number;
+  normalItemsInterval: number = 40;
   dotItemsInterval: number = 30;
   lineItemsInterval: number;
   cousinsIntervalMultiplier: number;
@@ -184,11 +184,12 @@ export class OrganizationOrgchartComponent {
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
-  cursorItem: number | string;
+  cursorItem: number | string = '';
 
   @Input() formModel: FormModel;
   @Input() orgUnitID: string = '';
   @Input() itemAdded;
+  @Input() formModelEmployee;
   @Input() view: ViewsComponent;
   @Input() dataService: CRUDService = null;
   @Output() clickMFunction = new EventEmitter();
@@ -204,14 +205,9 @@ export class OrganizationOrgchartComponent {
   employees: any[] = [];
   headerColor: string = '#03a9f4';
   selectedTeam = '';
+  isPopUpManager: boolean = false;
+  idHover: string;
 
-  //style slider
-  // stylesObj = {
-  //   width: '100%',
-  //   display: 'flex',
-  //   margin: '5px 14px',
-  //   cursor: 'pointer',
-  // };
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
@@ -976,6 +972,11 @@ export class OrganizationOrgchartComponent {
   }
 
   ngOnInit(): void {
+    // this.hrService.getFormModel('HRT03a1').then((res) => {
+    //   if (res) {
+    //     this.formModelEmployee = res;
+    //   }
+    // });
     this.hrService
       .GetParameterByHRAsync('HRParameters', '1')
       .subscribe((res: any) => {
@@ -1440,6 +1441,19 @@ export class OrganizationOrgchartComponent {
           });
       }
     }
+  }
+
+  dataManager: any;
+  mouseEnter(e, id) {
+    this.isPopUpManager = true;
+    this.idHover = id;
+    this.dataManager = e;
+  }
+
+  mouseLeave(e, id) {
+    this.isPopUpManager = false;
+    this.idHover = id;
+    // this.dataManager = '';
   }
 
   onSaveForm() {
