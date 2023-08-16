@@ -1,88 +1,204 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [className]="className"
-  [method]="method"
-  [views]="views"
-  [button]="!viewDashboard && showButtonAdd ? button : null"
-  (buttonClick)="click($event)"
-  [dataObj]="dataObj"
-  [moreFuncs]="moreFuncs"
-  [autoLoad]="true"
-  [idField]="idField"
-  [autoSearch]="false"
-  (selectedChange)="selectedChange($event)"
-  (viewChanged)="viewChanged($event)"
-  (onLoading)="onLoading($event)"
-  (searchChanged)="searchChanged($event)"
-  (filterChange)="filterChange($event)"
-  (filterReportChange)="filterReportChange($event)"
-></codx-views>
+<ng-container *ngIf="!viewDashboard">
+  <codx-views
+    #view
+    [funcID]="funcID"
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entityName"
+    [className]="className"
+    [method]="method"
+    [views]="views"
+    [button]="!viewDashboard && showButtonAdd ? button : null"
+    (buttonClick)="click($event)"
+    [dataObj]="dataObj"
+    [moreFuncs]="moreFuncs"
+    [autoLoad]="true"
+    [idField]="idField"
+    [autoSearch]="false"
+    (selectedChange)="selectedChange($event)"
+    (viewChanged)="viewChanged($event)"
+    (onLoading)="onLoading($event)"
+    (searchChanged)="searchChanged($event)"
+    (filterChange)="filterChange($event)"
+    (filterReportChange)="filterReportChange($event)"
+  ></codx-views>
+</ng-container>
+<ng-container *ngIf="viewDashboard">
+  <div class="w-100 h-100 bg-white rounded-2 d-flex flex-column" *ngIf="formModel">
+    <div class="d-flex p-3 justify-content-between align-items-center">
+      <div class="d-flex align-items-center justify-content-start">
+        <div class="d-flex flex-row">
+          <div
+            *ngFor="let item of lstCurrentView"
+            class="w-130px text-center"
+            [ngClass]="
+              item.value == '1'
+                ? 'cm-rounded-pill-left'
+                : 'cm-rounded-pill-right'
+            "
+            (click)="viewBusinessLines(item.value)"
+          >
+            <div
+              [ngClass]="
+                isActive(item.value, 'viewCurrent')
+                  ? 'cm-bg-primary'
+                  : 'view-switch'
+              "
+            >
+              <button
+                class="btn btn-32px min-w-60px"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="me-1">{{ item.text }}</span>
+                <span class="" *ngIf="item.value == '1'"
+                  >({{ countTarget }})</span
+                >
+                <span class="" *ngIf="item.value == '2'"
+                  >({{ countPersons }})</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
 
-<!----------------------------------Schedule---------------------------------->
-<ng-template #cardTemplate let-data>
-  <div class="d-flex flex-row justify-content-start align-items-center w-100">
-    <!-- <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
-    </codx-img> -->
-    <div class="ps-3 d-flex w-100 flex-column pe-12">
-      <!-- <span class="w-100 text-truncate fw-bold">{{ showHour(data?.startDate) }} - {{ showHour(data?.endDate) }}</span> -->
-      <span
-        class="w-100 text-truncate fw-bold"
-        [innerHTML]="targetToFixed(data?.target)"
-      ></span>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #resourceHeader let-data>
-  <div class="d-flex flex-row ms-5 align-items-center">
-    <codx-img
-      [objectId]="data?.resourceData?.salespersonID"
-      imageType="circle"
-      width="40"
-      [objectType]="'AD_Users'"
-      [objectName]="data?.resourceData?.userName"
-    ></codx-img>
-    <div class="ms-4 d-flex flex-column" style="width: 160px">
-      <span
-        class="fw-bold text-truncate"
-        [title]="data?.resourceData?.userName"
-        >{{ data?.resourceData?.userName }}</span
-      >
-      <div [ngbTooltip]="tooltip" class="line-clamp line-clamp-1">
-        {{ data?.resourceData?.positionName }}
-        <ng-template #tooltip>
-          <div>{{ data?.resourceData?.positionName }}</div>
-        </ng-template>
+        <div class="d-flex flex-row ms-4">
+          <div
+            class="w-130px text-center"
+            [ngClass]="'cm-rounded-pill-left'"
+            (click)="viewDataValueGrid('1')"
+          >
+            <div
+              [ngClass]="viewDataValue == '1' ? 'cm-bg-primary' : 'view-switch'"
+            >
+              <button
+                class="btn btn-32px min-w-60px"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="me-1"
+                  ><codx-label
+                    name="lblViewTarget"
+                    [formModel]="formModel"
+                    default="Xem theo chỉ tiêu"
+                  ></codx-label
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="w-130px text-center"
+            [ngClass]="'cm-rounded-pill-right'"
+            (click)="viewDataValueGrid('2')"
+          >
+            <div
+              [ngClass]="viewDataValue == '2' ? 'cm-bg-primary' : 'view-switch'"
+            >
+              <button
+                class="btn btn-32px min-w-60px"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="me-1"
+                  ><codx-label
+                    name="lblViewDataValue"
+                    [formModel]="formModel"
+                    default="Xem theo doanh số thực tế"
+                  ></codx-label
+                ></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="ms-2" ngbDropdown [container]="'body'">
+          <div
+            role="button"
+            class="d-flex align-items-center border px-2 h-32px rounded-1 w-100px bg-gray-100"
+            (click)="clickShow(!isShow)"
+            *ngIf="isShow == true"
+          >
+            <i class="icon-i-arrows-collapse me-2"></i>
+            <codx-label
+              default="Thu gọn"
+              [formModel]="formModel"
+              fiedName="lblCollapse"
+            ></codx-label>
+          </div>
+          <div
+            role="button"
+            class="d-flex align-items-center border px-2 h-32px rounded-1 w-100px"
+            (click)="clickShow(!isShow)"
+            *ngIf="isShow == false"
+          >
+            <i class="icon-i-arrows-expand me-2"></i>
+            <codx-label
+              default="Mở rộng"
+              [formModel]="formModel"
+              fiedName="lblExpand"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="ms-2 btn-32px target-calendar">
+          <codx-dropdown-calendar
+            #calendarDrop
+            cssPopup="h-350px w-550px"
+            [value]="date"
+            [selectedType]="'y'"
+            [displayOption]="ops"
+            cssClass="w-100"
+            (valueChange)="changeCalendar($event)"
+            (change)="changeCalendar($event)"
+          ></codx-dropdown-calendar>
+        </div>
+        <div class="w-75px ms-2 input-32px" *ngIf="viewDataValue == '2'">
+          <codx-input
+            #codxInput
+            type="valuelist"
+            refValue="CRM055"
+            [crrValue]="probability"
+            (valueChange)="valueChangeProbability($event)"
+            field="probability"
+          >
+          </codx-input>
+        </div>
+        <div class="w-75px ms-2 input-32px">
+          <codx-input
+            #codxInput
+            [formModel]="formModel"
+            [crrValue]="currencyID"
+            (valueChange)="valueChange($event)"
+            field="currencyID"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
+    <div class="h-100 scroll-grid">
+      <codx-gridview-v2
+        #gridBusiness
+        [formName]="formModel?.formName"
+        [gridViewName]="formModel?.gridViewName"
+        [entityName]="formModel?.entityName"
+        [columnsGrid]="columnGrids"
+        rowHeight="35"
+        [allowFiltering]="true"
+        [autoAddRow]="true"
+        [allowSorting]="true"
+        [hideMoreFunc]="true"
+        [showRowNumber]="false"
+        [loaded]="loadedTree"
+        service="CM"
+        [autoLoad]="false"
+        [autoFitColumns]="false"
+        [dataSource]="lstDataTree"
+        [height]="'100%'"
+      >
+      </codx-gridview-v2>
+    </div>
   </div>
-</ng-template>
-
-<ng-template #contentTmp let-data> </ng-template>
-
-<ng-template #resourceTootip let-data>
-  <span
-    class="w-100 text-truncate fw-bold"
-    [innerHTML]="targetToFixed(data?.target)"
-  ></span>
-</ng-template>
-
-<ng-template #mfButton let-data>
-  <div class="mt-1 me-1">
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      [hideMF]="viewDashboard"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-      (changeDataMF)="changeDataMF($event, data)"
-    ></codx-mfunc>
-  </div>
-</ng-template>
+</ng-container>
 <!--end-->
 
 <!--Tree-->
@@ -142,7 +258,7 @@
                 <span class="me-1"
                   ><codx-label
                     name="lblViewTarget"
-                    [formModel]="view.formModel"
+                    [formModel]="formModel"
                     default="Xem theo chỉ tiêu"
                   ></codx-label
                 ></span>
@@ -165,7 +281,7 @@
                 <span class="me-1"
                   ><codx-label
                     name="lblViewDataValue"
-                    [formModel]="view.formModel"
+                    [formModel]="formModel"
                     default="Xem theo doanh số thực tế"
                   ></codx-label
                 ></span>
@@ -185,7 +301,7 @@
             <i class="icon-i-arrows-collapse me-2"></i>
             <codx-label
               default="Thu gọn"
-              [formModel]="view.formModel"
+              [formModel]="formModel"
               fiedName="lblCollapse"
             ></codx-label>
           </div>
@@ -198,7 +314,7 @@
             <i class="icon-i-arrows-expand me-2"></i>
             <codx-label
               default="Mở rộng"
-              [formModel]="view.formModel"
+              [formModel]="formModel"
               fiedName="lblExpand"
             ></codx-label>
           </div>
@@ -229,7 +345,7 @@
         <div class="w-75px ms-2 input-32px">
           <codx-input
             #codxInput
-            [formModel]="view.formModel"
+            [formModel]="formModel"
             [crrValue]="currencyID"
             (valueChange)="valueChange($event)"
             field="currencyID"
@@ -250,7 +366,7 @@
             <codx-view-tree-targets
               [dataTree]="lstDataTree"
               [fmTargetLines]="fmTargetLines"
-              [formModel]="view.formModel"
+              [formModel]="formModel"
               [viewCurrent]="viewCurrent"
               [hidenMF]="viewDashboard"
               (clickMoreFunc)="clickMoreFunc($event)"
@@ -263,9 +379,9 @@
     <div class="h-100 scroll-grid" *ngIf="viewMode === 9">
       <codx-gridview-v2
         #gridBusiness
-        [formName]="view.formModel?.formName"
-        [gridViewName]="view.formModel?.gridViewName"
-        [entityName]="view.formModel?.entityName"
+        [formName]="formModel?.formName"
+        [gridViewName]="formModel?.gridViewName"
+        [entityName]="formModel?.entityName"
         [columnsGrid]="columnGrids"
         rowHeight="35"
         [allowFiltering]="true"
@@ -310,7 +426,7 @@
   <codx-label
     *ngIf="viewCurrent == '1'"
     class="container"
-    [formModel]="view.formModel"
+    [formModel]="formModel"
     fiedName="BusinessLineID"
     default="Dòng sản phẩm"
     [setRequire]="false"
@@ -319,7 +435,7 @@
   <codx-label
     *ngIf="viewCurrent == '2'"
     class="container"
-    [formModel]="view.formModel"
+    [formModel]="formModel"
     name="lblSalepersons"
     default="Nhân viên bán hàng"
     [setRequire]="false"
@@ -328,115 +444,103 @@
 </ng-template>
 <ng-template #headerYear>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblYear" default="Năm">
+    <codx-label [formModel]="formModel" name="lblYear" default="Năm">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerQuarter1>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblQuarter1" default="Quý 1">
+    <codx-label [formModel]="formModel" name="lblQuarter1" default="Quý 1">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerQuarter2>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblQuarter2" default="Quý 2">
+    <codx-label [formModel]="formModel" name="lblQuarter2" default="Quý 2">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerQuarter3>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblQuarter3" default="Quý 3">
+    <codx-label [formModel]="formModel" name="lblQuarter3" default="Quý 3">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerQuarter4>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblQuarter4" default="Quý 4">
+    <codx-label [formModel]="formModel" name="lblQuarter4" default="Quý 4">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth1>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth1" default="Tháng 1">
+    <codx-label [formModel]="formModel" name="lblMonth1" default="Tháng 1">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth2>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth2" default="Tháng 2">
+    <codx-label [formModel]="formModel" name="lblMonth2" default="Tháng 2">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth3>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth3" default="Tháng 3">
+    <codx-label [formModel]="formModel" name="lblMonth3" default="Tháng 3">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth4>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth4" default="Tháng 4">
+    <codx-label [formModel]="formModel" name="lblMonth4" default="Tháng 4">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth5>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth5" default="Tháng 5">
+    <codx-label [formModel]="formModel" name="lblMonth5" default="Tháng 5">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth6>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth6" default="Tháng 6">
+    <codx-label [formModel]="formModel" name="lblMonth6" default="Tháng 6">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth7>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth7" default="Tháng 7">
+    <codx-label [formModel]="formModel" name="lblMonth7" default="Tháng 7">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth8>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth8" default="Tháng 8">
+    <codx-label [formModel]="formModel" name="lblMonth8" default="Tháng 8">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth9>
   <div class="d-flex justify-content-end">
-    <codx-label [formModel]="view.formModel" name="lblMonth9" default="Tháng 9">
+    <codx-label [formModel]="formModel" name="lblMonth9" default="Tháng 9">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth10>
   <div class="d-flex justify-content-end">
-    <codx-label
-      [formModel]="view.formModel"
-      name="lblMonth10"
-      default="Tháng 10"
-    >
+    <codx-label [formModel]="formModel" name="lblMonth10" default="Tháng 10">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth11>
   <div class="d-flex justify-content-end">
-    <codx-label
-      [formModel]="view.formModel"
-      name="lblMonth11"
-      default="Tháng 11"
-    >
+    <codx-label [formModel]="formModel" name="lblMonth11" default="Tháng 11">
     </codx-label>
   </div>
 </ng-template>
 <ng-template #headerMonth12>
   <div class="d-flex justify-content-end">
-    <codx-label
-      [formModel]="view.formModel"
-      name="lblMonth12"
-      default="Tháng 12"
-    >
+    <codx-label [formModel]="formModel" name="lblMonth12" default="Tháng 12">
     </codx-label>
   </div>
 </ng-template>
@@ -448,7 +552,7 @@
     <div class="d-flex" [ngClass]="'height-parent'">
       <codx-mfunc
         *ngIf="viewCurrent == '1' && !viewDashboard"
-        [formModel]="view.formModel"
+        [formModel]="formModel"
         (clickMF)="clickMF($event, item)"
         (changeDataMF)="changeDataMF($event, item)"
         [isBookMark]="false"
@@ -523,7 +627,7 @@
           >
             <codx-mfunc
               *ngIf="!viewDashboard"
-              [formModel]="view.formModel"
+              [formModel]="formModel"
               (clickMF)="clickMF($event, busi)"
               (changeDataMF)="changeDataMF($event, busi)"
               [isBookMark]="false"
@@ -592,7 +696,7 @@
         *ngIf="item?.target > 0"
         [innerHTML]="
           targetToFixed(item?.target)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -604,7 +708,7 @@
           *ngIf="item.dealValue > 0"
           [innerHTML]="
             targetToFixed(item?.dealValue)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -632,7 +736,7 @@
               class="text-gray-800"
               [innerHTML]="
                 targetToFixed(busi?.target)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -645,7 +749,7 @@
                 *ngIf="busi.dealValue > 0"
                 [innerHTML]="
                   targetToFixed(busi?.dealValue)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -676,7 +780,7 @@
         *ngIf="sumTargetQuarter(item.targetsLines, 1) > 0"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 1)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -688,7 +792,7 @@
           *ngIf="sumDealValueQuarter(item?.deals, 1) > 0"
           [innerHTML]="
             sumDealValueQuarter(item?.deals, 1)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -716,7 +820,7 @@
               class="text-gray-800"
               [innerHTML]="
                 sumTargetQuarter(busi.targetsLines, 1)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -733,7 +837,7 @@
                 *ngIf="sumDealValueQuarter(busi?.deals, 1) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 1)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -769,7 +873,7 @@
         *ngIf="sumTargetQuarter(item.targetsLines, 2) > 0"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 2)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -781,7 +885,7 @@
           *ngIf="sumDealValueQuarter(item?.deals, 2) > 0"
           [innerHTML]="
             sumDealValueQuarter(item?.deals, 2)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -809,7 +913,7 @@
               class="text-gray-800"
               [innerHTML]="
                 sumTargetQuarter(busi.targetsLines, 2)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -826,7 +930,7 @@
                 *ngIf="sumDealValueQuarter(busi?.deals, 2) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 2)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -862,7 +966,7 @@
         *ngIf="sumTargetQuarter(item.targetsLines, 3) > 0"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 3)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -874,7 +978,7 @@
           *ngIf="sumDealValueQuarter(item?.deals, 3) > 0"
           [innerHTML]="
             sumDealValueQuarter(item?.deals, 3)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -902,7 +1006,7 @@
               class="text-gray-800"
               [innerHTML]="
                 sumTargetQuarter(busi.targetsLines, 3)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -919,7 +1023,7 @@
                 *ngIf="sumDealValueQuarter(busi?.deals, 3) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 3)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -955,7 +1059,7 @@
         *ngIf="sumTargetQuarter(item.targetsLines, 4) > 0"
         [innerHTML]="
           sumTargetQuarter(item.targetsLines, 4)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -967,7 +1071,7 @@
           *ngIf="sumDealValueQuarter(item?.deals, 4) > 0"
           [innerHTML]="
             sumDealValueQuarter(item?.deals, 4)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -995,7 +1099,7 @@
               class="text-gray-800"
               [innerHTML]="
                 sumTargetQuarter(busi.targetsLines, 4)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1012,7 +1116,7 @@
                 *ngIf="sumDealValueQuarter(busi?.deals, 4) > 0"
                 [innerHTML]="
                   sumDealValueQuarter(busi?.deals, 4)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1048,7 +1152,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 1) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 1)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1060,7 +1164,7 @@
           *ngIf="getDealValueMonth(item?.deals, 1) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 1)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1088,7 +1192,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 1)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1105,7 +1209,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 1) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 1)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1140,7 +1244,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 2) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 2)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1152,7 +1256,7 @@
           *ngIf="getDealValueMonth(item?.deals, 2) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 2)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1180,7 +1284,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 2)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1197,7 +1301,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 2) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 2)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1232,7 +1336,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 3) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 3)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1244,7 +1348,7 @@
           *ngIf="getDealValueMonth(item?.deals, 3) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 3)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1272,7 +1376,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 3)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1289,7 +1393,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 3) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 3)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1324,7 +1428,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 4) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 4)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1336,7 +1440,7 @@
           *ngIf="getDealValueMonth(item?.deals, 4) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 4)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1364,7 +1468,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 4)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1381,7 +1485,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 4) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 4)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1416,7 +1520,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 5) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 5)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1428,7 +1532,7 @@
           *ngIf="getDealValueMonth(item?.deals, 5) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 5)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1456,7 +1560,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 5)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1473,7 +1577,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 5) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 5)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1508,7 +1612,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 6) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 6)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1520,7 +1624,7 @@
           *ngIf="getDealValueMonth(item?.deals, 6) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 6)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1548,7 +1652,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 6)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1565,7 +1669,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 6) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 6)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1600,7 +1704,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 7) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 7)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1612,7 +1716,7 @@
           *ngIf="getDealValueMonth(item?.deals, 7) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 7)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1640,7 +1744,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 7)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1657,7 +1761,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 7) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 7)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1692,7 +1796,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 8) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 8)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1704,7 +1808,7 @@
           *ngIf="getDealValueMonth(item?.deals, 8) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 8)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1732,7 +1836,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 8)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1749,7 +1853,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 8) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 8)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1784,7 +1888,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 9) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 9)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1796,7 +1900,7 @@
           *ngIf="getDealValueMonth(item?.deals, 9) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 9)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1824,7 +1928,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 9)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1841,7 +1945,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 9) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 9)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1876,7 +1980,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 10) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 10)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1888,7 +1992,7 @@
           *ngIf="getDealValueMonth(item?.deals, 10) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 1)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -1916,7 +2020,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 10)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -1933,7 +2037,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 10) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 10)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -1968,7 +2072,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 11) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 11)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -1980,7 +2084,7 @@
           *ngIf="getDealValueMonth(item?.deals, 11) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 11)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -2008,7 +2112,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 11)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -2025,7 +2129,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 11) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 11)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
@@ -2060,7 +2164,7 @@
         *ngIf="getTargetMonth(item.targetsLines, 12) > 0"
         [innerHTML]="
           getTargetMonth(item.targetsLines, 12)
-            | formatvalue : view.formModel : 'Target'
+            | formatvalue : formModel : 'Target'
             | async
         "
       ></span>
@@ -2072,7 +2176,7 @@
           *ngIf="getDealValueMonth(item?.deals, 12) > 0"
           [innerHTML]="
             getDealValueMonth(item?.deals, 12)
-              | formatvalue : view.formModel : 'Target'
+              | formatvalue : formModel : 'Target'
               | async
           "
         ></span>
@@ -2100,7 +2204,7 @@
               class="text-gray-800"
               [innerHTML]="
                 getTargetMonth(busi.targetsLines, 12)
-                  | formatvalue : view.formModel : 'Target'
+                  | formatvalue : formModel : 'Target'
                   | async
               "
             ></span>
@@ -2117,7 +2221,7 @@
                 *ngIf="getDealValueMonth(busi?.deals, 12) > 0"
                 [innerHTML]="
                   getDealValueMonth(busi?.deals, 12)
-                    | formatvalue : view.formModel : 'Target'
+                    | formatvalue : formModel : 'Target'
                     | async
                 "
               ></span>
