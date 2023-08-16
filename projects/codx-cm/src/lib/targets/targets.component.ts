@@ -300,7 +300,6 @@ export class TargetsComponent
       this.views = [
         {
           type: ViewType.content,
-          active: true,
           sameData: false,
           model: {
             panelRightRef: this.panelRight,
@@ -311,7 +310,6 @@ export class TargetsComponent
           text: datasVll?.datas[1]?.text,
           icon: datasVll?.datas[1]?.icon,
           sameData: false,
-          active: false,
           model: {
             panelRightRef: this.panelRight,
           },
