@@ -21,7 +21,7 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
-import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { ComboBoxComponent, MultiSelectComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
@@ -31,6 +31,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
   styleUrls: ['./popup-step-task.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
+  @ViewChild('multiselect') mulObj: MultiSelectComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
@@ -131,6 +132,9 @@ export class PopupJobComponent implements OnInit {
     this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
   }
 
+  ngAfterViewInit(){
+    this.mulObj.showDropDownIcon = true;
+  }
   getFormModel() {
     this.cache
       .gridViewSetup(
