@@ -127,30 +127,51 @@
                     <div
                       class="me-3 d-flex align-items-center"
                       *ngIf="dataSelected?.phone || dataSelected?.mobile"
+                      [ngbTooltip]="popupAllowCall"
                     >
                       <span
-                        [ngbTooltip]="popupAllowCall"
                         [ngClass]="
                           dataSelected?.allowCall
-                            ? 'icon-phone_android text-primary'
-                            : 'icon-phonelink_erase'
+                            ? 'text-primary text-hover-primary'
+                            : 'icon-phonelink_erase me-2'
                         "
-                        class="icon-14 me-2 text-gray-700"
+                        class="icon-14 text-gray-700"
                         ><ng-template #popupAllowCall>
                           <codx-label
                             name="lblAllowCall"
                             [formModel]="formModel"
                             [default]="
-                              data?.allowCall
+                              dataSelected?.allowCall
                                 ? 'Cho phép điện thoại'
                                 : 'Không cho phép điện thoại'
                             "
                           ></codx-label> </ng-template
                       ></span>
                       <span
-                        [ngClass]="
-                          dataSelected?.allowCall ? 'text-primary' : ''
-                        "
+                        *ngIf="dataSelected?.allowCall"
+                        class="text-gray-600 text-primary text-hover-primary"
+                        ><span
+                          *ngIf="funcID == 'CM0105'"
+                          [innerHTML]="
+                            dataSelected?.phone
+                              | formatvalue : formModel : 'phone'
+                              | async
+                          "
+                        >
+                          {{ dataSelected?.phone }} </span
+                        ><span
+                          *ngIf="funcID == 'CM0102'"
+                          [innerHTML]="
+                            dataSelected?.mobile
+                              | formatvalue : formModel : 'mobile'
+                              | async
+                          "
+                        >
+                          {{ dataSelected?.mobile }}
+                        </span></span
+                      >
+                      <span
+                        *ngIf="!dataSelected?.allowCall"
                         class="text-gray-600"
                         ><span *ngIf="funcID == 'CM0105'">
                           {{ dataSelected?.phone }} </span
@@ -162,30 +183,50 @@
                     <div
                       class="d-flex align-items-center"
                       *ngIf="dataSelected?.email || dataSelected?.personalEmail"
+                      [ngbTooltip]="popupAllowEmail"
                     >
                       <span
-                        [ngbTooltip]="popupAllowEmail"
                         [ngClass]="
                           dataSelected?.allowEmail
-                            ? 'icon-email text-primary'
-                            : 'icon-print_disabled'
+                            ? 'text-primary text-hover-primary'
+                            : 'icon-print_disabled me-2'
                         "
-                        class="icon-14 me-2 text-gray-700"
+                        class="icon-14 text-gray-700"
                         ><ng-template #popupAllowEmail>
                           <codx-label
                             name="lblAllowEmail"
                             [formModel]="formModel"
                             [default]="
-                              data?.allowEmail
+                              dataSelected?.allowEmail
                                 ? 'Cho phép gửi mail'
                                 : 'Không cho phép gửi mail'
                             "
                           ></codx-label> </ng-template
                       ></span>
                       <span
-                        [ngClass]="
-                          dataSelected?.allowEmail ? 'text-primary' : ''
-                        "
+                        *ngIf="dataSelected?.allowEmail"
+                        class="text-gray-900 text-primary"
+                        ><span
+                          *ngIf="funcID == 'CM0105'"
+                          [innerHTML]="
+                            dataSelected?.email
+                              | formatvalue : formModel : 'email'
+                              | async
+                          "
+                        >
+                        </span
+                        ><span
+                          *ngIf="funcID == 'CM0102'"
+                          [innerHTML]="
+                            dataSelected?.personalEmail
+                              | formatvalue : formModel : 'personalEmail'
+                              | async
+                          "
+                        >
+                        </span
+                      ></span>
+                      <span
+                        *ngIf="!dataSelected?.allowEmail"
                         class="text-gray-900"
                         ><span *ngIf="funcID == 'CM0105'">
                           {{ dataSelected?.email }} </span

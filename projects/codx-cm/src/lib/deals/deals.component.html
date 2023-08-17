@@ -204,13 +204,16 @@
       </div>
 
       <div class="d-flex justify-content-end align-items-center">
-        <div class="d-flex align-items-center me-1" [ngbTooltip]="gridViewSetup['EndDate']?.headerText">
+        <div
+        class="d-flex align-items-center me-1"
+        [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
+      >
           <span class="icon-14 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
-            #endDate
+            #modifiedOn
             [innerHTML]="
-              data.endDate | formatvalue : view.formModel : 'endDate' | async
+              data.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
             "
           ></span>
         </div>
@@ -483,13 +486,13 @@
         <div class="d-flex align-items-center text-gray-600">
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
-            class="text-gray-700 line-clamp-menu"
-            [ngbTooltip]="gridViewSetup['EndDate']?.headerText"
-            #endDate
-            [innerHTML]="
-              data.endDate | formatvalue : view.formModel : 'endDate' | async
-            "
-          ></span>
+          class="text-gray-700 line-clamp-menu"
+          [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
+          #modifiedOn
+          [innerHTML]="
+            data.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
+          "
+        ></span>
         </div>
       </div>
       <div class="d-flex justify-content-center h-25px">
@@ -731,5 +734,34 @@
 </ng-template>
 
 <ng-template #dashBoard>
-  <codx-instance-dashboard [vllStatus]="'DP028'" [processID]="processID"></codx-instance-dashboard>
+  <codx-instance-dashboard
+    [vllStatus]="'DP028'"
+    [processID]="processID"
+  ></codx-instance-dashboard>
+</ng-template>
+
+<ng-template #popUpQuestionStatus let-dialog="dialogQuestionForm">
+  <codx-form
+    [headerText]="titleAction"
+    [body]="bodyPopup"
+    [footer]="footerPopup"
+    [dialog]="dialogQuestionForm"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyPopup>
+  <codx-input
+    [formModel]="view.formModel"
+    field="statusCodeID"
+    [placeholder]="gridViewSetup?.StatusCodeID?.description"
+    (valueChange)="valueChangeStatusCode($event)"
+  >
+  </codx-input>
+</ng-template>
+
+<ng-template #footerPopup>
+  <button type="button" class="btn btn-primary" (click)="saveStatus()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
 </ng-template>

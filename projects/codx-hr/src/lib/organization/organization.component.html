@@ -228,8 +228,8 @@
 </ng-template>
 <!--- Template tree-->
 <ng-template #templateTree let-item>
-  <div class="d-flex px-2 border-bottom has-action-menu w-100 h-100px">
-    <div class="my-1">
+  <div class="d-flex align-items-center px-2 border-bottom has-action-menu w-100 h-100px">
+    <div class="my-2">
       <div class="text-dark fw-bold fs-6 mb-1">
         {{ item.orgUnitName }}
       </div>
@@ -321,6 +321,7 @@
                 <span class="mx-1 text-gray-400">|</span>
                 <span
                   class="text-dark-700"
+                  (click)="preventDedefault($event)"
                   [innerHTML]="
                     item.employeeManager.email
                       | formatvalue : formModelEmployee : 'email'
@@ -344,7 +345,7 @@
       <div class="w-150px d-flex justify-content-end">
         <div class="d-flex">
           <div #c class="mx-6 d-flex flex-column align-items-center">
-            <span class="text-gray-500">
+            <span class="text-gray-600">
               <codx-label
                 [formModel]="view.formModel"
                 name="lblStaff"

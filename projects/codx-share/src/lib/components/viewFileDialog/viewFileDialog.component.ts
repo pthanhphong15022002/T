@@ -234,8 +234,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
   async download(): Promise<void> {
     var id = this.id;
-    var that = this;
-    
     if (this.checkDownloadRight()) {   
       this.fileService.downloadFile(id).subscribe(async res => {
         if (res) {                   

@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { Permission } from '../../../../../../../src/shared/models/file.model';
 import {
   ChangeDetectorRef,
@@ -29,13 +30,14 @@ import {
 } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
-import { Approver } from '../../../models/ApproveProcess.model';
+import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
 const _viewMF = EPCONST.MFUNCID.View;
 const _EPParameters = EPCONST.PARAM.EPParameters;
 const _EPRoomParameters = EPCONST.PARAM.EPRoomParameters;
+const _EPStationeryParameters = EPCONST.PARAM.EPStationeryParameters;
 
 export class Device {
   id;
@@ -106,7 +108,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       name: 'tabReminder',
     },
   ];
-  approvalRule: any;
+  approvalRule='1';
+  categoryID=EPCONST.ES_CategoryID.Room;
   listRoles = [];
   curUser: any;
   resources = [];
@@ -139,8 +142,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   viewOnly = false;
   onSaving = false;
   isEP = true;
-  categoryID: any;
   resourceOwner=null;
+  autoApproveItem: any;
+  approvalRuleSta: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -349,42 +353,57 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-
-    this.codxBookingService
-      .getDataValueOfSettingAsync(_EPParameters, _EPRoomParameters, '1')
-      .subscribe((res: string) => {
-        if (res) {
-          let roomSetting_1 = JSON.parse(res);
+    this.cacheService.viewSettingValues(_EPParameters).subscribe(sv=>{
+      if(sv){
+        let roomSetting_1 = this.codxBookingService.getCacheSettingValue(sv,_EPRoomParameters,'1');
+        if(roomSetting_1!=null){
+          
           this.dueDateControl = roomSetting_1?.DueDateControl;
           this.guestControl = roomSetting_1?.GuestControl;
         }
-      });
-
-    this.codxBookingService
-      .getDataValueOfSettingAsync(_EPParameters, null, '4')
-      .subscribe((res: string) => {
-        if (res) {
-          let roomSetting_4 = JSON.parse(res);
-          if (roomSetting_4 != null && roomSetting_4.length > 0) {
-            let setting = roomSetting_4.filter(
-              (x: any) => x.Category == EPCONST.ENTITY.R_Bookings
-            );
-            if (setting != null) {
-              this.approvalRule =
-                setting[0]?.ApprovalRule != null
-                  ? setting[0]?.ApprovalRule
-                  : '1';
-              this.categoryID =
-                setting[0]?.CategoryID != null
-                  ? setting[0]?.CategoryID
-                  : EPCONST.ES_CategoryID.Room;
-            } else {
-              this.approvalRule = '1'; //Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-              this.categoryID = EPCONST.ES_CategoryID.Room;
-            }
-          }
+        let roomSetting_4 = this.codxBookingService.getCacheSettingValue(sv,null,'4',EPCONST.ES_CategoryID.Room);
+        if (roomSetting_4 != null) {
+          this.approvalRule = roomSetting_4?.approvalRule != null? roomSetting_4?.approvalRule : '1';  
+          this.categoryID = roomSetting_4?.categoryID != null? roomSetting_4?.categoryID : EPCONST.ES_CategoryID.Room;
         }
-      });
+        let staSetting_1 =this.codxBookingService.getCacheSettingValue(sv,_EPStationeryParameters,'1');
+        if(staSetting_1!=null){
+          this.autoApproveItem = staSetting_1?.autoApproveItem;  
+        }
+        let staSetting_4 = this.codxBookingService.getCacheSettingValue(sv,null,'4',EPCONST.ES_CategoryID.Stationery);
+        if (staSetting_4 != null) {
+          this.approvalRuleSta = staSetting_4?.approvalRule !=null? staSetting_4?.approvalRule :'1';
+        }
+      }
+    });
+    
+
+    // this.codxBookingService
+    //   .getDataValueOfSettingAsync(_EPParameters, null, '4')
+    //   .subscribe((res: string) => {
+    //     if (res) {
+    //       debugger
+    //       let roomSetting_4 = JSON.parse(res);
+    //       if (roomSetting_4 != null && roomSetting_4.length > 0) {
+    //         let setting = roomSetting_4.filter(
+    //           (x: any) => x.Category == EPCONST.ENTITY.R_Bookings
+    //         );
+    //         if (setting != null) {
+    //           this.approvalRule =
+    //             setting[0]?.ApprovalRule != null
+    //               ? setting[0]?.ApprovalRule
+    //               : '1';
+    //           this.categoryID =
+    //             setting[0]?.CategoryID != null
+    //               ? setting[0]?.CategoryID
+    //               : EPCONST.ES_CategoryID.Room;
+    //         } else {
+    //           this.approvalRule = '1'; //Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
+    //           this.categoryID = EPCONST.ES_CategoryID.Room;
+    //         }
+    //       }
+    //     }
+    //   });
     // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -1477,24 +1496,22 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               'EP_Bookings',
               this.formModel.funcID,
               this.returnData?.title,
-              (res) => {
+              (res:ResponseModel) => {
                 if (res?.msgCodeError == null && res?.rowCount) {
-                  this.notificationsService.notifyCode('ES007');
-                  this.returnData.approveStatus = '3';
+                  this.returnData.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                   this.returnData.write = false;
                   this.returnData.delete = false;
-                  this.codxBookingService
-                    .getBookingByRecID(this.returnData.recID)
-                    .subscribe((res) => {
-                      if (res) {
-                        this.returnData.approveStatus = res?.approveStatus;
-                        this.detectorRef.detectChanges();
-                      }
-                      (this.dialogRef.dataService as CRUDService)
-                      .update(this.returnData)
-                      .subscribe();
-                    });
-                  
+                  (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+                  this.notificationsService.notifyCode('SYS034');
+                  if(this.returnData?.approveStatus == EPCONST.A_STATUS.Approved && this.returnData?.items?.length>0){
+                    //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
+                    if(this.autoApproveItem=='1' || this.approvalRuleSta=='0'){
+                      this.codxBookingService.autoApproveStationery(null,this.returnData?.recID).subscribe(result=>{});
+                    }
+                    else{
+                      this.codxBookingService.releaseStationeryOfRoom(null,this.returnData?.recID,null).subscribe(result=>{})
+                    }                    
+                  }
                   this.dialogRef && this.dialogRef.close(this.returnData);
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);

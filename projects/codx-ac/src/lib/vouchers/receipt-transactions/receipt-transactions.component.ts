@@ -18,6 +18,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  TenantStore,
   UIComponent,
   ViewModel,
   ViewType,
@@ -81,13 +82,13 @@ export class ReceiptTransactionsComponent extends UIComponent {
   journal: IJournal;
   hideFields: Array<any> = [];
   fmVouchers: FormModel = {
-    formName: '',
-    gridViewName: '',
+    formName: 'VouchersReceipts',
+    gridViewName: 'grvVouchersReceipts',
     entityName: 'IV_Vouchers',
   };
   fmVouchersLines: FormModel = {
-    formName: '',
-    gridViewName: '',
+    formName: 'VouchersLinesReceipts',
+    gridViewName: 'grvVouchersLinesReceipts',
     entityName: 'IV_VouchersLines',
   };
   vouchersLines: Array<VouchersLines> = [];
@@ -103,6 +104,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
+    private tenant: TenantStore,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -129,8 +131,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit() {
-
-    this.loadFormModel();
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.funcName = res.defaultName;
@@ -200,7 +200,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         break;
       case 'ACT070808':
       case 'ACT071408':
-        this.print(data, e.functionID);
+        this.printVoucher(data, e.functionID);
         break;
     }
   }
@@ -387,7 +387,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         this.loading = false;
       });
     this.api
-      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if(res)
@@ -472,7 +472,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
   loadhideFields() {
     this.acService
-      .execApi('AC', 'CommonBusiness', 'GetDataVoucherDefaultAsync', [this.journalNo])
+      .execApi('AC', 'CommonBusiness', 'GetDataDefaultVoucherAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.journal = res.journal;
@@ -482,39 +482,14 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
   changeDataMF(e: any, data: any)
   {
-    if(this.funcID == 'ACT0708')
-    {
-      this.loadMFVouchersReceipts(e, data);
-    }
-    if(this.funcID == 'ACT0714')
-    {
-      this.loadMFVouchersIssues(e, data);
-    }
-  }
-
-  loadFormModel()
-  {
-    switch (this.funcID) {
-      case 'ACT0708':
-        this.fmVouchers.formName = 'VouchersReceipts'
-        this.fmVouchers.gridViewName = 'grvVouchersReceipts'
-        this.fmVouchersLines.formName = 'VouchersLinesReceipts';
-        this.fmVouchersLines.gridViewName = 'grvVouchersLinesReceipts'
-        break;
-      case 'ACT0714':
-        this.fmVouchers.formName = 'VouchersIssues'
-        this.fmVouchers.gridViewName = 'grvVouchersIssues'
-        this.fmVouchersLines.formName = 'VouchersLinesIssues';
-        this.fmVouchersLines.gridViewName = 'grvVouchersLinesIssues'
-        break;
-    }
+    this.showHideMF(e, data);
   }
   
-  print(data: any, reportID: any, reportType: string = 'V') {
+  printVoucher(data: any, reportID: any, reportType: string = 'V') {
     this.api
       .execSv(
         'rptrp',
-        'Codx.RptBusiniess.RP',
+        'Codx.RptBusiness.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',
         [reportID, reportType]
@@ -522,18 +497,21 @@ export class ReceiptTransactionsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res != null) {
           if (res.length > 1) {
-            this.openPopupCashReport(data, res);
+            this.openFormReportVoucher(data, res);
           } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].recID}`
+            window.open(
+              '/' +
+                this.tenant.getName() +
+                '/' +
+                'ac/report/detail/' +
+                `${res[0].recID}`
             );
           }
         }
       });
   }
 
-  openPopupCashReport(data: any, reportList: any) {
+  openFormReportVoucher(data: any, reportList: any) {
     var obj = {
       data: data,
       reportList: reportList,
@@ -552,7 +530,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     );
   }
 
-  loadMFVouchersReceipts(e: any, data: any)
+  showHideMF(e: any, data: any)
   {
     var bm = e.filter(
       (x: { functionID: string }) =>
@@ -621,84 +599,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
         case '9':
           bm.forEach((morefunction) => {
             if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-        break;
-      }
-    }
-  }
-
-  loadMFVouchersIssues(e: any, data: any)
-  {
-    var bm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT071406' || // ghi sổ
-        x.functionID == 'ACT071404' || // gửi duyệt
-        x.functionID == 'ACT071405' || // hủy yêu cầu duyệt
-        x.functionID == 'ACT071407' || // khôi phục
-        x.functionID == 'ACT071408' || // in
-        x.functionID == 'ACT071403' // kiểm tra tính hợp lệ
-    );
-    if (bm.length > 0) {
-      switch(data.status)
-      {
-        case '0':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071403' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '1':
-          if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT071404' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
-            });
-          }
-          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
-            });
-          }
-          break;
-        case '3':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071405' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '5':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '6':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071407' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '9':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;

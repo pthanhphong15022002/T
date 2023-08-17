@@ -415,7 +415,7 @@ export class PopupMoveStageComponent implements OnInit {
         );
         return;
       }
-      if (!this.instancesStepOld.owner) {
+      if (!this.owner) {
         this.notiService.notifyCode(
           'SYS009',
           0,

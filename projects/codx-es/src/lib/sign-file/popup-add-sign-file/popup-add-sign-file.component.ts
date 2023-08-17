@@ -123,6 +123,7 @@ export class PopupAddSignFileComponent implements OnInit {
   loadedTemplateFile = false;
   showAttachment = true;
   approverProcess: ApproveProcess;
+  categoryID: any;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -151,6 +152,7 @@ export class PopupAddSignFileComponent implements OnInit {
       data?.data?.option?.DataService?.dataSelected ?? data?.data?.data ?? {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
+    this.categoryID = data?.data?.oSignFile?.categoryID;
     this.oSignFile = data?.data?.oSignFile;
     this.disableCateID = data?.data?.disableCateID ?? false;
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
@@ -200,6 +202,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.data.isTemplate) {
       this.isTemplate = true;
     }
+
   }
 
   ngOnInit(): void {
@@ -208,6 +211,15 @@ export class PopupAddSignFileComponent implements OnInit {
         this.listCategory = res;
       }
     });
+    if(this.data?.categoryID==null) this.data.categoryID=this.categoryID;
+    this.esService
+      .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
+      .subscribe((cate) => {
+        if (cate) {
+          this.eSign = cate?.eSign;
+          this.signatureType = cate?.signatureType;
+        }
+      });
     //Lấy quy trình mẫu cũ
     if (this.data?.processID && this.data?.approveControl == '2') {
       this.esService
@@ -316,14 +328,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.esService
-      .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
-      .subscribe((cate) => {
-        if (cate) {
-          this.eSign = cate?.eSign;
-          this.signatureType = cate?.signatureType;
-        }
-      });
+    
     ScrollComponent.reinitialization();
   }
 

@@ -173,6 +173,11 @@
                     <div
                       class="d-flex align-items-center justify-content-between cursor-pointer"
                       (dblclick)="viewTask(task, task?.taskType || 'T')"
+                      #popoverDetails="ngbPopover"
+                      [ngbPopover]="setNameTypeTask(task?.taskType)"
+                      [placement]="'top-left'"
+                      (mouseenter)="popoverDetails.open()"
+                      (mouseleave)="popoverDetails.close()"
                     >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container

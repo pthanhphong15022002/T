@@ -95,42 +95,50 @@
     <div
       class="mb-1 d-flex align-items-center"
       *ngIf="funcID == 'CM0102' && data?.mobile"
+      [ngbTooltip]="popupAllowCall"
     >
+      <ng-template #popupAllowCall>
+        <codx-label
+          name="lblAllowCall"
+          [formModel]="view.formModel"
+          [default]="
+            data?.allowCall
+              ? 'Cho phép điện thoại'
+              : 'Không cho phép điện thoại'
+          "
+        ></codx-label>
+      </ng-template>
       <span
-        [ngbTooltip]="popupAllowCall"
         [ngClass]="
           data.allowCall
-            ? 'icon-phone_android text-primary'
-            : 'icon-phonelink_erase'
+            ? 'text-primary text-hover-primary'
+            : 'icon-phonelink_erase  me-2'
         "
-        class="icon-16 me-2"
-        ><ng-template #popupAllowCall>
-          <codx-label
-            name="lblAllowCall"
-            [formModel]="view.formModel"
-            [default]="
-              data?.allowCall
-                ? 'Cho phép điện thoại'
-                : 'Không cho phép điện thoại'
-            "
-          ></codx-label> </ng-template
+        class="icon-16"
       ></span>
       <span
-        [ngClass]="data.allowCall ? 'text-primary' : ''"
-        class="text-gray-700"
-        >{{ data.mobile }}</span
-      >
+        *ngIf="data?.allowCall"
+        class="text-gray-700 text-primary text-hover-primary"
+        [innerHTML]="
+          data.mobile | formatvalue : view.formModel : 'mobile' | async
+        "
+      ></span>
+      <span *ngIf="!data?.allowCall" class="text-gray-700">{{
+        data.mobile
+      }}</span>
     </div>
     <div
       class="mb-1 d-flex align-items-center"
       *ngIf="funcID == 'CM0102' && data?.personalEmail"
+      [ngbTooltip]="popupAllowEmail"
     >
       <span
-        [ngbTooltip]="popupAllowEmail"
         [ngClass]="
-          data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
+          data.allowEmail
+            ? 'text-primary text-hover-primary'
+            : 'icon-print_disabled  me-2'
         "
-        class="icon-16 me-2 text-gray-900"
+        class="icon-16"
         ><ng-template #popupAllowEmail>
           <codx-label
             name="lblAllowEmail"
@@ -140,13 +148,20 @@
             "
           ></codx-label> </ng-template
       ></span>
-      <span [ngClass]="data.allowEmail ? 'text-primary' : ''">{{
-        data.personalEmail
-      }}</span>
+      <span
+        *ngIf="data?.allowEmail"
+        class="text-gray-700 text-primary text-hover-primary"
+        [innerHTML]="
+          data.personalEmail
+            | formatvalue : view.formModel : 'personalEmail'
+            | async
+        "
+      ></span>
+      <span *ngIf="!data?.allowEmail">{{ data.personalEmail }}</span>
     </div>
     <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
       <span
-        class="icon-location_on icon-16 me-2 text-gray-700"
+        class="icon-location_on icon-16 me-1 text-gray-700"
         [ngbTooltip]="popupAddress"
       >
         <ng-template #popupAddress>
@@ -158,7 +173,10 @@
       </span>
       <span class="fs-7 text-gray-600">{{ data.address }}</span>
     </div>
-    <div *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" class="mb-1 d-flex align-items-center">
+    <div
+      *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
+      class="mb-1 d-flex align-items-center"
+    >
       <div
         *ngIf="
           data?.custGroupID != null && data?.custGroupID?.trim() != '';
@@ -246,7 +264,7 @@
     </div>
     <div
       [ngClass]="
-        (funcID == 'CM0101' || funcID == 'CM0105')
+        funcID == 'CM0101' || funcID == 'CM0105'
           ? 'd-flex justify-content-between align-items-center'
           : 'd-flex justify-content-end'
       "
@@ -280,7 +298,11 @@
           class="h-25px"
           [isToolTip]="true"
           [width]="25"
-          [objectId]="funcID == 'CM0101' || funcID == 'CM0105' ? data?.owner : data?.createdBy"
+          [objectId]="
+            funcID == 'CM0101' || funcID == 'CM0105'
+              ? data?.owner
+              : data?.createdBy
+          "
           [objectType]="'AD_Users'"
           [numberImages]="1"
         >
