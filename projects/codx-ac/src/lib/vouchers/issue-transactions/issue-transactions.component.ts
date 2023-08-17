@@ -18,6 +18,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  TenantStore,
   UIComponent,
   ViewModel,
   ViewType,
@@ -103,6 +104,7 @@ export class IssueTransactionsComponent extends UIComponent {
     private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
+    private tenant: TenantStore,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -198,7 +200,7 @@ export class IssueTransactionsComponent extends UIComponent {
         break;
       case 'ACT070808':
       case 'ACT071408':
-        this.print(data, e.functionID);
+        this.printVoucher(data, e.functionID);
         break;
     }
   }
@@ -483,11 +485,11 @@ export class IssueTransactionsComponent extends UIComponent {
     this.showHideMF(e, data);
   }
   
-  print(data: any, reportID: any, reportType: string = 'V') {
+  printVoucher(data: any, reportID: any, reportType: string = 'V') {
     this.api
       .execSv(
         'rptrp',
-        'Codx.RptBusiniess.RP',
+        'Codx.RptBusiness.RP',
         'ReportListBusiness',
         'GetListReportByIDandType',
         [reportID, reportType]
@@ -495,18 +497,21 @@ export class IssueTransactionsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res != null) {
           if (res.length > 1) {
-            this.openPopupCashReport(data, res);
+            this.openFormReportVoucher(data, res);
           } else if (res.length == 1) {
-            this.codxService.navigate(
-              '',
-              'ac/report/detail/' + `${res[0].recID}`
+            window.open(
+              '/' +
+                this.tenant.getName() +
+                '/' +
+                'ac/report/detail/' +
+                `${res[0].recID}`
             );
           }
         }
       });
   }
 
-  openPopupCashReport(data: any, reportList: any) {
+  openFormReportVoucher(data: any, reportList: any) {
     var obj = {
       data: data,
       reportList: reportList,
