@@ -168,6 +168,7 @@ export class OrganizationOrgchartComponent {
   templateUpdateStatus: TemplateRef<any>;
 
   @ViewChild('input') input: ElementRef;
+  // @ViewChild('diagram1') diagram1: ElementRef;
   collapsed: boolean[] = [];
   dataTree: any = {};
 
@@ -762,14 +763,15 @@ export class OrganizationOrgchartComponent {
   onMouseWheel(evt) {
     if (evt.ctrlKey) {
       evt.preventDefault();
-      if (evt.deltaY > 0) {
-        if (this.scaleNumber > 0.3) {
-          this.scaleNumber = this.scaleNumber - 0.1;
-        }
-      } else {
-        if (this.scaleNumber < 1) {
-          this.scaleNumber = this.scaleNumber + 0.1;
-        }
+
+      // if (evt.deltaY > 0) {
+      if (this.scaleNumber > 0.3 && evt.deltaY > 0) {
+        //this.diagram1.nativeElement.scrollRight += evt.deltaY;
+        this.scaleNumber = this.scaleNumber - 0.1;
+      }
+      // }
+      if (this.scaleNumber < 1) {
+        this.scaleNumber = this.scaleNumber + 0.1;
       }
     }
   }
@@ -914,12 +916,12 @@ export class OrganizationOrgchartComponent {
   }
 
   //Disable active chart
-  clickActive(data) {
-    console.log('Run active');
-    //Patch id to parent chart
-    this.newIdItem.emit(data);
-    this.disableActive = true;
-  }
+  // clickActive(data) {
+  //   console.log('Run active');
+  //   //Patch id to parent chart
+  //   this.newIdItem.emit(data);
+  //   this.disableActive = true;
+  // }
   onCursorChanged(e) {
     //Patch id to parent chart
     this.newIdItem.emit(e.context.id);
@@ -973,15 +975,12 @@ export class OrganizationOrgchartComponent {
                   // groupTitleColor: Colors.Red,
                 })
               );
-              // }
             });
-            //this.cursorItem = items[0].id;
 
             this.items = items;
           }
         });
     }
-    //this.dt.detectChanges();
   }
 
   ngOnInit(): void {
@@ -1358,43 +1357,6 @@ export class OrganizationOrgchartComponent {
         });
     }
   }
-
-  // copyValue(data, actionHeaderText) {
-  //   this.hrService.copy(data, this.formModel, 'RecID').subscribe((res) => {
-  //     this.HandleEContractInfo(actionHeaderText, 'copy', res);
-  //   });
-  // }
-
-  // HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-  //   let option = new SidebarModel();
-  //   option.DataService = this.view.dataService;
-  //   option.FormModel = this.view.formModel;
-  //   option.Width = '800px';
-  //   let object = {
-  //     data: data,
-  //     action: actionType,
-  //     funcID: this.formModel.funcID,
-  //     isModeAdd: false,
-  //   };
-  //   let dialogAdd = this.callFC.openSide(
-  //     PopupAddOrganizationComponent,
-  //     object,
-  //     option,
-  //     this.formModel.funcID
-  //   );
-
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if (actionType == 'add') {
-  //         // this.view.dataService.add(res.event, 0).subscribe();
-  //       } else if (actionType == 'copy') {
-  //         // this.view.dataService.add(res.event, 0).subscribe();
-  //       } else if (actionType == 'edit') {
-  //         // this.view.dataService.update(res.event).subscribe();
-  //       }
-  //     }
-  //   });
-  // }
 
   // edit data
   editData(data: any, event: any) {
