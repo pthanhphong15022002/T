@@ -19,7 +19,7 @@
 
 <!-- Start: Body -->
 <ng-template #body>
-  <div class="card-add">
+  <div class="card-add h-100 d-flex flex-column">
     <ejs-tab>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
@@ -40,7 +40,8 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab tabindex="-1" #tab>
+    <ejs-tab tabindex="-1" heightAdjustMode="Fill"
+    class="overflow-auto mb-4" #tab>
       <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
@@ -60,79 +61,26 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-  </div>
-  <div class="row">
-    <div class="col-7">
-      <div
-        *ngIf="form.formGroup"
-        id="ac-column-def"
-        class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
-      >
-        <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
-        <codx-input
-          style="width: 100%"
-          class="fw-bold border-0"
-          [Group]="form.formGroup"
-          field="memo"
-          [formModel]="form.formModel"
-          (valueChange)="valueChange($event)"
+    <div class="row">
+      <div class="col-7">
+        <div
+          *ngIf="form.formGroup"
+          id="ac-column-def"
+          class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
         >
-        </codx-input>
+          <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
+          <codx-input
+            style="width: 100%"
+            class="fw-bold border-0"
+            [Group]="form.formGroup"
+            field="memo"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
-    <!-- <div class="col-5">
-      <div class="d-flex align-items-center justify-content-end">
-        <div *ngIf="formType != 'edit'" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-md btn-light-primary"
-            (click)="onSaveAdd()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-add_to_photos icon-16"></i>
-              <codx-label
-                class="fw-normal"
-                fiedName="lblSave"
-                default="Lưu & thêm"
-              ></codx-label>
-            </div>
-          </button>
-        </div>
-        <div class="ms-2 me-2">
-          <button
-            type="button"
-            class="btn btn-md btn-primary"
-            style="min-width: 60px"
-            (click)="onSave()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-save_alt icon-16"></i>
-              <codx-label
-                class="fw-normal"
-                fiedName="lblSave"
-                default="Lưu"
-              ></codx-label>
-            </div>
-          </button>
-        </div>
-        <div *ngIf="vouchers?.status == '0'" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-md btn-danger"
-            (click)="onDiscard()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-settings_backup_restore icon-18"></i>
-              <codx-label
-                class="fs-6 fw-normal"
-                fiedName="lblDiscard"
-                default="Hủy bỏ"
-              ></codx-label>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div> -->
   </div>
 </ng-template>
 <!-- End: Body -->
@@ -143,47 +91,6 @@
     <div class="row mt-5 ac-form-master">
       <div class="col-7 ac-left">
         <div class="mw-750px">
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <codx-label fiedName="ObjectID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="objectID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="Requester" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="requester"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="RequestDate" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="requestDate"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-6">
               <div class="form-group">
@@ -213,14 +120,43 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="RefNo" [formModel]="form.formModel">
-                </codx-label
-                >:&nbsp;
-                <span *ngIf="vouchers.refNo">
-                  {{ vouchers.refNo }}
-                </span>
+                <codx-label fiedName="DIM1" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="diM1"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="DIM2" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="diM2"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="DIM3" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="diM3"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
               </div>
             </div>
           </div>
@@ -347,9 +283,8 @@
 <!-- Start:VouchersLine -->
 <ng-template #tabLine>
   <ng-container *ngIf="modeGrid == '1'">
-    <div class="tabline-content position-relative">
+    <div class="position-relative h-100">
       <codx-gridview-v2
-        class="tabLine"
         #gridVouchersLine
         [formName]="fmVouchersLines.formName"
         [gridViewName]="fmVouchersLines.gridViewName"
@@ -393,11 +328,6 @@
         </button>
       </div>
     </div>
-    <div
-      class="row"
-      *ngIf="vouchersLines.length == 0"
-      style="height: 40px"
-    ></div>
   </ng-container>
   <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
     <div class="table-responsive table-content mt-3">

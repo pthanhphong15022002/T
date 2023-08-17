@@ -25,6 +25,8 @@ import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-
 import { CodxAddTaskComponent } from './codx-add-stask/codx-add-task.component';
 import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { CodxCalendarService } from '../codx-calendar/codx-calendar.service';
+import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
+import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 
 @Injectable({
   providedIn: 'root',
@@ -217,13 +219,13 @@ export class StepService {
     return check;
   }
   //setDeFault
-  getDefault(funcID, entityName) {
+  getDefault(funcID, entityName,id = null) {
     return this.api.execSv<any>(
       'CO',
       'Core',
       'DataBusiness',
       'GetDefaultAsync',
-      [funcID, entityName]
+      [funcID, entityName,id]
     );
   }
 
@@ -448,5 +450,99 @@ export class StepService {
         console.log('-------------', e);
       });
     });
+  }
+
+  addQuotation() {
+    let quotation;
+    this.getDefault('CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
+      if (res) {
+        let data = res.data;
+        data['_uuid'] = data['quotationsID'] ?? Util.uid();
+        data['idField'] = 'quotationsID';
+        quotation = data;
+        if (!quotation.quotationsID) {
+          this.api
+            .execSv<any>(
+              'SYS',
+              'AD',
+              'AutoNumbersBusiness',
+              'GenAutoNumberAsync',
+              ['CM0202', 'CM_Quotations', 'QuotationsID']
+            )
+            .subscribe((id) => {
+              quotation.quotationID = id;
+              this.openPopup(quotation, 'add',);
+            });
+        } else this.openPopup(quotation, 'add');
+      }
+    });
+  }
+
+  openPopup(res, action,titleAction = '') {
+    res.versionNo = res.versionNo ?? 'V1';
+    res.revision = res.revision ?? 0;
+    res.versionName = res.versionNo + '.' + res.revision;
+    res.status = res.status ?? '0';
+    res.exchangeRate = res.exchangeRate ?? 1;
+    res.totalAmt = res.totalAmt ?? 0;
+    res.currencyID = res.currencyID ?? 'VND';
+
+    let formModel: FormModel = {
+      entityName: 'CM_Quotations',
+      formName: 'CMQuotations',
+      gridViewName: 'grvCMQuotations',
+      funcID: 'CM0202',
+    };
+    var obj = {
+      data: res,
+      disableRefID: false,
+      action: 'add',
+      headerText: titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.FormModel = formModel;
+    let dialog = this.callfc.openForm(
+      PopupAddQuotationsComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      option
+    );
+  }
+
+  async openPopupContract(action, contract?) {
+    let data = {
+      action,
+      contract: contract || null,
+      // account: this.account,
+      type: 'task',
+    };
+    let formModel: FormModel = {
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      formName: 'CMContracts',
+      funcID: 'CM0204',
+      gridViewName: 'grvCMContracts',
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    option.FormModel = formModel;
+    let popupContract = this.callfc.openForm(
+      AddContractsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    );
+    let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    return dataPopupOutput;
   }
 }

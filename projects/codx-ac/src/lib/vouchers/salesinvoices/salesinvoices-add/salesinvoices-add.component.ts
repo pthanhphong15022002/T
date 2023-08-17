@@ -29,8 +29,8 @@ import { JournalService } from '../../../journals/journals.service';
 import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { SalesinvoiceslinesAddComponent } from '../salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { SalesInvoiceService } from '../salesinvoices.service';
+import { SalesinvoiceslinesAddComponent } from '../salesinvoiceslines-add/salesinvoiceslines-add.component';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -58,6 +58,7 @@ export class SalesinvoicesAddComponent
   gvsSalesInvoicesLines: any;
   fmSalesInvoicesLines: FormModel;
 
+  baseCurr: string;
   formTitle: string;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -124,6 +125,10 @@ export class SalesinvoicesAddComponent
       .subscribe((res) => {
         this.gvsSalesInvoices = res;
       });
+
+    this.cache.companySetting().subscribe(res => {
+      this.baseCurr = res[0]?.baseCurr;
+    })
 
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
@@ -216,7 +221,7 @@ export class SalesinvoicesAddComponent
     this.dialogRef.close();
   }
 
-  onDiscard(): void {
+  onClickDiscard(): void {
     this.masterService
       .delete([this.master], true, null, '', 'AC0010', null, null, false)
       .subscribe((res: any) => {
@@ -225,6 +230,10 @@ export class SalesinvoicesAddComponent
           this.resetForm();
         }
       });
+  }
+
+  onSubTypeChange(e): void {
+    this.master.subType = e.data[0];
   }
 
   onInputChange(e): void {
@@ -318,15 +327,22 @@ export class SalesinvoicesAddComponent
 
     const postFields: string[] = [
       'itemid',
-      'costprice',
-      'salesprice',
       'quantity',
-      'netamt',
-      'vatid',
-      'vatamt',
-      'umid',
-      'idim1',
+      'salesprice',
+      'discpct',
       'discamt',
+      'miscprice',
+      'miscamt',
+      'salestaxpct',
+      'salestaxamt',
+      'excisetaxpct',
+      'excisetaxamt',
+      'vatid',
+      'vatbase',
+      'vatamt',
+      'commissionpct',
+      'commissionamt',
+      'costprice',
     ];
     if (postFields.includes(e.field.toLowerCase())) {
       this.api
@@ -345,7 +361,7 @@ export class SalesinvoicesAddComponent
     }
   }
 
-  onClickMF(e, data) {
+  onClickMF(e, data): void {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteRow(data);
@@ -359,6 +375,18 @@ export class SalesinvoicesAddComponent
       case 'SYS002':
         // this.export(data);
         break;
+    }
+  }
+
+  onChangeMF(e): void {
+    console.log(
+      'onChangeMF',
+      e.filter((m) => !m.disabled)
+    );
+    for (const mf of e) {
+      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
+        mf.disabled = true;
+      }
     }
   }
 
@@ -435,21 +463,15 @@ export class SalesinvoicesAddComponent
         .exec('AC', 'SalesInvoicesLinesBusiness', 'BeginEditAsync', e.data)
         .subscribe();
     }
-  }
 
-  onChangeMF(e): void {
-    console.log(
-      'onChangeMF',
-      e.filter((m) => !m.disabled)
-    );
-    for (const mf of e) {
-      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
-        mf.disabled = true;
-      }
+    // bùa 🤬
+    // edit => escape => edit again => lỗi
+    if (e.type === "closeEdit" && !e.data.isAddNew) {
+      this.lines[e.data._rowIndex] = e.data;
     }
   }
 
-  // ❌❌
+  // ❌❌ bùa tab
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
     console.log(e);

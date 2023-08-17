@@ -39,6 +39,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() applyFor;
   @Input() isDataLoading: any;
   @Input() dataSelected: any;
+  @Input() formModel: any;
   @Input() listInstanceStep: any[];
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -73,11 +74,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   isZoomIn = false;
   isZoomOut = false;
 
-  formModel: FormModel = {
-    entityName: 'DP_Instances_Steps_Reasons',
-    formName: 'DPInstancesStepsReasons',
-    gridViewName: 'grvDPInstancesStepsReasons',
-  };
+  // formModel: FormModel = {
+  //   entityName: 'DP_Instances_Steps_Reasons',
+  //   formName: 'DPInstancesStepsReasons',
+  //   gridViewName: 'grvDPInstancesStepsReasons',
+  // };
   moreDefaut = {
     share: true,
     write: true,

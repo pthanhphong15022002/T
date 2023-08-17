@@ -107,13 +107,21 @@
           </codx-label>
         </div>
         <div>
-          <ejs-dropdownlist
+          <!-- <ejs-dropdownlist
             [dataSource]="listGroup"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
             [readonly]="stepsTasks?.isTaskDefault || groupTaskID"
-          ></ejs-dropdownlist>
+          ></ejs-dropdownlist> -->
+          <ejs-combobox
+            #sample
+            [dataSource]="listGroup"
+            [fields]="fieldsGroup"
+            [value]="stepsTasks?.taskGroupID"
+            (change)="filterText($event, 'taskGroupID')"
+            [allowCustom]="false"
+          ></ejs-combobox>
           <!-- [readonly]="groupTaskID" -->
         </div>
       </div>
@@ -320,7 +328,7 @@
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'O')"
+        (valueList)="changeRolerOwner($event)"
         [vllShare]="'DP0331'"
         [multiple]="false"
         [listCombobox]="listCombobox"
@@ -333,15 +341,15 @@
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="
-          typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'
-        "
+        [default]="typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'"
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'O')"
+        (valueList)="changeRolerOwner($event)"
         [multiple]="false"
-        [type]="'user'"
+        [vllShare]="'DP0331'"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
       ></codx-role>
     </div>
 
@@ -353,7 +361,7 @@
         [dataSource]="participant"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event, 'P')"
+        (valueList)="changeRoler($event)"
         [vllShare]="'DP0331'"
         [multiple]="true"
         [listCombobox]="listCombobox"

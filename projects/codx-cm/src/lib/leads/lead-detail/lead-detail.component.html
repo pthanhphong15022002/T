@@ -297,6 +297,22 @@
                         </codx-vll>
                       </div>
                     </ng-template>
+                    <ng-container
+                      *ngIf="
+                        dataSelected?.approveStatus &&
+                        dataSelected?.approveStatus != '1'
+                      "
+                    >
+                      <codx-vll
+                        [name]="gridViewSetup?.ApproveStatus?.referedValue"
+                        [field]="'ApproveStatus'"
+                        [value]="dataSelected?.approveStatus"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-primary badge-sm"
+                      >
+                      </codx-vll>
+                    </ng-container>
                   </div>
 
                   <ng-template #tooltipSalesperson>
@@ -389,6 +405,7 @@
                             class="d-flex align-items-center me-3"
                             *ngIf="dataSelected?.phone"
                           >
+                          <span class="icon-phone_android text-primary icon-16 me-2"></span>
                             <span class="text-gray-800 fs-7">{{
                               dataSelected?.phone
                             }}</span>
@@ -800,7 +817,7 @@
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem >
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -817,13 +834,18 @@
               <step-task
                 [typeTask]="2"
                 [customerID]="dataSelected?.recID"
-                [isPause]=" ['0', '1', '3', '5', '13', '11'].includes(dataSelected.status ) ||!dataSelected?.full ||dataSelected.closed
+                [isPause]="
+                  ['0', '1', '3', '5', '13', '11'].includes(
+                    dataSelected.status
+                  ) ||
+                  !dataSelected?.full ||
+                  dataSelected.closed
                 "
               ></step-task>
             </div>
           </ng-template>
         </e-tabitem>
-        <e-tabitem >
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top">
               <span class="icon-more icon-16 me-2"></span>
@@ -840,6 +862,7 @@
               <step-task
                 [isDataLoading]="isDataLoading"
                 [dataSelected]="dataSelected"
+                [formModel]="formModel"
                 [listInstanceStep]="listSteps"
                 [applyFor]="'5'"
                 (continueStep)="continueStep($event)"

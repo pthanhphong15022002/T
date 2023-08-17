@@ -171,6 +171,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    console.log("----------",this.isRoleAll);
+    
     if (changes.dataSources || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
       await this.getStepById();
@@ -421,10 +423,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return { 'background-color': color?.color };
   }
 
-  getRole(task, type) {
+  getRole(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return type == 'ID' ? role?.objectID : role?.objectName;
+      task?.roles.find((role) => role.objectID == task?.owner) || task?.roles[0];
+    return role?.objectName;
   }
   //#endregion
 
@@ -2235,5 +2237,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }else{
       return group?.progress > 0 && group?.progress < 100 ? "2" : (group?.progress <= 0 ? "1" : "3");
     }
+  }
+  setNameTypeTask(taskType){
+    let type = this.listTaskType?.find(task => task?.value == taskType);
+    return type?.text;
   }
 }

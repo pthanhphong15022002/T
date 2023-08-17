@@ -63,7 +63,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
         this.load(Math.floor(this.progress));
       },100);
     } 
-    if(changes?.status || changes?.vllData){
+    if(changes?.status || changes?.vllData || changes?.progress){
       this.setProgressLinear();
     }   
   }
@@ -121,12 +121,12 @@ export class ProgressbarComponent implements OnInit, OnChanges {
   }
 
   setProgressLinear(){
-    let value = this.vllData.find(vll => vll.value == this.status);
+    let value = this.vllData?.find(vll => vll.value == this.status);
     if(!value){return;}
     if(this.isStep){
       switch(this.status){
         case "1":
-          this.text = value?.text + " " + this.progress.toFixed(0) + "%";
+          this.text = value?.text + " " + this.progress?.toFixed(0) + "%";
           this.texColor = value?.textColor || '#FFFFFF';
           this.background = '#d1d1d1';
           this.backgroundProgress = value?.color;

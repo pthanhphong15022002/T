@@ -802,7 +802,7 @@ export class LeadsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: this.titleAction,
+      titleAction: this.formatTitleMore(this.titleAction),
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
       applyFor: this.applyForLead,
@@ -842,7 +842,7 @@ export class LeadsComponent
         var obj = {
           action: 'edit',
           formMD: formMD,
-          titleAction: this.titleAction,
+          titleAction: this.formatTitleMore(this.titleAction),
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
@@ -1680,4 +1680,7 @@ export class LeadsComponent
       }
     });
   }
+  formatTitleMore(titleAction){
+    return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
+   }
 }

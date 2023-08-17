@@ -3,9 +3,9 @@ import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import axios from 'axios';
-import { ApiHttpService, FormModel, NotificationsService, CacheService, AuthStore } from 'codx-core';
+import { ApiHttpService, FormModel, NotificationsService, CacheService, AuthStore, Util } from 'codx-core';
 
-import { Observable } from 'rxjs';
+import { Observable, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +30,7 @@ export class CodxBookingService {
       []
     );
   }
+
 
   autoApproveStationery(recID:string, refID:string) {
     return this.api.execSv(
@@ -110,6 +111,40 @@ export class CodxBookingService {
         resolve(formModel);
       });
     });
+  }
+  //Cache
+  getCacheSettingValue(settingValues:Array<any>,transType:string,category:string,fieldName:string=null):any{
+    if(settingValues==null || settingValues?.length==0) return null;  
+
+    let setting = settingValues.filter(x=>x?.transType == transType && x?.category==category)    
+    if(setting?.length>0){
+      if(category=='1'){
+        return Util.camelizekeyObj(JSON.parse(setting[0]?.dataValue));
+      }
+      if(category== '4'){
+        let arrSettingValue = JSON.parse(setting[0]?.dataValue);
+        if(arrSettingValue!=null && arrSettingValue?.length>0){
+          if(fieldName!=null){
+            let crrSetting = arrSettingValue.filter(x=>x?.FieldName == fieldName);
+            if(crrSetting!=null){
+              return Util.camelizekeyObj(crrSetting[0]);
+            }
+          }
+          else{            
+            return Util.camelizekeyObj(arrSettingValue[0]);
+          }
+        }
+        else{
+          return null;
+        }
+      }
+    }
+    else{
+      return null;
+    }   
+    
+    
+    
   }
 
   // getModelPage(functionID): Promise<ModelPage> {

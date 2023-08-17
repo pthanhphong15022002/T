@@ -35,6 +35,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
+  @Input() owner: string;
   @Input() isPause = false;
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
@@ -93,6 +94,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listActivitie = res;
           this.isNoData = false;
         } else {
+          this.listActivitie = [];
           this.isNoData = true;
         }
       });
@@ -153,15 +155,24 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             break;
           //tajo cuoc hop
           case 'DP24':
-            if (task.taskType != 'M') res.disabled = true;
+            if (task.taskType != 'M'){
+              res.disabled = true;
+            }else{
+              task?.status == '1' && (res.isblur = true);
+            } 
             break;
 
           case 'DP27': // đặt xe
-            if (task.taskType != 'B') res.disabled = true;
+            if (task?.taskType != 'B' ||(task?.taskType == 'B' && task?.actionStatus == '2')){
+              res.disabled = true;
+            }else{
+              task?.status == '1' && (res.isblur = true);
+            }
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
@@ -169,16 +180,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'DP29': // Hủy
             if (['B', 'M'].includes(task.taskType)) {
               this.convertMoreFunctions(event, res, task.taskType);
+              if (task?.actionStatus != '2') res.disabled = true;
             } else {
               res.disabled = true;
             }
             break;
           case 'DP30': //Khôi phục
-            if (['B', 'M'].includes(task.taskType)) {
-              this.convertMoreFunctions(event, res, task.taskType);
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = true;
             break;
           case 'DP31': //Bắt đầu
             if (task?.status != '1') {
@@ -222,6 +230,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP31':
         this.startActivitie(task);
         break;
+        
     }
   }
   convertMoreFunctions(listMore, more, type) {
@@ -388,6 +397,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isSave: false,
       isStart: true,
+      owner: this.owner,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
@@ -522,6 +532,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
   
   startActivitie(activitie) {
+    if (activitie?.taskType == 'Q') {
+      //báo giá
+      this.stepService.addQuotation();
+    } else if (activitie?.taskType == 'CO') {
+      // hợp đồng
+      this.stepService.openPopupContract('add');
+    }
     this.api
       .exec<any>('DP', 'InstanceStepsBusiness', 'StartActivitiesAsync', [
         activitie?.recID,
@@ -549,4 +566,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  setNameTypeTask(taskType){
+    let type = this.listTaskType?.find(task => task?.value == taskType);
+    return type?.text;
+  }
 }

@@ -245,7 +245,7 @@ textarea:focus,
   border-color: var(--gray-700)!important;
 }
 .e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
-  border-color: var(--gray-150);
+  border-color: var(--gray-200);
 }
 .codx-search.codx-focus {
   border-color: $primary !important;
@@ -1633,7 +1633,7 @@ codx-processsteps .e-card-wrapper {
   .e-header-title
   .header-template-wrap
   .header-text {
-  width: 100%;
+  width: unset;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
@@ -3653,4 +3653,19 @@ codx-view-tree-targets .menu-sub{
    .e-gridcontent{
      height: calc(100% - 40px)!important;
    }
+}
+
+
+.aside {
+  transition: width 50000s ease!important;
+}
+
+@media (min-width: 992px){
+[data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
+    display: block;
+}
+.aside-minimize-icon-title .aside .aside-secondary .menu-link {
+  padding-left: 7px !important;
+  padding-right: 7px !important;
+}
 }

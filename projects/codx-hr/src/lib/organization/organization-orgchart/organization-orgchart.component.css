@@ -64,8 +64,6 @@
 }
 
 .sample {
-  /* width: 100%;
-  height: 93%; */
   width: 100%;
   height: 100%;
   flex-direction: column;
@@ -93,7 +91,7 @@
 .p-node__manager {
   position: absolute;
   left: 45%;
-  bottom: -6px;
+  bottom: -20px;
   cursor: pointer;
 }
 

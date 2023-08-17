@@ -66,7 +66,10 @@
                       field="exchangeRate"
                       [formModel]="form.formModel"
                       [Group]="form.formGroup"
-                      [disabled]="!journal?.multiCurrency"
+                      [disabled]="
+                        !journal?.multiCurrency ||
+                        master.currencyID === baseCurr
+                      "
                       (controlBlur)="onInputChange($event)"
                     ></codx-input>
                   </div>
@@ -448,7 +451,7 @@
                 class="btn btn-light-primary btn-sm rounded-5 d-flex align-items-center position-absolute end-0"
                 style="
                   top: -32px;
-                  border: 1px solid var(--bs-primary) !important;
+                  border: 1px solid var(--primary-dark) !important;
                 "
                 (click)="onClickAddRow()"
                 (keyup.enter)="onClickAddRow()"
@@ -498,10 +501,11 @@
     >
       <button
         style="border: 1px solid var(--bs-danger) !important"
-        class="btn btn-md btn-light-danger rounded-5"
-        (click)="onDiscard()"
+        class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
+        (click)="onClickDiscard()"
         *ngIf="masterService.hasSaved && master.status == '0'"
       >
+        <i class="icon-cancel icon-16"></i>
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblDiscard"
@@ -513,10 +517,11 @@
       <button
         *ngIf="!isEdit"
         type="button"
-        style="border: 1px solid var(--bs-primary) !important"
-        class="btn btn-md btn-light-primary rounded-5"
+        style="border: 1px solid var(--primary-dark) !important"
+        class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
         (click)="onClickSave(false)"
       >
+        <i class="icon-add_to_photos icon-16"></i>
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblSaveAndClear"
@@ -527,10 +532,14 @@
 
       <button
         type="button"
-        style="min-width: 60px; border: 1px solid var(--bs-primary) !important"
-        class="btn btn-md btn-light-primary rounded-5"
+        style="
+          min-width: 60px;
+          border: 1px solid var(--primary-dark) !important;
+        "
+        class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
         (click)="onClickSave(true)"
       >
+        <i class="icon-save_alt icon-16"></i>
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblSave"
@@ -575,6 +584,20 @@
     >
       <i class="icon-close icon-18"></i>
     </button>
+  </div>
+
+  <div class="mb-1" style="margin-left: 30px">
+    <codx-dropdown-select
+      cssClass="border-0 fw-bold w-350px"
+      cssPopup="h-350px w-550px"
+      [isMulti]="false"
+      type="valuelist"
+      field="subType"
+      [refValue]="gvsSalesInvoices['SubType'].referedValue"
+      [emptyText]="gvsSalesInvoices.SubType?.headerText"
+      [value]="master.subType"
+      (valueChange)="onSubTypeChange($event)"
+    ></codx-dropdown-select>
   </div>
 </ng-template>
 

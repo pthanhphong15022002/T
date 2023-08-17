@@ -27,6 +27,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
   view = {};
   step;
   user;
+  owner;
   action = '';
   isSave = true;
   isStart = false;
@@ -54,6 +55,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.action = dt?.data?.action;
     this.isStart = dt?.data?.isStart;
     this.step = dt?.data?.step;
+    this.owner = dt?.data?.owner;
     this.user = this.authStore.get();
     this.grvTaskGroupsForm = {
       entityName: 'DP_Instances_Steps_TaskGroups',
@@ -249,11 +251,11 @@ export class CodxAddGroupTaskComponent implements OnInit {
         {
           case "Departments":
           case "OrgHierarchy":
-            data = [role?.objectID,this.step?.instanceID]
+            data = [role?.objectID,this.step?.instanceID, this.owner]
             break;
           case "Roles":
           case "Positions":
-            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            data = [role?.objectID,this.step?.instanceID,role?.objectType, this.owner]
             break;
         }
         if(data?.length > 0){
@@ -275,6 +277,9 @@ export class CodxAddGroupTaskComponent implements OnInit {
           });
         }
       }
+    }else{
+      this.taskGroup.roles = [];
+      this.taskGroup.owner = null;
     }
   }
 }

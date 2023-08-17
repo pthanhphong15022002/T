@@ -331,7 +331,6 @@ export class CodxShareService {
         gridModel.predicate = dataService.request.predicates;
         gridModel.dataValue = dataService.request.dataValues;
         gridModel.entityPermission = formModel.entityPer;
-        //Chưa có group
         gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
           CodxExportComponent,

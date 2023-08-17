@@ -173,6 +173,11 @@
                     <div
                       class="d-flex align-items-center justify-content-between cursor-pointer"
                       (dblclick)="viewTask(task, task?.taskType || 'T')"
+                      #popoverDetails="ngbPopover"
+                      [ngbPopover]="setNameTypeTask(task?.taskType)"
+                      [placement]="'top-left'"
+                      (mouseenter)="popoverDetails.open()"
+                      (mouseleave)="popoverDetails.close()"
                     >
                       <div style="flex-grow: 1" class="has-action-menu">
                         <ng-container
@@ -345,8 +350,8 @@
         ojectType="AD_Users"
         [numberImages]="1"
         [isToolTip]="true"
-        [objectId]="getRole(data?.value, 'ID')"
-        [objectName]="getRole(data?.value, 'name')"
+        [objectId]="data?.value?.owner"
+        [objectName]="getRole(data?.value)"
       >
       </codx-imgs>
     </span>
