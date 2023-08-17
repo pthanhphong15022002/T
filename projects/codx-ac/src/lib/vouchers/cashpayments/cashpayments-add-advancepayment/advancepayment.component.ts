@@ -118,7 +118,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
   }
   submit() {
     this.acService
-      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataCashSuggestAsync', [
+      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataAdvancePaymentAsync', [
         this.cashpayment.voucherDate,
         this.dateSuggestion,
         this.cashpayment.subType,
