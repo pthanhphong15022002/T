@@ -573,8 +573,8 @@ export class AddContractsComponent implements OnInit {
       }
     }
     if (event?.field == 'quotationID' && event?.data) {
+      this.getDataByQuotationID(event?.data);
       if (!this.contracts.customerID) {
-        this.getDataByQuotationID(event?.data);
         this.setValueComboboxDeal();
       }
     }
