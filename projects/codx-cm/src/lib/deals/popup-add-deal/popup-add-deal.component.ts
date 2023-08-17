@@ -547,6 +547,19 @@ export class PopupAddDealComponent
       }
     }
   }
+  valueChangeOwner($event) {
+    if ($event) {
+      this.owner = $event;
+      this.deal.owner = this.owner;
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.deal.owner
+        )[0].userName;
+      }
+      this.checkOwner(this.deal.owner,ownerName);
+    }
+  }
   checkOwner(owner: any, ownerName: any) {
     if (owner && this.deal?.permissions ) {
       let index  = -1;

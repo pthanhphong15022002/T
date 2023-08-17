@@ -1827,9 +1827,6 @@ export class DealsComponent
   }
   //#endregion
 
-  formatTitleMore(titleAction){
-   return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
-  }
   formatTitleMore(titleAction) {
     return (
       titleAction +
