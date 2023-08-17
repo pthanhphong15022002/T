@@ -507,16 +507,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.gridViewSetup['ContactType'].isRequire = false;
         this.gridViewSetup['ObjectID'].isRequire = false;
       }
-      if (this.data.firstName != null && this.data.firstName.trim() != '') {
-        if (this.data.lastName != null && this.data.lastName.trim() != '') {
-          this.data.contactName =
-            this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-        } else {
-          this.data.contactName = this.data.firstName.trim();
-        }
-      } else {
-        this.data.contactName = '';
-      }
+      this.gridViewSetup['FirstName'].isRequire = false;
+
+      // if (this.data.firstName != null && this.data.firstName.trim() != '') {
+      //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
+      //     this.data.contactName =
+      //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
+      //   } else {
+      //     this.data.contactName = this.data.firstName.trim();
+      //   }
+      // } else {
+      //   this.data.contactName = '';
+      // }
     }
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) {

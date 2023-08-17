@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  AuthStore,
   CallFuncService,
   CodxFormComponent,
   DataRequest,
@@ -47,7 +46,7 @@ export class PopupEProcessContractComponent
   idField = 'RecID';
   isAfterRender = false;
   autoNumField: string;
-  autoNumField2: string;
+  // autoNumField2: string;
   lstSubContract: any;
   headerText: string;
   openFrom: string;
@@ -74,7 +73,6 @@ export class PopupEProcessContractComponent
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
 
-  user: any;
   fmSubContract: FormModel;
   tabInfo: any[] = [
     {
@@ -102,7 +100,6 @@ export class PopupEProcessContractComponent
   tmpAddBenefit: TemplateRef<any>;
 
   constructor(
-    private authStore: AuthStore,
     private injector: Injector,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
@@ -113,7 +110,6 @@ export class PopupEProcessContractComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
@@ -159,9 +155,9 @@ export class PopupEProcessContractComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          if (res.key) {
-            this.autoNumField2 = res.key;
-          }
+          // if (res.key) {
+          //   this.autoNumField2 = res.key;
+          // }
           this.benefitObj = res?.data;
           this.benefitObj.effectedDate = null;
           this.benefitObj.expiredDate = null;

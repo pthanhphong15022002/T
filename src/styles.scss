@@ -3017,12 +3017,12 @@ codx-vll.badge.badge-md span::before{
   margin-bottom: 1px;
   margin-top: 0;
 }
-[data-kt-aside-minimize=on].aside-minimize-icon-title {
-  .aside .menu-link{
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-}
+// [data-kt-aside-minimize=on].aside-minimize-icon-title {
+//   .aside .menu-link{
+//     padding-top: 0;
+//     padding-bottom: 0;
+//   }
+// }
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
 }
@@ -3654,3 +3654,19 @@ codx-view-tree-targets .menu-sub{
      height: calc(100% - 40px)!important;
    }
 }
+
+
+
+
+@media (min-width: 992px){
+  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
+    display: block;
+    .menu-icon{
+      margin-right: 0;
+    }  
+  }
+  .aside-secondary .menu-title{
+    text-align: left!important;
+  }
+}
+

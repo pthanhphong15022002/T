@@ -16,6 +16,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import {
   ButtonModel,
+  CallFuncService,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -47,6 +48,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('assign_dashboard') templates3: QueryList<any>;
 
   @ViewChild('annotation1') annotation: ProgressBar;
+  @ViewChild('showTask') showTask: any;
 
   @Input() panels1: any;
   @Input() datas1: any;
@@ -360,7 +362,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     inject: Injector,
     private pageTitle: PageTitleService,
     private routerActive: ActivatedRoute,
-    private tmDBService: TMDashboardService
+    private tmDBService: TMDashboardService,
+    private callfunc: CallFuncService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -574,6 +577,19 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   toFixed(value: number) {
+    if (!value) {
+      return 0;
+    }
     return value % 1 === 0 ? value : value.toFixed(2);
+  }
+
+  predicates: string;
+  dataValues: string;
+
+  showTasks(predicates: string, dataValues: string) {
+    this.predicates = predicates;
+    this.dataValues = dataValues;
+    this.callfunc.openForm(this.showTask, '', 1280, 720, null);
+    this.detectorRef.detectChanges();
   }
 }

@@ -138,7 +138,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //#endregion
 
   //#region Init
-  //Master
+  //Init Master
   onInit(): void {
     this.loadInit();
   }
@@ -146,7 +146,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
-    this.setTabindex();
   }
 
   ngOnDestroy() {
@@ -177,20 +176,20 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.hasSaved = true;
     }
   }
-  //end Master
+  //end Init Master
 
-  //Line
+  //Init Line
   gridInit(columnsGrid)
   {
     this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
-  //end Line
+  //end Init Line
 
   //#endregion
 
   //#region Event
-  //Master
+  //Event Master
   valueChange(e: any){
     let field = e.field.toLowerCase();
     if(e.data)
@@ -234,14 +233,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         case 'voucherno':
           this.vouchers.voucherNo = e.data;
           break;
-        case 'dim1':
-          this.vouchers.dim1 = e.data;
+        case 'diM1':
+          this.vouchers.diM1 = e.data;
           break;
-        case 'dim2':
-          this.vouchers.dim2 = e.data;
+        case 'diM2':
+          this.vouchers.diM2 = e.data;
           break;
-        case 'dim3':
-          this.vouchers.dim3 = e.data;
+        case 'diM3':
+          this.vouchers.diM3 = e.data;
           break;
       }
     }
@@ -309,9 +308,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.dialog.close();
     }
   }
-  //end Master
+  //end Event Master
 
-  //Line
+  //Event Line
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -407,11 +406,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       break;
     }
   }
-  //end Line
+  //end Event Line
   //#endregion Event
 
   //#region Method
-  //Master
+  //Method Master
   onSaveAdd(){
     this.checkValidate();
     this.checkTransLimit(true);
@@ -571,9 +570,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           break;
       }
   }
-  //end Master
+  //end Method Master
 
-  //Line
+  //Method Line
   onSaveLine(e: any, type: any)
   {
     this.checkValidateLine(e);
@@ -612,11 +611,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       
     }
   }
-  //end Line
+  //end Method Line
   //#endregion Method
 
   //#region Function
-  //Master
+  //Function Master
   setDefault(o) {
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
@@ -702,36 +701,36 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     line.fixedDIMs = fixedDims.join('');
   }
 
-  setTabindex() {
-    let ins = setInterval(() => {
-      let eleInput = document
-        ?.querySelector('.ac-form-master')
-        ?.querySelectorAll('codx-input');
-      if (eleInput) {
-        clearInterval(ins);
-        let tabindex = 0;
-        for (let index = 0; index < eleInput.length; index++) {
-          let elechildren = (
-            eleInput[index] as HTMLElement
-          ).getElementsByTagName('input')[0];
-          if (elechildren.readOnly) {
-            elechildren.setAttribute('tabindex', '-1');
-          } else {
-            tabindex++;
-            elechildren.setAttribute('tabindex', tabindex.toString());
-          }
-        }
-        // input refdoc
-        let ref = document
-          .querySelector('.ac-refdoc')
-          .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
-      }
-    }, 200);
-    setTimeout(() => {
-      if (ins) clearInterval(ins);
-    }, 10000);
-  }
+  // setTabindex() {
+  //   let ins = setInterval(() => {
+  //     let eleInput = document
+  //       ?.querySelector('.ac-form-master')
+  //       ?.querySelectorAll('codx-input');
+  //     if (eleInput) {
+  //       clearInterval(ins);
+  //       let tabindex = 0;
+  //       for (let index = 0; index < eleInput.length; index++) {
+  //         let elechildren = (
+  //           eleInput[index] as HTMLElement
+  //         ).getElementsByTagName('input')[0];
+  //         if (elechildren.readOnly) {
+  //           elechildren.setAttribute('tabindex', '-1');
+  //         } else {
+  //           tabindex++;
+  //           elechildren.setAttribute('tabindex', tabindex.toString());
+  //         }
+  //       }
+  //       // input refdoc
+  //       let ref = document
+  //         .querySelector('.ac-refdoc')
+  //         .querySelectorAll('input');
+  //       (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+  //     }
+  //   }, 200);
+  //   setTimeout(() => {
+  //     if (ins) clearInterval(ins);
+  //   }, 10000);
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
@@ -780,9 +779,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }
     }
   }
-  //end Master
+  //end Function Master
 
-  //Line
+  //Function Line
   addVoucherLine(){
     this.checkValidate();
     if (this.validate > 0) {
@@ -1158,6 +1157,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }
     });
   }
-  //end Line
+  //end Function Line
   //#endregion
 }

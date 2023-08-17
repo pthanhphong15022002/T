@@ -37,3 +37,11 @@
   white-space: nowrap;
   text-align: right;
 }
+
+.scroll-hover {
+  overflow: hidden;
+}
+
+.scroll-hover:hover {
+  overflow-y: scroll;
+}

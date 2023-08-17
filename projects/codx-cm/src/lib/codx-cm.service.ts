@@ -702,12 +702,21 @@ export class CodxCmService {
       data
     );
   }
-  changeStatus(data) {
+  changeStatusLead(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
       'LeadsBusiness',
       'ChangeStatusLeadAsync',
+      data
+    );
+  }
+  changeStatusDeal(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'ChangeStatusDealAsync',
       data
     );
   }
