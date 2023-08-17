@@ -13,38 +13,38 @@ export class PopupAssginDealComponent extends UIComponent
 implements AfterViewInit
 {
 dialogRef: DialogRef;
-formModel:FormModel
+formModel: FormModel;
 title = '';
-employee:any;
+employee: any;
 activeTab: string;
-subHeaderText:string = '';
+subHeaderText: string = '';
 
-objectID:string = '';
+objectID: string = '';
 employeeName: any;
 gridViewSetup: any;
 applyProcess: boolean = false;
 
-recID:any;
-stepID:any;
-refID:any;
-processID:any;
-owner:any;
-ownerOld:any;
-ownerStep:any;
-step:any;
-buid:any;
-startControl:string = '';
+recID: any;
+stepID: any;
+refID: any;
+processID: any;
+owner: any;
+ownerOld: any;
+ownerStep: any;
+step: any;
+buid: any;
+startControl: string = '';
 applyFor: string = '';
 orgUnitName: string = '';
 positionName: string = '';
 
 listParticipants = [];
 
-listUser:any[] = [];
+listUser: any[] = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
-readonly viewBUID:string = 'ViewBUID';
-readonly viewDefault:string = 'ViewDefault';
-readonly viewGroupUser:string = 'viewGroupUser';
+readonly viewBUID: string = 'ViewBUID';
+readonly viewDefault: string = 'ViewDefault';
+readonly viewGroupUser: string = 'viewGroupUser';
 
 constructor(
   private injector: Injector,
@@ -58,11 +58,10 @@ constructor(
   this.dialogRef = dialogRef;
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
-  if(this.applyProcess) {
-
+  if (this.applyProcess) {
     this.refID = dialogData?.data?.refID;
-    this.stepID =  dialogData?.data?.stepID,
-    this.processID = dialogData?.data.processID;
+    (this.stepID = dialogData?.data?.stepID),
+      (this.processID = dialogData?.data.processID);
   }
   this.recID = dialogData?.data?.recID;
   this.buid = dialogData?.data?.buid;
@@ -70,16 +69,13 @@ constructor(
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
   this.formModel = dialogData?.data.formModel;
-  this.startControl=  dialogData?.data.startControl
+  this.startControl = dialogData?.data.startControl;
   this.applyProcess && this.promiseAll();
 }
 
-ngAfterViewInit(): void {
-}
+ngAfterViewInit(): void {}
 
-onInit(): void {
-
-}
+onInit(): void {}
 loadTabView() {
   this.detectorRef.detectChanges();
 }
@@ -89,29 +85,27 @@ click(event: any) {
   }
 }
 clickMenu(item) {
-
   this.detectorRef.detectChanges();
 }
 cancel() {
   this.dialogRef.close();
 }
-async promiseAll(){
-  await this.getListPermission(this.processID,this.applyFor,this.stepID);
+async promiseAll() {
+  await this.getListPermission(this.processID, this.applyFor, this.stepID);
 }
-async getListPermission(processId, applyFor,stepID) {
-var data = [processId,applyFor,stepID]
-  this.codxCmService.getListPermissionOwner(data).subscribe(async res =>{
-    if(res){
+async getListPermission(processId, applyFor, stepID) {
+  var data = [processId, applyFor, stepID];
+  this.codxCmService.getListPermissionOwner(data).subscribe(async (res) => {
+    if (res) {
       this.listParticipants = await this.getListPermissionInGroup(res[0]);
     }
-  })
+  });
 }
 async getListPermissionInGroup(permissions) {
   return permissions != null && permissions.length > 0
     ? await this.codxCmService.getListUserByOrg(permissions)
     : permissions;
 }
-
 
 async getListUserByOrg(lstRoles, objectType) {
   var owner = '';
@@ -155,62 +149,58 @@ async getListUserByOrg(lstRoles, objectType) {
 }
 
 changeOwner(evt: any, view: any) {
-
   if (evt?.data) {
-    if(view === this.viewDefault) {
+    if (view === this.viewDefault) {
       this.owner = evt.data;
       this.buid = '';
-    }
-    else if(view === this.viewBUID) {
-      this.buid =  evt.data;
-      var datas= [this.buid];
-      this.codxCmService.getListUserByBUID(datas).subscribe((res)=> {
-        if(res){
-         this.listUser = res;
+    } else if (view === this.viewBUID) {
+      this.buid = evt.data;
+      var datas = [this.buid];
+      this.codxCmService.getListUserByBUID(datas).subscribe((res) => {
+        if (res) {
+          this.listUser = res;
         }
-      })
+      });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
-
   }
 }
 
 cbxEmpChange(evt: any) {
   if (evt?.data != null && evt?.data != '') {
     this.objectID = evt.data;
-    this.owner= evt?.data;
-    this.codxCmService.getEmployeesByDomainID(this.objectID).subscribe((user) => {
+    this.owner = evt?.data;
+    this.codxCmService
+      .getEmployeesByDomainID(this.objectID)
+      .subscribe((user) => {
         if (user) {
-         this.assignTo(user);
+          this.assignTo(user);
         }
       });
     this.detectorRef.detectChanges();
-  }
-  else {
+  } else {
     this.owner = evt;
   }
 }
-assignTo(user:any){
+assignTo(user: any) {
   this.employeeName = user?.employeeName;
   this.orgUnitName = user?.orgUnitName;
   this.positionName = user?.positionName;
 }
 deleteOrg($event) {
-  if($event) {
-    let index = this.listUser.findIndex(x=>x.userID === $event );
+  if ($event) {
+    let index = this.listUser.findIndex((x) => x.userID === $event);
     this.listUser.splice(index, 1);
 
-    if(this.listUser.length < 0 && !this.listUser) {
+    if (this.listUser.length < 0 && !this.listUser) {
       this.owner = '';
       this.buid = '';
     }
   }
 }
 
-
-
 onSaveForm() {
-  if(!this.owner?.trim() && !this.owner && this.applyFor == '1') {
+  if (!this.owner?.trim() && !this.owner && this.applyFor == '1') {
     this.notificationsService.notifyCode(
       'SYS009',
       0,
@@ -221,57 +211,20 @@ onSaveForm() {
   this.saveOwner();
 }
 
-saveOwner(){
- this.applyProcess && this.setRoles();
-  var datas = [this.recID, this.owner, this.startControl,this.buid];
-  if(this.applyFor == "1"){
-    this.codxCmService.updateOwnerDeal(datas).subscribe((res)=> {
-      if(res) {
+saveOwner() {
+  var datas = [this.recID, this.owner, this.startControl, this.buid];
+  if (this.applyFor == '1') {
+    this.codxCmService.updateOwnerDeal(datas).subscribe((res) => {
+      if (res) {
         this.dialogRef.close(res[0]);
       }
-  })
-  }
-  else if (this.applyFor == "5") {
-    this.codxCmService.updateOwnerLead(datas).subscribe((res)=> {
-      if(res) {
+    });
+  } else if (this.applyFor == '5') {
+    this.codxCmService.updateOwnerLead(datas).subscribe((res) => {
+      if (res) {
         this.dialogRef.close(res[0]);
       }
-  })
-}
-
-}
-setRoles() {
-  var tmp = this.listParticipants.find((x) => x.userID == this.owner);
-  if (
-    this.step?.roles != null &&
-    this.step?.roles?.length > 0
-  ) {
-    var index = this.step.roles.findIndex(
-      (x) => x.roleType == 'S'
-    );
-    if (index != -1) {
-      if (this.step.roles[index].objectID != this.owner) {
-        this.step.roles[index].objectID = this.owner;
-        this.step.roles[index].objectName = tmp?.userName;
-        this.step.roles[index].objectType = 'U';
-      }
-    } else {
-      var u = new tmpInstancesStepsRoles();
-      u['objectID'] = this.owner;
-      u['objectName'] = tmp?.userName;
-      u['objectType'] = 'U';
-      u['roleType'] = 'S';
-      this.step.roles.push(u);
-    }
-  } else {
-    this.step.roles = [];
-    var u = new tmpInstancesStepsRoles();
-    u['objectID'] = this.owner;
-    u['objectName'] = tmp?.userName;
-    u['objectType'] = 'U';
-    u['roleType'] = 'S';
-    this.step.roles.push(u);
+    });
   }
 }
-
 }

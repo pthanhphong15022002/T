@@ -819,7 +819,7 @@ export class LeadsComponent
       if (e && e.event != null) {
         e.event.modifiedOn = new Date();
         this.dataSelected = e.event;
-        this.detailViewLead.promiseAllLoad();
+     //   this.detailViewLead.promiseAllLoad();
         this.view.dataService.update(this.dataSelected).subscribe();
         this.changeDetectorRef.detectChanges();
       }
@@ -1484,7 +1484,7 @@ export class LeadsComponent
       this.notificationsService.notifyCode('SYS007');
     } else {
       var datas = [this.dataSelected.recID, this.statusDefault];
-      this.codxCmService.changeStatus(datas).subscribe((res) => {
+      this.codxCmService.changeStatusLead(datas).subscribe((res) => {
         if (res[0]) {
           this.dialogQuestionCopy.close();
           this.dataSelected.status = res[0].status;

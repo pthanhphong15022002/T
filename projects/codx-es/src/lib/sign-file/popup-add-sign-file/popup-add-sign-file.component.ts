@@ -216,7 +216,6 @@ export class PopupAddSignFileComponent implements OnInit {
       .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
       .subscribe((cate) => {
         if (cate) {
-          debugger
           this.eSign = cate?.eSign;
           this.signatureType = cate?.signatureType;
         }
