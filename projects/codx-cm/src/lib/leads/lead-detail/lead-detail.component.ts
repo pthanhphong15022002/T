@@ -181,7 +181,7 @@ export class LeadDetailComponent implements OnInit {
   async promiseAllLoad() {
     this.isDataLoading = true;
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
-    await this.getTmpDeal();
+    this.dataSelected.dealID  && await this.getTmpDeal();
   }
   async executeApiCalls() {
     await this.getValueListRole();
