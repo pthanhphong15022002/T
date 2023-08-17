@@ -25,12 +25,12 @@ import {
 import { Subject, pipe, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-cashpayments-add-cashpaymentsuggestion',
-  templateUrl: './cashpayments-add-cashpaymentsuggestion.component.html',
-  styleUrls: ['./cashpayments-add-cashpaymentsuggestion.component.css'],
+  selector: 'lib-advancepayment',
+  templateUrl: './advancepayment.component.html',
+  styleUrls: ['./advancepayment.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush
 })
-export class CashpaymentSuggestion extends UIComponent implements OnInit {
+export class AdvancePayment extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   dialog!: DialogRef;

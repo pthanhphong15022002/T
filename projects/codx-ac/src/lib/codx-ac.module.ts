@@ -69,7 +69,6 @@ import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/salesinvoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
-import { CashpaymentSuggestion } from './vouchers/cashpayments/cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
 import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
 import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
 import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
@@ -79,6 +78,7 @@ import { PurchaseinvoiceslinesAddComponent } from './vouchers/purchaseinvoices/p
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
@@ -269,7 +269,7 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    CashpaymentSuggestion,
+    AdvancePayment,
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,
