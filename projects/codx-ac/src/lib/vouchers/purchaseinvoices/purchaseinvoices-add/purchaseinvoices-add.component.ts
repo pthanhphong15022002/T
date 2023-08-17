@@ -5,7 +5,7 @@ import {
   Injector,
   OnInit,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -524,7 +524,7 @@ export class PurchaseinvoicesAddComponent
       'discamt',
       'vatbase',
       'vatamt',
-      "miscprice",
+      'miscprice',
       'miscamt',
       'salestaxpct',
       'salestaxamt',
@@ -567,7 +567,7 @@ export class PurchaseinvoicesAddComponent
 
     // bùa 🤬
     // edit => escape => edit again => lỗi
-    if (e.type === "closeEdit" && !e.data.isAddNew) {
+    if (e.type === 'closeEdit' && !e.data.isAddNew) {
       this.lines[e.data._rowIndex] = e.data;
     }
   }
@@ -612,7 +612,7 @@ export class PurchaseinvoicesAddComponent
 
     // bùa 🤬
     // edit => escape => edit again => lỗi
-    if (e.type === "closeEdit" && !e.data.isAddNew) {
+    if (e.type === 'closeEdit' && !e.data.isAddNew) {
       this.vatInvoices[e.data._rowIndex] = e.data;
     }
   }
