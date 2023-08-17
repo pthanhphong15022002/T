@@ -559,4 +559,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  setNameTypeTask(taskType){
+    let type = this.listTaskType?.find(task => task?.value == taskType);
+    return type?.text;
+  }
 }

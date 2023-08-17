@@ -34,6 +34,8 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
     private cache: CacheService,
     public sanitizer: DomSanitizer
   ) {
+    debugger
+    var a = this.dataTree
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
