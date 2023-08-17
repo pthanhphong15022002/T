@@ -30,7 +30,7 @@
     <div class="tab-tch mt-3">
       <div class="d-flex align-items-start justify-content-between mb-3">
         <div class="d-flex align-items-start">
-          <span *ngIf="data?.items.length > 0">
+          <span *ngIf="data?.items && data?.items.length > 0">
             <div
               id="{{ data.taskID }}"
               class="icon-16  me-2 align-items-start pt-3  {{
