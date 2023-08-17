@@ -340,17 +340,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .login(this.fl.email.value, this.fl.password.value)
             .pipe()
             .subscribe((data) => {
-              if (data) {
-                if (!data.isError) {
-                  if (this.returnUrl.indexOf(data.tenant) > 0)
-                    this.router.navigate([`${this.returnUrl}`]);
-                  else
-                    this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
-                } else {
-                  //$(this.error.nativeElement).html(data.error);
-                  this.notificationsService.notify(data.error);
-                }
-              }
+              this.loginAfter(data);
             });
           this.unsubscribe.push(loginSubscr);
         } else {

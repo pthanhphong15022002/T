@@ -696,6 +696,7 @@ export class PopupConvertLeadComponent implements OnInit {
       tmp.objectType = '4';
       tmp.objectName = this.deal.dealName;
       tmp.contactName = this.lead.contactName;
+      tmp.refID = this.lead.contactID;
       tmp.jobTitle = this.lead.jobTitle ?? '';
       tmp.mobile = this.lead.phone;
       tmp.role = '';
@@ -704,7 +705,7 @@ export class PopupConvertLeadComponent implements OnInit {
       tmp.delete = true;
       tmp.write = true;
       tmp.share = true;
-      this.recIDContact = tmp.recID;
+      this.recIDContact = this.lead.contactID;
       this.lstContactDeal.push(tmp);
     }
   }
