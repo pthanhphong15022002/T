@@ -385,7 +385,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         this.loading = false;
       });
     this.api
-      .exec('AC', 'AcctTransBusiness', 'LoadDataAsync', [data.recID])
+      .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if(res)
@@ -470,7 +470,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
   loadhideFields() {
     this.acService
-      .execApi('AC', 'CommonBusiness', 'GetDataVoucherDefaultAsync', [this.journalNo])
+      .execApi('AC', 'CommonBusiness', 'GetDataDefaultVoucherAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.journal = res.journal;
