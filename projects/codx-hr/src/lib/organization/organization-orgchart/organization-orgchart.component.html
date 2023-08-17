@@ -2790,6 +2790,7 @@
     }"
     [centerOnCursor]="true"
     [scale]="scaleNumber"
+    (onCursorChanged)="onCursorChanged($event)"
     [templates]="[
       {
         name: 'contactTemplate',

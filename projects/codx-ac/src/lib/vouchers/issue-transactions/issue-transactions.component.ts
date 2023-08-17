@@ -26,20 +26,20 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
-import { ReceiptTransactionsAddComponent } from './receipt-transactions-add/receipt-transactions-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
+import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
 
 @Component({
-  selector: 'lib-receipt-transactions',
-  templateUrl: './receipt-transactions.component.html',
-  styleUrls: ['./receipt-transactions.component.css'],
+  selector: 'lib-issue-transactions',
+  templateUrl: './issue-transactions.component.html',
+  styleUrls: ['./issue-transactions.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsComponent extends UIComponent {
+export class IssueTransactionsComponent extends UIComponent {
   //#region Constructor
 
   views: Array<ViewModel> = [];
@@ -81,13 +81,13 @@ export class ReceiptTransactionsComponent extends UIComponent {
   journal: IJournal;
   hideFields: Array<any> = [];
   fmVouchers: FormModel = {
-    formName: 'VouchersReceipts',
-    gridViewName: 'grvVouchersReceipts',
+    formName: 'VouchersIssues',
+    gridViewName: 'grvVouchersIssues',
     entityName: 'IV_Vouchers',
   };
   fmVouchersLines: FormModel = {
-    formName: 'VouchersLinesReceipts',
-    gridViewName: 'grvVouchersLinesReceipts',
+    formName: 'VouchersLinesIssues',
+    gridViewName: 'grvVouchersLinesIssues',
     entityName: 'IV_VouchersLines',
   };
   vouchersLines: Array<VouchersLines> = [];
@@ -238,7 +238,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            ReceiptTransactionsAddComponent,
+            IssueTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -270,7 +270,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            ReceiptTransactionsAddComponent,
+            IssueTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -312,7 +312,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.isFull = true;
           this.dialog = this.callfunc.openSide(
-            ReceiptTransactionsAddComponent,
+            IssueTransactionsAddComponent,
             obj,
             option,
             this.view.funcID
@@ -529,19 +529,19 @@ export class ReceiptTransactionsComponent extends UIComponent {
   {
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT070806' || // ghi sổ
-        x.functionID == 'ACT070804' || // gửi duyệt
-        x.functionID == 'ACT070805' || // hủy yêu cầu duyệt
-        x.functionID == 'ACT070807' || // khôi phục
-        x.functionID == 'ACT070808' || // in
-        x.functionID == 'ACT070803' // kiểm tra tính hợp lệ
+        x.functionID == 'ACT071406' || // ghi sổ
+        x.functionID == 'ACT071404' || // gửi duyệt
+        x.functionID == 'ACT071405' || // hủy yêu cầu duyệt
+        x.functionID == 'ACT071407' || // khôi phục
+        x.functionID == 'ACT071408' || // in
+        x.functionID == 'ACT071403' // kiểm tra tính hợp lệ
     );
     if (bm.length > 0) {
       switch(data.status)
       {
         case '0':
           bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070803' || morefunction.functionID == 'ACT070808')
+            if(morefunction.functionID == 'ACT071403' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;
@@ -551,7 +551,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
           {
             bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT070804' || morefunction.functionID == 'ACT070808')
+              if(morefunction.functionID == 'ACT071404' || morefunction.functionID == 'ACT071408')
                 morefunction.disabled = false;
               else
                 morefunction.disabled = true;
@@ -560,7 +560,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
           {
             bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+              if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
                 morefunction.disabled = false;
               else
                 morefunction.disabled = true;
@@ -569,7 +569,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           break;
         case '3':
           bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070805' || morefunction.functionID == 'ACT070808')
+            if(morefunction.functionID == 'ACT071405' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;
@@ -577,7 +577,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           break;
         case '5':
           bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;
@@ -585,7 +585,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           break;
         case '6':
           bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070807' || morefunction.functionID == 'ACT070808')
+            if(morefunction.functionID == 'ACT071407' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;
@@ -593,7 +593,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           break;
         case '9':
           bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')
+            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
               morefunction.disabled = false;
             else
               morefunction.disabled = true;

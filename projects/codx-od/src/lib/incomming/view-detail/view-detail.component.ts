@@ -1243,6 +1243,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               )
               .subscribe((item) => {
                 if (item.status == 0) {
+                  this.data.tasks = e?.event[1];
+                  this.data.status = "3";
+                  e.data.tasks = e?.event[1];
                   that.view.dataService.update(e.data).subscribe();
                 } else that.notifySvr.notify(item.message);
               });

@@ -174,6 +174,7 @@ export class TargetsComponent
   dataValueSearch = '';
   probability = '1';
   formModel: FormModel;
+  isButton = false;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -653,13 +654,13 @@ export class TargetsComponent
     if (e.functionID) {
       switch (e.functionID) {
         case 'SYS02':
-          this.deleteTargetLine(data);
+          if (!this.isButton) this.deleteTargetLine(data);
           break;
         case 'SYS03':
-          this.edit(data);
+          if (!this.isButton) this.edit(data);
           break;
         case 'CM0206_1':
-          this.popupChangeAllocationRate(data);
+          if (!this.isButton) this.popupChangeAllocationRate(data);
           break;
         default:
           this.codxShareService.defaultMoreFunc(
@@ -713,6 +714,7 @@ export class TargetsComponent
 
   //#region CRUD
   add() {
+    this.isButton = true;
     this.view.dataService.addNew().subscribe((res: any) => {
       let dialogModel = new DialogModel();
       dialogModel.DataService = this.view.dataService;
@@ -737,21 +739,22 @@ export class TargetsComponent
         dialogModel
       );
       dialog.closed.subscribe((e) => {
+        this.isButton = false;
         if (!e?.event) this.view.dataService.clear();
         if (e != null && e?.event != null) {
           var data = e?.event[0];
           if (data.year == this.year) {
-            var index = this.lstTreeSearchs.findIndex(
+            var index = this.lstDataTree.findIndex(
               (x) => x.businessLineID == data?.businessLineID
             );
             if (index != -1) {
-              this.lstTreeSearchs[index] = data;
+              this.lstDataTree[index] = data;
               // this.lstDataTree.splice(index, 1);
             } else {
-              this.lstTreeSearchs.push(Object.assign({}, data));
+              this.lstDataTree.push(Object.assign({}, data));
               this.countTarget++;
             }
-            this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+            this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
             let lst = [];
             this.lstDataTree.forEach((res) => {
               res?.items?.forEach((element) => {
@@ -775,6 +778,7 @@ export class TargetsComponent
   }
 
   async edit(data) {
+    this.isButton = true;
     let lstOwners = [];
     let lstTargetLines = [];
     var tar = await firstValueFrom(
@@ -815,22 +819,23 @@ export class TargetsComponent
           dialogModel
         );
         dialog.closed.subscribe((e) => {
+          this.isButton = false;
           if (!e?.event) this.view.dataService.clear();
           if (e != null && e?.event != null) {
             var data = e?.event[0];
             if (data.year == this.year) {
               this.view.dataService.update(data).subscribe();
-              var index = this.lstTreeSearchs.findIndex(
+              var index = this.lstDataTree.findIndex(
                 (x) => x.businessLineID == data?.businessLineID
               );
               if (index != -1) {
-                this.lstTreeSearchs[index] = data;
+                this.lstDataTree[index] = data;
               } else {
-                this.lstTreeSearchs.push(Object.assign({}, data));
+                this.lstDataTree.push(Object.assign({}, data));
                 this.countTarget++;
               }
               this.lstDataTree = JSON.parse(
-                JSON.stringify(this.lstTreeSearchs)
+                JSON.stringify(this.lstDataTree)
               );
               let lst = [];
               this.lstDataTree.forEach((res) => {
@@ -867,14 +872,14 @@ export class TargetsComponent
             type: 'delete',
             data: data,
           });
-          var index = this.lstTreeSearchs.findIndex(
+          var index = this.lstDataTree.findIndex(
             (x) => x.recID == data.recID
           );
           if (index != -1) {
-            this.lstTreeSearchs.splice(index, 1);
+            this.lstDataTree.splice(index, 1);
             this.countTarget--;
           }
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
           let lst = [];
           this.lstDataTree.forEach((res) => {
             res?.items?.forEach((element) => {
@@ -906,6 +911,7 @@ export class TargetsComponent
 
   //#region Month
   async popupChangeAllocationRate(data) {
+    this.isButton = true;
     var lstLinesBySales = [];
     let result = await firstValueFrom(
       this.api.execSv<any>(
@@ -944,14 +950,15 @@ export class TargetsComponent
       dialogModel
     );
     dialog.closed.subscribe((e) => {
+      this.isButton = false;
       if (!e?.event) this.view.dataService.clear();
       if (e != null && e?.event != null) {
-        let index = this.lstTreeSearchs.findIndex(
+        let index = this.lstDataTree.findIndex(
           (x) => e.event.businessLineID == x.businessLineID
         );
         if (index != -1) {
-          this.lstTreeSearchs[index] = e.event;
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstTreeSearchs));
+          this.lstDataTree[index] = e.event;
+          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
         }
         this.isShow = false;
         this.changeDetec.detectChanges();

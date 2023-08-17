@@ -10,20 +10,19 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { ReceiptTransactionsLineAddComponent } from '../receipt-transactions-line-add/receipt-transactions-line-add.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
-
+import { IssueTransactionsLineAddComponent } from '../issue-transactions-line-add/issue-transactions-line-add.component';
 
 @Component({
-  selector: 'lib-receipt-transactions-add',
-  templateUrl: './receipt-transactions-add.component.html',
-  styleUrls: ['./receipt-transactions-add.component.css'],
+  selector: 'lib-issue-transactions-add',
+  templateUrl: './issue-transactions-add.component.html',
+  styleUrls: ['./issue-transactions-add.component.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit{
+export class IssueTransactionsAddComponent extends UIComponent implements OnInit{
 
   //#region Constructor
 
@@ -896,7 +895,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
-            ReceiptTransactionsLineAddComponent,
+            IssueTransactionsLineAddComponent,
             '',
             900,
             850,
@@ -954,7 +953,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
-                ReceiptTransactionsLineAddComponent,
+                IssueTransactionsLineAddComponent,
                 '',
                 650,
                 600,

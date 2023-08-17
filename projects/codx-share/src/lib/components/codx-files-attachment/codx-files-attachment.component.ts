@@ -20,6 +20,7 @@ export class CodxFilesAttachmentComponent {
   @Input() referType: string = ''; 
   @Input() addPermissions: Permission[] = [];
   @Input() heightScroll :any;
+  @Input() isScroll :any = true;
   @Output() fileAdded = new EventEmitter<any>();
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileSave = new EventEmitter<any>();

@@ -79,6 +79,9 @@ import { PurchaseinvoiceslinesAddComponent } from './vouchers/purchaseinvoices/p
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
+import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
+import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -155,7 +158,7 @@ export const routes: Routes = [
       },
       {
         path: 'issuetransaction/:funcID',
-        component: ReceiptTransactionsComponent,
+        component: IssueTransactionsComponent,
         data: { noReuse: true },
       },
       {
@@ -295,6 +298,9 @@ export const routes: Routes = [
     TableAccountingComponent,
     TranformSubobjectPipe,
     TranformClassBorderPipe,
+    IssueTransactionsComponent,
+    IssueTransactionsAddComponent,
+    IssueTransactionsLineAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
