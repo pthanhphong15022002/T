@@ -767,18 +767,18 @@
                           class="me-2 label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
-                          fiedName="DealValueTo"
+                          fiedName="ExpectedTo"
                         ></codx-label>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
-                          #dealValueTo
+                          #expectedTo
                           [innerHTML]="
-                            dataSelected?.dealValueTo
+                            dataSelected?.expectedTo
                               | formatvalue
                                 : formModel
-                                : 'dealValueTo'
-                                : dealValueTo
+                                : 'expectedTo'
+                                : expectedTo
                                 : 'CMDeals'
                                 : 'grvCMDeals'
                               | async
