@@ -2238,4 +2238,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return group?.progress > 0 && group?.progress < 100 ? "2" : (group?.progress <= 0 ? "1" : "3");
     }
   }
+  setNameTypeTask(taskType){
+    let type = this.listTaskType?.find(task => task?.value == taskType);
+    return type?.text;
+  }
 }
