@@ -166,6 +166,8 @@ export class PopupAddTargetComponent {
         this.lstTargetLines?.forEach((res) => {
           res.target =
             (res.target / exchangeRate?.exchRate) * this.exchangeRate;
+          res.currencyID =  currencyID;
+          res.exchangeRate = exchangeRate.exchRate;
         });
       }
       if (exchangeRate?.exchRate > 0) {
