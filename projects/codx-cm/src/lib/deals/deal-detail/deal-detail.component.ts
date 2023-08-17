@@ -339,7 +339,7 @@ export class DealDetailComponent implements OnInit {
     });
   }
   checkCompletedInstance(dealStatus: any) {
-    if (dealStatus == '1' || dealStatus == '2') {
+    if (dealStatus == '1' || dealStatus == '2' || dealStatus == '0') {
       this.deleteListReason(this.listSteps);
     }
   }
