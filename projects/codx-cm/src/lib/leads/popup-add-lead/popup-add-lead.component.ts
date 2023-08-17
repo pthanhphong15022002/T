@@ -466,7 +466,7 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-
+    this.lead.owner = this.owner;
     if (this.avatarChangeLead) {
       await this.saveFileLead(this.leadId);
     }
