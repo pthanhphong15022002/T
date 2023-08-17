@@ -40,8 +40,12 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab tabindex="-1" heightAdjustMode="Fill"
-    class="overflow-auto mb-4" #tab>
+    <ejs-tab
+      tabindex="-1"
+      heightAdjustMode="Fill"
+      class="overflow-auto mb-4"
+      #tab
+    >
       <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
@@ -94,6 +98,34 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
+                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="warehouseID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="reasonID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
@@ -129,46 +161,6 @@
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="warehouseID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="reasonID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              <div class="form-group">
-                <codx-label fiedName="RefNo" [formModel]="form.formModel">
-                </codx-label
-                >:&nbsp;
-                <span *ngIf="vouchers.refNo">
-                  {{ vouchers.refNo }}
-                </span>
               </div>
             </div>
           </div>
