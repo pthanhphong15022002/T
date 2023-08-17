@@ -306,7 +306,7 @@ export class PopupPermissionsComponent implements OnInit {
       if (
         (this.lstPermissions[index]?.roleType == 'O' &&
           this.lstPermissions[index]?.objectID == this.data?.owner) ||
-        !this.data?.assign || this.lstPermissions[index]?.memberType == '0'
+        !this.data?.assign || this.lstPermissions[index]?.memberType == '0' || this.lstPermissions[index]?.memberType == '2'
       )
         return true;
     }
@@ -366,7 +366,7 @@ export class PopupPermissionsComponent implements OnInit {
         'ERM.Business.CM',
         'LeadsBusiness',
         'UpdatePermissionsAsync',
-        [this.data, this.entityName]
+        [this.data, this.lstDeletePermissions, this.entityName]
       )
       .subscribe((res) => {
         if (res) {

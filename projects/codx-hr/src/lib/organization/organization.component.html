@@ -321,6 +321,7 @@
                 <span class="mx-1 text-gray-400">|</span>
                 <span
                   class="text-dark-700"
+                  (click)="preventDedefault($event)"
                   [innerHTML]="
                     item.employeeManager.email
                       | formatvalue : formModelEmployee : 'email'

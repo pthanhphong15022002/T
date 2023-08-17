@@ -119,7 +119,9 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   renderTrainFieldID(event){
-    this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
+    if(event.component?.itemsSelected){
+      this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
+    }
   }
 
   renderTrainLevel(event){

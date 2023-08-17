@@ -573,7 +573,7 @@
             >
               /
             </span>
-            <span
+            <span *ngIf="dataSelected?.phoneExt"
               class="text-dark fw-bold codx-textcontent"
               [innerHTML]="
                 dataSelected?.phoneExt

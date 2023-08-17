@@ -219,33 +219,32 @@ export class PopupEProcessContractComponent
         });
   }
 
-  clickMF(event, data){
-    debugger
-    switch(event.functionID){
+  clickMF(event, data) {
+    switch (event.functionID) {
       case 'SYS03': //edit
-      this.addBenefit('edit',data);
+        this.addBenefit('edit', data);
         break;
 
       case 'SYS02': //delete
-    this.notify.alertCode('SYS030').subscribe((x) =>{
-      if (x.event?.status == 'Y') {
-        let index = this.tempBenefitArr.indexOf(data)
-        if(index){
-          this.tempBenefitArr.splice(index, 1);
-          this.data.benefits = JSON.stringify(this.tempBenefitArr);
-          this.df.detectChanges();
-      }}
-    })
+        this.notify.alertCode('SYS030').subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            let index = this.tempBenefitArr.indexOf(data);
+            if (index) {
+              this.tempBenefitArr.splice(index, 1);
+              this.data.benefits = JSON.stringify(this.tempBenefitArr);
+              this.df.detectChanges();
+            }
+          }
+        });
         break;
     }
   }
 
-  handleShowHideMF(evt){
-    debugger
-    for(let i = 0; i < evt.length; i++){
+  handleShowHideMF(evt) {
+    for (let i = 0; i < evt.length; i++) {
       let funcIDStr = evt[i].functionID;
-        evt[i].disabled = true;
-      if(funcIDStr == 'SYS02' || funcIDStr == 'SYS03'){
+      evt[i].disabled = true;
+      if (funcIDStr == 'SYS02' || funcIDStr == 'SYS03') {
         evt[i].disabled = false;
       }
     }
@@ -291,33 +290,32 @@ export class PopupEProcessContractComponent
         headerText: 'Thêm phụ cấp',
         formGroup: this.benefitFormGroup,
         funcID: this.benefitFuncID,
-        actionType: this.actionType != 'view' ? actionType :'view',
+        actionType: this.actionType != 'view' ? actionType : 'view',
         dataObj: data,
       },
       '',
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger
       if (res?.event) {
-        if(actionType == 'add'){
-          let index = this.tempBenefitArr.findIndex((x: any) => x.BenefitID == res.event.benefitID)
-          if(index > -1){
-            this.notify.notifyCode('HR028')
-          }
-          else{
+        if (actionType == 'add') {
+          let index = this.tempBenefitArr.findIndex(
+            (x: any) => x.BenefitID == res.event.benefitID
+          );
+          if (index > -1) {
+            this.notify.notifyCode('HR028');
+          } else {
             this.tempBenefitArr.push({
               BenefitID: res.event.benefitID,
               BenefitAmt: res.event.benefitAmt,
               BenefitNorm: res.event.benefitNorm,
             });
           }
-        }
-        else if(actionType == 'edit'){
+        } else if (actionType == 'edit') {
           let index = this.tempBenefitArr.indexOf(data);
           this.tempBenefitArr[index].BenefitID = res.event.benefitID;
           this.tempBenefitArr[index].BenefitAmt = res.event.benefitAmt;
-          this.tempBenefitArr[index].BenefitNorm = res.event.benefitNorm
+          this.tempBenefitArr[index].BenefitNorm = res.event.benefitNorm;
         }
         this.data.benefits = JSON.stringify(this.tempBenefitArr);
         this.df.detectChanges();
@@ -352,7 +350,6 @@ export class PopupEProcessContractComponent
         )
         .subscribe((res) => {
           if (res) {
-            debugger;
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
             this.df.detectChanges();
@@ -526,7 +523,6 @@ export class PopupEProcessContractComponent
       this.hrSevice
         .editEContract(this.data, this.useForQTNS)
         .subscribe((res) => {
-          debugger
           if (res && res[0]) {
             this.notify.notifyCode('SYS007');
             res[0].emp = this.employeeObj;

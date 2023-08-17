@@ -644,6 +644,8 @@
           <codx-label
           class="ms-6"
             fiedName="AgeFrom"
+            [name]="'lblRelationAge'"
+            [default]="'Độ tuổi (thân nhân)'"
             [formModel]="fmPolicyConstraints"
           ></codx-label>
         </div>
@@ -671,17 +673,144 @@
         </div>
       </div>
       <div *ngIf="constraint == '3'">
+        <div class="form-group row">
+          <div class="col-6 d-flex flex-column">
+            <codx-label
+            class="ms-6"
+              fiedName="Relative"
+              [formModel]="fmPolicyConstraints"
+            ></codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input
+              field="relative"
+              [formModel]="fmPolicyConstraints"
+              [Group]="formGroupPolicyConstraints"
+            ></codx-input>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-2">
+          <codx-input
+            field="relativeAgeFrom"
+            [formModel]="fmPolicyConstraints"
+            [Group]="formGroupPolicyConstraints"
+          ></codx-input>
+        </div>
+        <codx-label
+          class="ms-6"
+            [name]="'lblRelativeAgeTo'"
+            [default]="'Đến'"
+            [formModel]="fmPolicyConstraints"
+          ></codx-label>
+        <div class="col-2">
+          <codx-input
+            field="relativeAgeTo"
+            [formModel]="fmPolicyConstraints"
+            [Group]="formGroupPolicyConstraints"
+          ></codx-input>
+        </div>
+      </div>
 
       </div>
       <div *ngIf="constraint == '4'">
-
-      </div>
+        <div class="form-group row">
+          <div class="col-6 d-flex flex-column">
+              <codx-label
+                  fiedName="TrainLevel"
+            class="ms-6"
+                  [formModel]="fmPolicyConstraints"
+              ></codx-label>
+          </div>
+          <div class="col-6 d-flex flex-row">
+              <button
+              class="btn btn-icon ms-3"
+              (click)="onClickOpenComboboxConstraint('trainLevel')"
+            >
+              <i class="icon-edit-one icon-18 text-dark" 
+              >
+              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
+            </i>
+            </button>
+          </div>
+        </div>
+        <span *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
+          <span
+          class="badge badge-success border-0 ms-2"
+          [innerHTML]="trainlevel
+              | formatvalue : fmPolicyConstraints : 'trainLevel'
+              | async"
+        ></span></span>
+    </div>
       <div *ngIf="constraint == '5'">
-
+        <div class="form-group row">
+          <div class="col-6 d-flex flex-column">
+              <codx-label
+                  fiedName="TrainField"
+            class="ms-6"
+                  [formModel]="fmPolicyConstraints"
+              ></codx-label>
+          </div>
+          <div class="col-6 d-flex flex-row">
+              <button
+              class="btn btn-icon ms-3"
+              (click)="onClickOpenComboboxConstraint('trainField')"
+            >
+              <i class="icon-edit-one icon-18 text-dark" 
+              >
+              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
+            </i>
+            </button>
+          </div>
+      </div>
+      <span *ngFor="let trainField of lstSelectedConstraintTrainField">
+        <span
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="trainField
+            | formatvalue : fmPolicyConstraints : 'trainField'
+            | async"
+      ></span></span>
       </div>
       <div *ngIf="constraint == '6'">
-
+        <div class="form-group row">
+          <div class="col-6 d-flex flex-column">
+              <codx-label
+                  fiedName="Certificate"
+            class="ms-6"
+                  [formModel]="fmPolicyConstraints"
+              ></codx-label>
+          </div>
+          <div class="col-6 d-flex flex-row">
+              <button
+              class="btn btn-icon ms-3"
+              (click)="onClickOpenComboboxConstraint('certificate')"
+            >
+              <i class="icon-edit-one icon-18 text-dark" 
+              >
+              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
+            </i>
+            </button>
+          </div>
       </div>
+      <span *ngFor="let cert of lstSelectedConstraintCertificate">
+        <span
+        class="badge badge-success border-0 ms-2"
+        [innerHTML]="cert
+            | formatvalue : fmPolicyConstraints : 'certificate'
+            | async"
+      ></span></span>
+      </div>
+
+      <codx-combobox-popup
+      *ngIf="!isHiddenCbxConstraint"
+      [comboboxName]="cbxConstraintCbxName"
+      [multiple]="true"
+      [width]="600"
+      [height]="500"
+      [value]="cbxConstraintCbxValue"
+      (clickSave)="onClickHideComboboxConstraint($event)"
+      >
+      </codx-combobox-popup>
     </div>
 </div>
 

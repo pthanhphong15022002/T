@@ -171,6 +171,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    console.log("----------",this.isRoleAll);
+    
     if (changes.dataSources || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
       await this.getStepById();

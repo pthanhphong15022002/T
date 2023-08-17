@@ -71,17 +71,6 @@
       <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 task-name">
          {{data?.task?.taskName}} 
       </div>
-      <div class="text-gray-600">
-        <codx-label class="title" fiedName="updateTime" default="Cập nhật:">
-        </codx-label>
-        <span
-          [innerHTML]="
-            data?.task?.modifiedOn || data?.task?.createdOn
-              | formatvalue : grvMoreFunction : 'ModifiedOn'
-              | async
-          "
-        ></span>
-      </div>
     </div>
     <codx-mfunc
       *ngIf="!isPause && data?.task?.status == '1'"
@@ -175,3 +164,15 @@
   >
   </codx-attachment>
 </ng-template>
+
+ <!-- <div class="text-gray-600">
+        <codx-label class="title" fiedName="updateTime" default="Cập nhật:">
+        </codx-label>
+        <span
+          [innerHTML]="
+            data?.task?.modifiedOn || data?.task?.createdOn
+              | formatvalue : grvMoreFunction : 'ModifiedOn'
+              | async
+          "
+        ></span>
+      </div> -->
