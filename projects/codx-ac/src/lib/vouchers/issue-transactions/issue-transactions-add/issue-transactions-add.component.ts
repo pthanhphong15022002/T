@@ -214,16 +214,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           let text = e?.component?.itemsSelected[0]?.ReasonName;
           this.setReason(field, text, 0);
           break;
-        case 'objectid':
-          this.vouchers.objectID = e.data;
-          if(e.component.itemsSelected.length > 0)
-          {
-            let data = e.component.itemsSelected[0];
-            this.vouchers.objectType = data['ObjectType'];
-            this.vouchers.objectName = data['ObjectName'];
-            this.setReason(field, data['ObjectName'], 1);
-          }
-          break;
+        // case 'objectid':
+        //   this.vouchers.objectID = e.data;
+        //   if(e.component.itemsSelected.length > 0)
+        //   {
+        //     let data = e.component.itemsSelected[0];
+        //     this.vouchers.objectType = data['ObjectType'];
+        //     this.vouchers.objectName = data['ObjectName'];
+        //     this.setReason(field, data['ObjectName'], 1);
+        //   }
+        //   break;
         case 'memo':
           this.vouchers.memo = e.data;
           break;
@@ -233,14 +233,14 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         case 'voucherno':
           this.vouchers.voucherNo = e.data;
           break;
-        case 'refno':
-          this.vouchers.refNo = e.data;
+        case 'dim1':
+          this.vouchers.dim1 = e.data;
           break;
-        case 'requester':
-          this.vouchers.requester = e.data;
+        case 'dim2':
+          this.vouchers.dim2 = e.data;
           break;
-        case 'requestdate':
-          this.vouchers.requestDate = e.data;
+        case 'dim3':
+          this.vouchers.dim3 = e.data;
           break;
       }
     }
