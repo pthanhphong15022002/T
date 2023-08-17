@@ -94,6 +94,34 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
+                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="warehouseID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="reasonID"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
@@ -129,46 +157,6 @@
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="warehouseID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="reasonID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              <div class="form-group">
-                <codx-label fiedName="RefNo" [formModel]="form.formModel">
-                </codx-label
-                >:&nbsp;
-                <span *ngIf="vouchers.refNo">
-                  {{ vouchers.refNo }}
-                </span>
               </div>
             </div>
           </div>
@@ -297,7 +285,6 @@
   <ng-container *ngIf="modeGrid == '1'">
     <div class="position-relative h-100">
       <codx-gridview-v2
-        class="tabline-content"
         #gridVouchersLine
         [formName]="fmVouchersLines.formName"
         [gridViewName]="fmVouchersLines.gridViewName"

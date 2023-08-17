@@ -122,9 +122,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   dataFolder: any;
   lstRawFile = [];
   date = new Date();
-  isScroll = true;
   dataRequest = new DataRequest();
-
   folder: any;
   closeBtnUp = false;
   barWidth = '0%';
@@ -171,7 +169,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isReferType: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Input() tmpRightThumb?: TemplateRef<any>;
-
+  @Input() isScroll = true;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;

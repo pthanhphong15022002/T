@@ -58,8 +58,8 @@ export class CodxAddTaskComponent implements OnInit {
   view = [];
   dataCombobox = [];
   litsParentID = [];
-
   user;
+  ownerParenr;
   groupTask;
   isSave = true;
   groupTaskID = null;
@@ -100,13 +100,21 @@ export class CodxAddTaskComponent implements OnInit {
     this.isStart = dt?.data?.isStart
     this.typeTask = dt?.data?.taskType;
     this.listTask = dt?.data?.listTask;
-    this.listGroup = dt?.data?.listGroup;
     this.stepsTasks = dt?.data?.dataTask;
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.ownerParenr = dt?.data?.owner;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+
+    if (dt?.data?.listGroup) { // remove group task recID null
+      this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
+      let index = this.listGroup?.findIndex((group) => !group.recID);
+      if (index >= 0) {
+        this.listGroup?.splice(index, 1);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -176,9 +184,10 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   filterText(event, key) {
-    this.stepsTasks[key] = event;
-    if (event) {
-      this.groupTask = this.listGroup.find((x) => x.refID === event);
+    let data = event?.value;
+    this.stepsTasks[key] = data;
+    if (data) {
+      this.groupTask = this.listGroup.find((x) => x.refID === data);
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
@@ -319,11 +328,11 @@ export class CodxAddTaskComponent implements OnInit {
         {
           case "Departments":
           case "OrgHierarchy":
-            data = [role?.objectID,this.step?.instanceID]
+            data = [role?.objectID,this.step?.instanceID,this.ownerParenr]
             break;
           case "Roles":
           case "Positions":
-            data = [role?.objectID,this.step?.instanceID,role?.objectType]
+            data = [role?.objectID,this.step?.instanceID, this.ownerParenr, role?.objectType]
             break;
         }
         if(data?.length > 0){

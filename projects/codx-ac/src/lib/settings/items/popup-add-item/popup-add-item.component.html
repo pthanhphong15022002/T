@@ -26,7 +26,7 @@
     [disabled]="false"
     [value]="item?.industries"
     field="industries"
-    (valueChange)="onInputChange($event)"
+    (valueChange)="onTagChange($event)"
   ></codx-tag>
 </ng-template>
 
@@ -188,7 +188,12 @@
     </div>
 
     <div class="row">
-      <codx-label default="Phân hệ sử dụng" class="fw-bold"></codx-label>
+      <codx-label
+        fiedName="lblSubsystem"
+        [formModel]="form.formModel"
+        default="Phân hệ sử dụng"
+        class="fw-bold"
+      ></codx-label>
 
       <div class="d-flex py-5 gap-7">
         <div class="d-flex gap-2">
@@ -196,7 +201,7 @@
             field="sales"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event, form)"
+            (valueChange)="onSwitchChange()"
           ></codx-input>
           <codx-label
             fiedName="sales"
@@ -209,7 +214,7 @@
             field="purchase"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event, form)"
+            (valueChange)="onSwitchChange()"
           ></codx-input>
           <codx-label
             fiedName="purchase"
@@ -222,7 +227,7 @@
             field="production"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event, form)"
+            (valueChange)="onSwitchChange()"
           ></codx-input>
           <codx-label
             fiedName="production"

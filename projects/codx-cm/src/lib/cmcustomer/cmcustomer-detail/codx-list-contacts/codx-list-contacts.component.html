@@ -40,7 +40,6 @@
       </div>
     </div>
   </div>
-
 </ng-container>
 
 <ng-template #noData>
@@ -162,15 +161,18 @@
       </div>
     </div>
     <div class="w-175px min-w-175px d-flex flex-column">
-      <div class="mb-1 d-flex align-items-center" *ngIf="data?.mobile">
+      <div
+        class="mb-1 d-flex align-items-center"
+        *ngIf="data?.mobile"
+        [ngbTooltip]="popupAllowCall"
+      >
         <span
-          [ngbTooltip]="popupAllowCall"
           [ngClass]="
             data.allowCall
-              ? 'icon-phone_android text-primary'
+              ? 'text-primary text-hover-primary'
               : 'icon-phonelink_erase'
           "
-          class="icon-16 me-1 text-hover-primary cursor-pointer"
+          class="icon-16 me-1 cursor-pointer"
           ><ng-template #popupAllowCall>
             <codx-label
               name="lblAllowCall"
@@ -183,18 +185,28 @@
             ></codx-label> </ng-template
         ></span>
         <span
-          [ngClass]="data.allowCall ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data.mobile }}</span
-        >
-      </div>
-      <div class="d-flex align-items-center" *ngIf="data?.personalEmail">
-        <span
-          [ngbTooltip]="popupAllowEmail"
-          [ngClass]="
-            data.allowEmail ? 'icon-email text-primary' : 'icon-print_disabled'
+          *ngIf="data?.allowCall"
+          class="text-gray-900 text-primary text-hover-primary"
+          [innerHTML]="
+            data?.mobile | formatvalue : formModelContact : 'mobile' | async
           "
-          class="icon-16 me-1 text-gray-900 text-hover-primary cursor-pointer"
+        ></span>
+        <span *ngIf="!data?.allowCall" class="text-gray-900">{{
+          data.mobile
+        }}</span>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        *ngIf="data?.personalEmail"
+        [ngbTooltip]="popupAllowEmail"
+      >
+        <span
+          [ngClass]="
+            data.allowEmail
+              ? 'text-primary text-hover-primary'
+              : 'icon-print_disabled'
+          "
+          class="icon-16 me-1 text-gray-900 cursor-pointer"
           ><ng-template #popupAllowEmail>
             <codx-label
               name="lblAllowEmail"
@@ -207,10 +219,16 @@
             ></codx-label> </ng-template
         ></span>
         <span
-          [ngClass]="data.allowEmail ? 'text-primary' : ''"
-          class="text-gray-900"
-          >{{ data.personalEmail }}</span
+          *ngIf="data.allowEmail"
+          class="text-gray-900 text-primary text-hover-primary"
+          [innerHTML]="
+            data?.personalEmail | formatvalue : formModelContact : 'personalEmail' | async
+          "
+          ></span
         >
+        <span *ngIf="!data.allowEmail" class="text-gray-900">{{
+          data.personalEmail
+        }}</span>
       </div>
     </div>
     <div class="w-50px min-w-50px">

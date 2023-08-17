@@ -2726,6 +2726,7 @@
 <div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
     [cursorItem]="cursorItem"
+    [highlightItem]="0"
     [navigationMode]="navigationMode"
     [items]="items"
     [annotations]="annotations"
@@ -2778,7 +2779,6 @@
       right: paddingIntervalRight,
       bottom: paddingIntervalBottom
     }"
-    [highlightItem]="0"
     [buttonsPanelSize]="48"
     [itemTitleSecondFontColor]="'#FFFFFF'"
     [childrenPlacementType]="childrenPlacementType"
@@ -2790,10 +2790,11 @@
     }"
     [centerOnCursor]="true"
     [scale]="scaleNumber"
+    (onCursorChanged)="onCursorChanged($event)"
     [templates]="[
       {
         name: 'contactTemplate',
-        itemSize: { width: 170, height: selectedTeam.includes('No') ? 48 : 154 },
+        itemSize: { width: 170, height: selectedTeam.includes('No') ? 46 : 154 },
         itemTemplate: contactTemplate,
         minimizedItemSize: { width: markerWidth, height: markerHeight },
         highlightPadding: {
@@ -2812,14 +2813,18 @@
 </div>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  <ng-container *ngFor="let item of dataVll">
+  <ng-container *ngFor="let item of dataVll" #items>
     <div
       *ngIf="itemConfig.context.orgUnitType === item.value"
       [style]="
         isCursor
-          ? stylesObjChart
+          ? !selectedTeam.includes('No')
+            ? stylesObjChart
+            : stylesObjChartActiveNoManager
           : itemConfig.id === orgUnitID && !isCursor && !disableActive
-          ? stylesObjChart
+          ? !selectedTeam.includes('No')
+            ? stylesObjChart
+            : stylesObjChartActiveNoManager
           : selectedTeam.includes('No')
           ? stylesObjChartNoneIsManager
           : stylesObjChartNone
@@ -2933,7 +2938,13 @@
           </div>
 
           <!-- <ng-container> -->
-          <div *ngIf="isPopUpManager && itemConfig.id == idHover">
+          <div
+            *ngIf="
+              isPopUpManager &&
+              itemConfig.id == idHover &&
+              itemConfig.context.employeeManager
+            "
+          >
             <div class="c-detail p-4">
               <div class="d-flex mb-2">
                 <codx-img
@@ -3081,9 +3092,7 @@
       </ng-container>
       <div
         *ngIf="itemConfig.context.isChildren"
-        [class]="
-          itemConfig.context.employeeManager ? 'p-node' : 'p-node__manager'
-        "
+        [class]="!selectedTeam.includes('No') ? 'p-node' : 'p-node__manager'"
       >
         <span
           #icon

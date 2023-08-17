@@ -308,7 +308,7 @@ export class PurchaseinvoicesComponent
       .exec(
         'AC',
         'AcctTransBusiness',
-        'LoadDataAsync',
+        'GetListDataDetailAsync',
         'e973e7b7-10a1-11ee-94b4-00155d035517'
       )
       .subscribe((res: IAcctTran[]) => {

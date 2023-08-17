@@ -461,7 +461,7 @@ export class CodxEsService {
       'ES',
       'ES',
       'CategoriesBusiness',
-      'GetAllCategoryAsync',
+      'GetAllByCategoryAsync',
       [category]
     );
   }
