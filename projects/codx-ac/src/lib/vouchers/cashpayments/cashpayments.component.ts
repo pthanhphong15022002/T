@@ -258,43 +258,19 @@ export class CashPaymentsComponent extends UIComponent {
   addNewVoucher() {
     this.dataDefaultCashpayment.recID = Util.uid(); // tạo recID mới
     let data = {
-      action: 'addNew', // trạng thái của form (thêm mới)
+      action: 'add', // trạng thái của form (thêm mới)
       headerText: this.headerText, // tiêu đề voucher
       journal: { ...this.journal }, //  data journal
       dataCashpayment: {...this.dataDefaultCashpayment}, //  data của cashpayment
       hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //  đồng tiền hạch toán
     };
-    if (this.journal.assignRule == '1') {
-      // nếu trường hợp chọn tự tạo số tự động từ sổ nhật ký
-      this.acService
-        .execApi(
-          'ERM.Business.AC',
-          'CommonBusiness',
-          'GenerateAutoNumberAsync',
-          this.journal.voucherFormat
-        )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res) {
-            data.dataCashpayment.voucherNo = res; // lấy số chứng từ tự động
-            this.callfc.openSide(
-              CashPaymentAdd,
-              data,
-              this.optionSidebar,
-              this.view.funcID
-            );
-          }
-        });
-    } else {
-      // nếu trường hợp chọn thủ công hoặc tạo trước khi lưu từ sổ nhật ký          
-      this.callfc.openSide(
-        CashPaymentAdd,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
+    this.callfc.openSide(
+      CashPaymentAdd,
+      data,
+      this.optionSidebar,
+      this.view.funcID
+    );
   }
 
   /**
