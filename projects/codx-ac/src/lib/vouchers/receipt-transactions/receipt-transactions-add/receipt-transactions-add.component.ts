@@ -234,14 +234,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         case 'voucherno':
           this.vouchers.voucherNo = e.data;
           break;
-        case 'dim1':
-          this.vouchers.dim1 = e.data;
+        case 'diM1':
+          this.vouchers.diM1 = e.data;
           break;
-        case 'dim2':
-          this.vouchers.dim2 = e.data;
+        case 'diM2':
+          this.vouchers.diM2 = e.data;
           break;
-        case 'dim3':
-          this.vouchers.dim3 = e.data;
+        case 'diM3':
+          this.vouchers.diM3 = e.data;
           break;
       }
     }
