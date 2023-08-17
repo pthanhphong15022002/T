@@ -304,8 +304,8 @@ export class PopupAddLeadComponent
     if ($event) {
       let ownerName = '';
       if (view === this.viewOwnerDefault) {
-        this.owner = $event.data;
-        ownerName = $event.component.itemsSelected[0].UserName;
+        this.owner = $event?.data;
+        ownerName = $event?.component?.itemsSelected[0]?.UserName;
       }
       else {
         this.owner = $event;
