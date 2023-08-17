@@ -378,18 +378,26 @@ export class OrgorganizationComponent extends UIComponent {
 
   // search employee in popup view list employee
   searchText: string = '';
-  searchUser(event: any) {
-    this.searchText = event;
-    this.lstMyTeam = [];
-    this.pageIndex = 1;
-    this.getMyTeam();
-  }
-
+  click = false;
   pageIndex: number = 1;
   total: number = 0;
   lstMyTeam: any[] = [];
   scrolling: boolean = false;
   orgId: string;
+
+  searchUser(event: any) {
+    this.searchText = event;
+    this.lstMyTeam = [];
+    this.pageIndex = 1;
+
+    if (this.searchText !== '' || this.searchText === '') {
+      this.scrolling = false;
+
+      if (!this.scrolling) {
+        this.getMyTeam();
+      }
+    }
+  }
 
   //get my team
   getMyTeam() {
@@ -426,19 +434,38 @@ export class OrgorganizationComponent extends UIComponent {
     if (
       this.scrolling &&
       total <= e.scrollHeight + 2 &&
-      total > e.scrollHeight - 2
+      total > e.scrollHeight - 2 &&
+      this.click
     ) {
       this.scrolling = false;
       this.getMyTeam();
     }
+    //Use reset div height
+    this.click = true;
   }
 
   //Click load employee
+  // clickOpen(event, data, employee) {
+  //   this.lstMyTeam = employee.slice(0, 10);
+  //   this.orgId = data;
+  //   this.scrolling = true;
+  //   this.pageIndex = 2;
+  //   event.stopPropagation();
+  // }
+
   clickOpen(event, data, employee) {
-    this.lstMyTeam = employee.slice(0, 10);
-    this.orgId = data;
-    this.scrolling = true;
+    this.lstMyTeam = [];
     this.pageIndex = 2;
+    if (employee.length > 10) {
+    } else {
+      this.lstMyTeam = employee.slice(0, 10);
+    }
+    this.searchText = '';
+    this.scrolling = true;
+
+    this.orgId = data;
+    //Use reset div height
+    this.click = false;
     event.stopPropagation();
   }
 

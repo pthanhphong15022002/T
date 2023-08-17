@@ -137,7 +137,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   //#endregion
 
   //#region Init
-  //Master
+  //Init Master
   onInit(): void {
     this.loadInit();
   }
@@ -145,7 +145,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   ngAfterViewInit() {
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
-    this.setTabindex();
   }
 
   ngOnDestroy() {
@@ -176,20 +175,20 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.hasSaved = true;
     }
   }
-  //end Master
+  //end Init Master
 
-  //Line
+  //Init Line
   gridInit(columnsGrid)
   {
     this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
-  //end Line
+  //end Init Line
 
   //#endregion
 
   //#region Event
-  //Master
+  //Event Master
   valueChange(e: any){
     let field = e.field.toLowerCase();
     if(e.data)
@@ -210,9 +209,12 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           break;
 
         case 'reasonid':
-          this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
-          let text = e?.component?.itemsSelected[0]?.ReasonName;
-          this.setReason(field, text, 0);
+          if(e?.component?.itemsSelected[0]?.ReasonID)
+          {
+            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
+            let text = e?.component?.itemsSelected[0]?.ReasonName;
+            this.setReason(field, text, 0);
+          }
           break;
         // case 'objectid':
         //   this.vouchers.objectID = e.data;
@@ -308,9 +310,11 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.dialog.close();
     }
   }
-  //end Master
+  //end Event Master
 
-  //Line
+  //Event Line
+
+  /** Hàm xử lí khi click more function */
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -325,6 +329,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Hàm update data khi chỉnh sửa detail */
   lineChanged(e: any) {
     if(!this.checkDataUpdateFromBackEnd(e))
       return;
@@ -385,6 +390,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Hàm kết thúc chỉnh sửa detail */
   endEdit(e: any) {
     switch (e.type) {
       case 'autoAdd':
@@ -406,11 +412,14 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       break;
     }
   }
-  //end Line
+  //end Event Line
   //#endregion Event
 
   //#region Method
-  //Master
+  //Method Master
+
+  /** Hàm lưu và thêm mới
+    */
   onSaveAdd(){
     this.checkValidate();
     this.checkTransLimit(true);
@@ -430,6 +439,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Hàm lưu và đóng form
+    */
   onSave() {
     this.checkValidate();
     this.checkTransLimit(true);
@@ -449,6 +460,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Hàm lưu master */
   save(isclose: boolean)
   {
       switch (this.formType) {
@@ -570,9 +582,10 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           break;
       }
   }
-  //end Master
+  //end Method Master
 
-  //Line
+  //Method Line
+  /** Hàm lưu detail */
   onSaveLine(e: any, type: any)
   {
     this.checkValidateLine(e);
@@ -611,11 +624,11 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       
     }
   }
-  //end Line
+  //end Method Line
   //#endregion Method
 
   //#region Function
-  //Master
+  //Function Master
   setDefault(o) {
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
@@ -701,36 +714,36 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     line.fixedDIMs = fixedDims.join('');
   }
 
-  setTabindex() {
-    let ins = setInterval(() => {
-      let eleInput = document
-        ?.querySelector('.ac-form-master')
-        ?.querySelectorAll('codx-input');
-      if (eleInput) {
-        clearInterval(ins);
-        let tabindex = 0;
-        for (let index = 0; index < eleInput.length; index++) {
-          let elechildren = (
-            eleInput[index] as HTMLElement
-          ).getElementsByTagName('input')[0];
-          if (elechildren.readOnly) {
-            elechildren.setAttribute('tabindex', '-1');
-          } else {
-            tabindex++;
-            elechildren.setAttribute('tabindex', tabindex.toString());
-          }
-        }
-        // input refdoc
-        let ref = document
-          .querySelector('.ac-refdoc')
-          .querySelectorAll('input');
-        (ref[0] as HTMLElement).setAttribute('tabindex', '11');
-      }
-    }, 200);
-    setTimeout(() => {
-      if (ins) clearInterval(ins);
-    }, 10000);
-  }
+  // setTabindex() {
+  //   let ins = setInterval(() => {
+  //     let eleInput = document
+  //       ?.querySelector('.ac-form-master')
+  //       ?.querySelectorAll('codx-input');
+  //     if (eleInput) {
+  //       clearInterval(ins);
+  //       let tabindex = 0;
+  //       for (let index = 0; index < eleInput.length; index++) {
+  //         let elechildren = (
+  //           eleInput[index] as HTMLElement
+  //         ).getElementsByTagName('input')[0];
+  //         if (elechildren.readOnly) {
+  //           elechildren.setAttribute('tabindex', '-1');
+  //         } else {
+  //           tabindex++;
+  //           elechildren.setAttribute('tabindex', tabindex.toString());
+  //         }
+  //       }
+  //       // input refdoc
+  //       let ref = document
+  //         .querySelector('.ac-refdoc')
+  //         .querySelectorAll('input');
+  //       (ref[0] as HTMLElement).setAttribute('tabindex', '11');
+  //     }
+  //   }, 200);
+  //   setTimeout(() => {
+  //     if (ins) clearInterval(ins);
+  //   }, 10000);
+  // }
 
   @HostListener('keyup', ['$event'])
   onKeyUp(e: KeyboardEvent): void {
@@ -779,9 +792,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       }
     }
   }
-  //end Master
+  //end Function Master
 
-  //Line
+  //Function Line
   addVoucherLine(){
     this.checkValidate();
     if (this.validate > 0) {
@@ -1157,6 +1170,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       }
     });
   }
-  //end Line
+  //end Function Line
   //#endregion
 }

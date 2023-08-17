@@ -80,7 +80,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.cashpayment = dialogData.data.cashpayment;
     this.objectName = dialogData.data.objectName;
-    this.type = dialogData.data.type;
+    this.type = dialogData.data.typeSettledInvoices;
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
