@@ -1813,6 +1813,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     }
   }
 
+  /**
+   * *Hàm set field bắt buộc nhập trên lưới
+   * @param fieldName 
+   * @param isRequire 
+   */
   setRequireField(fieldName, isRequire) {
     let i = this.eleGridCashPayment.columnsGrid.findIndex(
       (x) => x.fieldName == fieldName
@@ -1822,6 +1827,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     }
   }
 
+  /**
+   * *Hàm set field bỏ qua không cho nhập trên lưới 
+   * @param fieldName 
+   * @param islock 
+   */
   setLockField(fieldName, islock) {
     let i = this.eleGridCashPayment.columnsGrid.findIndex(
       (x) => x.fieldName == fieldName
