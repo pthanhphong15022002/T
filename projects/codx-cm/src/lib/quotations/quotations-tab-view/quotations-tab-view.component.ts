@@ -141,12 +141,12 @@ export class QuotationsTabViewComponent
           this.dealIDCrr = changes['dealID'].currentValue;
         } else return;
         break;
-      // case 'contracts':
-      //   if (changes['recID']) {
-      //     if (changes['recID'].currentValue === this.recIDCrr) return;
-      //     this.recIDCrr = changes['recID'].currentValue;
-      //   } else return;
-      //break;
+      case 'contracts':
+        if (changes['recID']) {
+          if (changes['recID'].currentValue === this.recIDCrr) return;
+          this.recIDCrr = changes['recID'].currentValue;
+        } else return;
+        break;
     }
     this.getQuotations();
   }
