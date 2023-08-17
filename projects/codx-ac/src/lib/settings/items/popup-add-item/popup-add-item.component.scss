@@ -1,0 +1,10 @@
+div.hover-color:hover {
+  border-color: var(--primary) !important;
+}
+
+:host ::ng-deep {
+  a.tab-item.disabled,
+  a.tab-item.disabled codx-label {
+    color: var(--gray-500);
+  }
+}

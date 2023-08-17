@@ -94,47 +94,6 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="ObjectID" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="objectID"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="Requester" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="requester"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="form-group">
-                <codx-label fiedName="RequestDate" [formModel]="form.formModel">
-                </codx-label>
-                <codx-input
-                  [Group]="form.formGroup"
-                  field="requestDate"
-                  [formModel]="form.formModel"
-                  (valueChange)="valueChange($event)"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="form-group">
                 <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
@@ -161,14 +120,43 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="RefNo" [formModel]="form.formModel">
-                </codx-label
-                >:&nbsp;
-                <span *ngIf="vouchers.refNo">
-                  {{ vouchers.refNo }}
-                </span>
+                <codx-label fiedName="DIM1" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="dim1"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="DIM2" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="dim2"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <codx-label fiedName="DIM3" [formModel]="form.formModel">
+                </codx-label>
+                <codx-input
+                  [Group]="form.formGroup"
+                  field="dim3"
+                  [formModel]="form.formModel"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-input>
               </div>
             </div>
           </div>

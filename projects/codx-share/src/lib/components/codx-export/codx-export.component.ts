@@ -303,7 +303,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.dataValues = [this.recID].join(';');
         }
 
-        if (!this.dataSource) {
+        if (!this.dataSource || !this.show) {
           this.api
             .execSv<any>(
               this.services,

@@ -532,6 +532,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
   
   startActivitie(activitie) {
+    if (activitie?.taskType == 'Q') {
+      //báo giá
+      this.stepService.addQuotation();
+    } else if (activitie?.taskType == 'CO') {
+      // hợp đồng
+      this.stepService.openPopupContract('add');
+    }
     this.api
       .exec<any>('DP', 'InstanceStepsBusiness', 'StartActivitiesAsync', [
         activitie?.recID,
@@ -559,4 +566,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  setNameTypeTask(taskType){
+    let type = this.listTaskType?.find(task => task?.value == taskType);
+    return type?.text;
+  }
 }

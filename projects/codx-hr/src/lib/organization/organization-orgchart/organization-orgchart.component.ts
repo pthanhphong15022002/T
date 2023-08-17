@@ -915,8 +915,15 @@ export class OrganizationOrgchartComponent {
 
   //Disable active chart
   clickActive(data) {
+    console.log('Run active');
     //Patch id to parent chart
     this.newIdItem.emit(data);
+    this.disableActive = true;
+  }
+  onCursorChanged(e) {
+    //Patch id to parent chart
+    this.newIdItem.emit(e.context.id);
+
     this.disableActive = true;
   }
 
