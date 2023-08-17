@@ -173,7 +173,7 @@ export class TargetsComponent
   predicateSearch = '';
   dataValueSearch = '';
   probability = '1';
-  formModel: FormModel;
+  formModel: any;
   isButton = false;
   constructor(
     private inject: Injector,
@@ -351,16 +351,18 @@ export class TargetsComponent
   async ngAfterViewInit() {
     if (this.viewDashboard) {
       this.formModel = await this.cmSv.getFormModel('CM0601');
+
     } else {
       this.formModel = this.view.formModel;
-      this.gridViewSetupTarget = await firstValueFrom(
-        this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
-      );
+
       this.view.dataService.methodSave = 'AddTargetAndTargetLineAsync';
       this.view.dataService.methodDelete = 'DeletedTargetAsync';
       this.view.dataService.methodUpdate = 'UpdateTargetAndTargetLineAsync';
       this.changeDetec.detectChanges();
     }
+    this.gridViewSetupTarget = await firstValueFrom(
+      this.cache.gridViewSetup('CMTargets', 'grvCMTargets')
+    );
   }
 
   //#region event codx-view

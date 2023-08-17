@@ -698,7 +698,7 @@ export class CM_Leads {
   annualRevenue: number;
   headcounts: string;
   establishDate: Date;
-  addresses: string;
+  address: string;
   countryID: string;
   provinceID: string;
   districtID: string;
