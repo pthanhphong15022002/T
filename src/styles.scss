@@ -3654,3 +3654,18 @@ codx-view-tree-targets .menu-sub{
      height: calc(100% - 40px)!important;
    }
 }
+
+
+.aside {
+  transition: width 50000s ease!important;
+}
+
+@media (min-width: 992px){
+[data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
+    display: block;
+}
+.aside-minimize-icon-title .aside .aside-secondary .menu-link {
+  padding-left: 7px !important;
+  padding-right: 7px !important;
+}
+}
