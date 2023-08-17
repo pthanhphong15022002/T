@@ -58,6 +58,7 @@ export class SalesinvoicesAddComponent
   gvsSalesInvoicesLines: any;
   fmSalesInvoicesLines: FormModel;
 
+  baseCurr: string;
   formTitle: string;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -124,6 +125,10 @@ export class SalesinvoicesAddComponent
       .subscribe((res) => {
         this.gvsSalesInvoices = res;
       });
+
+    this.cache.companySetting().subscribe(res => {
+      this.baseCurr = res[0]?.baseCurr;
+    })
 
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
@@ -225,6 +230,10 @@ export class SalesinvoicesAddComponent
           this.resetForm();
         }
       });
+  }
+
+  onSubTypeChange(e): void {
+    this.master.subType = e.data[0];
   }
 
   onInputChange(e): void {
