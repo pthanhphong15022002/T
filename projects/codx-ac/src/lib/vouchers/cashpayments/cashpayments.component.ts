@@ -136,7 +136,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    this.getDataDefaultVoucher(); // lấy data mặc định truyền vào form thêm
+    this.getDataDefaultVoucher(); //? lấy data mặc định truyền vào form thêm
   }
 
   ngAfterViewInit() {
@@ -144,12 +144,12 @@ export class CashPaymentsComponent extends UIComponent {
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res) this.headerText = res.defaultName; // lấy tên chứng từ (Phiếu chi)
+        if (res) this.headerText = res.defaultName; //? lấy tên chứng từ (Phiếu chi)
       });
 
     this.views = [
       {
-        type: ViewType.listdetail, // thiết lập view danh sách chi tiết
+        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
         active: true,
         sameData: true,
 
@@ -159,7 +159,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.list, // thiết lập view danh sách
+        type: ViewType.list, //? thiết lập view danh sách
         active: true,
         sameData: true,
 
@@ -168,7 +168,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid, // thiết lập view lưới
+        type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
         model: {
@@ -177,7 +177,7 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
 
-    // thiết lập cấu hình sidebar
+    //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
@@ -201,7 +201,7 @@ export class CashPaymentsComponent extends UIComponent {
         let ins = setInterval(() => {
           if (this.dataDefaultCashpayment) {
             clearInterval(ins);
-            this.addNewVoucher(); // thêm mới chứng từ
+            this.addNewVoucher(); //? thêm mới chứng từ
           }
         }, 200);
         setTimeout(() => {
@@ -219,31 +219,31 @@ export class CashPaymentsComponent extends UIComponent {
   clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.deleteVoucher(data); // xóa chứng từ
+        this.deleteVoucher(data); //? xóa chứng từ
         break;
       case 'SYS03':
-        this.editVoucher(data); // sửa chứng từ
+        this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        this.copyVoucher(data); // sao chép chứng từ
+        this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        this.exportVoucher(data); // xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT041002':
-        this.releaseVoucher(data); // gửi duyệt chứng từ
+        this.releaseVoucher(data); //? gửi duyệt chứng từ
         break;
       case 'ACT041004':
-        this.cancelReleaseVoucher(data); // hủy yêu cầu duyệt chứng từ
+        this.cancelReleaseVoucher(data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT041009':
-        this.validateVourcher(data); // kiểm tra tính hợp lệ chứng từ
+        this.validateVourcher(data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT041003':
-        this.postVoucher(data); // ghi sổ chứng từ
+        this.postVoucher(data); //? ghi sổ chứng từ
         break;
       case 'ACT041010':
-        this.printVoucher(data, e.functionID); // in chứng từ
+        this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
@@ -256,14 +256,14 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    this.dataDefaultCashpayment.recID = Util.uid(); // tạo recID mới
+    this.dataDefaultCashpayment.recID = Util.uid(); //? tạo recID mới
     let data = {
-      action: 'add', // trạng thái của form (thêm mới)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: {...this.dataDefaultCashpayment}, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'add', //? trạng thái của form (thêm mới)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: {...this.dataDefaultCashpayment}, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
     this.callfc.openSide(
       CashPaymentAdd,
@@ -279,12 +279,12 @@ export class CashPaymentsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     let data = {
-      action: 'edit', // trạng thái của form (chỉnh sửa)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: {...dataEdit}, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'edit', //? trạng thái của form (chỉnh sửa)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: {...dataEdit}, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -301,12 +301,12 @@ export class CashPaymentsComponent extends UIComponent {
    */
   copyVoucher(dataCopy) {
     let data = {
-      action: 'copy', // trạng thái của form (chỉnh sửa)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: {...dataCopy}, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'copy', //? trạng thái của form (chỉnh sửa)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: {...dataCopy}, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
     this.view.dataService.copy().subscribe((res: any) => {
       this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
@@ -472,13 +472,13 @@ export class CashPaymentsComponent extends UIComponent {
   changeTmpGridMF(event: any, data: any) {
     let arrBookmark = event.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ
-        x.functionID == 'ACT041002' || // MF gửi duyệt
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || // MF khôi phục
-        x.functionID == 'ACT042901' || // MF chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // MF in
-        x.functionID == 'ACT041009' // MF kiểm tra tính hợp lệ
+        x.functionID == 'ACT041003' || //? MF ghi sổ
+        x.functionID == 'ACT041002' || //? MF gửi duyệt
+        x.functionID == 'ACT041004' || //? MF hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || //? MF khôi phục
+        x.functionID == 'ACT042901' || //? MF chuyển tiền điện tử
+        x.functionID == 'ACT041010' || //? MF in
+        x.functionID == 'ACT041009' //? MF kiểm tra tính hợp lệ
     );
     if (arrBookmark.length > 0) {
       arrBookmark.forEach((element) => {
