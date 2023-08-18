@@ -40,7 +40,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() formModel: FormModel;
   @Input() lstContactRef = [];
   @Input() customerID: any;
-  @Input() owner: any;
+  @Input() isRole = true;
 
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
@@ -67,7 +67,6 @@ export class CodxListContactsComponent implements OnInit {
   placeholder = 'Nhập vai trò...';
   user: any;
   userID: any;
-  isRole = true;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -90,9 +89,6 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue != null &&
         changes['objectID']?.currentValue?.trim() != ''
       ) {
-        if (this.objectType == '1') {
-          this.isRole = this.userID == this.owner ? true : false;
-        }
         if (this.isRole) {
           if (changes['objectID']?.currentValue == this.id) return;
           this.id = changes['objectID']?.currentValue;
@@ -153,10 +149,10 @@ export class CodxListContactsComponent implements OnInit {
     if (!this.selectAll) {
       let predicate = 'ObjectID=@0';
       let dataValue = this.objectID;
-      if (this.objectType == '1') {
-        predicate += ' and CreatedBy.Contains(@1)';
-        dataValue += ';' + this.owner;
-      }
+      // if (this.objectType == '1') {
+      //   predicate += ' and CreatedBy.Contains(@1)';
+      //   dataValue += ';' + this.owner;
+      // }
       this.request.predicates = predicate;
       this.request.dataValues = dataValue;
       this.request.pageLoading = false;
