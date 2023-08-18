@@ -369,7 +369,13 @@ export class OkrTargetsComponent implements OnInit {
       }
       case OMCONST.MFUNCID.Delete: {
         if(this.adminRole || this.fullRoleCheck(ob) ){
-          this.deleteOB(ob);
+          if(this.mfCondition(funcID,ob)){
+            this.deleteOB(ob);
+          }
+          else{
+            this.notificationsService.notifyCode('SYS002');
+            return;
+          }
         }
         else{
           this.notificationsService.notifyCode('SYS032');
@@ -415,7 +421,7 @@ export class OkrTargetsComponent implements OnInit {
   clickKRMF(e: any, kr: any, isSKR: boolean) {
     let tempT = isSKR ? this.skrTitle : this.krTitle;
     let popupTitle = e.text + ' ' + tempT;
-    var funcID = e?.functionID;
+    let funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.Edit: {
         if(this.adminRole || this.fullRoleCheck(kr) ){
@@ -432,8 +438,14 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.Delete: {
-        if(this.adminRole || this.fullRoleCheck(kr) ){
-          this.deleteKR(kr, isSKR);
+        if(this.adminRole || this.fullRoleCheck(kr)){
+          if(this.mfCondition(funcID,kr)){
+            this.deleteKR(kr, isSKR);
+          }
+          else{
+            this.notificationsService.notifyCode('SYS002');
+            return;
+          }
         }
         else{
           this.notificationsService.notifyCode('SYS032');
@@ -732,6 +744,36 @@ export class OkrTargetsComponent implements OnInit {
     } else {
       return false;
     }
+  }
+  mfCondition(funcID:string, okr:any){
+    if(okr==null || funcID ==null) return false;
+    let allowed = true;
+    switch(funcID){
+      case OMCONST.MFUNCID.Delete:
+        if(okr?.checkIns?.length>0 || okr?.okrTasks?.length>0 || okr?.okrTasks?.length>0 || okr?.progress>0 || okr?.autoCreated>0 ){          
+          if(okr?.items?.length>0){
+            for(let child of okr?.items){
+              if(child?.checkIns?.length>0 || child?.okrTasks?.length>0 || child?.okrTasks?.length>0 || child?.progress>0|| child?.autoCreated>0 ){
+                if(child?.items?.length>0){
+                  for(let children of child?.items){
+                    if(children?.checkIns?.length>0 || children?.okrTasks?.length>0 || children?.okrTasks?.length>0 || children?.progress>0|| children?.autoCreated>0 ){                      
+                      allowed=false;
+                    }
+                  }
+                }
+                else{
+                  allowed=false;
+                }
+              }
+            }
+          }
+          else{
+            allowed=false;
+          }
+        }
+        break;       
+    }
+    return allowed;
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
