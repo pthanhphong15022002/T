@@ -561,11 +561,11 @@ export class PopupAddDealComponent
     }
   }
   checkOwner(owner: any, ownerName: any) {
-    if (owner && this.deal?.permissions ) {
+    if (owner ) {
       let index  = -1;
-      if(this.deal?.permissions.length > 0 && this.deal?.permissions) {
+      if(this.deal?.permissions?.length > 0 && this.deal?.permissions) {
         index = this.deal?.permissions.findIndex(
-          (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '1'
+          (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '0'
         );
         if (index !== -1 ) {
           this.deal.permissions[index].objectID = owner;
@@ -589,7 +589,7 @@ export class PopupAddDealComponent
     permission.upload = true;
     permission.download = true;
     permission.isActive = true;
-    permission.memberType = '1';
+    permission.memberType = '0';
     permission.allowPermit = true;
     permission.allowUpdateStatus = '1';
     this.deal.permissions.push(permission);
