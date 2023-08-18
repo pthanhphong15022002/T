@@ -69,6 +69,7 @@ import { PopupEProcessContractComponent } from '../../employee-contract/popup-ep
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/popup-equitjob.component';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -673,6 +674,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   benefitFormodel: FormModel;
   EBusinessTravelFormodel: FormModel;
   eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
+  eInfoFormGroup: FormGroup;
   eFamilyFormModel: FormModel; //Quan hệ gia đình
   ePassportFormModel: FormModel; //Hộ chiếu
   eQuitJobFormModel: FormModel; //Nghỉ việc
@@ -1006,6 +1008,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
       this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
         this.eInfoFormModel = res;
+        this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName).then((fg) =>{
+          this.eInfoFormGroup = fg;
+          this.eInfoFormGroup.patchValue(this.infoPersonal);
+          this.eInfoFormModel.currentData = this.infoPersonal;
+        })
       });
     }
     
@@ -3462,6 +3469,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             });
         }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.eInfoFormGroup.patchValue(this.infoPersonal);
+        this.eInfoFormModel.currentData = this.infoPersonal;
         if(oldManagerID != res.event.lineManager || indirectManagerID != res.event.indirectManager){
           this.getManagerEmployeeInfoById();
         }

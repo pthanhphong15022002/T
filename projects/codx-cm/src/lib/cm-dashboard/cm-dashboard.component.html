@@ -352,40 +352,109 @@
       gridViewName="grvCMMyDashboard"
       default="Lý do thành công"
     ></codx-label>
-    <div
-      style="overflow-y: auto; max-height: 95%"
-      *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
-    >
+
+    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isReasonSuscess ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMax')"
+        >
+          <codx-label
+            name="btnMax"
+            formModel=""
+            default="Cao nhất"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="
+            !isReasonSuscess ? 'button-selected' : 'button-no-selected'
+          "
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMin')"
+        >
+          <codx-label
+            name="btnMin"
+            formModel=""
+            default="Thấp nhất"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="isReasonSuscess">
       <div
-        *ngFor="let data of dataDashBoard?.countsReasonsSuscess"
-        class="mt-4"
+        style="overflow-y: auto; max-height: 90%"
+        *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
       >
-        <div class="mx-2 my-5">
-          <div class="d-flex justify-content-between">
-            <div>
-              <span>{{ data?.reasonName }}</span>
-              <span>&nbsp;(</span>
-              <span>{{ data?.quantity }}</span>
-              <span>)</span>
+        <div
+          *ngFor="let data of dataDashBoard?.countsReasonsSuscess"
+          class="mt-4"
+        >
+          <div class="mx-2 my-5">
+            <div class="d-flex justify-content-between">
+              <div>
+                <span>{{ data?.reasonName }}</span>
+                <span>&nbsp;(</span>
+                <span>{{ data?.quantity }}</span>
+                <span>)</span>
+              </div>
+              <div>
+                <span>{{ data?.percentage }}</span
+                ><span>% </span>
+              </div>
             </div>
-            <div>
-              <span>{{ data?.percentage }}</span
-              ><span>% </span>
-            </div>
-          </div>
-          <div class="d-flex align-items-center min-w-200px">
-            <div class="h-5px w-100 bg-gray-200 rounded-4">
-              <div
-                class="rounded-4 h-5px"
-                [ngStyle]="{ backgroundColor: colorReasonSuscess }"
-                role="progressbar"
-                [style.width]="data.percentage + '%'"
-              ></div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  [ngStyle]="{ backgroundColor: colorReasonSuscess }"
+                  role="progressbar"
+                  [style.width]="data.percentage + '%'"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isReasonSuscess">
+      <div
+        style="overflow-y: auto; max-height: 95%"
+        *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
+      >
+        <div
+          *ngFor="let data of dataDashBoard?.countsReasonsFails"
+          class="mt-4"
+        >
+          <div class="mx-2 my-5">
+            <div class="d-flex justify-content-between">
+              <div>
+                <span>{{ data?.reasonName }}</span>
+                <span>&nbsp;(</span>
+                <span>{{ data.quantity }}</span>
+                <span>)</span>
+              </div>
+              <div>
+                <span>{{ data?.percentage }}</span
+                ><span>% </span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [ngStyle]="{ backgroundColor: colorReasonFails }"
+                  [style.width]="data.percentage + '%'"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -481,13 +550,18 @@
       *ngIf="dataSourcePy?.length > 0; else noData"
     >
       <!-- <div class="control-section">
-        <div> -->
+        <div> tooltipPy -->
       <ejs-accumulationchart
         id="pyramidcontainer"
         #pyramid
         style="height: 100%"
         [legendSettings]="legendSettingsPy"
-        [tooltip]="tooltipPy"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
