@@ -918,7 +918,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   // chưa xử lí
   copyRow(data) {
     data.recID = Util.uid();
-    data.index=this.eleGridCashPayment.dataSource.length;
+    data.index = this.eleGridCashPayment.dataSource.length;
     // this.requireFields = data.unbounds.requireFields as Array<string>;
     // this.lockFields = data.unbounds.lockFields as Array<string>;
     // this.requireGrid();
@@ -970,115 +970,61 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     ) {
       this.isLoading = true;
       this.detectorRef.detectChanges();
-      setTimeout(() => {
-        switch (this.action) {
-          case 'add':
-          case 'copy':
-            if (this.hasSaved) {
-              // this.dialog.dataService.updateDatas.set(
-              //   this.cashpayment['_uuid'],
-              //   this.cashpayment
-              // );
-              this.dialog.dataService.update(this.cashpayment).subscribe();
-              this.acService
-                .execApi('AC', '', 'ValidateVourcherAsync', [
-                  this.cashpayment,
-                  this.cashpaymentline,
-                ])
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.cashpayment.status = '1';
-                    this.dialog.dataService
-                      .update(this.cashpayment)
-                      .subscribe();
-                    this.onDestroy();
-                    this.dialog.close();
-                    this.notification.notifyCode('SYS006');
-                  } else {
-                    this.isLoading = false;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              // this.dialog.dataService
-              //   .save((opt: RequestOption) => {
-              //     opt.methodName = 'ValidateVourcherAsync'
-              //     opt.data = [this.cashpayment];
-              //   })
-              //   .subscribe((res) => {
-              //     if (res && res.update.data != null) {
-              //       this.loading = false;
-              //       this.dialog.close();
-              //       this.dt.detectChanges();
-              //     } else {
-              //       this.loading = false;
-              //     }
-              //   });
-            }
-            break;
-          case 'edit':
-            if (
-              this.cashpayment.updateColumn ||
-              this.cashpayment.status == '0'
-            ) {
-              this.dialog.dataService.update(this.cashpayment).subscribe();
-              this.acService
-                .execApi('AC', '', 'ValidateVourcherAsync', [
-                  this.cashpayment,
-                  this.cashpaymentline,
-                ])
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res) {
-                    if (this.cashpayment.status == '0') {
-                      this.cashpayment.status = '1';
-                    }
-                    this.dialog.dataService
-                      .update(this.cashpayment)
-                      .subscribe();
-                    this.onDestroy();
-                    this.isLoading = false;
-                    this.detectorRef.detectChanges();
-                    this.dialog.close();
-                    this.notification.notifyCode('SYS007');
-                  } else {
-                    this.isLoading = false;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            } else {
-              this.onDestroy();
-              this.dialog.close();
-            }
-            // this.journalService.checkVoucherNoBeforeSave(
-            //   this.journal,
-            //   this.cashpayment,
-            //   'AC',
-            //   'AC_CashPayments',
-            //   this.form,
-            //   this.action === 'edit',
-            //   () => {
-            //     this.dialog.dataService.updateDatas.set(
-            //       this.cashpayment['_uuid'],
-            //       this.cashpayment
-            //     );
-            //     this.dialog.dataService
-            //       .save((opt: RequestOption) => {
-            //         opt.data = [this.cashpayment];
-            //       })
-            //       .subscribe((res) => {
-            //         if (res && res.update.data != null) {
-            //           this.dialog.close();
-            //           this.dt.detectChanges();
-            //         } else {
-            //           this.loading = false;
-            //         }
-            //       });
-            //   }
+      switch (this.action) {
+        case 'add':
+        case 'copy':
+          if (this.hasSaved) {
+            // this.dialog.dataService.updateDatas.set(
+            //   this.cashpayment['_uuid'],
+            //   this.cashpayment
             // );
-            break;
-        }
-      }, 500);
+            //this.dialog.dataService.update(this.cashpayment).subscribe();
+            this.api.exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [
+                this.cashpayment,
+                this.cashpaymentline,
+              ])
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                if (res) {
+                  this.dialog.dataService.update(res).subscribe();
+                  this.onDestroy();
+                  this.dialog.close();
+                  this.notification.notifyCode('SYS006');
+                } else {
+                  this.isLoading = false;
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+          break;
+        case 'edit':
+          if (
+            this.cashpayment.updateColumn ||
+            this.cashpayment.status == '0'
+          ) {
+            //this.dialog.dataService.update(this.cashpayment).subscribe();
+            this.api.exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [
+              this.cashpayment,
+              this.cashpaymentline,
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res) {
+                this.dialog.dataService.update(res).subscribe();
+                this.onDestroy();
+                this.dialog.close();
+                this.notification.notifyCode('SYS007');
+              } else {
+                this.isLoading = false;
+                this.detectorRef.detectChanges();
+              }
+            });
+          } else {
+            this.onDestroy();
+            this.dialog.close();
+          }
+          break;
+      }
     }
   }
 
@@ -1106,46 +1052,43 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     ) {
       this.isLoading = true;
       this.detectorRef.detectChanges();
-      setTimeout(() => {
-        if (this.hasSaved) {
-          this.dialog.dataService.update(this.cashpayment).subscribe();
-          this.acService
-            .execApi('AC', '', 'ValidateVourcherAsync', [
-              this.cashpayment,
-              this.cashpaymentline,
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.cashpayment.status = '1';
-                this.dialog.dataService.update(this.cashpayment).subscribe();
-                this.hasSaved = false;
-                this.clearCashpayment();
-                this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                    this.journal,
-                  ])
-                  .subscribe((res: any) => {
-                    if (res) {
-                      this.cashpayment = res;
-                      this.formCashPayment.formGroup.patchValue(
-                        this.cashpayment,
-                        {
-                          onlySelf: true,
-                          emitEvent: false,
-                        }
-                      );
-                      this.notification.notifyCode('SYS006');
-                      this.isLoading = false;
-                      this.detectorRef.detectChanges();
-                    }
-                  });
-              } else {
-                this.isLoading = false;
-                this.detectorRef.detectChanges();
-              }
-            });
-        }
-      }, 500);
+      if (this.hasSaved) {
+        //this.dialog.dataService.update(this.cashpayment).subscribe();
+        this.acService
+          .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [
+            this.cashpayment,
+            this.cashpaymentline,
+          ])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res) {
+              this.dialog.dataService.update(res).subscribe();
+              this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                  this.journal,
+                ])
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.hasSaved = false;
+                    this.clearCashpayment();
+                    this.cashpayment = res.data;   
+                    this.formCashPayment.formGroup.patchValue(
+                      this.cashpayment,
+                      {
+                        onlySelf: true,
+                        emitEvent: false,
+                      }
+                    );
+                    this.notification.notifyCode('SYS006');
+                    this.isLoading = false;
+                    this.detectorRef.detectChanges();
+                  }
+                });
+            } else {
+              this.isLoading = false;
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
     }
   }
 
