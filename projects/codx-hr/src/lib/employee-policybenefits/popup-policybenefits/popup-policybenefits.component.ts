@@ -18,8 +18,6 @@ implements OnInit{
   @HostListener('click', ['$event.target']) onClick(e) {
     if(this.gridView1){
       if(this.gridView1.gridRef.isEdit == true){
-        //this.gridView2.isEdit = false;
-        //this.gridView2.isAdd = false;
         this.gridView1.endEdit();
       }else{
        //
@@ -598,6 +596,9 @@ implements OnInit{
         if(res.event){
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
+          if(this.lstSelectedObj.length > 0){
+            this.addApplyObj()
+          }
           this.df.detectChanges();
         }
       });
@@ -625,6 +626,9 @@ implements OnInit{
       popup.closed.subscribe((res) => {
         this.benefitPolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
+        if(this.lstSelectedExcludeObj.length > 0){
+          this.addExcludeObj()
+        }
         this.df.detectChanges();
       });
     }
@@ -1521,6 +1525,16 @@ implements OnInit{
 
     if(this.benefitPolicyObj.hasIncludeBenefits == true && !this.benefitPolicyObj.includeBenefits){
       this.notify.notifyCode('HR018')
+      return
+    }
+
+    if(this.benefitPolicyObj.hasIncludeObjects == true && (this.benefitPolicyObj.includeObjects?.length < 1 || this.lstPolicyBeneficiariesApply.length < 1)){
+      this.notify.notifyCode('HR032')
+      return
+    }
+
+    if(this.benefitPolicyObj.hasExcludeObjects == true && (this.benefitPolicyObj.excludeObjects?.length < 1 || this.lstPolicyBeneficiariesExclude.length < 1)){
+      this.notify.notifyCode('HR033')
       return
     }
 
