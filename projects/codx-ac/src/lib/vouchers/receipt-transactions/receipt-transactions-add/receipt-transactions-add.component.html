@@ -853,6 +853,7 @@
           [refValue]="gridViewSetup['SubType'].referedValue"
           [value]="vouchers.subType"
           emptyText="Loại phiếu"
+          (valueChange)="subTypeChange($event)"
         ></codx-dropdown-select>
       </div>
       <span
