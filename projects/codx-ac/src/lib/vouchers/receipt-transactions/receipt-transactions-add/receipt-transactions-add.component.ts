@@ -210,9 +210,12 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           break;
 
         case 'reasonid':
-          this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
-          let text = e?.component?.itemsSelected[0]?.ReasonName;
-          this.setReason(field, text, 0);
+          if(e?.component?.itemsSelected[0]?.ReasonID)
+          {
+            this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
+            let text = e?.component?.itemsSelected[0]?.ReasonName;
+            this.setReason(field, text, 0);
+          }
           break;
         // case 'objectid':
         //   this.vouchers.objectID = e.data;
