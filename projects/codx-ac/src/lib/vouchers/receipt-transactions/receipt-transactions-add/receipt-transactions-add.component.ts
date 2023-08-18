@@ -252,21 +252,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onDiscard() {
-    this.checkGridLineBeforeDiscard();
-  }
-
-  checkGridLineBeforeDiscard() {
-    if (this.modeGrid == 1) {
-      if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit) {
-        this.discard();
-      }
-    }
-    else {
-      this.discard();
-    }
-  }
-
-  discard() {
     this.dialog.dataService
       .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
       .pipe(takeUntil(this.destroy$))
@@ -279,21 +264,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onClose() {
-    this.checkGridLineBeforeClose();
-  }
-
-  checkGridLineBeforeClose() {
-    if (this.modeGrid == 1) {
-      if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit) {
-        this.close();
-      }
-    }
-    else {
-      this.close();
-    }
-  }
-
-  close() {
     if (this.hasSaved) {
       this.dialog.close({
         update: true,

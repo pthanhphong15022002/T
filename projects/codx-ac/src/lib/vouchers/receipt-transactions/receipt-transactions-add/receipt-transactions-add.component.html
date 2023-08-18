@@ -724,7 +724,7 @@
       class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
     >
       <button
-        *ngIf="formType != 'edit'"
+        *ngIf="formType != 'edit' && hasSaved == true"
         tabindex="9"
         style="border: 1px solid"
         id="discard"
