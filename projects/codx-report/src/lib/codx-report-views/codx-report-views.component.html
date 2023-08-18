@@ -1,22 +1,22 @@
 <div class="card-ep-report" *ngIf="module">
-<codx-views
-  #view
-  service="rptrp"
-  entityName="RP_ReportList"
-  idField="reportID"
-  assemblyName="Codx.RptBusiness.RP"
-  className="ReportListBusiness"
-  method="GetReportsByModuleWebAsync"
-  [predicates]="'Module=@0&&ReportType=@1'"
-  [dataValues]="this.module.toUpperCase()+';R'"
-  (viewChanged)="viewChanged($event)"
-  [toolbarDisplay]="true"
-  [views]="views"
-  [autoLoad]="false"
-  [button]="button"
-  (onActions)="onActions($event)"
-  >
-</codx-views>
+  <codx-views
+    #view
+    service="rptrp"
+    entityName="RP_ReportList"
+    idField="recID"
+    assemblyName="Codx.RptBusiness.RP"
+    className="ReportListBusiness"
+    method="GetReportsByModuleAsync"
+    [predicates]="predicates"
+    [dataValues]="dataValues"
+    (viewChanged)="viewChanged($event)"
+    [toolbarDisplay]="true"
+    [views]="views"
+    [autoLoad]="false"
+    [button]="button"
+    (onActions)="onActions($event)"
+    >
+  </codx-views>
 </div>
 <ng-template #templateListCard let-data>
   <codx-card-img
