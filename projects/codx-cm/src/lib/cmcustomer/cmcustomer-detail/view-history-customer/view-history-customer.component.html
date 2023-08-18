@@ -19,35 +19,51 @@
 
 <ng-template #templateTree let-data>
   <div (click)="clickTreeNode($event)">
-    <div class="d-flex justify-content-between w-100 mb-2">
+    <div class="d-flex justify-content-between w-100 mb-3">
       <div class="d-flex flex-row">
-        <div class="me-4 fw-bold w-100px min-w-100px">
-          <codx-label
-            *ngIf="data?.type == '1'"
-            class="label-colon"
-            name="lblDeal"
-            default="Cơ hội"
-            [formModel]="formModelDeal"
-          ></codx-label>
-          <codx-label
-            *ngIf="data?.type == '2'"
-            class="label-colon"
-            name="lblContract"
-            default="Hợp đồng"
-            [formModel]="formModelContract"
-          ></codx-label>
-          <codx-label
-            *ngIf="data?.type == '3'"
-            name="lblQuotation"
-            class="label-colon"
-            default="Báo giá"
-            [formModel]="formModelQuotation"
-          ></codx-label>
-        </div>
         <div class="d-flex flex-column w-400px min-w-400px">
+          <div class="me-4 d-flex fw-bold fs-5-sm mb-1">
+            <span
+              class="me-2 icon-18"
+              [ngClass]="
+                data.type == '1'
+                  ? 'icon-monetization_on'
+                  : data.type == '2'
+                  ? 'icon-shopping_bag'
+                  : 'icon-monetization_on'
+              "
+            ></span>
+            <codx-label
+              *ngIf="data?.type == '1'"
+              name="lblDeal"
+              default="Cơ hội"
+              [formModel]="formModelDeal"
+            ></codx-label>
+            <codx-label
+              *ngIf="data?.type == '2'"
+              name="lblContract"
+              default="Hợp đồng"
+              [formModel]="formModelContract"
+            ></codx-label>
+            <codx-label
+              *ngIf="data?.type == '3'"
+              name="lblQuotation"
+              default="Báo giá"
+              [formModel]="formModelQuotation"
+            ></codx-label>
+            <span
+              *ngIf="data.type == '3'"
+              class="ms-2"
+              [innerHTML]="
+                data.version
+                  | formatvalue : formModelQuotation : 'Version'
+                  | async
+              "
+            ></span>
+          </div>
           <div
             class="text-dark fw-bold"
-            [ngClass]="data.parentID == null ? 'fs-5-sm' : 'fs-6'"
+            [ngClass]="data.parentID == null ? 'fs-8-' : 'fs-9'"
           >
             {{ data.name }}
           </div>
@@ -161,31 +177,7 @@
             ></span
             ><span class="text-dark fw-bold">%</span>
           </div>
-          <div class="d-flex align-items-center" *ngIf="data.type == '3'">
-            <span
-              class="icon-offline_pin icon-16 me-1"
-              [ngbTooltip]="popupVersion"
-            >
-              <ng-template #popupVersion>
-                <codx-label
-                  fiedName="VersionName"
-                  [formModel]="formModelQuotation"
-                ></codx-label> </ng-template
-            ></span>
-            <codx-label
-              class="label-colon text-gray-600 me-1"
-              [formModel]="formModelQuotation"
-              fiedName="VersionName"
-            ></codx-label>
-            <span
-              class="me-1 text-dark fw-bold"
-              [innerHTML]="
-                data.version
-                  | formatvalue : formModelQuotation : 'Version'
-                  | async
-              "
-            ></span>
-          </div>
+
           <div class="d-flex" *ngIf="data.type == '2'">
             <codx-label
               class="label-colon text-gray-600"
