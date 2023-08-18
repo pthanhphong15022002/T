@@ -261,7 +261,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
                     grvSetup: this.grvSetupQuotationsLines,
                   };
                   let opt = new DialogModel();
-                  opt.zIndex = 1000;
+                  opt.zIndex = 1010;
                   opt.FormModel = this.fmQuotationLines;
 
                   let dialogQuotations = this.callFC.openForm(

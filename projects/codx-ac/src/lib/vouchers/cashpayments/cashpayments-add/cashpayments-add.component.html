@@ -261,7 +261,7 @@
                     default="Đề nghị thanh toán" fiedName="RefID" [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input field="refID" [disabled]="true" [crrValue]="voucherNoRef"
+                    <codx-input field="refID" [disabled]="true" [crrValue]="voucherNoAdv"
                       [formModel]="formCashPayment.formModel">
                     </codx-input>
                   </div>
@@ -281,7 +281,7 @@
                   </codx-label>
                   <div class="ac-input">
                     <codx-input disabled="true" type="number" [formModel]="formCashPayment.formModel"
-                      [crrValue]="dRRef">
+                      [crrValue]="dRAdv">
                     </codx-input>
                   </div>
 
@@ -399,11 +399,11 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subtypeRef == '1') || (cashpayment?.subType == '4' && subtypeRef == '1'))">
+  <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subTypeAdv == '1') || (cashpayment?.subType == '4' && subTypeAdv == '1'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment  showRowNumber="true" class="tabLine" [allowRowDragAndDrop]="true"
+      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [allowRowDragAndDrop]="true" autoAddRow="false"
         formName="CashPaymentsLines" gridViewName="grvCashPaymentsLines" [editSettings]="editSettingsGrid"
-        entityName="AC_CashPaymentsLines" [allowFiltering]="true" [allowSorting]="true" hideMoreFunc="true"
+        entityName="AC_CashPaymentsLines" [allowFiltering]="true" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
         [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
         (gridInit)="beforeInitGridCashpayments($event)" rowHeight="35" [showEmptyRecord]="false" rowNoField="rowNo"
         (onAddNew)="onSaveLine($event,true)" (eventAction)="onActionGridCashpayment($event)" (onEdit)="onSaveLine($event,false)"
@@ -435,7 +435,7 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="((cashpayment?.subType == '2') ||(cashpayment?.subType == '3' && subtypeRef == '2') || (cashpayment?.subType == '4' && subtypeRef == '2')  || (cashpayment?.subType == '9'))">
+  <ng-container *ngIf="((cashpayment?.subType == '2') ||(cashpayment?.subType == '3' && subTypeAdv == '2') || (cashpayment?.subType == '4' && subTypeAdv == '2')  || (cashpayment?.subType == '9'))">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices" [showEmptyRecord]="false"
         entityName="AC_SettledInvoices" showRowNumber="true" rowHeight="35" [editOnClick]="true" [allowFiltering]="true"
@@ -514,12 +514,11 @@
 </ng-template>
 <!-- End: Grid VATInvoices -->
 
-<!-- Start: More function -->
-<ng-template #morefunction let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="dialog.formModel" (changeDataMF)="changeDataMF($event)"
-    (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
+<!-- Start: More function Cashpayment -->
+<ng-template #TmpMFCashpayment let-data>
+  <codx-mfunc [formModel]="fmCashpaymentLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
 </ng-template>
-<!-- End: More function -->
+<!-- End: More function Cashpayment -->
 
 
 
