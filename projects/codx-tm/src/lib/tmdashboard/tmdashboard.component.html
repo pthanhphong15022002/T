@@ -347,15 +347,18 @@
         </e-axes>
       </ejs-circulargauge>
     </div>
-    <div class="container w-100" style="height: 30%">
-      <div class="d-flex flex-column">
+    <div class="container w-100 position-relative" style="height: 30%">
+      <div
+        class="d-flex flex-column scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
         <div class="m-2">
           <div class="d-flex align-items-center">
             <div
               class="me-2"
               style="
-                height: 15px;
-                width: 15px;
+                height: 10px;
+                width: 10px;
                 border-radius: 10%;
                 background-color: #5465ff;
               "
@@ -363,7 +366,7 @@
             <span>Tỷ lệ hoàn thành công việc</span>
           </div>
           <div class="ms-6">
-            <span class="fw-bold fs-3"
+            <span class="fw-bold fs-4"
               >{{ toFixed(myDBData?.rateDoneTask) }}%</span
             >
           </div>
@@ -373,8 +376,8 @@
             <div
               class="me-2"
               style="
-                height: 15px;
-                width: 15px;
+                height: 10px;
+                width: 10px;
                 border-radius: 10%;
                 background-color: #04deb7;
               "
@@ -382,7 +385,7 @@
             <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
           </div>
           <div class="ms-6">
-            <span class="fw-bold fs-3"
+            <span class="fw-bold fs-4"
               >{{ toFixed(myDBData?.rateDoneTaskOnTime) }}%</span
             >
           </div>
