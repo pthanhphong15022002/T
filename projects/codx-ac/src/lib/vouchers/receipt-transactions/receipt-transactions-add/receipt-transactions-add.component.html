@@ -860,7 +860,7 @@
         *ngIf="formType == 'edit' && vouchers?.status != '0'"
       >
         <codx-vll
-          [name]="'AC040'"
+          [name]="gridViewSetup['SubType'].referedValue"
           [formModel]="form.formModel"
           [field]="'SubType'"
           [value]="vouchers?.subType"
