@@ -37,6 +37,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
   @Input() owner: string;
   @Input() isPause = false;
+  @Input() entityName = '';
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
@@ -267,7 +268,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.status = '1';
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-          this.activitie,
+          this.activitie,this.entityName
         ])
         .subscribe((res) => {
           if (res) {

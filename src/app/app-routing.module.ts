@@ -177,6 +177,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'ws',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ws/src/lib/codx-ws.module').then(
+        (m) => m.CodxWsModule
+      ),
+  },
+  {
     path: 'shared',
     canActivate: [AuthGuard],
     component: LayoutOnlyHeaderComponent,

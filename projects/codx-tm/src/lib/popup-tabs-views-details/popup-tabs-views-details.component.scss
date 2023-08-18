@@ -76,14 +76,14 @@
         // height: calc(100vh - 202px) !important;
         //overflow: hidden;
         overflow-y: auto;
-        codx-view-list{
-            height: auto!important;
-        }
+        // codx-view-list{
+        //     height: auto!important;
+        // }
         codx-content{
        //   height:auto !important;
          //   border: 1px rebeccapurple solid;
-            position: relative;
-            overflow: hidden;
+           // position: relative;
+            //overflow: hidden;
             codx-detail-tmp{
                 position: absolute;
                 top:0;
@@ -106,7 +106,7 @@
     .sprints-task-detail {
         height: calc(100vh - 142px) !important;
         overflow: hidden;
-
+       // border: 1px aqua solid;
         .card-body.fillter-card-body.scroll-y {
             height: calc(100vh - 342px) !important;
            // border: 1px rebeccapurple solid;
@@ -127,4 +127,7 @@
 .tm-detail .row.row-content{
     margin-left: 0!important;
     margin-right: 0!important;
+}
+.e-dlg-content .stepper-body.popup-task-detail .codx-detail-main {
+    height: calc(100vh - 232px);
 }

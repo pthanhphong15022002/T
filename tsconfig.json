@@ -128,6 +128,12 @@
         "dist/codx-wr/codx-wr",
         "dist/codx-wr"
       ],
+      "codx-ws": [
+        "dist/codx-ws"
+      ],
+      "codx-ws-header": [
+        "dist/codx-ws-header"
+      ],
       "@shared/*": [
         "src/shared/*"
       ],
