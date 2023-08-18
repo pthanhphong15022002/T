@@ -82,7 +82,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
   accept() {
     if (this.grid.arrSelectedRows.length > 0) {
       this.acService
-        .execApi('AC', 'CashPaymentsLinesBusiness', 'LoadDataReferenceAsync', [
+        .execApi('AC', 'CashPaymentsLinesBusiness', 'LoadDataAdvancePaymentAsync', [
           this.grid.arrSelectedRows[0],
         ])
         .pipe(takeUntil(this.destroy$))
@@ -118,7 +118,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
   }
   submit() {
     this.acService
-      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataCashSuggestAsync', [
+      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataAdvancePaymentAsync', [
         this.cashpayment.voucherDate,
         this.dateSuggestion,
         this.cashpayment.subType,

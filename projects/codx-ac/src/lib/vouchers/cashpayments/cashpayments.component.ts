@@ -651,10 +651,23 @@ export class CashPaymentsComponent extends UIComponent {
             if (result?.msgCodeError == null && result?.rowCount) {
               this.notification.notifyCode('ES007');
               data.status = '3';
-              this.itemSelected = { ...data };
-              this.getDatadetail(this.itemSelected);
-              this.view.dataService.update(data).subscribe((res) => {});
-              this.detectorRef.detectChanges();
+              this.view.dataService.updateDatas.set(
+                data['_uuid'],
+                data
+              );
+              this.view.dataService
+              .save(null, 0, '', '', false)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                if (res && !res.update.error) {
+                  this.itemSelected = res.update.data;
+                  this.getDatadetail(this.itemSelected);
+                  this.detectorRef.detectChanges();
+                }
+              });
+              // this.getDatadetail(this.itemSelected);
+              // this.view.dataService.update(data).subscribe((res) => {});
+              
             } else this.notification.notifyCode(result?.msgCodeError);
           });
       });
@@ -671,22 +684,21 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          this.acService
-            .loadData('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
-              data,
-              '1',
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.itemSelected = res;
-                this.getDatadetail(this.itemSelected);
-                this.view.dataService
-                  .update(this.itemSelected)
-                  .subscribe((res) => {});
-                this.detectorRef.detectChanges();
-              }
-            });
+          data.status = '1';
+          this.view.dataService.updateDatas.set(
+            data['_uuid'],
+            data
+          );
+          this.view.dataService
+              .save(null, 0, '', '', false)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                if (res && !res.update.error) {
+                  this.itemSelected = res.update.data;
+                  this.getDatadetail(this.itemSelected);
+                  this.detectorRef.detectChanges();
+                }
+              });
         } else this.notification.notifyCode(result?.msgCodeError);
       });
   }
@@ -696,13 +708,10 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data 
    */
   validateVourcher(data: any) {
-    this.acService
-      .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
-      .pipe(takeUntil(this.destroy$))
+    this.api.exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
       .subscribe((res) => {
         if (res) {
-          data.status = '1';
-          this.itemSelected = data;
+          this.itemSelected = res;
           this.getDatadetail(this.itemSelected);
           this.view.dataService.update(this.itemSelected).subscribe();
           this.detectorRef.detectChanges();

@@ -1,0 +1,87 @@
+<div class="d-flex align-items-center justify-content-between bg-white container-fluid py-2">
+    <div class="d-flex align-items-center">
+        <ng-template [ngTemplateOutlet]="brand" ></ng-template>
+        <ng-template [ngTemplateOutlet]="title" ></ng-template>
+   </div>
+   <div class="d-flex align-items-center">
+     <codx-chat></codx-chat>
+     <codx-notes></codx-notes>
+     <codx-notify-drawer></codx-notify-drawer>
+     <codx-activies-approval-list></codx-activies-approval-list>
+     <!-- Home -->
+    <div class="align-items-center d-flex ms-1 ms-lg-3">
+        <a
+          class="d-flex align-items-center"
+          (click)="codxService.navigate(null, '/')"
+        >
+          <!-- begin::Menu wrapper -->
+          <div
+            class="btn btn-icon btn-clean position-relative"
+            [ngClass]="codxService.toolbarButtonHeightClass"
+            id=""
+          >
+            <span
+              [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
+              class="svg-icon"
+              [ngClass]="codxService.toolbarButtonIconSizeClass"
+            ></span>
+          </div>
+          <!-- end::Menu wrapper -->
+        </a>
+      </div>
+      <!--end Home -->
+      <!-- Quick links -->
+      <erm-quick-links-inner
+        [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+        [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+        [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+      ></erm-quick-links-inner>
+      <!-- End: Quick links -->
+  
+      <!-- begin::User -->
+      <codx-user-inner
+        [user]="user"
+        (onAvatarChanged)="this.reloadAvatar($event)"
+        [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      ></codx-user-inner>
+      <!-- end::User -->
+    </div>
+</div>
+<!-- begin::Brand -->
+<ng-template #brand>
+    <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+      <!-- begin::Logo -->
+      <ng-container *ngIf="asideTheme === 'dark'">
+        <a
+          class="brand-logo d-flex align-items-center flex-grow-1"
+        >
+          <img
+            alt="Logo"
+            class="mh-35px logo justify-content-start"
+            src="{{logo$ | async}}"
+          />
+        </a>
+      </ng-container>
+  
+      <ng-container *ngIf="asideTheme === 'light'">
+        <a
+          class="brand-logo d-flex align-items-center flex-grow-1"
+        >
+          <img
+            alt="Logo"
+            class="mh-35px logo justify-content-start"
+            src="{{logo$ | async}}"
+          />
+        </a>
+      </ng-container>
+  
+      <!-- end::Logo -->
+    </div>
+</ng-template>
+<!-- end::Brand  -->
+
+<!-- begin::Title -->
+<ng-template #title>
+    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3"><span class="text-dark text-hover-primary cursor-pointer">{{title$ | async}}</span></h1>
+</ng-template>
+<!-- end::Title  -->

@@ -1718,7 +1718,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     dialog.closed.subscribe((res) => {
       if (res && res.event && res.event) {
         this.cashpayment.refID = res.event.oCashRef.recID;
-        this.dialog.dataService.update(this.cashpayment).subscribe();
         this.setDataRef(res.event.oCashRef, res.event.oLineRef);
       }
     });
