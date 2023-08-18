@@ -2451,13 +2451,23 @@ export class CodxHrService {
       [employeeID, alYear, alYearMonth, isMonth, pageIndex, pageSize]);
   }
   getEmployeeListByPopupCalculateAnnualLeaveAsync(alYear: string, alObjectIDList: any, orgUnitIDList: any, 
-    employeeIDList: any, calculateALBy: string, alMonth: string){
+    employeeIDList: any, calculateALBy: string, alMonth: string, isExcept: boolean = false){
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
       'EAnnualLeavesBusiness',
       'GetEmployeeListByPopupCalculateAnnualLeaveAsync',
-      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth]
+      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth, isExcept]
+    )
+  }
+  calculateAnnualLeaveAsync(alYear: string, alObjectIDList: any, orgUnitIDList: any, 
+    employeeIDList: any, calculateALBy: string, alMonth: string,  isExcept: boolean = false){
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAnnualLeavesBusiness',
+      'CalculateAnnualLeaveAsync',
+      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth, isExcept]
     )
   }
   //#endregion

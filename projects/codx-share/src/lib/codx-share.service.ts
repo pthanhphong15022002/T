@@ -51,6 +51,7 @@ import { ES_File } from './components/codx-approval-procress/model/codx-approval
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
+import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 
 @Injectable({
   providedIn: 'root',
@@ -188,6 +189,8 @@ export class CodxShareService {
     that: any = null,
     customData = null
   ) {
+
+    debugger
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
@@ -360,9 +363,25 @@ export class CodxShareService {
           referType: customData?.referType,
           addPermissions: customData?.addPermissions
         };
-        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas)
+        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas);
+        break;
       }
-
+      //Gửi mail
+      case 'SYS004':
+      {
+        var dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+        dialog.closed.subscribe((x) => {
+          if (x.event) {
+            var result =
+            {
+              funcID: funcID,
+              result: x.event
+            }
+            afterSave(result);
+          }
+        });
+        break;
+      }
     }
   }
 
@@ -981,6 +1000,7 @@ export class CodxShareService {
   }
 
   changeMFApproval(data: any, value: object | any = null) {
+    debugger
     var datas = value;
     if (datas) {
       var list = data.filter(

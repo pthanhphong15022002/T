@@ -906,20 +906,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         });
         break;
       }
-      //Gửi email
-      case 'SYS004': {
-        // let option = new SidebarModel();
-        // option.DataService = this.view?.currentView?.dataService;
-        this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
-        this.dialog.closed.subscribe((x) => {
-          if (x.event != null) {
-            this.data = x.event[0];
-            this.data.lstUserID = getListImg(x.event[0].relations);
-            this.data.listInformationRel = x.event[1];
-          }
-        });
-        break;
-      }
       case 'recallUser': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
@@ -1403,7 +1389,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   afterSave(e?: any, that: any = null) {
-    // Chú thích ;
+    // Chú thích
     // e:{
     //   funcID: Mã moreFunc ,
     //   result : kết quả trả về sau khi thực hiện,
@@ -1427,6 +1413,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             });
         }
         break;
+      }
+      //Gửi mail
+      case "SYS004":
+      {
+        this.data = e?.result[0];
+        this.data.lstUserID = getListImg(e?.result[0].relations);
+        this.data.listInformationRel = e?.result[1];
+        break; 
       }
     }
   }
@@ -1485,7 +1479,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      this.shareService.changeMFApproval(e, data);
+      this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
       var bm = e.filter(
