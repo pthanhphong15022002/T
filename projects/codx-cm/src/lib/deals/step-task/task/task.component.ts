@@ -290,7 +290,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event,
+          taskOutput?.event, this.entityName
         ])
         .subscribe((res) => {
           if (res) {
@@ -312,7 +312,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       if (x.event && x.event.status == 'Y') {
         this.api
           .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
-            task?.recID,
+            task?.recID,this.entityName
           ])
           .subscribe((res) => {
             if (res) {

@@ -1,6 +1,5 @@
 <codx-views
   #view
-  [idField]="idField"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -12,11 +11,13 @@
   (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  [selectedFirst]="true"
-  (onActions)="onActions($event)"
-  (viewChanged)="changeView($event)"
+  [idField]="idField"
+  [autoSearch]="true"
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
+  (viewChanged)="changeView($event)"
+  (searchChanged)="searchChanged($event)"
+  (onActions)="onActions($event)"
 ></codx-views>
 
 <ng-template #itemViewList let-data>
@@ -37,24 +38,25 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     [typeMF]="'hover'"
-    [imageId]="data?.customerID"
+    [imageId]="data?.productID"
     [imgOn]="data?.modifiedOn"
-    [imageObjName]="data?.customerName"
+    [imageObjName]="data?.productName"
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
     [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
-    [imageObjType]="'CM_Customers'"
+    [imageObjType]="'WR_Products'"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [title]="data?.customerName"
+    [title]="data?.productName"
     [body]="footer"
     [formModel]="view.formModel"
     [footer]="footer"
     [titleCss]="'text-gray-600 fw-normal'"
     [dataItem]="data"
+    [viewActiveType]="viewMode"
   >
   </codx-temp-full>
 </ng-template>
