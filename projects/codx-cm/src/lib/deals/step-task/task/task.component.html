@@ -8,7 +8,7 @@
         [cdkDragDisabled]="true"
         class="drap-drop my-2"
       >
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between" (dblclick)="viewTask(task, task?.taskType || 'T')">
           <div style="flex-grow: 1" class="has-action-menu ps-2">
             <ng-container
               [ngTemplateOutlet]="taskTemplate"

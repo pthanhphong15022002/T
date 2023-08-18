@@ -218,16 +218,15 @@ export class PopupAddLeadComponent
           let index = this.listParticipants.findIndex(x=>x.userID);
 
           if(index != -1 ) {
-            this.lead.owner = owner;
+            this.owner = owner;
             ownerName = this.listParticipants[index].userName;
           }
         }
         else {
-          this.lead.owner = owner;
+          this.owner = owner
            ownerName = '';
         }
-
-        this.checkOwner(this.lead.owner, ownerName);
+        this.checkOwner(this.owner, ownerName);
       }
     }
   }
@@ -305,24 +304,27 @@ export class PopupAddLeadComponent
     if ($event) {
       let ownerName = '';
       if (view === this.viewOwnerDefault) {
-        this.lead[$event.field] = $event.data;
-        ownerName = $event.component.itemsSelected[0].UserName;
+        this.owner = $event?.data;
+        ownerName = $event?.component?.itemsSelected[0]?.UserName;
       }
       else {
-        this.lead.owner = $event;
+        this.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
-            (x) => x.userID === this.lead.owner
+            (x) => x.userID === this.owner
           )[0].userName;
         }
       }
-      this.checkOwner(this.lead.owner, ownerName);
+      this.checkOwner(this.owner , ownerName);
+    }
+    else if( view === this.viewOwnerProcess){
+      this.owner ='';
     }
   }
   checkOwner(owner: any, ownerName: any) {
     if (owner) {
       let index = this.lead.permissions.findIndex(
-        (x) => x.objectType === 'U' && x.roleType === 'O'
+        (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '0'
       );
       if (index !== -1) {
         this.lead.permissions[index].objectID = owner;
@@ -341,7 +343,7 @@ export class PopupAddLeadComponent
         permission.upload = true;
         permission.download = true;
         permission.isActive = true;
-        permission.memberType = '1';
+        permission.memberType = '0';
         permission.allowPermit = true;
         permission.allowUpdateStatus = '1';
         this.lead.permissions.push(permission);
@@ -457,7 +459,6 @@ export class PopupAddLeadComponent
       lead.refID = instance.recID;
       lead.startDate = null;
     }
-    lead.owner = this.owner;
   }
 
   async promiseSaveFile() {
@@ -465,7 +466,7 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-
+    this.lead.owner = this.owner;
     if (this.avatarChangeLead) {
       await this.saveFileLead(this.leadId);
     }
@@ -788,8 +789,6 @@ export class PopupAddLeadComponent
       this.lead.industries = null;
       this.lead.annualRevenue = 0;
       this.lead.headcounts = null;
-    } else {
-      this.lead.jobTitle = null;
     }
   }
   changeAutoNum(e) {

@@ -25,12 +25,12 @@ import {
 import { Subject, pipe, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-cashpayments-add-cashpaymentsuggestion',
-  templateUrl: './cashpayments-add-cashpaymentsuggestion.component.html',
-  styleUrls: ['./cashpayments-add-cashpaymentsuggestion.component.css'],
+  selector: 'lib-advancepayment',
+  templateUrl: './advancepayment.component.html',
+  styleUrls: ['./advancepayment.component.css'],
   changeDetection : ChangeDetectionStrategy.OnPush
 })
-export class CashpaymentSuggestion extends UIComponent implements OnInit {
+export class AdvancePayment extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   dialog!: DialogRef;
@@ -82,7 +82,7 @@ export class CashpaymentSuggestion extends UIComponent implements OnInit {
   accept() {
     if (this.grid.arrSelectedRows.length > 0) {
       this.acService
-        .execApi('AC', 'CashPaymentsLinesBusiness', 'LoadDataReferenceAsync', [
+        .execApi('AC', 'CashPaymentsLinesBusiness', 'LoadDataAdvancePaymentAsync', [
           this.grid.arrSelectedRows[0],
         ])
         .pipe(takeUntil(this.destroy$))
@@ -118,7 +118,7 @@ export class CashpaymentSuggestion extends UIComponent implements OnInit {
   }
   submit() {
     this.acService
-      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataCashSuggestAsync', [
+      .execApi('AC', 'CashPaymentsBusiness', 'LoadDataAdvancePaymentAsync', [
         this.cashpayment.voucherDate,
         this.dateSuggestion,
         this.cashpayment.subType,

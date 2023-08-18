@@ -162,26 +162,13 @@
     class="form-group"
     *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
   >
-    <codx-label [formModel]="form.formModel" fiedName="LastName"> </codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [crrValue]="data?.lastName"
-      (valueChange)="valueChange($event)"
-      field="lastName"
-    >
-    </codx-input>
-  </div>
-  <div
-    class="form-group"
-    *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
-  >
-    <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
+    <codx-label [formModel]="dialog.formModel" fiedName="ContactName">
     </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [crrValue]="data?.firstName"
+      [crrValue]="data?.contactName"
       (valueChange)="valueChange($event)"
-      field="firstName"
+      field="contactName"
     >
     </codx-input>
   </div>

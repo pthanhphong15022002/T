@@ -40,8 +40,12 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <ejs-tab tabindex="-1" heightAdjustMode="Fill"
-    class="overflow-auto mb-4" #tab>
+    <ejs-tab
+      tabindex="-1"
+      heightAdjustMode="Fill"
+      class="overflow-auto mb-4"
+      #tab
+    >
       <e-tabitems #tabObj *ngIf="modeGrid">
         <!-- Tab chi tiết -->
         <e-tabitem>
@@ -126,7 +130,7 @@
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
-                  field="dim1"
+                  field="diM1"
                   [formModel]="form.formModel"
                   (valueChange)="valueChange($event)"
                 >
@@ -139,7 +143,7 @@
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
-                  field="dim2"
+                  field="diM2"
                   [formModel]="form.formModel"
                   (valueChange)="valueChange($event)"
                 >
@@ -152,7 +156,7 @@
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
-                  field="dim3"
+                  field="diM3"
                   [formModel]="form.formModel"
                   (valueChange)="valueChange($event)"
                 >
@@ -721,15 +725,16 @@
     >
       <button
         *ngIf="formType != 'edit'"
-        style="border: 1px solid"
         tabindex="9"
+        style="border: 1px solid"
         id="discard"
         type="button"
-        class="btn btn-md btn-light-danger me-2"
+        class="btn btn-md btn-light-danger me-2 rounded-15"
+        (keydown.enter)="onDiscard(); $event.preventDefault()"
         (click)="onDiscard()"
       >
         <div class="d-flex align-items-center">
-          <i class="icon-delete_outline icon-16"></i>
+          <i class="icon-cancel icon-16"></i>
           <codx-label
             class="fw-normal"
             fiedName="lblDiscard"
@@ -742,7 +747,8 @@
         style="border: 1px solid var(--primary-dark) !important"
         tabindex="10"
         type="button"
-        class="btn btn-md btn-light-primary me-2"
+        class="btn btn-md btn-light-primary me-2 rounded-15"
+        (keydown.enter)="onSaveAdd(); $event.preventDefault()"
         (click)="onSaveAdd()"
       >
         <div class="d-flex align-items-center">
@@ -758,8 +764,9 @@
         id="save"
         tabindex="11"
         type="button"
-        class="btn btn-md btn-primary"
-        style="min-width: 60px"
+        class="btn btn-md btn-light-primary rounded-15"
+        style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSave(); $event.preventDefault()"
         (click)="onSave()"
       >
         <div class="d-flex align-items-center">
