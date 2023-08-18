@@ -19,10 +19,9 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
-import { CashTransferService } from './cashtransfers.service';
-import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
-import { Subject } from 'rxjs';
+import { ICashTransfer } from './interfaces/ICashTransfer.interface';
+import { CashtransfersService } from './cashtransfers.service';
 
 @Component({
   selector: 'lib-cashtransfers',
@@ -63,14 +62,13 @@ export class CashtransfersComponent
     entityPer: 'AC_AcctTrans',
   };
   gvsAcctTrans: any;
-  fgVatInvoice: any;
   overflowed: boolean = false;
   expanding: boolean = false;
-  private destroy$ = new Subject<void>();
+
   constructor(
     injector: Injector,
-    private cashTransferService: CashTransferService,
-    private acService: CodxAcService
+    private acService: CodxAcService,
+    cashTransferService: CashtransfersService // don't remove
   ) {
     super(injector);
 
@@ -82,16 +80,11 @@ export class CashtransfersComponent
 
   //#region Init
   onInit(): void {
-    this.fgVatInvoice = this.codxService.buildFormGroup(
-      'VATInvoices',
-      'grvVATInvoices',
-      'AC_VATInvoices'
-    );
-    // this.cache
-    //   .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-    //   .subscribe((gvs) => {
-    //     this.gvsAcctTrans = gvs;
-    //   });
+    this.cache
+      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
+      .subscribe((gvs) => {
+        this.gvsAcctTrans = gvs;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -122,18 +115,12 @@ export class CashtransfersComponent
   }
 
   ngAfterViewChecked(): void {
-    // const element: HTMLElement = this.memo?.nativeElement;
-    // this.overflowed = element?.scrollWidth > element?.offsetWidth;
+    const element: HTMLElement = this.memo?.nativeElement;
+    this.overflowed = element?.scrollWidth > element?.offsetWidth;
   }
 
   ngOnDestroy() {
     this.view.setRootNode('');
-    this.onDestroy();
-  }
-
-  onDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
   //#endregion
 
@@ -160,7 +147,7 @@ export class CashtransfersComponent
     this.detectorRef.detectChanges();
   }
 
-  onChange(e): void {
+  onSelectChange(e): void {
     if (e.data?.error?.isError) {
       return;
     }
@@ -187,10 +174,10 @@ export class CashtransfersComponent
         'GetListDataDetailAsync',
         'e973e7b7-10a1-11ee-94b4-00155d035517'
       )
-      .subscribe((res: IAcctTran[]) => {
+      .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.lines = this.groupBy(res, 'entryID');
+          this.lines = this.groupBy(res.lsAcctrants, 'entryID');
         }
 
         this.loading = false;
@@ -209,24 +196,16 @@ export class CashtransfersComponent
         options.DataService = this.view.dataService;
         options.FormModel = this.view.formModel;
         options.isFull = true;
-        let dialog = this.callfc.openSide(
+        this.callfc.openSide(
           CashtransferAddComponent,
           {
             formType: 'add',
             journalNo: this.journalNo,
             formTitle: `${e.text} ${this.functionName}`,
-            fgVatInvoice : this.fgVatInvoice
           },
           options,
           this.view.funcID
         );
-        // this.cache
-        //   .gridViewSetup('VATInvoices', 'grvVATInvoices')
-        //   .subscribe((res) => {
-        //     if (res) {
-              
-        //     }
-        //   });
       });
   }
   //#endregion
@@ -245,23 +224,16 @@ export class CashtransfersComponent
       options.FormModel = this.view.formModel;
       options.isFull = true;
 
-      this.cache
-        .gridViewSetup('VATInvoices', 'grvVATInvoices')
-        .subscribe((res) => {
-          if (res) {
-            this.callfc.openSide(
-              CashtransferAddComponent,
-              {
-                formType: 'edit',
-                formTitle: `${e.text} ${this.functionName}`,
-                journalNo: this.journalNo,
-                fgVatInvoice : this.fgVatInvoice
-              },
-              options,
-              this.view.funcID
-            );
-          }
-        });
+      this.callfc.openSide(
+        CashtransferAddComponent,
+        {
+          formType: 'edit',
+          formTitle: `${e.text} ${this.functionName}`,
+          journalNo: this.journalNo,
+        },
+        options,
+        this.view.funcID
+      );
     });
   }
 
@@ -277,35 +249,25 @@ export class CashtransfersComponent
       options.FormModel = this.view.formModel;
       options.isFull = true;
 
-      this.cache
-        .gridViewSetup('VATInvoices', 'grvVATInvoices')
-        .subscribe((res) => {
-          if (res) {
-            this.callfc.openSide(
-              CashtransferAddComponent,
-              {
-                formType: 'add',
-                formTitle: `${e.text} ${this.functionName}`,
-              },
-              options,
-              this.view.funcID
-            );
-          }
-        });
+      this.callfc.openSide(
+        CashtransferAddComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+        },
+        options,
+        this.view.funcID
+      );
     });
   }
 
   delete(data): void {
-    this.view.dataService.delete([data]).subscribe((res: any) => {
-      if (res?.data) {
-        this.cashTransferService.deleteVatInvoiceByTransID(data.recID);
-      }
-    });
+    this.view.dataService.delete([data]).subscribe();
   }
   //#endregion
 
   //#region Function
-  export(data) {
+  export(data): void {
     var gridModel = new DataRequest();
     gridModel.formName = this.view.formModel.formName;
     gridModel.entityName = this.view.formModel.entityName;
@@ -330,6 +292,10 @@ export class CashtransfersComponent
   }
 
   groupBy(arr: any[], key: string): any[][] {
+    if (!Array.isArray(arr)) {
+      return [[]];
+    }
+
     return Object.values(
       arr.reduce((acc, current) => {
         acc[current[key]] = acc[current[key]] ?? [];

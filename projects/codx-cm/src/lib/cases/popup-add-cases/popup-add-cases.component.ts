@@ -165,18 +165,20 @@ export class PopupAddCasesComponent
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
     }
-    this.executeApiCalls();
+    // this.executeApiCalls();
   }
 
   async onInit(): Promise<void> {
     await this.getCurrentSetting();
-    this.tabInfo = this.applyProcess
-      ? [this.menuGeneralInfo, this.menuInputInfo]
-      : [this.menuGeneralInfo];
+    // this.tabInfo = this.applyProcess
+    //   ? [this.menuGeneralInfo, this.menuInputInfo]
+    //   : [this.menuGeneralInfo];
   }
   ngAfterViewInit(): void {
+    this.executeApiCalls();
+
     // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
-    this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+    // this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
   }
   valueChange($event) {
     if ($event) {
@@ -381,16 +383,16 @@ export class PopupAddCasesComponent
   }
 
   async executeApiCalls() {
-    try {
-      await this.getGridView(this.formModel);
-      if (this.processID) {
-        await this.getListInstanceSteps(this.cases.processID);
-      }
-      //  else {
-      //   this.itemTabs(false);
-      // }
-    } catch (error) {
-      console.error('Error executing API calls:', error);
+    await this.getGridView(this.formModel);
+    if (this.action == 'add') {
+      this.itemTabs(false);
+      return;
+    }
+
+    if (this.processID) {
+      await this.getListInstanceSteps(this.cases.processID);
+    } else {
+      this.itemTabs(false);
     }
   }
 
@@ -451,7 +453,8 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        // this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
@@ -786,7 +789,6 @@ export class PopupAddCasesComponent
 
   // --------------------------lOad Tabs ----------------------- //
   itemTabs(check: boolean): void {
-    debugger;
     if (check) {
       this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
       this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];

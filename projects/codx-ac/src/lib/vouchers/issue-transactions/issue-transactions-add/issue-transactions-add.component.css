@@ -24,7 +24,7 @@
 .e-summarycontent{
     padding-top: 10px;
 }
-.add-cash #gridViewV2.e-grid .e-summarycell {
+#gridViewV2.e-grid .e-summarycell {
     border-width: 0;
 }
 .ac-ng-overlay .ngx-overlay{
@@ -45,4 +45,10 @@
 }
 .rounded-15{
    border-radius: 15px !important;
+}
+.input-circle .text-truncate{
+   text-align: left !important;
+}
+.input-circle .icon-keyboard_arrow_down{
+   display: none;
 }
