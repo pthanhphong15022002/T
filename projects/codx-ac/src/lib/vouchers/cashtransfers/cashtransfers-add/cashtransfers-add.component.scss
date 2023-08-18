@@ -1,0 +1,25 @@
+:host ::ng-deep {
+  .codx-form {
+    .card-body {
+      padding-bottom: 0 !important;
+    }
+
+    .card-header {
+      padding-bottom: 0 !important;
+      margin-bottom: 10px !important;
+    }
+  }
+
+  codx-tabs .tab-footer {
+    ul {
+      border-bottom: 0;
+      height: 3.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    div {
+      padding-bottom: 0 !important;
+    }
+  }
+}

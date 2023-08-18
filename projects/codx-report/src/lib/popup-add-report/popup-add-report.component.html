@@ -33,7 +33,7 @@
               <div class="row ">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/file.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode != '3' && displayMode != '4';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode != '3' && displayMode != '4';else tmpDefaultName">
                     <span class="ms-2">{{data.reportName}}</span>
                 </ng-container>
                 </div>
@@ -78,7 +78,7 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/xls.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode == '3';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode == '3';else tmpDefaultName">
                       <span class="ms-2">{{data.reportName}}</span>
                   </ng-container>
                 </div>
@@ -106,7 +106,7 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/doc.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode == '4';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode == '4';else tmpDefaultName">
                     <span class="ms-2">{{data.reportName}}</span>
                 </ng-container>
                 </div>

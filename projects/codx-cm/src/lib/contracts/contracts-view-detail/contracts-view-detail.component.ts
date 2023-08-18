@@ -66,19 +66,24 @@ export class ContractsViewDetailComponent
       isActive: false,
       template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+    },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
       isActive: false,
       template: null,
     },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
+    // {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
   fmQuotationLines: FormModel = {
     funcID: 'CM02021',
@@ -217,14 +222,20 @@ export class ContractsViewDetailComponent
   }
 
   loadTabs() {
+    // let quotations = {
+    //   name: 'Quotations',
+    //   textDefault: 'Báo giá',
+    //   isActive: false,
+    //   icon: 'icon-monetization_on',
+    //   template: this.quotationsTab,
+    // };
     let quotations = {
-      name: 'Quotations',
-      textDefault: 'Báo giá',
+      name: 'References',
+      textDefault: 'Liên kết',
       isActive: false,
-      icon: 'icon-monetization_on',
-      template: this.quotationsTab,
+      template: null,
     };
-    let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
+    let idx = this.tabControl.findIndex((x) => x.name == 'References');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
   }

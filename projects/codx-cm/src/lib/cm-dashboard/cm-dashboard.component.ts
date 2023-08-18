@@ -50,7 +50,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isLoaded: boolean = false;
   titLeModule = '';
 
-  // setting  //chart tree
+  //Industry
+  dataSourceIndustry = [];
+
+  leafItemSettingsIns = {
+    labelPath: 'industryName',
+    lableWidth: '100%',
+    labelPosition: 'Center',
+    labelFormat: '${industryName}',
+  };
+  paletteIndustry = [];
+  // setting  //chart tree buss
   dataSourceBussnessLine = [];
   palette = ['#005dc7', '#0078ff', '#3699ff', '#d3e8ff'];
   //mau cố định
@@ -86,8 +96,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   colorReasonSuscess = '';
   colorReasonFails = '';
-  checkBtnMin = false;
-  checkBtnMax = true;
+  isMax = true;
   maxOwners = [];
   minOwners = [];
 
@@ -165,8 +174,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
 
   marker = { visible: true };
-  checkBtnSuscess = true;
-  checkBtnFail = false;
+  isSuccess = true;
 
   //nang suat nhan viên
   productivityOwner = [];
@@ -210,10 +218,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   explode: boolean = false;
 
+  //tooltip chart Funel
   tooltipPy: Object = {
-    header: '',
-    enable: true,
-    format: '${point.x} : <b>${point.y}</b>',
+    // header: '',
+    // enable: true,
+    // format: '${point.x} : <b>${point.y}</b>',
   };
   titlePy: string = 'Food Comparison Chart';
 
@@ -233,6 +242,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   user: any;
   //end
 
+  //business line or linh vuc hoac dong
+  isBussinessLine = false;
+
+  //status or
+  isStatus = true;
+
+  //ReasonSuscess
+  isReasonSuscess = true;
+  valueFormat: any;
+
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
@@ -248,7 +267,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"}]'
@@ -384,12 +403,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.productivityOwner =
             this.dataDashBoard.countsProductivityOwner ?? [];
           this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
+
+          this.dataSourceIndustry = this.dataDashBoard?.countsIndustries ?? [];
+          this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
+            (x) => x.color
+          );
         } else {
           this.dataStatisticTarget = [];
           this.maxOwners = [];
           this.minOwners = [];
           this.productivityOwner = [];
           this.dataSourcePy = [];
+          this.dataSourceBussnessLine = [];
+          this.dataSourceIndustry = [];
+          this.paletteIndustry = [];
+          this.palette = [];
         }
         setTimeout(() => {
           this.isLoaded = true;
@@ -410,20 +438,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   clickButton(id) {
     switch (id) {
       case 'btnMin':
-        this.checkBtnMin = true;
-        this.checkBtnMax = false;
+        this.isMax = false;
         break;
       case 'btnMax':
-        this.checkBtnMin = false;
-        this.checkBtnMax = true;
+        this.isMax = true;
         break;
       case 'btSuccess':
-        this.checkBtnSuscess = true;
-        this.checkBtnMax = false;
+        this.isSuccess = true;
         break;
       case 'btFail':
-        this.checkBtnSuscess = false;
-        this.checkBtnFail = true;
+        this.isSuccess = false;
+        break;
+      case 'btBussinessLine':
+        this.isBussinessLine = true;
+        break;
+      case 'btIndustries':
+        this.isBussinessLine = false;
+        break;
+      case 'btStatus':
+        this.isStatus = true;
+        break;
+      case 'btStage':
+        this.isStatus = false;
         break;
     }
     this.detectorRef.detectChanges();
@@ -461,6 +497,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.colorReasonFails = vll?.datas.filter(
           (x) => x.value == 'F'
         )[0]?.color;
+      }
+    });
+
+    this.cache.valueList('CRM049').subscribe((vl) => {
+      if (vl) {
+        this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
       }
     });
 
@@ -556,5 +598,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = false;
       });
     }
+  }
+
+  formatCrrView(e) {
+    let html = '';
+    if (e.point.x == this.valueFormat) {
+      var listItems = this.dataSourcePy.find((x) => x.name == e.point.x)?.items;
+      if (listItems?.length > 0) {
+        html = '';
+        listItems.forEach((t) => {
+          html += '<br>' + t.name + ' : <b>' + t.quantity + '</b>';
+        });
+      }
+    }
+    e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
   }
 }

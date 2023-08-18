@@ -499,6 +499,7 @@
                         "
                         [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
+                        [isRole]="!isAdmin ? user.userID == dataSelected.owner : true"
                       ></codx-list-contacts>
                     </div>
                   </ng-template>

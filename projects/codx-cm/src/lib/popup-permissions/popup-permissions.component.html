@@ -81,7 +81,9 @@
                           class="d-flex align-items-center position-relative me-4"
                           style="position: relative"
                           popoverClass="popoverClass"
-                          [ngbPopover]="popupRoleType"
+                          [ngbPopover]="
+                            perm.roleType != 'O' ? popupRoleType : null
+                          "
                           placement="right top"
                           #p="ngbPopover"
                           (mouseenter)="showPopover(p, perm.objectID)"

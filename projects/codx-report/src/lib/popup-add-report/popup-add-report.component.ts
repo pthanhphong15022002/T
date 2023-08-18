@@ -445,6 +445,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.data.reportContent = this.data.reportContent.split(',')[1];
     }
     this.data.displayMode = this.displayMode;
+    debugger;
     this.api
       .execSv(
         'rptrp',
@@ -509,7 +510,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.api.execSv(this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
-      'GetReportRootFileAsync',
+      'GetReportFileAsync',
       [this.data.recID])
       .subscribe((res:any)=>{
         let linkSource = res;
@@ -537,7 +538,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
 
   private downloadCustomFile(){
     let linkSource = this.data.reportContent;
-    if(linkSource.split(',').length ==1){
+    if(linkSource != "" && linkSource?.split(',').length == 1)
+    {
         linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
         }
       const downloadLink = document.createElement("a");
@@ -599,7 +601,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         })
     }
   }
-  clickDowload(mode:string){
+  clickDowload(mode:string){  
     if(mode =="0")
       this.downloadCustomFile();
     else
