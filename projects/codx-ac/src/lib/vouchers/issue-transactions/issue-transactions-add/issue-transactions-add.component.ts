@@ -501,8 +501,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
                       });
-                      this.dt.detectChanges();
                   }
+                  this.dt.detectChanges();
                 }
               });
           } else {

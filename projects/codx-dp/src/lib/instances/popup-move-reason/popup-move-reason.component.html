@@ -86,11 +86,18 @@
     </div>
     <div class="ms-6" *ngFor="let item of listReason">
       <div class="form-check mb-3">
-        <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"/>
-        <span class="form-check-label">
+        <input class="form-check-input rounded-circle w-20px h-20px" type="checkbox" (change)="checkValue($event,item)"
+
+        [checked]="listReasonClick.indexOf(item) >= 0"
+        />
+        <span class="form-check-label"
+        style="cursor: pointer"
+        (click)="checkValue($event, item)"
+        >
           {{ item?.reasonName }}
         </span>
       </div>
+
     </div>
   </div>
 </ng-template>

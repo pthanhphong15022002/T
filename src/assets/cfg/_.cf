@@ -1,6 +1,13 @@
 {
   "apiUrl": "http://localhost:8011",
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 2996642a1b69cef2dfeededb3a3c9dd5804c253f
   "reportUrl": "http://172.16.7.34:4203/report",
+=======
+  "reportUrl": "http://localhost:4203/report",
+>>>>>>> 541eac47f6d043ea214bddfb77189af18ac11e9f
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "office365": "",

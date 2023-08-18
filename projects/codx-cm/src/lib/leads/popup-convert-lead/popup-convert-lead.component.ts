@@ -682,6 +682,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.channelID = this.lead?.channelID;
     this.customer.headcounts = this.lead?.headcounts;
     this.customer.address = this.lead?.address;
+    this.customer.owner = this.deal.owner;
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
   }
@@ -718,6 +719,9 @@ export class PopupConvertLeadComponent implements OnInit {
         this.listParticipants.find((x) => x.userID == e),
         'O'
       );
+      if(!this.radioChecked){
+        this.customer.owner = this.deal.owner;
+      }
     }
   }
   valueChangeCustomer(e) {
