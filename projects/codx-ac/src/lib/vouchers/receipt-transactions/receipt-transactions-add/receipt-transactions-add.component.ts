@@ -492,8 +492,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
                       });
-                      this.dt.detectChanges();
                   }
+                  this.dt.detectChanges();
                 }
               });
           } else {
