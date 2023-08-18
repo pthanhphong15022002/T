@@ -189,6 +189,8 @@ export class CodxShareService {
     that: any = null,
     customData = null
   ) {
+
+    debugger
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
@@ -372,7 +374,7 @@ export class CodxShareService {
           if (x.event) {
             var result =
             {
-              funcID: "SYS004",
+              funcID: funcID,
               result: x.event
             }
             afterSave(result);
@@ -998,6 +1000,7 @@ export class CodxShareService {
   }
 
   changeMFApproval(data: any, value: object | any = null) {
+    debugger
     var datas = value;
     if (datas) {
       var list = data.filter(

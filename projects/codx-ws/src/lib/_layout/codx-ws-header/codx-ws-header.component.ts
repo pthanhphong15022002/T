@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
+import { CacheService, CodxService, LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
 
 @Component({
   selector: 'codx-ws-header',
@@ -19,15 +19,25 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     this.title$ = this.pageTitle.title.asObservable();
     this.asideTheme = this.layout.getProp('aside.theme') as string;
     this.logo$ = this.layout.logo.asObservable();
+
+    this.getFuncList();
   }
  
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
+    override codxService: CodxService,
   ) {
     super(inject);
     this.module = 'WS';
   }
 
+  getFuncList()
+  {
+    this.codxService.getFuncs("WS").subscribe(item=>{
+      debugger
+    })
+   
+  }
 
 }
