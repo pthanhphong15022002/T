@@ -245,7 +245,7 @@ textarea:focus,
   border-color: var(--gray-700)!important;
 }
 .e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
-  border-color: var(--gray-150);
+  border-color: var(--gray-200);
 }
 .codx-search.codx-focus {
   border-color: $primary !important;
@@ -1633,7 +1633,7 @@ codx-processsteps .e-card-wrapper {
   .e-header-title
   .header-template-wrap
   .header-text {
-  width: 100%;
+  width: unset;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
@@ -3017,12 +3017,12 @@ codx-vll.badge.badge-md span::before{
   margin-bottom: 1px;
   margin-top: 0;
 }
-[data-kt-aside-minimize=on].aside-minimize-icon-title {
-  .aside .menu-link{
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-}
+// [data-kt-aside-minimize=on].aside-minimize-icon-title {
+//   .aside .menu-link{
+//     padding-top: 0;
+//     padding-bottom: 0;
+//   }
+// }
 .aside-minimize-icon-title .aside-extended .aside-primary .menu-link.active{
   border-radius: 0!important;
 }
@@ -3654,3 +3654,19 @@ codx-view-tree-targets .menu-sub{
      height: calc(100% - 40px)!important;
    }
 }
+
+
+
+
+@media (min-width: 992px){
+  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
+    display: block;
+    .menu-icon{
+      margin-right: 0;
+    }  
+  }
+  .aside-secondary .menu-title{
+    text-align: left!important;
+  }
+}
+

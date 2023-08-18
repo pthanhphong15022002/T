@@ -63,7 +63,7 @@
     [ngClass]="'show-main'"
   >
     <div
-      class="d-flex row class-field m-3"
+      class="d-flex row class-field my-3"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
     >
       <ng-container *ngFor="let field of dataStep.fields">
@@ -242,9 +242,9 @@
 </ng-template>
 
 <ng-template #viewDetailFieldCurrent let-data>
-  <div class="d-flex">
-    <span class="">
-      <span class="fw-bold mb-1">{{ data.title }}</span>
+  <div class="d-flex mb-1">
+    <span class="w-150px min-w-150px">
+      <span class="text-gray-600">{{ data.title }}</span>
       <span *ngIf="data.isRequired">
         <codx-label
           class="text-danger"
@@ -257,7 +257,7 @@
       </span>
       <span>
         <codx-label
-          class="fw-bold mb-1"
+          class="text-gray-600"
           name="separation"
           formName="DPInstancesStepsFields"
           gridViewName="grvDPInstancesStepsFields"
@@ -267,7 +267,7 @@
       </span>
     </span>
 
-    <span class="margin-l">
+    <span class="w-100">
       <ng-container *ngIf="!data.dataValue">
         <!-- margin-l -->
         <span class="place-holder" *ngIf="data.dataType != 'R'">

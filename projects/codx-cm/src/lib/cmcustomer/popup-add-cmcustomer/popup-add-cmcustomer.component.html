@@ -141,7 +141,11 @@
               >
               </codx-input>
             </div>
-            <div class="form-group" style="margin-top: 33px" *ngIf="funcID == 'CM0101'">
+            <div
+              class="form-group"
+              style="margin-top: 33px"
+              *ngIf="funcID == 'CM0101'"
+            >
               <div class="d-flex justify-content-between">
                 <div class="me-2">
                   <codx-input
@@ -1064,29 +1068,16 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-6 form-group">
-        <codx-label [formModel]="dialog.formModel" fiedName="LastName">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="lastName"
-        >
-        </codx-input>
-      </div>
-      <div class="col-6 form-group">
-        <codx-label [formModel]="dialog.formModel" fiedName="FirstName">
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="firstName"
-        >
-        </codx-input>
-      </div>
+    <div class="form-group">
+      <codx-label [formModel]="dialog.formModel" fiedName="ContactName">
+      </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="contactName"
+      >
+      </codx-input>
     </div>
-
     <div class="row">
       <div class="col-6 form-group">
         <codx-label [formModel]="dialog.formModel" fiedName="Gender">

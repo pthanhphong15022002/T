@@ -105,7 +105,10 @@ export class PopupConvertLeadComponent implements OnInit {
   dateMessage: string;
   gridViewSetup: any;
   radioCheckedCus = true;
+  disabledShowInput = false;
+  planceHolderAutoNumber = '';
   lstPermissions: CM_Permissions[] = [];
+  recIDContact: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -184,7 +187,7 @@ export class PopupConvertLeadComponent implements OnInit {
   async getProcessIDBybusinessLineID(businessLineID) {
     var options = new DataRequest();
     options.entityName = 'CM_BusinessLines';
-    options.predicates = 'RecID=@0';
+    options.predicates = 'BusinessLineID=@0';
     options.dataValues = businessLineID;
     options.pageLoading = false;
     this.businessLine = await firstValueFrom(
@@ -404,6 +407,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer,
       this.deal,
       this.isCheckContact ? this.lstContactDeal : null,
+      this.recIDContact,
     ];
     await this.api
       .execSv<any>(
@@ -606,6 +610,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async changeRadio(e) {
     if (e.field === 'yes' && e.component.checked === true) {
+      this.lstContactDeal = [];
       if (this.countAddSys > 0) {
         this.customerID = this.customerOld;
         this.lead.customerID = this.customerID;
@@ -614,18 +619,40 @@ export class PopupConvertLeadComponent implements OnInit {
       // this.getListContactByObjectID(this.customerID);
       this.countAddSys++;
     } else if (e.field === 'no' && e.component.checked === true) {
+      this.lstContactDeal = [];
       this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
       this.gridViewSetupCustomer = await firstValueFrom(
         this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
       );
       this.radioChecked = false;
+      this.api
+        .execSv<any>(
+          'SYS',
+          'AD',
+          'AutoNumberDefaultsBusiness',
+          'GetFieldAutoNoAsync',
+          ['CM0101', 'CM_Customers']
+        )
+        .subscribe((res) => {
+          if (res && !res.stop) {
+            this.disabledShowInput = true;
+            // this.getAutoNumber(this.autoNumber);
+            this.cache.message('AD019').subscribe((mes) => {
+              if (mes)
+                this.planceHolderAutoNumber =
+                  mes?.customName || mes?.description;
+            });
+          } else {
+            this.disabledShowInput = false;
+          }
+        });
       if (this.countAddNew == 0) {
         this.customerID = Util.uid();
         this.customerNewOld = this.customerID;
         this.customer.recID = this.customerNewOld;
       }
       this.setDataCustomer();
-
+      this.setContact();
       this.countAddNew++;
 
       // this.getListContactByObjectID(this.customerNewOld);
@@ -654,7 +681,33 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.establishDate = this.lead?.establishDate;
     this.customer.channelID = this.lead?.channelID;
     this.customer.headcounts = this.lead?.headcounts;
-    this.customer.memo = '';
+    this.customer.address = this.lead?.address;
+    this.customer.memo = this.lead?.memo ?? '';
+    this.customer.owner = this.lead?.owner;
+  }
+
+  setContact() {
+    if (this.lead.contactName != null && this.lead.contactName.trim() != '') {
+      var tmp = new CM_Contacts();
+      tmp.recID = Util.uid();
+      tmp.isDefault = true;
+      tmp.contactType = '0';
+      tmp.objectID = this.deal.recID;
+      tmp.objectType = '4';
+      tmp.objectName = this.deal.dealName;
+      tmp.contactName = this.lead.contactName;
+      tmp.refID = this.lead.contactID;
+      tmp.jobTitle = this.lead.jobTitle ?? '';
+      tmp.mobile = this.lead.phone;
+      tmp.role = '';
+      tmp.personalEmail = this.lead.email;
+      tmp.assign = true;
+      tmp.delete = true;
+      tmp.write = true;
+      tmp.share = true;
+      this.recIDContact = this.lead.contactID;
+      this.lstContactDeal.push(tmp);
+    }
   }
 
   valueChangeOwner(e) {
@@ -896,10 +949,6 @@ export class PopupConvertLeadComponent implements OnInit {
       tmp.refID = e?.recID;
       tmp.objectType = '4';
       tmp.isDefault = false;
-      var indexCus = this.lstContactCustomer.findIndex(
-        (x) => x.recID == e?.recID
-      );
-
       if (!this.lstContactDeal.some((x) => x.refID == e?.recID)) {
         this.lstContactDeal.push(tmp);
         // this.codxConvert.loadListContact(this.lstContactDeal);

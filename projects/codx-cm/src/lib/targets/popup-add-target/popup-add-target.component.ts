@@ -166,6 +166,8 @@ export class PopupAddTargetComponent {
         this.lstTargetLines?.forEach((res) => {
           res.target =
             (res.target / exchangeRate?.exchRate) * this.exchangeRate;
+          res.currencyID =  currencyID;
+          res.exchangeRate = exchangeRate.exchRate;
         });
       }
       if (exchangeRate?.exchRate > 0) {
@@ -176,9 +178,6 @@ export class PopupAddTargetComponent {
       }
       this.currencyID = currencyID;
       this.exchangeRate = exchangeRate.exchRate;
-      this.currencyIDSys = this.currencyID;
-      this.exchangeRateSys = this.exchangeRate;
-
       this.data.currencyID = this.currencyID;
       this.data.exchangeRate = this.exchangeRate;
     }
@@ -742,7 +741,8 @@ export class PopupAddTargetComponent {
             this.isAllocation = this.data?.allocation == '1' ? true : false;
             this.isExitTarget = true;
             this.isBusiness = true;
-            this.exchangeRate = this.data.exchangeRate ?? 0;
+            this.currencyID = this.data.currencyID;
+            this.exchangeRate = this.data.exchangeRate;
           }
           this.lstOwners = res[2] ?? [];
           this.lstOwners.forEach((element) => {
@@ -769,7 +769,9 @@ export class PopupAddTargetComponent {
             this.quarter2 = 0;
             this.quarter3 = 0;
             this.quarter4 = 0;
-            this.data.currencyID = this.currencyID;
+            this.currencyID = this.currencyIDSys;
+            this.exchangeRate = this.exchangeRateSys;
+            this.data.currencyID = this.currencyIDSys;
             this.lstTime.forEach((x) => (x.lines = []));
             this.lstOwners = [];
             this.isExitTarget = false;

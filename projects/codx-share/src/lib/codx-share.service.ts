@@ -51,6 +51,7 @@ import { ES_File } from './components/codx-approval-procress/model/codx-approval
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
+import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 
 @Injectable({
   providedIn: 'root',
@@ -331,7 +332,6 @@ export class CodxShareService {
         gridModel.predicate = dataService.request.predicates;
         gridModel.dataValue = dataService.request.dataValues;
         gridModel.entityPermission = formModel.entityPer;
-        //Chưa có group
         gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
           CodxExportComponent,
@@ -361,9 +361,25 @@ export class CodxShareService {
           referType: customData?.referType,
           addPermissions: customData?.addPermissions
         };
-        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas)
+        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas);
+        break;
       }
-
+      //Gửi mail
+      case 'SYS004':
+      {
+        var dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+        dialog.closed.subscribe((x) => {
+          if (x.event) {
+            var result =
+            {
+              funcID: "SYS004",
+              result: x.event
+            }
+            afterSave(result);
+          }
+        });
+        break;
+      }
     }
   }
 

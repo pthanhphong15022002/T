@@ -150,7 +150,7 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
 
   clickMF(event, data){
     switch(event.functionID){
-      case 'SYS03': //add
+      case 'SYS03': //edit
       this.HandlePolicyBenefit(event.text, this.ActionEdit, data);
         break;
 

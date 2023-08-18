@@ -117,8 +117,8 @@ export class OrganizationOrgchartComponent {
   showFrame: boolean = false;
   maximumColumnsInMatrix: number;
   minimumVisibleLevels: number;
-  markerWidth: number;
-  markerHeight: number;
+  markerWidth: number = 8;
+  markerHeight: number = 8;
   minimizedItemCornerRadius: number;
   selectCheckBoxLabel: string;
   hightlightleft: number;
@@ -130,7 +130,7 @@ export class OrganizationOrgchartComponent {
   normalLevelShift: number = 50;
   dotLevelShift: number = 30;
   lineLevelShift: number;
-  normalItemsInterval: number;
+  normalItemsInterval: number = 40;
   dotItemsInterval: number = 30;
   lineItemsInterval: number;
   cousinsIntervalMultiplier: number;
@@ -168,6 +168,7 @@ export class OrganizationOrgchartComponent {
   templateUpdateStatus: TemplateRef<any>;
 
   @ViewChild('input') input: ElementRef;
+  // @ViewChild('diagram1') diagram1: ElementRef;
   collapsed: boolean[] = [];
   dataTree: any = {};
 
@@ -184,11 +185,12 @@ export class OrganizationOrgchartComponent {
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
-  cursorItem: number | string;
+  cursorItem: number | string = '';
 
   @Input() formModel: FormModel;
   @Input() orgUnitID: string = '';
   @Input() itemAdded;
+  @Input() formModelEmployee;
   @Input() view: ViewsComponent;
   @Input() dataService: CRUDService = null;
   @Output() clickMFunction = new EventEmitter();
@@ -204,18 +206,20 @@ export class OrganizationOrgchartComponent {
   employees: any[] = [];
   headerColor: string = '#03a9f4';
   selectedTeam = '';
+  isPopUpManager: boolean = false;
+  idHover: string;
 
-  //style slider
-  // stylesObj = {
-  //   width: '100%',
-  //   display: 'flex',
-  //   margin: '5px 14px',
-  //   cursor: 'pointer',
-  // };
   stylesObjChart = {
     border: '3px solid #03a9f4',
     position: 'relative',
     height: '100%',
+    background: '#fff',
+  };
+
+  stylesObjChartActiveNoManager = {
+    border: '3px solid #03a9f4',
+    position: 'relative',
+    height: 'max-content',
     background: '#fff',
   };
   stylesObjChartNone = {
@@ -759,14 +763,15 @@ export class OrganizationOrgchartComponent {
   onMouseWheel(evt) {
     if (evt.ctrlKey) {
       evt.preventDefault();
-      if (evt.deltaY > 0) {
-        if (this.scaleNumber > 0.3) {
-          this.scaleNumber = this.scaleNumber - 0.1;
-        }
-      } else {
-        if (this.scaleNumber < 1) {
-          this.scaleNumber = this.scaleNumber + 0.1;
-        }
+
+      // if (evt.deltaY > 0) {
+      if (this.scaleNumber > 0.3 && evt.deltaY > 0) {
+        //this.diagram1.nativeElement.scrollRight += evt.deltaY;
+        this.scaleNumber = this.scaleNumber - 0.1;
+      }
+      // }
+      if (this.scaleNumber < 1) {
+        this.scaleNumber = this.scaleNumber + 0.1;
       }
     }
   }
@@ -911,9 +916,16 @@ export class OrganizationOrgchartComponent {
   }
 
   //Disable active chart
-  clickActive(data) {
+  // clickActive(data) {
+  //   console.log('Run active');
+  //   //Patch id to parent chart
+  //   this.newIdItem.emit(data);
+  //   this.disableActive = true;
+  // }
+  onCursorChanged(e) {
     //Patch id to parent chart
-    this.newIdItem.emit(data);
+    this.newIdItem.emit(e.context.id);
+
     this.disableActive = true;
   }
 
@@ -942,11 +954,10 @@ export class OrganizationOrgchartComponent {
               items.push(
                 new OrgItemConfig({
                   id: item.orgUnitID,
-                  parent: item.parentID,
+                  parent: item.parentID || null,
                   title: item.orgUnitName,
                   description: item.positionName,
                   label: item.orgUnitName,
-                  //image: this.imgTest,
                   templateName: 'contactTemplate',
                   itemTitleColor: String(this.getColorItem(item.orgUnitType)),
                   context: {
@@ -964,18 +975,20 @@ export class OrganizationOrgchartComponent {
                   // groupTitleColor: Colors.Red,
                 })
               );
-              // }
             });
-            this.cursorItem = items[0].id;
 
             this.items = items;
           }
         });
     }
-    //this.dt.detectChanges();
   }
 
   ngOnInit(): void {
+    // this.hrService.getFormModel('HRT03a1').then((res) => {
+    //   if (res) {
+    //     this.formModelEmployee = res;
+    //   }
+    // });
     this.hrService
       .GetParameterByHRAsync('HRParameters', '1')
       .subscribe((res: any) => {
@@ -1103,6 +1116,7 @@ export class OrganizationOrgchartComponent {
       }
 
       //CursorItem
+      this.disableActive = true;
       this.cursorItem = data.orgUnitID;
     }
     if (
@@ -1201,6 +1215,7 @@ export class OrganizationOrgchartComponent {
           this.editData(data, event);
           break;
         case 'SYS04': // copy
+          this.copyValue(data, event);
           break;
         default:
           break;
@@ -1211,6 +1226,138 @@ export class OrganizationOrgchartComponent {
   changeDataMf(event, data) {
     this.hrService.handleShowHideMF(event, data, this.formModel);
   }
+
+  copyValue(data: any, event: any) {
+    if (data) {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+
+      this.hrService
+        .copy(data, this.view.formModel, 'OrgUnitID')
+        .subscribe((res) => {
+          if (res) {
+            res.orgUnitID = '';
+
+            let object = {
+              data: res,
+              funcID: this.view.formModel.funcID,
+              isModeAdd: true,
+              titleMore: event.text,
+              action: event,
+            };
+            let popup = this.callFC.openSide(
+              PopupAddOrganizationComponent,
+              object,
+              option,
+              this.view.formModel.funcID
+            );
+            popup.closed.subscribe((res: any) => {
+              if (res.event) {
+                this.view.dataService.add(res.event, 0).subscribe();
+
+                const data = res.event;
+
+                let checkSameTree = this.items.find(
+                  (e) => e.id === data.parentID
+                );
+
+                if (!checkSameTree) {
+                  this.orgUnitID = data.orgUnitID;
+                  this.isGetManager(this.selectedTeam);
+                } else {
+                  this.items.forEach((e) => {
+                    if (
+                      e.id === data.parentID &&
+                      e.context.loadChildrent !== false
+                    ) {
+                      //Add to chart from parent
+                      this.items.push(
+                        new OrgItemConfig({
+                          id: data.orgUnitID,
+                          parent: data.parentID,
+                          title: data.orgUnitName,
+                          description: data.positionName,
+                          label: data.orgUnitName,
+                          templateName: 'contactTemplate',
+                          itemTitleColor: String(
+                            this.getColorItem(data.orgUnitType)
+                          ),
+                          context: {
+                            employeeID: data.employeeID,
+                            employeeName: data.employeeName,
+                            employeeManager: data.employeeManager,
+                            orgUnitType: data.orgUnitType,
+                            data: data,
+                            isChildren: data.isChildren,
+                            loadChildrent: data.loadChildrent,
+                          },
+                        })
+                      );
+                      e.context.isChildren = true;
+                      e.context.loadChildrent = true;
+                    } else {
+                      this.api
+                        .execSv(
+                          'HR',
+                          'ERM.Business.HR',
+                          'OrganizationUnitsBusiness',
+                          'GetChildChartAsync',
+                          [
+                            data.parentID,
+                            this.selectedTeam.includes('No') ? false : true,
+                          ]
+                        )
+                        .subscribe((res: any) => {
+                          if (res) {
+                            res.map((item) => {
+                              this.items.push(
+                                new OrgItemConfig({
+                                  id: item.orgUnitID,
+                                  parent: item.parentID,
+                                  title: item.orgUnitName,
+                                  description: item.positionName,
+                                  label: item.orgUnitName,
+                                  templateName: 'contactTemplate',
+                                  itemTitleColor: String(
+                                    this.getColorItem(item.orgUnitType)
+                                  ),
+                                  context: {
+                                    employeeID: item.employeeID,
+                                    employeeName: item.employeeName,
+                                    employeeManager: item.employeeManager,
+                                    orgUnitType: item.orgUnitType,
+                                    data: item,
+                                    isChildren: item.isChildren,
+                                    loadChildrent: item.loadChildrent,
+                                  },
+                                })
+                              );
+                            });
+
+                            // this.items.forEach((e) => {
+                            if (e.id == data.parentID) {
+                              e.context.isChildren = true;
+                              e.context.loadChildrent = true;
+                            }
+                            // });
+                          }
+                        });
+                    }
+                  });
+                }
+
+                //CursorItem
+                this.disableActive = true;
+                this.cursorItem = data.orgUnitID;
+              }
+            });
+          }
+        });
+    }
+  }
+
   // edit data
   editData(data: any, event: any) {
     if (this.dataService) {
@@ -1297,7 +1444,7 @@ export class OrganizationOrgchartComponent {
             }
           });
 
-          this.dataService.update(res.event).subscribe(() => {
+          this.view.dataService.update(res.event).subscribe(() => {
             // this.dataSource = this.newDataManager(this.dataService.data);
             //this.isGetManager(this.selectedTeam);
             this.dt.detectChanges();
@@ -1319,19 +1466,11 @@ export class OrganizationOrgchartComponent {
   // delete data
   deleteData(data) {
     this.view.dataService
-      .delete(
-        [data],
-        true,
-        (option: RequestOption) => this.beforeDelete(option, data.orgUnitID),
-        null,
-        null,
-        null,
-        null,
-        null
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data.orgUnitID)
       )
       .subscribe((res) => {
         if (res === true) {
-          this.notify.notifyCode('SYS008');
           this.items = this.items.filter((item) => item.id != data.orgUnitID);
 
           // const ids = this.items.map(({ id }) => id);
@@ -1355,8 +1494,6 @@ export class OrganizationOrgchartComponent {
           }
 
           this.dt.detectChanges();
-        } else {
-          this.notify.notifyCode('SYS022');
         }
       });
   }
@@ -1440,6 +1577,19 @@ export class OrganizationOrgchartComponent {
           });
       }
     }
+  }
+
+  dataManager: any;
+  mouseEnter(e, id) {
+    this.isPopUpManager = true;
+    this.idHover = id;
+    this.dataManager = e;
+  }
+
+  mouseLeave(e, id) {
+    this.isPopUpManager = false;
+    this.idHover = id;
+    // this.dataManager = '';
   }
 
   onSaveForm() {

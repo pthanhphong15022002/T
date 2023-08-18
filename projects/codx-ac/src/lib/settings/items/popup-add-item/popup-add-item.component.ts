@@ -8,7 +8,6 @@ import {
 import { FormGroup } from '@angular/forms';
 import {
   CRUDService,
-  CodxFormComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -20,6 +19,7 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
+import { lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
@@ -34,19 +34,18 @@ import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/po
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
 import { EntityName, getClassName } from '../utils/unknown.util';
-import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-item',
   templateUrl: './popup-add-item.component.html',
-  styleUrls: ['./popup-add-item.component.css'],
+  styleUrls: ['./popup-add-item.component.scss'],
 })
 export class PopupAddItemComponent
   extends UIComponent
   implements AfterViewInit
 {
   //#region Constructor
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('itemImage') itemImage?: ImageViewerComponent;
 
   item: Item;
@@ -59,6 +58,7 @@ export class PopupAddItemComponent
   gvsItemsSales: any;
   gvsItemsProduction: any;
 
+  disabledTabs = new Map();
   ignoredFields: string[] = [];
   title: string = '';
   isEdit: boolean = false;
@@ -387,43 +387,36 @@ export class PopupAddItemComponent
   }
 
   ngAfterViewInit(): void {
-    // debug
-    console.log(this.form);
-
     this.title = this.dialogData.data?.title;
+
+    this.onSwitchChange();
   }
   //#endregion
 
-  valueChange(evt: any, form: LayoutAddComponent) {
-    // var field = evt.field;
-    // let i = '';
-    // let itab = '';
-    // switch (field) {
-    //   case 'sales':
-    //     i = '4';
-    //     break;
-    //   case 'purchase':
-    //     i = '3';
-    //     break;
-    //   case 'production':
-    //     i = '5';
-    //     break;
-    // }
-    // if (!evt.data) {
-    //   if (itab && itab.includes(i)) return;
-    //   itab += i + ';';
-    // } else {
-    //   if (itab && itab.includes(i)) itab = itab.replace(i + ';', '');
-    // }
-    // form.setDisabled(itab);
-    // var a = evt;
-  }
-
   //#region Event
-  onInputChange(e: any): void {
+  onTagChange(e: any): void {
     console.log('onInputChange', e);
 
     this.item[e.field] = e.data;
+  }
+
+  onSwitchChange(): void {
+    if (!this.item.purchase) {
+      this.disabledTabs.set('purchase', '3');
+    } else {
+      this.disabledTabs.delete("purchase");
+    }
+    if (!this.item.sales) {
+      this.disabledTabs.set('sales', '4');
+    } else {
+      this.disabledTabs.delete("sales");
+    }
+    if (!this.item.production) {
+      this.disabledTabs.set('production', '5');
+    } else {
+      this.disabledTabs.delete("production")
+    }
+    this.form.setDisabled([...this.disabledTabs.values()].join(';'));
   }
 
   onDimGroupIDChange(e): void {

@@ -9,17 +9,21 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100" *ngIf="isLoaded">
+  <div class="w-100 h-100" *ngIf="isLoaded && reportID != '5'">
     <codx-dashboard
       [templates]="dashBoardDeals"
       [panels]="panelsDeals"
       [datas]="datasDeals"
       [isEditMode]="isEditMode"
-      [cellSpacing]="[22, 20]"
+      [cellSpacing]="[20, 20]"
     ></codx-dashboard>
   </div>
   <div class="w-100 h-100" *ngIf="!isLoaded">
     <div id="loader"></div>
+  </div>
+
+  <div class="w-100 h-100" *ngIf="isLoaded && reportID == '5'">
+    <cm-targets [viewDashboard]="true"></cm-targets>
   </div>
 </ng-template>
 
@@ -90,31 +94,85 @@
     <div>
       <codx-label
         class="fs-5 fw-bold"
-        name="lblPercentageOfBusinessLinesByDeals"
-        default="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm"
+        name="lblPercentageOfDeals"
+        default="Tỷ lệ phân bổ cơ hội"
       ></codx-label>
     </div>
-    <ng-container
-      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
-    >
-      <ejs-treemap
-        class="w-100"
-        style="display: block"
-        [dataSource]="dataSourceBussnessLine ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="palette"
-        [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${businessLineName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
-    </ng-container>
+    <div id="chartPercentageOfDeals" class="mt-3">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isBussinessLine ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btBussinessLine"
+            formModel="CMMyDashboard"
+            default="Dòng sản phẩm"
+            (click)="clickButton('btBussinessLine')"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="
+            !isBussinessLine ? 'button-selected' : 'button-no-selected'
+          "
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btIndustries"
+            formModel="CMMyDashboard"
+            default="Lĩnh vực hoạt động"
+            (click)="clickButton('btIndustries')"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+    <div class="w-100">
+      <ng-container *ngIf="isBussinessLine">
+        <ng-container
+          *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+        >
+          <ejs-treemap
+            class="w-100"
+            [dataSource]="dataSourceBussnessLine ?? []"
+            weightValuePath="quantity"
+            rangeColorValuePath="quantity"
+            [palette]="palette"
+            [leafItemSettings]="leafItemSettings"
+            [tooltipSettings]="{
+              visible: true,
+              format:
+                '${businessLineName}<br>${quantity} ' +
+                this.titLeModule +
+                '-(${percentage} %)'
+            }"
+          >
+          </ejs-treemap>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="!isBussinessLine">
+        <ng-container
+          *ngIf="dataDashBoard?.countsIndustries?.length > 0; else noData"
+        >
+          <ejs-treemap
+            class="w-100"
+            [dataSource]="dataSourceIndustry ?? []"
+            weightValuePath="quantity"
+            rangeColorValuePath="quantity"
+            [palette]="paletteIndustry"
+            [leafItemSettings]="leafItemSettingsIns"
+            [tooltipSettings]="{
+              visible: true,
+              format:
+                '${industryName}<br>${quantity} ' +
+                this.titLeModule +
+                '-(${percentage} %)'
+            }"
+          >
+          </ejs-treemap>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
 
@@ -133,23 +191,25 @@
     <div id="chartBusinessLinesButton" class="mt-3">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          [ngClass]="checkBtnSuscess ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="isSuccess ? 'button-selected' : 'button-no-selected'"
           class="btn-left py-1 d-flex justify-content-center align-items-center"
         >
           <codx-label
             name="btSuccess"
             formModel=""
             default="Thành công"
+            (click)="clickButton('btSuccess')"
           ></codx-label>
         </div>
         <div
-          [ngClass]="checkBtnFail ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="!isSuccess ? 'button-selected' : 'button-no-selected'"
           class="btn-right py-1 d-flex justify-content-center align-items-center"
         >
           <codx-label
             name="btFail"
             formModel=""
             default="Thất bại"
+            (click)="clickButton('btFail')"
           ></codx-label>
         </div>
       </div>
@@ -172,7 +232,7 @@
               *ngFor="let item of dataDashBoard?.countsBussinessLines"
             >
               <e-series
-                *ngIf="checkBtnSuscess"
+                *ngIf="isSuccess"
                 [dataSource]="item?.chartDataSuscess ?? []"
                 type="Line"
                 xName="month"
@@ -183,7 +243,7 @@
               ></e-series>
 
               <e-series
-                *ngIf="checkBtnFail"
+                *ngIf="!isSuccess"
                 [dataSource]="item?.chartDataFail ?? []"
                 type="Line"
                 xName="month"
@@ -214,7 +274,7 @@
     <div class="mt-5" style="overflow-y: auto; max-height: 85%">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          [ngClass]="checkBtnMax ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="isMax ? 'button-selected' : 'button-no-selected'"
           class="btn-left py-1 d-flex justify-content-center align-items-center"
           (click)="clickButton('btnMax')"
         >
@@ -225,7 +285,7 @@
           ></codx-label>
         </div>
         <div
-          [ngClass]="checkBtnMin ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="!isMax ? 'button-selected' : 'button-no-selected'"
           class="btn-right py-1 d-flex justify-content-center align-items-center"
           (click)="clickButton('btnMin')"
         >
@@ -239,7 +299,7 @@
     </div>
 
     <div class="mt-3">
-      <ng-container *ngIf="checkBtnMax">
+      <ng-container *ngIf="isMax">
         <ng-container *ngIf="maxOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of maxOwners; let i = index"
@@ -258,7 +318,7 @@
           </div>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="checkBtnMin">
+      <ng-container *ngIf="!isMax">
         <ng-container *ngIf="minOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of minOwners; let i = index"
@@ -388,7 +448,38 @@
       gridViewName="grvCMMyDashboard"
       default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
     ></codx-label>
-    <div style="height: 100% !important" *ngIf="true; else noData">
+
+    <div id="chartCoverionButton" class="mt-3">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isStatus ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btStatus"
+            formModel=""
+            default="Status"
+            (click)="clickButton('btStatus')"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="!isStatus ? 'button-selected' : 'button-no-selected'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btStage"
+            formModel=""
+            default="Stage"
+            (click)="clickButton('btStage')"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="height: 100% !important"
+      *ngIf="dataSourcePy?.length > 0; else noData"
+    >
       <!-- <div class="control-section">
         <div> -->
       <ejs-accumulationchart
@@ -550,5 +641,18 @@
 </ng-template>
 
 <ng-template #noData>
-  <codx-no-data></codx-no-data>
+  <codx-no-data [size]="150"></codx-no-data>
+</ng-template>
+
+<!-- temp filter -->
+<ng-template #filterTemplate>
+  <!-- <codx-input
+    [cssClass]="'rounded-pill border-1'"
+    cssPopup="h-350px w-300px"
+    type="valuelist"
+    [crrValue]="'2'"
+    refValue="AC083"
+    field="payType"
+    (valueChange)="valueChangeFilter($event)"
+  ></codx-input> -->
 </ng-template>

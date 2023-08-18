@@ -145,7 +145,7 @@ export class EmployeePolicyalComponent extends UIComponent{
 
   clickMF(event, data){
     switch(event.functionID){
-      case 'SYS03': //add
+      case 'SYS03': //edit
       this.HandlePolicyAL(event.text, this.ActionEdit, data);
         break;
 

@@ -12,9 +12,9 @@ export class Vouchers{
     siteID: any;
     prodStageID: any;
     wcid: any;
-    dim1: any;
-    dim2: any;
-    dim3: any;
+    diM1: any;
+    diM2: any;
+    diM3: any;
     projectID: any;
     memo: any;
     memo2: any;

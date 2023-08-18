@@ -89,6 +89,10 @@ export class DealsComponent
 
   popupConfirm: DialogRef;
 
+  @ViewChild('popUpQuestionStatus', { static: true }) popUpQuestionStatus;
+  dialogQuestionForm: DialogRef;
+
+
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -163,6 +167,9 @@ export class DealsComponent
   listHeader: any = [];
   listSteps: any[] = [];
   arrFieldIsVisible: any[];
+
+  valueListStatusCode: any; // status code ID
+  statusDefault: string = '';
 
   constructor(
     private inject: Injector,
@@ -348,13 +355,17 @@ export class DealsComponent
   getRoleMoreFunction(type) {
     let functionMappings;
     let isDisabled = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' ? (data.closed && data.status != '1') ||
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? (data.closed && data.status != '1') ||
             ['1', '0'].includes(data.status) ||
             this.checkMoreReason(data)
           : true;
     };
     let isDelete = (eventItem, data) => {
-        eventItem.disabled = data.delete ? data.closed || this.checkMoreReason(data) || data.status == '0' : true;
+      eventItem.disabled = data.delete
+        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        : true;
     };
     let isCopy = (eventItem, data) => {
       eventItem.disabled = data.write
@@ -381,7 +392,9 @@ export class DealsComponent
           : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = data.full ? !['1', '2'].includes(data.status) || data.closed : true;
+      eventItem.disabled = data.full
+        ? !['1', '2'].includes(data.status) || data.closed
+        : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
@@ -427,13 +440,28 @@ export class DealsComponent
 
     let isDisCRd = (eventItem, data) => {
       // Nhập khẩu dữ liệu
-      eventItem.disabled =  true ;
+      eventItem.disabled = true;
+    };
+    let isChangeStatus = (eventItem, data)  => {
+      eventItem.disabled = data.status != '2';
     };
     functionMappings = {
-      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce((acc, code) => ({ ...acc, [code]: isDisabled }), {}),
-      ...['CM0201_12', 'CM0201_13'].reduce((acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }), {}),
-      ...['SYS101', 'SYS103','SYS104','SYS102'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
-      ...['SYS003', 'SYS001'].reduce((acc, code) => ({ ...acc, [code]: isDisCRd }), {}),
+      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+        (acc, code) => ({ ...acc, [code]: isDisabled }),
+        {}
+      ),
+      ...['CM0201_12', 'CM0201_13'].reduce(
+        (acc, code) => ({ ...acc, [code]: isConfirmOrRefuse }),
+        {}
+      ),
+      ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
+        (acc, code) => ({ ...acc, [code]: isDisCRd }),
+        {}
+      ),
+      ...['SYS003', 'SYS001'].reduce(
+        (acc, code) => ({ ...acc, [code]: isDisCRd }),
+        {}
+      ),
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -447,6 +475,7 @@ export class DealsComponent
       SYS004: isEmail,
       SYS002: isDownload,
       CM0201_15: isPermission,
+      CM0201_17: isChangeStatus,
     };
 
     return functionMappings[type];
@@ -455,6 +484,18 @@ export class DealsComponent
   executeApiCallFunctionID(formName, gridViewName) {
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
+  }
+  async getValuelistStatusCode() {
+    this.cache.valueList('CRM041').subscribe((func) => {
+      if (func) {
+        this.valueListStatusCode = func.datas
+          .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+          .map((item) => ({
+            text: item.text,
+            value: item.value,
+          }));
+      }
+    });
   }
 
   getMoreFunction(formName, gridViewName) {
@@ -508,87 +549,57 @@ export class DealsComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0201_1':
-        this.moveStage(data);
-        break;
-      case 'CM0201_2':
-        this.handelStartDay(data);
-        break;
-      case 'CM0201_3':
-        this.moveReason(data, true);
-        break;
-      case 'CM0201_4':
-        this.moveReason(data, false);
-        break;
-      case 'CM0201_8':
-        this.openOrCloseDeal(data, true);
-        break;
-      case 'CM0201_7':
-        this.popupOwnerRoles(data);
-        break;
-      case 'CM0201_9':
-        this.openOrCloseDeal(data, false);
-        break;
-      case 'CM0201_5':
-        this.exportFile(data);
-        break;
-      case 'CM0201_6':
-        this.approvalTrans(data);
-        break;
-      case 'CM0201_12':
-        this.confirmOrRefuse(true, data);
-        break;
-      case 'CM0201_13':
-        this.confirmOrRefuse(false, data);
-        break;
-      case 'CM0201_14':
-        this.openFormBANT(data);
-        break;
-      //cancel Aprover
-      case 'CM0201_16':
-        this.cancelApprover(data);
-        break;
-      case 'SYS002':
-        this.exportFiles(e, data);
-        break;
+    const functionMapping = {
+      SYS03: () => this.edit(data),
+      SYS04: () => this.copy(data),
+      SYS02: () => this.delete(data),
+      CM0201_1: () => this.moveStage(data),
+      CM0201_2: () => this.handelStartDay(data),
+      CM0201_3: () => this.moveReason(data, true),
+      CM0201_4: () => this.moveReason(data, false),
+      CM0201_8: () => this.openOrCloseDeal(data, true),
+      CM0201_7: () => this.popupOwnerRoles(data),
+      CM0201_9: () => this.openOrCloseDeal(data, false),
+      CM0201_5: () => this.exportFile(data),
+      CM0201_6: () => this.approvalTrans(data),
+      CM0201_12: () => this.confirmOrRefuse(true, data),
+      CM0201_13: () => this.confirmOrRefuse(false, data),
+      CM0201_14: () => this.openFormBANT(data),
+      CM0201_16: () => this.cancelApprover(data),
+      SYS002: () => this.exportFiles(e, data),
+      CM0201_15: () => this.popupPermissions(data),
+      CM0201_17: () => this.openFormChangeStatus(data),
+    };
 
-      case 'CM0201_15':
-        this.popupPermissions(data);
-        break;
-      default:
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave.bind(this),
-          this.view.formModel,
-          this.view.dataService,
-          this,
-          customData
-        );
-        this.detectorRef.detectChanges();
-        break;
+    const executeFunction = functionMapping[e.functionID];
+    if (executeFunction) {
+      executeFunction();
+    } else {
+      var customData = {
+        refID: data.processID,
+        refType: 'DP_Processes',
+        dataSource: '', // truyen sau
+      };
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave.bind(this),
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
+      this.detectorRef.detectChanges();
     }
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval
-      if (appoverStatus !=null &&  appoverStatus != this.dataSelected.approveStatus) {
-        this.dataSelected.approveStatus=appoverStatus
+      let appoverStatus = e.unbounds.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.dataSelected.approveStatus
+      ) {
+        this.dataSelected.approveStatus = appoverStatus;
       }
       this.view.dataService.update(this.dataSelected).subscribe();
     }
@@ -1090,7 +1101,6 @@ export class DealsComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
       var formMD = new FormModel();
       option.Width = '800px';
       option.zIndex = 1001;
@@ -1103,7 +1113,7 @@ export class DealsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction: action === 'add' ? 'Thêm cơ hội' : 'Sao chép cơ hội',
+      titleAction:this.formatTitleMore(this.titleAction),
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
@@ -1149,7 +1159,7 @@ export class DealsComponent
         var obj = {
           action: 'edit',
           formMD: formMD,
-          titleAction: 'Chỉnh sửa cơ hội',
+          titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
         };
         let dialogCustomDeal = this.callfc.openSide(
@@ -1252,7 +1262,6 @@ export class DealsComponent
   //#region event
   selectedChange(data) {
     if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
@@ -1817,4 +1826,47 @@ export class DealsComponent
       });
   }
   //#endregion
+
+  formatTitleMore(titleAction) {
+    return (
+      titleAction +
+      ' ' +
+      this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() +
+      this.funcIDCrr.customName.slice(1)
+    );
+  }
+  openFormChangeStatus(data) {
+    this.dataSelected = data;
+    this.statusDefault = data.status;
+    this.dialogQuestionForm = this.callfc.openForm(
+      this.popUpQuestionStatus,
+      '',
+      400,
+      200
+    );
+  }
+  valueChangeStatusCode($event) {
+    if ($event) {
+      this.statusDefault= $event.data;
+    }
+  }
+  saveStatus() {
+    if (this.dataSelected.status === this.statusDefault) {
+      this.dialogQuestionForm.close();
+      this.notificationsService.notifyCode('SYS007');
+    } else {
+      var datas = [this.dataSelected.recID, this.statusDefault];
+      this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
+        if (res) {
+          this.dialogQuestionForm.close();
+          this.dataSelected.statusCodeID =this.statusDefault;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      });
+    }
+  }
 }

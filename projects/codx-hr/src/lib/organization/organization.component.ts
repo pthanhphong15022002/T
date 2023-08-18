@@ -50,7 +50,8 @@ export class OrgorganizationComponent extends UIComponent {
   viewActive: string = '';
   count: any;
   buttonAdd: ButtonModel;
-  activeMFC:boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
+  formModelEmployee;
+  activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
@@ -64,30 +65,30 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
 
-  constructor(
-    inject: Injector,
-    private hrService: CodxHrService,
-  ) 
-  {
+  constructor(inject: Injector, private hrService: CodxHrService) {
     super(inject);
   }
 
   onInit(): void {
-    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
-    this.router.params.subscribe((param:any) => {
-      let funcID = param["funcID"]; 
-      if (funcID.includes('WP')) {
-        this.buttonAdd = null; 
-        this.activeMFC = false;
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
       }
-      else
-      {
+    });
+
+    // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
+    this.router.params.subscribe((param: any) => {
+      let funcID = param['funcID'];
+      if (funcID.includes('WP')) {
+        this.buttonAdd = null;
+        this.activeMFC = false;
+      } else {
         this.buttonAdd = {
           id: 'btnAdd',
         };
         this.activeMFC = true;
       }
-    this.detectorRef.detectChanges();
+      this.detectorRef.detectChanges();
     });
   }
 
@@ -101,7 +102,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.parentIDField = 'ParentID';
 
     this.views = [
-      
       {
         id: '2',
         type: ViewType.listtree,
@@ -146,7 +146,6 @@ export class OrgorganizationComponent extends UIComponent {
       //   },
       // },
     ];
-
   }
 
   //loadEmployList
@@ -240,7 +239,7 @@ export class OrgorganizationComponent extends UIComponent {
           //     'OrgUnitID'
           //   )
           //   .subscribe((res) => {
-
+          res.orgUnitID = '';
           if (res) {
             let object = {
               data: res,
@@ -379,18 +378,26 @@ export class OrgorganizationComponent extends UIComponent {
 
   // search employee in popup view list employee
   searchText: string = '';
-  searchUser(event: any) {
-    this.searchText = event;
-    this.lstMyTeam = [];
-    this.pageIndex = 1;
-    this.getMyTeam();
-  }
-
+  click = false;
   pageIndex: number = 1;
   total: number = 0;
   lstMyTeam: any[] = [];
   scrolling: boolean = false;
   orgId: string;
+
+  searchUser(event: any) {
+    this.searchText = event;
+    this.lstMyTeam = [];
+    this.pageIndex = 1;
+
+    if (this.searchText !== '' || this.searchText === '') {
+      this.scrolling = false;
+
+      if (!this.scrolling) {
+        this.getMyTeam();
+      }
+    }
+  }
 
   //get my team
   getMyTeam() {
@@ -427,20 +434,42 @@ export class OrgorganizationComponent extends UIComponent {
     if (
       this.scrolling &&
       total <= e.scrollHeight + 2 &&
-      total > e.scrollHeight - 2
+      total > e.scrollHeight - 2 &&
+      this.click
     ) {
       this.scrolling = false;
       this.getMyTeam();
     }
+    //Use reset div height
+    this.click = true;
   }
 
   //Click load employee
+  // clickOpen(event, data, employee) {
+  //   this.lstMyTeam = employee.slice(0, 10);
+  //   this.orgId = data;
+  //   this.scrolling = true;
+  //   this.pageIndex = 2;
+  //   event.stopPropagation();
+  // }
+
   clickOpen(event, data, employee) {
-    this.lstMyTeam = employee.slice(0, 10);
-    this.orgId = data;
-    this.scrolling = true;
+    this.lstMyTeam = [];
     this.pageIndex = 2;
+    if (employee.length > 10) {
+    } else {
+      this.lstMyTeam = employee.slice(0, 10);
+    }
+    this.searchText = '';
+    this.scrolling = true;
+
+    this.orgId = data;
+    //Use reset div height
+    this.click = false;
     event.stopPropagation();
   }
-  
+
+  preventDedefault(e) {
+    e.stopPropagation();
+  }
 }

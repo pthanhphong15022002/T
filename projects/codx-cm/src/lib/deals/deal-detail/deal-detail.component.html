@@ -309,26 +309,48 @@
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
-                    <div
+                    <ng-container
                       *ngIf="dataSelected.status == '2'; else statusDefault"
-                      [ngStyle]="{
-                        'background-color':
-                          dataSelected?.steps['backgroundColor']
-                      }"
-                      class="badge badge-sm d-flex align-items-center me-0"
                     >
-                      <span
-                        [ngClass]="dataSelected?.steps['icon']"
-                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
-                        class="me-1"
-                      ></span>
-                      <span
-                        class="text-ellipsis line-clamp line-clamp-1"
-                        [ngbTooltip]="dataSelected?.currentStepName"
-                        [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                        >{{ dataSelected?.currentStepName }}</span
-                      >
+                    <div *ngIf="dataSelected?.statusCodeID">
+                      <codx-vll
+                      [name]="gridViewSetup?.StatusCodeID?.referedValue"
+                      [field]="'StatusCodeID'"
+                      [value]="dataSelected?.statusCodeID"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-sm ms-2"
+                    >
+                    </codx-vll>
                     </div>
+
+
+
+                      <div
+                        [ngStyle]="{
+                          'background-color':
+                            dataSelected?.steps['backgroundColor']
+                        }"
+                        class="badge badge-sm d-flex align-items-center me-0"
+                      >
+                        <span
+                          [ngClass]="dataSelected?.steps['icon']"
+                          [ngStyle]="{
+                            color: dataSelected?.steps['iconColor']
+                          }"
+                          class="me-1"
+                        ></span>
+                        <span
+                          class="text-ellipsis line-clamp line-clamp-1"
+                          [ngbTooltip]="dataSelected?.currentStepName"
+                          [ngStyle]="{
+                            color: dataSelected?.steps['textColor']
+                          }"
+                          >{{ dataSelected?.currentStepName }}</span
+                        >
+                      </div>
+                    </ng-container>
+
                     <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
@@ -340,6 +362,22 @@
                       >
                       </codx-vll>
                     </ng-template>
+                    <ng-container
+                      *ngIf="
+                        dataSelected?.approveStatus &&
+                        dataSelected?.approveStatus != '1'
+                      "
+                    >
+                      <codx-vll
+                        [name]="gridViewSetup?.ApproveStatus.referedValue"
+                        [field]="'ApproveStatus'"
+                        [value]="dataSelected?.approveStatus"
+                        [showText]="true"
+                        [showBgColor]="true"
+                        class="badge badge-primary badge-sm"
+                      >
+                      </codx-vll>
+                    </ng-container>
                   </div>
                   <ng-template #tooltipSalesperson>
                     <div class="d-flex justify-content-center fw-bold fs-6">
@@ -688,10 +726,6 @@
                     </div>
                   </div>
                 </div>
-                <!--
-                <div class="row">
-
-                </div> -->
 
                 <div class="row">
                   <div class="col-6">
@@ -716,68 +750,6 @@
                                 : formModel
                                 : 'dealValue'
                                 : dealValue
-                                : 'CMDeals'
-                                : 'grvCMDeals'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="mb-1 d-flex align-items-top">
-                      <div
-                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                      >
-                        <codx-label
-                          class="me-2 label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                          fiedName="DealValueTo"
-                        ></codx-label>
-                      </div>
-                      <div class="text-dark fw-bold codx-textcontent">
-                        <span
-                          #dealValueTo
-                          [innerHTML]="
-                            dataSelected?.dealValueTo
-                              | formatvalue
-                                : formModel
-                                : 'dealValueTo'
-                                : dealValueTo
-                                : 'CMDeals'
-                                : 'grvCMDeals'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-6">
-                    <div class="mb-1 d-flex align-items-top">
-                      <div
-                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                      >
-                        <codx-label
-                          class="me-2 label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                          fiedName="ExpectedFrom"
-                        ></codx-label>
-                      </div>
-                      <div class="text-dark fw-bold codx-textcontent">
-                        <span
-                          #expectedFrom
-                          *ngIf="dataSelected?.expectedFrom"
-                          [innerHTML]="
-                            dataSelected?.expectedFrom
-                              | formatvalue
-                                : formModel
-                                : 'expectedFrom'
-                                : expectedFrom
                                 : 'CMDeals'
                                 : 'grvCMDeals'
                               | async
@@ -835,7 +807,6 @@
                 ></span>
               </div>
               <div *ngIf="dataSelected?.steps?.isHaveField">
-
                 <div class="d-flex flex-column mt-5">
                   <ng-container *ngFor="let item of listSteps">
                     <codx-fields-detail-temp
@@ -946,7 +917,7 @@
               <span class="icon-more icon-16 me-2"></span>
               <codx-label
                 class="fw-bold"
-                default="Quy trình xử lý"
+                default="Công việc"
                 [formModel]="formModel"
                 name="lblProcess"
               ></codx-label>
@@ -958,6 +929,7 @@
                 [isDataLoading]="isDataLoading"
                 [dataSelected]="dataSelected"
                 [listInstanceStep]="listSteps"
+                [formModel]="formModel"
                 [applyFor]="'1'"
                 (continueStep)="continueStep($event)"
                 (saveAssignTask)="saveAssignTask($event)"

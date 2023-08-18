@@ -504,11 +504,10 @@
             </codx-label>
             <codx-input
               type="text"
-              [disabled]="true"
+              [disabled]="disabledShowInput"
               [crrValue]="customer?.customerID"
               [formModel]="formModelCustomer"
-              [placeholder]="gridViewSetupCustomer?.CustomerID?.description"
-              [refValue]="gridViewSetupCustomer?.CustomerID?.referedValue"
+              [placeholder]="planceHolderAutoNumber"
               field="customerID"
               (valueChange)="valueChangeCustomer($event)"
             >
