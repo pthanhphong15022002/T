@@ -33,7 +33,7 @@
               <div class="row ">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/file.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode != '3' && displayMode != '4';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode != '3' && displayMode != '4';else tmpDefaultName">
                     <span class="ms-2">{{data.reportName}}</span>
                 </ng-container>
                 </div>
@@ -45,7 +45,7 @@
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
-                    <button class="btn btn-light-primary">
+                    <button class="btn btn-light-primary" (click)="clickDowload('0')">
                       <i class="icon-cloud_download i-14"></i>
                       <span>Dowload</span>
                     </button>
@@ -78,7 +78,7 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/xls.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode == '3';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode == '3';else tmpDefaultName">
                       <span class="ms-2">{{data.reportName}}</span>
                   </ng-container>
                 </div>
@@ -90,7 +90,7 @@
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
-                    <button class="btn btn-light-primary">
+                    <button class="btn btn-light-primary" (click)="clickDowload('3')">
                       <i class="icon-cloud_download i-14"></i>
                       <span>Dowload</span>
                     </button>
@@ -106,7 +106,7 @@
               <div class="row">
                 <div class="d-flex align-items-center">
                   <img src="../../../assets/codx/dms/doc.svg" class="rp_template-item_rdl">
-                  <ng-container *ngIf="displayMode == '4';else tmpDefaultName">
+                  <ng-container *ngIf="data.reportContent && displayMode == '4';else tmpDefaultName">
                     <span class="ms-2">{{data.reportName}}</span>
                 </ng-container>
                 </div>
@@ -118,7 +118,7 @@
                       <i class="icon-cloud_upload i-14"></i>
                       <span>Upload</span>
                     </button>
-                    <button class="btn btn-light-primary">
+                    <button class="btn btn-light-primary" (click)="clickDowload('4')">
                       <i class="icon-cloud_download i-14"></i>
                       <span>Dowload</span>
                     </button>

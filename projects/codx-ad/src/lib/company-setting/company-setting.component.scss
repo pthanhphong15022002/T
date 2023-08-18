@@ -210,13 +210,15 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 
 lib-company-setting .e-toolbar-items {
   margin-top: 10px !important;
+
+  .e-toolbar-item {
+    margin-bottom: 2px !important;
+    min-height: 38px !important;
+        padding: 6px 10px!important;
+  }
+  
 }
 
-.e-toolbar-items .e-toolbar-item {
-  margin-bottom: 2px !important;
-  min-height: 38px !important;
-      padding: 6px 10px!important;
-}
 
 .memory-store .e-control-wrapper.e-slider-container.e-horizontal {
   height: 16px;

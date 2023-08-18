@@ -21,6 +21,7 @@ import {
   Util,
   CRUDService,
   CodxFormComponent,
+  CacheService,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Deals, CM_Leads, CM_Permissions } from '../../models/cm_model';
@@ -91,7 +92,6 @@ export class PopupAddLeadComponent
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
   readonly actionEdit: string = 'edit';
-  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   readonly radioCategory: string = 'radioCategory';
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly radioCompany: string = 'company';
@@ -211,6 +211,23 @@ export class PopupAddLeadComponent
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
       }
+      else if( $event.field == 'industries') {
+        let owner = $event.component.itemsSelected[0].Owner;
+        let ownerName = '';
+        if(this.applyProcess) {
+          let index = this.listParticipants.findIndex(x=>x.userID);
+
+          if(index != -1 ) {
+            this.owner = owner;
+            ownerName = this.listParticipants[index].userName;
+          }
+        }
+        else {
+          this.owner = owner
+           ownerName = '';
+        }
+        this.checkOwner(this.owner, ownerName);
+      }
     }
   }
 
@@ -287,24 +304,27 @@ export class PopupAddLeadComponent
     if ($event) {
       let ownerName = '';
       if (view === this.viewOwnerDefault) {
-        this.lead[$event.field] = $event.data;
-        ownerName = $event.component.itemsSelected[0].UserName;
+        this.owner = $event?.data;
+        ownerName = $event?.component?.itemsSelected[0]?.UserName;
       }
       else {
-        this.lead.owner = $event;
+        this.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
-            (x) => x.userID === this.lead.owner
+            (x) => x.userID === this.owner
           )[0].userName;
         }
       }
-      this.checkOwner(this.lead.owner, ownerName);
+      this.checkOwner(this.owner , ownerName);
+    }
+    else if( view === this.viewOwnerProcess){
+      this.owner ='';
     }
   }
   checkOwner(owner: any, ownerName: any) {
     if (owner) {
       let index = this.lead.permissions.findIndex(
-        (x) => x.objectType === 'U' && x.roleType === 'O'
+        (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '0'
       );
       if (index !== -1) {
         this.lead.permissions[index].objectID = owner;
@@ -323,18 +343,18 @@ export class PopupAddLeadComponent
         permission.upload = true;
         permission.download = true;
         permission.isActive = true;
-        permission.memberType = '1';
+        permission.memberType = '0';
         permission.allowPermit = true;
         permission.allowUpdateStatus = '1';
         this.lead.permissions.push(permission);
       }
     }
   }
-  valueChangeIndustries($event) {
-    if ($event && $event.data) {
-      this.listIndustries.push($event.data);
-    }
-  }
+  // valueChangeIndustries($event) {
+  //   if ($event && $event.data) {
+  //     this.listIndustries.push($event.data);
+  //   }
+  // }
 
   checkApplyProcess(check: boolean) {
     if (check) {
@@ -439,7 +459,6 @@ export class PopupAddLeadComponent
       lead.refID = instance.recID;
       lead.startDate = null;
     }
-    lead.owner = this.owner;
   }
 
   async promiseSaveFile() {
@@ -447,7 +466,7 @@ export class PopupAddLeadComponent
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-
+    this.lead.owner = this.owner;
     if (this.avatarChangeLead) {
       await this.saveFileLead(this.leadId);
     }
@@ -550,7 +569,6 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
-        debugger;
         this.itemTab(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
@@ -627,7 +645,6 @@ export class PopupAddLeadComponent
   }
   // an tat theo truong tuy chinh
   itemTab(check: boolean): void {
-    debugger;
     if (check) {
       this.tabInfo = [
         this.menuGeneralInfo,
@@ -772,8 +789,6 @@ export class PopupAddLeadComponent
       this.lead.industries = null;
       this.lead.annualRevenue = 0;
       this.lead.headcounts = null;
-    } else {
-      this.lead.jobTitle = null;
     }
   }
   changeAutoNum(e) {

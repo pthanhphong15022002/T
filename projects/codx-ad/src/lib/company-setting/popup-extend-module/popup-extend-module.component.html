@@ -8,20 +8,20 @@
 >
 </codx-form>
 <ng-template #header>
-  <div class="row header w-100">
-    <div class="close d-flex justify-content-end">
+  <div class="row header w-100 px-0 h-40px">
+    <div class="d-flex justify-content-end px-0">
       <button
         type="button"
-        class="btn btn-light-primary me-4"
+        class="btn btn-flex justify-content-end text-dark-75 text-hover-primary px-0"
         (click)="closePopup()"
       >
-        <codx-label formName="" default="X"></codx-label>
+        <span class="icon-close icon-18"></span>
       </button>
     </div>
   </div>
-  <div *ngIf="extendMode == 'module'" class="moduleInfo w-100">
+  <div *ngIf="extendMode == 'module'" class="moduleInfo w-100 fs-6">
     <codx-temp-full
-      cardCss="card-template border-bottom px-2 pt-4 pb-2"
+      cardCss="card-template border-bottom py-3"
       [typeMF]="'hover'"
       [imageSrc]="lstModule[0].boughtModule?.image"
       [title]="lstModule[0].boughtModule.moduleName"
@@ -29,7 +29,7 @@
       [desc2Tmp]="moduleEmplDescTmp"
       [descLine]="2"
       [icoCss]="
-        'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
+        'w-20px symbol h-20px rounded-circle'
       "
       [titleLine]="2"
       [icoDateCss]="'icon-access_alarm'"
@@ -85,9 +85,11 @@
   </div>
 </ng-template>
 <ng-template #moduleOperatorDescTmp let-module>
-  <div class="d-flex" *ngIf="module.price != null">
-    <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">
-    </codx-label>
+  <div class="d-flex align-items-center fs-body text-gray-600 mt-1" *ngIf="module.price != null">
+    <span class="me-1">
+      <codx-label name="lblPriceForOperator" default="Nhân viên nghiệp vụ: ">
+      </codx-label>
+    </span>
     <span>
       {{ module.price + " " + module.currency + "/" + module.umid + "/ " }}
     </span>
@@ -201,7 +203,7 @@
 <ng-template #moduleTmp let-module>
   {{ module.moduleName }}
   <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom py-3"
     [typeMF]="'hover'"
     [title]="module.boughtModule.moduleName"
     [descTmp]="moduleOperatorDescTmp"
@@ -209,7 +211,7 @@
     [descLine]="2"
     [imageSrc]="module.boughtModule.image"
     [icoCss]="
-      'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 '
+      'w-25px symbol h-25px rounded-circle'
     "
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"

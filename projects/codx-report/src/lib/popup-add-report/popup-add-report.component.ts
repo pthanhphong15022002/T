@@ -31,6 +31,7 @@ import {L10n } from '@syncfusion/ej2-base';
 import { FileInfo } from '@shared/models/file.model';
 
 import { EmitType } from '@syncfusion/ej2-base';
+import { environment } from 'src/environments/environment';
 
 L10n.load({
   vi: {
@@ -190,6 +191,10 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.displayMode = this.data.displayMode;
         this.parameters = this.data.parameters;
         this.getRootFunction(this.data.moduleID, this.data.reportType);
+        if(this.data.displayMode == "3" || this.data.displayMode == "4")
+        {
+          this.getFileTemplate(this.data.templateID);
+        }
         if(this.data.reportContent){
           if(this.data.reportContent.split(',').length ==1){
             this.data.reportContent = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${this.data.reportContent}`
@@ -421,7 +426,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   saveForm() {
-    debugger
     if (!this.data.recID)
     {
       this.data.recID = this.recID;
@@ -440,6 +444,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     {
       this.data.reportContent = this.data.reportContent.split(',')[1];
     }
+    this.data.displayMode = this.displayMode;
+    debugger;
     this.api
       .execSv(
         'rptrp',
@@ -470,19 +476,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
   isBlockBtn:boolean = false;
   fileSelected(e:any){
+    debugger;
     if(e.filesData.length == 0) {
       this.notiService.notify("Bạn chưa chọn file","2");
       return;
     }
-    // let type = e.filesData[0].type;
-    // if(!type || (type != "rdl" && type != "rdlc"))
-    // {
-    //   this.isBlockBtn = true;
-    //   this.notiService.notify("File không hợp lệ","2");
-    //   this.changeDetectorRef.detectChanges();
-    //   return;
-    // }
-
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -495,7 +493,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         strBase64 = (strBase64 as string).split(',')[1];
       }
       t.data.reportContent = strBase64;
-      //t.data.reportName = file.name;
       t.data.location = file.name;
     };
 
@@ -507,14 +504,14 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   download(){
-    if(this.data.reportName && this.data.reportName)
+    if(this.data?.service && this.data?.reportName)
     {
       let fileName = this.data.reportName;
       this.api.execSv(this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
-      'GetRootFileAsync',
-      fileName)
+      'GetReportFileAsync',
+      [this.data.recID])
       .subscribe((res:any)=>{
         let linkSource = res;
         if(linkSource.split(',').length ==1){
@@ -534,14 +531,15 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     iconEle.title = 'download';
     let t= this;
     iconEle.addEventListener('click',function(){
-      t.downloadCustomFile(e);
+      t.downloadCustomFile();
     });
     e.element.insertBefore(iconEle,e.element.lastChild)
   }
 
-  private downloadCustomFile(e:any){
+  private downloadCustomFile(){
     let linkSource = this.data.reportContent;
-    if(linkSource.split(',').length ==1){
+    if(linkSource != "" && linkSource?.split(',').length == 1)
+    {
         linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
         }
       const downloadLink = document.createElement("a");
@@ -595,15 +593,50 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           '',
           option
         ).closed.subscribe((res:any) => {
-          debugger;
           if(res?.event?.length > 0)
           {
             this.data.templateID = res.event[0].recID;
+            this.data.reportName = res.event[2];
           }
         })
     }
   }
+  clickDowload(mode:string){  
+    if(mode =="0")
+      this.downloadCustomFile();
+    else
+    {
+      if(this.pathDisk){
+        const downloadLink = document.createElement("a");
+        downloadLink.href = this.pathDisk;
+        downloadLink.download = this.data.reportName;
+        downloadLink.click();
+      }
+      else{
+        this.notiService.notify("Template không tồn tại","2");
+      }
+    }
+  }
 
+  pathDisk:string = "";
+  getFileTemplate(templateID:string)
+  {
+    if(templateID)
+    {
+      this.api
+      .execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      [templateID]).subscribe((res:any) =>{
+        if(res?.length > 0){
+          this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
+        }
+        
+      });
+    }
+  }
 }
 class GuId {
   static newGuid() {

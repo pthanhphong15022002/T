@@ -278,7 +278,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="industries"
-          (valueChange)="valueChangeIndustries($event)"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -367,7 +367,7 @@
           <codx-input
             field="owner"
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [crrValue]="owner"
             (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>

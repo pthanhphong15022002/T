@@ -142,16 +142,6 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   //#region save
   beforeSave(type) {
-    if (this.data.firstName != null && this.data.firstName.trim() != '') {
-      if (this.data.lastName != null && this.data.lastName.trim() != '') {
-        this.data.contactName =
-          this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-      } else {
-        this.data.contactName = this.data.firstName.trim();
-      }
-    } else {
-      this.data.contactName = '';
-    }
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
       this.data.isDefault = this.isDefault;
@@ -256,14 +246,6 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
-    if (this.data.firstName == null || this.data.firstName.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['FirstName'].headerText + '"'
-      );
-      return;
-    }
 
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;

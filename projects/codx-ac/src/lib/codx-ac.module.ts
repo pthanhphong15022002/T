@@ -25,7 +25,7 @@ import { GroupShareComponent } from './journals/components/group-share/group-sha
 import { Group067Component } from './journals/components/group067/group067.component';
 import { JournalsComponent } from './journals/journals.component';
 import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
-import { PopupAddJournalComponent } from './journals/popup-add-journal/popup-add-journal.component';
+import { JournalsAddComponent } from './journals/journals-add/journals-add.component';
 import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
 import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
 import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
@@ -42,19 +42,13 @@ import { NameByIdPipe } from './pipes/nameById.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
-import { CashTransfersComponent } from './vouchers/cash-transfers/cash-transfers.component';
-import { PopupAddCashTransferComponent } from './vouchers/cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
-import { PopAddLineReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-line-receipt-transaction/pop-add-line-receipt-transaction.component';
-import { PopAddLineComponent } from './vouchers/purchase-invoices/pop-add-line/pop-add-line.component';
-import { PopAddPurchaseComponent } from './vouchers/purchase-invoices/pop-add-purchase/pop-add-purchase.component';
-import { PurchaseinvoicesComponent } from './vouchers/purchase-invoices/purchase-invoices.component';
-import { PopAddReceiptTransactionComponent } from './vouchers/receipt-transaction/pop-add-receipt-transaction/pop-add-receipt-transaction.component';
-import { ReceiptTransactionComponent } from './vouchers/receipt-transaction/receipt-transaction.component';
-import { TableLineDetailStaticComponent } from './vouchers/sales-invoices/components/table-line-detail-static/table-line-detail-static.component';
-import { TableLineDetailComponent } from './vouchers/sales-invoices/components/table-line-detail/table-line-detail.component';
-import { PopupAddSalesInvoiceComponent } from './vouchers/sales-invoices/popup-add-sales-invoice/popup-add-sales-invoice.component';
-import { PopupAddSalesInvoicesLineComponent } from './vouchers/sales-invoices/popup-add-sales-invoices-line/popup-add-sales-invoices-line.component';
-import { SalesInvoicesComponent } from './vouchers/sales-invoices/sales-invoices.component';
+import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
+import { ReceiptTransactionsLineAddComponent } from './vouchers/receipt-transactions/receipt-transactions-line-add/receipt-transactions-line-add.component';
+import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
+import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
+import { TableLineDetailStaticComponent } from './vouchers/salesinvoices/components/table-line-detail-static/table-line-detail-static.component';
+import { TableLineDetailComponent } from './vouchers/salesinvoices/components/table-line-detail/table-line-detail.component';
+import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
@@ -72,13 +66,22 @@ import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/po
 import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-import { TableAccountingComponent } from './vouchers/sales-invoices/components/table-accounting/table-accounting.component';
+import { TableAccountingComponent } from './vouchers/salesinvoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
-import { CashpaymentSuggestion } from './vouchers/cashpayments/cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
 import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
 import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
 import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
+import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
+import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
+import { PurchaseinvoiceslinesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoiceslines-add/purchaseinvoiceslines-add.component';
+import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
+import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
+import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
+import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
+import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
+import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -120,7 +123,7 @@ export const routes: Routes = [
       // },
       {
         path: 'cashtranfers/:funcID',
-        component: CashTransfersComponent,
+        component: CashtransfersComponent,
         data: { noReuse: true },
       },
       {
@@ -135,12 +138,12 @@ export const routes: Routes = [
       },
       {
         path: 'salesinvoices/:funcID',
-        component: SalesInvoicesComponent,
+        component: SalesinvoicesComponent,
         data: { noReuse: true },
       },
       {
         path: 'salesreturn/:funcID',
-        component: SalesInvoicesComponent,
+        component: SalesinvoicesComponent,
         data: { noReuse: true },
       },
       {
@@ -150,12 +153,12 @@ export const routes: Routes = [
       },
       {
         path: 'receipttransaction/:funcID',
-        component: ReceiptTransactionComponent,
+        component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {
         path: 'issuetransaction/:funcID',
-        component: ReceiptTransactionComponent,
+        component: IssueTransactionsComponent,
         data: { noReuse: true },
       },
       {
@@ -241,32 +244,32 @@ export const routes: Routes = [
     CashPaymentsComponent,
     CashPaymentAdd,
     JournalsComponent,
-    CashTransfersComponent,
-    PopupAddCashTransferComponent,
+    CashtransfersComponent,
+    CashtransfersAddComponent,
     PurchaseinvoicesComponent,
-    PopAddPurchaseComponent,
-    PopupAddJournalComponent,
+    PurchaseinvoicesAddComponent,
+    JournalsAddComponent,
     DropdownDetailComponent,
-    PopAddLineComponent,
+    PurchaseinvoiceslinesAddComponent,
     MultiSelectPopupComponent,
     SettledInvoicesAdd,
     DashboardComponent,
     PeriodicComponent,
-    SalesInvoicesComponent,
-    PopupAddSalesInvoiceComponent,
-    PopupAddSalesInvoicesLineComponent,
+    SalesinvoicesComponent,
+    SalesinvoicesAddComponent,
+    SalesinvoiceslinesAddComponent,
     SearchingComponent,
     TableLineDetailComponent,
-    ReceiptTransactionComponent,
-    PopAddReceiptTransactionComponent,
+    ReceiptTransactionsComponent,
+    ReceiptTransactionsAddComponent,
     ReportsComponent,
     ApprovalsComponent,
-    PopAddLineReceiptTransactionComponent,
+    ReceiptTransactionsLineAddComponent,
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    CashpaymentSuggestion,
+    AdvancePayment,
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,
@@ -295,6 +298,9 @@ export const routes: Routes = [
     TableAccountingComponent,
     TranformSubobjectPipe,
     TranformClassBorderPipe,
+    IssueTransactionsComponent,
+    IssueTransactionsAddComponent,
+    IssueTransactionsLineAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

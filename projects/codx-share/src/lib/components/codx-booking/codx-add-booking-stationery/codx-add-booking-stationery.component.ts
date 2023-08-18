@@ -22,7 +22,7 @@ import { CodxBookingService } from '../codx-booking.service';
 import { BookingItems, GridModels } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
-import { Approver } from '../../../models/ApproveProcess.model';
+import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-add-booking-stationery',
@@ -509,16 +509,14 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         'EP_Bookings',
                         this.formModel.funcID,
                         item?.title,
-                        (res:any) => {
-                          if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                            this.notificationsService.notifyCode('ES007');
-                            item.approveStatus = '3';
+                        (res:ResponseModel) => {
+                          if (res?.msgCodeError == null && res?.rowCount >= 0) {                            
+                            item.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                             item.write = false;
                             item.delete = false;
-                            (this.dialogRef.dataService as CRUDService)
-                              .update(item)
-                              .subscribe();
-                            this.dialogRef && this.dialogRef.close();
+                            (this.dialogRef.dataService as CRUDService).update(item).subscribe();
+                            this.notificationsService.notifyCode('SYS034');
+                            this.dialogRef && this.dialogRef.close(item);
                           } else {
                             this.notificationsService.notifyCode(
                               res?.msgCodeError
@@ -580,7 +578,10 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       ])
       .subscribe((res: any) => {
         this.listView.dataService.data = [];
-        this.listView.dataService.add(res[0]).subscribe();
+        if(res?.length>0 && res[0]!=null){          
+          this.listView.dataService.add(res[0]).subscribe();
+
+        }
       });
     this.detectorRef.detectChanges();
   }

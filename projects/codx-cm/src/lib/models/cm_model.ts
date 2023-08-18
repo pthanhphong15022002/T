@@ -178,7 +178,7 @@ export class CM_Deals {
   consultantID: string;
   processID: string;
   startDate: Date;
-  permissions: CM_Permissions[];
+  permissions: CM_Permissions[] = [];
   endDate: Date;
   // datas: Json; hỏi kiểu dữ liệu sau
   owner: string;
@@ -698,7 +698,7 @@ export class CM_Leads {
   annualRevenue: number;
   headcounts: string;
   establishDate: Date;
-  addresses: string;
+  address: string;
   countryID: string;
   provinceID: string;
   districtID: string;
@@ -788,6 +788,7 @@ export class CM_TargetsLines {
   endDate: Date;
   currencyID: number;
   target: number = 0;
+  exchangeRate: number = 0;
   note: string;
   createdOn: Date = new Date();
   createdBy: string;

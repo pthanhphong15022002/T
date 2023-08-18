@@ -1,5 +1,5 @@
 <div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender && formModelCustom">
-  <div class="codx-stepper stepper stepper-pills">
+  <div class="codx-stepper stepper stepper-pills d-flex flex-column justify-content-between">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center col-3">
         <h2 class="h2-title">
@@ -425,7 +425,7 @@
         </div>
       </div>
     </div>
-    <div class="stepper-body no-header pt-2 w-100" *ngIf="currentTab == 2 && data.files?.length > 0 && data?.recID">
+    <div class="stepper-body  pt-2 w-100" *ngIf="currentTab == 2 && data.files?.length > 0 && data?.recID">
       <lib-pdf [recID]="data?.recID" [isApprover]="false" [oApprovalTrans]="data" [isEditable]="
           (data?.approveStatus == '1' || data?.approveStatus == '2') &&
           modeView != '1'

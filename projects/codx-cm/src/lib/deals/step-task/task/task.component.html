@@ -1,6 +1,6 @@
 <div class="list-contracts h-100">
   <div *ngIf="!isNoData">
-    <ng-container *ngFor="let task of listActivitie">
+    <ng-container *ngFor="let task of listActivitie; let i=index">
       <div
         cdkDrag
         [cdkDragStartDelay]="100"
@@ -8,12 +8,12 @@
         [cdkDragDisabled]="true"
         class="drap-drop my-2"
       >
-        <div class="d-flex align-items-center justify-content-between">
-          <div style="flex-grow: 1" class="has-action-menu">
+        <div class="d-flex align-items-center justify-content-between" (dblclick)="viewTask(task, task?.taskType || 'T')">
+          <div style="flex-grow: 1" class="has-action-menu ps-2">
             <ng-container
               [ngTemplateOutlet]="taskTemplate"
               [ngTemplateOutletContext]="{
-                value: { task: task, group: null }
+                value: { task: task, group: null , index:i}
               }"
             ></ng-container>
           </div>
@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div style="margin-left: 45px;">
+        <div style="margin-left: 45px">
           <ng-container
             [ngTemplateOutlet]="fileTemplate"
             [ngTemplateOutletContext]="{ value: task }"
@@ -43,24 +43,31 @@
   </div>
   <div class="d-flex justify-content-center add-contract">
     <button
-    *ngIf="!isPause"
-    type="button"
-    class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
-    (click)="chooseTypeTask()"
-  >
-    <i class="icon-18 icon-more text-light"></i>
-    <codx-label
-      class=""
-      [formModel]=""
-      fiedName="btnAddContract"
-      [default]="'Thêm công việc'"
-    ></codx-label>
-  </button>
+      *ngIf="!isPause"
+      type="button"
+      class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
+      (click)="chooseTypeTask()"
+    >
+      <i class="icon-18 icon-more text-light"></i>
+      <codx-label
+        class=""
+        [formModel]=""
+        fiedName="btnAddContract"
+        [default]="'Thêm công việc'"
+      ></codx-label>
+    </button>
   </div>
 </div>
 
 <ng-template #taskTemplate let-data="value">
-  <div class="d-flex justify-content-start align-items-center has-action-menu task-hover cursor-pointer">
+  <div
+    class="d-flex justify-content-start align-items-center has-action-menu task-hover cursor-pointer"
+    #popoverDetails="ngbPopover"
+    [ngbPopover]="setNameTypeTask(data?.task?.taskType)"
+    [placement]="data?.index == 0 ? 'bottom-left' :'top-left'"
+    (mouseenter)="popoverDetails.open()"
+    (mouseleave)="popoverDetails.close()"
+  >
     <codx-icon-step
       [typeTask]="data?.task?.taskType"
       [listTypeTask]="listTaskType"
@@ -69,18 +76,7 @@
     ></codx-icon-step>
     <div class="steplist-hearder">
       <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 task-name">
-         {{data?.task?.taskName}} 
-      </div>
-      <div class="text-gray-600">
-        <codx-label class="title" fiedName="updateTime" default="Cập nhật:">
-        </codx-label>
-        <span
-          [innerHTML]="
-            data?.task?.modifiedOn || data?.task?.createdOn
-              | formatvalue : grvMoreFunction : 'ModifiedOn'
-              | async
-          "
-        ></span>
+        {{ data?.task?.taskName }}
       </div>
     </div>
     <codx-mfunc
@@ -108,15 +104,6 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <codx-vll
-      [name]="'DP048'"
-      [field]="'Status'"
-      [value]="data?.value?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-primary badge-sm w-95px"
-    >
-    </codx-vll>
     <div
       class="date text-nowrap mx-2"
       *ngIf="data?.value?.startDate && data?.value?.endDate"
@@ -150,12 +137,16 @@
       >
       </codx-imgs>
     </span>
-    <div class="disabled-inline cursor-pointer" (click)="openPopupUpdateProgress(data?.value, 'T')">
+    <div
+      class="disabled-inline cursor-pointer ms-2"
+      (click)="openPopupUpdateProgress(data?.value, 'T')"
+    >
       <codx-progressbar
         [progress]="data?.value?.progress"
         [stype]="3"
         [vllData]="vllData"
         [status]="data?.value?.status"
+        [isStep]="false"
         #p="ngbPopover"
         [ngbPopover]="'Cập nhật tiến độ'"
         (mouseenter)="p.open()"
@@ -183,3 +174,15 @@
   >
   </codx-attachment>
 </ng-template>
+
+<!-- <div class="text-gray-600">
+        <codx-label class="title" fiedName="updateTime" default="Cập nhật:">
+        </codx-label>
+        <span
+          [innerHTML]="
+            data?.task?.modifiedOn || data?.task?.createdOn
+              | formatvalue : grvMoreFunction : 'ModifiedOn'
+              | async
+          "
+        ></span>
+      </div> -->

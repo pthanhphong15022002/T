@@ -821,6 +821,23 @@
 </ng-template>
 <ng-template #task let-data="value">
   <div>
-    <task [customerID]="contract?.recID"></task>
+    <task [customerID]="contract?.recID" [owner]="contract?.owner" [entityName]="'CM_Contracts'"></task>
   </div>
+</ng-template>
+
+<!-- báo giá -->
+<ng-template #quotationsTab>
+  <div class="mt-5" *ngIf="contract.quotationID; else noData">
+    <codx-quotations-tab-view
+      [funcID]="'CM0202'"
+      [showButton]="false"
+      [typeModel]="'contracts'"
+      [recID]="contract.quotationID"
+      [predicates]="'RecID==@0'"
+      [dataValues]="contract.quotationID"
+    ></codx-quotations-tab-view>
+  </div>
+  <ng-template #noData>
+    <codx-no-data> </codx-no-data>
+  </ng-template>
 </ng-template>
