@@ -1,3 +1,4 @@
+import { T } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -33,7 +34,6 @@ export class CodxReportViewsComponent
 {
   @ViewChild('templateListCard') templateListCard!: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
-  onInit(): void {}
 
   views: ViewModel[];
   viewType = ViewType;
@@ -43,6 +43,8 @@ export class CodxReportViewsComponent
     id: 'btnAdd',
   };
   module: any = '';
+  predicates:string = "ReportType = 'R' && Module=@0";
+  dataValues:String = "";
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
@@ -52,16 +54,28 @@ export class CodxReportViewsComponent
     private routerNg: Router
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.cacheSv.functionList(this.funcID).subscribe((res: any) => {
-      if (res) {
-        this.funcItem = res;
-        this.module = res.module ? res.module.toLowerCase() : '';
-        this.pageTitle.setSubTitle('');
-        this.pageTitle.setChildren([]);
+    
+    
+  }
+  onInit(): void {
+    this.router.params.subscribe((param:any) => {
+      if(param)
+      {
+        this.funcID = param['funcID'];
+        this.cacheSv.functionList(this.funcID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.funcItem = res;
+            this.module = res.module ? res.module.toLowerCase() : '';
+            this.dataValues = res.module;
+            this.pageTitle.setSubTitle('');
+            this.pageTitle.setChildren([]);
+          }
+        });
       }
     });
   }
+
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
@@ -114,7 +128,11 @@ export class CodxReportViewsComponent
     }
   }
   cardClick(e: any) {
-    this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","UpdateViewAsync",[e.recID]).subscribe();
-    this.codxService.navigate('', this.module + '/report/detail/' + e.recID);
+    if(e?.recID)
+    {
+      this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","UpdateViewAsync",[e.recID]).subscribe();
+      this.codxService.navigate('', this.module + '/report/detail/' + e.recID);
+    }
+    
   }
 }

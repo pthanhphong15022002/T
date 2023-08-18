@@ -268,7 +268,7 @@ export class IncommingComponent
   {
     if(fc.runMode == "1")
     {
-      this.shareService.changeMFApproval(e,data);
+      this.shareService.changeMFApproval(e,data.unbounds);
     }
     else
     {
