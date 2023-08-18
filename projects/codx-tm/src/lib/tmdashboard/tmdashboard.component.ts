@@ -48,7 +48,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('assign_dashboard') templates3: QueryList<any>;
 
   @ViewChild('annotation1') annotation: ProgressBar;
-  @ViewChild('showTask') showTask: any;
+  @ViewChild('showTask1') showTask1: any;
+  @ViewChild('showTask2') showTask2: any;
+  @ViewChild('showTask3') showTask3: any;
 
   @Input() panels1: any;
   @Input() datas1: any;
@@ -586,10 +588,21 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   predicates: string;
   dataValues: string;
 
-  showTasks(predicates: string, dataValues: string) {
+  showTasks(predicates: string, dataValues: string, funcID: string) {
     this.predicates = predicates;
     this.dataValues = dataValues;
-    this.callfunc.openForm(this.showTask, '', 1280, 720, null);
+    switch (funcID) {
+      case 'TMT0202':
+        this.callfunc.openForm(this.showTask2, '', 1280, 720, null);
+        break;
+      case 'TMT0203':
+        this.callfunc.openForm(this.showTask3, '', 1280, 720, null);
+        break;
+      default:
+        this.callfunc.openForm(this.showTask1, '', 1280, 720, null);
+        break;
+    }
+
     this.detectorRef.detectChanges();
   }
 }
