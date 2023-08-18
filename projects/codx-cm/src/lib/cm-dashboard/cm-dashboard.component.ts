@@ -218,10 +218,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   explode: boolean = false;
 
+  //tooltip chart Funel
   tooltipPy: Object = {
-    header: '',
-    enable: true,
-    format: '${point.x} : <b>${point.y}</b>',
+    // header: '',
+    // enable: true,
+    // format: '${point.x} : <b>${point.y}</b>',
   };
   titlePy: string = 'Food Comparison Chart';
 
@@ -246,6 +247,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //status or
   isStatus = true;
+
+  //ReasonSuscess
+  isReasonSuscess = true;
+  valueFormat: any;
 
   constructor(
     inject: Injector,
@@ -495,6 +500,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     });
 
+    this.cache.valueList('CRM049').subscribe((vl) => {
+      if (vl) {
+        this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
+      }
+    });
+
     // this.cache.valueList('CRM057').subscribe((vl) => {
     //   if (vl) {
     //     this.vllData = vl.datas;
@@ -587,5 +598,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = false;
       });
     }
+  }
+
+  formatCrrView(e) {
+    let html = '';
+    if (e.point.x == this.valueFormat) {
+      var listItems = this.dataSourcePy.find((x) => x.name == e.point.x)?.items;
+      if (listItems?.length > 0) {
+        html = '';
+        listItems.forEach((t) => {
+          html += '<br>' + t.name + ' : <b>' + t.quantity + '</b>';
+        });
+      }
+    }
+    e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
   }
 }
