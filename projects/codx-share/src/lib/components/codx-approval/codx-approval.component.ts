@@ -101,6 +101,7 @@ export class CodxApprovalComponent
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
       { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
     this.views = [
       {

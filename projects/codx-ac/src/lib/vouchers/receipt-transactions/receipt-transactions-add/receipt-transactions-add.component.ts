@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
@@ -21,9 +21,9 @@ import { itemMove } from '@syncfusion/ej2-angular-treemap';
   templateUrl: './receipt-transactions-add.component.html',
   styleUrls: ['./receipt-transactions-add.component.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection : ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit{
+export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit {
 
   //#region Constructor
 
@@ -36,7 +36,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   @ViewChild('tabObj') tabObj: TabComponent;
   @ViewChild('warehouse') warehouse: CodxInputComponent;
   @ViewChild('tab') tab: TabComponent;
-  
+
   private destroy$ = new Subject<void>();
 
   keymodel: any = [];
@@ -99,10 +99,10 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
     this.routerActive.queryParams
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res && res?.journalNo) this.journalNo = res.journalNo;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res && res?.journalNo) this.journalNo = res.journalNo;
+      });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.journal = dialogData.data?.journal;
@@ -112,8 +112,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
     }
-    if(this.journal)
-    {
+    if (this.journal) {
       this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
@@ -126,13 +125,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         }
       });
     this.cache
-    .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetupLine = res;
-      }
-    });
+      .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetupLine = res;
+        }
+      });
   }
 
   //#endregion
@@ -158,7 +157,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.destroy$.complete();
   }
 
-  loadInit(){
+  loadInit() {
     if (this.formType == 'edit') {
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
@@ -179,8 +178,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //end Init Master
 
   //Init Line
-  gridInit(columnsGrid)
-  {
+  gridInit(columnsGrid) {
     this.showHideColumns(columnsGrid);
     this.dt.detectChanges();
   }
@@ -190,13 +188,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Event
   //Event Master
-  valueChange(e: any){
+  valueChange(e: any) {
     let field = e.field.toLowerCase();
-    if(e.data)
-    {
-      switch(field)
-      {
-        case'warehouseid':
+    if (e.data) {
+      switch (field) {
+        case 'warehouseid':
           {
             this.vouchers.warehouseID = e.data;
             this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
@@ -210,8 +206,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           break;
 
         case 'reasonid':
-          if(e?.component?.itemsSelected[0]?.ReasonID)
-          {
+          if (e?.component?.itemsSelected[0]?.ReasonID) {
             this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
             let text = e?.component?.itemsSelected[0]?.ReasonName;
             this.setReason(field, text, 0);
@@ -248,60 +243,27 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }
     }
   }
-  
-  onDiscard()
-  {
-    this.checkGridLineBeforeDiscard();
-  }
 
-  checkGridLineBeforeDiscard(){
-    if(this.modeGrid == 1)
-    {
-      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
-      {
-        this.discard();
-      }
-    }
-    else
-    {
-      this.discard();
+  subTypeChange(event: any) {
+    if (event && event.data[0]) {
+      this.vouchers.subType = event.data[0];
+      this.dt.detectChanges();
     }
   }
 
-  discard()
-  {
+  onDiscard() {
     this.dialog.dataService
-    .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res.data != null) {
-        this.dialog.close();
-        this.dt.detectChanges();
-      }
-    });
+      .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.data != null) {
+          this.dialog.close();
+          this.dt.detectChanges();
+        }
+      });
   }
 
-  onClose()
-  {
-    this.checkGridLineBeforeClose();
-  }
-
-  checkGridLineBeforeClose()
-  {
-    if(this.modeGrid == 1)
-    {
-      if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
-      {
-        this.close();
-      }
-    }
-    else
-    {
-      this.close();
-    }
-  }
-
-  close() {
+  onClose() {
     if (this.hasSaved) {
       this.dialog.close({
         update: true,
@@ -329,7 +291,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   lineChanged(e: any) {
-    if(!this.checkDataUpdateFromBackEnd(e))
+    if (!this.checkDataUpdateFromBackEnd(e))
       return;
 
     const postFields: string[] = [
@@ -358,8 +320,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           console.log(res);
-          if(res)
-          {
+          if (res) {
             var arrColumn = [];
             arrColumn = res.updateColumns.split(';');
             arrColumn.forEach((a) => {
@@ -374,8 +335,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         });
     }
 
-    switch(e.field)
-    {
+    switch (e.field) {
       case 'costAmt':
         this.costAmt_Change(e.data);
         break;
@@ -399,14 +359,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         }
         break;
       case 'endEdit':
-        if (!this.gridVouchersLine.autoAddRow) 
-        {
+        if (!this.gridVouchersLine.autoAddRow) {
           setTimeout(() => {
             let element = document.getElementById('btnadd');
             element.focus();
-          }, 100); 
+          }, 100);
         }
-      break;
+        break;
     }
   }
   //end Event Line
@@ -414,20 +373,18 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Method
   //Method Master
-  onSaveAdd(){
+  onSaveAdd() {
     this.checkValidate();
     this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
-      if(this.modeGrid == 1)
-      {
-        if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      if (this.modeGrid == 1) {
+        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
           this.save(false);
       }
-      else
-      {
+      else {
         this.save(false);
       }
     }
@@ -440,108 +397,58 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.validate = 0;
       return;
     } else {
-      if(this.modeGrid == 1)
-      {
-        if(this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+      if (this.modeGrid == 1) {
+        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
           this.save(true);
       }
-      else
-      {
+      else {
         this.save(true);
       }
     }
   }
 
-  save(isclose: boolean)
-  {
-      switch (this.formType) {
-        case 'add':
-        case 'copy':
-          this.vouchers.status = '1';
-          if (this.hasSaved) {
-            this.dialog.dataService.updateDatas.set(
-              this.vouchers['_uuid'],
-              this.vouchers
-            );
-            this.dialog.dataService
-              .save(null, 0, '', 'SYS006', true)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if(res.update.error)
-                {
-                  this.vouchers.status = '0';
+  save(isclose: boolean) {
+    switch (this.formType) {
+      case 'add':
+      case 'copy':
+        this.vouchers.status = '1';
+        if (this.hasSaved) {
+          this.dialog.dataService.updateDatas.set(
+            this.vouchers['_uuid'],
+            this.vouchers
+          );
+          this.dialog.dataService
+            .save(null, 0, '', 'SYS006', true)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.update.error) {
+                this.vouchers.status = '0';
+              }
+              if (res && res.update.data != null && res.update.error != true) {
+                if (isclose) {
+                  this.dialog.close({
+                    update: true,
+                    data: res.update,
+                  });
                 }
-                if (res && res.update.data != null && res.update.error != true) 
-                {
-                  if(isclose)
-                  {
-                    this.dialog.close({
-                      update: true,
-                      data: res.update,
-                    });
-                  }
-                  else
-                  {
-                    this.clearVouchers();
-                    this.dialog.dataService.clear();
-                    this.dialog.dataService
-                      .addNew((o) => this.setDefault(o))
-                      .pipe(takeUntil(this.destroy$))
-                      .subscribe((res) => {
+                else {
+                  this.clearVouchers();
+                  this.dialog.dataService.clear();
+                  this.dialog.dataService
+                    .addNew((o) => this.setDefault(o))
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe((res) => {
                       this.vouchers = res;
                       this.form.formGroup.patchValue(this.vouchers);
                       this.hasSaved = false;
-                      });
-                      this.dt.detectChanges();
-                  }
+                    });
                 }
-              });
-          } else {
-            // nếu voucherNo đã tồn tại,
-            // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-            this.journalService.checkVoucherNoBeforeSave(
-              this.journal,
-              this.vouchers,
-              'IV',
-              this.fmVouchers.entityName,
-              this.form,
-              this.formType === 'edit',
-              () => {
-                this.dialog.dataService.save()
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if(res.save.error)
-                  {
-                    this.vouchers.status = '0';
-                  }
-                  if (res && res.save.data != null && res.save.error != true) {
-                    if(isclose)
-                    {
-                      this.dialog.close();
-                    }
-                    else
-                    {
-                      this.clearVouchers();
-                      this.dialog.dataService.clear();
-                      this.dialog.dataService
-                      .addNew((o) => this.setDefault(o))
-                      .pipe(takeUntil(this.destroy$))
-                      .subscribe((res) => {
-                        this.vouchers = res;
-                        this.form.formGroup.patchValue(this.vouchers);
-                      });
-                    }
-                    this.dt.detectChanges();
-                  }
-                  else {
-                    this.vouchers.unbounds.isAddNew = true;
-                  }
-                });
+                this.dt.detectChanges();
               }
-            );
-          }
-          break;
-        case 'edit':
+            });
+        } else {
+          // nếu voucherNo đã tồn tại,
+          // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
           this.journalService.checkVoucherNoBeforeSave(
             this.journal,
             this.vouchers,
@@ -550,14 +457,54 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             this.form,
             this.formType === 'edit',
             () => {
-              if (this.vouchers.status == '0') {
-                this.vouchers.status = '1';
-              }
-              this.dialog.dataService.updateDatas.set(
-                this.vouchers['_uuid'],
-                this.vouchers
-              );
-              this.dialog.dataService.save(null, 0, '', '', true)
+              this.dialog.dataService.save()
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
+                  if (res.save.error) {
+                    this.vouchers.status = '0';
+                  }
+                  if (res && res.save.data != null && res.save.error != true) {
+                    if (isclose) {
+                      this.dialog.close();
+                    }
+                    else {
+                      this.clearVouchers();
+                      this.dialog.dataService.clear();
+                      this.dialog.dataService
+                        .addNew((o) => this.setDefault(o))
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe((res) => {
+                          this.vouchers = res;
+                          this.form.formGroup.patchValue(this.vouchers);
+                        });
+                    }
+                    this.dt.detectChanges();
+                  }
+                  else {
+                    this.vouchers.unbounds.isAddNew = true;
+                  }
+                });
+            }
+          );
+        }
+        break;
+      case 'edit':
+        this.journalService.checkVoucherNoBeforeSave(
+          this.journal,
+          this.vouchers,
+          'IV',
+          this.fmVouchers.entityName,
+          this.form,
+          this.formType === 'edit',
+          () => {
+            if (this.vouchers.status == '0') {
+              this.vouchers.status = '1';
+            }
+            this.dialog.dataService.updateDatas.set(
+              this.vouchers['_uuid'],
+              this.vouchers
+            );
+            this.dialog.dataService.save(null, 0, '', '', true)
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
@@ -568,16 +515,15 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                   this.dt.detectChanges();
                 }
               });
-            }
-          );
-          break;
-      }
+          }
+        );
+        break;
+    }
   }
   //end Method Master
 
   //Method Line
-  onSaveLine(e: any, type: any)
-  {
+  onSaveLine(e: any, type: any) {
     this.checkValidateLine(e);
     if (this.validate > 0) {
       this.validate = 0;
@@ -587,31 +533,29 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     } else {
       this.updateFixedDims(e);
 
-      if(type == 'isAddNew')
-      {
+      if (type == 'isAddNew') {
         this.api
-        .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((save) => {
-          if (save) {
-            this.notification.notifyCode('SYS006', 0, '');
-            this.hasSaved = true;
-          }
-        });
+          .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((save) => {
+            if (save) {
+              this.notification.notifyCode('SYS006', 0, '');
+              this.hasSaved = true;
+            }
+          });
       }
-      else if(type == 'isEdit')
-      {
+      else if (type == 'isEdit') {
         this.api
-        .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((save) => {
-          if (save) {
-            this.notification.notifyCode('SYS007', 0, '');
-            this.hasSaved = true;
-          }
-        });
+          .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((save) => {
+            if (save) {
+              this.notification.notifyCode('SYS007', 0, '');
+              this.hasSaved = true;
+            }
+          });
       }
-      
+
     }
   }
   //end Method Line
@@ -660,12 +604,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     }
   }
 
-  checkTransLimit(isShowNotify : boolean){
-    if(this.journal.transLimit && this.vouchers.totalAmt > this.journal.transLimit)
-    {
-      if(isShowNotify)
+  checkTransLimit(isShowNotify: boolean) {
+    if (this.journal.transLimit && this.vouchers.totalAmt > this.journal.transLimit) {
+      if (isShowNotify)
         this.notification.notifyCode('AC0016');
-      this.validate++ ;
+      this.validate++;
     }
   }
 
@@ -766,10 +709,10 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }
     }
   }
-  
+
   @HostListener('click', ['$event'])
   onClick(e) {
-    if(this.modeGrid != 1)
+    if (this.modeGrid != 1)
       return;
     if (
       e.target.closest('.e-grid') == null &&
@@ -785,7 +728,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //end Function Master
 
   //Function Line
-  addVoucherLine(){
+  addVoucherLine() {
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -908,17 +851,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             opt
           );
           dialogs.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              var dataline = res.event['data'];
-              if(dataline)
-              {
-                this.vouchersLines.push(dataline);
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.event != null) {
+                var dataline = res.event['data'];
+                if (dataline) {
+                  this.vouchersLines.push(dataline);
+                }
+                this.hasSaved = true;
               }
-              this.hasSaved = true;
-            }
-          });
+            });
         }
       });
   }
@@ -966,14 +908,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                 opt
               );
               dialogs.closed
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if (res.event != null) {
-                  var dataline = res.event['data'];
-                  this.vouchersLines[index] = dataline;
-                  this.hasSaved = true;
-                }
-              });
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res) => {
+                  if (res.event != null) {
+                    var dataline = res.event['data'];
+                    this.vouchersLines[index] = dataline;
+                    this.hasSaved = true;
+                  }
+                });
             }
           });
         break;
@@ -1007,57 +949,57 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         }
       });
   }
-  
+
   deleteRow(data) {
     this.notification.alertCode('SYS030', null)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res.event.status === 'Y') {
-        switch (this.modeGrid) {
-          case '1':
-            this.gridVouchersLine.deleteRow(data);
-            if (this.gridVouchersLine.dataSource.length > 0) {
-              for (
-                let i = 0;
-                i < this.gridVouchersLine.dataSource.length;
-                i++
-              ) {
-                this.gridVouchersLine.dataSource[i].rowNo = i + 1;
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res.event.status === 'Y') {
+          switch (this.modeGrid) {
+            case '1':
+              this.gridVouchersLine.deleteRow(data);
+              if (this.gridVouchersLine.dataSource.length > 0) {
+                for (
+                  let i = 0;
+                  i < this.gridVouchersLine.dataSource.length;
+                  i++
+                ) {
+                  this.gridVouchersLine.dataSource[i].rowNo = i + 1;
+                }
               }
-            }
-            this.vouchersLines = this.gridVouchersLine.dataSource;
-            break;
-          case '2':
-            let index = this.vouchersLines.findIndex(
-              (x) => x.recID == data.recID
-            );
-            this.vouchersLines.splice(index, 1);
-            for (let i = 0; i < this.vouchersLines.length; i++) {
-              this.vouchersLines[i].rowNo = i + 1;
-            }
-            break;
+              this.vouchersLines = this.gridVouchersLine.dataSource;
+              break;
+            case '2':
+              let index = this.vouchersLines.findIndex(
+                (x) => x.recID == data.recID
+              );
+              this.vouchersLines.splice(index, 1);
+              for (let i = 0; i < this.vouchersLines.length; i++) {
+                this.vouchersLines[i].rowNo = i + 1;
+              }
+              break;
+          }
+          this.api
+            .execAction<any>(this.fmVouchersLines.entityName, [data], 'DeleteAsync')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                this.hasSaved = true;
+                this.api
+                  .exec(
+                    'IV',
+                    'VouchersLinesBusiness',
+                    'UpdateAfterDelete',
+                    [this.vouchersLines]
+                  )
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res) => {
+                    this.notification.notifyCode('SYS008', 0, '');
+                  });
+              }
+            });
         }
-        this.api
-          .execAction<any>(this.fmVouchersLines.entityName, [data], 'DeleteAsync')
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res) {
-              this.hasSaved = true;
-              this.api
-                .exec(
-                  'IV',
-                  'VouchersLinesBusiness',
-                  'UpdateAfterDelete',
-                  [this.vouchersLines]
-                )
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  this.notification.notifyCode('SYS008', 0, '');
-                });
-            }
-          });
-      }
-    });
+      });
   }
 
   checkValidateLine(e) {
@@ -1084,12 +1026,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     }
   }
 
-  costPrice_Change(line: any)
-  {
-    if(line)
-    {
-      if(line.quantity != 0)
-      {
+  costPrice_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
         setTimeout(() => {
           line.costAmt = line.costPrice * line.quantity;
           this.dt.detectChanges();
@@ -1098,38 +1037,31 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     }
   }
 
-  costAmt_Change(line: any)
-  {
-    if(line)
-    {
-      if(line.quantity != 0)
-      {
+  costAmt_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
         setTimeout(() => {
           line.costPrice = line.costAmt / line.quantity;
           this.dt.detectChanges();
         }, 100);
-        
+
       }
     }
   }
 
-  checkDataUpdateFromBackEnd(e: any): boolean
-  {
-    if(this.dataUpdate)
-    {
-      if(this.dataUpdate.recID &&
+  checkDataUpdateFromBackEnd(e: any): boolean {
+    if (this.dataUpdate) {
+      if (this.dataUpdate.recID &&
         this.dataUpdate.recID == e.data.recID &&
         this.dataUpdate[e.field] == e.data[e.field]
-        )
-        {
-          return false;
-        }
+      ) {
+        return false;
+      }
     }
     return true;
   }
 
-  showHideColumns(columnsGrid)
-  {
+  showHideColumns(columnsGrid) {
     let arr = [
       'IDIM0',
       'IDIM1',
@@ -1144,15 +1076,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     ];
 
     arr.forEach((fieldName) => {
-      if(this.hideFields.includes(fieldName))
-      {
+      if (this.hideFields.includes(fieldName)) {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].isVisible = false;
         }
       }
-      else
-      {
+      else {
         let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
         if (i > -1) {
           columnsGrid[i].isVisible = true;

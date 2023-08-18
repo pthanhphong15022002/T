@@ -35,6 +35,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   dialog!: DialogRef;
   cashpayment: any;
+  subTypeAdv : any;
   dateNow: any = new Date();
   mapPredicates = new Map<string, string>();
   mapDataValues = new Map<string, string>();
@@ -62,6 +63,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.cashpayment = dialogData.data?.cashpayment;
     this.objectName = dialogData.data?.objectName;
+    this.subTypeAdv = dialogData.data?.subTypeAdv
   }
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '80%', '90%');
@@ -81,23 +83,23 @@ export class AdvancePayment extends UIComponent implements OnInit {
   }
   accept() {
     if (this.grid.arrSelectedRows.length > 0) {
-      this.acService
-        .execApi('AC', 'CashPaymentsLinesBusiness', 'LoadDataAdvancePaymentAsync', [
-          this.grid.arrSelectedRows[0],
-        ])
+      this.api
+        .exec(
+          'AC',
+          'CashPaymentsLinesBusiness',
+          'SaveListAdvancePaymentAsync',
+          [this.subTypeAdv,this.cashpayment.recID,this.grid.arrSelectedRows[0]]
+        )
         .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
+        .subscribe((res:any) => {
           if (res) {
             this.onDestroy();
             this.dialog.close({
-              oCashRef: this.grid.arrSelectedRows[0],
-              oLineRef: res,
+              oCashAdv: this.grid.arrSelectedRows[0],
+              oLineAdv: res?.oLine ? res?.oLine : [],
             });
           }
         });
-    } else {
-      this.onDestroy();
-      this.dialog.close();
     }
   }
   valueChange(e: any) {

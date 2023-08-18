@@ -12,7 +12,7 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
-import { NameByIdPipe } from '../pipes/nameById.pipe';
+import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { IJournalPermission } from './interfaces/IJournalPermission.interface';
 import { JournalService } from './journals.service';
 import { JournalsAddComponent } from './journals-add/journals-add.component';

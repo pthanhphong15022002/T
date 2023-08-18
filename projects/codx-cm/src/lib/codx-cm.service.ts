@@ -62,6 +62,10 @@ export class CodxCmService {
     );
   }
 
+  getAdminRolesByModule(){
+    return this.api.exec<any>('AD', 'UserRolesBusiness', 'GetListUserIDByADMinStrAsync', ['CM']);
+  }
+
   getAvatar(avata) {
     return this.api.exec<any>('DM', 'FileBussiness', 'GetAvatarAsync', [avata]);
   }

@@ -5,7 +5,7 @@
   [formModel]="dialog.formModel"
   [dialog]="dialog"
   [data]="master"
-  [customToolbar]="subToolbar"
+  [customToolbar]="customToolbar"
   [openMore]="false"
   class="ac-dialog"
 >
@@ -168,7 +168,7 @@
   </div>
 </ng-template>
 
-<ng-template #subToolbar>
+<ng-template #customToolbar>
   <div class="d-flex align-items-center justify-content-between pt-3 w-100">
     <div class="d-flex justify-content-start align-items-center me-2">
       <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
