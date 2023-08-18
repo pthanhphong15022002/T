@@ -438,7 +438,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @param data
    */
   clickMF(event: any, data) {
-    switch (event.functionID) { 
+    switch (event.functionID) {
       case 'ACT041011':
         this.copyRow(data);
         break;
@@ -898,7 +898,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
 
   /**
    * *Hàm xóa dòng trong lưới
-   * @param data 
+   * @param data
    */
   deleteRow(data) {
     this.notification.alertCode('SYS030', null).subscribe((res) => {
@@ -918,6 +918,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   // chưa xử lí
   copyRow(data) {
     data.recID = Util.uid();
+    data.index=this.eleGridCashPayment.dataSource.length;
     // this.requireFields = data.unbounds.requireFields as Array<string>;
     // this.lockFields = data.unbounds.lockFields as Array<string>;
     // this.requireGrid();
@@ -1752,8 +1753,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
 
   /**
    * *Hàm set field bắt buộc nhập trên lưới
-   * @param fieldName 
-   * @param isRequire 
+   * @param fieldName
+   * @param isRequire
    */
   setRequireField(fieldName, isRequire) {
     let i = this.eleGridCashPayment.columnsGrid.findIndex(
@@ -1765,9 +1766,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm set field bỏ qua không cho nhập trên lưới 
-   * @param fieldName 
-   * @param islock 
+   * *Hàm set field bỏ qua không cho nhập trên lưới
+   * @param fieldName
+   * @param islock
    */
   setLockField(fieldName, islock) {
     let i = this.eleGridCashPayment.columnsGrid.findIndex(
@@ -2024,8 +2025,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm các sự kiện của lưới VatInvoice 
-   * @param event 
+   * *Hàm các sự kiện của lưới VatInvoice
+   * @param event
    */
   onActionGridVatInvoice(event: any) {
     switch (event.type) {
@@ -2046,7 +2047,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
 
   /**
    * *Hàm ẩn các morefunction trong lưới
-   * @param event 
+   * @param event
    */
   hideMF(event){
     var bm = event.filter(x => x.functionID != 'ACT041011' && x.functionID != 'ACT041012'); //? ẩn các morefunction ngoại trừ MF sao chép và MF xóa của lưới
