@@ -1,47 +1,50 @@
-<ng-container *ngIf="loaded">
-  <div
-    class="codx-listcontact pb-3"
-    *ngIf="listContacts != null && listContacts.length > 0; else noData"
-  >
-    <div class="d-flex mb-1" *ngIf="selectAll">
-      <input
-        type="checkbox"
-        [(ngModel)]="isCheckedAll"
-        (change)="toggleAll($event)"
-      />
-      <codx-label
-        class="ms-1"
-        name="lblSelectAll"
-        [formModel]="formModelContact"
-        default="Chọn tất cả"
-      ></codx-label>
-    </div>
-    <div *ngFor="let item of listContacts">
-      <ng-container
-        [ngTemplateOutlet]="contacts"
-        [ngTemplateOutletContext]="{ $implicit: item }"
-      >
-      </ng-container>
-    </div>
-    <div [class]="'mt-5'">
-      <div class="d-flex justify-content-center" *ngIf="!hidenMF && objectID">
-        <button
-          type="button"
-          class="btn btn-sm btn-primary"
-          (click)="isButton ? clickAddContact('add', null, moreFuncAdd) : null"
+<ng-container *ngIf="isRole; else noData">
+  <ng-container *ngIf="loaded">
+    <div
+      class="codx-listcontact pb-3"
+      *ngIf="listContacts != null && listContacts.length > 0; else noData"
+    >
+      <div class="d-flex mb-1" *ngIf="selectAll">
+        <input
+          type="checkbox"
+          [(ngModel)]="isCheckedAll"
+          (change)="toggleAll($event)"
+        />
+        <codx-label
+          class="ms-1"
+          name="lblSelectAll"
+          [formModel]="formModelContact"
+          default="Chọn tất cả"
+        ></codx-label>
+      </div>
+      <div *ngFor="let item of listContacts">
+        <ng-container
+          [ngTemplateOutlet]="contacts"
+          [ngTemplateOutletContext]="{ $implicit: item }"
         >
-          <i class="icon-person_add_alt_1 icon-16 me-1"></i>
-          <codx-label
-            name="lblQuickAdd"
-            [formModel]="formModelContact"
-            default="Thêm nhanh liên hệ"
-          ></codx-label>
-        </button>
+        </ng-container>
+      </div>
+      <div [class]="'mt-5'">
+        <div class="d-flex justify-content-center" *ngIf="!hidenMF && objectID">
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="
+              isButton ? clickAddContact('add', null, moreFuncAdd) : null
+            "
+          >
+            <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+            <codx-label
+              name="lblQuickAdd"
+              [formModel]="formModelContact"
+              default="Thêm nhanh liên hệ"
+            ></codx-label>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </ng-container>
-
 <ng-template #noData>
   <div class="empty-data">
     <div class="container h-100">
@@ -51,11 +54,14 @@
             src="../assets/themes/sys/default/img/DataEmpty.svg"
             class="w-200px"
           />
-          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="isRole">
             {{ "SYS011" | mssg | async }}
           </div>
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="!isRole">
+            {{ "SYS032" | mssg | async }}
+          </div>
         </div>
-        <div [class]="'d-flex justify-content-center mt-5'">
+        <div [class]="'d-flex justify-content-center mt-5'" *ngIf="isRole">
           <div class="d-flex" *ngIf="!hidenMF && objectID">
             <button
               type="button"
@@ -222,10 +228,11 @@
           *ngIf="data.allowEmail"
           class="text-gray-900 text-primary text-hover-primary"
           [innerHTML]="
-            data?.personalEmail | formatvalue : formModelContact : 'personalEmail' | async
+            data?.personalEmail
+              | formatvalue : formModelContact : 'personalEmail'
+              | async
           "
-          ></span
-        >
+        ></span>
         <span *ngIf="!data.allowEmail" class="text-gray-900">{{
           data.personalEmail
         }}</span>

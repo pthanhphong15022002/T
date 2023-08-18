@@ -246,7 +246,14 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
-
+    if(this.data.contactName == null || this.data.contactName.trim() == ''){
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.ContactName?.headerText + '"'
+      );
+      return;
+    }
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
     } else {
