@@ -252,10 +252,10 @@ export class SalesinvoicesComponent
         'GetListDataDetailAsync',
         'e973e7b7-10a1-11ee-94b4-00155d035517'
       )
-      .subscribe((res: IAcctTran[]) => {
+      .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.acctTranLines = this.groupBy(res, 'entryID');
+          this.acctTranLines = this.groupBy(res.lsAcctrants, 'entryID');
         }
 
         this.acctLoading = false;
@@ -464,6 +464,10 @@ export class SalesinvoicesComponent
   }
 
   groupBy(arr: any[], key: string): any[][] {
+    if (!Array.isArray(arr)) {
+      return [[]];
+    }
+
     return Object.values(
       arr.reduce((acc, current) => {
         acc[current[key]] = acc[current[key]] ?? [];

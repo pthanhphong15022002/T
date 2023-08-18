@@ -100,6 +100,7 @@
                       field="buid"
                       [formModel]="formModel"
                       [crrValue]="buid"
+                      [disabled]="true"
                       (valueChange)="changeOwner($event,viewBUID)"
                     >
                     </codx-input>
@@ -155,6 +156,7 @@
                   <div class="w-75">
                     <codx-input
                       field="buid"
+                      [disabled]="true"
                       [formModel]="formModel"
                       [crrValue]="buid"
                       (valueChange)="changeOwner($event,viewGroupUser)"

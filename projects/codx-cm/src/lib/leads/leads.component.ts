@@ -432,13 +432,13 @@ export class LeadsComponent
     let isEdit = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.write
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        ? data.closed || (data.status != '13' && this.checkMoreReason(data)) || this.checkMoreReason(data)
         : true;
     };
     let isDelete = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.delete
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        ? data.closed || (data.status != '13' && this.checkMoreReason(data)) || this.checkMoreReason(data)
         : true;
     };
     let isClosed = (eventItem, data) => {
@@ -492,8 +492,7 @@ export class LeadsComponent
     let isStartFirst = (eventItem, data) => {
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
-        ? !['3', '5'].includes(data.status)
-        : true;
+        ? !['3', '5'].includes(data.status) && data.applyProcess || !data.applyProcess : true;
     };
     let isChangeStatus = (eventItem, data) => {
       // Đổi trạng thái cho tiềm năng ko có quy trình
@@ -503,11 +502,11 @@ export class LeadsComponent
 
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
-      eventItem.disabled = data.applyProcess;
+      eventItem.disabled = data.full ? data.closed || data.applyProcess || this.checkMoreReason(data): true ;
     };
     let isDeleteProcess = (eventItem, data) => {
       // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
+      eventItem.disabled = data.full ? data.closed || !data.applyProcess || this.checkMoreReason(data) : true;
     };
 
     let isApprover = (eventItem, data) => {
@@ -1125,42 +1124,42 @@ export class LeadsComponent
   }
   startFirst(data) {
     this.notificationsService
-      .alertCode('DP033', null, [
-        '"' + data?.leadName + ' bạn có muốn quay trở lại đầu tiên không"' ||
-          '',
-      ])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.codxCmService
-            .moveBackStartInstance([
-              data.refID,
-              data.status,
-              data.processID,
-              this.applyForLead,
-            ])
-            .subscribe((resDP) => {
-              if (resDP) {
-                var datas = [data.recID, resDP[0]];
-                this.codxCmService
-                  .moveStartFirstLead(datas)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.dataSelected = res[0];
-                      this.dataSelected = JSON.parse(
-                        JSON.stringify(this.dataSelected)
-                      );
-                      this.detailViewLead.reloadListStep(resDP[1]);
-                      this.notificationsService.notifyCode('SYS007');
-                      this.view.dataService
-                        .update(this.dataSelected)
-                        .subscribe();
-                    }
-                    this.detectorRef.detectChanges();
-                  });
-              }
-            });
-        }
-      });
+    .alertCode('DP033', null, [
+      '"' + data?.leadName + ' bạn có muốn quay trở lại đầu tiên không"' ||
+        '',
+    ])
+    .subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.codxCmService
+          .moveBackStartInstance([
+            data.refID,
+            data.status,
+            data.processID,
+            this.applyForLead,
+          ])
+          .subscribe((resDP) => {
+            if (resDP) {
+              var datas = [data.recID, resDP[0]];
+              this.codxCmService
+                .moveStartFirstLead(datas)
+                .subscribe((res) => {
+                  if (res) {
+                    this.dataSelected = res[0];
+                    this.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
+                    this.detailViewLead.reloadListStep(resDP[1]);
+                    this.notificationsService.notifyCode('SYS007');
+                    this.view.dataService
+                      .update(this.dataSelected)
+                      .subscribe();
+                  }
+                  this.detectorRef.detectChanges();
+                });
+            }
+          });
+      }
+    });
   }
   updateProcess(data, isCheck) {
     this.notificationsService

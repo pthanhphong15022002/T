@@ -263,6 +263,33 @@
         </codx-label>
       </div>
 
+      <div class="flex-nowrap">
+        <codx-attachment
+          #attachment
+          [objectType]="formModel?.entityName"
+          showMessage="0"
+          hideBtnSave="1"
+          hideFolder="1"
+          hideUploadBtn="1"
+          hideDes="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          [objectId]="benefitPolicyObj?.policyID"
+          [allowMultiFile]="1"
+          [idBrowse]="'add'"
+          displayThumb="full"
+          [functionID]="funcID"
+          (fileAdded)="addFiles($event)">
+          [referType]="'source'"
+          >
+          <!-- [formModel]="formModel"
+          [idField]="'RecID'" -->
+        <!-- (fileDelete)="handleDelete($event)"
+        (fileCount)="getfileCount($event)"
+        (fileGet)="getfileCount($event)" -->
+        </codx-attachment>
+      </div>
+
       <codx-combobox-popup
       *ngIf="!isHidden2 && benefitPolicyObj.hasIncludeBenefits"
       [comboboxName]="grvSetup.IncludeBenefits.referedValue"
@@ -276,7 +303,7 @@
 </ng-template>
 
 <ng-template #policyInfo>
-    <div class="form-group row mt-5">
+    <div class="form-group row mt-5 red">
     <codx-input
         field="memo"
         [formModel]="formModel"
@@ -286,6 +313,15 @@
 </ng-template>
 
 <ng-template #setting>
+  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <codx-label 
+        [formModel]="formModel" 
+        [name]="'lblHeadAdjustBy'"
+        [default]="'Điều chỉnh mức hưởng'"
+    >
+    </codx-label>
+  </div>
+
   <div class="form-group row">
     <div class="col-6 d-flex flex-column">
       <codx-label fiedName="AdjustBy" [formModel]="formModel"></codx-label>
@@ -409,6 +445,15 @@
           [Group]="formGroup"
         ></codx-input>
       </div>
+    </div>
+
+    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+      <codx-label 
+          [formModel]="formModel" 
+          [name]="'lblApplyConstraint'"
+          [default]="'Điều kiện áp dụng'"
+      >
+      </codx-label>
     </div>
 
     <div class="form-group row">
@@ -623,7 +668,7 @@
       <div *ngIf="constraint == '0'">
 
       </div>
-      <div class="form-group row" *ngIf="constraint == '1'">
+      <div class="form-group row" *ngIf="constraint == '1' && benefitPolicyObj.isConstraintOther">
           <div class="col-6 d-flex flex-column">
             <codx-label
             class="ms-6"
@@ -639,7 +684,7 @@
             ></codx-input>
         </div>
       </div>
-      <div class="form-group row" *ngIf="constraint == '2'">
+      <div class="form-group row" *ngIf="constraint == '2' && benefitPolicyObj.isConstraintOther">
         <div class="col-6">
           <codx-label
           class="ms-6"
@@ -672,7 +717,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="constraint == '3'">
+      <div *ngIf="constraint == '3' && benefitPolicyObj.isConstraintOther">
         <div class="form-group row">
           <div class="col-6 d-flex flex-column">
             <codx-label
@@ -713,7 +758,7 @@
       </div>
 
       </div>
-      <div *ngIf="constraint == '4'">
+      <div *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
         <div class="form-group row">
           <div class="col-6 d-flex flex-column">
               <codx-label
@@ -742,7 +787,7 @@
               | async"
         ></span></span>
     </div>
-      <div *ngIf="constraint == '5'">
+      <div *ngIf="constraint == '5' && benefitPolicyObj.isConstraintOther">
         <div class="form-group row">
           <div class="col-6 d-flex flex-column">
               <codx-label
@@ -771,7 +816,7 @@
             | async"
       ></span></span>
       </div>
-      <div *ngIf="constraint == '6'">
+      <div *ngIf="constraint == '6' && benefitPolicyObj.isConstraintOther">
         <div class="form-group row">
           <div class="col-6 d-flex flex-column">
               <codx-label
@@ -1537,7 +1582,7 @@
 
 <ng-template #footer>
 <div class="d-flex justify-content-between">
-    <!-- <button
+    <button
     class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
     (click)="openFormUploadFile()"
 >
@@ -1546,7 +1591,7 @@
     default="Đính kèm file"
     [formModel]="formModel"
     ></codx-label>
-</button> -->
+</button>
 
     <button class="btn btn-primary" (click)="onSaveForm()">
     <i class="icon-save"></i>

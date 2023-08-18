@@ -18,7 +18,7 @@ import {
   ScrollComponent,
 } from 'codx-core';
 import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
-import { NameByIdPipe } from '../pipes/nameById.pipe';
+import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { JournalService } from '../journals/journals.service';

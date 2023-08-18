@@ -6,6 +6,7 @@ import { PopupMultiselectvllComponent } from '../../employee-policyal/popup-mult
 import {
   EditSettingsModel, detailIndentCellInfo,
 } from '@syncfusion/ej2-angular-grids';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-policybenefits',
   templateUrl: './popup-policybenefits.component.html',
@@ -17,8 +18,6 @@ implements OnInit{
   @HostListener('click', ['$event.target']) onClick(e) {
     if(this.gridView1){
       if(this.gridView1.gridRef.isEdit == true){
-        //this.gridView2.isEdit = false;
-        //this.gridView2.isAdd = false;
         this.gridView1.endEdit();
       }else{
        //
@@ -37,6 +36,7 @@ implements OnInit{
   @ViewChild('headTmpGrid1Col3', { static: true }) headTmpGrid1Col3: TemplateRef<any>;
 
   @ViewChild('gridView1') gridView1: CodxGridviewV2Component;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   lstSelectedBenefits: any = []
 
@@ -408,6 +408,17 @@ implements OnInit{
     }
   }
 
+  openFormUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  async addFiles(evt){
+    this.benefitPolicyObj.attachments = evt.data.length;
+  }
+  fileAdded(evt){
+
+  }
+
   changeTab(event){
     this.currentTab = event.nextId;
   }
@@ -585,6 +596,9 @@ implements OnInit{
         if(res.event){
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
+          if(this.lstSelectedObj.length > 0){
+            this.addApplyObj()
+          }
           this.df.detectChanges();
         }
       });
@@ -612,6 +626,9 @@ implements OnInit{
       popup.closed.subscribe((res) => {
         this.benefitPolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
+        if(this.lstSelectedExcludeObj.length > 0){
+          this.addExcludeObj()
+        }
         this.df.detectChanges();
       });
     }
@@ -1064,6 +1081,8 @@ implements OnInit{
 
     if(flag == false){
       this.benefitPolicyObj.hasIncludeBenefits = false;
+      this.benefitPolicyObj.includeBenefits = ''
+      this.formGroup.patchValue(this.benefitPolicyObj)
     }
   }
 
@@ -1506,15 +1525,42 @@ implements OnInit{
 
     if(this.benefitPolicyObj.hasIncludeBenefits == true && !this.benefitPolicyObj.includeBenefits){
       this.notify.notifyCode('HR018')
+      return
     }
 
+    if(this.benefitPolicyObj.hasIncludeObjects == true && (this.benefitPolicyObj.includeObjects?.length < 1 || this.lstPolicyBeneficiariesApply.length < 1)){
+      this.notify.notifyCode('HR032')
+      return
+    }
+
+    if(this.benefitPolicyObj.hasExcludeObjects == true && (this.benefitPolicyObj.excludeObjects?.length < 1 || this.lstPolicyBeneficiariesExclude.length < 1)){
+      this.notify.notifyCode('HR033')
+      return
+    }
+
+    if(this.benefitPolicyObj.hasIncludeObjects == false){
+      this.benefitPolicyObj.includeObjects = ''
+    }
+    if(this.benefitPolicyObj.hasExcludeObjects == false){
+      this.benefitPolicyObj.excludeObjects = ''
+    }
+
+    if(
+      this.attachment.fileUploadList &&
+      this.attachment.fileUploadList.length > 0
+      ) {
+      this.attachment.objectId=this.benefitPolicyObj?.policyID;
+      (await (this.attachment.saveFilesObservable())).subscribe(
+      (item2:any)=>{
+            
+          });
+      }
 
     if(this.actionType === 'add' || this.actionType === 'copy'){
       this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
         if(res){
             this.notify.notifyCode('SYS006');
             for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-              debugger
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                 
               })
@@ -1525,7 +1571,7 @@ implements OnInit{
               })
             }
 
-            if(this.benefitPolicyObj.isConstraintOther){
+            if(this.benefitPolicyObj.isConstraintOther && this.benefitPolicyObj.constraintBy){
               this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
               this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 
@@ -1542,28 +1588,28 @@ implements OnInit{
         this.EditPolicyBenefitsIDChanged().subscribe((res) => {
           if(res){
             this.notify.notifyCode('SYS007');
-            this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
+            this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+              if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                  
                 })
               }
               for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                  
                 })
               }
-              this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
-                debugger
-              })
-              if(this.benefitPolicyObj.isConstraintOther){
-                this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
-                this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
-                  debugger
-                })
-              }
-              this.dialog && this.dialog.close(this.benefitPolicyObj);
+            }
             })
+            if(this.benefitPolicyObj.constraintBy){
+              this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
+                if(this.benefitPolicyObj.isConstraintOther){
+                  this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                  this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+                  })
+                }
+              })
+            }
+            this.dialog && this.dialog.close(this.benefitPolicyObj);
           }
           else{
             this.notify.notifyCode('SYS023');
@@ -1574,28 +1620,26 @@ implements OnInit{
         this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
           if(res){
             this.notify.notifyCode('SYS007');
-            this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
-              for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                  
-                })
-              }
-              for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                  
-                })
-              }
-              this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
-                debugger
-              })
-              if(this.benefitPolicyObj.isConstraintOther){
+            this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+                if(this.benefitPolicyObj.constraintBy){
                 this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
                 this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
-                  debugger
                 })
               }
-              this.dialog && this.dialog.close(this.benefitPolicyObj);
             })
+            this.DeletePolicyBeneficiaries(this.benefitPolicyObj.policyID).subscribe((res) => {
+                if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
+                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+                  })
+                }
+                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                  })
+                }
+              }
+              })
+            this.dialog && this.dialog.close(this.benefitPolicyObj);
           }
           else{
             this.notify.notifyCode('SYS023');

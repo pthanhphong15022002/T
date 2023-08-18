@@ -249,8 +249,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.instance[$event.field] = $event.data;
     }
   }
-  //anh thao Code ne bao
-  // em thay roi
+
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
       let result = event.e?.data;
@@ -318,7 +317,7 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if (this.instance?.owner === null || this.instance?.owner.trim() === '') {
+    if (!this.instance?.owner || this.instance?.owner?.trim() === '') {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -413,7 +412,6 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dateMessage = new Date(date2).toLocaleDateString('en-AU');
     date1.setHours(0, 0, 0, 0);
     date2.setHours(0, 0, 0, 0);
-
     return date1 < date2;
   }
 

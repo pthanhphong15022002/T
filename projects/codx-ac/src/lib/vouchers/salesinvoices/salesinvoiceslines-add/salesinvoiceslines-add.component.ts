@@ -18,7 +18,7 @@ import { combineLatestWith, map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { NameByIdPipe } from '../../../pipes/nameById.pipe';
+import { NameByIdPipe } from '../../../pipes/name-by-id.pipe';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../salesinvoices.service';
 

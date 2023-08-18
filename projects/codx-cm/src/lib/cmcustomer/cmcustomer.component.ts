@@ -282,11 +282,11 @@ export class CmCustomerComponent
         switch (res.functionID) {
           case 'CM0105_1':
           case 'CM0101_1':
-            if (data.isBlackList) res.disabled = true;
+            if (!data.write || data.isBlackList) res.disabled = true;
             break;
           case 'CM0105_3':
           case 'CM0101_3':
-            if (!data.isBlackList) res.disabled = true;
+            if (!data.write || !data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (
@@ -306,11 +306,11 @@ export class CmCustomerComponent
             break;
           case 'CM0105_4':
           case 'CM0101_4':
-            if (data.status === '99') res.disabled = true;
+            if (!data.write || data.status === '99') res.disabled = true;
             break;
           case 'CM0105_5':
           case 'CM0101_5':
-            if (data.status !== '99') res.disabled = true;
+            if (!data.write || data.status !== '99') res.disabled = true;
             break;
           default:
             break;
