@@ -826,57 +826,6 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <!-- <div class="d-flex align-items-center justify-content-end">
-          <div *ngIf="formType != 'edit'" class="ms-2">
-            <button
-              type="button"
-              class="btn btn-md btn-light-primary"
-              (click)="onSaveAdd()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-add_to_photos icon-16"></i>
-                <codx-label
-                  class="fw-normal"
-                  fiedName="lblSave"
-                  default="Lưu & thêm"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-          <div class="ms-2 me-2">
-            <button
-              type="button"
-              class="btn btn-md btn-primary"
-              style="min-width: 60px"
-              (click)="onSave()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-save_alt icon-16"></i>
-                <codx-label
-                  class="fw-normal"
-                  fiedName="lblSave"
-                  default="Lưu"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-          <div *ngIf="vouchers?.status == '0'" class="ms-2">
-            <button
-              type="button"
-              class="btn btn-md btn-danger"
-              (click)="onDiscard()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-settings_backup_restore icon-18"></i>
-                <codx-label
-                  class="fs-6 fw-normal"
-                  fiedName="lblDiscard"
-                  default="Hủy bỏ"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-        </div> -->
         <div class="ms-2">
           <div
             class="btn btn-icon btn-light-danger btn-circle bg"
@@ -887,6 +836,41 @@
         </div>
       </div>
     </div>
+    <ng-container>
+      <div
+        style="margin-left: 30px"
+        *ngIf="formType == 'add' || vouchers?.status == '0'"
+        class="input-circle h-20px input-border-0 w-400px mb-1"
+      >
+        <codx-dropdown-select
+          #cbxSub
+          [isToolbar]="false"
+          [cssClass]="'border-0'"
+          cssPopup="h-350px w-550px"
+          [isMulti]="false"
+          type="valuelist"
+          field="subType"
+          [refValue]="gridViewSetup['SubType'].referedValue"
+          [value]="vouchers.subType"
+          emptyText="Loại phiếu"
+        ></codx-dropdown-select>
+      </div>
+      <span
+        style="margin-left: 30px"
+        *ngIf="formType == 'edit' && vouchers?.status != '0'"
+      >
+        <codx-vll
+          [name]="gridViewSetup['SubType'].referedValue"
+          [formModel]="form.formModel"
+          [field]="'SubType'"
+          [value]="vouchers?.subType"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light-primary badge-lg mt-1"
+        >
+        </codx-vll>
+      </span>
+    </ng-container>
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->

@@ -1,7 +1,7 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService, AuthStore, DialogModel, LayoutService, PageLink, PageTitleService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { AuthService, AuthStore, DialogModel, LayoutService, PageLink, PageTitleService, UIComponent, Util, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.component';
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 import { HttpClient } from '@angular/common/http';
@@ -116,8 +116,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         this.data = res;
         this.reportID = res.reportID;
         this.isRunMode = res.runMode == "1";
-        this.pageTitle.setRootNode(this.data.customName);
-        this.getRootFunction(this.data.moduleID, this.data.reportType);
+        this.pageTitle.setRootNode(res.customName);
+        this.getRootFunction(res.moduleID, res.reportType);
         if(res.displayMode == "2" || res.displayMode == "3" || res.displayMode == "4"){
           this.getReportPDF(res.recID);
         }
@@ -129,7 +129,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.api
     .execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type])
     .subscribe((res:any)=>{
-      if(res){
+      if(res)
+      {
         this.rootFunction = res;
         this.viewBase.formModel.funcID = this.rootFunction?.functionID;
         this.viewBase.formModel.formName = this.rootFunction?.formName;

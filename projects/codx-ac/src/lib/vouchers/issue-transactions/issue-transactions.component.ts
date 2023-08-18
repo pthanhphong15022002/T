@@ -245,6 +245,16 @@ export class IssueTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
+          this.dialog.closed
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res.event != null) {
+              if (res.event['update']) {
+                this.itemSelected = res.event['data'];
+                this.loadDatadetail(this.itemSelected);
+              }
+            }
+          });
         }
       });
   }
@@ -319,6 +329,16 @@ export class IssueTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
+          this.dialog.closed
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res.event != null) {
+              if (res.event['update']) {
+                this.itemSelected = res.event['data'];
+                this.loadDatadetail(this.itemSelected);
+              }
+            }
+          });
         }
       });
   }
@@ -382,9 +402,9 @@ export class IssueTransactionsComponent extends UIComponent {
         {
           this.vouchersLines = res;
           this.loadTotal();
-          this.detectorRef.detectChanges();
         }
         this.loading = false;
+        this.detectorRef.detectChanges();
       });
     this.api
       .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [data.recID])
