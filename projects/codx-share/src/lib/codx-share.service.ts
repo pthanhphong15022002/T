@@ -372,7 +372,7 @@ export class CodxShareService {
           if (x.event) {
             var result =
             {
-              funcID: "SYS004",
+              funcID: funcID,
               result: x.event
             }
             afterSave(result);
