@@ -422,28 +422,50 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.objectName = null;
       this.data.isDefault = false;
     }
-    if (this.action === 'add' || this.action == 'copy') {
-      op.method = 'AddCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.listAddress,
-      ];
-    } else {
-      op.method = 'UpdateCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.lstContactDeletes,
-        this.listAddress,
-        this.listAddressDelete,
-      ];
+    op.method = this.action != 'edit' ? 'AddCrmAsync' : 'UpdateCrmAsync';
+
+    switch (this.funcID) {
+      case 'CM0101':
+      case 'CM0105':
+        op.className = 'CustomersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0102':
+        op.className = 'ContactsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
+      case 'CM0103':
+        op.className = 'PartnersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0104':
+        op.className = 'CompetitorsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
     }
 
     op.data = data;

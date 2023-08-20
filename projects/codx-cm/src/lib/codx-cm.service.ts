@@ -169,7 +169,7 @@ export class CodxCmService {
   addCompetitorByName(name) {
     return this.api.exec<any>(
       'CM',
-      'CustomersBusiness',
+      'CompetitorsBusiness',
       'AddCompetitorByDealCompetitorAsync',
       [name]
     );
