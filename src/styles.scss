@@ -3689,3 +3689,11 @@ codx-view-tree-targets .menu-sub{
 .aside {
   transition: width 0.2s ease;
 }
+.contract-grid .e-table{
+  width: 100%!important;
+}
+codx-attachment.h-35px{
+  .overflow-auto.mh-200px{
+    min-height: 35px;
+  }
+}

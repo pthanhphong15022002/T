@@ -232,8 +232,9 @@
               *ngFor="let item of dataDashBoard?.countsBussinessLines"
             >
               <e-series
-                *ngIf="isSuccess"
-                [dataSource]="item?.chartDataSuscess ?? []"
+                [dataSource]="
+                  isSuccess ? item?.chartDataSuscess : item?.chartDataFail ?? []
+                "
                 type="Line"
                 xName="month"
                 yName="percentage"
@@ -242,7 +243,7 @@
                 [fillColor]="item.color"
               ></e-series>
 
-              <e-series
+              <!-- <e-series
                 *ngIf="!isSuccess"
                 [dataSource]="item?.chartDataFail ?? []"
                 type="Line"
@@ -251,7 +252,7 @@
                 [name]="item.businessLineName"
                 width="3"
                 [fillColor]="item.color"
-              ></e-series>
+              ></e-series> -->
             </ng-container>
           </e-series-collection>
         </ejs-chart>
@@ -382,44 +383,51 @@
       </div>
     </div>
 
-    <ng-container *ngIf="isReasonSuscess">
+    <div
+      style="overflow-y: auto; max-height: 90%"
+      *ngIf="
+        isReasonSuscess
+          ? dataDashBoard?.countsReasonsSuscess?.length > 0
+          : dataDashBoard?.countsReasonsFails?.length > 0;
+        else noData
+      "
+    >
       <div
-        style="overflow-y: auto; max-height: 90%"
-        *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
+        *ngFor="
+          let data of isReasonSuscess
+            ? dataDashBoard?.countsReasonsSuscess
+            : dataDashBoard?.countsReasonsFails
+        "
+        class="mt-4"
       >
-        <div
-          *ngFor="let data of dataDashBoard?.countsReasonsSuscess"
-          class="mt-4"
-        >
-          <div class="mx-2 my-5">
-            <div class="d-flex justify-content-between">
-              <div>
-                <span>{{ data?.reasonName }}</span>
-                <span>&nbsp;(</span>
-                <span>{{ data?.quantity }}</span>
-                <span>)</span>
-              </div>
-              <div>
-                <span>{{ data?.percentage }}</span
-                ><span>% </span>
-              </div>
+        <div class="mx-2 my-5">
+          <div class="d-flex justify-content-between">
+            <div>
+              <span>{{ data?.reasonName }}</span>
+              <span>&nbsp;(</span>
+              <span>{{ data?.quantity }}</span>
+              <span>)</span>
             </div>
-            <div class="d-flex align-items-center min-w-200px">
-              <div class="h-5px w-100 bg-gray-200 rounded-4">
-                <div
-                  class="rounded-4 h-5px"
-                  [ngStyle]="{ backgroundColor: colorReasonSuscess }"
-                  role="progressbar"
-                  [style.width]="data.percentage + '%'"
-                ></div>
-              </div>
+            <div>
+              <span>{{ data?.percentage }}</span
+              ><span>% </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center min-w-200px">
+            <div class="h-5px w-100 bg-gray-200 rounded-4">
+              <div
+                class="rounded-4 h-5px"
+                [ngStyle]="{ backgroundColor: colorReasonSuscess }"
+                role="progressbar"
+                [style.width]="data.percentage + '%'"
+              ></div>
             </div>
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
 
-    <ng-container *ngIf="!isReasonSuscess">
+    <!-- <ng-container *ngIf="!isReasonSuscess">
       <div
         style="overflow-y: auto; max-height: 95%"
         *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
@@ -454,7 +462,7 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </ng-container> -->
   </div>
 </ng-template>
 
@@ -544,10 +552,14 @@
         </div>
       </div>
     </div>
-
     <div
       style="height: 100% !important"
-      *ngIf="dataSourcePy?.length > 0; else noData"
+      *ngIf="
+        isStatus
+          ? dataSourcePyStatus?.length > 0
+          : dataSourcePyStage?.length > 0;
+        else noData
+      "
     >
       <!-- <div class="control-section">
         <div> tooltipPy -->
@@ -566,7 +578,7 @@
         <e-accumulation-series-collection>
           <e-accumulation-series
             name="ConversionRate"
-            [dataSource]="dataSourcePy"
+            [dataSource]="isStatus ? dataSourcePyStatus : dataSourcePyStage"
             xName="name"
             yName="quantity"
             [neckWidth]="neckWidth"

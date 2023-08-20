@@ -432,14 +432,14 @@
         </div>
         <div class="row form-group">
           <div class="col-6">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center h-30px">
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="delContactID"
                 default="Liên hệ giao hàng"
               ></codx-label>
-              <button type="button" class="btn btn-sm btn-light-primary">
-                <span class="icon-person_add_alt_1"></span>
+              <button type="button" class="btn btn-icon btn-sm btn-light-primary">
+                <i class="icon-person_add_alt_1 icon-16"></i>
               </button>
             </div>
             <div class>
@@ -453,7 +453,7 @@
             </div>
           </div>
           <div class="col-6">
-            <div>
+            <div class="h-30px d-flex align-items-center">
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="delPhone"
@@ -542,15 +542,15 @@
         </div>
         <div class="row form-group">
           <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center h-30px">
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="delAddress"
                 default="Địa chỉ giao hàng"
               ></codx-label>
-              <span
-                class="icon-add_location_alt text-primary icon-20 cursor-pointer"
-              ></span>
+              <button type="button" class="btn btn-icon btn-sm btn-light-primary">
+                <i class="icon-add_location_alt icon-16"></i>
+              </button>
             </div>
             <div class>
               <codx-input

@@ -402,7 +402,7 @@
   <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subTypeAdv == '1') || (cashpayment?.subType == '4' && subTypeAdv == '1'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [allowRowDragAndDrop]="true" autoAddRow="false"
-        formName="CashPaymentsLines" gridViewName="grvCashPaymentsLines" [editSettings]="editSettingsGrid"
+        [formName]="journal.entryMode == '1' ? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'" [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'" [editSettings]="editSettingsGrid"
         entityName="AC_CashPaymentsLines" [allowFiltering]="true" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
         [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
         (gridInit)="beforeInitGridCashpayments($event)" rowHeight="35" [showEmptyRecord]="false" rowNoField="rowNo"
@@ -492,11 +492,11 @@
   <ng-container *ngIf="(cashpayment?.subType == '9')">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices"
-        [editOnClick]="true" entityName="AC_VATInvoices" showRowNumber="true" rowHeight="35" [editSettings]="editSettingsGrid"
+        [editOnClick]="true" entityName="AC_VATInvoices" rowHeight="35" [editSettings]="editSettingsGrid" rowNoField="rowNo"
         (cellChanged)="cellLineChangeVATInvoices($event)" [allowFiltering]="true" [autoAddRow]="false" [allowSorting]="true"
         (onAddNew)="onSaveLineVATInvoices($event,true)" (eventAction)="onActionGridVatInvoice($event)" (onEdit)="onSaveLineVATInvoices($event,false)"
         [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false" [showEmptyRecord]="false"
-        [dataSource]="vatInvoices">
+        [dataSource]="_vatInvoices">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">

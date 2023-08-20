@@ -870,6 +870,16 @@ export class PopupPolicyalComponent
       return;
     }
 
+    if(this.alpolicyObj.hasIncludeObjects == true && (this.alpolicyObj.includeObjects?.length < 1 || this.lstPolicyBeneficiariesApply?.length < 1)){
+      this.notify.notifyCode('HR032')
+      return
+    }
+
+    if(this.alpolicyObj.hasExcludeObjects == true && (this.alpolicyObj.excludeObjects?.length < 1 || this.lstPolicyBeneficiariesExclude?.length < 1)){
+      this.notify.notifyCode('HR033')
+      return
+    }
+
     if(
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
@@ -881,12 +891,16 @@ export class PopupPolicyalComponent
           });
       }
 
+
+
       if(this.alpolicyObj.hasIncludeObjects == false){
         this.alpolicyObj.includeObjects = ''
       }
       if(this.alpolicyObj.hasExcludeObjects == false){
         this.alpolicyObj.excludeObjects = ''
       }
+
+
       if(this.actionType === 'add' || this.actionType === 'copy'){
         this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
           if(res){
@@ -1223,6 +1237,9 @@ export class PopupPolicyalComponent
         if(res.event){
           this.alpolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
+          if(this.lstSelectedObj.length > 0){
+            this.addApplyObj()
+          }
           this.df.detectChanges();
         }
       });
@@ -1250,6 +1267,9 @@ export class PopupPolicyalComponent
       popup.closed.subscribe((res) => {
         this.alpolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
+        if(this.lstSelectedExcludeObj.length > 0){
+          this.addExcludeObj()
+        }
         this.df.detectChanges();
       });
     }

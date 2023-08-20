@@ -73,7 +73,7 @@ export class CashPaymentsComponent extends UIComponent {
   acctTrans: any; //? data của tab hạch toán
   baseCurr: any; //? đồng tiền hạch toán
   dataDefaultCashpayment: any; //? data default của phiếu
-  isLoadData: any = true; //? trạng thái load data
+  isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   fmCashPaymentsLines: FormModel = { //? formModel của cashpaymentlines
     formName: 'CashPaymentsLines',
@@ -595,6 +595,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
           return;
         } 
+        
       }
     }
   }
@@ -604,7 +605,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data 
    */
   getDatadetail(data) {
-    this.isLoadData = true; // bật progressbar của tab
+    //this.isLoadData = true; // bật progressbar của tab
     this.acctTrans = [];
     this.settledInvoices = [];
     this.vatInvoices = [];
@@ -615,10 +616,10 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res:any) => {
         if (res) {
-          this.acctTrans = res?.lsAcctrants;
-          this.settledInvoices = res?.lsSettledInvoices;
-          this.vatInvoices = res?.lsVATInvoices;
-          this.isLoadData = false; // tắt progressbar của tab
+          this.acctTrans = res?.lsAcctrants ? res?.lsAcctrants : [];
+          this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : [];
+          this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
+          //this.isLoadData = false; // tắt progressbar của tab
           this.detectorRef.detectChanges();
         }
       });     
