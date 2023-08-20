@@ -215,6 +215,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask?.forEach((group) => {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
+            task['statusOld'] = task.status;
             task['isChange'] = false;
           });
           group['progressOld'] = group.progress;
@@ -227,6 +228,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = 100;
+              task.status = '3'
               progressData.push(this.setProgressOutput(task, group));
             });
             group.progress = 100;
@@ -241,6 +243,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             let sumProgress = 0;
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+              task.status = task?.statusOld;
               sumProgress += task?.progress;
               if (task?.isChange) {
                 progressData.push(this.setProgressOutput(task, group));
@@ -259,10 +262,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
 
-    if (
-      changes?.isSuccessTaskDefault &&
-      !changes?.isSuccessTaskDefault?.firstChange
-    ) {
+    if (changes?.isSuccessTaskDefault && !changes?.isSuccessTaskDefault?.firstChange) {
       let progressData = [];
       if (changes?.isSuccessTaskDefault?.currentValue) {
         this.listGroupTask?.forEach((group) => {
@@ -273,6 +273,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = 100;
+                task.status = '3'
                 progressData.push(this.setProgressOutput(task, group));
                 check = true;
               }

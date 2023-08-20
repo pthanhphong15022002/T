@@ -39,7 +39,6 @@ export class WarrantiesComponent
 
   // extension core
   views: Array<ViewModel> = [];
-  viewsDefault: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   formModel: FormModel;
 
@@ -48,19 +47,29 @@ export class WarrantiesComponent
   @Input() funcID: any;
 
   // region LocalVariable
+  viewMode = 1;
   vllStatus = '';
   dataSelected: any;
-  idField = 'recID';
-  service = 'WR';
-  assemblyName = 'ERM.Business.WR';
-  entityName = 'WR_Products';
-  className = 'ProductsBusiness';
-  method = 'FunctionTest';
+  viewCrr: any;
   request: ResourceModel;
-  button?: ButtonModel;
+  button?: ButtonModel = { id: 'btnAdd' };
   readonly btnAdd: string = 'btnAdd';
   titleAction = '';
   user: any;
+
+  // config api get data
+  service = 'WR';
+  assemblyName = 'ERM.Business.WR';
+  entityName = 'WR_WorkOrders';
+  className = 'WorkOrdersBusiness';
+  method = 'FunctionTest';
+  idField = 'recID';
+  // idField = 'recID';
+  // service = 'WR';
+  // assemblyName = 'ERM.Business.WR';
+  // entityName = 'WR_Products';
+  // className = 'ProductsBusiness';
+  // method = 'GetListProductsAsync';
 
   constructor(
     private inject: Injector,
@@ -73,7 +82,7 @@ export class WarrantiesComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.loadParam();
     // this.cache.functionList(this.funcID).subscribe((f) => {
     //   this.funcIDCrr = f;
@@ -99,14 +108,25 @@ export class WarrantiesComponent
     this.button = {
       id: this.btnAdd,
     };
+    // this.loadViewModel();
   }
 
   ngAfterViewInit(): void {
-    console.log(this.view.dataService);
-    this.viewsDefault = [
+    setTimeout(() => console.log(this.view.dataService), 5000);
+    this.loadViewModel();
+  }
+
+  searchChanged(e) {}
+
+  onLoading(e) {
+    // this.loadViewModel();
+  }
+
+  loadViewModel() {
+    this.views = [
       {
         type: ViewType.list,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template: this.itemViewList,
@@ -123,67 +143,14 @@ export class WarrantiesComponent
       },
     ];
 
-    this.views = this.viewsDefault;
-  }
-
-  onLoading(e) {
-    console.log('Not implemented');
-    // if (!this.funCrr) {
-    //   this.getColumsGrid(this.gridViewSetup);
-    //   return;
-    // }
-
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-    // else if (this.processIDKanban)
-    //   this.dataObj = { processID: this.processIDKanban };
-    // this.cache.viewSettings(this.funcID).subscribe((views) => {
-    //   if (views) {
-    //     this.afterLoad();
-    //     this.views = [];
-    //     let idxActive = -1;
-    //     let viewOut = false;
-    //     this.viewsDefault.forEach((v, index) => {
-    //       let idx = views.findIndex((x) => x.view == v.type);
-    //       if (idx != -1) {
-    //         v.hide = false;
-    //         if (v.type != this.viewCrr) v.active = false;
-    //         else v.active = true;
-    //         if (views[idx].isDefault) idxActive = index;
-    //       } else {
-    //         v.hide = true;
-    //         v.active = false;
-    //         if (this.viewCrr == v.type) viewOut = true;
-    //       }
-    //       if (v.type == 6) {
-    //         v.request.dataObj = this.dataObj;
-    //         v.request2.dataObj = this.dataObj;
-    //       }
-    //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
-    //       this.views.push(v);
-    //       //  else viewOut = true;
-    //     });
-    //     if (!this.views.some((x) => x.active)) {
-    //       if (idxActive != -1) this.views[idxActive].active = true;
-    //       else this.views[0].active = true;
-
-    //       let viewModel =
-    //         idxActive != -1 ? this.views[idxActive] : this.views[0];
-    //       this.view.viewActiveType = viewModel.type;
-    //       this.view.viewChange(viewModel);
-    //       if (viewOut) this.view.load();
-    //     }
-    //     if ((this.view?.currentView as any)?.kanban) this.loadKanban();
-    //   }
-    // });
+    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'WR';
     this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'ProductsBusiness';
+    this.request.className = 'WorkOrdersBusiness';
     this.request.method = 'FunctionTest';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
@@ -306,37 +273,13 @@ export class WarrantiesComponent
   }
 
   changeView(e) {
-    console.log('Not implemented');
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.viewCrr = e?.view?.type;
-    // //xu ly view fitter
-    // this.changeFilter();
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
+    this.viewCrr = e?.view?.type;
     // if (this.viewCrr == 6) {
     //   this.kanban = (this.view?.currentView as any)?.kanban;
-    // }
-
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-    // else if (this.processIDKanban)
-    //   this.dataObj = { processID: this.processIDKanban };
-
-    // if (this.funCrr != this.funcID) {
-    //   this.funCrr = this.funcID;
-    // } else if (
-    //   this.funcID == 'CM0201' &&
-    //   this.viewCrr == 6 &&
-    //   this.processIDKanban != this.crrProcessID &&
-    //   (this.view?.currentView as any)?.kanban
-    // ) {
-    //   this.crrProcessID = this.processIDKanban;
-    //   this.dataObj = { processID: this.processIDKanban };
-    //   this.view.views.forEach((x) => {
-    //     if (x.type == 6) {
-    //       x.request.dataObj = this.dataObj;
-    //       x.request2.dataObj = this.dataObj;
-    //     }
-    //   });
-    //   this.loadKanban();
     // }
   }
 
