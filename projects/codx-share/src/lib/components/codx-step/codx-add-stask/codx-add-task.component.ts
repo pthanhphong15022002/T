@@ -138,7 +138,7 @@ export class CodxAddTaskComponent implements OnInit {
     }
 
     this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
-    this.participant = this.roles?.filter((role) => role.roleType !== this.stepsTasks?.owner);
+    this.participant = this.roles?.filter((role) => role.objectID !== this.stepsTasks?.owner);
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
