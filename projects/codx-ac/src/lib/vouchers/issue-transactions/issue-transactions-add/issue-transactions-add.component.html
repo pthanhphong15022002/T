@@ -317,10 +317,11 @@
 
       <div #btnRef class="btn-addline">
         <button
+          style="border: 1px solid !important;"
           id="btnadd"
           type="button"
           tabindex="8"
-          class="btn btn-sm btn-light-primary"
+          class="btn btn-sm btn-light-primary rounded-15"
           (keydown.enter)="addVoucherLine(); $event.preventDefault()"
           (click)="addVoucherLine()"
         >
@@ -667,8 +668,12 @@
       </table>
       <div #btnRef class="btn-addline" style="top: -38px">
         <button
+          style="border: 1px solid !important;"
+          id="btnadd"
           type="button"
-          class="btn btn-sm btn-light-primary"
+          tabindex="8"
+          class="btn btn-sm btn-light-primary rounded-15"
+          (keydown.enter)="addVoucherLine(); $event.preventDefault()"
           (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
