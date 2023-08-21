@@ -61,7 +61,7 @@ export class CashPaymentsComponent extends UIComponent {
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
   userID: any; //?  tên user đăng nhập
   dataCategory: any; //? data của category
-  journal: IJournal; //? data sổ nhật kí
+  journal: any; //? data sổ nhật kí
   totaltransAmt1: any = 0; //? tổng tiền nợ tab hạch toán
   totaltransAmt2: any = 0; //? tông tiền có tab hạch toán
   totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn

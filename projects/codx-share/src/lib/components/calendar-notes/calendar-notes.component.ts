@@ -1266,6 +1266,9 @@ export class CalendarNotesComponent
     for (let i = 0; i < note.checkList.length; i++) {
       if (index == i) note.checkList[i].status = e.data;
     }
+    if ((note as any).data != null) {
+      note.createdOn = (note as any).data.createdOn;
+    }
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         note?.transID,
