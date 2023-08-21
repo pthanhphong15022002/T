@@ -195,16 +195,20 @@ export class CmCustomerDetailComponent implements OnInit {
   ngAfterViewInit(): void {}
 
   getOneCustomerDetail(dataSelected) {
-    this.viewTag = '';
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.addressNameCM = this.dataSelected?.address;
-    setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags;
-    }, 100);
+    this.loadTag(this.dataSelected);
     this.listTab(this.funcID);
     this.loaded = true;
+  }
+
+  loadTag(data) {
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = data?.tags;
+    }, 100);
   }
 
   async checkAdmin() {

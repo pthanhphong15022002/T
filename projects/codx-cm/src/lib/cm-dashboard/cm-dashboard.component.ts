@@ -186,7 +186,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     visible: false,
     toggleVisibility: false,
   };
-  dataSourcePy = [
+  dataSourcePyStatus = [
     // {
     //   name: 'Milk, Youghnut, Cheese',
     //   quantity: 435,
@@ -208,6 +208,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //   quantity: 520,
     // },
   ];
+  dataSourcePyStage = [];
   neckWidth = '0%';
   neckHeight = '0%';
   gapRatio: number = 0.03;
@@ -218,10 +219,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   explode: boolean = false;
 
+  //tooltip chart Funel
   tooltipPy: Object = {
-    header: '',
-    enable: true,
-    format: '${point.x} : <b>${point.y}</b>',
+    // header: '',
+    // enable: true,
+    // format: '${point.x} : <b>${point.y}</b>',
   };
   titlePy: string = 'Food Comparison Chart';
 
@@ -245,7 +247,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isBussinessLine = false;
 
   //status or
-  isStatus = true;
+  isStatus = false;
+
+  //ReasonSuscess
+  isReasonSuscess = true;
+  valueFormat: any;
 
   constructor(
     inject: Injector,
@@ -311,7 +317,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   filterChange(e: any) {
     this.isLoaded = false;
     let { predicates, dataValues } = e[0];
-    debugger;
     const param = e[1];
 
     switch (this.reportID) {
@@ -397,7 +402,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
           this.productivityOwner =
             this.dataDashBoard.countsProductivityOwner ?? [];
-          this.dataSourcePy = this.dataDashBoard?.countsConversionRate ?? [];
+          this.dataSourcePyStatus =
+            this.dataDashBoard?.countsConversionRate?.filter(
+              (x) => !x.type || x.type == 'Status'
+            ) ?? [];
+          this.dataSourcePyStage =
+            this.dataDashBoard?.countsConversionRate?.filter(
+              (x) => !x.type || x.type == 'Stage'
+            ) ?? [];
 
           this.dataSourceIndustry = this.dataDashBoard?.countsIndustries ?? [];
           this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
@@ -408,7 +420,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.maxOwners = [];
           this.minOwners = [];
           this.productivityOwner = [];
-          this.dataSourcePy = [];
+          this.dataSourcePyStatus = [];
+          this.dataSourcePyStage = [];
           this.dataSourceBussnessLine = [];
           this.dataSourceIndustry = [];
           this.paletteIndustry = [];
@@ -492,6 +505,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.colorReasonFails = vll?.datas.filter(
           (x) => x.value == 'F'
         )[0]?.color;
+      }
+    });
+
+    this.cache.valueList('CRM049').subscribe((vl) => {
+      if (vl) {
+        this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
       }
     });
 
@@ -587,5 +606,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = false;
       });
     }
+  }
+
+  formatCrrView(e) {
+    let html = '';
+    if (e.point.x == this.valueFormat) {
+      var listItems = [];
+      if (this.isStatus)
+        listItems = this.dataSourcePyStatus.find(
+          (x) => x.name == e.point.x
+        )?.items;
+      else
+        listItems = this.dataSourcePyStage.find(
+          (x) => x.name == e.point.x
+        )?.items;
+
+      if (listItems?.length > 0) {
+        html = '';
+        listItems.forEach((t) => {
+          html += '<br>' + t.name + ' : <b>' + t.quantity + '</b>';
+        });
+      }
+    }
+    e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
   }
 }
