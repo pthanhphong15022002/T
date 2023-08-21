@@ -249,7 +249,7 @@ export class CustomerGroupsComponent extends UIComponent {
             PopupAddCustomerGroupsComponent,
             {
               data: data,
-              isAdd: 'edit',
+              action: 'edit',
               headerText:
                 evt.text +
                 ' ' +
@@ -287,7 +287,7 @@ export class CustomerGroupsComponent extends UIComponent {
         PopupAddCustomerGroupsComponent,
         {
           data: data,
-          isAdd: 'copy',
+          action: 'copy',
           headerText:
             evt.text +
             ' ' +

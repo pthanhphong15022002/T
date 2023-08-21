@@ -38,7 +38,7 @@ import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
 import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
-import { NameByIdPipe } from './pipes/nameById.pipe';
+import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
@@ -82,6 +82,9 @@ import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advance
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
+import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
+import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
+import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -108,7 +111,7 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID',
-        component: CashPaymentsComponent,
+        component: CashreceiptsComponent,
         data: { noReuse: true },
       },
       {
@@ -301,6 +304,9 @@ export const routes: Routes = [
     IssueTransactionsComponent,
     IssueTransactionsAddComponent,
     IssueTransactionsLineAddComponent,
+    IsObjectEmptyPipe,
+    CashreceiptsComponent,
+    CashreceiptsAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

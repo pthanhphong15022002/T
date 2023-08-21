@@ -1,0 +1,8 @@
+.ws-fc-list>div:hover
+{
+    color: var(--text-primary);
+}
+.ws-fc-list>div.active
+{
+    color: var(--text-primary);
+}

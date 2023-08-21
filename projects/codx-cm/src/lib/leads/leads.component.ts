@@ -1059,7 +1059,6 @@ export class LeadsComponent
       default:
         break;
     }
-    console.log('gộp: ', e);
   }
   //#endregion
 
