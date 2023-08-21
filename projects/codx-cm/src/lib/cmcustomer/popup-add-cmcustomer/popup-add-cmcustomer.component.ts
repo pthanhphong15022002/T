@@ -102,7 +102,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     },
   ];
 
-  checkContact: boolean = false;
+  checkContact: boolean;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -133,6 +133,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
     } else {
       this.refValueCbx = 'CMPartners';
     }
+    if (this.funcID == 'CM0102')
+      this.data.owner = this.action == 'add' ? null : this.data?.owner;
   }
 
   async ngOnInit() {
@@ -157,17 +159,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.disabledShowInput = false;
         }
       });
-    if (this.action == 'edit') {
-      this.checkContact = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContactsBusiness',
-          'CheckContactDealAsync',
-          [this.data?.recID]
-        )
-      );
-    }
 
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
@@ -189,6 +180,17 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
+    if (this.action == 'edit') {
+      this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContactsBusiness',
+          'CheckContactDealAsync',
+          [this.data?.recID]
+        )
+        .subscribe((res) => (this.checkContact = res));
+    }
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
@@ -404,6 +406,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
             : e?.component?.itemsSelected[0]?.CustomerName
           : null;
       this.getListContactByObjectID(this.data.objectID);
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueChecked(e) {
+    if (e) {
+      this.data.isDefault = e?.data;
     }
   }
 

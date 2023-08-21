@@ -261,7 +261,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                 this.getCompetitorName(e?.event?.competitorID) == null
               ) {
                 this.cmSv
-                  .getOneCustomer(e?.event?.competitorID, 'CM_Competitors')
+                  .getOneCompetitor(e?.event?.competitorID)
                   .subscribe((res) => {
                     if (res) {
                       var address = res?.address;
