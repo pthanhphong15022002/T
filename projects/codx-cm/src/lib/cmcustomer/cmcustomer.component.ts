@@ -311,6 +311,10 @@ export class CmCustomerComponent
           case 'CM0101_3':
             if (!data.write || !data.isBlackList) res.disabled = true;
             break;
+          case 'CM0102_4':
+          case 'CM0102_1':
+            res.disabled = true;
+            break;
           case 'CM0102_2':
             if (
               data.objectType == null ||
