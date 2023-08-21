@@ -718,44 +718,50 @@
         </div>
       </div>
       <div *ngIf="constraint == '3' && benefitPolicyObj.isConstraintOther">
-        <div class="form-group row">
-          <div class="col-6 d-flex flex-column">
+        <div class="d-flex align-items-center justify-content-between ms-6">
+          <div class="w-100">
             <codx-label
-            class="ms-6"
+            class=""
               fiedName="Relative"
               [formModel]="fmPolicyConstraints"
             ></codx-label>
           </div>
-          <div class="col-6">
-            <codx-input
+          <div class="w-200px">
+            <codx-input class="w-100"
               field="relative"
               [formModel]="fmPolicyConstraints"
               [Group]="formGroupPolicyConstraints"
             ></codx-input>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-2">
-          <codx-input
-            field="relativeAgeFrom"
-            [formModel]="fmPolicyConstraints"
-            [Group]="formGroupPolicyConstraints"
-          ></codx-input>
+        <div class="form-group row ms-12">
+          <div class="col-6"></div>
+          <div class="col-6 row">
+            <div class="col-2">
+              <codx-input
+                field="relativeAgeFrom"
+                [formModel]="fmPolicyConstraints"
+                [Group]="formGroupPolicyConstraints"
+              ></codx-input>
+            </div>
+            <div class="col-2">
+            <codx-label
+              class="ms-6"
+                [name]="'lblRelativeAgeTo'"
+                [default]="'Đến'"
+                [formModel]="fmPolicyConstraints"
+              ></codx-label>
+            </div>
+            <div class="col-2">
+              <codx-input
+                field="relativeAgeTo"
+                [formModel]="fmPolicyConstraints"
+                [Group]="formGroupPolicyConstraints"
+              ></codx-input>
+            </div>
+          </div>
+          
         </div>
-        <codx-label
-          class="ms-6"
-            [name]="'lblRelativeAgeTo'"
-            [default]="'Đến'"
-            [formModel]="fmPolicyConstraints"
-          ></codx-label>
-        <div class="col-2">
-          <codx-input
-            field="relativeAgeTo"
-            [formModel]="fmPolicyConstraints"
-            [Group]="formGroupPolicyConstraints"
-          ></codx-input>
-        </div>
-      </div>
 
       </div>
       <div *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
