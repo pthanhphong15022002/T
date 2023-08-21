@@ -127,7 +127,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             {
               field: '',
               headerText: '',
-              width: 30,
+              width: '30',
               template: this.itemAction,
               textAlign: 'Center',
               controlType:'text',
@@ -146,7 +146,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['FullName'].headerText || 'FullName'
                 : 'FullName',
               template: this.fullName,
-              width: 180,
+              width: '180',
               controlType:'text',
             },
             {
@@ -155,7 +155,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['SignatureType'].headerText || 'SignatureType'
                 : 'SignatureType',
               template: this.signatureType,
-              width: 140,
+              width: '140',
               controlType:'text',
             },
             {
@@ -164,7 +164,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['Supplier'].headerText || 'Supplier'
                 : 'Supplier',
               template: this.supplier,
-              width: 150,
+              width: '150',
               controlType:'text',
             },
             {
@@ -173,7 +173,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['Signature1'].headerText || 'Signature1'
                 : 'Signature1',
               template: this.imageSignature1,
-              width: 130,
+              width: '130',
               textAlign: 'Center',
               controlType:'text',
             },
@@ -183,7 +183,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['Signature2'].headerText || 'Signature2'
                 : 'Signature2',
               template: this.imageSignature2,
-              width: 130,
+              width: '130',
               textAlign: 'Center',
               controlType:'text',
             },
@@ -191,7 +191,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               field: 'stamp',
               headerText: gv ? gv['Stamp'].headerText || 'Stamp' : 'Stamp',
               template: this.imageStamp,
-              width: 130,
+              width: '130',
               textAlign: 'Center',
               controlType:'text',
             },
@@ -199,7 +199,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               field: 'otpControl',
               headerText: gv ? gv['OTPControl'].headerText || 'Icon' : 'Icon',
               template: this.oTPControl,
-              width: 110,
+              width: '110',
               controlType:'text',
             },
             // {

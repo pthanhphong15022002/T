@@ -79,6 +79,7 @@
               field="reasonID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="onInputChange($event)"
             ></codx-input>
           </div>
         </div>
@@ -226,7 +227,9 @@
               field="exchangeRate"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disabled]="!journal?.multiCurrency"
+              [disabled]="
+                !journal?.multiCurrency || cashTransfer.currencyID === baseCurr
+              "
             ></codx-input>
           </div>
         </div>
