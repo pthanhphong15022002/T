@@ -47,22 +47,27 @@ export class CashtransferAddComponent extends UIComponent {
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   masterService: CRUDService;
   invoiceService: CRUDService;
-  formTitle: string;
+
+  fmVATInvoice: FormModel;
+  fgVatInvoice: FormGroup;
+  gvsCashTransfers: any;
+  gvsVATInvoices: any;
+
   hasInvoice: boolean = false;
+  isEdit: boolean = false;
+
+  formTitle: string;
+
   cashBookName1: string = '';
   cashBookName2: string = '';
   reasonName: string;
+  baseCurr: string;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'link', textDefault: 'Liên kết', isActive: false },
   ];
-  fmVATInvoice: FormModel;
-  fgVatInvoice: FormGroup;
-  gvsCashTransfers: any;
-  gvsVATInvoices: any;
-  isEdit: boolean = false;
   voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -148,6 +153,10 @@ export class CashtransferAddComponent extends UIComponent {
       .subscribe((res) => {
         this.gvsVATInvoices = res;
       });
+
+    this.cache.companySetting().subscribe((res) => {
+      this.baseCurr = res[0]?.baseCurr;
+    });
 
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
@@ -246,7 +255,7 @@ export class CashtransferAddComponent extends UIComponent {
       return;
     }
 
-    if (field === "reasonid") {
+    if (field === 'reasonid') {
       this.reasonName = e.component.itemsSelected[0]?.ReasonName;
       this.form.formGroup.patchValue({
         memo: this.generateMemo(),
@@ -261,7 +270,8 @@ export class CashtransferAddComponent extends UIComponent {
       });
     }
 
-    if (['currencyid', 'cashbookid', 'exchangeamt'].includes(field)) {
+    const postFields: string[] = ['currencyid', 'cashbookid'];
+    if (postFields.includes(field)) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
           field,
