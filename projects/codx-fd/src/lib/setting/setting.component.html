@@ -46,14 +46,14 @@
             </div>
 
             <div class="title" *ngFor="let row of groupSettings[cate.value]">
-              <div
+              <ng-container
                 class="d-flex w-100 bg-hover justify-content-between"
                 *ngIf="
                   row.lineType == curLineType &&
                   row.refLineID == this.refQueue[this.refQueue.length - 1]
                 "
               >
-                <div class="category-title d-flex mt-5 list-item">
+                <div class="category-title d-flex mt-5 list-item bg-hover">
                   <div class="setting-btnright align-items-center">
                     <span class="w-30px d-flex justify-content-center">
                       <span [class]="'icon-18 ' + row.icon"></span
@@ -72,7 +72,7 @@
                   </div>
                   <ng-template #rowDetail>
                     <div
-                      class="d-flex justify-content-between mb-2 list-item bg-hover w-100 ms-5"
+                      class="d-flex justify-content-between mb-2 list-item w-100 ms-5"
                     >
                       <div class="d-flex flex-column">
                         <div class="title fw-bold text-dark">
@@ -84,41 +84,65 @@
                       </div>
                     </div>
                   </ng-template>
-                </div>
-                <div
-                  class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
-                >
-                  <codx-input
-                    *ngIf="row.fieldName && row?.controlType"
-                    [field]="row.fieldName"
-                    [refType]="row?.referedType"
-                    [type]="row.controlType"
-                    [refValue]="row?.referdValue"
-                    [style]="
-                      row.controlType &&
-                      (row.controlType.toLowerCase() == 'textbox' ||
-                        row.controlType.toLowerCase() == 'combobox')
-                        ? 'width: 200px'
-                        : ''
+
+                  <ng-container
+                    *ngIf="
+                      (row.fieldName && row?.controlType) || row.displayMode
                     "
-                    [crrValue]="
-                      setingValues[row.transType ?? '']
-                        ? setingValues[row.transType ?? ''][row.fieldName]
-                        : ''
-                    "
-                    (valueChange)="changeFieldValue(formName,row.transType ?? '',row.category,  $event)"
-                  ></codx-input>
-                  <div
-                    class="setting-btnright"
-                    *ngIf="row.displayMode == 1"
-                    (click)="changeLineType(row, true)"
+                    class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
                   >
-                    <span class="w-30px d-flex justify-content-center"
-                      ><span class="icon-keyboard_arrow_right icon-22"></span
-                    ></span>
-                  </div>
+                    <ng-container *ngIf="row.fieldName && row?.controlType">
+                      <codx-input
+                        [field]="row.fieldName"
+                        [refType]="row?.referedType"
+                        [type]="row.controlType"
+                        [refValue]="row?.referdValue"
+                        [style]="
+                          row.controlType &&
+                          (row.controlType.toLowerCase() == 'textbox' ||
+                            row.controlType.toLowerCase() == 'combobox')
+                            ? 'width: 200px'
+                            : ''
+                        "
+                        [crrValue]="
+                          setingValues[row.transType ?? '']
+                            ? setingValues[row.transType ?? ''][row.fieldName]
+                            : ''
+                        "
+                        (valueChange)="
+                          changeFieldValue(
+                            formName,
+                            row.transType ?? '',
+                            row.category,
+                            $event
+                          )
+                        "
+                      ></codx-input>
+                    </ng-container>
+                    <ng-container *ngIf="row.displayMode == 1">
+                      <div
+                        class="setting-btnright"
+                        (click)="changeLineType(row, true)"
+                      >
+                        <span class="w-30px d-flex justify-content-center"
+                          ><span
+                            class="icon-keyboard_arrow_right icon-22"
+                          ></span
+                        ></span>
+                      </div>
+                    </ng-container>
+                  </ng-container>
                 </div>
-              </div>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  row.reference == 'FDPatterns' &&
+                  row.lineType == curLineType &&
+                    row.refLineID == this.refQueue[this.refQueue.length - 1]
+                "
+              >
+                <app-pattern [type]="row.transType"></app-pattern>
+              </ng-container>
             </div>
           </div>
         </ng-template>
