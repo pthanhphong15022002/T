@@ -58,7 +58,7 @@ export class CodxListContactsComponent implements OnInit {
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
-  method = 'GetListContactAsync';
+  method = 'GetListByTabAsync';
   isButton = true;
   currentRecID = '';
   lstConvertContact = [];
