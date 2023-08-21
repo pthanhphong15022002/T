@@ -289,45 +289,56 @@ export class CmCustomerComponent
   changeDataMF(e, data) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        switch (res.functionID) {
-          case 'CM0105_1':
-          case 'CM0101_1':
-            if (!data.write || data.isBlackList) res.disabled = true;
-            break;
-          case 'CM0105_3':
-          case 'CM0101_3':
-            if (!data.write || !data.isBlackList) res.disabled = true;
-            break;
-          case 'CM0102_4':
-          case 'CM0102_1':
-            res.disabled = true;
-            break;
-          case 'CM0102_2':
-            if (
-              data.objectType == null ||
-              data.objectType.trim() == '' ||
-              data.objectType != '1'
-            )
+        if (data?.status != '99') {
+          switch (res.functionID) {
+            case 'CM0105_1':
+            case 'CM0101_1':
+              if (!data.write || data.isBlackList) res.disabled = true;
+              break;
+            case 'CM0105_3':
+            case 'CM0101_3':
+              if (!data.write || !data.isBlackList) res.disabled = true;
+              break;
+            case 'CM0102_4':
+            case 'CM0102_1':
               res.disabled = true;
-            break;
-          case 'CM0102_3':
-            if (
-              data.objectType == null ||
-              data.objectType.trim() == '' ||
-              data.objectType != '3'
-            )
+              break;
+            case 'CM0102_2':
+              if (
+                data.objectType == null ||
+                data.objectType.trim() == '' ||
+                data.objectType != '1'
+              )
+                res.disabled = true;
+              break;
+            case 'CM0102_3':
+              if (
+                data.objectType == null ||
+                data.objectType.trim() == '' ||
+                data.objectType != '3'
+              )
+                res.disabled = true;
+              break;
+            case 'CM0105_4':
+            case 'CM0101_4':
+              if (!data.write || data.status === '99') res.disabled = true;
+              break;
+            case 'CM0105_5':
+            case 'CM0101_5':
+              if (!data.write || data.status !== '99') res.disabled = true;
+              break;
+            default:
+              break;
+          }
+        } else {
+          switch (res.functionID) {
+            case 'CM0105_5':
+            case 'CM0101_5':
+              break;
+            default:
               res.disabled = true;
-            break;
-          case 'CM0105_4':
-          case 'CM0101_4':
-            if (!data.write || data.status === '99') res.disabled = true;
-            break;
-          case 'CM0105_5':
-          case 'CM0101_5':
-            if (!data.write || data.status !== '99') res.disabled = true;
-            break;
-          default:
-            break;
+              break;
+          }
         }
       });
     }
