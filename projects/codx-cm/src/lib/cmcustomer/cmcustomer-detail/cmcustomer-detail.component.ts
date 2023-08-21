@@ -202,6 +202,7 @@ export class CmCustomerDetailComponent implements OnInit {
     this.loadTag(this.dataSelected);
     this.listTab(this.funcID);
     this.loaded = true;
+    this.changeDetectorRef.detectChanges();
   }
 
   loadTag(data) {
