@@ -19,13 +19,13 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
+import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { CashtransfersService } from '../cashtransfers.service';
 
 @Component({
   selector: 'lib-cashtransfers-add',
@@ -47,21 +47,27 @@ export class CashtransferAddComponent extends UIComponent {
   vatInvoice: IVATInvoice = {} as IVATInvoice;
   masterService: CRUDService;
   invoiceService: CRUDService;
-  formTitle: string;
+
+  fmVATInvoice: FormModel;
+  fgVatInvoice: FormGroup;
+  gvsCashTransfers: any;
+  gvsVATInvoices: any;
+
   hasInvoice: boolean = false;
+  isEdit: boolean = false;
+
+  formTitle: string;
+
   cashBookName1: string = '';
   cashBookName2: string = '';
+  reasonName: string;
+  baseCurr: string;
   tabs: TabModel[] = [
     { name: 'history', textDefault: 'Lịch sử', isActive: false },
     { name: 'comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'link', textDefault: 'Liên kết', isActive: false },
   ];
-  fmVATInvoice: FormModel;
-  fgVatInvoice: FormGroup;
-  gvsCashTransfers: any;
-  gvsVATInvoices: any;
-  isEdit: boolean = false;
   voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -148,6 +154,10 @@ export class CashtransferAddComponent extends UIComponent {
         this.gvsVATInvoices = res;
       });
 
+    this.cache.companySetting().subscribe((res) => {
+      this.baseCurr = res[0]?.baseCurr;
+    });
+
     this.voucherNoPlaceholderText$ =
       this.journalService.getVoucherNoPlaceholderText();
 
@@ -188,31 +198,28 @@ export class CashtransferAddComponent extends UIComponent {
           const options = new DataRequest();
           options.entityName = 'AC_VATInvoices';
           options.pageLoading = false;
-          this.acService
-            .loadDataAsync('AC', options)
-            .pipe(
-              map((invoices) =>
-                invoices.find((i) => i.transID === this.cashTransfer.recID)
-              )
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.hasInvoice = true;
-                this.invoiceService.dataSelected = res;
-                this.invoiceService.edit(res).subscribe();
+          options.predicates = 'TransID=@0';
+          options.dataValues = this.cashTransfer.recID;
+          this.acService.loadDataAsync('AC', options).subscribe((res: any) => {
+            if (res) {
+              this.hasInvoice = true;
+              this.detectorRef.markForCheck();
+
+              this.invoiceService.dataSelected = res;
+              this.invoiceService.edit(res).subscribe();
+              this.vatInvoice = this.fmVATInvoice.currentData = res;
+              this.fgVatInvoice.patchValue(res);
+
+              this.loadDims(this.journal, true);
+            } else {
+              this.invoiceService.addNew().subscribe((res) => {
                 this.vatInvoice = this.fmVATInvoice.currentData = res;
                 this.fgVatInvoice.patchValue(res);
 
-                this.loadDims(this.journal, true);
-              } else {
-                this.invoiceService.addNew().subscribe((res) => {
-                  this.vatInvoice = this.fmVATInvoice.currentData = res;
-                  this.fgVatInvoice.patchValue(res);
-
-                  this.loadDims(this.journal, false);
-                });
-              }
-            });
+                this.loadDims(this.journal, false);
+              });
+            }
+          });
         } else {
           this.invoiceService.addNew().subscribe((res) => {
             this.vatInvoice = this.fmVATInvoice.currentData = res;
@@ -242,14 +249,29 @@ export class CashtransferAddComponent extends UIComponent {
 
     if (field === 'cashbookid2') {
       this.cashBookName2 = e.component.itemsSelected[0]?.CashBookName;
+      this.form.formGroup.patchValue({
+        memo: this.generateMemo(),
+      });
+      return;
+    }
+
+    if (field === 'reasonid') {
+      this.reasonName = e.component.itemsSelected[0]?.ReasonName;
+      this.form.formGroup.patchValue({
+        memo: this.generateMemo(),
+      });
       return;
     }
 
     if (field === 'cashbookid') {
       this.cashBookName1 = e.component.itemsSelected[0]?.CashBookName;
+      this.form.formGroup.patchValue({
+        memo: this.generateMemo(),
+      });
     }
 
-    if (['currencyid', 'cashbookid', 'exchangeamt'].includes(field)) {
+    const postFields: string[] = ['currencyid', 'cashbookid'];
+    if (postFields.includes(field)) {
       this.api
         .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
           field,
@@ -522,6 +544,23 @@ export class CashtransferAddComponent extends UIComponent {
       'diM3',
       isEdit
     );
+  }
+
+  generateMemo(): string {
+    const memo: string[] = [];
+    if (this.cashBookName1) {
+      memo.push(this.cashBookName1);
+    }
+
+    if (this.reasonName) {
+      memo.push(this.reasonName);
+    }
+
+    if (this.cashBookName2) {
+      memo.push(this.cashBookName2);
+    }
+
+    return memo.join(' - ');
   }
   //#endregion
 }

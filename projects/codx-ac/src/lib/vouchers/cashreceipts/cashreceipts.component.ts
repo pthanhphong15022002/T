@@ -1,53 +1,21 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Injector,
-  Optional,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {
-  AuthStore,
-  ButtonModel,
-  CallFuncService,
-  DataRequest,
-  DialogModel,
-  DialogRef,
-  FormModel,
-  NotificationsService,
-  RequestOption,
-  SidebarModel,
-  TenantStore,
-  UIComponent,
-  Util,
-  ViewModel,
-  ViewType,
-} from 'codx-core';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
-import { CodxAcService } from '../../codx-ac.service';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import {
-  AnimationModel,
-  ProgressBar,
-} from '@syncfusion/ej2-angular-progressbar';
+import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
+import { AuthStore, ButtonModel, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-import { Subject, interval, takeUntil } from 'rxjs';
-import { RoundService } from '../../round.service';
+import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.component';
+
 @Component({
-  selector: 'lib-cashpayments',
-  templateUrl: './cashpayments.component.html',
-  styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'lib-cashreceipts',
+  templateUrl: './cashreceipts.component.html',
+  styleUrls: ['./cashreceipts.component.css']
 })
-export class CashPaymentsComponent extends UIComponent {
+export class CashreceiptsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
@@ -72,7 +40,7 @@ export class CashPaymentsComponent extends UIComponent {
   vatInvoices: any; //? data của tab hóa đợn GTGT
   acctTrans: any; //? data của tab hạch toán
   baseCurr: any; //? đồng tiền hạch toán
-  dataDefaultCashpayment: any; //? data default của phiếu
+  dataDefaultCashreceipts: any; //? data default của phiếu
   isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   fmCashPaymentsLines: FormModel = { //? formModel của cashpaymentlines
@@ -132,9 +100,7 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
   //#endregion
-
   //#region Init
-
   onInit(): void {
     this.getDataDefaultVoucher(); //? lấy data mặc định truyền vào form thêm
   }
@@ -186,11 +152,9 @@ export class CashPaymentsComponent extends UIComponent {
   ngOnDestroy() {
     this.onDestroy();
   }
-
   //#endregion
 
   //#region Event
-
   /**
    * * Hàm click button thêm mới
    * @param event 
@@ -199,7 +163,7 @@ export class CashPaymentsComponent extends UIComponent {
     switch (event.id) {
       case 'btnAdd':
         let ins = setInterval(() => {
-          if (this.dataDefaultCashpayment) {
+          if (this.dataDefaultCashreceipts) {
             clearInterval(ins);
             this.addNewVoucher(); //? thêm mới chứng từ
           }
@@ -249,24 +213,23 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   //#endregion
-
+  
   //#region Function
-
   /**
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    this.dataDefaultCashpayment.recID = Util.uid(); //? tạo recID mới
+    this.dataDefaultCashreceipts.recID = Util.uid(); //? tạo recID mới
     let data = {
       action: 'add', //? trạng thái của form (thêm mới)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...this.dataDefaultCashpayment}, //?  data của cashpayment
+      dataCashpayment: {...this.dataDefaultCashreceipts}, //?  data của cashpayment
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
     this.callfc.openSide(
-      CashPaymentAdd,
+      CashreceiptsAddComponent,
       data,
       this.optionSidebar,
       this.view.funcID
@@ -290,7 +253,7 @@ export class CashPaymentsComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+        this.callfc.openSide(CashreceiptsAddComponent, data, this.optionSidebar, this.view.funcID);
       });
   }
 
@@ -309,7 +272,7 @@ export class CashPaymentsComponent extends UIComponent {
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
     this.view.dataService.copy().subscribe((res: any) => {
-      this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+      this.callfc.openSide(CashreceiptsAddComponent, data, this.optionSidebar, this.view.funcID);
     });
   }
 
@@ -739,7 +702,7 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           this.journal = res.journal; // data journal
-          this.dataDefaultCashpayment = res.dataDefault.data; // data cashpayment mặc định
+          this.dataDefaultCashreceipts = res.dataDefault.data; // data cashpayment mặc định
           this.hideFields = res.hideFields; // array field ẩn từ sổ nhật kí
           this.setTotalRecord()
           this.detectorRef.detectChanges();

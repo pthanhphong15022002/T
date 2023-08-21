@@ -7,8 +7,10 @@
   [data]="data"
   [formModel]="formModel"
   [dialog]="dialog"
+  
 >
   <ng-template #body>
+    <div *ngIf="form?.formModel && form?.formGroup"></div>
     <div class="d-flex flex-stack fs-6 py-3">
       <div class="fw-bold text-primary">
         <codx-label
@@ -32,14 +34,14 @@
       </span>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
+      <codx-label fiedName="Email" [formModel]="form?.formModel"> </codx-label>
       <div class="d-flex pb-1 border-bottom">
         <div class="w-100 me-2" *ngIf="!isAdd">
           <codx-input
             type="text"
             field="email"
             [Group]="form.formGroup"
-            [formModel]="dialog.formModel"
+            [formModel]="form?.formModel"
             [disabled]="true"
           >
           </codx-input>
@@ -61,33 +63,33 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="FullName" [formModel]="dialog.formModel">
+      <codx-label fiedName="FullName" [formModel]="form?.formModel">
       </codx-label>
       <codx-input
         type="text"
         field="fullName"
         [Group]="form.formGroup"
-        [formModel]="dialog.formModel"
+        [formModel]="form?.formModel"
         [crrValue]="data.fullName"
       >
       </codx-input>
     </div>
     <div class="form-group row mt-3">
       <div class="col-6">
-        <codx-label fiedName="SignatureType" [formModel]="dialog.formModel">
+        <codx-label fiedName="SignatureType" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           type="valuelist"
           field="signatureType"
           [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           (valueChange)="valueChange($event)"
           [disabled]="data?.certificate!=null? true : false"
         >
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Supplier" [formModel]="dialog.formModel">
+        <codx-label fiedName="Supplier" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           *ngIf="data.signatureType == '1'"
@@ -123,7 +125,7 @@
           <codx-label
             default="Chữ ký & Con dấu"
             name="lblTitleSignment"
-            [formModel]="dialog.formModel"
+            [formModel]="form?.formModel"
           ></codx-label>
         </div>
         <span class="text-end align-items-end">
@@ -167,7 +169,7 @@
           </div>
           <codx-label
             fiedName="Signature1"
-            [formModel]="dialog.formModel"
+            [formModel]="form?.formModel"
           ></codx-label>
         </div>
         <div class="text-center me-6 mb-3">
@@ -196,7 +198,7 @@
           <codx-label
             class=""
             fiedName="Signature2"
-            [formModel]="dialog.formModel"
+            [formModel]="form?.formModel"
           >
           </codx-label>
         </div>
@@ -223,7 +225,7 @@
               </codx-img>
             </div>
           </div>
-          <codx-label fiedName="Stamp" [formModel]="dialog.formModel">
+          <codx-label fiedName="Stamp" [formModel]="form?.formModel">
           </codx-label>
         </div>
       </div>
@@ -231,29 +233,29 @@
 
     <div class="form-group row mt-3">
       <div class="col-4">
-        <codx-label fiedName="OTPControl" [formModel]="dialog.formModel">
+        <codx-label fiedName="OTPControl" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
-          field="OTPControl"
+          field="otpControl"
           [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label fiedName="OTPPin" [formModel]="dialog.formModel">
+        <codx-label fiedName="OTPPin" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
-          field="OTPPin"
+          field="otpPin"
           [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           [disabled]="data.otpControl == '3' ? false : true"
         >
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label fiedName="SpanTime" [formModel]="dialog.formModel">
+        <codx-label fiedName="SpanTime" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           type="number"
@@ -262,7 +264,7 @@
           max="50"
           [showSpinButton]="false"
           [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           [disabled]="
             data.otpControl == '1' || data.otpControl == '2' ? false : true
           "
@@ -275,7 +277,7 @@
         <codx-label
           [name]="'lblTitleCA'"
           default="Thông tin CA"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
         >
         </codx-label>
       </div>
@@ -289,7 +291,7 @@
           <codx-label
             name="lblUploadCA"
             default="Upload CA"
-            [formModel]="dialog.formModel"
+            [formModel]="form?.formModel"
           ></codx-label>
         </a>
       </span>
@@ -315,32 +317,32 @@
     </div>
     <div class="form-group row mt-3">
       <div class="col-4">
-        <codx-label fiedName="StartedOn" [formModel]="dialog.formModel">
+        <codx-label fiedName="StartedOn" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           type="datetime"
           field="startedOn"
           format="d"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           [Group]="form.formGroup"
           [disabled]="true"
         >
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label fiedName="ExpiredOn" [formModel]="dialog.formModel">
+        <codx-label fiedName="ExpiredOn" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           type="datetime"
           field="expiredOn"
           format="d"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
           [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-4">
-        <codx-label fiedName="Password" [formModel]="dialog.formModel">
+        <codx-label fiedName="Password" [formModel]="form?.formModel">
         </codx-label>
         <codx-input
           type="password"
@@ -366,7 +368,7 @@
       <div class="d-flex form-group">
         <!-- <codx-input type="checkbox" [crrValue]="data.stop" [disabled]="true">
         </codx-input>
-        <codx-label class="ms-2" fiedName="Stop" [formModel]="dialog.formModel">
+        <codx-label class="ms-2" fiedName="Stop" [formModel]="form?.formModel">
         </codx-label> -->
       </div>
 
@@ -374,7 +376,7 @@
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="dialog.formModel"
+          [formModel]="form?.formModel"
         ></codx-label>
       </button>
     </div>
