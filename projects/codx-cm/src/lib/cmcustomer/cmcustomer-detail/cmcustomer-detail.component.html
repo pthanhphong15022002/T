@@ -500,7 +500,11 @@
                         [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
                         [isRole]="
-                          !isAdmin ? user.userID == dataSelected.owner : true
+                          funcID == 'CM0101'
+                            ? !isAdmin
+                              ? user.userID == dataSelected.owner
+                              : true
+                            : true
                         "
                       ></codx-list-contacts>
                     </div>
@@ -533,10 +537,12 @@
                         [entityName]="entityName"
                         [id]="dataSelected.recID"
                         [hidden]="
-                          (!isAdmin && user.userID != dataSelected.owner) ||
-                          dataSelected?.status == '99'
-                            ? true
-                            : false
+                          funcID == 'CM0101'
+                            ? (!isAdmin && user.userID != dataSelected.owner) ||
+                              dataSelected?.status == '99'
+                              ? true
+                              : false
+                            : dataSelected?.status == '99'
                         "
                         (addressName)="addressName($event)"
                       ></codx-address-cm>

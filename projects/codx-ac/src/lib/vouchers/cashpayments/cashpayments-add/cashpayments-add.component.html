@@ -75,6 +75,18 @@
             <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
           </ng-template>
         </e-tabitem>
+        <e-tabitem *ngIf="dialog.formModel.funcID == 'ACT0429'">
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-i-file-earmark-text icon-18 me-2"></i>
+              <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral2"
+                [formModel]="dialog.formModel" default="Ủy nhiệm chi"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabDelegate"></ng-container>
+          </ng-template>
+        </e-tabitem>
       </e-tabitems>
     </ejs-tab>
   </div>
@@ -396,6 +408,125 @@
   <!-- Phiếu chi && Ủy nhiệm chi MASTER -->
 </ng-template>
 <!-- End: TmpTabGeneral -->
+
+<!-- Start: TmpTabDelegate -->
+<ng-template #TmpTabDelegate>
+  <ng-container *ngIf="formCashPayment.formGroup">
+    <div class="p-3 tab-basic ac-form-master">
+      <div class="row">
+        <div class="col-12">
+          <div>
+            <div class="row">
+              <div class="col-3">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="CashBookID"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="cashBookID" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="lblBankName" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
+                      [formModel]="formCashPayment.formModel">
+                    </codx-label>
+                    <codx-input field="lblOwner" disabled="true" type="text">
+                    </codx-input>
+                </div>
+              </div>
+            </div>
+            
+            
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div>
+            <div class="row">
+              <div class="col-3">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblAccountReceive" default="Tài khoản nhận"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="cashBookID" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="lblBankName" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
+                      [formModel]="formCashPayment.formModel">
+                    </codx-label>
+                    <codx-input field="lblOwner" disabled="true" type="text">
+                    </codx-input>
+                </div>
+              </div>
+            </div>          
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div>
+            <div class="row">
+              <div class="col-3">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblAmout" default="Số tiền"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="lblAmout" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblAlphabet" default="Bảng chữ"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input field="lblAlphabet" disabled="true" type="text">
+                  </codx-input>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important;" fiedName="Memo2"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <div class="ac-input">
+                    <codx-input [Group]="formCashPayment.formGroup" field="memo2"
+                      [formModel]="formCashPayment.formModel" (controlBlur)="valueChangeMaster($event)">
+                    </codx-input>
+                  </div>
+                </div>
+              </div>
+            </div>        
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<!-- End: TmpTabDelegate -->
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>

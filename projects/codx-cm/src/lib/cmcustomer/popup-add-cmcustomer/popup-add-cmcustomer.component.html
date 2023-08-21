@@ -990,11 +990,11 @@
       <div class="d-flex justify-content-between">
         <div class="me-2">
           <codx-input
+            [ngClass]="checkContact ? 'disabled' : ''"
             [field]="'isDefault'"
-            [crrValue]="data?.isDefault"
-            [disabled]="checkContact"
-            type="switch"
-            (valueChange)="valueChangeContact($event)"
+            [checked]="data?.isDefault ?? false"
+            type="checkbox"
+            (valueChange)="valueChecked($event)"
           ></codx-input>
         </div>
         <div class="w-100">
