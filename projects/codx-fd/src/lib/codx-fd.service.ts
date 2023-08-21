@@ -28,7 +28,7 @@ export class CodxFdService {
     private tenantStore: TenantStore,
     private notificationsService: NotificationsService,
     private cache: CacheService
-  ) { }
+  ) {}
   appendTitle(title) {
     this.title.next(title);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -95,7 +95,7 @@ export class CodxFdService {
       }
     }
     let fieldName = invalid[0]?.charAt(0).toUpperCase() + invalid[0]?.slice(1);
-    if(fieldName){
+    if (fieldName) {
       if (gridViewSetup == null) {
         this.cache
           .gridViewSetup(formModel.formName, formModel.gridViewName)
@@ -127,6 +127,42 @@ export class CodxFdService {
       'FileBussiness',
       'DeleteByObjectIDAsync',
       [item.recID, objectType, true]
+    );
+  }
+
+  getSettings(formName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'SettingsBusiness',
+      'GetSettingByFormAsync',
+      formName
+    );
+  }
+
+  getSettingValues(formName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'SettingValuesBusiness',
+      'GetListSettingValuesAsync',
+      formName
+    );
+  }
+
+  updateSettingValue(
+    formName: string,
+    transType: string,
+    category: string,
+    fieldName: string,
+    fieldValue: string
+  ) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'SettingValuesBusiness',
+      'UpdateFieldAsync',
+      [formName, transType, category, fieldName, fieldValue]
     );
   }
 }

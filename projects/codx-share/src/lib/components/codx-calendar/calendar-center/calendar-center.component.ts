@@ -256,4 +256,21 @@ export class CalendarCenterComponent
         }
       });
   }
+
+  valueChangeCB(e, note, index) {
+    for (let i = 0; i < note.checkList.length; i++) {
+      if (index == i) note.checkList[i].status = e.data;
+    }
+    note.createdOn = note.calendarDate;
+
+    // if ((note as any).data != null) {
+    //   note.createdOn = (note as any).data.createdOn;
+    // }
+    this.api
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+        note?.transID,
+        note,
+      ])
+      .subscribe();
+  }
 }
