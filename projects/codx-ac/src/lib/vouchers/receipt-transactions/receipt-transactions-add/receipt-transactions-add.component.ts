@@ -293,7 +293,28 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
+    this.updateFromFrontEnd(e);
+    this.updateFromBackEnd(e);
+    
+  }
 
+  updateFromFrontEnd(e: any)
+  {
+    switch (e.field) {
+      case 'costAmt':
+        this.costAmt_Change(e.data);
+        break;
+      case 'costPrice':
+        this.costPrice_Change(e.data);
+        break;
+      case 'reasonID':
+        e.data.note = e.itemData.ReasonName;
+        break;
+    }
+  }
+
+  updateFromBackEnd(e: any)
+  {
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -335,17 +356,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         });
     }
 
-    switch (e.field) {
-      case 'costAmt':
-        this.costAmt_Change(e.data);
-        break;
-      case 'costPrice':
-        this.costPrice_Change(e.data);
-        break;
-      case 'reasonID':
-        e.data.note = e.itemData.ReasonName;
-        break;
-    }
   }
 
   endEdit(e: any) {

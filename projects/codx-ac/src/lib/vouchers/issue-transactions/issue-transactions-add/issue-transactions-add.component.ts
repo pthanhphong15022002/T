@@ -295,7 +295,28 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
+    this.updateFromFrontEnd(e);
+    this.updateFromBackEnd(e);
+    
+  }
 
+  updateFromFrontEnd(e: any)
+  {
+    switch (e.field) {
+      case 'costAmt':
+        this.costAmt_Change(e.data);
+        break;
+      case 'costPrice':
+        this.costPrice_Change(e.data);
+        break;
+      case 'reasonID':
+        e.data.note = e.itemData.ReasonName;
+        break;
+    }
+  }
+
+  updateFromBackEnd(e: any)
+  {
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -337,17 +358,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         });
     }
 
-    switch (e.field) {
-      case 'costAmt':
-        this.costAmt_Change(e.data);
-        break;
-      case 'costPrice':
-        this.costPrice_Change(e.data);
-        break;
-      case 'reasonID':
-        e.data.note = e.itemData.ReasonName;
-        break;
-    }
   }
 
   /** Hàm kết thúc chỉnh sửa detail */
