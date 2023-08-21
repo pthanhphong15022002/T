@@ -570,6 +570,8 @@ export class JournalsAddComponent
         this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
           this.journal.idimControl.split(';').includes(d.value)
         );
+
+        this.detectorRef.markForCheck();
       });
   }
 
