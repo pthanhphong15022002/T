@@ -194,23 +194,10 @@ export class CmCustomerComponent
   }
 
   async afterLoad() {
-    // this.entityName =
-    //   this.funcID == 'CM0101'
-    //     ? 'CM_Customers'
-    //     : this.funcID == 'CM0102'
-    //     ? 'CM_Contacts'
-    //     : this.funcID == 'CM0103'
-    //     ? 'CM_Partners'
-    //     : 'CM_Competitors';
     let funcID = this.funcID == 'CM0105' ? 'CM0101' : this.funcID;
     this.cache.functionList(funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
       this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
-      // formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
-      // formMD.formName = JSON.parse(JSON.stringify(fun?.formName));
-      // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
-      // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
-      // this.view.formModel = formMD;
       if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.lstCustGroups = await firstValueFrom(
           this.api.execSv<any>(
@@ -311,6 +298,10 @@ export class CmCustomerComponent
           case 'CM0101_3':
             if (!data.write || !data.isBlackList) res.disabled = true;
             break;
+          case 'CM0102_4':
+          case 'CM0102_1':
+            res.disabled = true;
+            break;
           case 'CM0102_2':
             if (
               data.objectType == null ||
@@ -394,7 +385,7 @@ export class CmCustomerComponent
                 e.event.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
-                this.customerDetail.loadTag(this.dataSelected);
+                // this.customerDetail.loadTag(this.dataSelected);
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }

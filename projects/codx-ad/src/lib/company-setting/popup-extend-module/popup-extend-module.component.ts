@@ -81,16 +81,19 @@ export class PopupExtendModuleComponent extends UIComponent {
         headerTemplate: this.operatorHT,
         template: this.operatorTmp,
         textAlign: 'center',
+        width: 170,
       },
       {
         headerTemplate: this.employeeHT,
         template: this.emplTmp,
         textAlign: 'center',
+        width: 170,
       },
       {
         headerTemplate: this.totalHT,
         template: this.totalTmp,
         textAlign: 'center',
+        width: 150,
       },
     ];
   }

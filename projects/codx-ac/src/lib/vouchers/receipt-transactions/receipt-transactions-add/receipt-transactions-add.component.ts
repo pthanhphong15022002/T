@@ -83,6 +83,12 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   columnChange: string = '';
   vllWarehouse: any;
   authStore: AuthStore;
+  tabInfo: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  ];
 
   constructor(
     inject: Injector,
