@@ -83,6 +83,8 @@ import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
+import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
+import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -109,7 +111,7 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID',
-        component: CashPaymentsComponent,
+        component: CashreceiptsComponent,
         data: { noReuse: true },
       },
       {
@@ -303,6 +305,8 @@ export const routes: Routes = [
     IssueTransactionsAddComponent,
     IssueTransactionsLineAddComponent,
     IsObjectEmptyPipe,
+    CashreceiptsComponent,
+    CashreceiptsAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -22,8 +22,7 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   constructor(
     inject: Injector,
-    private hideToolbar: CodxWsService,
-    private callfc: CallFuncService
+    private codxWsService: CodxWsService
   ) {
     super(inject);
     this.module = 'WS';
@@ -32,10 +31,10 @@ export class LayoutComponent extends LayoutBaseComponent {
   onInit() {}
 
   onAfterViewInit() {
-    this.hideToolbar.SetLayout.subscribe((res) => {
+    this.codxWsService.SetLayout.subscribe((res) => {
       if (res != null) this.setToolbar(res);
     });
   }
 
-  
+
 }

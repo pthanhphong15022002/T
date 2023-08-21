@@ -438,28 +438,29 @@ export class PurchaseinvoicesAddComponent
       return;
     }
 
+    const field: string = e.field.toLowerCase();
     if (
-      e.field === 'exchangeRate' &&
+      field === 'exchangerate' &&
       this.acParams.BaseCurr === this.acParams.TaxCurr
     ) {
       this.notiService.alertCode('AC0022').subscribe(({ event }) => {
         this.master.unbounds = {
           requiresTaxUpdate: event.status === 'Y',
         };
-        this.handleMasterChange(e.field);
+        this.handleMasterChange(field);
       });
 
       return;
     }
 
     const postFields: string[] = [
-      'objectID',
-      'currencyID',
-      'taxExchRate',
-      'voucherDate',
+      'objectid',
+      'currencyid',
+      'voucherdate',
+      'taxexchrate',
     ];
-    if (postFields.includes(e.field)) {
-      this.handleMasterChange(e.field);
+    if (postFields.includes(field)) {
+      this.handleMasterChange(field);
     } else {
       this.prevMaster = { ...this.master };
     }
@@ -514,6 +515,7 @@ export class PurchaseinvoicesAddComponent
       return;
     }
 
+    const field: string = e.field.toLowerCase();
     const postFields: string[] = [
       'itemid',
       'quantity',
@@ -531,10 +533,10 @@ export class PurchaseinvoicesAddComponent
       'excisetaxpct',
       'excisetaxamt',
     ];
-    if (postFields.includes(e.field.toLowerCase())) {
+    if (postFields.includes(field)) {
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
-          e.field,
+          field,
           this.master,
           e.data,
         ])
@@ -767,49 +769,6 @@ export class PurchaseinvoicesAddComponent
 
     return vatInvoice;
   }
-
-  // openPopupLine(data, type: string) {
-  //   var obj = {
-  //     dataline: this.lines,
-  //     dataPurchaseinvoices: this.master,
-  //     headerText: this.formTitle,
-  //     data: data,
-  //     lockFields: this.lockFields,
-  //     type: type,
-  //   };
-  //   let opt = new DialogModel();
-  //   let dataModel = new FormModel();
-  //   dataModel.formName = 'PurchaseInvoicesLines';
-  //   dataModel.gridViewName = 'grvPurchaseInvoicesLines';
-  //   dataModel.entityName = 'AC_PurchaseInvoicesLines';
-  //   opt.FormModel = dataModel;
-  //   this.cache
-  //     .gridViewSetup('PurchaseInvoicesLines', 'grvPurchaseInvoicesLines')
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         var dialogs = this.callfc.openForm(
-  //           PopAddLineComponent,
-  //           '',
-  //           900,
-  //           850,
-  //           '',
-  //           obj,
-  //           '',
-  //           opt
-  //         );
-  //         dialogs.closed.subscribe((res) => {
-  //           if (res.event != null) {
-  //             var dataline = res.event['data'];
-  //             if (dataline) {
-  //               this.lines.push(dataline);
-  //             }
-  //             this.hasSaved = true;
-  //             this.isSaveMaster = true;
-  //           }
-  //         });
-  //       }
-  //     });
-  // }
 
   genFixedDims(line: IPurchaseInvoiceLine): string {
     let fixedDims: string[] = Array(10).fill('0');

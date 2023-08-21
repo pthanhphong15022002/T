@@ -54,11 +54,14 @@ export class PopupJobComponent implements OnInit {
 
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
+  fieldsFields= { text: 'fieldName', value: 'recID' };
 
   view = [];
   listParentID = [];
   listTaskLink = [];
+  listFields = [];
   listFileTask: string[] = [];
+  listFieldID = [];
 
   stepID = '';
   stepName = '';
@@ -130,6 +133,7 @@ export class PopupJobComponent implements OnInit {
     await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
     this.listTaskLink = listTaskConvert;
     this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
+    this.listFields = this.step?.fields || [];
   }
 
   ngAfterViewInit(){
@@ -432,6 +436,9 @@ export class PopupJobComponent implements OnInit {
   //#region change value
   parentIDChange(event) {
     this.listParentID = event;
+  }
+  FieldIDChange(event) {
+    this.listFields = event;
   }
 
   valueChangeText(event) {
