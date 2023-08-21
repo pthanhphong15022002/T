@@ -133,8 +133,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
     } else {
       this.refValueCbx = 'CMPartners';
     }
-    if (this.funcID == 'CM0102')
-      this.data.owner = this.action == 'add' ? null : this.data?.owner;
+    if (this.funcID == 'CM0102'){
+      if(this.action == 'add'){
+        this.data.owner =  null;
+        this.data.contactType = null;
+        this.data.objectType = null;
+
+      }
+    }
   }
 
   async ngOnInit() {
