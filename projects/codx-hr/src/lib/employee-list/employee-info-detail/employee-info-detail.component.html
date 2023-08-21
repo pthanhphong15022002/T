@@ -2889,11 +2889,12 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="me-2" *ngIf="infoPersonal?.isTUnion">
+                    <span class="me-2">
                       <codx-input
-                        field="IsTUnion"
+                        field="isTUnion"
+                        [type]="'checkbox'"
+                        [Group]="eInfoFormGroup"
                         [formModel]="eInfoFormModel"
-                        [crrValue]="infoPersonal?.isTUnion"
                         [disabled]="true"
                       ></codx-input>
                     </span>
@@ -2907,7 +2908,7 @@
                     ></span>
                   </div>
                 </div>
-                <div class="col" *ngIf="infoPersonal?.isExpertRecruit">
+                <div class="col">
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="IsExpertRecruit"
@@ -2918,14 +2919,15 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <codx-input
-                      field="IsExpertRecruit"
+                      field="isExpertRecruit"
+                      [Group]="eInfoFormGroup"
+                      [type]="'checkbox'"
                       [formModel]="eInfoFormModel"
-                      [crrValue]="infoPersonal?.isExpertRecruit"
                       [disabled]="true"
                     ></codx-input>
                   </div>
                 </div>
-                <div class="col" *ngIf="infoPersonal?.isExpertTrain">
+                <div class="col">
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="IsExpertTrain"
@@ -2936,9 +2938,10 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <codx-input
-                      field="IsExpertTrain"
+                      field="isExpertTrain"
+                      [Group]="eInfoFormGroup"
                       [formModel]="eInfoFormModel"
-                      [crrValue]="infoPersonal?.isExpertTrain"
+                      [type]="'checkbox'"
                       [disabled]="true"
                     ></codx-input>
                   </div>

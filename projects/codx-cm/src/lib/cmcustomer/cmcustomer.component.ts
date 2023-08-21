@@ -74,7 +74,7 @@ export class CmCustomerComponent
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Customers';
   className = 'CustomersBusiness';
-  method = 'GetListCRMAsync';
+  method = 'GetListCustomersAsync';
   idField = 'recID';
   //endregion
 
@@ -115,6 +115,29 @@ export class CmCustomerComponent
       if (param.funcID) {
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
+        switch (this.funcID) {
+          case 'CM0101':
+          case 'CM0105':
+            this.method = 'GetListCustomersAsync';
+            this.className = 'CustomersBusiness';
+            this.entityName = 'CM_Customers';
+            break;
+          case 'CM0102':
+            this.method = 'GetListContactAsync';
+            this.className = 'ContactsBusiness';
+            this.entityName = 'CM_Contacts';
+            break;
+          case 'CM0103':
+            this.method = 'GetListPartnersAsync';
+            this.className = 'PartnersBusiness';
+            this.entityName = 'CM_Partners';
+            break;
+          case 'CM0104':
+            this.method = 'GetListCompetitorsAsync';
+            this.className = 'CompetitorsBusiness';
+            this.entityName = 'CM_Competitors';
+            break;
+        }
         this.isButton = true;
         this.afterLoad();
       }
@@ -282,11 +305,11 @@ export class CmCustomerComponent
         switch (res.functionID) {
           case 'CM0105_1':
           case 'CM0101_1':
-            if (data.isBlackList) res.disabled = true;
+            if (!data.write || data.isBlackList) res.disabled = true;
             break;
           case 'CM0105_3':
           case 'CM0101_3':
-            if (!data.isBlackList) res.disabled = true;
+            if (!data.write || !data.isBlackList) res.disabled = true;
             break;
           case 'CM0102_2':
             if (
@@ -306,11 +329,11 @@ export class CmCustomerComponent
             break;
           case 'CM0105_4':
           case 'CM0101_4':
-            if (data.status === '99') res.disabled = true;
+            if (!data.write || data.status === '99') res.disabled = true;
             break;
           case 'CM0105_5':
           case 'CM0101_5':
-            if (data.status !== '99') res.disabled = true;
+            if (!data.write || data.status !== '99') res.disabled = true;
             break;
           default:
             break;
@@ -371,6 +394,7 @@ export class CmCustomerComponent
                 e.event.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(e?.event));
                 this.view.dataService.update(e?.event).subscribe();
+                this.customerDetail.loadTag(this.dataSelected);
                 this.detectorRef.detectChanges();
                 // this.customerDetail.listTab(this.funcID);
               }
@@ -551,48 +575,12 @@ export class CmCustomerComponent
         }
       });
 
-    // this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe((res) => {
-    //   if (res) {
-    //     this.notiService.notifyCode(
-    //       'Đang tồn tại trong cơ hội, không được xóa'
-    //     );
-    //     return;
-    //   } else {
-    //     this.view.dataService
-    //       .delete([this.view.dataService.dataSelected], true, (opt) =>
-    //         this.beforeDel(opt)
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           this.view.dataService.onAction.next({
-    //             type: 'delete',
-    //             data: data,
-    //           });
-    //         }
-    //       });
-    //   }
-    // });
-    // } else {
-    //   this.view.dataService
-    //     .delete([this.view.dataService.dataSelected], true, (opt) =>
-    //       this.beforeDel(opt)
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.view.dataService.onAction.next({
-    //           type: 'delete',
-    //           data: data,
-    //         });
-    //       }
-    //     });
-    // }
-
     this.detectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteCmAsync';
-    opt.data = [itemSelected.recID, this.funcID, this.entityName];
+    opt.data = [itemSelected.recID, this.entityName];
     return true;
   }
 

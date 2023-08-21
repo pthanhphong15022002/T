@@ -102,7 +102,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     },
   ];
 
-  checkContact: boolean = false;
+  checkContact: boolean;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -133,6 +133,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
     } else {
       this.refValueCbx = 'CMPartners';
     }
+    if (this.funcID == 'CM0102'){
+      if(this.action == 'add'){
+        this.data.owner =  null;
+        this.data.contactType = null;
+        this.data.objectType = null;
+
+      }
+    }
   }
 
   async ngOnInit() {
@@ -157,17 +165,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.disabledShowInput = false;
         }
       });
-    if (this.action == 'edit') {
-      this.checkContact = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContactsBusiness',
-          'CheckContactDealAsync',
-          [this.data?.recID]
-        )
-      );
-    }
 
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
@@ -189,6 +186,17 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
+    if (this.action == 'edit') {
+      this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContactsBusiness',
+          'CheckContactDealAsync',
+          [this.data?.recID]
+        )
+        .subscribe((res) => (this.checkContact = res));
+    }
     if (this.data?.objectID) {
       this.getListContactByObjectID(this.data?.objectID);
     }
@@ -405,6 +413,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
           : null;
       this.getListContactByObjectID(this.data.objectID);
     }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueChecked(e) {
+    if (e) {
+      this.data.isDefault = e?.data;
+    }
   }
 
   valueChangeIndustries(e) {
@@ -422,28 +437,50 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.objectName = null;
       this.data.isDefault = false;
     }
-    if (this.action === 'add' || this.action == 'copy') {
-      op.method = 'AddCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.listAddress,
-      ];
-    } else {
-      op.method = 'UpdateCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.lstContactDeletes,
-        this.listAddress,
-        this.listAddressDelete,
-      ];
+    op.method = this.action != 'edit' ? 'AddCrmAsync' : 'UpdateCrmAsync';
+
+    switch (this.funcID) {
+      case 'CM0101':
+      case 'CM0105':
+        op.className = 'CustomersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0102':
+        op.className = 'ContactsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
+      case 'CM0103':
+        op.className = 'PartnersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0104':
+        op.className = 'CompetitorsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
     }
 
     op.data = data;
