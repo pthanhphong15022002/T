@@ -724,7 +724,7 @@
       class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
     >
       <button
-        *ngIf="formType != 'edit'"
+        *ngIf="formType != 'edit' && hasSaved == true"
         tabindex="9"
         style="border: 1px solid"
         id="discard"
@@ -853,6 +853,7 @@
           [refValue]="gridViewSetup['SubType'].referedValue"
           [value]="vouchers.subType"
           emptyText="Loại phiếu"
+          (valueChange)="subTypeChange($event)"
         ></codx-dropdown-select>
       </div>
       <span
@@ -860,7 +861,7 @@
         *ngIf="formType == 'edit' && vouchers?.status != '0'"
       >
         <codx-vll
-          [name]="'AC040'"
+          [name]="gridViewSetup['SubType'].referedValue"
           [formModel]="form.formModel"
           [field]="'SubType'"
           [value]="vouchers?.subType"

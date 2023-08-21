@@ -1570,6 +1570,9 @@ a {
   padding-top: 5px !important;
 }
 
+codx-label.label-colon{
+  white-space: nowrap;
+}
 codx-label.label-colon span{
   padding-right: 7px;
   min-height: 18px;
@@ -3659,14 +3662,38 @@ codx-view-tree-targets .menu-sub{
 
 
 @media (min-width: 992px){
-  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
-    display: block;
-    .menu-icon{
-      margin-right: 0;
-    }  
+  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended){
+    .menu-item{
+      display: block;
+    }
+    .aside-secondary .menu-title{
+      text-align: left!important;
+    }
+    .aside-secondary  .menu-icon{
+      margin-right: 0.5rem!important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
-  .aside-secondary .menu-title{
-    text-align: left!important;
+  .aside .aside-footer {
+    min-height: 65px;
+    .menu-link{
+      padding-top: 10px;
+      height: 65px;
+    }
   }
 }
 
+
+.aside {
+  transition: width 0.2s ease;
+}
+.contract-grid .e-table{
+  width: 100%!important;
+}
+codx-attachment.h-35px{
+  .overflow-auto.mh-200px{
+    min-height: 35px;
+  }
+}

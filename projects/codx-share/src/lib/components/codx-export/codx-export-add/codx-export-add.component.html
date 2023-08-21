@@ -59,10 +59,10 @@
             >
             </codx-attachment>
           </div>
-          <div class="d-flex justify-content-end ms-2">
+          <div class="d-flex justify-content-end me-2">
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="btn btn-sm btn-outline-primary"
               style="width: 100px"
               (click)="openFormUploadFile()"
             >
@@ -100,7 +100,7 @@
     <div class="row" *ngIf="type == 'excel'">
       <div class="form-group">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex justify-content-start w-100">
+          <div class="d-flex justify-content-start w-100 pe-6">
             <codx-attachment
               #attachment2
               [objectType]="module"
@@ -117,22 +117,24 @@
               showMessage="0"
               idBrowse="3"
               [allowExtensions]="'xlsx'"
-              class="w-100"
+              class="w-100 h-35px"
               
             >
             </codx-attachment>
           </div>
-          <div class="d-flex justify-content-end ms-2">
+          <div class="d-flex justify-content-end me-2">
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="btn btn-sm btn-light-primary"
               style="width: 100px"
               (click)="openFormUploadFile()"
             >
               <codx-label [default]="'Chọn File'"></codx-label>
             </button>
           </div>
-          <span class="icon-download ms-2 icon-20"></span>
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary">
+            <i class="icon-download icon-16"></i>
+          </button>
         </div>
       </div>
       <div class="form-group">

@@ -472,10 +472,12 @@ export class DealsComponent
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
-      SYS004: isEmail,
-      SYS002: isDownload,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
+      SYS004: isEmail,
+      SYS002: isDownload,
+      SYS003: isUpload,
+      SYS001: isUpload,
     };
 
     return functionMappings[type];

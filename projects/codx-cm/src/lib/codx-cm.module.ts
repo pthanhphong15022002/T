@@ -100,6 +100,7 @@ import { PopupPermissionsComponent } from './popup-permissions/popup-permissions
 import { CalendarsComponent } from './calendars/calendars.component';
 import { ViewCalendarComponent } from './calendars/view-calendar/view-calendar.component';
 import { ProgressSliderComponent } from './targets/view-tree-targets/progress-slider/progress-slider.component';
+import { ViewHistoryCustomerComponent } from './cmcustomer/cmcustomer-detail/view-history-customer/view-history-customer.component';
 
 export const routes: Routes = [
   {
@@ -242,7 +243,7 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component, ViewCalendarComponent, ProgressSliderComponent],
+  declarations: [T_Component, ViewCalendarComponent, ProgressSliderComponent, ViewHistoryCustomerComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
