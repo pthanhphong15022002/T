@@ -294,6 +294,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                task.status = task?.statusOld;
                 if (task?.isChange) {
                   progressData.push(this.setProgressOutput(null, group));
                 }

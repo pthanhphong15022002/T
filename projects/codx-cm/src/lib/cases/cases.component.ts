@@ -1498,9 +1498,11 @@ export class CasesComponent
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dts,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1514,13 +1516,19 @@ export class CasesComponent
         this.detectorRef.detectChanges();
       });
     } else {
+      customData = {
+        refID: data.recID,
+        refType: this.view.entityName,
+      };
+
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave,
         this.view.formModel,
         this.view.dataService,
-        this
+        this,
+        customData
       );
       this.detectorRef.detectChanges();
     }
