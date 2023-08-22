@@ -808,7 +808,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               'EP',
               data,
               category,
-              'EP_Bookings',
+              this.formModel.entityName,
               this.formModel?.funcID,
               data?.title,
               (res:ResponseModel) => {

@@ -1144,6 +1144,15 @@ export class CodxShareService {
       recID
     );
   }
+  deleteByObjectWithAutoCreate(objectID:string, objectType:string, delForever:boolean, autoCreate:string) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectWithAutoCreateAsync',
+      [objectID,objectType,delForever,autoCreate]
+    );
+  }
   getSignFileTemplateByRefType(refType) {
     return this.api.execSv(
       'ES',
@@ -1398,7 +1407,7 @@ export class CodxShareService {
           return;
         }
       });
-    } else {
+    } else if(template?.templateID!=null && template?.templateID !=null){
       let exportUpload = new ExportUpload();
       exportUpload.templateRecID = template?.templateID;
       exportUpload.templateType = template?.templateType;
@@ -1422,10 +1431,7 @@ export class CodxShareService {
               exportUpload
             );
           } else {
-            exportUpload.dataJson =
-              template?.templateType == 'AD_ExcelTemplates'
-                ? JSON.stringify([approveProcess?.data])
-                : JSON.stringify([approveProcess?.data]);
+            exportUpload.dataJson = template?.templateType == 'AD_ExcelTemplates' ? JSON.stringify([approveProcess?.data]) : JSON.stringify([approveProcess?.data]);
             this.exportFileRelease(
               approveProcess,
               releaseCallback,
@@ -1434,6 +1440,10 @@ export class CodxShareService {
           }
         }
       );
+    }
+    else {
+      this.notificationsService.notify("Vui lòng kiểm tra lại mẫu thiết lập",'2');
+      return;
     }
   }
   exportFileRelease(
