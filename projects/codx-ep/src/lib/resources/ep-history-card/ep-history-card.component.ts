@@ -55,10 +55,11 @@ export class EPHistoryCardComponent
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+
           this.columnGrids = [
             {
               field: 'transType',
-              headerText: gv?.TransType?.headerText,
+              headerText: gv?.TransType?.headerText || 'TransType',
               width: "15%",
               template: this.tranTypeCol,
               headerTextAlign: 'Center',
@@ -66,25 +67,25 @@ export class EPHistoryCardComponent
             },
             {
               field: 'transDate',
-              headerText: gv?.TransDate?.headerText,
+              headerText: gv?.TransDate?.headerText || 'TransDate',
               width: 200,
               template : this.transDateCol,
             },
             {
               field: 'userID',
-              headerText: gv?.UserID?.headerText,
+              headerText: gv?.UserID?.headerText || 'UserID',
               width: 250,
               template: this.userIDCol,
             },          
             {
               field: 'note',
-              headerText: gv?.Note?.headerText,
+              headerText: gv?.Note?.headerText || 'Note',
               width: "20%",   
               template: this.noteCol,       
             },
             {
               field: 'createdBy',
-              headerText: gv?.CreatedBy?.headerText,
+              headerText: gv?.CreatedBy?.headerText || 'CreatedBy',
               width: 250,
               template: this.createByCol,
             },
