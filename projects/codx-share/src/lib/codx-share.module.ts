@@ -1,3 +1,4 @@
+import { FileSizePipe } from './pipe/file-size.pipe';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -395,6 +396,7 @@ const T_Pipe: Type<any>[] = [
   SearchPipe,
   FillterReferType,
   GroupModulePipe,
+  FileSizePipe,
 ];
 
 @NgModule({

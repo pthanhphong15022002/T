@@ -141,6 +141,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.curUser = this.authStore.get();
     this.createCOObject();
+    this.firstLoad();
   }
 
   //---------------------------------------------------------------------------------//
@@ -673,7 +674,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.funcID = this.router.snapshot.params['funcID'];
     this.dataRequest.entityName = 'OM_OKRPlans';
     this.dataRequest.page = 1;
-    this.dataRequest.pageSize = 1000;
+    this.dataRequest.pageSize = 20;
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.dataValue = 'false;';
     this.dataRequest.predicate = 'Stop==@0 && OKRLevel==@1';
@@ -730,7 +731,67 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
 
     this.formModelChanged();
-    this.detectorRef.detectChanges();
+    this.detectorRef?.detectChanges();
+  }
+  firstLoad(){
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.dataRequest.entityName = 'OM_OKRPlans';
+    this.dataRequest.page = 1;
+    this.dataRequest.pageSize = 20;
+    this.dataRequest.funcID = this.funcID;
+    this.dataRequest.dataValue = 'false;';
+    this.dataRequest.predicate = 'Stop==@0 && OKRLevel==@1';
+
+    switch (this.funcID) {
+      case OMCONST.FUNCID.COMP:
+        this.krFuncID = OMCONST.KRFUNCID.COMP;
+        this.skrFuncID = OMCONST.SKRFUNCID.COMP;
+        this.obFuncID = OMCONST.OBFUNCID.COMP;
+        this.okrLevel = OMCONST.VLL.OKRLevel.COMP;
+        this.curOrgID = this.curUser?.employee?.companyID;
+        this.curOrgName = this.curUser?.employee?.companyName;
+        this.dataRequest.entityPermission = 'OM_OKRCompany';
+        this.dataRequest.gridViewName = 'grvOKRCompany';
+        this.dataRequest.formName = 'OKRCompany';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.COMP;
+        break;
+      case OMCONST.FUNCID.DEPT:
+        this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
+        this.krFuncID = OMCONST.KRFUNCID.DEPT;
+        this.obFuncID = OMCONST.OBFUNCID.DEPT;
+        this.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
+        this.curOrgID = this.curUser?.employee?.departmentID;
+        this.curOrgName = this.curUser?.employee?.departmentName;
+        this.dataRequest.entityPermission = 'OM_OKRDepartment';
+        this.dataRequest.gridViewName = 'grvOKRDepartment';
+        this.dataRequest.formName = 'OKRDepartment';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.DEPT;
+        break;
+      case OMCONST.FUNCID.ORG:
+        this.skrFuncID = OMCONST.SKRFUNCID.ORG;
+        this.krFuncID = OMCONST.KRFUNCID.ORG;
+        this.obFuncID = OMCONST.OBFUNCID.ORG;
+        this.okrLevel = OMCONST.VLL.OKRLevel.ORG;
+        this.curOrgID = this.curUser?.employee?.orgUnitID;
+        this.curOrgName = this.curUser?.employee?.orgUnitName;
+        this.dataRequest.entityPermission = 'OM_OKRTeam';
+        this.dataRequest.gridViewName = 'grvOKRTeam';
+        this.dataRequest.formName = 'OKRTeam';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.ORG;
+        break;
+      case OMCONST.FUNCID.PERS:
+        this.skrFuncID = OMCONST.SKRFUNCID.PERS;
+        this.krFuncID = OMCONST.KRFUNCID.PERS;
+        this.obFuncID = OMCONST.OBFUNCID.PERS;
+        this.okrLevel = OMCONST.VLL.OKRLevel.PERS;
+        this.curOrgID = this.curUser?.employee?.employeeID;
+        this.curOrgName = this.curUser?.employee?.employeeName;
+        this.dataRequest.entityPermission = 'OM_OKRPersonal';
+        this.dataRequest.gridViewName = 'grvOKRPersonal';
+        this.dataRequest.formName = 'OKRPersonal';
+        this.dataRequest.dataValue += OMCONST.VLL.OKRLevel.PERS;
+        break;
+    }
   }
 
   //---------------------------------------------------------------------------------//
