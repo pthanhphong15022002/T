@@ -7,14 +7,12 @@ import {
 } from '@angular/core';
 import {
   Util,
-  FormModel,
   DialogRef,
+  AuthStore,
   DialogData,
   CacheService,
-  ApiHttpService,
   CallFuncService,
   NotificationsService,
-  AuthStore,
 } from 'codx-core';
 import {
   DP_Steps,
@@ -22,8 +20,8 @@ import {
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
 import { ComboBoxComponent, MultiSelectComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -31,19 +29,13 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
   styleUrls: ['./popup-step-task.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
-  @ViewChild('multiselect') mulObj: MultiSelectComponent;
-  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
+  @ViewChild('multiselect') mulObj: MultiSelectComponent;
+  @ViewChild('multiselect2') mulObj2: MultiSelectComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
-
-  typeTask;
-  action = 'add';
-
-  isNewEmails = true;
-  vllShare = 'DP0331';
-  linkQuesiton = 'http://';
-  listGroupTask = [];
+  
   step: DP_Steps;
   dialog!: DialogRef;
   stepsTasks: DP_Steps_Tasks;
@@ -56,27 +48,34 @@ export class PopupJobComponent implements OnInit {
   fieldsTask = { text: 'taskName', value: 'recID' };
   fieldsFields= { text: 'title', value: 'recID' };
 
+  typeTask;
+  action = 'add';
+  vllShare = 'DP0331';
+  linkQuesiton = 'http://';
+
   view = [];
-  listParentID = [];
-  listTaskLink = [];
-  listFileTask: string[] = [];
   listFields = [];
   listFieldID = [];
+  listParentID = [];
+  listTaskLink = [];
+  listGroupTask = [];
+  listFileTask: string[] = [];
 
   stepID = '';
   stepName = '';
   recIdEmail = '';
   taskGroupID = '';
+  isNewEmails = true;
   isHaveFile = false;
   showLabelAttachment = false;
   user: any;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
+    O: 'Share_OrgUnits_Sgl',
     P: 'Share_Positions_Sgl',
     R: 'Share_UserRoles_Sgl',
     D: 'Share_Departments_Sgl',
-    O: 'Share_OrgUnits_Sgl',
   };
 
   constructor(
@@ -149,7 +148,9 @@ export class PopupJobComponent implements OnInit {
   }
 
   ngAfterViewInit(){
+    // icon show ejs-multiselect
     this.mulObj.showDropDownIcon = true;
+    this.mulObj2.showDropDownIcon = true;
   }
   getFormModel() {
     this.cache
