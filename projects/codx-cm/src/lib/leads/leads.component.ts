@@ -425,7 +425,7 @@ export class LeadsComponent
     let isCopy = (eventItem, data) => {
       // Thêm, xóa, copy
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data)
+        ? data.closed ||   (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
       // eventItem.disabled  = false;
     };
@@ -433,8 +433,7 @@ export class LeadsComponent
       // Chỉnh sửa
       eventItem.disabled = data.write
         ? data.closed ||
-          (data.status != '13' && this.checkMoreReason(data)) ||
-          this.checkMoreReason(data)
+          (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
     };
     let isDelete = (eventItem, data) => {
@@ -442,7 +441,7 @@ export class LeadsComponent
       eventItem.disabled = data.delete
         ? data.closed ||
           (data.status != '13' && this.checkMoreReason(data)) ||
-          this.checkMoreReason(data)
+          ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
     };
     let isClosed = (eventItem, data) => {

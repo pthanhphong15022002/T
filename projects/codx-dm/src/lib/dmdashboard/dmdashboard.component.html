@@ -116,7 +116,9 @@
                     </div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <h5 class="fw-bold">{{ item.totalFileSize }} Byte</h5>
+                    <h5 class="fw-bold">
+                      {{ item.totalFileSize | filesize }}
+                    </h5>
                   </div>
                 </div>
               </div>
@@ -186,7 +188,9 @@
                   </codx-img>
                   <div class="ms-2">{{ item.organizationName }}</div>
                 </div>
-                <div class="fw-bold">{{ item.totalFileSize }} Byte</div>
+                <div class="fw-bold">
+                  {{ item.totalFileSize | filesize }}
+                </div>
               </div>
               <div class="my-2">
                 <div class="progress border" style="height: 12px">
@@ -299,7 +303,11 @@
         style="max-height: 100%; width: 100%"
       >
         <div *ngFor="let item of dbData?.e">
-          <div class="card mx-2 mb-2">
+          <div
+            class="card mx-2 mb-2"
+            (click)="viewFile(item.recID)"
+            style="cursor: pointer"
+          >
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
