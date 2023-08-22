@@ -124,7 +124,9 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
     this.loadTabs();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.loadTabs();
+  }
 
   loadTabs() {
     let references = {
