@@ -1,0 +1,24 @@
+<div class="d-flex flex-column justify-content-between bg-white h-100">
+    <ng-container *ngIf="funcList">
+        <div class="h-100 menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-light">
+            <ng-container *ngFor="let item of funcList ; let i = index">
+                <ng-container *ngIf="i < (funcList.length -1)">
+                    <ng-container *ngTemplateOutlet="tmpFunc ; context: { $implicit: item , index:i }"></ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+       <div class="d-flex justify-content-center h-80px border-top">
+            <ng-container *ngTemplateOutlet="tmpFunc ; context: { $implicit: funcList[(funcList.length - 1)] ,  index:(funcList.length - 1) }"></ng-container>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #tmpFunc let-data let-index="index">
+    <div class="d-flex flex-column justify-content-center menu-item menu-accordion ws-sub-menu text-center p-4 cursor-pointer ws-menu" 
+        [class.active]="index == selectedIndex"
+        (click)="menuChange(data,index)"
+    >
+        <img [src]="data?.smallIcon"/>
+        <span class="mt-2">{{data?.customName}}</span>
+    </div>
+</ng-template>
