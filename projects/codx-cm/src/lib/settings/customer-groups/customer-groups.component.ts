@@ -225,9 +225,9 @@ export class CustomerGroupsComponent extends UIComponent {
 
       popupAdd.closed.subscribe((res) => {
         if (!res?.event) this.view.dataService.clear();
-        else {
-          this.view.dataService.update(res.event).subscribe();
-        }
+        // else {
+        //   this.view.dataService.update(res.event).subscribe();
+        // }
       });
     });
   }
