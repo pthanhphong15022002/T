@@ -213,8 +213,7 @@ export class PopupAddDealComponent
   valueChange($event) {
     if ($event) {
       this.deal[$event.field] = $event.data;
-
-      if ($event.field == 'customerID') {
+      if ($event.field === 'customerID') {
         this.customerID = $event?.data ? $event.data : null;
         if (this.customerID) {
           this.customerOld = this.customerID;
@@ -226,8 +225,75 @@ export class PopupAddDealComponent
           this.getListContactByObjectID(this.customerID);
         }
       }
-      if ($event.field == 'currencyID') {
+      if ($event.field === 'currencyID') {
         this.loadExchangeRate();
+      }
+      if($event.field ==='consultantID') {
+       this.searchOwner('U','C','0',this.deal.consultantID,$event?.component?.itemsSelected[0]?.UserName);
+      }
+    }
+  }
+
+  valueChangeOwner($event) {
+    if ($event) {
+      this.owner = $event;
+      this.deal.owner = this.owner;
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.deal.owner
+        )[0].userName;
+      }
+      this.searchOwner('1','O','0',this.deal.owner,ownerName);
+    }
+  }
+  searchOwner(objectType:any,roleType:any, memberType: any,owner:any, ownerName:any ){
+    let index  = -1;
+    if(this.deal?.permissions?.length > 0 && this.deal?.permissions) {
+      index = this.deal?.permissions.findIndex(
+        (x) => x.objectType == objectType && x.roleType === roleType&& x.memberType == memberType
+      );
+      if (index != -1 ) {
+        this.deal.permissions[index].objectID = owner;
+        this.deal.permissions[index].objectName = ownerName;
+        if(this.action == this.actionEdit) {
+          this.deal.permissions[index].modifiedBy = this.user.userID;
+          this.deal.permissions[index].modifiedOn = new Date();
+        }
+      }
+    }
+    if(index == -1) {
+      this.addOwner(owner,ownerName,roleType,objectType);
+    }
+  }
+  addOwner(owner,ownerName,roleType,objectType) {
+    var permission = new CM_Permissions();
+    permission.objectID = owner;
+    permission.objectName = ownerName;
+    permission.objectType = objectType;
+    permission.roleType = roleType;
+    permission.memberType = '0';
+    permission.full = true;
+    permission.read = true;
+    permission.update = true;
+    permission.upload = true;
+    permission.download = true;
+    permission.allowUpdateStatus = '1';
+    permission.full =  roleType === 'O';
+    permission.assign =  roleType === 'O';
+    permission.delete = roleType === 'O';
+    permission.allowPermit = roleType === 'O';
+
+    this.deal.permissions.push(permission);
+  }
+  addPermission(processID) {
+    var result = this.checkProcessInList(processID);
+    if (result) {
+      let permissionsDP = result?.permissionRoles;
+      if(permissionsDP.length > 0 && permissionsDP) {
+        for(let item of permissionsDP ) {
+          this.deal.permissions.push(this.copyPermission(item));
+        }
       }
     }
   }
@@ -547,64 +613,7 @@ export class PopupAddDealComponent
       }
     }
   }
-  valueChangeOwner($event) {
-    if ($event) {
-      this.owner = $event;
-      this.deal.owner = this.owner;
-      let ownerName = '';
-      if (this.listParticipants.length > 0 && this.listParticipants) {
-        ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.deal.owner
-        )[0].userName;
-      }
-      this.checkOwner(this.deal.owner,ownerName);
-    }
-  }
-  checkOwner(owner: any, ownerName: any) {
-    if (owner ) {
-      let index  = -1;
-      if(this.deal?.permissions?.length > 0 && this.deal?.permissions) {
-        index = this.deal?.permissions.findIndex(
-          (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '0'
-        );
-        if (index !== -1 ) {
-          this.deal.permissions[index].objectID = owner;
-          this.deal.permissions[index].objectName = ownerName;
-        }
-      }
-      index == -1 && this.addOwner(owner,ownerName);
-    }
-  }
-  addOwner(owner,ownerName) {
-    var permission = new CM_Permissions();
-    permission.objectID = owner;
-    permission.objectName = ownerName;
-    permission.objectType = '1';
-    permission.roleType = 'O';
-    permission.full = true;
-    permission.read = true;
-    permission.update = true;
-    permission.assign = true;
-    permission.delete = true;
-    permission.upload = true;
-    permission.download = true;
-    permission.isActive = true;
-    permission.memberType = '0';
-    permission.allowPermit = true;
-    permission.allowUpdateStatus = '1';
-    this.deal.permissions.push(permission);
-  }
-  addPermission(processID) {
-    var result = this.checkProcessInList(processID);
-    if (result) {
-      let permissionsDP = result?.permissionRoles;
-      if(permissionsDP.length > 0 && permissionsDP) {
-        for(let item of permissionsDP ) {
-          this.deal.permissions.push(this.copyPermission(item));
-        }
-      }
-    }
-  }
+
 
   // Add permission form DP
   copyPermission(permissionDP:any ) {

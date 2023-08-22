@@ -80,7 +80,7 @@
       <codx-vll *ngIf="resourceType=='6' || (resourceType=='2' && data?.issueControl)" [showText]="true" [showBgColor]="true" [name]="resourceType=='6'?'EP020':'EP027'"
         [value]="data?.issueStatus" class="badge badge-light badge-md ">
       </codx-vll>
-      <div [innerHTML]=" data?.bookingOn | formatvalue : formModel : 'BookingOn' | async "></div>
+      <div [innerHTML]=" data?.createdOn | formatvalue : formModel : 'createdOn' | async "></div>
     </div>
 
   </div>

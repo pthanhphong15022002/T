@@ -198,7 +198,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
             if (this.settingDataValue) {
-              let lstTrueFalse = ['AllowEditAreas'];
+              let lstTrueFalse = ['AllowEditAreas','allowEditAreas'];
               for (const key in this.settingDataValue) {
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
@@ -216,8 +216,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   fieldName: this.data[fieldName],
                 });
               }
-
-              this.cr.detectChanges();
+              this.cr.detectChanges();              
             }
           }
           this.esService
