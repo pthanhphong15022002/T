@@ -9,6 +9,11 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ProgressAnnotationService } from '@syncfusion/ej2-angular-progressbar';
 import { CodxWsHeaderComponent } from './_layout/codx-ws-header/codx-ws-header.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { WpBreadcumComponent } from './workspace/wp-breadcum/wp-breadcum.component';
+import { HeaderComponent } from './workspace/header/header.component';
+import { PersonalComponent } from './personal/personal.component';
+import { MenuListComponent } from './personal/menu-list/menu-list.component';
+import { MasterDetailComponent } from './personal/master-detail/master-detail.component';
 
 const routes: Routes = [
   {
@@ -16,12 +21,16 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'ws/workspace/:funcID',
+        path: 'workspace/:funcID',
         component: WorkspaceComponent,
       },
       {
-        path: 'ws/calendar/:funcID',
+        path: 'calendar/:funcID',
         component: CalendarComponent,
+      },
+      {
+        path: 'personal/:funcID',
+        component: PersonalComponent,
       },
       {
         path: '',
@@ -41,7 +50,13 @@ const routes: Routes = [
   declarations: [
     CodxWsComponent,
     LayoutComponent,
-    CodxWsHeaderComponent
+    CodxWsHeaderComponent,
+    WpBreadcumComponent,
+    WorkspaceComponent,
+    HeaderComponent,
+    PersonalComponent,
+    MenuListComponent,
+    MasterDetailComponent
   ],
   imports: [
     RouterModule.forChild(routes),

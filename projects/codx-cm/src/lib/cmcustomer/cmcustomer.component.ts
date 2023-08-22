@@ -72,9 +72,9 @@ export class CmCustomerComponent
   funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  entityName = 'CM_Customers';
-  className = 'CustomersBusiness';
-  method = 'GetListCustomersAsync';
+  entityName = '';
+  className = '';
+  method = '';
   idField = 'recID';
   //endregion
 

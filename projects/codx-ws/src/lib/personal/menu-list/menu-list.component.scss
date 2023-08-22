@@ -1,0 +1,17 @@
+.ws-sub-menu
+{
+    max-width: 90px;
+    align-items: center;
+}
+.ws-menu:hover
+{
+    background-color: var(--primary-lighter) ;
+}
+.ws-menu.active
+{
+    color: var(--text-primary);
+    >img 
+    {
+        filter: invert(90%) sepia(95%) saturate(2029%) hue-rotate(204deg) brightness(100%) contrast(100%);
+    }
+}
