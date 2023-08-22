@@ -9,13 +9,17 @@ import {
 } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FileService } from '@shared/services/file.service';
 import {
   ButtonModel,
+  DialogModel,
+  NotificationsService,
   PageTitleService,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 export class GridModels {
   pageSize: number;
@@ -60,103 +64,12 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     valueType: 'Category',
   };
 
-  public data: object[] = [
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Brazil',
-      Count: 25,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Colombia',
-      Count: 12,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Argentina',
-      Count: 9,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Ecuador',
-      Count: 7,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Chile',
-      Count: 6,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Peru',
-      Count: 3,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Venezuela',
-      Count: 3,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Bolivia',
-      Count: 2,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Paraguay',
-      Count: 2,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Uruguay',
-      Count: 2,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Falkland Islands',
-      Count: 1,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'French Guiana',
-      Count: 1,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Guyana',
-      Count: 1,
-    },
-    {
-      Title: 'State wise International Airport count in South America',
-      State: 'Suriname',
-      Count: 1,
-    },
-  ];
-
-  public data1: object[] = [
-    { Product: 'TV : 30 (12%)', Percentage: 12, TextMapping: 'TV, 30 <br>12%' },
-    { Product: 'PC : 20 (8%)', Percentage: 8, TextMapping: 'PC, 20 <br>8%' },
-    {
-      Product: 'Laptop : 40 (16%)',
-      Percentage: 16,
-      TextMapping: 'Laptop, 40 <br>16%',
-    },
-    {
-      Product: 'Mobile : 90 (36%)',
-      Percentage: 36,
-      TextMapping: 'Mobile, 90 <br>36%',
-    },
-    {
-      Product: 'Camera : 27 (11%)',
-      Percentage: 11,
-      TextMapping: 'Camera, 27 <br>11%',
-    },
-  ];
-
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
-    private routerActive: ActivatedRoute
+    private routerActive: ActivatedRoute,
+    private fileService: FileService,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -332,5 +245,26 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
 
   getThumbnail(data) {
     return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;
+  }
+
+  viewFile(id: string) {
+    var dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    this.fileService.getFile(id).subscribe((fileInfo: any) => {
+      if (fileInfo && fileInfo.read) {
+        this.callfc.openForm(
+          ViewFileDialogComponent,
+          fileInfo.fileName,
+          1000,
+          800,
+          '',
+          [fileInfo, this.view?.currentView?.formModel],
+          '',
+          dialogModel
+        );
+      } else {
+        this.notificationsService.notifyCode('SYS032');
+      }
+    });
   }
 }
