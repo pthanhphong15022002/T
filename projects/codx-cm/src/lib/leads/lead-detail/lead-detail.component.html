@@ -32,8 +32,10 @@
       </div>
       <ng-template #toolTipDealValue>
         <div class="text-end text-sm-start">
-          <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
-          >: {{ dataSelected?.dealValue }}
+          <strong class="label-colon">{{
+            gridViewSetup?.DealValue?.headerText
+          }}</strong>
+          {{ dataSelected?.dealValue }}
         </div>
       </ng-template>
       <div class="container_detail mt-1">
@@ -118,7 +120,7 @@
                       dataSelected?.currencyID ? '' : 'line-clamp-menu'
                     "
                     class="fw-bold fs-5-sm"
-                    [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+                    [ngbTooltip]="gridViewSetup?.CurrencyID?.headerText"
                     #currencyID
                     [innerHTML]="
                       dataSelected?.currencyID
@@ -131,7 +133,7 @@
               <div class="d-flex align-items-center justify-content-end mt-1">
                 <div
                   class="d-flex align-items-center"
-                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                  [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                 >
                   <span
                     class="icon-check_circle text-green icon-16 pe-1"
@@ -139,7 +141,7 @@
                   <span
                     *ngIf="dataSelected?.probability; else defaultNull"
                     class="line-clamp-menu"
-                    [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                    [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                     #probability
                     [innerHTML]="
                       dataSelected?.probability
