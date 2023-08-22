@@ -16,6 +16,10 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { WarrantiesComponent } from './warranties/warranties.component';
 import { ViewListWrComponent } from './warranties/view-list-wr/view-list-wr.component';
+import { PopupAddWarrantyComponent } from './warranties/popup-add-warranty/popup-add-warranty.component';
+import { PopupAddCustomerWrComponent } from './warranties/popup-add-warranty/popup-add-customerwr/popup-add-customerwr.component';
+import { PopupAddServicetagComponent } from './warranties/popup-add-warranty/popup-add-servicetag/popup-add-servicetag.component';
+import { PopupUpdateReasonCodeComponent } from './warranties/popup-update-reasoncode/popup-update-reasoncode.component';
 
 var routes: Routes = [
   {
@@ -36,6 +40,10 @@ var routes: Routes = [
     CodxWrComponent,
     WarrantiesComponent,
     ViewListWrComponent,
+    PopupAddWarrantyComponent,
+    PopupAddCustomerWrComponent,
+    PopupAddServicetagComponent,
+    PopupUpdateReasonCodeComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

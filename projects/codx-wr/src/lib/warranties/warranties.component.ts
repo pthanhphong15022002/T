@@ -13,14 +13,19 @@ import {
   AuthStore,
   ButtonModel,
   CacheService,
+  CallFuncService,
+  DialogModel,
   FormModel,
   NotificationsService,
   ResourceModel,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupAddWarrantyComponent } from './popup-add-warranty/popup-add-warranty.component';
+import { PopupUpdateReasonCodeComponent } from './popup-update-reasoncode/popup-update-reasoncode.component';
 
 @Component({
   selector: 'lib-warranties',
@@ -77,6 +82,7 @@ export class WarrantiesComponent
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
+    private callFc: CallFuncService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -194,82 +200,35 @@ export class WarrantiesComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
-    console.log('Not implemented');
-    // switch (e.functionID) {
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     break;
-    //   case 'SYS04':
-    //     this.copy(data);
-    //     break;
-    //   case 'SYS02':
-    //     this.delete(data);
-    //     break;
-    //   case 'CM0201_1':
-    //     this.moveStage(data);
-    //     break;
-    //   case 'CM0201_2':
-    //     this.handelStartDay(data);
-    //     break;
-    //   case 'CM0201_3':
-    //     this.moveReason(data, true);
-    //     break;
-    //   case 'CM0201_4':
-    //     this.moveReason(data, false);
-    //     break;
-    //   case 'CM0201_8':
-    //     this.openOrCloseDeal(data, true);
-    //     break;
-    //   case 'CM0201_7':
-    //     this.popupOwnerRoles(data);
-    //     break;
-    //   case 'CM0201_9':
-    //     this.openOrCloseDeal(data, false);
-    //     break;
-    //   case 'CM0201_5':
-    //     this.exportFile(data);
-    //     break;
-    //   case 'CM0201_6':
-    //     this.approvalTrans(data);
-    //     break;
-    //   case 'CM0201_12':
-    //     this.confirmOrRefuse(true, data);
-    //     break;
-    //   case 'CM0201_13':
-    //     this.confirmOrRefuse(false, data);
-    //     break;
-    //   case 'CM0201_14':
-    //     this.openFormBANT(data);
-    //     break;
-    //   //cancel Aprover
-    //   case 'CM0201_16':
-    //     this.cancelApprover(data);
-    //     break;
-    //   case 'SYS002':
-    //     this.exportFiles(e, data);
-    //     break;
-
-    //   case 'CM0201_15':
-    //     this.popupPermissions(data);
-    //     break;
-    //   default:
-    //     var customData = {
-    //       refID: data.processID,
-    //       refType: 'DP_Processes',
-    //       dataSource: '', // truyen sau
-    //     };
-    //     this.codxShareService.defaultMoreFunc(
-    //       e,
-    //       data,
-    //       this.afterSave.bind(this),
-    //       this.view.formModel,
-    //       this.view.dataService,
-    //       this,
-    //       customData
-    //     );
-    //     this.detectorRef.detectChanges();
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS03':
+        // this.edit(data);
+        this.updateReasonCode(data);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
+      case 'SYS02':
+        // this.delete(data);
+        break;
+      default:
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+        break;
+    }
   }
 
   changeDataMF($event, data, type = null) {
@@ -364,22 +323,66 @@ export class WarrantiesComponent
     // }
   }
 
-  // region CRUD
+  //#region  CRUD
   add() {
-    this.addWarranty();
+    this.view.dataService.addNew().subscribe((res: any) => {
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '550px';
+        var obj = {
+          action: 'add',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddWarrantyComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            e.event.modifiedOn = new Date();
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+    });
   }
+  //#endregion
 
-  addWarranty() {
-    // this.view.dataService.addNew().subscribe((res) => {
-    console.log('Not implemented');
-    // let option = new SidebarModel();
-    // option.DataService = this.view.dataService;
-    // option.FormModel = this.view.formModel;
-    // var formMD = new FormModel();
-    // option.Width = '800px';
-    // option.zIndex = 1001;
-    // this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
-    // this.openFormDeal(formMD, option, 'add');
-    // });
+  //#region update reason code
+  updateReasonCode(data){
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 1010;
+    dialogModel.FormModel = this.view?.formModel;
+    let obj = {
+      title: this.titleAction,
+    };
+    this.callFc
+      .openForm(
+        PopupUpdateReasonCodeComponent,
+        '',
+        600,
+        700,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.detectorRef.detectChanges();
+        }
+      });
   }
+  //#endregion
 }
