@@ -69,7 +69,7 @@ export class FAPostingAccountsComponent
         active: true,
         model: {
           panelLeftRef: this.templateLeft,
-          widthLeft: '20%',
+          widthLeft: '25%',
           panelRightRef: this.templateRight,
         },
       },
