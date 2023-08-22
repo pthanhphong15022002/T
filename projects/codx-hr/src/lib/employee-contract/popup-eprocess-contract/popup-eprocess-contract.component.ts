@@ -54,7 +54,6 @@ export class PopupEProcessContractComponent
 
   loaded: boolean = false;
   disabledInput = false;
-  useForQTNS: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -117,7 +116,6 @@ export class PopupEProcessContractComponent
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
-    this.useForQTNS = data?.data?.useForQTNS;
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
@@ -473,7 +471,7 @@ export class PopupEProcessContractComponent
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
-        .validateBeforeSaveContract(this.data, true, this.useForQTNS)
+        .validateBeforeSaveContract(this.data, true)
         .subscribe((res) => {
           if (res) {
             if (res[0]) {
@@ -487,7 +485,7 @@ export class PopupEProcessContractComponent
                 if (stt?.event?.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
-                      .addEContract(this.data, this.useForQTNS)
+                      .addEContract(this.data)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -501,7 +499,7 @@ export class PopupEProcessContractComponent
                     this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
                     this.hrSevice
-                      .addEContract(this.data, this.useForQTNS)
+                      .addEContract(this.data)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -516,15 +514,13 @@ export class PopupEProcessContractComponent
           }
         });
     } else if (this.actionType == 'edit') {
-      this.hrSevice
-        .editEContract(this.data, this.useForQTNS)
-        .subscribe((res) => {
-          if (res && res[0]) {
-            this.notify.notifyCode('SYS007');
-            res[0].emp = this.employeeObj;
-            this.dialog && this.dialog.close(res[0]);
-          }
-        });
+      this.hrSevice.editEContract(this.data).subscribe((res) => {
+        if (res && res[0]) {
+          this.notify.notifyCode('SYS007');
+          res[0].emp = this.employeeObj;
+          this.dialog && this.dialog.close(res[0]);
+        }
+      });
     }
     this.cr.detectChanges();
   }
