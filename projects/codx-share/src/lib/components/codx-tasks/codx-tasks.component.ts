@@ -1090,7 +1090,7 @@ export class CodxTasksComponent
     this.viewCrr = evt?.view?.type;
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
-        if (views) {
+        if (views?.length > 0) {
           this.afterLoad();
           this.crrFuncID = this.funcID;
           this.views = [];
@@ -1098,6 +1098,7 @@ export class CodxTasksComponent
           let viewOut = false;
           this.viewsDefault.forEach((v, index) => {
             let idx = views.findIndex((x) => x.view == v.type);
+            debugger;
             if (idx != -1) {
               v.hide = false;
               if (v.type != this.viewCrr) v.active = false;
