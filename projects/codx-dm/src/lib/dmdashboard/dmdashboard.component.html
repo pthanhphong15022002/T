@@ -303,21 +303,18 @@
         style="max-height: 100%; width: 100%"
       >
         <div *ngFor="let item of dbData?.e">
-          <div
-            class="card mx-2 mb-2"
-            (click)="viewFile(item.recID)"
-            style="cursor: pointer"
-          >
-            <div class="card-body">
+          <div class="card">
+            <div class="p-2">
               <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex justify-content-between align-items-center">
-                  <img
-                    [src]="getThumbnail(item)"
-                    class="me-2"
-                    style="width: 30px; height: 30px"
-                  />
+                <div class="d-flex flex-column">
+                  <codx-thumbnail
+                    [files]="[item?.fileInfo]"
+                    displayThumb="simple"
+                    [hideDelete]="'1'"
+                    [hideMoreF]="'0'"
+                  >
+                  </codx-thumbnail>
                   <div>
-                    <h5 class="card-title">{{ item.fileName }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">
                       {{ item.extension }} |
                       {{ item.createdOn | fmDT : "dmy" }} |
