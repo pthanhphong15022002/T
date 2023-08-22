@@ -12,14 +12,14 @@
   [data]="lead"
 ></codx-layout-add>
 <ng-template #subHeader>
-  <!-- <codx-tag
+  <codx-tag
     field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
     [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
-  ></codx-tag> -->
+  ></codx-tag>
 </ng-template>
 
 <ng-template #tabDeal>
@@ -70,6 +70,7 @@
           <codx-label
             fiedName="DealName"
             [default]="'Tên cơ hội'"
+
             [formModel]="formModelDeals"
           >
           </codx-label>
@@ -107,7 +108,7 @@
       </div> -->
     <!-- </div> -->
 
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label
@@ -204,12 +205,13 @@
           </codx-input>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label
             fiedName="Owner"
+            [setRequire]="false"
             default="Nhân viên bán hàng"
             [formModel]="formModelDeals"
           >
