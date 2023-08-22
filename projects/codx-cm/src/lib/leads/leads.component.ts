@@ -163,12 +163,12 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
-    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
-    // this.getProcessSetting();
+    this.loadViewModel();
   }
+
   afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'CM';
@@ -190,6 +190,7 @@ export class LeadsComponent
     this.getFuncID(this.funcID);
     this.getColorReason();
     this.getValuelistStatus();
+    this.getProcessSetting();
   }
   getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
@@ -211,40 +212,40 @@ export class LeadsComponent
           this.processId = res.recID;
           this.dataObj = { processID: res.recID };
           this.afterLoad();
-          this.views = [
-            {
-              type: ViewType.listdetail,
-              active: false,
-              sameData: true,
-              model: {
-                template: this.itemTemplate,
-                panelRightRef: this.templateDetail,
-              },
-            },
-            // {
-            //   type: ViewType.kanban,
-            //   active: false,
-            //   sameData: false,
-            //   request: this.request,
-            //   request2: this.resourceKanban,
-            //   // toolbarTemplate: this.footerButton,
-            //   model: {
-            //     template: this.cardKanban,
-            //     template2: this.viewColumKaban,
-            //     setColorHeader: true,
-            //   },
-            // },
-            {
-              type: ViewType.grid,
-              active: false,
-              sameData: true,
-              model: {
-                resources: this.columnGrids,
-                template2: this.templateMore,
-                // frozenColumns: 1,
-              },
-            },
-          ];
+          // this.views = [
+          //   {
+          //     type: ViewType.listdetail,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       template: this.itemTemplate,
+          //       panelRightRef: this.templateDetail,
+          //     },
+          //   },
+          //   // {
+          //   //   type: ViewType.kanban,
+          //   //   active: false,
+          //   //   sameData: false,
+          //   //   request: this.request,
+          //   //   request2: this.resourceKanban,
+          //   //   // toolbarTemplate: this.footerButton,
+          //   //   model: {
+          //   //     template: this.cardKanban,
+          //   //     template2: this.viewColumKaban,
+          //   //     setColorHeader: true,
+          //   //   },
+          //   // },
+          //   {
+          //     type: ViewType.grid,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       // resources: this.columnGrids,
+          //       template2: this.templateMore,
+          //       // frozenColumns: 1,
+          //     },
+          //   },
+          // ];
         }
       });
   }
@@ -299,45 +300,44 @@ export class LeadsComponent
   }
 
   onLoading(e) {
-    this.loadViewModel();
+    // this.loadViewModel();
   }
 
   loadViewModel() {
-    if (!this.views || this.views?.length == 0)
-      this.views = [
-        {
-          type: ViewType.listdetail,
-          active: false,
-          sameData: true,
-          model: {
-            template: this.itemTemplate,
-            panelRightRef: this.templateDetail,
-          },
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
-        // {
-        //   type: ViewType.kanban,
-        //   active: false,
-        //   sameData: false,
-        //   request: this.request,
-        //   request2: this.resourceKanban,
-        //   // toolbarTemplate: this.footerButton,
-        //   model: {
-        //     template: this.cardKanban,
-        //     template2: this.viewColumKaban,
-        //     setColorHeader: true,
-        //   },
-        // },
-        {
-          type: ViewType.grid,
-          active: false,
-          sameData: true,
-          model: {
-            resources: this.columnGrids,
-            template2: this.templateMore,
-            // frozenColumns: 1,
-          },
+      },
+      // {
+      //   type: ViewType.kanban,
+      //   active: false,
+      //   sameData: false,
+      //   request: this.request,
+      //   request2: this.resourceKanban,
+      //   // toolbarTemplate: this.footerButton,
+      //   model: {
+      //     template: this.cardKanban,
+      //     template2: this.viewColumKaban,
+      //     setColorHeader: true,
+      //   },
+      // },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          // resources: this.columnGrids,
+          template2: this.templateMore,
+          // frozenColumns: 1,
         },
-      ];
+      },
+    ];
   }
 
   changeView(e) {
