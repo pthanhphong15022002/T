@@ -110,7 +110,7 @@ export class LeadsComponent
   vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
-  viewMode = 2;
+  // viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
@@ -167,39 +167,7 @@ export class LeadsComponent
   }
 
   ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     type: ViewType.listdetail,
-    //     sameData: true,
-    //     model: {
-    //       template: this.itemTemplate,
-    //       panelRightRef: this.templateDetail,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.kanban,
-    //     active: false,
-    //     sameData: false,
-    //     request: this.request,
-    //     request2: this.resourceKanban,
-    //     toolbarTemplate: this.footerButton,
-    //     model: {
-    //       template: this.cardKanban,
-    //       template2: this.viewColumKaban,
-    //       setColorHeader: true,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.grid,
-    //     active: false,
-    //     sameData: true,
-    //     model: {
-    //       resources: this.columnGrids,
-    //       template2: this.templateMore,
-    //       // frozenColumns: 1,
-    //     },
-    //   },
-    // ];
+    // this.getProcessSetting();
   }
   afterLoad() {
     this.request = new ResourceModel();
@@ -219,14 +187,11 @@ export class LeadsComponent
   }
 
   executeApiCalls() {
-    try {
-      this.getFuncID(this.funcID);
-      this.getColorReason();
-      // this.getCurrentSetting();
-      this.getValuelistStatus();
-    } catch (error) {}
+    this.getFuncID(this.funcID);
+    this.getColorReason();
+    this.getValuelistStatus();
   }
-  async getValuelistStatus() {
+  getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
       if (func) {
         this.valueListStatus = func.datas
@@ -238,7 +203,7 @@ export class LeadsComponent
       }
     });
   }
-  async getProcessSetting() {
+  getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
       .subscribe((res) => {
@@ -249,6 +214,7 @@ export class LeadsComponent
           this.views = [
             {
               type: ViewType.listdetail,
+              active: false,
               sameData: true,
               model: {
                 template: this.itemTemplate,
@@ -282,7 +248,7 @@ export class LeadsComponent
         }
       });
   }
-  async getColorReason() {
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -296,9 +262,7 @@ export class LeadsComponent
     });
   }
 
-  async promiseByFuncID(formName, gridViewName) {}
-
-  async getGridViewSetup(formName, gridViewName) {
+  getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -309,8 +273,9 @@ export class LeadsComponent
       }
     });
   }
-  async getFuncID(funcID) {
-    if (funcID == 'CM0504') funcID = 'CM0205';
+  getFuncID(funcID) {
+    //bua tam
+    // if (funcID == 'CM0504') funcID = 'CM0205';
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
@@ -325,7 +290,7 @@ export class LeadsComponent
       }
     });
   }
-  async getMoreFunction(formName, gridViewName) {
+  getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
@@ -338,39 +303,41 @@ export class LeadsComponent
   }
 
   loadViewModel() {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
+    if (!this.views || this.views?.length == 0)
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          active: false,
+          sameData: true,
+          model: {
+            template: this.itemTemplate,
+            panelRightRef: this.templateDetail,
+          },
         },
-      },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        // toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
+        // {
+        //   type: ViewType.kanban,
+        //   active: false,
+        //   sameData: false,
+        //   request: this.request,
+        //   request2: this.resourceKanban,
+        //   // toolbarTemplate: this.footerButton,
+        //   model: {
+        //     template: this.cardKanban,
+        //     template2: this.viewColumKaban,
+        //     setColorHeader: true,
+        //   },
+        // },
+        {
+          type: ViewType.grid,
+          active: false,
+          sameData: true,
+          model: {
+            resources: this.columnGrids,
+            template2: this.templateMore,
+            // frozenColumns: 1,
+          },
         },
-      },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-          template2: this.templateMore,
-          // frozenColumns: 1,
-        },
-      },
-    ];
+      ];
   }
 
   changeView(e) {
