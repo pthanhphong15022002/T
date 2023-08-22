@@ -43,9 +43,11 @@ import {
 } from 'ngx-basic-primitives';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CRUDService,
+  DataRequest,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -208,6 +210,7 @@ export class OrganizationOrgchartComponent {
   selectedTeam = '';
   isPopUpManager: boolean = false;
   idHover: string;
+  user: any;
 
   stylesObjChart = {
     border: '3px solid #03a9f4',
@@ -237,13 +240,16 @@ export class OrganizationOrgchartComponent {
 
   @ViewChild('diagram') diagram: any;
   constructor(
+    private authStore: AuthStore,
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     private callFC: CallFuncService,
     private cacheService: CacheService,
     private hrService: CodxHrService,
     private notify: NotificationsService
-  ) {}
+  ) {
+    this.user = this.authStore.get();
+  }
 
   showVal(value) {
     this.scaleNumber = parseInt(value) / 100;
@@ -751,6 +757,23 @@ export class OrganizationOrgchartComponent {
       case 'frameoutBottom':
         this.frameoutBottom = parseInt(e.target.value);
         break;
+
+      //Get orgunit
+      case 'isOrgUnitID':
+        this.dataTree.isOrgUnitID = e.target.checked;
+
+        if (this.dataTree.isOrgUnitID === true) {
+          this.getEmployeeInfoById(this.user.userID);
+        }
+
+        this.hrService
+          .SaveSettingValue('HRParameters', '1', this.dataTree)
+          .subscribe((res: any) => {
+            if (res) {
+              this.notify.notifyCode('SYS007');
+            }
+          });
+        break;
       default:
         break;
     }
@@ -763,15 +786,14 @@ export class OrganizationOrgchartComponent {
   onMouseWheel(evt) {
     if (evt.ctrlKey) {
       evt.preventDefault();
-
-      // if (evt.deltaY > 0) {
-      if (this.scaleNumber > 0.3 && evt.deltaY > 0) {
-        //this.diagram1.nativeElement.scrollRight += evt.deltaY;
-        this.scaleNumber = this.scaleNumber - 0.1;
-      }
-      // }
-      if (this.scaleNumber < 1) {
-        this.scaleNumber = this.scaleNumber + 0.1;
+      if (evt.deltaY > 0) {
+        if (this.scaleNumber > 0.3) {
+          this.scaleNumber = this.scaleNumber - 0.1;
+        }
+      } else {
+        if (this.scaleNumber < 1) {
+          this.scaleNumber = this.scaleNumber + 0.1;
+        }
       }
     }
   }
@@ -935,6 +957,27 @@ export class OrganizationOrgchartComponent {
       .map((obj) => obj.color);
   }
 
+  getEmployeeInfoById(userID: string) {
+    if (userID) {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'OrganizationUnitsBusiness',
+          'GetOrgEmployeeAsync',
+          userID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.getDataPositionByID(
+              res,
+              this.selectedTeam.includes('No') ? false : true
+            );
+          }
+        });
+    }
+  }
+
   getDataPositionByID(orgUnitID: string, getManager: boolean) {
     if (orgUnitID) {
       this.api
@@ -995,7 +1038,16 @@ export class OrganizationOrgchartComponent {
         this.dataTree = JSON.parse(res);
 
         this.selectedTeam = this.dataTree.isGetManager;
-        this.isGetManager(this.selectedTeam);
+        //this.isGetManager(this.selectedTeam);
+
+        this.dataTree.isOrgUnitID = JSON.parse(this.dataTree.isOrgUnitID);
+
+        //Load data depend orgunit check
+        if (this.dataTree.isOrgUnitID === true) {
+          this.getEmployeeInfoById(this.user.userID);
+        } else {
+          this.isGetManager(this.selectedTeam);
+        }
 
         for (const [key, value] of Object.entries(this.dataTree)) {
           this.changeMode(value);
@@ -1126,7 +1178,6 @@ export class OrganizationOrgchartComponent {
       if (this.orgUnitID) {
         //Function get new orgchart
         this.isGetManager(this.selectedTeam);
-
         //this.dt.detectChanges();
         //Function get olg orgchart
         // this.dataService.setPredicates([], [this.orgUnitID], (res) => {
