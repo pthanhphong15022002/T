@@ -54,15 +54,18 @@ export class WarrantiesComponent
   request: ResourceModel;
   button?: ButtonModel = { id: 'btnAdd' };
   readonly btnAdd: string = 'btnAdd';
+  funcIDCrr: any;
   titleAction = '';
   user: any;
+  gridViewSetup: any;
+  moreFuncInstance: any;
 
   // config api get data
   service = 'WR';
   assemblyName = 'ERM.Business.WR';
   entityName = 'WR_WorkOrders';
   className = 'WorkOrdersBusiness';
-  method = 'FunctionTest';
+  method = 'GetListWorkOrdersAsync';
   idField = 'recID';
   // idField = 'recID';
   // service = 'WR';
@@ -81,26 +84,11 @@ export class WarrantiesComponent
     private authStore: AuthStore
   ) {
     super(inject);
-    this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
+    this.executeApiCalls();
     // this.loadParam();
-    // this.cache.functionList(this.funcID).subscribe((f) => {
-    //   this.funcIDCrr = f;
-    //   this.functionModule = f.module;
-    //   this.nameModule = f.customName;
-    //   this.executeApiCallFunctionID(f.formName, f.gridViewName);
-    // });
-    // this.getColorReason();
-
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-
-    // this.codxCmService.getProcessDefault('1').subscribe((res) => {
-    //   if (res) {
-    //     this.processIDDefault = res.recID;
-    //     this.processIDKanban = res.recID;
-    //   }
-    // });
   }
 
   onInit(): void {
@@ -151,7 +139,7 @@ export class WarrantiesComponent
     this.request.service = 'WR';
     this.request.assemblyName = 'ERM.Business.WR';
     this.request.className = 'WorkOrdersBusiness';
-    this.request.method = 'FunctionTest';
+    this.request.method = 'GetListWorkOrdersAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
 
@@ -163,6 +151,29 @@ export class WarrantiesComponent
     // this.resourceKanban.dataObj = this.dataObj;
   }
 
+  executeApiCalls() {
+    try {
+      this.getFuncID(this.funcID);
+      // this.getColorReason();
+      // this.getCurrentSetting();
+      this.getValuelistStatus();
+    } catch (error) {}
+  }
+
+  async getValuelistStatus() {
+    console.log('Not implemented');
+    // this.cache.valueList('CRM041').subscribe((func) => {
+    //   if (func) {
+    //     this.valueListStatus = func.datas
+    //       .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+    //       .map((item) => ({
+    //         text: item.text,
+    //         value: item.value,
+    //       }));
+    //   }
+    // });
+  }
+
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
     switch (evt.id) {
@@ -170,6 +181,14 @@ export class WarrantiesComponent
         this.add();
         break;
     }
+  }
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeMoreMF(e) {
+    this.changeDataMF(e.e, e.data);
   }
 
   clickMF(e, data) {
@@ -267,9 +286,46 @@ export class WarrantiesComponent
     // }
   }
 
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        this.vllStatus =
+          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+        // this.vllApprove =
+        //   this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
+      }
+    });
+  }
+
+  async getFuncID(funcID) {
+    this.cache.functionList(funcID).subscribe((f) => {
+      if (f) {
+        this.funcIDCrr = f;
+        this.getGridViewSetup(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
+        this.getMoreFunction(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
+      }
+    });
+  }
+
+  async getMoreFunction(formName, gridViewName) {
+    this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.moreFuncInstance = res;
+      }
+    });
+  }
+
   selectedChange(data) {
-    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    this.changeDetectorRef.detectChanges();
+    console.log('Not implemented');
+    // if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
+    // this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
@@ -314,16 +370,16 @@ export class WarrantiesComponent
   }
 
   addWarranty() {
-    this.view.dataService.addNew().subscribe((res) => {
-      console.log('Not implemented');
-      // let option = new SidebarModel();
-      // option.DataService = this.view.dataService;
-      // option.FormModel = this.view.formModel;
-      // var formMD = new FormModel();
-      // option.Width = '800px';
-      // option.zIndex = 1001;
-      // this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
-      // this.openFormDeal(formMD, option, 'add');
-    });
+    // this.view.dataService.addNew().subscribe((res) => {
+    console.log('Not implemented');
+    // let option = new SidebarModel();
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // var formMD = new FormModel();
+    // option.Width = '800px';
+    // option.zIndex = 1001;
+    // this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
+    // this.openFormDeal(formMD, option, 'add');
+    // });
   }
 }
