@@ -3,8 +3,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <!-- <codx-aside *ngIf="asideDisplay" [hasSecond]="false">
-      </codx-aside> -->
+      <codx-aside *ngIf="codxService.asideDisplay"> </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="codxService.headerCSSClasses"
@@ -14,13 +13,12 @@
           #codxHeader
         >
         </codx-header>
-        <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
-        </codx-wrapper> -->
         <codx-wrapper class="d-flex flex-column flex-column-fluid no-wrapper">
         </codx-wrapper>
       </div>
     </div>
   </div>
+
   <codx-scripts-init></codx-scripts-init>
   <codx-scroll-top></codx-scroll-top>
 
@@ -37,15 +35,7 @@
     <!-- NOTES -->
     <codx-notes></codx-notes>
     <!-- NOTIFICATIONS -->
-    <!-- <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
-        <div class="btn btn-icon btn-clean position-relative"
-            [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
-            <span [inlineSVG]="
-                './assets/themes/sys/default/img/header_notifications.svg'
-            " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-        </div>
-        </div> -->
-    <codx-notify-drawer></codx-notify-drawer>
+    <codx-notes></codx-notes>
 
     <!-- Home -->
     <div class="align-items-center d-flex ms-1 ms-lg-3">
@@ -196,7 +186,19 @@
       <div class="text-dark fw-bold fs-5 me-6">
         <span>{{ item.stepName }}</span>
       </div>
-      <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.memo)"></div>
+      <div
+        *ngIf="item?.memo"
+        [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.memo)"
+      ></div>
+      <div
+        #memo
+        *ngIf="!item?.memo"
+        [innerHTML]="
+          item?.memo
+            | formatvalue : formModel : 'memo' : memo : 'DPSteps' : 'grvDPSteps'
+            | async
+        "
+      ></div>
     </ng-container>
   </div>
 </ng-template>

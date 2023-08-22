@@ -310,6 +310,7 @@ export class LeadsComponent
     });
   }
   async getFuncID(funcID) {
+    if (funcID == 'CM0504') funcID = 'CM0205';
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
@@ -425,7 +426,9 @@ export class LeadsComponent
     let isCopy = (eventItem, data) => {
       // Thêm, xóa, copy
       eventItem.disabled = data.write
-        ? data.closed ||   (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
       // eventItem.disabled  = false;
     };
@@ -433,7 +436,8 @@ export class LeadsComponent
       // Chỉnh sửa
       eventItem.disabled = data.write
         ? data.closed ||
-          (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isDelete = (eventItem, data) => {
@@ -441,7 +445,7 @@ export class LeadsComponent
       eventItem.disabled = data.delete
         ? data.closed ||
           (data.status != '13' && this.checkMoreReason(data)) ||
-          ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isClosed = (eventItem, data) => {
