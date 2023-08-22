@@ -4,6 +4,7 @@
     [body]="body"
     [footer]="footer"
     [dialog]="dialog"
+    *ngIf="isAfterRender"
 >
 <ng-template #body>
     <div class="form-group row mt-5">
@@ -13,7 +14,6 @@
               class="check-circle"
               [label]="data.text"
               [checked]="data.checked"
-              field="dim"
               (valueChange)="onChangeSelect($event, data)"
             ></codx-input>
           </div>
@@ -23,7 +23,12 @@
 </codx-form>
 
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" (click)="onClickUnSelectAll()">
+            <!-- <i class="icon-save"></i> -->
+        <codx-label default="Bỏ chọn tất cả" name="lblUnselectAll" [formModel]="formModel"></codx-label>
+        </button>
+
         <button class="btn btn-primary" (click)="onSaveForm()">
             <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>

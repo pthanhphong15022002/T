@@ -54,13 +54,13 @@ export class PopupJobComponent implements OnInit {
 
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
-  fieldsFields= { text: 'fieldName', value: 'recID' };
+  fieldsFields= { text: 'title', value: 'recID' };
 
   view = [];
   listParentID = [];
   listTaskLink = [];
-  listFields = [];
   listFileTask: string[] = [];
+  listFields = [];
   listFieldID = [];
 
   stepID = '';
@@ -133,6 +133,7 @@ export class PopupJobComponent implements OnInit {
     await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
     this.listTaskLink = listTaskConvert;
     this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
+    this.listFieldID = this.stepsTasks?.fieldID ? this.stepsTasks?.fieldID?.split(';') : [];
     this.listFields = this.step?.fields || [];
   }
 
@@ -229,6 +230,7 @@ export class PopupJobComponent implements OnInit {
   async saveData() {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.listParentID.join(';');
+    this.stepsTasks['fieldID'] = this.listFieldID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
       if (
@@ -437,8 +439,8 @@ export class PopupJobComponent implements OnInit {
   parentIDChange(event) {
     this.listParentID = event;
   }
-  FieldIDChange(event) {
-    this.listFields = event;
+  fieldIDChange(event) {
+    this.listFieldID = event;
   }
 
   valueChangeText(event) {

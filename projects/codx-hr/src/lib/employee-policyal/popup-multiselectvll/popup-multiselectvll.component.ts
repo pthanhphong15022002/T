@@ -13,6 +13,7 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   lstDataSelected: any =[];
   vllName: any;
   headerText: '';
+  isAfterRender = false;
   formModel: '';
   @ViewChild('form') form: CodxFormComponent;
   constructor(
@@ -24,6 +25,7 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   ) {
     super(injector);
     this.dialog = dialog
+    debugger
     this.headerText = data?.data?.headerText;
     this.vllName = data?.data?.vllName;
     this.formModel = data?.data?.formModel;
@@ -48,6 +50,8 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
           }
         }
       }
+
+    this.isAfterRender = true;
     })
   }
 
@@ -63,6 +67,13 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
     else if(event.data == false){
       let index = this.lstDataSelected.indexOf(data.value);
       this.lstDataSelected.splice(index,1);
+    }
+  }
+
+  onClickUnSelectAll(){
+    this.lstDataSelected = []
+    for(let i = 0; i < this.lstData.length; i++){
+        this.lstData[i].checked = false;
     }
   }
 }

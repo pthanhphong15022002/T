@@ -792,7 +792,7 @@ export class PopupConvertLeadComponent implements OnInit {
       perm.allowPermit = roleType == 'O' ? true : false;
       perm.roleType = roleType;
       perm.allowUpdateStatus = '1';
-      perm.memberType = '1';
+      perm.memberType = '0';
       this.lstPermissions.push(perm);
     } else {
       this.lstPermissions[index].objectID =
