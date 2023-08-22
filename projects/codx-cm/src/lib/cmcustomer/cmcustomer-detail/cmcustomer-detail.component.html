@@ -355,7 +355,7 @@
           </div>
           <div
             class="d-flex align-items-start mt-2 h-20px"
-            *ngIf="viewTag && viewTag != ''"
+            *ngIf="viewTag != null && viewTag != ''"
           >
             <codx-tag
               [entityName]="entityName"
@@ -500,7 +500,11 @@
                         [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
                         [isRole]="
-                          !isAdmin ? user.userID == dataSelected.owner : true
+                          funcID == 'CM0101'
+                            ? !isAdmin
+                              ? user.userID == dataSelected.owner
+                              : true
+                            : true
                         "
                       ></codx-list-contacts>
                     </div>
@@ -533,10 +537,12 @@
                         [entityName]="entityName"
                         [id]="dataSelected.recID"
                         [hidden]="
-                          (!isAdmin && user.userID != dataSelected.owner) ||
-                          dataSelected?.status == '99'
-                            ? true
-                            : false
+                          funcID == 'CM0101'
+                            ? (!isAdmin && user.userID != dataSelected.owner) ||
+                              dataSelected?.status == '99'
+                              ? true
+                              : false
+                            : dataSelected?.status == '99'
                         "
                         (addressName)="addressName($event)"
                       ></codx-address-cm>

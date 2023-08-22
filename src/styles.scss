@@ -3697,3 +3697,19 @@ codx-attachment.h-35px{
     min-height: 35px;
   }
 }
+
+.badge-light {
+  color:var(--gray-400);
+  background-color:var(--gray-150);
+}
+.badge-with-delete .badge{
+  padding-right: 24px!important;
+}
+.badge-with-delete .btn.btn-icon.btn-sm{
+  margin-left: -18px;
+  border-radius: 50%!important;
+  width: 20px!important;
+  height: 20px!important;
+  min-width: 20px!important;
+  min-height: 20px!important;
+}

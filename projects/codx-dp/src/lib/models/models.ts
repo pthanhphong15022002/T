@@ -242,6 +242,7 @@ export class DP_Steps_Tasks {
   modifiedOn: Date;
   modifiedBy: string;
   owner: string;
+  fieldID: string;
 }
 
 export class DP_Steps_Tasks_Roles {
@@ -487,6 +488,7 @@ export class DP_Instances_Steps_Tasks {
   isOnline: boolean;
   isTaskDefault: boolean;
   actionStatus: string;
+  fieldID: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

@@ -39,7 +39,11 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-import { ApproveProcess, Approver, ResponseModel } from './models/ApproveProcess.model';
+import {
+  ApproveProcess,
+  Approver,
+  ResponseModel,
+} from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -189,8 +193,6 @@ export class CodxShareService {
     that: any = null,
     customData = null
   ) {
-
-    debugger
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SYS207
     var funcID = val?.functionID;
     switch (funcID) {
@@ -235,7 +237,7 @@ export class CodxShareService {
             //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
-            if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
+            if (x?.event?.msgCodeError == null && x?.event?.rowCount > 0) {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
@@ -353,30 +355,33 @@ export class CodxShareService {
         break;
       }
       //Đính kèm file
-      case 'SYS003':
-      {
-        var datas = 
-        {
-          headerText : val?.data?.customName,
-          objectID : data?.recID,
+      case 'SYS003': {
+        var datas = {
+          headerText: val?.data?.customName,
+          objectID: data?.recID,
           dataSelected: data,
           referType: customData?.referType,
-          addPermissions: customData?.addPermissions
+          addPermissions: customData?.addPermissions,
         };
-        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas);
+        this.callfunc.openForm(
+          CodxFilesAttachmentViewComponent,
+          '',
+          700,
+          600,
+          '',
+          datas
+        );
         break;
       }
       //Gửi mail
-      case 'SYS004':
-      {
+      case 'SYS004': {
         var dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
         dialog.closed.subscribe((x) => {
           if (x.event) {
-            var result =
-            {
+            var result = {
               funcID: funcID,
-              result: x.event
-            }
+              result: x.event,
+            };
             afterSave(result);
           }
         });
@@ -1451,7 +1456,6 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel, component: any) => void,
     exportUpload: ExportUpload
   ) {
-    
     this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
       (exportedFile: any) => {
         if (exportedFile) {

@@ -432,13 +432,17 @@ export class LeadsComponent
     let isEdit = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.write
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data)) || this.checkMoreReason(data)
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          this.checkMoreReason(data)
         : true;
     };
     let isDelete = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.delete
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data)) || this.checkMoreReason(data)
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          this.checkMoreReason(data)
         : true;
     };
     let isClosed = (eventItem, data) => {
@@ -492,7 +496,9 @@ export class LeadsComponent
     let isStartFirst = (eventItem, data) => {
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
-        ? !['3', '5'].includes(data.status) && data.applyProcess || !data.applyProcess : true;
+        ? (!['3', '5'].includes(data.status) && data.applyProcess) ||
+          !data.applyProcess
+        : true;
     };
     let isChangeStatus = (eventItem, data) => {
       // Đổi trạng thái cho tiềm năng ko có quy trình
@@ -502,11 +508,15 @@ export class LeadsComponent
 
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
-      eventItem.disabled = data.full ? data.closed || data.applyProcess || this.checkMoreReason(data): true ;
+      eventItem.disabled = data.full
+        ? data.closed || data.applyProcess || this.checkMoreReason(data)
+        : true;
     };
     let isDeleteProcess = (eventItem, data) => {
       // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = data.full ? data.closed || !data.applyProcess || this.checkMoreReason(data) : true;
+      eventItem.disabled = data.full
+        ? data.closed || !data.applyProcess || this.checkMoreReason(data)
+        : true;
     };
 
     let isApprover = (eventItem, data) => {
@@ -725,10 +735,15 @@ export class LeadsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      var customData: any = null;
-      // var customData = {
-      //   refID: data.processID,
-      //   refType: 'DP_Processes',
+      // var customData: any = null;
+      // // var customData = {
+      // //   refID: data.processID,
+      // //   refType: 'DP_Processes',
+      // //   dataSource: '', // truyen sau
+      // // };
+      // this.customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Deals',
       //   dataSource: '', // truyen sau
       // };
       this.codxShareService.defaultMoreFunc(
@@ -737,8 +752,8 @@ export class LeadsComponent
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        // customData
       );
     }
   }
@@ -818,7 +833,7 @@ export class LeadsComponent
       if (e && e.event != null) {
         e.event.modifiedOn = new Date();
         this.dataSelected = e.event;
-     //   this.detailViewLead.promiseAllLoad();
+        //   this.detailViewLead.promiseAllLoad();
         this.view.dataService.update(this.dataSelected).subscribe();
         this.changeDetectorRef.detectChanges();
       }
@@ -1059,7 +1074,6 @@ export class LeadsComponent
       default:
         break;
     }
-    console.log('gộp: ', e);
   }
   //#endregion
 
@@ -1124,42 +1138,42 @@ export class LeadsComponent
   }
   startFirst(data) {
     this.notificationsService
-    .alertCode('DP033', null, [
-      '"' + data?.leadName + ' bạn có muốn quay trở lại đầu tiên không"' ||
-        '',
-    ])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.codxCmService
-          .moveBackStartInstance([
-            data.refID,
-            data.status,
-            data.processID,
-            this.applyForLead,
-          ])
-          .subscribe((resDP) => {
-            if (resDP) {
-              var datas = [data.recID, resDP[0]];
-              this.codxCmService
-                .moveStartFirstLead(datas)
-                .subscribe((res) => {
-                  if (res) {
-                    this.dataSelected = res[0];
-                    this.dataSelected = JSON.parse(
-                      JSON.stringify(this.dataSelected)
-                    );
-                    this.detailViewLead.reloadListStep(resDP[1]);
-                    this.notificationsService.notifyCode('SYS007');
-                    this.view.dataService
-                      .update(this.dataSelected)
-                      .subscribe();
-                  }
-                  this.detectorRef.detectChanges();
-                });
-            }
-          });
-      }
-    });
+      .alertCode('DP033', null, [
+        '"' + data?.leadName + ' bạn có muốn quay trở lại đầu tiên không"' ||
+          '',
+      ])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.codxCmService
+            .moveBackStartInstance([
+              data.refID,
+              data.status,
+              data.processID,
+              this.applyForLead,
+            ])
+            .subscribe((resDP) => {
+              if (resDP) {
+                var datas = [data.recID, resDP[0]];
+                this.codxCmService
+                  .moveStartFirstLead(datas)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.dataSelected = res[0];
+                      this.dataSelected = JSON.parse(
+                        JSON.stringify(this.dataSelected)
+                      );
+                      this.detailViewLead.reloadListStep(resDP[1]);
+                      this.notificationsService.notifyCode('SYS007');
+                      this.view.dataService
+                        .update(this.dataSelected)
+                        .subscribe();
+                    }
+                    this.detectorRef.detectChanges();
+                  });
+              }
+            });
+        }
+      });
   }
   updateProcess(data, isCheck) {
     this.notificationsService
@@ -1527,12 +1541,20 @@ export class LeadsComponent
   //export theo moreFun
   exportFiles(e, data) {
     let customData: any;
+    debugger;
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dts,
+          };
+        } else {
+          customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1546,13 +1568,18 @@ export class LeadsComponent
         this.detectorRef.detectChanges();
       });
     } else {
+      customData = {
+        refID: data.recID,
+        refType: this.view.entityName,
+      };
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave,
         this.view.formModel,
         this.view.dataService,
-        this
+        this,
+        customData
       );
       this.detectorRef.detectChanges();
     }
@@ -1679,7 +1706,12 @@ export class LeadsComponent
       }
     });
   }
-  formatTitleMore(titleAction){
-    return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
-   }
+  formatTitleMore(titleAction) {
+    return (
+      titleAction +
+      ' ' +
+      this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() +
+      this.funcIDCrr.customName.slice(1)
+    );
+  }
 }

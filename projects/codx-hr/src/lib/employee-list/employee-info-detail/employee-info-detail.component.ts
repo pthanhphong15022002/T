@@ -741,6 +741,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   editHeaderText;
   //#endregion
 
+  loadedLineManager = false;
+  loadedIndirectManager = false;
+
   //#region filter variables of form main eDayoffs
   filterByKowIDArr: any = [];
   yearFilterValueDayOffs;
@@ -922,6 +925,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           if(res){
             console.log('info nv',  res[0]);
             this.infoPersonal = res[0];
+          this.getManagerEmployeeInfoById();
             this.infoPersonal.PositionName = res[1]
             // this.lstOrg = res[2]
             this.orgUnitStr = res[2]
@@ -955,7 +959,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.loadEBenefit = true;
             this.crrEContract = res[7];
           }
-          this.getManagerEmployeeInfoById();
         })
       }
       if (this.employeeID) {
@@ -3111,9 +3114,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           break;
 
         case this.jobInfoFuncID:
-          debugger
           this.lineManager = null;
           this.indirectManager = null;
+          this.loadedLineManager = false;
+          this.loadedIndirectManager = false;
+          this.getManagerEmployeeInfoById();
           this.lstBtnAdd = []
           this.lstFuncJobInfo = res;
           for(let i = 0; i < res.length; i++){
@@ -5798,10 +5803,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       empRequest.predicates = 'EmployeeID=@0';
       empRequest.pageLoading = false;
       this.hrService.loadData('HR', empRequest).subscribe((res: any) => {
+        console.log('line manager', res);
         if (Array.isArray(res) && res[1] > 0) {
           this.lineManager = res[0][0];
+          this.loadedLineManager = true;
+          this.df.detectChanges()
         }
       });
+    }
+    else{
+      this.loadedLineManager = true;
+      this.df.detectChanges()
     }
     if (this.infoPersonal?.indirectManager) {
       let empRequest = new DataRequest();
@@ -5812,8 +5824,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.indirectManager = emp[0][0];
+          this.loadedIndirectManager = true;
+          this.df.detectChanges()
         }
       });
+    }
+    else{
+      this.loadedIndirectManager = true;
+      this.df.detectChanges()
     }
   }
 }

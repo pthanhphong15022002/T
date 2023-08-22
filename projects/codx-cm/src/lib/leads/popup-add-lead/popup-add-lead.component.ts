@@ -143,6 +143,7 @@ export class PopupAddLeadComponent
   leadNoProcess: any;
   leadNoSetting: any;
   leadNoSystem: any;
+  user:any;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -169,6 +170,7 @@ export class PopupAddLeadComponent
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog.formModel;
     this.funcID = this.formModel?.funcID;
@@ -210,21 +212,19 @@ export class PopupAddLeadComponent
       this.lead[$event.field] = $event.data;
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
-      }
-      else if( $event.field == 'industries') {
+      } else if ($event.field == 'industries') {
         let owner = $event.component.itemsSelected[0].Owner;
         let ownerName = '';
-        if(this.applyProcess) {
-          let index = this.listParticipants.findIndex(x=>x.userID);
+        if (this.applyProcess) {
+          let index = this.listParticipants.findIndex((x) => x.userID);
 
-          if(index != -1 ) {
+          if (index != -1) {
             this.owner = owner;
             ownerName = this.listParticipants[index].userName;
           }
-        }
-        else {
-          this.owner = owner
-           ownerName = '';
+        } else {
+          this.owner = owner;
+          ownerName = '';
         }
         this.checkOwner(this.owner, ownerName);
       }
@@ -306,8 +306,7 @@ export class PopupAddLeadComponent
       if (view === this.viewOwnerDefault) {
         this.owner = $event?.data;
         ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      }
-      else {
+      } else {
         this.owner = $event;
         if (this.listParticipants.length > 0 && this.listParticipants) {
           ownerName = this.listParticipants.filter(
@@ -315,10 +314,9 @@ export class PopupAddLeadComponent
           )[0].userName;
         }
       }
-      this.checkOwner(this.owner , ownerName);
-    }
-    else if( view === this.viewOwnerProcess){
-      this.owner ='';
+      this.checkOwner(this.owner, ownerName);
+    } else if (view === this.viewOwnerProcess) {
+      this.owner = '';
     }
   }
   checkOwner(owner: any, ownerName: any) {
@@ -356,6 +354,40 @@ export class PopupAddLeadComponent
   //   }
   // }
 
+  addPermission(processId:any) {
+
+    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
+    if (result) {
+      let permissionsDP = result?.permissionRoles;
+      if(permissionsDP.length > 0 && permissionsDP) {
+        for(let item of permissionsDP ) {
+          this.lead.permissions.push(this.copyPermission(item));
+        }
+      }
+    }
+  }
+
+  // Add permission from DP
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = permissionDP.isActive;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    return permission;
+  }
   checkApplyProcess(check: boolean) {
     if (check) {
       this.planceHolderAutoNumber = this.leadNoProcess;
@@ -415,6 +447,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
+    this.addPermission(this.lead.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -474,7 +507,8 @@ export class PopupAddLeadComponent
       await this.saveFileContact(this.contactId);
     }
     if (this.isLoading) {
-    } else {
+    }
+    else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
         await this.onAdd();
@@ -559,6 +593,7 @@ export class PopupAddLeadComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
+          permissionRoles: res[3]
         };
         this.leadNoProcess = res[2];
         var isExist = this.listMemorySteps.some((x) => x.id === processId);

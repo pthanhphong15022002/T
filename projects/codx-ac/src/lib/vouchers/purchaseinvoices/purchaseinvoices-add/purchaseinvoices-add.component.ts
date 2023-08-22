@@ -223,6 +223,7 @@ export class PurchaseinvoicesAddComponent
     }
   }
 
+  /** Hide some mfs */
   onChangeMF(e): void {
     for (const mf of e) {
       if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
@@ -237,7 +238,6 @@ export class PurchaseinvoicesAddComponent
 
   /**
    * @param columns grid.columnsGrid
-   * @returns
    */
   onGridInit(columns: any[]): void {
     if (this.journal.addNewMode === '2') {
@@ -447,7 +447,7 @@ export class PurchaseinvoicesAddComponent
         this.master.unbounds = {
           requiresTaxUpdate: event.status === 'Y',
         };
-        this.handleMasterChange(field);
+        this.changeMaster(field);
       });
 
       return;
@@ -460,7 +460,7 @@ export class PurchaseinvoicesAddComponent
       'taxexchrate',
     ];
     if (postFields.includes(field)) {
-      this.handleMasterChange(field);
+      this.changeMaster(field);
     } else {
       this.prevMaster = { ...this.master };
     }
@@ -650,7 +650,7 @@ export class PurchaseinvoicesAddComponent
     });
   }
 
-  handleMasterChange(field: string): void {
+  changeMaster(field: string): void {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
         field,
