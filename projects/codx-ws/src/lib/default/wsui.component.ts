@@ -13,9 +13,12 @@ import { CodxWsService } from '../codx-ws.service';
 
 @Component({ template: '' })
 export abstract class WSUIComponent implements OnInit {
+    funcID:any;
+
     abstract onInit(): void;
     protected route!: ActivatedRoute;
     protected codxWsService!: CodxWsService;
+    
     constructor(inject: Injector) 
     {
         this.route = inject.get(ActivatedRoute);
@@ -29,7 +32,7 @@ export abstract class WSUIComponent implements OnInit {
     
     getFuncID()
     {
-        var funcID = this.route.snapshot.paramMap.get('funcID');
-        this.codxWsService.funcChange.next(funcID);
+        this.funcID = this.route.snapshot.paramMap.get('funcID');
+        this.codxWsService.funcChange.next(this.funcID);
     }
 }

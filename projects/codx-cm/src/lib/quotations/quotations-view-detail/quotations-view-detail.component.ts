@@ -85,6 +85,7 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
   crrContactID: any;
   loadedRef: boolean = false;
   dataRef: any;
+  loadFirst = true;
 
   constructor(
     private api: ApiHttpService,
@@ -121,10 +122,13 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
       this.loadedRef = true;
       this.dataRef = null;
     }
-    this.loadTabs();
+    if (!this.loadFirst) this.loadTabs();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.loadTabs();
+    this.loadFirst = false;
+  }
 
   loadTabs() {
     let references = {
