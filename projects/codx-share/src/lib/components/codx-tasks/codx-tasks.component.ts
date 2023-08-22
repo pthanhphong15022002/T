@@ -1098,7 +1098,6 @@ export class CodxTasksComponent
           let viewOut = false;
           this.viewsDefault.forEach((v, index) => {
             let idx = views.findIndex((x) => x.view == v.type);
-            debugger;
             if (idx != -1) {
               v.hide = false;
               if (v.type != this.viewCrr) v.active = false;
