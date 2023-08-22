@@ -127,7 +127,8 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.inputData[event.field] = event.data.value | event.data;
         break;
       case 'isExcept':
-        this.inputData[event.field] = event.data.value | event.data;
+        let result = event.data.value | event.data;
+        this.inputData[event.field] = result == 1 ? true : false;
         break;
       case 'inMonth':
         this.inputData[event.field] = event.data.value | event.data;
@@ -189,9 +190,10 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
     this.hrService.calculateAnnualLeaveAsync(this.inputData.alYear, this.inputData.alObjectID,
       this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
       .subscribe(res => {
-        if (res[0]?.length > 0) {
-          //this.dialogRef.close(res[0]);
-        }
+        console.log(res);
+        // if (res[0]?.length > 0) {
+        //   this.dialogRef.close(res[0]);
+        // }
       })
     // this.inputEmployeeList = [];
     // this.excludedEmployeeList = [];
@@ -205,8 +207,7 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
     //   this.currentStep = 2;
   }
   cancel() {
-    this.stepper.nativeElement.goNext();
-    //this.dialogRef.close();
+    this.dialogRef.close();
   }
 }
 export class CalculateInputData {

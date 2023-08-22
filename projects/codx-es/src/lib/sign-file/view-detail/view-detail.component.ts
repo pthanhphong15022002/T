@@ -192,6 +192,19 @@ export class ViewDetailComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.files = res;
+              // if(this.itemDetail.approveStatus!='5' && this.files?.length>0){
+              //   for(let i=0;i<this.files?.length;i++){
+              //     if(this.files[i].history?.length>0 ){
+              //       let orgFile = this.files[i].history.filter((x:any)=>x.version=='Ver 001');
+              //       if(orgFile?.length>0){
+              //         let tempFile =orgFile[0];
+              //         //tempFile.fileName = this.files[i].fileName.split('.')[0] + tempFile?.extension;
+              //         //tempFile.permissions = this.files[i].permissions;
+              //         this.files[i]=tempFile;
+              //       }
+              //     }      
+              //   }                            
+              // }
             }
           });
       }

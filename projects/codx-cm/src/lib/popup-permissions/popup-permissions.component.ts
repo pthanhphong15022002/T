@@ -24,7 +24,7 @@ export class PopupPermissionsComponent implements OnInit {
   lstPermissions: CM_Permissions[] = [];
   lstDeletePermissions: CM_Permissions[] = [];
   listRoles = [];
-  currentPemission: any;
+  currentPemission: number;
   //#region quyền
   isSetFull = false;
   full: boolean = false;
@@ -66,8 +66,13 @@ export class PopupPermissionsComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-    if (this.lstPermissions != null && this.lstPermissions.length > 0) {
-      this.currentPemission = 0;
+    if (
+      this.lstPermissions.filter((x) => x.memberType == '1') != null &&
+      this.lstPermissions.filter((x) => x.memberType == '1').length > 0
+    ) {
+      this.currentPemission = this.lstPermissions.findIndex(
+        (inline) => inline.memberType === '1'
+      );
       this.changePermissions(this.currentPemission);
     }
   }
@@ -171,8 +176,12 @@ export class PopupPermissionsComponent implements OnInit {
       if (perm != null && list.length > 0) {
         index = list.findIndex(
           (x) =>
-            (x.objectID != null && x.objectID === perm.objectID) ||
-            (x.objectID == null && x.objectType == perm.objectType)
+            (x.objectID != null &&
+              x.objectID === perm.objectID &&
+              x.memberType == '1') ||
+            (x.objectID == null &&
+              x.objectType == perm.objectType &&
+              x.memberType == '1')
         );
       }
     } else {
@@ -192,7 +201,7 @@ export class PopupPermissionsComponent implements OnInit {
       list.push(Object.assign({}, perm));
     }
 
-    if(perm.objectType == '7'){
+    if (perm.objectType == '7') {
       perm.full = true;
       perm.read = true;
       perm.update = true;
@@ -285,7 +294,8 @@ export class PopupPermissionsComponent implements OnInit {
         (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
           this.lstPermissions[this.currentPemission]?.objectID ==
             this.data?.owner) ||
-        !this.data?.allowPermit || this.lstPermissions[this.currentPemission]?.memberType == '0'
+        !this.data?.allowPermit ||
+        this.lstPermissions[this.currentPemission]?.memberType == '0'
       )
         return true;
     }
@@ -306,7 +316,9 @@ export class PopupPermissionsComponent implements OnInit {
       if (
         (this.lstPermissions[index]?.roleType == 'O' &&
           this.lstPermissions[index]?.objectID == this.data?.owner) ||
-        !this.data?.assign || this.lstPermissions[index]?.memberType == '0' || this.lstPermissions[index]?.memberType == '2'
+        !this.data?.assign ||
+        this.lstPermissions[index]?.memberType == '0' ||
+        this.lstPermissions[index]?.memberType == '2'
       )
         return true;
     }
@@ -329,9 +341,11 @@ export class PopupPermissionsComponent implements OnInit {
             this.lstDeletePermissions.push(tmp);
           }
           this.lstPermissions.splice(index, 1);
-          this.currentPemission = 0;
           if (this.lstPermissions != null && this.lstPermissions.length > 0)
-            this.changePermissions(this.currentPemission);
+            this.currentPemission = this.lstPermissions.findIndex(
+              (inline) => inline.memberType === '1'
+            );
+          this.changePermissions(this.currentPemission);
         }
       }
     });
@@ -339,9 +353,34 @@ export class PopupPermissionsComponent implements OnInit {
   //#endregion
 
   //#region save
+
+  setPermissionsToData() {
+    if (this.lstPermissions != null && this.lstPermissions.length > 0) {
+      if (
+        this.data?.permissions != null &&
+        this.data?.permissions?.length > 0
+      ) {
+        var lst = [];
+        for (var item of this.data?.permissions) {
+          for (var inline of this.lstPermissions) {
+            if (
+              inline.memberType == '1' &&
+              inline.objectID == item?.objectID &&
+              inline.objectType == item?.objectType
+            ) {
+              var newItem = new CM_Permissions();
+              newItem = inline;
+            }
+          }
+        }
+      } else {
+        this.data.permissions = this.lstPermissions;
+      }
+    }
+  }
+
   onSave() {
-    this.data.permissions =
-      this.lstPermissions != null ? this.lstPermissions : [];
+    this.data.permissions = this.lstPermissions ?? [];
     if (
       this.currentPemission > -1 &&
       this.lstPermissions[this.currentPemission] != null &&

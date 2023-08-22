@@ -72,6 +72,8 @@ export class CodxAddTaskComponent implements OnInit {
   isStatusNew = true;
   isStart = false;
 
+  listField = [];
+
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -138,7 +140,7 @@ export class CodxAddTaskComponent implements OnInit {
     }
 
     this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
-    this.participant = this.roles?.filter((role) => role.roleType !== this.stepsTasks?.owner);
+    this.participant = this.roles?.filter((role) => role.objectID !== this.stepsTasks?.owner);
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
@@ -148,6 +150,10 @@ export class CodxAddTaskComponent implements OnInit {
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }
+    }
+    if(this.step?.fields?.length > 0 && this.stepsTasks?.fieldID){
+      let fieldID = this.stepsTasks?.fieldID;
+      this.listField = this.step?.fields?.filter((field) => fieldID?.includes(field?.recID));
     }
   }
 
@@ -520,4 +526,28 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   //#endregion
+  addFileCompleted(e) {
+    // this.isAddComplete = e;
+  }
+  valueChangeCustom(event) {
+    if (event && event.e && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'R':
+        case 'A':
+          result = event.e;
+          break;
+      }
+
+      // var index = this.fiels.findIndex((x) => x.recID == field.recID);
+      // if (index != -1) {
+      //   this.fiels[index].dataValue = result;
+      // }
+    }
+  }
 }
