@@ -14,6 +14,7 @@ import {
   NotificationsService,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -118,7 +119,7 @@ export class ResourcesComponent extends UIComponent {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          this.resourceGridView = gv;
+          this.resourceGridView = Util.camelizekeyObj(gv);
           switch (this.funcID) {
             case EPCONST.FUNCID.R_Category:
               this.roomCategory();
@@ -259,35 +260,35 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView['ResourceName'].headerText,
+        headerText: this.resourceGridView?.resourceName?.headerText || 'ResourceName',
         //width: '25%',
         template: this.roomNameCol,
       },
       {
-        headerText: this.resourceGridView['Location'].headerText,
+        headerText: this.resourceGridView?.location?.headerText || 'Location',
         //width: '15%', //width: gv['Location'].width,
         field: 'location',
         template: this.locationCol,
       },
       {
-        headerText: this.resourceGridView['Equipments'].headerText,
+        headerText: this.resourceGridView?.equipments?.headerText || 'Equipments',
         //width: '10%', //gv['Equipments'].width,
         field: 'equipments',
         template: this.equipmentsCol,
       },
       {
-        headerText: this.resourceGridView['Note'].headerText,
+        headerText: this.resourceGridView?.note?.headerText || 'Note',
         //width: '20%', //width: gv['Note'].width,
         template: this.noteCol,
         field: 'note',
       },
       {
-        headerText: this.resourceGridView['Owner'].headerText,
+        headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         //width: '15%',
         template: this.ownerCol,
       },
       {
-        headerText: this.resourceGridView['Preparator'].headerText,
+        headerText: this.resourceGridView?.preparator?.headerText || 'Preparator',
         //width: '15%',
         template: this.preparatorCol,
       },
@@ -316,18 +317,18 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView['ResourceName'].headerText,
+        headerText: this.resourceGridView?.resourceName?.headerText  || 'ResourceName',
         template: this.carNameCol,
         //width: '25%',
       },
       {
-        headerText: this.resourceGridView['CompanyID'].headerText,
+        headerText: this.resourceGridView?.companyID?.headerText  || 'CompanyID',
        // width: '15%',
         field: 'companyID',
         template: this.companyCol,
       },
       {
-        headerText: this.resourceGridView['Equipments'].headerText,
+        headerText: this.resourceGridView?.equipments?.headerText || 'Equipments',
         //width: '10%', //gv['Equipments'].width,
         field: 'equipments',
         template: this.equipmentsCol,
@@ -335,19 +336,19 @@ export class ResourcesComponent extends UIComponent {
         // textAlign: 'Center',
       },
       {
-        headerText: this.resourceGridView['Note'].headerText,
+        headerText: this.resourceGridView?.note?.headerText || 'Note',
         //textAlign: 'center',
         //width: '20%',
         template: this.noteCol,
         field: 'note',
       },
       {
-        headerText: this.resourceGridView['LinkID'].headerText,
+        headerText: this.resourceGridView?.linkID?.headerText || 'LinkID',
         //width: '15%', //width:gv['Owner'].width,
         template: this.linkCol,
       },
       {
-        headerText: this.resourceGridView['Owner'].headerText,
+        headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         //width: '15%', //width:gv['Owner'].width,
         template: this.ownerCol,
       },
@@ -376,29 +377,29 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView['ResourceName'].headerText,
+        headerText: this.resourceGridView?.resourceName?.headerText || 'ResourceName',
         template: this.driverNameCol,
         //width: '20%',
       },
       {
-        headerText: this.resourceGridView['CompanyID'].headerText,
+        headerText: this.resourceGridView?.companyID?.headerText || 'CompanyID',
         field: 'company',
         template: this.companyCol,
       },
 
       {
-        headerText: this.resourceGridView['LinkID'].headerText,
+        headerText: this.resourceGridView?.linkID?.headerText || 'LinkID',
         //width:gv['Owner'].width,
         template: this.carCol,
         //width: '20%',
       },
       {
-        headerText: this.resourceGridView['Owner'].headerText,
+        headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         //width:gv['Owner'].width,
         template: this.ownerCol,
       },
       {
-        headerText: this.resourceGridView['Note'].headerText,
+        headerText: this.resourceGridView?.note?.headerText || 'Note',
         field: 'note',
         template: this.noteCol,
       },
@@ -428,16 +429,16 @@ export class ResourcesComponent extends UIComponent {
       {
         field: 'resourceID',
         template: this.cardIDCol,
-        headerText: this.resourceGridView['ResourceID'].headerText,
+        headerText: this.resourceGridView?.resourceID?.headerText || 'ResourceID',
       },
       {
         field: 'resourceName',
         template: this.cardNameCol,
-        headerText: this.resourceGridView['ResourceName'].headerText,
+        headerText: this.resourceGridView?.resourceName?.headerText  || 'ResourceName',
         //width: '20%',
       },
       {
-        headerText: this.resourceGridView['Icon'].headerText,
+        headerText: this.resourceGridView?.icon?.headerText || 'Icon',
         template: this.cardImgCol,
         textAlign: 'Center',
         headerTextAlign: 'Center',
@@ -445,7 +446,7 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'status',
-        headerText: this.resourceGridView['Status'].headerText,
+        headerText: this.resourceGridView?.status?.headerText || 'Status',
         textAlign: 'Center',
         headerTextAlign: 'Center',
         template: this.cardStatus,
@@ -453,10 +454,10 @@ export class ResourcesComponent extends UIComponent {
       {
         field: 'note',
         template: this.noteCol,
-        headerText: this.resourceGridView['Note'].headerText,
+        headerText: this.resourceGridView?.note?.headerText || 'Note',
       },
       {
-        headerText: this.resourceGridView['Owner'].headerText,
+        headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         template: this.ownerCol,
       },
     ];

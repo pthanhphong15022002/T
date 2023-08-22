@@ -61,7 +61,6 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   hasChangedData: boolean = false;
 
-  onFirstInit: boolean = true;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -100,7 +99,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.hasChangedData = false;
           }
         })
-    }
+    }else this.hasChangedData = true;
   }
 
   //get grvSetup
@@ -147,7 +146,6 @@ export class PopupAddEmployeeComponent implements OnInit {
                 }
               });
           }
-          this.onFirstInit = false;
           break;
         case 'orgUnitID':
           // this.getOrgNote();
@@ -196,9 +194,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainFieldID){
+              this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + ' ',"");
             }
           } else {
             this.trainLevel = null;
@@ -207,9 +208,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainLevel){
+              this.trainLevel = this.data['degreeName'].replace(' ' + this.trainFieldID,"");
             }
           } else {
             this.trainFieldID = null;
