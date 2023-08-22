@@ -576,6 +576,7 @@ implements OnInit{
 
   onClickOpenSelectIncludeObj(){
     if(this.benefitPolicyObj.hasIncludeObjects){
+      debugger
       let opt = new DialogModel();
       let popup = this.callfunc.openForm(
         PopupMultiselectvllComponent,
@@ -596,7 +597,7 @@ implements OnInit{
         if(res.event){
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
-          if(this.lstSelectedObj.length > 0){
+          if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
             this.addApplyObj()
           }
           this.df.detectChanges();
@@ -615,7 +616,7 @@ implements OnInit{
         450,
         null,
         {
-          headerText: 'Chọn đối tượng áp dụng',
+          headerText: 'Chọn đối tượng loại trừ',
           vllName : 'HRObject',
           formModel: this.formModel,
           dataSelected: this.benefitPolicyObj.excludeObjects
@@ -626,7 +627,7 @@ implements OnInit{
       popup.closed.subscribe((res) => {
         this.benefitPolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
-        if(this.lstSelectedExcludeObj.length > 0){
+        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
           this.addExcludeObj()
         }
         this.df.detectChanges();
@@ -1572,7 +1573,7 @@ implements OnInit{
             }
 
             if(this.benefitPolicyObj.isConstraintOther && this.benefitPolicyObj.constraintBy){
-              this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+              this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
               this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 
               })
@@ -1603,7 +1604,7 @@ implements OnInit{
             if(this.benefitPolicyObj.constraintBy){
               this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
                 if(this.benefitPolicyObj.isConstraintOther){
-                  this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                  this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
                   this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                   })
                 }
@@ -1622,7 +1623,7 @@ implements OnInit{
             this.notify.notifyCode('SYS007');
             this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
                 if(this.benefitPolicyObj.constraintBy){
-                this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
                 this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 })
               }

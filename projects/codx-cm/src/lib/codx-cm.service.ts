@@ -83,10 +83,9 @@ export class CodxCmService {
     );
   }
 
-  getOneCustomer(recID, entityName) {
+  getOneCompetitor(recID) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
       recID,
-      entityName,
     ]);
   }
 

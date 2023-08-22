@@ -50,7 +50,7 @@
               ? planceHolderAutoNumber
               : gridViewSetup['CustGroupID']?.description
           "
-          [disabled]="disabledShowInput"
+          [disabled]="disabledShowInput || action == 'edit'"
           [crrValue]="data?.custGroupID"
           (valueChange)="valueChange($event)"
           [field]="'custGroupID'"

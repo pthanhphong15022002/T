@@ -105,12 +105,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     entityName : 'AC_CashPaymentsLines',
     gridViewName : 'grvCashPaymentsLines'
   }
-  // noEditSetting: EditSettingsModel = {
-  //   allowEditing: false,
-  //   allowAdding: false,
-  //   allowDeleting: false,
-  //   mode: 'Normal',
-  // };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -855,8 +849,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       case 'add':
       case 'copy':
         if (this.hasSaved) {
-          if (this.cashpayment.updateColumn) {
-            this.cashpayment.updateColumn = null;
+          if (this.cashpayment.updateColumn) {    
             this.dialog.dataService.updateDatas.set(
               this.cashpayment['_uuid'],
               this.cashpayment
@@ -867,6 +860,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res && !res.update.error) {
                   this.addRowDetailByType(typeBtn);
+                  this.cashpayment.updateColumn = null;
                 }
               });
           } else {
@@ -876,15 +870,15 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
           this.dialog.dataService.addDatas.set(
             this.cashpayment['_uuid'],
             this.cashpayment
-          );
-          this.cashpayment.updateColumn = null;
-          this.hasSaved = true;
+          );    
           this.dialog.dataService
             .save(null, 0, '', '', false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
               if (res && !res.save.error) {
                 this.addRowDetailByType(typeBtn);
+                this.cashpayment.updateColumn = null;
+                this.hasSaved = true;
               }
             });
         }
@@ -1255,6 +1249,10 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.oLine.transID = this.cashpayment.recID;
     this.oLine.objectID = this.cashpayment.objectID;
     this.oLine.reasonID = this.cashpayment.reasonID;
+    this.oLine.dr = 0;
+    this.oLine.cr = 0;
+    this.oLine.dR2 = 0;
+    this.oLine.cR2 = 0;
 
     let indexCashBook =
       this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex(

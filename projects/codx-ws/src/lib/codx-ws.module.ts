@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ProgressAnnotationService } from '@syncfusion/ej2-angular-progressbar';
 import { CodxWsHeaderComponent } from './_layout/codx-ws-header/codx-ws-header.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -15,8 +16,12 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'mwp/workspace/:funcID',
+        path: 'ws/workspace/:funcID',
         component: WorkspaceComponent,
+      },
+      {
+        path: 'ws/calendar/:funcID',
+        component: CalendarComponent,
       },
       {
         path: '',

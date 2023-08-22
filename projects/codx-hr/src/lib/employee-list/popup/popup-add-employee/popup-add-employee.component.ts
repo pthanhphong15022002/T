@@ -61,7 +61,6 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   hasChangedData: boolean = false;
 
-  onFirstInit: boolean = true;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -100,7 +99,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.hasChangedData = false;
           }
         })
-    }
+    }else this.hasChangedData = true;
   }
 
   //get grvSetup
@@ -147,7 +146,6 @@ export class PopupAddEmployeeComponent implements OnInit {
                 }
               });
           }
-          this.onFirstInit = false;
           break;
         case 'orgUnitID':
           // this.getOrgNote();

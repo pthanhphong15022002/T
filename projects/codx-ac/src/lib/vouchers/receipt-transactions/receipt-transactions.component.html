@@ -1020,14 +1020,7 @@
             </th>
             <td class="d-flex flex-column gap-1">
               <div class="fw-bold">
-                <span
-                  #itemID
-                  [innerHTML]="
-                    item?.itemID
-                      | formatvalue : fmVouchersLines : 'itemID' : itemID
-                      | async
-                  "
-                ></span>
+                {{ item.itemName }}
               </div>
               <div>
                 <codx-label

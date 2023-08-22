@@ -84,6 +84,7 @@
                     [checked]="
                       itemList?.status === 'true' || itemList?.status === '1'
                     "
+                    (valueChange)="valueChangeCB($event, data, i)"
                   ></codx-input>
                   <div class="text-break ms-2">{{ itemList.listNote }}</div>
                 </div>
