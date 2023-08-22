@@ -390,6 +390,20 @@
       </codx-input>
     </div>
 
+    <div class="form-group">
+      <ng-container *ngFor="let item of listField">
+        <codx-input-custom-field
+        [customField]="item"
+        [objectId]="item.recID"
+        [objectType]="'DP_Instances_Steps_Fields'"
+        [formModel]="dialog.formModel"
+        (valueChangeCustom)="valueChangeCustom($event)"
+        (addFileCompleted)="addFileCompleted($event)"
+      ></codx-input-custom-field>
+      </ng-container>
+      
+    </div>
+
     <div class="form-group d-flex align-item-center" *ngIf="this.action == 'add' && isStart && stepsTasks.status == '1'">
       <codx-input
         type="switch"
