@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxWrComponent } from './codx-wr.component';
+import { PersonalComponent } from './personal.component';
 
-describe('CodxWrComponent', () => {
-  let component: CodxWrComponent;
-  let fixture: ComponentFixture<CodxWrComponent>;
+describe('PersonalComponent', () => {
+  let component: PersonalComponent;
+  let fixture: ComponentFixture<PersonalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CodxWrComponent]
+      declarations: [PersonalComponent]
     });
-    fixture = TestBed.createComponent(CodxWrComponent);
+    fixture = TestBed.createComponent(PersonalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -15,6 +15,7 @@ import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { WarrantiesComponent } from './warranties/warranties.component';
+import { ViewListWrComponent } from './warranties/view-list-wr/view-list-wr.component';
 
 var routes: Routes = [
   {
@@ -30,7 +31,12 @@ var routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [LayoutComponent, CodxWrComponent, WarrantiesComponent],
+  declarations: [
+    LayoutComponent,
+    CodxWrComponent,
+    WarrantiesComponent,
+    ViewListWrComponent,
+  ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

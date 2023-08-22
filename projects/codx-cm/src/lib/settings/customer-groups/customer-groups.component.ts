@@ -114,19 +114,11 @@ export class CustomerGroupsComponent extends UIComponent {
         case 'Icon':
           template = this.icon;
           break;
-        case 'CreatedOn':
-          template = this.createdOn;
-          break;
-        case 'ModifiedOn':
-          template = this.modifiedOn;
-          break;
-        default:
-          break;
       }
       if (template) {
         colums = {
           field: field,
-          headerText: grid[key].headerText,
+          headerText: grid[key].headerText ?? key,
           width: grid[key].width,
           template: template,
           // textAlign: 'center',
@@ -134,7 +126,7 @@ export class CustomerGroupsComponent extends UIComponent {
       } else {
         colums = {
           field: field,
-          headerText: grid[key].headerText,
+          headerText: grid[key].headerText ?? key,
           width: grid[key].width,
         };
       }

@@ -78,6 +78,12 @@ export class CurrencyFormComponent extends UIComponent {
     //   .subscribe((res) => {
     //     if (res) this.funcName = res.defaultName;
     //   });
+    this.cache.functionList(this.view.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+      this.funcName = res.defaultName;
+    });
+    
     this.views = [
       {
         type: ViewType.grid,
@@ -114,7 +120,7 @@ export class CurrencyFormComponent extends UIComponent {
     }
   }
   add(e) {
-    this.headerText = e.text + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName.toLowerCase();
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -144,7 +150,7 @@ export class CurrencyFormComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: e.text + ' ' + this.funcName.toLowerCase(),
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -166,7 +172,7 @@ export class CurrencyFormComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: e.text + ' ' + this.funcName.toLowerCase(),
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;

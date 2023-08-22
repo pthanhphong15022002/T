@@ -114,7 +114,9 @@ export class PopupAddEmployeeComponent implements OnInit {
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-
+  hasChangeAva(event){
+    this.hasChangedData = true;
+  }
   //value change
   valueChange(event: any) {
     if (event) {
@@ -194,9 +196,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainFieldID){
+              this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + ' ',"");
             }
           } else {
             this.trainLevel = null;
@@ -205,9 +210,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainLevel){
+              this.trainLevel = this.data['degreeName'].replace(' ' + this.trainFieldID,"");
             }
           } else {
             this.trainFieldID = null;

@@ -1938,10 +1938,10 @@ codx-calendar .e-tab{
     //width: 130px !important;
     max-width: 130px !important;
   }
-  .e-tab-header.e-vertical:before {
+ // .e-tab-header.e-vertical:before {
     //border-color: var(--gray-200);
     //left: 20%;
-  }
+ // }
 }
 
 
@@ -2165,9 +2165,9 @@ codx-calendar {
   .e-tab .e-tab-header.e-vertical .e-toolbar-item {
     border-left: 3px transparent solid !important;
   }
-  .e-tab > .e-content{
+  //.e-tab > .e-content{
     //margin-left: 140px;
-  }
+ // }
 }
 .w-550px.dropdown-menu{
   codx-calendar {
