@@ -114,7 +114,9 @@ export class PopupAddEmployeeComponent implements OnInit {
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-
+  hasChangeAva(event){
+    this.hasChangedData = true;
+  }
   //value change
   valueChange(event: any) {
     if (event) {
