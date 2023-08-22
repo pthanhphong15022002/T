@@ -133,8 +133,19 @@ export class PopupJobComponent implements OnInit {
     await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
     this.listTaskLink = listTaskConvert;
     this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
+
     this.listFieldID = this.stepsTasks?.fieldID ? this.stepsTasks?.fieldID?.split(';') : [];
     this.listFields = this.step?.fields || [];
+
+    let listField = [];
+    if (this.step?.tasks?.length > 0) {
+      this.step.tasks.forEach(task => {
+        if (task?.fieldID && task.recID != this.stepsTasks?.recID) {
+          listField.push(...task.fieldID.split(';'));
+        }
+      });
+    }
+    this.listFields = this.step?.fields.filter(field => !listField.includes(field.recID));
   }
 
   ngAfterViewInit(){
