@@ -1,25 +1,30 @@
 import {
   ChangeDetectorRef,
   Component,
+  OnInit,
   Optional,
   ViewChild,
 } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef } from 'codx-core';
+import { CallFuncService, DialogData, DialogRef, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { WR_WorkOrderUpdates } from '../../_models-wr/wr-model.model';
 
 @Component({
   selector: 'lib-popup-update-reasoncode',
   templateUrl: './popup-update-reasoncode.component.html',
   styleUrls: ['./popup-update-reasoncode.component.css'],
 })
-export class PopupUpdateReasonCodeComponent {
+export class PopupUpdateReasonCodeComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
-  data: any;
+  data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
   title = '';
   showLabelAttachment = false;
   isHaveFile = false;
+
+  dateControl = false;
+  commentControl = false;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -30,8 +35,23 @@ export class PopupUpdateReasonCodeComponent {
     // this.data = JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
     this.title = dt?.data?.title;
   }
+  ngOnInit(): void {
+    this.data.recID = Util.uid();
 
-  onSave() {}
+  }
+
+  async onSave() {
+    if (this.attachment?.fileUploadList?.length > 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          var countAttach = 0;
+          countAttach = Array.isArray(res) ? res.length : 1;
+          this.data.attachments = countAttach;
+        }
+      });
+    } else {
+    }
+  }
 
   valueChange(e) {}
 

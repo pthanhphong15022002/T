@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, inject } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
+import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 
 @Component({
   selector: 'lib-popup-policygeneral',

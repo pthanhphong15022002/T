@@ -259,7 +259,7 @@
             [disabled]="journal?.assignRule != '0'"
             [placeholder]="
               journal?.assignRule == '2'
-                ? (voucherNoPlaceholderText$ | async)
+                ? ('AC0028' | mssg | async)
                 : ''
             "
           ></codx-input>
