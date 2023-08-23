@@ -114,6 +114,7 @@ export class NotifyBodyComponent implements OnInit {
 
   // view detail noti
   clickNotification(item:any,element:any){
+    debugger
     if(element.target.tagName !== 'A'){
       if(!item.read){
         this.api.execSv(

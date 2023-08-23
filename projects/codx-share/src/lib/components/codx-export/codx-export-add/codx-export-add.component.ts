@@ -246,7 +246,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
                       if(saved)
                       {
                         //Trả về thông tin khi upload file thành công
-                        let fileName = saved.data?.fileName; // report cần trả về fileName để set reportName
+                        debugger
+                        let fileName = saved.data?.fileName;
                         this.dialog.close([item[1], this.type,fileName]);
                       }
                       else{
@@ -315,7 +316,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
               this.onSaveWord();
-              this.dialog.close([item[1][0], this.type]);
+              debugger
+              this.dialog.close([item[1][0], this.type,this.nameFile]);
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
