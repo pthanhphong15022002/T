@@ -110,7 +110,7 @@ export class LeadsComponent
   vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
-  // viewMode = 2;
+  viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
@@ -190,6 +190,7 @@ export class LeadsComponent
     this.getFuncID(this.funcID);
     this.getColorReason();
     this.getValuelistStatus();
+    this.getValuelistCategory();
     this.getProcessSetting();
   }
   getValuelistStatus() {
@@ -204,7 +205,19 @@ export class LeadsComponent
       }
     });
   }
-  getProcessSetting() {
+  async getValuelistCategory() {
+    // this.cache.valueList('CRM058').subscribe((func) => {
+    //   if (func) {
+    //     this.valueListStatus = func.datas
+    //       .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+    //       .map((item) => ({
+    //         text: item.text,
+    //         value: item.value,
+    //       }));
+    //   }
+    // });
+  }
+  async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
       .subscribe((res) => {
@@ -437,7 +450,7 @@ export class LeadsComponent
     let isConvertLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['13', '3'].includes(data.status) || data.closed
+        ? !['13', '3', '2'].includes(data.status) || data.closed
         : true;
     };
     let isMergeLead = (eventItem, data) => {
@@ -479,7 +492,7 @@ export class LeadsComponent
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.full
-        ? data.closed || data.applyProcess || this.checkMoreReason(data)
+        ? data.closed || data.applyProcess || this.checkMoreReason(data) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
@@ -812,7 +825,7 @@ export class LeadsComponent
 
   edit(data) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -913,6 +926,7 @@ export class LeadsComponent
                 action: 'edit',
                 title: this.titleAction,
                 gridViewSetup: res,
+                applyFor: this.applyForLead
               };
               var dialog = this.callfc.openSide(
                 PopupConvertLeadComponent,
@@ -927,6 +941,7 @@ export class LeadsComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
+                  this.dataSelected.applyProcess && this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });

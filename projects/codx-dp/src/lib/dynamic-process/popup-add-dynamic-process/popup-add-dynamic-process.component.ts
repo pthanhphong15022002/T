@@ -59,6 +59,8 @@ import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/c
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -314,6 +316,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     navy: '#192440',
   };
   isEditReason = false;
+  isBoughtTM = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -325,7 +328,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private auth: AuthService,
     private formBuilder: FormBuilder,
     private codxService: CodxService,
-
+    private adService: CodxAdService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -376,6 +379,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   async ngOnInit() {
     this.loading();
     this.formModelGroup = await this.getFormModel('DPS0105');
+    this.getDefaultCM();
   }
 
   async loading(): Promise<void> {
@@ -2849,6 +2853,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       listTask: this.taskList,
       groupTaskID: this.groupTaskID,
       listFileTask: this.listFileTask,
+      isBoughtTM: this.isBoughtTM,
     };
     let functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -4457,5 +4462,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event) {
       data[event.field] = event?.data || false;
     }
+  }
+
+  getDefaultCM() {
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+        }
+      });
   }
 }

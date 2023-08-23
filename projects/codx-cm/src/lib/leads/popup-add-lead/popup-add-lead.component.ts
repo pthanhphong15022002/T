@@ -183,12 +183,11 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
+      this.contactId = this.action === this.actionCopy ? dt?.data?.contactIdOld:  this.lead.contactID;
+      this.leadId = this.action === this.actionCopy ?  dt?.data?.leadIdOld:  this.lead.recID;
       if (this.action === this.actionCopy) {
-        this.leadId = dt?.data?.leadIdOld;
-        this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
-
         this.lead.leadID = '';
       } else {
         this.planceHolderAutoNumber = this.lead.leadID;
@@ -213,7 +212,7 @@ export class PopupAddLeadComponent
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
       } else if ($event.field == 'industries') {
-        let owner = $event.component.itemsSelected[0].Owner;
+        let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
           let index = this.listParticipants.findIndex((x) => x.userID);
@@ -321,7 +320,7 @@ export class PopupAddLeadComponent
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
-        )[0].userName;
+        )[0]?.userName;
       }
       this.searchOwner('1','O','0',this.owner,ownerName);
     }
