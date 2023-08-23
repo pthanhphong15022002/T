@@ -31,22 +31,22 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="ProductName" [formModel]="form.formModel">
+      <codx-label fiedName="ProductID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="productName"
+        field="productID"
         [formModel]="form.formModel"
-        [crrValue]="data?.productName"
+        [crrValue]="data?.productID"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Configuration" [formModel]="form.formModel">
+      <codx-label fiedName="ProductDesc" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="configuration"
+        field="productDesc"
         [formModel]="form.formModel"
-        [crrValue]="data?.configuration"
+        [crrValue]="data?.productDesc"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>

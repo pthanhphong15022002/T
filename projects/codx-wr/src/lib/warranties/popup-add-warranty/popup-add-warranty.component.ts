@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Optional } from '@angular/core';
 import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel } from 'codx-core';
 import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-servicetag.component';
 import { PopupAddCustomerWrComponent } from './popup-add-customerwr/popup-add-customerwr.component';
+import { WR_WorkOrders } from '../../_models-wr/wr-model.model';
 
 @Component({
   selector: 'lib-popup-add-warranty',
@@ -10,7 +11,7 @@ import { PopupAddCustomerWrComponent } from './popup-add-customerwr/popup-add-cu
 })
 export class PopupAddWarrantyComponent {
 
-  data: any;
+  data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
   constructor(
@@ -68,6 +69,7 @@ export class PopupAddWarrantyComponent {
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
       title: 'Thêm',
+      data: this.data
     };
     this.callFc
       .openForm(
@@ -82,6 +84,7 @@ export class PopupAddWarrantyComponent {
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
+          this.data = e?.event;
           this.detectorRef.detectChanges();
         }
       });
