@@ -826,8 +826,6 @@ export class LeadsComponent
   edit(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.oldIdLead = data.recID;
-      this.oldIdContact = data.contactID;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -845,8 +843,6 @@ export class LeadsComponent
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
-          leadIdOld: this.oldIdLead,
-          contactIdOld: this.oldIdContact,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,

@@ -183,9 +183,9 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
-      this.leadId = dt?.data?.leadIdOld;
+      this.contactId = this.action === this.actionCopy ? dt?.data?.contactIdOld:  this.lead.contactID;
+      this.leadId = this.action === this.actionCopy ?  dt?.data?.leadIdOld:  this.lead.recID;
       if (this.action === this.actionCopy) {
-        this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
         this.lead.leadID = '';
