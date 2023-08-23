@@ -10,6 +10,127 @@
   <ng-template #body>
     <ng-container *ngIf="form?.formGroup">
       <div class="form-group">
+        <ng-container>
+          <div
+            class="d-flex align-items-center justify-content-between mt-3 mb-4"
+          >
+            <div class="d-flex align-items-center">
+              <div class="text-primary">
+                <codx-label
+                  class="fw-bold fs-6"
+                  name="lblInformationCustomer"
+                  [formModel]="form.formModel"
+                  default="Thông tin khách hàng"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end align-content-center">
+              <button
+                type="button"
+                class="btn btn-sm btn-icon btn-light-primary"
+                (click)="clickAddCustomer()"
+              >
+                <span class="icon-person_add_alt_1 icon-16"></span>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex w-100" *ngIf="data?.customerID">
+            <div class="me-3 d-flex align-items-center">
+              <codx-img
+                [objectId]="data?.customerID"
+                [objectName]="data?.customerName"
+                [referType]="'avt'"
+                [objectType]="'CM_Customers'"
+                [width]="35"
+              >
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column">
+              <div
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
+              >
+
+                <div class="d-flex mb-2">
+                  <div
+                    class="fw-bold fs-6 text-dark me-3"
+                    [innerHTML]="
+                      data?.customerName
+                        | formatvalue : form.formModel : 'customerName'
+                        | async
+                    "
+                  ></div>
+                  <div
+                    class=""
+                    [innerHTML]="
+                      data?.custGroupID
+                        | formatvalue : form.formModel : 'custGroupID'
+                        | async
+                    "
+                  ></div>
+                </div>
+                <div class="d-flex justify-content-end action-menu-od me-1" *ngIf="data?.customerID" (click)="removeUser()">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <div class="me-3 d-flex align-items-center">
+                  <span
+                    class="icon-16 text-primary me-2 text-hover-primary text-gray-700"
+                    [ngClass]="data?.phone ? '' : 'icon-phone_iphone'"
+                  ></span>
+                  <span
+                    class="text-gray-600 text-primary text-hover-primary"
+                    [innerHTML]="
+                      data?.phone
+                        | formatvalue : form.formModel : 'phone'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="text-primary me-2 text-hover-primary icon-16 text-gray-700"
+                    [ngClass]="data?.email ? '' : 'icon-email'"
+                  ></span>
+                  <span
+                    class="text-gray-900 text-primary"
+                    [innerHTML]="
+                      data?.email
+                        | formatvalue : form.formModel : 'Email'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <span
+                  [ngbTooltip]="popupAddress"
+                  class="icon-16 me-2 text-gray-600 fs-7"
+                  [ngClass]="data?.address ? '' : 'icon-location_on'"
+                  ><ng-template #popupAddress>
+                    <codx-label
+                      fiedName="Address"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                  </ng-template>
+                </span>
+                <span
+                  class="text-gray-600"
+                  [innerHTML]="
+                    data?.address
+                      | formatvalue : form.formModel : 'address'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="form-group" >
         <div class="text-primary mb-1">
           <codx-label
             class="fw-bold fs-6"
@@ -31,6 +152,11 @@
             <button
               style="width: 100% !important; height: 32px !important"
               type="button"
+              [ngClass]="
+                data.customerID == null || data.customerID?.trim() == ''
+                  ? 'disabled'
+                  : ''
+              "
               class="btn btn-primary"
               (click)="clickAddServiceTag()"
             >
@@ -42,7 +168,7 @@
             </button>
           </div>
         </div>
-        <div class="d-flex w-100 mt-1">
+        <div class="d-flex w-100 mt-1" *ngIf="data?.serviceTag">
           <div class="me-3 d-flex align-items-center">
             <codx-img
               [objectId]="data?.serviceTag"
@@ -58,16 +184,8 @@
               <div
                 class="fw-bold fs-6 text-dark me-3"
                 [innerHTML]="
-                  data?.productLine
-                    | formatvalue : form.formModel : 'ProductLine'
-                    | async
-                "
-              ></div>
-              <div
-                class="fw-bold fs-6 text-dark"
-                [innerHTML]="
-                  data?.productModel
-                    | formatvalue : form.formModel : 'ProductModel'
+                  data?.productID
+                    | formatvalue : form.formModel : 'productID'
                     | async
                 "
               ></div>
@@ -117,83 +235,7 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <ng-container>
-          <div
-            class="d-flex align-items-center justify-content-between mt-3 mb-4"
-          >
-            <div class="d-flex align-items-center">
-              <div class="text-primary">
-                <codx-label
-                  class="fw-bold fs-6"
-                  name="lblInformationCustomer"
-                  [formModel]="form.formModel"
-                  default="Thông tin khách hàng"
-                >
-                </codx-label>
-              </div>
-            </div>
-            <div class="d-flex justify-content-end align-content-center">
-              <button
-                type="button"
-                class="btn btn-sm btn-icon btn-light-primary"
-                (click)="clickAddCustomer()"
-              >
-                <span class="icon-person_add_alt_1 icon-16"></span>
-              </button>
-            </div>
-          </div>
-          <div class="d-flex w-100">
-            <div class="me-3 d-flex align-items-center">
-              <codx-img
-                [objectId]="'ADMIN'"
-                [objectName]="'ADMIN'"
-                [referType]="'avt'"
-                [objectType]="'CM_Customers'"
-                [width]="35"
-              >
-              </codx-img>
-            </div>
-            <div class="d-flex flex-column">
-              <div class="d-flex mb-2">
-                <div class="fw-bold fs-6 text-dark me-3">
-                  Lê phạm hoài thương
-                </div>
-                <div class="">custgroup</div>
-              </div>
-              <div class="d-flex flex-wrap me-4 mb-2">
-                <div class="me-3 d-flex align-items-center">
-                  <span
-                    class="icon-14 text-primary me-2 text-hover-primary icon-phone_iphone text-gray-700"
-                  ></span>
-                  <span class="text-gray-600 text-primary text-hover-primary">
-                    mobile
-                  </span>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span
-                    class="icon-email text-primary me-2 text-hover-primary icon-14 text-gray-700"
-                  ></span>
-                  <span class="text-gray-900 text-primary"> email </span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center">
-                <span
-                  [ngbTooltip]="popupAddress"
-                  class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
-                  ><ng-template #popupAddress>
-                    <codx-label
-                      fiedName="Address"
-                      [formModel]="form.formModel"
-                    ></codx-label>
-                  </ng-template>
-                </span>
-                <span class="text-gray-600">địa chỉ</span>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
+
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Problem">
         </codx-label>

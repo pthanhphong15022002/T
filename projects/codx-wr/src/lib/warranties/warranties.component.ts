@@ -106,8 +106,14 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
+    this.view.dataService.methodSave = 'AddWorkOrderAsync';
+    this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
+    this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
+
     setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
+    this.detectorRef.detectChanges();
+
   }
 
   searchChanged(e) {}
@@ -232,17 +238,16 @@ export class WarrantiesComponent
   }
 
   changeDataMF($event, data, type = null) {
-    console.log('Not implemented');
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     mappingFunction && mappingFunction(eventItem, data);
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
+        const functionID = eventItem.functionID;
+        // const mappingFunction = this.getRoleMoreFunction(functionID);
+        // mappingFunction && mappingFunction(eventItem, data);
+      }
+    }
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -282,9 +287,8 @@ export class WarrantiesComponent
   }
 
   selectedChange(data) {
-    console.log('Not implemented');
-    // if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    // this.changeDetectorRef.detectChanges();
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
+    this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
@@ -348,7 +352,6 @@ export class WarrantiesComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
             this.view.dataService.update(e?.event).subscribe();
             this.detectorRef.detectChanges();
@@ -360,7 +363,7 @@ export class WarrantiesComponent
   //#endregion
 
   //#region update reason code
-  updateReasonCode(data){
+  updateReasonCode(data) {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.view?.formModel;

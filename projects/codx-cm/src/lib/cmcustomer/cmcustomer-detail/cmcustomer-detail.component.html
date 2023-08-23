@@ -242,7 +242,7 @@
                   >
                     <span
                       [ngbTooltip]="popupAddress"
-                      class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
+                      class="icon-16 text-gray-600 fs-7"
                       ><ng-template #popupAddress>
                         <codx-label
                           fiedName="Address"
@@ -250,7 +250,14 @@
                         ></codx-label>
                       </ng-template>
                     </span>
-                    <span class="text-gray-600">{{ addressNameCM }}</span>
+                    <span
+                      class="text-gray-600"
+                      [innerHTML]="
+                        addressNameCM
+                          | formatvalue : formModel : 'Address'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
                 <div class="d-flex flex-column align-items-start">

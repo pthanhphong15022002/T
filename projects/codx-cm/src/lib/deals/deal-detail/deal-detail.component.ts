@@ -177,8 +177,8 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      await this.getTree(); //ve cay giao viec
       await this.getListInstanceStep();
+      await this.getTree(); //ve cay giao viec
       await this.getContactByDeaID(this.dataSelected.recID);
       await this.getHistoryByDeaID();
     } catch (error) {}

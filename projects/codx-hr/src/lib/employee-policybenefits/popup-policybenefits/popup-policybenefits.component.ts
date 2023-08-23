@@ -486,8 +486,9 @@ implements OnInit{
     if(constraintOther == false){
       this.benefitPolicyObj.isConstraintOther = false;
     }
-    else{
+    else if(constraintOther == true){
       this.benefitPolicyObj.isConstraintOther = true;
+      this.onClickOpenVllIsConstraintOther();
     }
   }
 
@@ -1088,6 +1089,9 @@ implements OnInit{
       this.benefitPolicyObj.includeBenefits = ''
       this.formGroup.patchValue(this.benefitPolicyObj)
     }
+    else if(flag == true){
+      this.onClickOpenSelectIncludeBenefits();
+    }
   }
 
   ValChangeHasExcludeObj(event){
@@ -1651,6 +1655,60 @@ implements OnInit{
         })
       }
     }
+}
+
+deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
+  switch(data){
+    case '1':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, orgUnitID: null }));
+      // lstBeneficiaries.orgUnitID = null
+      break;
+    case '2':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, jobLevel: null }));
+      // lstBeneficiaries.jobLevel = null
+      break;
+    case '3':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, positionID: null }));
+      // lstBeneficiaries.positionID = null
+      break;
+    case '4':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeTypeID: null }));
+      // lstBeneficiaries.employeeTypeID = null
+      break;
+    case '5':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, labourType: null }));
+      // lstBeneficiaries.labourType = null
+      break;
+    case '6':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, contractTypeID: null }));
+      // lstBeneficiaries.contractTypeID = null
+      break;
+    case '7':
+      debugger
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeID: null }));
+      // lstBeneficiaries.employeeID = null
+      break;
+    case '8':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeStatus: null }));
+      // lstBeneficiaries.employeeStatus = null
+      break;
+  }
+
+  switch(from){
+    case 'lstSelectedObj':
+      debugger
+      this.lstPolicyBeneficiariesApply = lstBeneficiaries;
+      let index = this.lstSelectedObj.indexOf(data);
+      this.lstSelectedObj.splice(index,1);
+      this.benefitPolicyObj.includeObjects = this.lstSelectedObj.join(';');
+      break;
+    case 'lstSelectedExcludeObj':
+      this.lstPolicyBeneficiariesExclude = lstBeneficiaries;
+      let index2 = this.lstSelectedExcludeObj.indexOf(data);
+      this.lstSelectedExcludeObj.splice(index2,1);
+      this.benefitPolicyObj.excludeObjects = this.lstSelectedExcludeObj.join(';');
+      break;
+  }
 }
 
 deleteApplyExcludeObj(data, from, crrObj?){
