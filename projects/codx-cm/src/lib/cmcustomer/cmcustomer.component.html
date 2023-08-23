@@ -160,22 +160,18 @@
       <span *ngIf="!data?.allowEmail">{{ data.personalEmail }}</span>
     </div>
     <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
-      <span
-        class="icon-16 text-gray-700"
-        [ngbTooltip]="popupAddress"
-      >
-        <ng-template #popupAddress>
-          <codx-label
-            fiedName="Address"
-            [formModel]="view.formModel"
-          ></codx-label>
-        </ng-template>
-      </span>
+      <span class="icon-16 text-gray-700"> </span>
       <span
         class="fs-7 text-gray-600"
+        [ngbTooltip]="popupAddress"
         [innerHTML]="
           data?.address | formatvalue : view.formModel : 'address' | async
         "
+        ><ng-template #popupAddress>
+          <codx-label
+            fiedName="Address"
+            [formModel]="view.formModel"
+          ></codx-label> </ng-template
       ></span>
     </div>
     <div
