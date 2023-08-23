@@ -106,8 +106,14 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
+    this.view.dataService.methodSave = 'AddWorkOrderAsync';
+    this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
+    this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
+
     setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
+    this.detectorRef.detectChanges();
+
   }
 
   searchChanged(e) {}
@@ -348,7 +354,6 @@ export class WarrantiesComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
             this.view.dataService.update(e?.event).subscribe();
             this.detectorRef.detectChanges();

@@ -8,7 +8,7 @@ export class WR_WorkOrders {
   custGroupID: string;
   customerID: string;
   customerName: string;
-  contactname: string;
+  contactName: string;
   mobile: string;
   phone: string;
   email: string;
@@ -25,6 +25,7 @@ export class WR_WorkOrders {
   serviceTag: string;
   lob: string;
   productID: string;
+  productType: string;
   productBrand: string;
   productModel: string;
   productDesc: string;
