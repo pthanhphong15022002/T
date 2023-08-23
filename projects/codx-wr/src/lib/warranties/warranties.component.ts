@@ -216,6 +216,9 @@ export class WarrantiesComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'WR0101_1':
+        this.updateReasonCode(data);
+        break;
       default:
         var customData = {
           refID: data.processID,
