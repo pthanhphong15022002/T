@@ -35,7 +35,10 @@ import { map } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
 import { environment } from 'src/environments/environment';
-import { ClickEventArgs, MenuItemModel } from '@syncfusion/ej2-angular-navigations';
+import {
+  ClickEventArgs,
+  MenuItemModel,
+} from '@syncfusion/ej2-angular-navigations';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-lists';
 
@@ -44,8 +47,9 @@ import { SelectEventArgs } from '@syncfusion/ej2-angular-lists';
   templateUrl: './codx-export-add.component.html',
   styleUrls: ['./codx-export-add.component.scss'],
 })
-export class CodxExportAddComponent implements OnInit, OnChanges{
-  @ViewChild('documenteditor_default') public container: DocumentEditorContainerComponent;
+export class CodxExportAddComponent implements OnInit, OnChanges {
+  @ViewChild('documenteditor_default')
+  public container: DocumentEditorContainerComponent;
   @ViewChild('attachment1') attachment1: AttachmentComponent;
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Output() setDefaultValue = new EventEmitter();
@@ -63,16 +67,16 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
   refType: any; // Thảo thêm để thêm biến lưu cho temEx
   fileCount = 0;
   module: any;
-  defaultDocument:any;
-  serviceUrl:any;
+  defaultDocument: any;
+  serviceUrl: any;
   nameFile: any;
   isContentChange = false;
-  formModel:any;
-  gridViewSettup:any;
+  formModel: any;
+  gridViewSettup: any;
   listFeild = [];
   showInsert = false;
   constructor(
-    private tenant:TenantStore,
+    private tenant: TenantStore,
     private readonly auth: AuthService,
     private formBuilder: FormBuilder,
     private api: ApiHttpService,
@@ -97,11 +101,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
     this.data = dialog.dataService;
     this.dialog = dialog;
   }
- 
+
   ngOnInit(): void {
-    this.module = this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
-    if (this.type == 'excel') 
-    {
+    this.module =
+      this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
+    if (this.type == 'excel') {
       this.exportAddForm = this.formBuilder.group({
         templateName: [this.data?.templateName, Validators.required],
         description: this.data?.description,
@@ -126,9 +130,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
         groupTotal2: this.data?.groupTotal2,
         groupTotal3: this.data?.groupTotal3,
       });
-    } 
-    else 
-    {
+    } else {
       this.api
         .execSv('SYS', 'AD', 'WordTemplatesBusiness', 'GetDefaultAsync', [
           'WordTemplates',
@@ -164,45 +166,50 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
               'AD_WordTemplates',
               this.data
             );
-         
+
             // this.exportAddForm.addControl('pWControl', new FormControl(''));
             // this.exportAddForm.addControl('pWDefault', new FormControl(''));
           }
         });
       this.getGridView();
       //Url service word
-      let baseurl: string = environment.apiUrl+'/api/documenteditor/import';
-      baseurl += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
+      let baseurl: string = environment.apiUrl + '/api/documenteditor/import';
+      baseurl +=
+        '?sk=' +
+        btoa(
+          this.auth.userValue.userID + '|' + this.auth.userValue.securityKey
+        );
       this.serviceUrl = baseurl;
     }
   }
-  public fields:object = { tooltip:"category"};
-  getGridView()
-  {
-    this.cache.gridViewSetup(this.formModel?.formName , this.formModel?.gridViewName).subscribe(item=>{
-      var key = Object.keys(item);
-      this.gridViewSettup = [];
-      for (var i = 0; i < key.length; i++) {
-        if (item[key[i]]?.isTemplate == "1") {
-          var obj =  {
-            text: item[key[i]]?.headerText,
-            category: 'Drag or click the field to insert.',
-            htmlAttributes: { draggable: true }
-          };
+  public fields: object = { tooltip: 'category' };
+  getGridView() {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((item) => {
+        var key = Object.keys(item);
+        this.gridViewSettup = [];
+        for (var i = 0; i < key.length; i++) {
+          if (item[key[i]]?.isTemplate == '1') {
+            var obj = {
+              text: item[key[i]]?.headerText,
+              category: 'Drag or click the field to insert.',
+              htmlAttributes: { draggable: true },
+            };
 
-          var obj2 =  {
-            key: key[i],
-            headerText : item[key[i]]?.headerText,
-            referedType : item[key[i]]?.referedType,
-            referedValue : item[key[i]]?.referedValue,
-          };
+            var obj2 = {
+              key: key[i],
+              headerText: item[key[i]]?.headerText,
+              referedType: item[key[i]]?.referedType,
+              referedValue: item[key[i]]?.referedValue,
+            };
 
-          this.gridViewSettup.push(obj2);
+            this.gridViewSettup.push(obj2);
 
-          this.listFeild.push(obj);
+            this.listFeild.push(obj);
+          }
         }
-      }
-    })
+      });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -210,11 +217,13 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges) {}
-  
+
   openFormUploadFile() {
-    this.type == "word" ? this.attachment1.uploadFile() : this.attachment2.uploadFile()
+    this.type == 'word'
+      ? this.attachment1.uploadFile()
+      : this.attachment2.uploadFile();
   }
-  
+
   onSave() {
     this.submitted = true;
     if (this.exportAddForm.invalid) return;
@@ -238,23 +247,22 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
                 this.attachment2.objectId = item[1].recID;
+                this.attachment2.objectType = 'AD_ExcelTemplates';
                 //this.attachment2.saveFiles();
                 //Upload file
-                this.attachment2.saveFilesObservable().then(saveFile=>{
-                  if(saveFile){
-                    saveFile.subscribe((saved:any)=>{
-                      if(saved)
-                      {
+                this.attachment2.saveFilesObservable().then((saveFile) => {
+                  if (saveFile) {
+                    saveFile.subscribe((saved: any) => {
+                      if (saved) {
                         //Trả về thông tin khi upload file thành công
                         let fileName = saved.data?.fileName; // report cần trả về fileName để set reportName
-                        this.dialog.close([item[1], this.type,fileName]);
-                      }
-                      else{
+                        this.dialog.close([item[1], this.type, fileName]);
+                      } else {
                         this.notifySvr.notify('SYS023');
                       }
-                    })
-                  }                
-                })
+                    });
+                  }
+                });
               } else this.notifySvr.notifyCode('SYS023');
             });
         } else this.notifySvr.notifyCode('OD022');
@@ -274,6 +282,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment2.objectId = item[1][0].recID;
+              this.attachment2.objectType = 'AD_ExcelTemplates';
               if (this.fileCount > 0) {
                 /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                   console.log(item);
@@ -284,25 +293,27 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
                 this.attachment2.objectId = item[1][0].recID;
                 //this.attachment2.saveFiles();
                 //Upload file mới
-                this.attachment2.saveFilesObservable().then(saveFile=>{
-                  if(saveFile){
-                    saveFile.subscribe(saved=>{
-                      if(saved){
+                this.attachment2.saveFilesObservable().then((saveFile) => {
+                  if (saveFile) {
+                    saveFile.subscribe((saved) => {
+                      if (saved) {
                         //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
-                        this.dialog.close([item[1][0], this.type, true/*true:Up lại file khi edit*/]);
-                      }
-                      else{
+                        this.dialog.close([
+                          item[1][0],
+                          this.type,
+                          true /*true:Up lại file khi edit*/,
+                        ]);
+                      } else {
                         this.notifySvr.notify('SYS021');
                       }
-                    })
+                    });
                   }
-                })
+                });
               }
             } else this.notifySvr.notify('SYS021');
           });
       }
-    } 
-    else {
+    } else {
       if (this.action == 'add') {
         this.api
           .execActionData(
@@ -314,6 +325,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
+              this.attachment1.objectType = 'AD_WordTemplates';
               this.onSaveWord();
               this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notifyCode('SYS023');
@@ -340,15 +352,15 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               if (this.isContentChange) {
-                this.file.deleteFileToTrash(this.idCrrFile, '', true).subscribe(res=>{
-                  if(res)
-                  {
-                    this.attachment1.objectId = this.data.recID;
-                    this.onSaveWord();
-                  }
-                
-                });
-              
+                this.file
+                  .deleteFileToTrash(this.idCrrFile, '', true)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.attachment1.objectId = this.data.recID;
+                      this.attachment1.objectType = 'AD_WordTemplates';
+                      this.onSaveWord();
+                    }
+                  });
               }
               this.dialog.close([item[1][0], this.type]);
             } else this.notifySvr.notify('SYS021');
@@ -356,21 +368,19 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
       }
     }
   }
-  
+
   getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
 
-  fileSave(e:any)
-  {
+  fileSave(e: any) {
     this.nameFile = e?.fileName;
-    this.loadContentWord(e?.urlPath , e?.uploadId);
+    this.loadContentWord(e?.urlPath, e?.uploadId);
   }
 
-  loadContentWord(url:any , uploadId:any = null)
-  {
+  loadContentWord(url: any, uploadId: any = null) {
     let http: XMLHttpRequest = new XMLHttpRequest();
-    let content = { fileUrl: environment.urlUpload+ "/" + url};
+    let content = { fileUrl: environment.urlUpload + '/' + url };
     http.withCredentials = true;
     http.open('Post', this.serviceUrl, true);
     http.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -379,110 +389,119 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
         if (http.status === 200 || http.status === 304) {
           //open the SFDT text in Document Editor
           this.container.documentEditor.open(http.responseText);
-          if(uploadId) this.deleteFile(uploadId);
+          if (uploadId) this.deleteFile(uploadId);
           this.changeDetectorRef.detectChanges();
-        }
-        else{
+        } else {
           //this.notificationsService.notifyCode("DM065");
-         
         }
       }
     };
-    //this.container.documentEditor.documentName = this.data?.fileName; 
+    //this.container.documentEditor.documentName = this.data?.fileName;
     http.send(JSON.stringify(content));
   }
 
   getFile(e: any) {
     if (!e || (e && e.length == 0)) return;
     this.idCrrFile = e[0].recID;
-    
-    if(this.type == "word" && this.action == "edit")
-    {
+
+    if (this.type == 'word' && this.action == 'edit') {
       this.nameFile = e[0].fileName;
       this.loadContentWord(e[0].pathDisk);
     }
   }
-  onSaveWord()
-  {
+  onSaveWord() {
     this.container.documentEditor.saveAsBlob('Docx').then((blob: Blob) => {
-      var file = new File([blob], this.nameFile)
-      this.attachment1.isSaveSelected = "1";
+      var file = new File([blob], this.nameFile);
+      this.attachment1.isSaveSelected = '1';
       this.attachment1.fileUploadList = [];
-      this.attachment1.handleFileInput([{name : this.nameFile , rawFile: file , type: 'docx' , size: file.size}]);
+      this.attachment1.handleFileInput([
+        { name: this.nameFile, rawFile: file, type: 'docx', size: file.size },
+      ]);
     });
   }
-  
+
   deleteFile(uploadID: any) {
     lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     lvFileClientAPI.postAsync(`api/${this.tenant.getName()}/files/delete`, {
-      UploadId: uploadID
+      UploadId: uploadID,
     });
   }
 
-  onDocumentChange()
-  {
+  onDocumentChange() {
     this.isContentChange = true;
-    this.container.documentEditor.resize()
+    this.container.documentEditor.resize();
   }
 
-  onCreate()
-  {
-    this.container.toolbarItems =  this.container.toolbarItems.filter(x=>x != "New" && x != "Open");
-    this.container.toolbarItems.unshift(
-      {
-          prefixIcon: 'bi bi-file-spreadsheet-fill',
-          tooltipText: 'Insert Field',
-          text: this.onWrapText('Insert Field'),
-          id: 'InsertField'
-      },)
+  onCreate() {
+    this.container.toolbarItems = this.container.toolbarItems.filter(
+      (x) => x != 'New' && x != 'Open'
+    );
+    this.container.toolbarItems.unshift({
+      prefixIcon: 'bi bi-file-spreadsheet-fill',
+      tooltipText: 'Insert Field',
+      text: this.onWrapText('Insert Field'),
+      id: 'InsertField',
+    });
     // document.getElementById("listview").addEventListener("dragstart", function (event) {
     //   event.dataTransfer.setData("Text", (event.target as any).innerText);
     //   (event.target as any).classList.add('de-drag-target');
     // });
-    this.container.documentEditor.element.addEventListener("dragover", function (event) {
-      event.preventDefault();
-    });
+    this.container.documentEditor.element.addEventListener(
+      'dragover',
+      function (event) {
+        event.preventDefault();
+      }
+    );
 
     // Drop Event for document editor element
-    this.container.documentEditor.element.addEventListener("drop", (e) => {
-      var text = e.dataTransfer.getData('Text');//.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
-      this.container.documentEditor.selection.select({ x: e.offsetX, y: e.offsetY, extend: false });
+    this.container.documentEditor.element.addEventListener('drop', (e) => {
+      var text = e.dataTransfer.getData('Text'); //.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
+      this.container.documentEditor.selection.select({
+        x: e.offsetX,
+        y: e.offsetY,
+        extend: false,
+      });
       //this.container.documentEditor.editor.insertText(text);
       this.insertField(text);
     });
 
-    document.addEventListener("dragend", (event) => {
+    document.addEventListener('dragend', (event) => {
       if ((event.target as any).classList.contains('de-drag-target')) {
         (event.target as any).classList.remove('de-drag-target');
       }
     });
   }
 
-  dragStart(event:any)
-  {
-    event.dataTransfer.setData("Text", (event.target as any).innerText);
+  dragStart(event: any) {
+    event.dataTransfer.setData('Text', (event.target as any).innerText);
     //(event.target as any).classList.add('de-drag-target');
   }
 
   insertField(fieldName: any): void {
-
     var fieldInfo = this.container.documentEditor.selection.getFieldInfo();
-    if(fieldInfo && fieldInfo.code.includes('MERGEFIELD')) return; 
-    
-    let fileName: any = fieldName.replace(/\n/g, '').replace(/\r/g, '').replace(/\r\n/g, '');
+    if (fieldInfo && fieldInfo.code.includes('MERGEFIELD')) return;
+
+    let fileName: any = fieldName
+      .replace(/\n/g, '')
+      .replace(/\r/g, '')
+      .replace(/\r\n/g, '');
     let fieldCode: any = 'MERGEFIELD  ' + fileName + '  \\* MERGEFORMAT ';
     var text = fieldName;
-   
-    var check = this.gridViewSettup.filter(x=>x.headerText == text);
-    if(Array.isArray(check)) text += "|" +  check[0].referedType + "|" + check[0].referedValue;
-    this.container.documentEditor.editor.insertField(fieldCode, '[' + text + ']');
+
+    var check = this.gridViewSettup.filter((x) => x.headerText == text);
+    if (Array.isArray(check))
+      text += '|' + check[0].referedType + '|' + check[0].referedValue;
+    this.container.documentEditor.editor.insertField(
+      fieldCode,
+      '[' + text + ']'
+    );
     this.container.documentEditor.focusIn();
   }
 
-  onSelect(text:any): void {
+  onSelect(text: any): void {
     this.insertField(text);
   }
-  
+
   onWrapText(text: string): string {
     let content: string = '';
     let index: number = text.lastIndexOf(' ');
@@ -494,15 +513,14 @@ export class CodxExportAddComponent implements OnInit, OnChanges{
 
   toolbarClick = (args: ClickEventArgs): void => {
     switch (args.item.id) {
-        case 'InsertField':
-            this.showInsertFielddialog();
-            break;
+      case 'InsertField':
+        this.showInsertFielddialog();
+        break;
     }
   };
 
-  showInsertFielddialog()
-  {
-    this.showInsert = !this.showInsert
+  showInsertFielddialog() {
+    this.showInsert = !this.showInsert;
     this.container.documentEditor.focusIn();
   }
 }
