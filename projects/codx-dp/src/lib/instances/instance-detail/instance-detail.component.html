@@ -12,8 +12,8 @@
       (clickMF)="clickMF($event, dataSelect)"
     >
       <ng-template #header>
-        <div class="d-flex justify-content-between align-items-top">
-          <div class="container_detail instance-info">
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex flex-column w-100">
             <div class="fs-4 fw-bold">
               {{ dataSelect?.title }}
             </div>
@@ -160,69 +160,72 @@
                 </div> -->
             </div>
           </div>
-          <div class="d-flex justify-content-end me-3 mt-2">
-            <div class="d-flex align-items-center w-100 h-30px">
-              <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
-                <codx-vll
-                  [name]="vllApprover"
-                  [field]="'ApproveStatus'"
-                  [value]="dataSelect.approveStatus"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-sm line-clamp-vll"
-                >
-                </codx-vll>
-              </div>
-              <div class="d-flex flex-column">
-                <div
-                  class="badge badge-sm d-flex align-items-center"
-                  [ngStyle]="{
-                    'background-color':
-                      dataSelect.status == '3' || dataSelect.status == '4'
-                        ? colorSuccesss
-                        : dataSelect.status == '5' || dataSelect.status == '6'
-                        ? colorFail
-                        : stepValue['backgroundColor']
-                  }"
-                >
-                  <span
-                    [ngClass]="stepValue['icon']"
-                    [ngStyle]="{ color: stepValue['iconColor'] }"
-                    class="me-2"
-                  ></span>
-                  <span [ngStyle]="{ color: stepValue['textColor'] }">{{
-                    stepName
-                  }}</span>
+          <div class="ms-5 d-flex justify-content-between">
+            <div class="d-flex justify-content-end me-3 mt-2">
+              <div class="d-flex align-items-center w-100 h-30px">
+                <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
+                  <codx-vll
+                    [name]="vllApprover"
+                    [field]="'ApproveStatus'"
+                    [value]="dataSelect.approveStatus"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm line-clamp-vll"
+                  >
+                  </codx-vll>
                 </div>
-              </div>
-              <div
-                class="d-flex align-items-center mx-2"
-                *ngIf="dataSelect.owner"
-              >
-                <codx-imgs
-                  class="d-flex align-items-center"
-                  [isToolTip]="true"
-                  [width]="25"
-                  [objectId]="dataSelect.owner"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
+                <div class="d-flex flex-column">
+                  <div
+                    class="badge badge-sm d-flex align-items-center"
+                    [ngStyle]="{
+                      'background-color':
+                        dataSelect.status == '3' || dataSelect.status == '4'
+                          ? colorSuccesss
+                          : dataSelect.status == '5' || dataSelect.status == '6'
+                          ? colorFail
+                          : stepValue['backgroundColor']
+                    }"
+                  >
+                    <span
+                      [ngClass]="stepValue['icon']"
+                      [ngStyle]="{ color: stepValue['iconColor'] }"
+                      class="me-2"
+                    ></span>
+                    <span [ngStyle]="{ color: stepValue['textColor'] }">{{
+                      stepName
+                    }}</span>
+                  </div>
+                </div>
+                <div
+                  class="d-flex align-items-center mx-2"
+                  *ngIf="dataSelect.owner"
                 >
-                </codx-imgs>
-              </div>
-              <div class="ms-2">
-                <codx-progressbar
-                  [progress]="progress"
-                  [stype]="2"
-                  [size]="30"
-                ></codx-progressbar>
+                  <codx-imgs
+                    class="d-flex align-items-center"
+                    [isToolTip]="true"
+                    [width]="25"
+                    [objectId]="dataSelect.owner"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+                </div>
+                <div class="ms-2">
+                  <codx-progressbar
+                    [progress]="progress"
+                    [stype]="2"
+                    [size]="30"
+                  ></codx-progressbar>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <ng-container *ngIf="isViewApprover">
-          <h5>File gửi trình ký chưa xử lý</h5>
-          <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-          <!-- <codx-thumbnail
+
+        <!-- <ng-container *ngIf="isViewApprover"> -->
+        <!-- <h5>File gửi trình ký chưa xử lý</h5> -->
+        <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+        <!-- <codx-thumbnail
             [files]="data?.files"
             displayThumb="simple"
             [hideDelete]="'1'"
@@ -231,7 +234,7 @@
             [permissions]="data?.relations"
           >
           </codx-thumbnail> -->
-        </ng-container>
+        <!-- </ng-container> -->
       </ng-template>
       <ng-template #body>
         <div class="d-flex tab-header">
