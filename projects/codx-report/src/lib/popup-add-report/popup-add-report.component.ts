@@ -457,7 +457,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         if(this.data.reportContent){
           this.setDataset();
         }
-        this.dialog.close();
+        this.dialog.close(this.data);
       });
 
   }
@@ -593,6 +593,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           '',
           option
         ).closed.subscribe((res:any) => {
+          debugger
           if(res?.event?.length > 0)
           {
             this.data.templateID = res.event[0].recID;
@@ -630,23 +631,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       'FileBussiness',
       'GetFilesByIbjectIDAsync',
       [templateID]).subscribe((res:any) =>{
-        if(res?.length > 0){
+        if(res?.length > 0)
+        {
           this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
         }
         
       });
     }
-  }
-}
-class GuId {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
   }
 }

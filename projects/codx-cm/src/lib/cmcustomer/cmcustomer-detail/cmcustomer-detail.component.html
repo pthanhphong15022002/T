@@ -239,17 +239,9 @@
                   <div
                     class="d-flex align-items-top"
                     *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
+                    [ngbTooltip]="popupAddress"
                   >
-                    <span
-                      [ngbTooltip]="popupAddress"
-                      class="icon-16 text-gray-600 fs-7"
-                      ><ng-template #popupAddress>
-                        <codx-label
-                          fiedName="Address"
-                          [formModel]="formModel"
-                        ></codx-label>
-                      </ng-template>
-                    </span>
+                    <span class="icon-16 text-gray-600 fs-7"> </span>
                     <span
                       class="text-gray-600"
                       [innerHTML]="
@@ -258,6 +250,12 @@
                           | async
                       "
                     ></span>
+                    <ng-template #popupAddress>
+                      <codx-label
+                        fiedName="Address"
+                        [formModel]="formModel"
+                      ></codx-label>
+                    </ng-template>
                   </div>
                 </div>
                 <div class="d-flex flex-column align-items-start">
@@ -435,8 +433,11 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll">
-          <div class="btn btn-white btn-icon tab-action">
+        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+          <div
+            class="btn btn-white btn-icon tab-action"
+            (click)="clickShowTab(!isShow)"
+          >
             <span class="icon-unfold_more icon-20"></span>
           </div>
           <div class="instance-select">

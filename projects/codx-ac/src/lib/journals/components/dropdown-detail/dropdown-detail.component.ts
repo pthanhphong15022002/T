@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
 import { IJournalPermission } from '../../interfaces/IJournalPermission.interface';
-import { PopupPermissionComponent } from '../../popup-permission/popup-permission.component';
+import { JournalspermissionEditComponent } from '../../journalspermission-edit/journalspermission-edit.component';
 
 @Component({
   selector: 'lib-dropdown-detail',
@@ -81,7 +81,7 @@ export class DropdownDetailComponent
 
     this.callfc
       .openForm(
-        PopupPermissionComponent,
+        JournalspermissionEditComponent,
         'This param is not working',
         950,
         650,

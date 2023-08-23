@@ -58,6 +58,7 @@ export class PopupAddCustomerWrComponent {
     this.data.customerName = '';
     this.data.custGroupID = '';
     this.data.category = '';
+    this.data.contactName = '';
     this.data.phone = '';
     this.data.mobile = '';
     this.data.email = '';

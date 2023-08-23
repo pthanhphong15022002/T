@@ -27,6 +27,7 @@
             </div>
             <div class="d-flex justify-content-end align-content-center">
               <button
+                [ngClass]="action == 'edit' ? 'disabled' : ''"
                 type="button"
                 class="btn btn-sm btn-icon btn-light-primary"
                 (click)="clickAddCustomer()"
@@ -50,7 +51,6 @@
               <div
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
               >
-
                 <div class="d-flex mb-2">
                   <div
                     class="fw-bold fs-6 text-dark me-3"
@@ -69,7 +69,11 @@
                     "
                   ></div>
                 </div>
-                <div class="d-flex justify-content-end action-menu-od me-1" *ngIf="data?.customerID" (click)="removeUser()">
+                <div
+                  class="d-flex justify-content-end action-menu-od me-1"
+                  *ngIf="data?.customerID && action != 'edit'"
+                  (click)="removeUser()"
+                >
                   <i class="icon-close text-danger icon-16"></i>
                 </div>
               </div>
@@ -130,7 +134,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="form-group" >
+      <div class="form-group">
         <div class="text-primary mb-1">
           <codx-label
             class="fw-bold fs-6"
@@ -145,6 +149,7 @@
               field="serviceTag"
               [formModel]="form.formModel"
               [crrValue]="data?.serviceTag"
+              [disabled]="action == 'edit'"
               (valueChange)="valueChange($event)"
             ></codx-input>
           </div>
@@ -153,7 +158,9 @@
               style="width: 100% !important; height: 32px !important"
               type="button"
               [ngClass]="
-                data.customerID == null || data.customerID?.trim() == ''
+                data.customerID == null ||
+                data.customerID?.trim() == '' ||
+                action == 'edit'
                   ? 'disabled'
                   : ''
               "
@@ -191,8 +198,7 @@
               ></div>
             </div>
             <div
-              class="d-flex align-items-center mb-2"
-              class="fw-bold me-1"
+              class="d-flex align-items-center fw-bold mb-2"
               [innerHTML]="
                 data?.productDesc
                   | formatvalue : form.formModel : 'ProductDesc'
@@ -224,13 +230,10 @@
                 "
               >
               </span>
-              <span class="me-1">-</span>
-              <span
-                class="text-primary"
-                [innerHTML]="
-                  data?.oow | formatvalue : form.formModel : 'OOW' | async
-                "
-              ></span>
+              <span *ngIf="data?.warrantyExpired && !data.oow" class="me-1">-</span>
+              <span *ngIf="data?.warrantyExpired" [ngClass]="data.oow ? '' : 'text-danger'">
+                <codx-label *ngIf="!data.oow" name="lblOOW" [formModel]="form.formModel" default="Đã hết hạn"></codx-label>
+              </span>
             </div>
           </div>
         </div>

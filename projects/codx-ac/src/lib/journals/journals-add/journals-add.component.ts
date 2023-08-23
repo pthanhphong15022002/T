@@ -17,40 +17,25 @@ import {
   ImageViewerComponent,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { Observable, lastValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
-import { IJournal } from '../interfaces/IJournal.interface';
+import { MultiSelectPopupComponent } from '../components/multi-select-popup/multi-select-popup.component';
+import { IJournal, Vll075 } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
-import { MultiSelectPopupComponent } from '../multi-select-popup/multi-select-popup.component';
 
-const irrPropNames: string[] = [
-  'drAcctControl',
-  'drAcctID',
-  'crAcctControl',
-  'crAcctID',
-  'diM1Control',
-  'diM2Control',
-  'diM3Control',
-  'diM1',
-  'diM2',
-  'diM3',
-  'idimControl',
-];
 @Component({
   selector: 'lib-journals-add',
   templateUrl: './journals-add.component.html',
   styleUrls: ['./journals-add.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JournalsAddComponent
-  extends UIComponent
-  implements AfterViewInit
-{
+export class JournalsAddComponent extends UIComponent implements AfterViewInit {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('periodID') periodID: CodxInputComponent;
@@ -63,6 +48,7 @@ export class JournalsAddComponent
   oldJournal: IJournal;
   prevJournal: IJournal;
   dataService: CRUDService;
+
   formTitle: string;
   gvs: any;
   tabInfo: any[] = [
@@ -81,6 +67,7 @@ export class JournalsAddComponent
   fiscalYears: number[] = [];
   tempIDIMControls: any[] = [];
   arrowColorStyle: string;
+  eVll075 = Vll075;
 
   isEdit: boolean = false;
   hasVouchers: boolean = false;
@@ -91,7 +78,8 @@ export class JournalsAddComponent
   comboboxValue: string;
   propName: string;
 
-  dataValueProps088: string[] = [];
+  extrasProps088: string[] = []; // props of journal.extras
+  templateProps127: string[] = []; // props of journal template that is used to assign to this.journal
   notAllowEditingFields087: string[] = [];
 
   journalTypes104: string[] = [];
@@ -129,11 +117,10 @@ export class JournalsAddComponent
 
     this.dataService = dialogRef.dataService;
     this.journal = { ...this.journal, ...this.dataService?.dataSelected };
-
-    this.journal.vatControl = this.journal.vatControl === '1';
-
     this.oldJournal = { ...this.journal };
     this.prevJournal = { ...this.journal };
+
+    this.journal.vatControl = this.journal.vatControl === '1';
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion
@@ -246,18 +233,13 @@ export class JournalsAddComponent
 
     this.cache
       .valueList('AC088')
-      .pipe(
-        map((v) =>
-          v.datas.map(
-            (d) =>
-              irrPropNames.find(
-                (i) => i.toLowerCase() === d.value.toLowerCase()
-              ) ?? this.acService.toCamelCase(d.value)
-          )
-        ),
-        tap((t) => console.log(t))
-      )
-      .subscribe((res) => (this.dataValueProps088 = res));
+      .pipe(map((v) => v.datas.map((d) => Util.camelize(d.value))))
+      .subscribe((res) => (this.extrasProps088 = res));
+
+    this.cache
+      .valueList('AC127')
+      .pipe(map((v) => v.datas.map((d) => Util.camelize(d.value))))
+      .subscribe((res) => (this.templateProps127 = res));
 
     this.acService
       .loadComboboxData('FiscalPeriods', 'AC')
@@ -321,6 +303,7 @@ export class JournalsAddComponent
   ngAfterViewInit(): void {
     this.formTitle = this.dialogData.data?.formTitle;
     this.detectorRef.markForCheck();
+
     setTimeout(() => {
       let moreInfoLabel: Element = document.getElementById('moreInfo');
       let arrowColor: string = window.getComputedStyle(moreInfoLabel).color;
@@ -380,7 +363,19 @@ export class JournalsAddComponent
     }
   }
 
-  onSelect(e): void {
+  onJournalNameChange(e): void {
+    console.log('onJournalNameChange', e);
+
+    this.journalService.getJournal(e.data).subscribe((journal: IJournal) => {
+      const { journalNo, recID, journalName, isTemplate, status, ...rest } =
+        journal;
+        // this.form.formGroup.controls["hi"].patchValue();
+      this.form.formGroup.patchValue(rest);
+      Object.assign(this.journal, rest);
+    });
+  }
+
+  onFiscalYearSelect(e): void {
     console.log('onSelect', e);
     this.journal.fiscalYear = e.itemData.value;
   }
@@ -389,12 +384,20 @@ export class JournalsAddComponent
     console.log(this.journal);
     console.log(this.thumbnail);
 
+    let ignoredFields: string[] = [];
+    if (!this.journal.multiCurrency) {
+      ignoredFields.push('CurrencyID');
+    }
+    if (this.journal.isTemplate) {
+      ignoredFields.push('JournalName');
+    }
+
     if (
       !this.acService.validateFormData(
         this.form.formGroup,
         this.gvs,
         ['DIM1Control', 'DIM2Control', 'DIM3Control'],
-        !this.journal.multiCurrency ? ['CurrencyID'] : []
+        ignoredFields
       )
     ) {
       return;
@@ -453,7 +456,7 @@ export class JournalsAddComponent
     this.journal.vatControl = this.journal.vatControl ? '1' : '0';
 
     const dataValueObj = {};
-    for (const prop of this.dataValueProps088) {
+    for (const prop of this.extrasProps088) {
       dataValueObj[prop] = this.journal[prop];
     }
     this.journal.extras = JSON.stringify(dataValueObj);
@@ -779,6 +782,7 @@ export class JournalsAddComponent
     });
   }
 
+  /** When vll067 has values of 0, 1 and 2, this.journal[propName] must not be left empty */
   validateVll067(
     vll067: string,
     propName: string,

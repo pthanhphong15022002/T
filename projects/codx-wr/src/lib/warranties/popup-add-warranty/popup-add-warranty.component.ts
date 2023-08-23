@@ -1,12 +1,14 @@
-import { ChangeDetectorRef, Component, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Optional, OnInit } from '@angular/core';
 import {
   ApiHttpService,
   AuthStore,
+  CRUDService,
   CallFuncService,
   DialogData,
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-servicetag.component';
@@ -19,14 +21,17 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './popup-add-warranty.component.html',
   styleUrls: ['./popup-add-warranty.component.css'],
 })
-export class PopupAddWarrantyComponent {
+export class PopupAddWarrantyComponent implements OnInit {
   data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
   userID: any;
   radioChecked = true;
   action = '';
+  gridViewSetup: any;
+
   constructor(
+    private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private api: ApiHttpService,
@@ -39,12 +44,15 @@ export class PopupAddWarrantyComponent {
     this.title = dt?.data?.title;
     this.userID = this.authstore?.get()?.userID;
     this.action = dt?.data?.action;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
+  ngOnInit(): void {}
 
   //#region onSave
   beforeSave(op) {
     var data = [];
-    op.method = this.action != 'edit' ? 'AddWorkOrderAsync' : 'UpdateWorkOrderAsync';
+    op.method =
+      this.action != 'edit' ? 'AddWorkOrderAsync' : 'UpdateWorkOrderAsync';
     op.className = 'WorkOrdersBusiness';
     op.data = this.data;
     return true;
@@ -60,19 +68,48 @@ export class PopupAddWarrantyComponent {
       });
   }
 
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe(async (res) => {
+        if (res && res.update) {
+          var recID = res.update?.recID;
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+
+          this.dialog.close(res.update);
+        }
+      });
+  }
+
   onSave() {
-    if(this.data?.customerID == null || this.data?.customerID?.trim() == ''){
+    if (this.data?.customerID == null || this.data?.customerID?.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.CustomerID?.headerText + '"'
+      );
       return;
     }
 
-    if(this.data?.serviceTag == null || this.data?.serviceTag?.trim() == ''){
+    if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.ServiceTag?.headerText + '"'
+      );
       return;
     }
 
-    if(this.radioChecked){
-      this.onAdd();
-    }else{
-      this.addCustomer();
+    if (this.action != 'edit') {
+      if (this.radioChecked) {
+        this.onAdd();
+      } else {
+        this.addCustomer();
+      }
+    } else {
+      this.onUpdate();
     }
   }
 
@@ -194,6 +231,8 @@ export class PopupAddWarrantyComponent {
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
+          if (this.data.customerID != e?.event[0]?.customerID)
+            this.setServiceTagEmtry();
           this.data = e?.event[0];
           this.radioChecked = e?.event[1];
           this.detectorRef.detectChanges();
@@ -212,6 +251,7 @@ export class PopupAddWarrantyComponent {
     this.data.customerID = '';
     this.data.customerName = '';
     this.data.custGroupID = '';
+    this.data.contactName = '';
     this.data.category = '';
     this.data.phone = '';
     this.data.mobile = '';
@@ -231,6 +271,7 @@ export class PopupAddWarrantyComponent {
     this.data.productModel = '';
     this.data.productBrand = '';
     this.data.productDesc = '';
+    this.data.note = '';
     this.data.warrantyExpired = null;
   }
 }

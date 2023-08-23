@@ -43,6 +43,8 @@ export class ContractsViewDetailComponent
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
+  treeTask = [];
+  id='';
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -129,9 +131,12 @@ export class ContractsViewDetailComponent
       if (this.contract?.applyProcess) {
         this.getListInstanceStep(this.contract);
         this.listTypeContract = this.contractService.listTypeContract;
+        this.id = this.contract?.refID;
       } else {
         this.listTypeContract = this.contractService.listTypeContractNoTask;
+        this.id = this.contract?.recID;
       }
+      this.loadTree(this.id);
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -241,9 +246,31 @@ export class ContractsViewDetailComponent
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
   }
+
   checkSusscess(e){
     if(e){
       this.isSusscess.emit(true);
     }
+  }
+
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.id);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
+    });
   }
 }
