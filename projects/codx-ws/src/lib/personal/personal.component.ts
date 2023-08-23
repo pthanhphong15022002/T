@@ -6,6 +6,7 @@ import { WSUIComponent } from '../default/wsui.component';
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.css']
 })
+
 export class PersonalComponent extends WSUIComponent{
   override onInit(): void {
     throw new Error('Method not implemented.');

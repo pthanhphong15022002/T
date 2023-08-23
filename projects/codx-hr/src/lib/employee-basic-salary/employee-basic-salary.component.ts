@@ -290,7 +290,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         funcID: this.view.funcID,
         salaryObj: data,
         fromListView: true,
-        useForQTNS: true,
       },
       option
     );
@@ -338,7 +337,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   onSaveUpdateForm() {
     this.hrService
-      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj, true)
+      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj)
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
@@ -408,7 +407,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail, false)
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService

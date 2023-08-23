@@ -1,20 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CodxWsService } from '../../codx-ws.service';
 import { isObservable } from 'rxjs';
 
 @Component({
-  selector: 'lib-menu-list',
-  templateUrl: './menu-list.component.html',
-  styleUrls: ['./menu-list.component.scss']
+  selector: 'lib-menu-list-approval',
+  templateUrl: './menu-list-approval.component.html',
+  styleUrls: ['./menu-list-approval.component.css']
 })
-export class MenuListComponent implements OnInit{
-  @Input() funcID:any;
-  @Output() selectedChange = new EventEmitter();
+export class MenuListApprovalComponent implements OnInit{
+  @Input() funcID: any;
   funcList:any;
-  selectedIndex = 0;
   constructor(private codxWsService: CodxWsService)
   {
-
   }
   
   ngOnInit(): void {
@@ -36,16 +33,5 @@ export class MenuListComponent implements OnInit{
     else {
       this.funcList = fucList.filter(x=>x.parentID == this.funcID);
     }
-  }
-
-  menuChange(item:any, index:any)
-  {
-    this.selectedIndex = index;
-    this.selectedChange.emit(item);
-  }
-
-  imgToSvg(e:any)
-  {
-
   }
 }
