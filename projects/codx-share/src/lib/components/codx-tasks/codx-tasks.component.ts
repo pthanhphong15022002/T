@@ -1090,7 +1090,7 @@ export class CodxTasksComponent
     this.viewCrr = evt?.view?.type;
     if (this.crrFuncID != this.funcID) {
       this.cache.viewSettings(this.funcID).subscribe((views) => {
-        if (views) {
+        if (views?.length > 0) {
           this.afterLoad();
           this.crrFuncID = this.funcID;
           this.views = [];

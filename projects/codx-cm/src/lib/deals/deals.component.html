@@ -53,8 +53,10 @@
   </codx-temp-full>
   <ng-template #tooltipDealName>
     <div class="text-end text-sm-start">
-      <strong>{{ gridViewSetup["DealName"]?.headerText }}</strong
-      >: {{ data?.dealName }}
+      <strong class="label-colon">{{
+        gridViewSetup?.DealName?.headerText
+      }}</strong>
+      {{ data?.dealName }}
     </div>
   </ng-template>
   <ng-template #descTmpCard>
@@ -77,7 +79,7 @@
         <span
           class="text-gray-600 fs-7 line-clamp-menu"
           #businessLineID
-          [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+          [ngbTooltip]="gridViewSetup?.BusinessLineID?.headerText"
           [innerHTML]="
             data?.businessLineID
               | formatvalue : view.formModel : 'businessLineID' : businessLineID
@@ -92,7 +94,7 @@
 <ng-template #footerKanban let-data>
   <ng-template #toolTipDealValue>
     <div class="text-end text-sm-start">
-      <strong>{{ gridViewSetup["DealValue"]?.headerText }}</strong
+      <strong>{{ gridViewSetup?.DealValue?.headerText }}</strong
       >:
       <span
         *ngIf="data?.dealValue; else defaultNull"
@@ -129,7 +131,7 @@
         <span
           [ngClass]="data?.currencyID ? '' : 'line-clamp-menu'"
           class="text-gray-700"
-          [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+          [ngbTooltip]="gridViewSetup?.CurrencyID?.headerText"
           #currencyID
           [innerHTML]="
             data?.currencyID
@@ -141,7 +143,7 @@
       <div
         class="d-flex justify-content-end"
         container="body"
-        [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+        [ngbTooltip]="gridViewSetup?.Probability?.headerText"
       >
         <span class="icon-i-check-all icon-16 text-green me-2"></span>
         <span
@@ -205,15 +207,17 @@
 
       <div class="d-flex justify-content-end align-items-center">
         <div
-        class="d-flex align-items-center me-1"
-        [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
-      >
+          class="d-flex align-items-center me-1"
+          [ngbTooltip]="gridViewSetup?.ModifiedOn?.headerText"
+        >
           <span class="icon-14 icon-av_timer me-1"></span>
           <span
             class="text-gray-700"
             #modifiedOn
             [innerHTML]="
-              data.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
+              data.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
             "
           ></span>
         </div>
@@ -486,13 +490,15 @@
         <div class="d-flex align-items-center text-gray-600">
           <span class="icon-16 icon-av_timer me-1"></span>
           <span
-          class="text-gray-700 line-clamp-menu"
-          [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
-          #modifiedOn
-          [innerHTML]="
-            data.modifiedOn | formatvalue : view.formModel : 'modifiedOn' | async
-          "
-        ></span>
+            class="text-gray-700 line-clamp-menu"
+            [ngbTooltip]="gridViewSetup?.ModifiedOn?.headerText"
+            #modifiedOn
+            [innerHTML]="
+              data.modifiedOn
+                | formatvalue : view.formModel : 'modifiedOn'
+                | async
+            "
+          ></span>
         </div>
       </div>
       <div class="d-flex justify-content-center h-25px">

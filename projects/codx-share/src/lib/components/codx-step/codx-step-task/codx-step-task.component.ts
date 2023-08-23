@@ -86,6 +86,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
   @Output() changeProgress = new EventEmitter<any>(); 
+  @Output() isSuccessStep = new EventEmitter<any>(); 
   //#endregion
 
   isUpdate;
@@ -1594,6 +1595,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (dataProgress) {
       if (dataProgress?.type == 'P') {
         this.updateDataProgress(data, dataProgress);
+        if(dataProgress?.progressStep == 100){
+          this.isSuccessStep.emit(true);
+        }
       } else if (dataProgress?.type == 'G') {
         this.updateDataProgress(data, dataProgress);
         let groupData = this.currentStep?.taskGroups?.find(
@@ -1605,6 +1609,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataProgress?.isUpdate) {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
+          if(dataProgress?.progressStep == 100){
+            this.isSuccessStep.emit(true);
+          }
         }
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
@@ -1646,6 +1653,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
+          if(dataProgress?.progressStep == 100){
+            this.isSuccessStep.emit(true);
+          }
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));

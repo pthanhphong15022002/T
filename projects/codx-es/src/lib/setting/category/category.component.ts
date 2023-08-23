@@ -135,17 +135,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'categoryID',
-              headerText: gv
-                ? gv['CategoryID'].headerText || 'categoryID'
-                : 'categoryID',
+              headerText:  gv['CategoryID'].headerText || 'CategoryID',
               //template: '',
               width: 100,
             },
             {
               field: 'categoryName',
-              headerText: gv
-                ? gv['CategoryName'].headerText || 'CategoryName'
-                : 'CategoryName',
+              headerText: gv['CategoryName'].headerText || 'CategoryName',
               //template: '',
               width: 180,
             },
@@ -157,19 +153,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'icon',
-              headerText: gv ? gv['Icon'].headerText || 'Icon' : 'Icon',
+              headerText:  gv['Icon'].headerText || 'Icon' ,
               template: this.icon,
               width: 80,
             },
             {
               field: 'memo',
-              headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
+              headerText:  gv['Memo'].headerText || 'Memo',
               template : this.memo,
               width: 180,
             },
             {
               field: 'eSign',
-              headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
+              headerText: gv['ESign'].headerText ||  'ESign',
               template : this.eSign,
               width: 80,
             },

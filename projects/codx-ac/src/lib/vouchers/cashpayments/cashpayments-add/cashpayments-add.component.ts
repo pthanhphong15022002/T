@@ -127,6 +127,27 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  customerData: Object[] = [
+    {
+        "CustomerID": "ALFKI",
+        "ContactName": "Maria ",
+        "CompanyName": "Alfreds Futterkiste",
+        "Address": "Obere Str. 57",
+        "Country": "Germany",
+        'rowNo':1
+    },
+    {
+        "CustomerID": "ANATR",
+        "ContactName": "Ana Trujillo",
+        "CompanyName": "Ana Trujillo Emparedados y helados",
+        "Address": "Avda. de la Constitución 2222",
+        "Country": "Mexico",
+        'rowNo':1
+    },
+
+  ];
+  childGrid:any = {};
+
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -171,6 +192,25 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       onlySelf: true,
       emitEvent: false,
     });
+    this.childGrid = {
+      dataSource: this.customerData,
+      editSettings:{
+        allowEditing: true,
+      allowAdding: true,
+      allowDeleting: true,
+      mode: 'Normal',
+      },
+      queryString:'rowNo',
+      rowHeight:35,
+      height:200,
+      columns: [
+        { field: 'CustomerID', headerText: 'Customer ID', textAlign: 'Right', width: 75 },
+        { field: 'ContactName', headerText: 'ContactName', width: 100 },
+        { field: 'Address', headerText: 'Address', width: 120 },
+        { field: 'Country', headerText: 'Country', width: 100 }
+    ]
+
+  };
   }
 
   /**
@@ -362,11 +402,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         if (this.hideFieldsCashpayment.includes(fieldName)) { //? nếu field ẩn có trong danh sách
           if ((columnsGrid.findIndex((x) => x.fieldName == fieldName)) > -1) {
             columnsGrid[columnsGrid.findIndex((x) => x.fieldName == fieldName)].isVisible = false; //? => ẩn cột
-          }   
+          }
         } else {
           if ((columnsGrid.findIndex((x) => x.fieldName == fieldName)) > -1) {
             columnsGrid[columnsGrid.findIndex((x) => x.fieldName == fieldName)].isVisible = true; //? => hiện cột
-          }        
+          }
         }
       }
     });
@@ -885,7 +925,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
 
   /**
    * *Hàm sao chép dòng trong lưới
-   * @param data 
+   * @param data
    */
   copyRow(data) {
     data.recID = Util.uid();
@@ -1069,7 +1109,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
                   if (res) {
                     this.hasSaved = false;
                     this.clearCashpayment();
-                    this.cashpayment = res.data;   
+                    this.cashpayment = res.data;
                     this.formCashPayment.formGroup.patchValue(
                       this.cashpayment,
                       {
@@ -1759,11 +1799,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         hCR2 = true; //? mode 1 tài khoản => hiện cột có,HT
       }
     }
-    this.eleGridCashPayment.columnsGrid[this.eleGridCashPayment.columnsGrid.findIndex((x) => x.fieldName == 'DR2')].isVisible = hDR2; 
-    this.eleGridCashPayment.columnsGrid[this.eleGridCashPayment.columnsGrid.findIndex((x) => x.fieldName == 'CR2')].isVisible = hCR2; 
+    this.eleGridCashPayment.columnsGrid[this.eleGridCashPayment.columnsGrid.findIndex((x) => x.fieldName == 'DR2')].isVisible = hDR2;
+    this.eleGridCashPayment.columnsGrid[this.eleGridCashPayment.columnsGrid.findIndex((x) => x.fieldName == 'CR2')].isVisible = hCR2;
     setTimeout(() => {
         this.eleGridCashPayment.refresh();
-    }, 100);  
+    }, 100);
   }
 
   /**

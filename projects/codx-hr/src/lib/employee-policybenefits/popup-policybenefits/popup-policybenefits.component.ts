@@ -636,7 +636,7 @@ implements OnInit{
   }
 
   onClickOpenSelectApplyObjDetail(detail, obj){
-    
+    debugger
     this.currentRec = obj.recID;
     if(this.benefitPolicyObj.hasIncludeObjects){
       if(detail == '5' || detail == '8'){
@@ -901,8 +901,11 @@ implements OnInit{
             
             this.formModel.currentData = this.benefitPolicyObj;
             this.formGroup.patchValue(this.benefitPolicyObj);
-            this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
-            this.fmPolicyConstraints.currentData = this.constraintsObj;
+            if(this.constraintsObj){
+              debugger
+              this.formGroupPolicyConstraints?.patchValue(this.constraintsObj);
+              this.fmPolicyConstraints.currentData = this.constraintsObj;
+            }
             this.df.detectChanges();
             this.isAfterRender = true;
           }
@@ -1649,6 +1652,96 @@ implements OnInit{
       }
     }
 }
+
+deleteApplyExcludeObj(data, from, crrObj?){
+  switch(from){
+      case 'lstPositionID':
+        let index = this.lstPositionID.indexOf(data);
+        this.lstPositionID.splice(index,1);
+        let lstId = this.lstPositionID.map(item => item.id);
+        crrObj.positionID = lstId.join(';');
+        break;
+      case 'lstOrgUnitID':
+        let index2 = this.lstOrgUnitID.indexOf(data);
+        this.lstOrgUnitID.splice(index2,1);
+        let lstId2 = this.lstOrgUnitID.map(item => item.id);
+        crrObj.orgUnitID = lstId2.join(';');
+        break;
+      case 'lstJobLevel':
+        let index3 = this.lstJobLevel.indexOf(data);
+        this.lstJobLevel.splice(index3,1);
+        let lstId3 = this.lstJobLevel.map(item => item.id);
+        crrObj.jobLevel = lstId3.join(';');
+        break;
+      case 'lstEmployeeTypeID':
+        let index4 = this.lstEmployeeTypeID.indexOf(data);
+        this.lstEmployeeTypeID.splice(index4,1);
+        let lstId4 = this.lstEmployeeTypeID.map(item => item.id);
+        crrObj.employeeTypeID = lstId4.join(';');
+        break;
+      case 'lstLabourType':
+        let index5 = this.lstLabourType.indexOf(data);
+        this.lstLabourType.splice(index5,1);
+        let lstId5 = this.lstLabourType.map(item => item.id);
+        crrObj.labourType = lstId5.join(';');
+        break;
+      case 'lstContractTypeID':
+        let index6 = this.lstContractTypeID.indexOf(data);
+        this.lstContractTypeID.splice(index6,1);
+        let lstId6 = this.lstContractTypeID.map(item => item.id);
+        crrObj.contractTypeID = lstId6.join(';');
+        break;
+      case 'lstEmployeeID':
+        let index7 = this.lstEmployeeID.indexOf(data);
+        this.lstEmployeeID.splice(index7,1);
+        let lstId7 = this.lstEmployeeID.map(item => item.id);
+        crrObj.employeeID = lstId7.join(';');
+        break;
+      case 'lstEmpStatus':
+        let index8 = this.lstEmpStatus.indexOf(data);
+        this.lstEmpStatus.splice(index8,1);
+        let lstId8 = this.lstEmpStatus.map(item => item.id);
+        crrObj.employeeStatus = lstId8.join(';');
+        break;
+      case 'lstSelectedBenefits':
+        let index9 = this.lstSelectedBenefits.indexOf(data);
+        this.lstSelectedBenefits.splice(index9,1);
+        this.benefitPolicyObj.includeBenefits = this.lstSelectedBenefits.join(';');
+        break;
+      case 'lstKow':
+        let index10 = this.lstKow.indexOf(data);
+        this.lstKow.splice(index10,1);
+        this.benefitPolicyObj.adjustKows = this.lstKow.join(';');
+        break;
+      case 'lstMinKows':
+        let index11 = this.lstMinKows.indexOf(data);
+        this.lstMinKows.splice(index11,1);
+        this.benefitPolicyObj.minKows = this.lstMinKows.join(';');
+        break;
+      case 'lstMaxKows':
+        let index12 = this.lstMaxKows.indexOf(data);
+        this.lstMaxKows.splice(index12,1);
+        this.benefitPolicyObj.maxKows = this.lstMaxKows.join(';');
+        break;
+      case 'lstSelectedConstraintTrainLevel':
+        let index13 = this.lstSelectedConstraintTrainLevel.indexOf(data);
+        this.lstSelectedConstraintTrainLevel.splice(index13,1);
+        this.constraintsObj.trainLevel = this.lstSelectedConstraintTrainLevel.join(';');
+        break;
+      case 'lstSelectedConstraintTrainField':
+        let index14 = this.lstSelectedConstraintTrainField.indexOf(data);
+        this.lstSelectedConstraintTrainField.splice(index14,1);
+        this.constraintsObj.trainField = this.lstSelectedConstraintTrainField.join(';');
+        break;
+      case 'lstSelectedConstraintCertificate':
+        let index15 = this.lstSelectedConstraintCertificate.indexOf(data);
+        this.lstSelectedConstraintCertificate.splice(index15,1);
+        this.constraintsObj.certificate = this.lstSelectedConstraintCertificate.join(';');
+        break;
+    }
+    this.df.detectChanges();
+}
+
 onClickOpenCbxKow(){
   if(this.benefitPolicyObj.isAdjustKow){
     this.isHidden3 = false;

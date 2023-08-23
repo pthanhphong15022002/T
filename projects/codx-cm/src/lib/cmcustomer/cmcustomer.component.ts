@@ -72,9 +72,9 @@ export class CmCustomerComponent
   funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  entityName = 'CM_Customers';
-  className = 'CustomersBusiness';
-  method = 'GetListCustomersAsync';
+  entityName = '';
+  className = '';
+  method = '';
   idField = 'recID';
   //endregion
 
@@ -365,43 +365,27 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-
-        this.cmSv
-          .getAutonumber(
-            this.funcID,
-            fun.entityName,
-            this.funcID == 'CM0101' || this.funcID == 'CM0105'
-              ? 'CustomerID'
-              : this.funcID == 'CM0102'
-              ? 'ContactID'
-              : this.funcID == 'CM0103'
-              ? 'PartnerID'
-              : 'CompetitorID'
-          )
-          .subscribe((x) => {
-            var obj = {
-              action: 'add',
-              title: this.titleAction,
-              autoNumber: x,
-            };
-            var dialog = this.callfc.openSide(
-              PopupAddCmCustomerComponent,
-              obj,
-              option
-            );
-            dialog.closed.subscribe((e) => {
-              this.isButton = true;
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.modifiedOn = new Date();
-                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-                this.view.dataService.update(e?.event).subscribe();
-                // this.customerDetail.loadTag(this.dataSelected);
-                this.detectorRef.detectChanges();
-                // this.customerDetail.listTab(this.funcID);
-              }
-            });
-          });
+        var obj = {
+          action: 'add',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddCmCustomerComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          this.isButton = true;
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            e.event.modifiedOn = new Date();
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e?.event).subscribe();
+            // this.customerDetail.loadTag(this.dataSelected);
+            this.detectorRef.detectChanges();
+            // this.customerDetail.listTab(this.funcID);
+          }
+        });
       });
     });
   }
