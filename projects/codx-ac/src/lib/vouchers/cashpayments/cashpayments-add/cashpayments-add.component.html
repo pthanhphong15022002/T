@@ -84,7 +84,7 @@
             </div>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabDelegate"></ng-container>
+            <ng-container *ngTemplateOutlet="TmpTabInvoiceInfo"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -220,7 +220,7 @@
                   </codx-label>
                   <div class="ac-input">
                     <codx-input [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
-                      field="totalAmt" [min]="0" (controlBlur)="valueChangeTotalamtAndExchangerate($event)"></codx-input>
+                      field="totalAmt" [min]="0" (controlBlur)="valueChangeNumber($event)"></codx-input>
                   </div>
                 </div>
               </div>
@@ -358,7 +358,7 @@
                     [class]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr) ? 'ac-input-disable' : 'ac-input'">
                     <codx-input #tExchange [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)"
                       [Group]="formCashPayment.formGroup" field="exchangeRate" [formModel]="formCashPayment.formModel"
-                      (controlBlur)="valueChangeTotalamtAndExchangerate($event)">
+                      (controlBlur)="valueChangeNumber($event)">
                     </codx-input>
                   </div>
                 </div>
@@ -415,7 +415,7 @@
 <!-- End: TmpTabGeneral -->
 
 <!-- Start: TmpTabDelegate -->
-<ng-template #TmpTabDelegate>
+<ng-template #TmpTabInvoiceInfo>
   <ng-container *ngIf="formCashPayment.formGroup">
     <div class="p-3 tab-basic ac-form-master">
       <div class="row">

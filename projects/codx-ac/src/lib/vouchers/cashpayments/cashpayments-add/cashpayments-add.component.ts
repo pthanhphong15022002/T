@@ -263,12 +263,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
           ]) //? get data detail theo loại chứng từ
           .subscribe((res: any) => {
             if (res) {
-              this.cashpaymentline = res?.lsCashpaymentLine
-                ? res?.lsCashpaymentLine
-                : []; //? danh sách chi tiết (tab chi tiết)
-              this.settledInvoices = res?.lsSettledInvoices
-                ? res?.lsSettledInvoices
-                : []; //? danh sách chi tiết (tab hóa đơn công nợ)
+              this.cashpaymentline = res?.lsCashpaymentLine ? res?.lsCashpaymentLine : []; //? danh sách chi tiết (tab chi tiết)
+              this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : []; //? danh sách chi tiết (tab hóa đơn công nợ)
               this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : []; //? danh sách chi tiết (tab hóa đơn GTGT)
               this.voucherNoAdv = res?.voucherNoRef ? res?.voucherNoRef : ''; //? số chứng từ đề nghị tạm ứng,thanh toán
               this.dRAdv = res?.totalDrRef ? res?.totalDrRef : 0; //? số tiền chứng từ đề nghị tạm ứng,thanh toán
@@ -536,22 +532,14 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               emitEvent: false,
             }
           );
-          if (this.cashpaymentline.length > 0) {
-            //? nếu có dữ liệu chi tiết thì sẽ cập nhật lại đối tượng cho tất cá các line
-            if (
-              event?.component?.dataService?.currentComponent?.previousItemData
-            ) {
-              //? nếu có giá trị đối tượng cũ
-              preValue =
-                event?.component?.dataService?.currentComponent
-                  ?.previousItemData?.ObjectID;
+          if (this.cashpaymentline.length > 0) { //? nếu có dữ liệu chi tiết thì sẽ cập nhật lại đối tượng cho tất cá các line
+            if (event?.component?.dataService?.currentComponent?.previousItemData) { //? nếu có giá trị đối tượng cũ
+              preValue = event?.component?.dataService?.currentComponent?.previousItemData?.ObjectID;
             }
             this.cashpaymentline.forEach((item) => {
-              if (preValue && preValue == item.objectID) {
-                //? nếu có đối tượng cũ && so sánh nếu đối tượng tại dòng line = với đối tượng cũ
+              if (preValue && preValue == item.objectID) { //? nếu có đối tượng cũ && so sánh nếu đối tượng tại dòng line = với đối tượng cũ
                 item.objectID = this.cashpayment.objectID; //? => cập nhật giá trị đối tượng mới cho dòng line
-              } else {
-                //? nếu ko có đối tượng cũ
+              } else { //? nếu ko có đối tượng cũ
                 item.objectID = this.cashpayment.objectID; //? => cập nhật giá trị đối tượng mới cho dòng line
               }
             });
@@ -568,21 +556,15 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               emitEvent: false,
             }
           );
-          if (this.cashpaymentline.length > 0) {
-            //? nếu có dữ liệu chi tiết thì sẽ cập nhật lại lí do chi,ghi chú,tài khoản nợ cho tất cá các line
-            if (event.component.dataService.currentComponent.previousItemData) {
-              //? nếu có giá trị lí do chi cũ
-              preValue =
-                event.component.dataService.currentComponent.previousItemData
-                  .ReasonID;
+          if (this.cashpaymentline.length > 0) { //? nếu có dữ liệu chi tiết thì sẽ cập nhật lại lí do chi,ghi chú,tài khoản nợ cho tất cá các line
+            if (event.component.dataService.currentComponent.previousItemData) { //? nếu có giá trị lí do chi cũ
+              preValue = event.component.dataService.currentComponent.previousItemData.ReasonID;
             }
             this.cashpaymentline.forEach((item) => {
-              if (preValue && preValue == item.reasonID) {
-                //? nếu có lí do chi cũ && so sánh nếu lí do chi tại dòng line = với lí do chi cũ
+              if (preValue && preValue == item.reasonID) { //? nếu có lí do chi cũ && so sánh nếu lí do chi tại dòng line = với lí do chi cũ
                 item.reasonID = this.cashpayment.reasonID; //? => cập nhật giá trị lí do chi mới cho dòng line
                 item.note = event?.component?.itemsSelected[0]?.ReasonName; //? => cập nhật giá trị ghi chú mới cho dòng line
-                item.accountID =
-                  event?.component?.itemsSelected[0]?.OffsetAcctID; //? => cập nhật giá trị TK Nợ mới cho dòng line
+                item.accountID = event?.component?.itemsSelected[0]?.OffsetAcctID; //? => cập nhật giá trị TK Nợ mới cho dòng line
               }
             });
             this.eleGridCashPayment.refresh(); //? => refresh lại lưới
@@ -601,33 +583,20 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
           break;
         //* Sổ quỹ
         case 'cashbookid':
-          if (
-            this.cashpayment.currencyID !=
-            event?.component?.itemsSelected[0]?.CurrencyID
-          ) {
-            //? nếu tiền tệ của sổ quỹ khác với tiền tệ của chứng từ
-            this.cashpayment.currencyID =
-              event?.component?.itemsSelected[0]?.CurrencyID; //? lấy tiền tệ từ sổ quỹ
+          if (this.cashpayment.currencyID != event?.component?.itemsSelected[0]?.CurrencyID) { //? nếu tiền tệ của sổ quỹ khác với tiền tệ của chứng từ
+            this.cashpayment.currencyID = event?.component?.itemsSelected[0]?.CurrencyID; //? lấy tiền tệ từ sổ quỹ
             this.getExchangeRateMaster(); //? lấy tỷ giá của currency
           }
           if (this.cashpaymentline.length > 0) {
             //? nếu có dữ liệu chi tiết thì sẽ cập nhật lại tiền tệ và tài khoản nợ cho tất cá các line
             if (event.component.dataService.currentComponent.previousItemData) {
               //? nếu có giá trị TK cũ của sổ quỹ
-              preValue =
-                event.component.dataService.currentComponent.previousItemData
-                  .CashAcctID;
+              preValue =event.component.dataService.currentComponent.previousItemData.CashAcctID;
             }
-            if (
-              preValue &&
-              preValue != event?.component?.itemsSelected[0]?.CashAcctID
-            ) {
-              //? nếu có giá trị TK cũ của sổ quỹ && giá trị TK cũ của số quỹ != giá trị mới
+            if (preValue && preValue != event?.component?.itemsSelected[0]?.CashAcctID) { //? nếu có giá trị TK cũ của sổ quỹ && giá trị TK cũ của số quỹ != giá trị mới
               this.cashpaymentline.forEach((item) => {
-                if (preValue && preValue == item.offsetAcctID) {
-                  //? nếu có TK cũ && so sánh nếu TK tại dòng line = với TK cũ
-                  item.offsetAcctID =
-                    event?.component?.itemsSelected[0]?.CashAcctID; //? => cập nhật giá trị TK mới cho dòng line
+                if (preValue && preValue == item.offsetAcctID) { //? nếu có TK cũ && so sánh nếu TK tại dòng line = với TK cũ
+                  item.offsetAcctID = event?.component?.itemsSelected[0]?.CashAcctID; //? => cập nhật giá trị TK mới cho dòng line
                 }
               });
             }
@@ -647,7 +616,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm xử lí khi change value của số tiền và tỷ giá trên master (khi out focus thì mới change)
    * @param event
    */
-  valueChangeTotalamtAndExchangerate(event: any) {
+  valueChangeNumber(event: any) {
     this.cashpayment[event.ControlName] = event.crrValue;
     this.cashpayment.updateColumn = event.ControlName;
     switch (event.ControlName.toLowerCase()) {
@@ -1898,24 +1867,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       item.dR2 = line.dR2;
     });
     this.eleGridCashPayment.refresh(); //? => refresh lại lưới
-  }
-
-  // doi ten checkaccount/ dem len valuechange cashbookid
-  checkExistAccount() {
-    // let oAccount = this.acService.getCacheValue(
-    //   'account',
-    //   this.cbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID
-    // );
-    // if (oAccount != null) {
-    //   return true;
-    // } else {
-    //   this.notification.notifyCode(
-    //     'AC0021',
-    //     0,
-    //     this.cbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID
-    //   );
-    //   return false;
-    // }
   }
 
   /**
