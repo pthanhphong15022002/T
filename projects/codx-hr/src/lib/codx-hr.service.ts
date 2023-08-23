@@ -1351,23 +1351,23 @@ export class CodxHrService {
     );
   }
 
-  AddEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
+  AddEmployeeBasicSalariesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'AddEmployeeBasicSalariesInfoAsync',
-      [data, useForQTNS]
+      data
     );
   }
 
-  UpdateEmployeeBasicSalariesInfo(data, useForQTNS: boolean) {
+  UpdateEmployeeBasicSalariesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EBasicSalariesBusiness',
       'UpdateEmployeeBasicSalariesInfoAsync',
-      [data, useForQTNS]
+      data
     );
   }
   getOldBasicSalary(data) {
@@ -1775,6 +1775,16 @@ export class CodxHrService {
       'EContractsBusiness',
       'DeleteEContractAsync',
       data
+    );
+  }
+
+  validateBeforeReleaseContract(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
     );
   }
   //#endregion
