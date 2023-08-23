@@ -183,8 +183,8 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
+      this.leadId = dt?.data?.leadIdOld;
       if (this.action === this.actionCopy) {
-        this.leadId = dt?.data?.leadIdOld;
         this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
@@ -212,7 +212,7 @@ export class PopupAddLeadComponent
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
       } else if ($event.field == 'industries') {
-        let owner = $event.component.itemsSelected[0].Owner;
+        let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
           let index = this.listParticipants.findIndex((x) => x.userID);
