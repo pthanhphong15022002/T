@@ -441,4 +441,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.isZoomOut = false;
     this.isZoomIn = false;
   }
+  
+  susscessStepEnd(event, step){
+    let count = this.listInstanceStepShow?.length - 1;
+    let stepEnd;
+    for(let i = count; i >=0 ; i--){
+      if(!this.listInstanceStepShow[i]?.isSuccessStep && !this.listInstanceStepShow[i]?.isFailStep){
+        stepEnd = this.listInstanceStepShow[i];
+        break;
+      }
+    }
+  }
 }

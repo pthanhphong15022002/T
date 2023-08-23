@@ -1,0 +1,184 @@
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [data]="data"
+>
+  <ng-template #body>
+    <div class="row mb-4 mt-5">
+      <div class="d-flex align-items-top col-6">
+        <span class="d-flex align-items-center w-25px h-1px">
+          <codx-input
+            name="customerwr-1"
+            class="test-check"
+            type="radio"
+            field="yes"
+            [checked]="radioChecked ?? false"
+            (valueChange)="changeRadio($event)"
+          ></codx-input>
+        </span>
+        <span class="d-flex align-items-center">
+          <codx-label
+            name="lblRadioCustomer"
+            [formModel]="dialog.formModel"
+            default="Chọn khách hàng có sẵn từ hệ thống"
+          ></codx-label>
+        </span>
+      </div>
+      <div class="d-flex align-items-top col-6">
+        <span class="d-flex align-items-center w-25px h-1px">
+          <codx-input
+            name="customerwr-2"
+            class="test-check"
+            type="radio"
+            style="width: 100%"
+            field="no"
+            [checked]="!radioChecked ?? false"
+            (valueChange)="changeRadio($event)"
+          ></codx-input>
+        </span>
+
+        <span class="d-flex justify-content-end align-items-center">
+          <codx-label
+            name="lblRadioAddCustomer"
+            [formModel]="dialog.formModel"
+            default="Tạo khách hàng mới"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+    <div
+      class="mt-5"
+      *ngIf="radioChecked; then systemCustomer; else addCustomer"
+    ></div>
+  </ng-template>
+  <ng-template #systemCustomer>
+    <div class="form-group mt-5">
+      <codx-input
+        type="combobox"
+        field="customerID"
+        [crrValue]="data?.customerID"
+        [refValue]="'CMCustomers'"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </ng-template>
+  <ng-template #addCustomer>
+    <div class="form-group">
+      <codx-label fiedName="Category" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        field="category"
+        [formModel]="form.formModel"
+        [crrValue]="data?.category"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="CustomerType" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        field="customerType"
+        [formModel]="form.formModel"
+        [crrValue]="data?.customerType"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="CustomerName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        field="customerName"
+        [formModel]="form.formModel"
+        [crrValue]="data?.customerName"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="ContactName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        field="contactName"
+        [formModel]="form.formModel"
+        [crrValue]="data?.contactName"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="Mobile" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="mobile"
+          [formModel]="form.formModel"
+          [crrValue]="data?.mobile"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Phone" [formModel]="form.formModel"> </codx-label>
+        <codx-input
+          field="phone"
+          [formModel]="form.formModel"
+          [crrValue]="data?.phone"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Email" [formModel]="form.formModel"> </codx-label>
+      <codx-input
+        field="email"
+        [formModel]="form.formModel"
+        [crrValue]="data?.email"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="Address" [formModel]="form.formModel"> </codx-label>
+      <codx-input
+        field="address"
+        [formModel]="form.formModel"
+        [crrValue]="data?.address"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="Jobtitle" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="jobtitle"
+          [formModel]="form.formModel"
+          [crrValue]="data?.jobtitle"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Occupation" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="occupation"
+          [formModel]="form.formModel"
+          [crrValue]="data?.occupation"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

@@ -3,14 +3,16 @@
 </codx-form>
 <ng-template #subHeader>
     <div class="d-flex align-items-center mt-2">
-        <span type="button" class="btn btn-icon" (click)="yearChange(false)">
-            <i class="icon-arrow_back_ios text-primary icon-16"></i>
+        <span type="button" class="btn btn-icon btn-sm" (click)="yearChange(false)">
+            <i class="icon-arrow_back_ios icon-16 text-primary"></i>
         </span>
-        <codx-dropdown-calendar cssPopup="h-350px w-550px" [cssClass]="'rounded-pill'" [selectedType]="'y'"
+        <span class="mx-2">
+            <codx-dropdown-calendar cssPopup="h-350px w-550px" [cssClass]="'rounded-pill'" [selectedType]="'y'"
             [displayOption]="['y']" [value]="inYearValue" [emptyText]="inYearValue"
             (change)="yearSelect($event)"></codx-dropdown-calendar>
-        <span type="button" class="btn btn-icon" (click)="yearChange(true)">
-            <i class="icon-arrow_forward_ios text-primary icon-16"></i>
+        </span>
+        <span type="button" class="btn btn-icon btn-sm" (click)="yearChange(true)">
+            <i class="icon-arrow_forward_ios icon-16 text-primary"></i>
         </span>
     </div>
 </ng-template>
@@ -33,7 +35,7 @@
                 <div #step1 class="d-flex flex-column">
                     <div class="d-flex flex-column mb-3 control-field">
                         <div class="d-flex align-items-center justify-content-between">
-                            <codx-label class="fw-bold fs-5" fiedName="lblALObjectID" [formModel]="formModel"
+                            <codx-label class="fw-bold fs-5-sm" fiedName="lblALObjectID" [formModel]="formModel"
                                 default="Đối tượng phép"></codx-label>
                             <codx-input field="alObjectID" [Group]="form.formGroup" [formModel]="formModel"
                                 [showInput]="false" [crrValue]="alObjectIDList"
@@ -54,7 +56,7 @@
                     </div>
                     <div class="d-flex flex-column mb-3 control-field">
                         <div class="d-flex align-items-center justify-content-between">
-                            <codx-label class="fw-bold fs-5" fiedName="lblOrgUnitID" [formModel]="formModel"
+                            <codx-label class="fw-bold fs-5-sm" fiedName="lblOrgUnitID" [formModel]="formModel"
                                 default="Phòng ban"></codx-label>
                             <codx-input field="orgUnitID" [Group]="form.formGroup" [formModel]="formModel"
                                 [showInput]="false" [crrValue]="orgUnitIDList"
@@ -75,7 +77,7 @@
                     </div>
                     <div class="d-flex flex-column h-100px mb-3">
                         <div class="d-flex align-items-center justify-content-between">
-                            <codx-label class="fw-bold fs-5" fiedName="lblEmployeeID" [formModel]="formModel"
+                            <codx-label class="fw-bold fs-5-sm" fiedName="lblEmployeeID" [formModel]="formModel"
                                 default="Nhân viên"></codx-label>
                             <codx-input field="employeeID" [Group]="form.formGroup" [formModel]="formModel"
                                 [showInput]="false" (valueChange)="valueChange($event)"
@@ -99,7 +101,7 @@
                     </div>
                     <div class="d-flex flex-column mt-auto">
                         <div class="d-flex align-items-center justify-content-between">
-                            <codx-label class="fw-bold fs-5" fiedName="lblIsExceptEmp" [formModel]="formModel"
+                            <codx-label class="fw-bold fs-5-sm" fiedName="lblIsExceptEmp" [formModel]="formModel"
                                 default="Nhân viên có"></codx-label>
                             <div class="d-flex align-items-center flex-row">
                                 <codx-input class="w-200px" field="calculateALBy" [Group]="form.formGroup"
@@ -121,7 +123,7 @@
                 <div #step1 class="d-flex flex-column">
                     <div class="d-flex flex-column max-w-500px">
                         <div class="d-flex">
-                            <codx-label class="fw-bold fs-5 mb-2" fiedName="lblEmpList" [formModel]="formModel"
+                            <codx-label class="fw-bold fs-5-sm mb-2" fiedName="lblEmpList" [formModel]="formModel"
                                 default="Danh sách nhân viên:"></codx-label>
                             <codx-searchbar class="ms-auto" (searchEvent)="searchEmp($event) "></codx-searchbar>
                         </div>
@@ -165,52 +167,52 @@
     <div #step1 class="d-flex flex-column">
         <div class="d-flex flex-column mb-3 control-field">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label class="fw-bold fs-5" fiedName="lblALObjectID" [formModel]="formModel"
+                <codx-label class="fw-bold fs-5-sm" fiedName="lblALObjectID" [formModel]="formModel"
                     default="Đối tượng phép"></codx-label>
                 <codx-input field="alObjectID" [Group]="form.formGroup" [formModel]="formModel" [showInput]="false"
                     [crrValue]="alObjectIDList" (valueChange)="valueChange($event)"></codx-input>
             </div>
-            <codx-label class="data-text-color mb-2" fiedName="lblALObjectIDDes" [formModel]="formModel"
+            <codx-label class="text-gray-600 mb-2" fiedName="lblALObjectIDDes" [formModel]="formModel"
                 default="Chọn các đối tượng phép cần tính tiêu chuẩn phép năm"></codx-label>
             <div class="d-flex flex-wrap align-items-center item-field" *ngIf="alObjectList?.length > 0">
                 <div *ngFor="let al of alObjectList">
                     <span class="d-flex align-items-center badge me-2 small-card-item">
-                        <span class="fw-bold me-2">
+                        <span class="fs-7 me-2">
                             {{al?.alObjectName}}
                         </span>
-                        <i class="icon-close icon-14" (click)="deleteItem(al, 'alObjectID')"></i>
+                        <i class="icon-close icon-14 text-hover-danger" (click)="deleteItem(al, 'alObjectID')"></i>
                     </span>
                 </div>
             </div>
         </div>
         <div class="d-flex flex-column mb-3 control-field">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label class="fw-bold fs-5" fiedName="lblOrgUnitID" [formModel]="formModel"
+                <codx-label class="fw-bold fs-5-sm" fiedName="lblOrgUnitID" [formModel]="formModel"
                     default="Phòng ban"></codx-label>
                 <codx-input field="orgUnitID" [Group]="form.formGroup" [formModel]="formModel" [showInput]="false"
                     [crrValue]="orgUnitIDList" (valueChange)="valueChange($event)"></codx-input>
             </div>
-            <codx-label class="data-text-color mb-2" fiedName="lblOrgUnitIDDes" [formModel]="formModel"
+            <codx-label class="text-gray-600 mb-2" fiedName="lblOrgUnitIDDes" [formModel]="formModel"
                 default="Chọn phòng ban cần tính tiêu chuẩn phép năm"></codx-label>
             <div class="d-flex flex-wrap align-items-center item-field" *ngIf="orgUnitList?.length > 0">
                 <div *ngFor="let org of orgUnitList">
                     <span class="d-flex align-items-center badge me-1 mb-1 small-card-item">
-                        <span class="fw-bold me-2">
+                        <span class="fs-7 me-2">
                             {{org?.orgUnitName}}
                         </span>
-                        <i class="icon-close icon-14" (click)="deleteItem(org, 'orgUnitID')"></i>
+                        <i class="icon-close icon-14 text-hover-danger" (click)="deleteItem(org, 'orgUnitID')"></i>
                     </span>
                 </div>
             </div>
         </div>
         <div class="d-flex flex-column h-100px mb-3">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label class="fw-bold fs-5" fiedName="lblEmployeeID" [formModel]="formModel"
+                <codx-label class="fw-bold fs-5-sm" fiedName="lblEmployeeID" [formModel]="formModel"
                     default="Nhân viên"></codx-label>
                 <codx-input field="employeeID" [Group]="form.formGroup" [formModel]="formModel" [showInput]="false"
                     (valueChange)="valueChange($event)" [crrValue]="empIDList"></codx-input>
             </div>
-            <codx-label class="data-text-color mb-2" fiedName="lblEmployeeIDDes" [formModel]="formModel"
+            <codx-label class="text-gray-600 mb-2" fiedName="lblEmployeeIDDes" [formModel]="formModel"
                 default="Chọn nhân viên cần tính tiêu chuẩn phép năm"></codx-label>
             <div class="d-flex align-items-center" *ngIf="employeeList?.length >0">
                 <div *ngFor="let emp of employeeList.slice(0,10)" [ngbTooltip]="emp?.employeeName">
@@ -227,23 +229,25 @@
         </div>
         <div class="d-flex flex-column mt-auto">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label class="fw-bold fs-5" fiedName="lblIsExceptEmp" [formModel]="formModel"
+                <codx-label class="fw-bold fs-5-sm" fiedName="lblIsExceptEmp" [formModel]="formModel"
                     default="Nhân viên có"></codx-label>
                 <div class="d-flex align-items-center flex-row">
-                    <codx-input class="w-200px" field="calculateALBy" [Group]="form.formGroup" refValue="HRDate"
+                    <span class="input-pill w-200px">
+                    <codx-input class="w-100" field="calculateALBy" [Group]="form.formGroup" refValue="HRDate"
                         refType="2" type="valuelist" (valueChange)="valueChange($event)"
                         [crrValue]="inputData?.calculateALBy"></codx-input>
-                    <codx-label class="fw-bold ms-3 me-3" fiedName="lblInMonth" [formModel]="formModel"
+                    </span>
+                    <codx-label class="text-gray-700 mx-3" fiedName="lblInMonth" [formModel]="formModel"
                         default="trong tháng"></codx-label>
                     <codx-dropdown-calendar cssPopup="h-350px w-550px" [cssClass]="'rounded-pill'" [selectedType]="'m'"
                         [displayOption]="['m']" (change)="monthSelect($event)"></codx-dropdown-calendar>
                 </div>
             </div>
-            <codx-label class="data-text-color mb-2" fiedName="lblInMonthDes" [formModel]="formModel"
+            <codx-label class="text-gray-600 mb-2" fiedName="lblInMonthDes" [formModel]="formModel"
                 default="Tính tiêu chuẩn phép năm cho các nhân viên thỏa điều kiện"></codx-label>
         </div>
         <!-- <div class="d-flex flex-column max-w-500px">
-            <codx-label class="fw-bold fs-5 mb-2" fiedName="lblEmpList" [formModel]="formModel"
+            <codx-label class="fw-bold fs-5-sm mb-2" fiedName="lblEmpList" [formModel]="formModel"
                 default="Danh sách nhân viên:"></codx-label>
             <div class="d-flex">
                 <div class="col-6">
@@ -275,7 +279,7 @@
 <ng-template #footer>
     <div class="d-flex flex-column h-60px border-top">
         <div class="d-flex align-items-center justify-content-between mt-2">
-            <codx-label class="fw-bold fs-5" fiedName="lblExceptTitle" [formModel]="formModel"
+            <codx-label class="fw-bold fs-5-sm" fiedName="lblExceptTitle" [formModel]="formModel"
                 default="Bỏ qua nhân viên đã được tính phép tiêu chuẩn">
             </codx-label>
             <codx-input class="me-2" field="isExcept" [Group]="form.formGroup" type="switch"

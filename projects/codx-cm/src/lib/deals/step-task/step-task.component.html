@@ -151,6 +151,7 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
+        (isSuccessStep)="susscessStepEnd($event,step)"
       ></codx-step-task>
       <div
         *ngIf="
