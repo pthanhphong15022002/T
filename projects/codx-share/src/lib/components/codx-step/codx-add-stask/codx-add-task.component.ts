@@ -71,6 +71,7 @@ export class CodxAddTaskComponent implements OnInit {
   showLabelAttachment = false;
   isStatusNew = true;
   isStart = false;
+  isBoughtTM = false;
 
   listFieldCopy = [];
   listField = [];
@@ -102,10 +103,11 @@ export class CodxAddTaskComponent implements OnInit {
     this.action = dt?.data?.action;
     this.isStart = dt?.data?.isStart
     this.typeTask = dt?.data?.taskType;
+    this.ownerParenr = dt?.data?.owner;
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
+    this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
-    this.ownerParenr = dt?.data?.owner;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave =
@@ -148,6 +150,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
       this.stepsTasks.status = "1";
+      this.stepsTasks.createTask = this.isBoughtTM;
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }

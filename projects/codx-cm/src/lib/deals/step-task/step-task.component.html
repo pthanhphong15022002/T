@@ -28,6 +28,7 @@
         #popoverDetails="ngbPopover"
         [ngbPopover]="'Hướng dẫn'"
         [placement]="'top-left'"
+        placement="top bottom"
         (mouseenter)="popoverDetails.open()"
         (mouseleave)="popoverDetails.close()"
         (click)="showGuide()"
@@ -41,10 +42,8 @@
       <div
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
-        #addTaskTootip="ngbPopover"
-        [ngbPopover]="'Thêm công việc'"
-        (mouseenter)="addTaskTootip.open()"
-        (mouseleave)="addTaskTootip.close()"
+        ngbTooltip="Thêm công việc"
+        placement="top"
         *ngIf="dataSelected?.status == '2'"
       >
         <i class="icon-20 icon-add_task text-primary"></i>
