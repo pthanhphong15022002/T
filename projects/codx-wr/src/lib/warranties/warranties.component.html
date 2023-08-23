@@ -223,10 +223,13 @@
 <ng-template #footer let-data> </ng-template>
 
 <ng-template #templateDetail>
-  <codx-view-detail-wr>
-    [dataSelected]="this.dataService.data[0]" [formModel]="view.formModel"
-    [user]="user" [entityName]="entityName" [funcID]="funcID"
+  <codx-view-detail-wr
+    [dataSelected]="dataSelected"
+    [formModel]="view.formModel"
+    [user]="user"
+    [entityName]="entityName"
+    [funcID]="funcID"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeMoreMF)="changeMoreMF($event)"
-  </codx-view-detail-wr>
+  ></codx-view-detail-wr>
 </ng-template>
