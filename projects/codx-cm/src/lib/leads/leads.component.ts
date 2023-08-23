@@ -110,7 +110,7 @@ export class LeadsComponent
   vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
-  viewMode = 2;
+  // viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
@@ -163,44 +163,12 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
-    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     type: ViewType.listdetail,
-    //     sameData: true,
-    //     model: {
-    //       template: this.itemTemplate,
-    //       panelRightRef: this.templateDetail,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.kanban,
-    //     active: false,
-    //     sameData: false,
-    //     request: this.request,
-    //     request2: this.resourceKanban,
-    //     toolbarTemplate: this.footerButton,
-    //     model: {
-    //       template: this.cardKanban,
-    //       template2: this.viewColumKaban,
-    //       setColorHeader: true,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.grid,
-    //     active: false,
-    //     sameData: true,
-    //     model: {
-    //       resources: this.columnGrids,
-    //       template2: this.templateMore,
-    //       // frozenColumns: 1,
-    //     },
-    //   },
-    // ];
+    this.loadViewModel();
   }
+
   afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'CM';
@@ -219,15 +187,13 @@ export class LeadsComponent
   }
 
   executeApiCalls() {
-    try {
-      this.getFuncID(this.funcID);
-      this.getColorReason();
-      // this.getCurrentSetting();
-      this.getValuelistStatus();
-      this.getValuelistCategory();
-    } catch (error) {}
+    this.getFuncID(this.funcID);
+    this.getColorReason();
+    this.getValuelistStatus();
+    this.getValuelistCategory();
+    this.getProcessSetting();
   }
-  async getValuelistStatus() {
+  getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
       if (func) {
         this.valueListStatus = func.datas
@@ -259,43 +225,44 @@ export class LeadsComponent
           this.processId = res.recID;
           this.dataObj = { processID: res.recID };
           this.afterLoad();
-          this.views = [
-            {
-              type: ViewType.listdetail,
-              sameData: true,
-              model: {
-                template: this.itemTemplate,
-                panelRightRef: this.templateDetail,
-              },
-            },
-            // {
-            //   type: ViewType.kanban,
-            //   active: false,
-            //   sameData: false,
-            //   request: this.request,
-            //   request2: this.resourceKanban,
-            //   // toolbarTemplate: this.footerButton,
-            //   model: {
-            //     template: this.cardKanban,
-            //     template2: this.viewColumKaban,
-            //     setColorHeader: true,
-            //   },
-            // },
-            {
-              type: ViewType.grid,
-              active: false,
-              sameData: true,
-              model: {
-                resources: this.columnGrids,
-                template2: this.templateMore,
-                // frozenColumns: 1,
-              },
-            },
-          ];
+          // this.views = [
+          //   {
+          //     type: ViewType.listdetail,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       template: this.itemTemplate,
+          //       panelRightRef: this.templateDetail,
+          //     },
+          //   },
+          //   // {
+          //   //   type: ViewType.kanban,
+          //   //   active: false,
+          //   //   sameData: false,
+          //   //   request: this.request,
+          //   //   request2: this.resourceKanban,
+          //   //   // toolbarTemplate: this.footerButton,
+          //   //   model: {
+          //   //     template: this.cardKanban,
+          //   //     template2: this.viewColumKaban,
+          //   //     setColorHeader: true,
+          //   //   },
+          //   // },
+          //   {
+          //     type: ViewType.grid,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       // resources: this.columnGrids,
+          //       template2: this.templateMore,
+          //       // frozenColumns: 1,
+          //     },
+          //   },
+          // ];
         }
       });
   }
-  async getColorReason() {
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -309,9 +276,7 @@ export class LeadsComponent
     });
   }
 
-  async promiseByFuncID(formName, gridViewName) {}
-
-  async getGridViewSetup(formName, gridViewName) {
+  getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -322,7 +287,9 @@ export class LeadsComponent
       }
     });
   }
-  async getFuncID(funcID) {
+  getFuncID(funcID) {
+    //bua tam
+    // if (funcID == 'CM0504') funcID = 'CM0205';
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
@@ -337,7 +304,7 @@ export class LeadsComponent
       }
     });
   }
-  async getMoreFunction(formName, gridViewName) {
+  getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
@@ -346,38 +313,39 @@ export class LeadsComponent
   }
 
   onLoading(e) {
-    this.loadViewModel();
+    // this.loadViewModel();
   }
 
   loadViewModel() {
     this.views = [
       {
         type: ViewType.listdetail,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
         },
       },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        // toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
+      // {
+      //   type: ViewType.kanban,
+      //   active: false,
+      //   sameData: false,
+      //   request: this.request,
+      //   request2: this.resourceKanban,
+      //   // toolbarTemplate: this.footerButton,
+      //   model: {
+      //     template: this.cardKanban,
+      //     template2: this.viewColumKaban,
+      //     setColorHeader: true,
+      //   },
+      // },
       {
         type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
-          resources: this.columnGrids,
+          // resources: this.columnGrids,
           template2: this.templateMore,
           // frozenColumns: 1,
         },
@@ -438,7 +406,9 @@ export class LeadsComponent
     let isCopy = (eventItem, data) => {
       // Thêm, xóa, copy
       eventItem.disabled = data.write
-        ? data.closed ||   (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
       // eventItem.disabled  = false;
     };
@@ -446,7 +416,8 @@ export class LeadsComponent
       // Chỉnh sửa
       eventItem.disabled = data.write
         ? data.closed ||
-          (data.status != '13' && this.checkMoreReason(data)) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isDelete = (eventItem, data) => {
@@ -454,7 +425,7 @@ export class LeadsComponent
       eventItem.disabled = data.delete
         ? data.closed ||
           (data.status != '13' && this.checkMoreReason(data)) ||
-          ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isClosed = (eventItem, data) => {

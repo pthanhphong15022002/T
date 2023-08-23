@@ -37,6 +37,7 @@ export class ContractsViewDetailComponent
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
@@ -222,21 +223,27 @@ export class ContractsViewDetailComponent
   }
 
   loadTabs() {
+    let quotations = {
+      name: 'Quotations',
+      textDefault: 'Báo giá',
+      isActive: false,
+      icon: 'icon-monetization_on',
+      template: this.quotationsTab,
+    };
     // let quotations = {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
     //   isActive: false,
-    //   icon: 'icon-monetization_on',
+    //   icon: 'icon-i-link',
     //   template: this.quotationsTab,
     // };
-    let quotations = {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    };
-    let idx = this.tabControl.findIndex((x) => x.name == 'References');
+    let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
+  }
+  checkSusscess(e){
+    if(e){
+      this.isSusscess.emit(true);
+    }
   }
 }

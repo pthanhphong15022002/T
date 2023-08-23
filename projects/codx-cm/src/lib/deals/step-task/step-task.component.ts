@@ -45,6 +45,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -440,5 +441,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     this.isZoomOut = false;
     this.isZoomIn = false;
+  }
+  
+  susscessStepEnd(event, step){
+    let count = this.listInstanceStepShow?.length - 1;
+    let stepEnd;
+    for(let i = count; i >=0 ; i--){
+      if(!this.listInstanceStepShow[i]?.isSuccessStep && !this.listInstanceStepShow[i]?.isFailStep){
+        stepEnd = this.listInstanceStepShow[i];
+        break;
+      }
+    }
+    if(stepEnd?.recID == step?.recID){
+      this.isSusscess.emit(true);
+    }
   }
 }
