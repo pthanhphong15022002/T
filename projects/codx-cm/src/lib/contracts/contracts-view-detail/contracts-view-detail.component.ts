@@ -222,20 +222,21 @@ export class ContractsViewDetailComponent
   }
 
   loadTabs() {
+    let quotations = {
+      name: 'Quotations',
+      textDefault: 'Báo giá',
+      isActive: false,
+      icon: 'icon-monetization_on',
+      template: this.quotationsTab,
+    };
     // let quotations = {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
     //   isActive: false,
-    //   icon: 'icon-monetization_on',
+    //   icon: 'icon-i-link',
     //   template: this.quotationsTab,
     // };
-    let quotations = {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    };
-    let idx = this.tabControl.findIndex((x) => x.name == 'References');
+    let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
   }

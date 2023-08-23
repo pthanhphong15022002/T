@@ -72,6 +72,7 @@ export class CashPaymentsComponent extends UIComponent {
   vatInvoices: any; //? data của tab hóa đợn GTGT
   acctTrans: any; //? data của tab hạch toán
   baseCurr: any; //? đồng tiền hạch toán
+  legalName:any //? tên công ty
   dataDefaultCashpayment: any; //? data default của phiếu
   isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
@@ -122,8 +123,11 @@ export class CashPaymentsComponent extends UIComponent {
     this.cache
       .companySetting()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+      .subscribe((res:any) => {
+        if (res.length > 0) {
+          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+          this.legalName = res[0].legalName; //? get tên company
+        }      
       });
     this.router.queryParams
       .pipe(takeUntil(this.destroy$))
@@ -264,6 +268,8 @@ export class CashPaymentsComponent extends UIComponent {
       dataCashpayment: {...this.dataDefaultCashpayment}, //?  data của cashpayment
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName //? tên company
+
     };
     this.callfc.openSide(
       CashPaymentAdd,
@@ -285,6 +291,7 @@ export class CashPaymentsComponent extends UIComponent {
       dataCashpayment: {...dataEdit}, //?  data của cashpayment
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName //? tên company
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -307,6 +314,7 @@ export class CashPaymentsComponent extends UIComponent {
       dataCashpayment: {...dataCopy}, //?  data của cashpayment
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName //? tên company
     };
     this.view.dataService.copy().subscribe((res: any) => {
       this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);

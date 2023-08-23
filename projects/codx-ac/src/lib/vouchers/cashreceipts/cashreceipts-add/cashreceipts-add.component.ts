@@ -169,16 +169,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           ]) //? get data detail theo loại chứng từ
           .subscribe((res: any) => {
             if (res) {
-              this.cashreceiptsline = res?.lsCashpaymentLine
-                ? res?.lsCashpaymentLine
-                : []; //? danh sách chi tiết (tab chi tiết)
-              this.settledInvoices = res?.lsSettledInvoices
-                ? res?.lsSettledInvoices
-                : []; //? danh sách chi tiết (tab hóa đơn công nợ)
+              this.cashreceiptsline = res?.lsCashReceiptsline? res?.lsCashReceiptsline : []; //? danh sách chi tiết (tab chi tiết)
+              this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : []; //? danh sách chi tiết (tab hóa đơn công nợ)
               this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : []; //? danh sách chi tiết (tab hóa đơn GTGT)
-              this.voucherNoAdv = res?.voucherNoRef ? res?.voucherNoRef : ''; //? số chứng từ đề nghị tạm ứng,thanh toán
-              this.dRAdv = res?.totalDrRef ? res?.totalDrRef : 0; //? số tiền chứng từ đề nghị tạm ứng,thanh toán
-              this.subTypeAdv = res?.subtypeRef ? res?.subtypeRef : '1'; //? loại của chứng từ đề nghị tạm ứng,thanh toán(mặc định là 1)
+              this.voucherNoAdv = res?.voucherNoRef ? res?.voucherNoRef : ''; //? số chứng từ đề nghị hoàn ứng,thanh toán
+              this.dRAdv = res?.totalDrRef ? res?.totalDrRef : 0; //? số tiền chứng từ đề nghị hoàn ứng,thanh toán
+              this.subTypeAdv = res?.subtypeRef ? res?.subtypeRef : '1'; //? loại của chứng từ đề nghị hoàn ứng,thanh toán(mặc định là 1)
               this.detectorRef.detectChanges();
             }
           });
