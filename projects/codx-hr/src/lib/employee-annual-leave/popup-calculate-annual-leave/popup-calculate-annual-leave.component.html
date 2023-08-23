@@ -3,17 +3,15 @@
 </codx-form>
 <ng-template #subHeader>
     <div class="d-flex align-items-center mt-2">
-        <span type="button" class="btn btn-icon btn-sm" (click)="yearChange(false)">
-            <i class="icon-arrow_back_ios icon-16 text-primary"></i>
-        </span>
-        <span class="mx-2">
-            <codx-dropdown-calendar cssPopup="h-350px w-550px" [cssClass]="'rounded-pill'" [selectedType]="'y'"
+        <!-- <span type="button" class="btn btn-icon" (click)="yearChange(false)">
+            <i class="icon-arrow_back_ios text-primary icon-16"></i>
+        </span> -->
+        <codx-dropdown-calendar cssPopup="h-350px w-550px" [cssClass]="'rounded-pill'" [selectedType]="'y'"
             [displayOption]="['y']" [value]="inYearValue" [emptyText]="inYearValue"
             (change)="yearSelect($event)"></codx-dropdown-calendar>
-        </span>
-        <span type="button" class="btn btn-icon btn-sm" (click)="yearChange(true)">
-            <i class="icon-arrow_forward_ios icon-16 text-primary"></i>
-        </span>
+        <!-- <span type="button" class="btn btn-icon" (click)="yearChange(true)">
+            <i class="icon-arrow_forward_ios text-primary icon-16"></i>
+        </span> -->
     </div>
 </ng-template>
 <ng-template #body>
