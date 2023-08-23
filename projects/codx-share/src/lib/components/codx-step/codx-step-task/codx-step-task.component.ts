@@ -45,6 +45,8 @@ import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meetin
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-step-task',
@@ -119,6 +121,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   dialogGuide: DialogRef;
   vllDataTask;
   vllDataStep;
+  isBoughtTM = false;
 
   moreDefaut = {
     share: true,
@@ -133,11 +136,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private callfc: CallFuncService,
+    private adService: CodxAdService,
     private codxService: CodxService,
     private stepService: StepService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private calendarService: CodxCalendarService
+    private calendarService: CodxCalendarService,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -172,8 +176,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    console.log("----------",this.isRoleAll);
-    
     if (changes.dataSources || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
       await this.getStepById();
@@ -2185,38 +2187,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           });
       }
     });
-
-    // let option = new DialogModel();
-    // option.FormModel = this.frmModelInstancesTask;
-    // this.callfc
-    //   .openForm(
-    //     CodxAddBookingCarComponent,
-    //     '',
-    //     600,
-    //     800,
-    //     '',
-    //     null,
-    //     '',
-    //     option
-    //   )
-    // .closed.subscribe((returnData) => {
-    //   if (!this.calendarType) {
-    //     this.calendarType = this.defaultCalendar;
-    //   }
-    //   if (returnData.event) {
-    //     this.api
-    //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-    //         this.calendarType,
-    //       ])
-    //       .subscribe((res: any) => {
-    //         if (res) {
-    //           this.getDataAfterAddEvent(res);
-    //         }
-    //         this.detectorRef.detectChanges();
-    //       });
-    //   }
-    // });
   }
+
   showGuide(p) {
     p.close();
     let option = new DialogModel();
@@ -2253,5 +2225,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   setNameTypeTask(taskType){
     let type = this.listTaskType?.find(task => task?.value == taskType);
     return type?.text;
+  }
+  getDefaultCM() {
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+        }
+      });
   }
 }
