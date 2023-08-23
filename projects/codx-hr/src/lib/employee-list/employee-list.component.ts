@@ -8,6 +8,7 @@ import {
   CRUDService,
   RequestOption,
   ResourceModel,
+  NotificationsService,
 } from 'codx-core';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
 import { ActivatedRoute } from '@angular/router';
@@ -61,6 +62,7 @@ export class EmployeeListComponent extends UIComponent {
     private injector: Injector,
     private routerActive: ActivatedRoute,
     private shareService: CodxShareService,
+    private notificationSv: NotificationsService
   ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];
@@ -300,9 +302,17 @@ export class EmployeeListComponent extends UIComponent {
   //delete Employee
   delete(data: any) {
     if (data) {
-      this.view.dataService
-        .delete([data], true, (opt: any) => this.beforDelete(opt, data))
-        .subscribe(res => { if (res) this.hasChangedData = true });
+      this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'CheckIfDeleteEmployeeAsync', [data])
+        .subscribe(res => { 
+          if (res) {
+            this.view.dataService
+            .delete([data], true, (opt: any) => this.beforDelete(opt, data))
+            .subscribe(res => { if (res) this.hasChangedData = true });
+          }else{
+            this.notificationSv.notifyCode('SYS007');
+          }
+        } );
+
     }
   }
 

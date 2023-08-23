@@ -62,7 +62,7 @@
         field="customerID"
         [crrValue]="data?.customerID"
         [refValue]="'CMCustomers'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeCbx($event)"
       >
       </codx-input>
     </div>
@@ -79,12 +79,12 @@
       ></codx-input>
     </div>
     <div class="form-group">
-      <codx-label fiedName="CustomerType" [formModel]="form.formModel">
+      <codx-label fiedName="CustGroupID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="customerType"
+        field="custGroupID"
         [formModel]="form.formModel"
-        [crrValue]="data?.customerType"
+        [crrValue]="data?.custGroupID"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>

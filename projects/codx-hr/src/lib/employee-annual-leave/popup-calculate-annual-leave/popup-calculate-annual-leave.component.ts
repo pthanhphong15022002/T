@@ -54,6 +54,8 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
   inYearValue: any = new Date();
   currentStep = 1;
   searchText: string = '';
+
+  hasAddData: boolean = false; 
   constructor(
     // private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -149,11 +151,10 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.inputEmployeeList = this.inputEmployeeList.filter(x => x.employeeID != data.employeeID);
         this.excludedEmployeeList.unshift(data);
         break;
-      case 'exEmployeeID':
-        this.excludedEmployeeList = this.excludedEmployeeList.filter(x => x.employeeID != data.employeeID);
-        this.inputEmployeeList.unshift(data);
-        break;
-
+      // case 'exEmployeeID':
+      //   this.excludedEmployeeList = this.excludedEmployeeList.filter(x => x.employeeID != data.employeeID);
+      //   this.inputEmployeeList.unshift(data);
+      //   break;
     }
   }
   yearChange(data: boolean) {
@@ -191,9 +192,10 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
       this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
       .subscribe(res => {
         console.log(res);
-        // if (res[0]?.length > 0) {
-        //   this.dialogRef.close(res[0]);
-        // }
+        if (res[2]?.count > 0) {
+          this.hasAddData = true;
+          //this.dialogRef.close(res[0]);
+        }
       })
     // this.inputEmployeeList = [];
     // this.excludedEmployeeList = [];
@@ -207,7 +209,7 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
     //   this.currentStep = 2;
   }
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.hasAddData);
   }
 }
 export class CalculateInputData {
