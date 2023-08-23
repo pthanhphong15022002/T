@@ -162,6 +162,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP048.datas) {
       this.vllDataStep = DP032?.datas;
     }
+    this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
       entityName: 'DP_Instances_Steps_TaskGroups',
@@ -1199,6 +1200,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isEditTimeDefault: this.currentStep?.leadtimeControl,
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isStart: this.isStart,
+      isBoughtTM: this.isBoughtTM,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
