@@ -404,22 +404,31 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eContractsObj = parsedJSON[index];
-          if (eContractsObj['ApprovalRule'] == '1') {
-            this.release();
-          }
+    //Validate backend send approval
+    this.hrService
+      .validateBeforeReleaseContract(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let eContractsObj = parsedJSON[index];
+                  if (eContractsObj['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
   }
 
   release() {
