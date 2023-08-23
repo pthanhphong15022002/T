@@ -65,6 +65,8 @@ export class LeadDetailComponent implements OnInit {
 
   isBool: boolean = false;
   hasRunOnce = false;
+  treeTask = [];
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -180,8 +182,9 @@ export class LeadDetailComponent implements OnInit {
 
   async promiseAllLoad() {
     this.isDataLoading = true;
+    this.getTree();
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
-    this.dataSelected.dealID  && await this.getTmpDeal();
+    this.dataSelected.dealID && (await this.getTmpDeal());
   }
   async executeApiCalls() {
     await this.getValueListRole();
@@ -296,5 +299,15 @@ export class LeadDetailComponent implements OnInit {
     this.listSteps = listSteps;
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
+  }
+
+  //load giao việc
+  getTree() {
+    let seesionID = this.dataSelected.applyProcess
+      ? this.dataSelected.refID
+      : this.dataSelected.recID;
+    this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
+      this.treeTask = tree || [];
+    });
   }
 }

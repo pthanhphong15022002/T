@@ -72,6 +72,7 @@ export class CodxAddTaskComponent implements OnInit {
   isStatusNew = true;
   isStart = false;
 
+  listFieldCopy = [];
   listField = [];
 
   listCombobox = {
@@ -153,7 +154,8 @@ export class CodxAddTaskComponent implements OnInit {
     }
     if(this.step?.fields?.length > 0 && this.stepsTasks?.fieldID){
       let fieldID = this.stepsTasks?.fieldID;
-      this.listField = this.step?.fields?.filter((field) => fieldID?.includes(field?.recID));
+      this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields)); 
+      this.listField = this.listFieldCopy?.filter((field) => fieldID?.includes(field?.recID));
     }
   }
 
@@ -511,9 +513,10 @@ export class CodxAddTaskComponent implements OnInit {
   editTask(task) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', task)
+        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [task, this.listField])
         .subscribe((res) => {
           if (res) {
+          this.step.fields = this.listFieldCopy;
             this.dialog.close({
               task: res,
               progressGroup: null,
@@ -544,10 +547,43 @@ export class CodxAddTaskComponent implements OnInit {
           break;
       }
 
-      // var index = this.fiels.findIndex((x) => x.recID == field.recID);
-      // if (index != -1) {
-      //   this.fiels[index].dataValue = result;
-      // }
+      var index = this.listField.findIndex((x) => x.recID == field.recID);
+      if (index != -1) {
+        this.listField[index].dataValue = result;
+      }
+      let a = this.step?.fields;
     }
+  }
+
+  checkFormat(field) {
+    if (field.dataType == 'T') {
+      if (field.dataFormat == 'E') {
+        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!field.dataValue.toLowerCase().match(validEmail)) {
+          //this.notiService.notifyCode('SYS037');
+          this.cache.message('SYS037').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+      if (field.dataFormat == 'P') {
+        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+        if (!field.dataValue.toLowerCase().match(validPhone)) {
+          // this.notiService.notifyCode('RS030');
+          this.cache.message('RS030').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

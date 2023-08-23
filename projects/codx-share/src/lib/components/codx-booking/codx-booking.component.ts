@@ -181,42 +181,42 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   {
                     field: 'bookingOn',
                     template: this.gridBookingOn,
-                    headerText: this.grView?.bookingOn?.headerText,
+                    headerText: this.grView?.bookingOn?.headerText || 'BookingOn',
                     isVisible : this.grView?.bookingOn?.isVisible,
                     
                   },
                   {
                     field: 'resourceID',
                     template: this.gridResourceName,
-                    headerText: this.grView?.resourceID?.headerText,
+                    headerText: this.grView?.resourceID?.headerText || 'ResourceID',
                     isVisible : this.grView?.resourceID?.isVisible,
                   },
                   {
                     field: 'title',
-                    headerText: this.grView?.title?.headerText,
+                    headerText: this.grView?.title?.headerText || 'Title',
                     isVisible : this.grView?.title?.isVisible,
                   },
                   {
                     field: 'owner',
                     template: this.gridOwner,
-                    headerText: this.grView?.owner?.headerText,
+                    headerText: this.grView?.owner?.headerText || 'Owner',
                     isVisible : this.grView?.owner?.isVisible,
                   },
                   {
                     field: 'startDate',
                     template: this.gridStartDate,
-                    headerText: this.grView?.startDate?.headerText,
+                    headerText: this.grView?.startDate?.headerText || 'StartDate',
                     isVisible : this.grView?.startDate?.isVisible,
                   },
                   {
                     field: 'endDate',
                     template: this.gridEndDate,
-                    headerText: this.grView?.endDate?.headerText,
+                    headerText: this.grView?.endDate?.headerText || 'EndDate',
                     isVisible : this.grView?.endDate?.isVisible,
                   },
                   {
                     field: 'requester',
-                    headerText: this.grView?.requester?.headerText,
+                    headerText: this.grView?.requester?.headerText || 'Requester',
                     isVisible : this.grView?.requester?.isVisible,
                   },
                   {

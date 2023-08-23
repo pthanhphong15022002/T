@@ -61,7 +61,7 @@
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
   <div style="height: 250px !important;">
-    <ejs-tab enablePersistence="true">
+    <ejs-tab enablePersistence="true" (selected)="tabSelectedMaster($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -80,7 +80,7 @@
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-file-earmark-text icon-18 me-2"></i>
               <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral2"
-                [formModel]="dialog.formModel" default="Ủy nhiệm chi"></codx-label>
+                [formModel]="dialog.formModel" default="Thông tin chuyển khoản"></codx-label>
             </div>
           </ng-template>
           <ng-template #content>
@@ -93,7 +93,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px)!important;">
      <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)" (selected)="tabSelected($event)">
+    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)" (selected)="tabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -114,7 +114,7 @@
                 class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="cashpayment?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
               <codx-label
-                *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '12' || cashpayment?.subType == '3' || cashpayment?.subType == '4'"
+                *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '3' || cashpayment?.subType == '4'"
                 style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail2" [formModel]="dialog.formModel"
                 default="Chi tiết"></codx-label>
               <codx-label *ngIf="cashpayment?.subType == '9'" style="font-size: 14px !important;" class="fw-bold"
@@ -302,12 +302,17 @@
               <div [style]="cashpayment.subType != '3' && cashpayment.subType != '4' ? 'display:inline' : 'display:none'" class="col-6 ac-type-1">
                 <div class="form-group">
                   <div class="form-group">
-                    <codx-label style="white-space: nowrap !important;" fiedName="Payee"
+                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0410'" style="white-space: nowrap !important;" fiedName="Payee"
+                      [formModel]="formCashPayment.formModel">
+                    </codx-label>
+                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0429'" style="white-space: nowrap !important;" fiedName="BankAcctID"
                       [formModel]="formCashPayment.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input #eleCbxPayee [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
+                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0410'" #eleCbxPayee [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
                         field="payee" (valueChange)="valueChangeMaster($event)"></codx-input>
+                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0429'" #eleCbxBankAcct [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
+                        field="bankAcctID" (valueChange)="valueChangeMaster($event)"></codx-input>
                     </div>
                   </div>
                 </div>
@@ -419,10 +424,10 @@
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="CashBookID"
+                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankPay" default="Tài khoản chi"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="cashBookID" disabled="true" type="text">
+                  <codx-input [crrValue]="bankAcctIDPay" field="lblBankPay" disabled="true" type="text">
                   </codx-input>
                 </div>
               </div>
@@ -431,7 +436,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="lblBankName" disabled="true" type="text">
+                  <codx-input [crrValue]="bankNamePay" field="lblBankName" disabled="true" type="text">
                   </codx-input>
                 </div>
               </div>
@@ -440,13 +445,11 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
                       [formModel]="formCashPayment.formModel">
                     </codx-label>
-                    <codx-input field="lblOwner" disabled="true" type="text">
+                    <codx-input [crrValue]="legalName"  field="lblOwner" disabled="true" type="text">
                     </codx-input>
                 </div>
               </div>
-            </div>
-            
-            
+            </div>          
           </div>
         </div>
       </div>
@@ -459,7 +462,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="lblAccountReceive" default="Tài khoản nhận"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="cashBookID" disabled="true" type="text">
+                  <codx-input [crrValue]="bankAcctIDReceive" field="cashBookID" disabled="true" type="text">
                   </codx-input>
                 </div>
               </div>
@@ -468,7 +471,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="lblBankName" disabled="true" type="text">
+                  <codx-input [crrValue]="bankReceiveName" field="lblBankName" disabled="true" type="text">
                   </codx-input>
                 </div>
               </div>
@@ -477,7 +480,7 @@
                   <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
                       [formModel]="formCashPayment.formModel">
                     </codx-label>
-                    <codx-input field="lblOwner" disabled="true" type="text">
+                    <codx-input [crrValue]="ownerReceive" field="lblOwner" disabled="true" type="text">
                     </codx-input>
                 </div>
               </div>

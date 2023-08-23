@@ -59,7 +59,7 @@ export class CodxHrService {
     private auth: AuthStore,
     private fb: FormBuilder,
     private notiService: NotificationsService
-  ) { }
+  ) {}
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
       .call(
@@ -1736,39 +1736,35 @@ export class CodxHrService {
     );
   }
 
-  addEContract(data: any, useForQTNS: boolean) {
+  addEContract(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'AddEContractAsync',
-      [data, useForQTNS]
+      data
     );
   }
 
-  validateBeforeSaveContract(
-    data: any,
-    isAddNew: boolean,
-    useForQTNS: boolean
-  ) {
+  validateBeforeSaveContract(data: any, isAddNew: boolean) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'ValidateBeforeSaveAsync',
-      [data, isAddNew, useForQTNS]
+      [data, isAddNew]
     );
   }
 
   ValidateBeforeSaveAsync;
 
-  editEContract(data: any, useForQTNS: boolean) {
+  editEContract(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EContractsBusiness',
       'EditEContractAsync',
-      [data, useForQTNS]
+      data
     );
   }
 
@@ -2441,34 +2437,71 @@ export class CodxHrService {
   }
 
   //#region EAnnualLeave
-  getDaysOffByEAnnualLeaveAsync(employeeID: string, alYear: string, alYearMonth: string, isMonth: any, 
-    pageIndex: number, pageSize: number) {
+  getDaysOffByEAnnualLeaveAsync(
+    employeeID: string,
+    alYear: string,
+    alYearMonth: string,
+    isMonth: any,
+    pageIndex: number,
+    pageSize: number
+  ) {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
       'EAnnualLeavesBusiness',
       'GetDaysOffByEAnnualLeaveAsync',
-      [employeeID, alYear, alYearMonth, isMonth, pageIndex, pageSize]);
+      [employeeID, alYear, alYearMonth, isMonth, pageIndex, pageSize]
+    );
   }
-  getEmployeeListByPopupCalculateAnnualLeaveAsync(alYear: string, alObjectIDList: any, orgUnitIDList: any, 
-    employeeIDList: any, calculateALBy: string, alMonth: string, isExcept: boolean = false){
+  getEmployeeListByPopupCalculateAnnualLeaveAsync(
+    alYear: string,
+    alObjectIDList: any,
+    orgUnitIDList: any,
+    employeeIDList: any,
+    calculateALBy: string,
+    alMonth: string,
+    isExcept: boolean = false
+  ) {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
       'EAnnualLeavesBusiness',
       'GetEmployeeListByPopupCalculateAnnualLeaveAsync',
-      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth, isExcept]
-    )
+      [
+        alYear,
+        alObjectIDList,
+        orgUnitIDList,
+        employeeIDList,
+        calculateALBy,
+        alMonth,
+        isExcept,
+      ]
+    );
   }
-  calculateAnnualLeaveAsync(alYear: string, alObjectIDList: any, orgUnitIDList: any, 
-    employeeIDList: any, calculateALBy: string, alMonth: string,  isExcept: boolean = false){
+  calculateAnnualLeaveAsync(
+    alYear: string,
+    alObjectIDList: any,
+    orgUnitIDList: any,
+    employeeIDList: any,
+    calculateALBy: string,
+    alMonth: string,
+    isExcept: boolean = false
+  ) {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
       'EAnnualLeavesBusiness',
       'CalculateAnnualLeaveAsync',
-      [alYear, alObjectIDList, orgUnitIDList, employeeIDList,calculateALBy, alMonth, isExcept]
-    )
+      [
+        alYear,
+        alObjectIDList,
+        orgUnitIDList,
+        employeeIDList,
+        calculateALBy,
+        alMonth,
+        isExcept,
+      ]
+    );
   }
   //#endregion
 }
