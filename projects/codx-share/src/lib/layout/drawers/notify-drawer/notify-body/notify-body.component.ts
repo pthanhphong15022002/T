@@ -114,7 +114,6 @@ export class NotifyBodyComponent implements OnInit {
 
   // view detail noti
   clickNotification(item:any,element:any){
-    debugger
     if(element.target.tagName !== 'A'){
       if(!item.read){
         this.api.execSv(
@@ -182,7 +181,6 @@ export class NotifyBodyComponent implements OnInit {
                 "DeleteAsync",
                 [item.recID])
                 .subscribe((res2:boolean) => {
-                  debugger
                   if(res2){
                     this.notiSV.notifyCode("SYS008");
                     if(type == "bookmark")
@@ -235,7 +233,6 @@ export class NotifyBodyComponent implements OnInit {
     this.api.execSv("BG","ERM.Business.BG","NotificationBusinesss","ReadAllAsync",[])
     .subscribe((res:boolean) => {
       if(res){
-        debugger
         if(this.bookmark.length > 0){
           this.bookmark.map(e => e.read = true);
         }
