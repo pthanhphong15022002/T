@@ -37,6 +37,7 @@ export class ContractsViewDetailComponent
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
@@ -238,5 +239,10 @@ export class ContractsViewDetailComponent
     let idx = this.tabControl.findIndex((x) => x.name == 'References');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
+  }
+  checkSusscess(e){
+    if(e){
+      this.isSusscess.emit(true);
+    }
   }
 }
