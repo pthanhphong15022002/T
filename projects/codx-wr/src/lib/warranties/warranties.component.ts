@@ -106,14 +106,13 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
+    setTimeout(() => console.log(this.view.dataService), 5000);
+    this.loadViewModel();
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
 
-    setTimeout(() => console.log(this.view.dataService), 5000);
-    this.loadViewModel();
     this.detectorRef.detectChanges();
-
   }
 
   searchChanged(e) {}
@@ -208,11 +207,10 @@ export class WarrantiesComponent
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        // this.edit(data);
-        this.updateReasonCode(data);
+        this.edit(data);
         break;
       case 'SYS04':
-        // this.copy(data);
+        this.copy(data);
         break;
       case 'SYS02':
         // this.delete(data);
@@ -354,6 +352,80 @@ export class WarrantiesComponent
           if (e && e.event != null) {
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
             this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+    });
+  }
+
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '550px';
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddWarrantyComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
+  }
+
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '550px';
+        var obj = {
+          action: 'copy',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddWarrantyComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
           }
         });

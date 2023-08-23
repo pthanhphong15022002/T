@@ -1,4 +1,4 @@
-import { Component, Optional } from '@angular/core';
+import { Component, Optional, OnInit } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { WR_WorkOrders } from '../../../_models-wr/wr-model.model';
 
@@ -7,7 +7,7 @@ import { WR_WorkOrders } from '../../../_models-wr/wr-model.model';
   templateUrl: './popup-add-servicetag.component.html',
   styleUrls: ['./popup-add-servicetag.component.css'],
 })
-export class PopupAddServicetagComponent {
+export class PopupAddServicetagComponent implements OnInit {
   data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
@@ -15,6 +15,18 @@ export class PopupAddServicetagComponent {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+  }
+  ngOnInit(): void {
+    this.data.seriNo = '';
+    this.data.serviceTag = '';
+    this.data.lob = '';
+    this.data.productID = '';
+    this.data.productType = '';
+    this.data.productModel = '';
+    this.data.productBrand = '';
+    this.data.productDesc = '';
+    this.data.note = '';
+    this.data.warrantyExpired = null;
   }
 
   //#region onSave
