@@ -8,7 +8,7 @@ import {
 } from 'codx-core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { CodxAcService } from '../../codx-ac.service';
+import { CodxAcService } from '../../../codx-ac.service';
 
 @Component({
   selector: 'lib-multi-select-popup',

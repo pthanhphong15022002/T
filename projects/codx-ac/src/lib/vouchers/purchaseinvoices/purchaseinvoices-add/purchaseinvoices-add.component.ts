@@ -24,7 +24,7 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { IJournal, Vll075 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
@@ -59,13 +59,13 @@ export class PurchaseinvoicesAddComponent
   purchaseInvoiceLineService: CRUDService;
   vatInvoiceService: CRUDService;
 
-  grvPurchaseInvoices: any;
+  // grvPurchaseInvoices: any;
   fmVATInvoices: FormModel;
   fmPurchaseInvoicesLines: FormModel;
 
   isEdit: boolean = false;
   journal: IJournal;
-  ignoredFields: string[] = [];
+  // ignoredFields: string[] = [];
   hiddenFields: string[] = [];
   formTitle: string;
   editSettings: EditSettingsModel = {
@@ -80,7 +80,6 @@ export class PurchaseinvoicesAddComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  voucherNoPlaceholderText$: Observable<string>;
   acParams: any;
 
   defaultLineData: IPurchaseInvoiceLine;
@@ -126,23 +125,20 @@ export class PurchaseinvoicesAddComponent
 
   //#region Init
   onInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        this.grvPurchaseInvoices = res;
-      });
+    // this.cache
+    //   .gridViewSetup(
+    //     this.dialog.formModel.formName,
+    //     this.dialog.formModel.gridViewName
+    //   )
+    //   .subscribe((res) => {
+    //     this.grvPurchaseInvoices = res;
+    //   });
 
-    if (this.journal.assignRule === '2') {
-      this.ignoredFields.push('VoucherNo');
-    }
+    // if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+    //   this.ignoredFields.push('VoucherNo');
+    // }
 
     this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-
-    this.voucherNoPlaceholderText$ =
-      this.journalService.getVoucherNoPlaceholderText();
 
     this.acService.getACParameters().subscribe((res) => {
       this.acParams = res;
@@ -160,8 +156,8 @@ export class PurchaseinvoicesAddComponent
 
       const options2 = new DataRequest();
       options2.entityName = this.fmVATInvoices.entityName;
-      options2.predicates = 'TransID=@0&&InvoiceType=@1';
-      options2.dataValues = `${this.master.recID};Detail`;
+      options2.predicates = 'TransID=@0';
+      options2.dataValues = this.master.recID;
       options2.pageLoading = false;
       this.acService.loadDataAsync('AC', options2).subscribe((vatInvoices) => {
         this.vatInvoices = vatInvoices;
@@ -179,23 +175,22 @@ export class PurchaseinvoicesAddComponent
 
   ngAfterViewInit(): void {
     // prevent readonly input and codx-tabs from being focused
-    setTimeout(() => {
-      const inputEls: HTMLInputElement[] = Array.from(
-        document.querySelectorAll('codx-input input')
-      );
-      for (const el of inputEls) {
-        if (el.readOnly) {
-          el.setAttribute('tabindex', '-1');
-        }
-      }
-
-      const navLinkEls: HTMLAnchorElement[] = Array.from(
-        document.querySelectorAll('codx-tabs a.nav-link')
-      );
-      for (const el of navLinkEls) {
-        el.setAttribute('tabindex', '-1');
-      }
-    }, 1000);
+    // setTimeout(() => {
+    //   const inputEls: HTMLInputElement[] = Array.from(
+    //     document.querySelectorAll('codx-input input')
+    //   );
+    //   for (const el of inputEls) {
+    //     if (el.readOnly) {
+    //       el.setAttribute('tabindex', '-1');
+    //     }
+    //   }
+    //   const navLinkEls: HTMLAnchorElement[] = Array.from(
+    //     document.querySelectorAll('codx-tabs a.nav-link')
+    //   );
+    //   for (const el of navLinkEls) {
+    //     el.setAttribute('tabindex', '-1');
+    //   }
+    // }, 1000);
   }
   //#endregion
 
@@ -224,7 +219,7 @@ export class PurchaseinvoicesAddComponent
   }
 
   /** Hide some mfs */
-  onChangeMF(e): void {
+  onInitMF(e): void {
     for (const mf of e) {
       if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
         mf.disabled = true;
@@ -282,14 +277,18 @@ export class PurchaseinvoicesAddComponent
   }
 
   onClickAddRow(): void {
-    if (
-      !this.acService.validateFormData(
-        this.form.formGroup,
-        this.grvPurchaseInvoices,
-        [],
-        this.ignoredFields
-      )
-    ) {
+    // if (
+    //   !this.acService.validateFormData(
+    //     this.form.formGroup,
+    //     this.grvPurchaseInvoices,
+    //     [],
+    //     this.ignoredFields
+    //   )
+    // ) {
+    //   return;
+    // }
+
+    if (this.form.formGroup.invalid) {
       return;
     }
 
@@ -305,14 +304,18 @@ export class PurchaseinvoicesAddComponent
   }
 
   onClickSave(closeAfterSave: boolean): void {
-    if (
-      !this.acService.validateFormData(
-        this.form.formGroup,
-        this.grvPurchaseInvoices,
-        [],
-        this.ignoredFields
-      )
-    ) {
+    // if (
+    //   !this.acService.validateFormData(
+    //     this.form.formGroup,
+    //     this.grvPurchaseInvoices,
+    //     [],
+    //     this.ignoredFields
+    //   )
+    // ) {
+    //   return;
+    // }
+
+    if (this.form.formGroup.invalid) {
       return;
     }
 
@@ -366,46 +369,46 @@ export class PurchaseinvoicesAddComponent
   }
 
   // ❌❌
-  @HostListener('keyup', ['$event'])
-  onKeyUp(e: KeyboardEvent): void {
-    console.log(e);
+  // @HostListener('keyup', ['$event'])
+  // onKeyUp(e: KeyboardEvent): void {
+  //   console.log(e);
 
-    if (e.key !== 'Tab') {
-      return;
-    }
+  //   if (e.key !== 'Tab') {
+  //     return;
+  //   }
 
-    if (
-      !e.shiftKey &&
-      (document.activeElement.id === 'gridViewV2' ||
-        document.activeElement.className === 'e-tab-wrap')
-    ) {
-      if (this.tab.selectedItem === 0) {
-        document.getElementById('btnAddLine').focus();
-      } else {
-        document.getElementById('btnAddLine2').focus();
-      }
-    }
+  //   if (
+  //     !e.shiftKey &&
+  //     (document.activeElement.id === 'gridViewV2' ||
+  //       document.activeElement.className === 'e-tab-wrap')
+  //   ) {
+  //     if (this.tab.selectedItem === 0) {
+  //       document.getElementById('btnAddLine').focus();
+  //     } else {
+  //       document.getElementById('btnAddLine2').focus();
+  //     }
+  //   }
 
-    if (e.shiftKey) {
-      if (
-        document.activeElement.className === 'e-lastrowcell' ||
-        document.activeElement.id === 'gridViewV2'
-      ) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
-          .focus();
+  //   if (e.shiftKey) {
+  //     if (
+  //       document.activeElement.className === 'e-lastrowcell' ||
+  //       document.activeElement.id === 'gridViewV2'
+  //     ) {
+  //       document
+  //         .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+  //         .focus();
 
-        return;
-      }
+  //       return;
+  //     }
 
-      const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
-      if (nodes[nodes.length - 1] === document.activeElement) {
-        document
-          .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
-          .focus();
-      }
-    }
-  }
+  //     const nodes = document.querySelectorAll('ejs-grid #dropdownMenuButton');
+  //     if (nodes[nodes.length - 1] === document.activeElement) {
+  //       document
+  //         .querySelector<HTMLElement>("codx-input[field='postedDate'] input")
+  //         .focus();
+  //     }
+  //   }
+  // }
 
   @HostListener('click', ['$event.target'])
   onClick(e: HTMLElement): void {

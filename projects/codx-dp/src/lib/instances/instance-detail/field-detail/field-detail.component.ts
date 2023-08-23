@@ -1,3 +1,5 @@
+//da đưa vào Codx-share dùng chung với CM
+
 import {
   ChangeDetectorRef,
   Component,
@@ -64,10 +66,8 @@ export class FieldDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    
-  }
-  ngOnChanges(){
+  ngOnInit(): void {}
+  ngOnChanges() {
     this.changeDetectorRef.detectChanges();
   }
 
@@ -150,16 +150,15 @@ export class FieldDetailComponent implements OnInit {
     );
     dialogFields.closed.subscribe((e) => {
       if (e && e?.event) {
-        var fields = e?.event;       
+        var fields = e?.event;
         fields.forEach((obj) => {
           var idx = this.dataStep.fields.findIndex((x) => x.recID == obj.recID);
           if (idx != -1) this.dataStep.fields[idx].dataValue = obj.dataValue;
         });
-        this.saveDataStep.emit(this.dataStep)
+        this.saveDataStep.emit(this.dataStep);
       }
     });
   }
-
 
   partNum(num): number {
     return Number.parseInt(num);
@@ -181,7 +180,10 @@ export class FieldDetailComponent implements OnInit {
   formatNumber(dt) {
     if (!dt.dataValue) return '';
     if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-    return Number.parseFloat(dt.dataValue).toFixed(2) + (dt.dataFormat=='P'?'%':'');
+    return (
+      Number.parseFloat(dt.dataValue).toFixed(2) +
+      (dt.dataFormat == 'P' ? '%' : '')
+    );
   }
 
   clickInput(eleID, dataStep = null, isClick = false) {

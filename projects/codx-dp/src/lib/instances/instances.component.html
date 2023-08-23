@@ -42,10 +42,10 @@
     [footer]="footerKanban"
     [dataItem]="data"
     [rootData]="data"
-    (dblclick)="dblClick($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-card-img>
+  <!-- (dblclick)="dblClick($event, data)" -->
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
@@ -212,14 +212,13 @@
     [moreFunc]="moreFuncStart"
     (clickStartInstances)="clickStartInstances($event)"
     [viewsCurrent]="'k-'"
-    [listSteps]="listInstanceStep"
+    [reasonStepsObject]="reasonStepsObject"
     (outStepInstance)="outStepInstance($event)"
     (saveDatasInstance)="saveDatasInstance($event)"
     [lstStepProcess]="listSteps"
     [colorSuccesss]="colorReasonSuccess?.color"
     [colorFail]="colorReasonFail?.color"
-    [reasonStepsObject]="reasonStepsObject"
-    [vllApprover]="vllApprover"
+    [applyFor]="process.applyFor"
     [progressControl]="process?.instanceProgressControl"
   >
   </codx-instance-detail>

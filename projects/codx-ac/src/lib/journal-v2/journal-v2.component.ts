@@ -265,6 +265,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   dbClick(data) {
+    if (this.statusFilter == "3") {
+      return;
+    }
+
     let f = this.func.find((x) => x.value === data.journalType);
     if (!f) return;
     this.cache.functionList(f?.default).subscribe((func) => {
@@ -282,23 +286,27 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
   }
 
-  onChange(e): void {
-    console.log('onChange', e);
+  // onActions(e): void {
+  //   console.log('onActions', e);
 
-    if (e.type === 'edit') {
-      this.dbClick(e.data);
-    }
-  }
+  //   if (e.type === 'edit') {
+  //     this.dbClick(e.data);
+  //   }
+  // }
   //#region Events
 
   //#region Method
   add(e): void {
-    console.log(`${e.text} ${this.functionName}`);
-
     this.view.dataService
-      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync'))
-      .subscribe((res) => {
-        console.log(res);
+      .addNew(() =>
+        this.api.exec(
+          'AC',
+          'JournalsBusiness',
+          'SetDefaultAsync',
+          this.statusFilter == '3'
+        )
+      )
+      .subscribe(() => {
         const options = new SidebarModel();
         options.Width = '800px';
         options.DataService = this.view.dataService;

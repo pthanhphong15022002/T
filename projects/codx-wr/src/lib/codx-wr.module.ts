@@ -20,6 +20,7 @@ import { PopupAddWarrantyComponent } from './warranties/popup-add-warranty/popup
 import { PopupAddCustomerWrComponent } from './warranties/popup-add-warranty/popup-add-customerwr/popup-add-customerwr.component';
 import { PopupAddServicetagComponent } from './warranties/popup-add-warranty/popup-add-servicetag/popup-add-servicetag.component';
 import { PopupUpdateReasonCodeComponent } from './warranties/popup-update-reasoncode/popup-update-reasoncode.component';
+import { ViewDetailWrComponent } from './warranties/view-detail-wr/view-detail-wr.component';
 
 var routes: Routes = [
   {
@@ -44,6 +45,7 @@ var routes: Routes = [
     PopupAddCustomerWrComponent,
     PopupAddServicetagComponent,
     PopupUpdateReasonCodeComponent,
+    ViewDetailWrComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
