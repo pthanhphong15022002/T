@@ -89,7 +89,11 @@
           <span
             [ngbTooltip]="address"
             class="text-gray-900 line-clamp line-clamp-1"
-            [innerHTML]="getAddress(data?.competitorID)"
+            [innerHTML]="
+              getAddress(data?.competitorID)
+                | formatvalue : formModelAddress : 'AdressName'
+                | async
+            "
           ></span>
           <ng-template #address>
             <span [innerHTML]="getAddress(data?.competitorID)"></span>

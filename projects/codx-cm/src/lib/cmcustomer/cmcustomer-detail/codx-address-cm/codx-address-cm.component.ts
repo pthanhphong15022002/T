@@ -177,8 +177,8 @@ export class CodxAddressCmComponent implements OnInit {
   }
   getFormModelAddress() {
     let dataModel = new FormModel();
-    dataModel.formName = 'CMAddressBook';
-    dataModel.gridViewName = 'grvCMAddressBook';
+    dataModel.formName = 'AddressBook';
+    dataModel.gridViewName = 'grvAddressBook';
     dataModel.entityName = 'BS_AddressBook';
     dataModel.funcID = this.funcID;
     this.formModelAddress = dataModel;
