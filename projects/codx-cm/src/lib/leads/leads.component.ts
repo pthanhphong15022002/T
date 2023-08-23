@@ -224,6 +224,7 @@ export class LeadsComponent
       this.getColorReason();
       // this.getCurrentSetting();
       this.getValuelistStatus();
+      this.getValuelistCategory();
     } catch (error) {}
   }
   async getValuelistStatus() {
@@ -237,6 +238,18 @@ export class LeadsComponent
           }));
       }
     });
+  }
+  async getValuelistCategory() {
+    // this.cache.valueList('CRM058').subscribe((func) => {
+    //   if (func) {
+    //     this.valueListStatus = func.datas
+    //       .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+    //       .map((item) => ({
+    //         text: item.text,
+    //         value: item.value,
+    //       }));
+    //   }
+    // });
   }
   async getProcessSetting() {
     this.codxCmService
@@ -466,7 +479,7 @@ export class LeadsComponent
     let isConvertLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['13', '3'].includes(data.status) || data.closed
+        ? !['13', '3', '2'].includes(data.status) || data.closed
         : true;
     };
     let isMergeLead = (eventItem, data) => {
@@ -508,7 +521,7 @@ export class LeadsComponent
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.full
-        ? data.closed || data.applyProcess || this.checkMoreReason(data)
+        ? data.closed || data.applyProcess || this.checkMoreReason(data) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
@@ -942,6 +955,7 @@ export class LeadsComponent
                 action: 'edit',
                 title: this.titleAction,
                 gridViewSetup: res,
+                applyFor: this.applyForLead
               };
               var dialog = this.callfc.openSide(
                 PopupConvertLeadComponent,
@@ -956,6 +970,7 @@ export class LeadsComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
+                  this.dataSelected.applyProcess && this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });

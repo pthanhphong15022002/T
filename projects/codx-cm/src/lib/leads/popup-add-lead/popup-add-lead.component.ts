@@ -188,7 +188,6 @@ export class PopupAddLeadComponent
         this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
-
         this.lead.leadID = '';
       } else {
         this.planceHolderAutoNumber = this.lead.leadID;
@@ -321,7 +320,7 @@ export class PopupAddLeadComponent
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
-        )[0].userName;
+        )[0]?.userName;
       }
       this.searchOwner('1','O','0',this.owner,ownerName);
     }

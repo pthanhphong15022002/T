@@ -441,6 +441,14 @@ export class CodxCmService {
       data
     );
   }
+  moveReasonByIdInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveReasonByIdInstnaceAsync',
+      data
+    );
+  }
   addInstanceNoRecId(data: any) {
     return this.api.exec<any>(
       'DP',
