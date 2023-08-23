@@ -18,7 +18,7 @@
         [class.active]="index == selectedIndex"
         (click)="menuChange(data,index)"
     >
-        <img [src]="data?.smallIcon"/>
+        <img [src]="data?.smallIcon" (onload)="imgToSvg(this)"/>
         <span class="mt-2">{{data?.customName}}</span>
     </div>
 </ng-template>
