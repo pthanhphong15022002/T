@@ -39,6 +39,7 @@ export class LeadDetailComponent implements OnInit {
   @Input() colorReasonFail: any;
   @Input() action: any;
   @Input() applyProcess: any;
+  @Input() listCategory: any;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -50,6 +51,8 @@ export class LeadDetailComponent implements OnInit {
   listRoles = [];
   listSteps = [];
   listStepsProcess = [];
+  treeTask = [];
+  listCategoryTmp = [] = [];
 
   tmpDeal: any;
   oCountFooter: any = {};
@@ -60,12 +63,19 @@ export class LeadDetailComponent implements OnInit {
 
   isDataLoading = false;
 
+  // type of string
   oldRecId: string = '';
-  isHidden: boolean = true;
+  companyNo:string = '';
+  customerNo:string = '';
+  companyName:string = '';
+  customerName:string = '';
 
+
+  isHidden: boolean = true;
   isBool: boolean = false;
-  hasRunOnce = false;
-  treeTask = [];
+  hasRunOnce: boolean = false;
+
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -153,6 +163,11 @@ export class LeadDetailComponent implements OnInit {
       }
       this.getTags(this.dataSelected);
     }
+    if (changes['listCategory']?.currentValue && this.listCategoryTmp.length <= 0) {
+        this.listCategoryTmp = changes['listCategory'].currentValue;
+        this.getValuelistCategory(this.listCategoryTmp);
+    }
+
   }
 
   clickMF(e, data) {
@@ -187,10 +202,24 @@ export class LeadDetailComponent implements OnInit {
     this.dataSelected.dealID && (await this.getTmpDeal());
   }
   async executeApiCalls() {
+
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
-  }
 
+  }
+  getValuelistCategory(listCategory) {
+    const mappings = {
+      '5': 'companyNo',
+      '6': 'customerNo',
+      '3': 'companyName',
+      '4': 'customerName'
+    };
+    for (const key in mappings) {
+      const value = mappings[key];
+      this[value] = listCategory.find(x => x.value === key)?.text || '';
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   async getGridViewSetupDeal() {
     this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
     this.gridViewSetupDeal = await firstValueFrom(
