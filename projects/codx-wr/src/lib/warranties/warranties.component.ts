@@ -232,17 +232,16 @@ export class WarrantiesComponent
   }
 
   changeDataMF($event, data, type = null) {
-    console.log('Not implemented');
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     mappingFunction && mappingFunction(eventItem, data);
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
+        const functionID = eventItem.functionID;
+        // const mappingFunction = this.getRoleMoreFunction(functionID);
+        // mappingFunction && mappingFunction(eventItem, data);
+      }
+    }
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -282,9 +281,8 @@ export class WarrantiesComponent
   }
 
   selectedChange(data) {
-    console.log('Not implemented');
-    // if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    // this.changeDetectorRef.detectChanges();
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
+    this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
@@ -360,7 +358,7 @@ export class WarrantiesComponent
   //#endregion
 
   //#region update reason code
-  updateReasonCode(data){
+  updateReasonCode(data) {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.view?.formModel;

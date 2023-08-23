@@ -223,18 +223,10 @@
 <ng-template #footer let-data> </ng-template>
 
 <ng-template #templateDetail>
-  <share-view-detail
-    #detail
-    [productID]="dataSelected?.productID"
-    [formModel]="view.formModel"
-    [vllStatus]="vllStatus"
-    [user]="user"
-    [dataService]="view.dataService"
-  >
-  </share-view-detail>
+  <codx-view-detail-wr>
+    [dataSelected]="this.dataService.data[0]" [formModel]="view.formModel"
+    [user]="user" [entityName]="entityName" [funcID]="funcID"
+    (clickMoreFunc)="clickMoreFunc($event)"
+    (changeMoreMF)="changeMoreMF($event)"
+  </codx-view-detail-wr>
 </ng-template>
-
-<!-- thiếu [paramDefaut]="paramDefaut" [listRoles]="listRoles"
-[vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
-[popoverCrr]="popoverCrr" [showMoreFunc]="showMoreFunc"
-(clickMoreFunction)="receiveMF($event)" (hoverPopover)="hoverPopover($event)" -->
