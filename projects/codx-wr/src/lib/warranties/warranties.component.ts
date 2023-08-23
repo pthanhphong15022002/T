@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -213,7 +214,7 @@ export class WarrantiesComponent
         this.copy(data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
         break;
       default:
         var customData = {
@@ -341,6 +342,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -379,6 +381,7 @@ export class WarrantiesComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
+            gridViewSetup: this.gridViewSetup
           };
           var dialog = this.callfc.openSide(
             PopupAddWarrantyComponent,
@@ -415,6 +418,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'copy',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -431,6 +435,31 @@ export class WarrantiesComponent
         });
       });
     });
+  }
+
+  async delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteWorkOrderAsync';
+    opt.data = [itemSelected.recID];
+    return true;
   }
   //#endregion
 
