@@ -285,7 +285,7 @@
             </ng-container> -->
             <ng-container
               *ngIf="viewModelDetail == 'G'"
-              [ngTemplateOutlet]=" tempGanchart"
+              [ngTemplateOutlet]="tempGanchart"
             >
             </ng-container>
             <div
@@ -361,6 +361,7 @@
                 <codx-fields-detail-temp
                   *ngIf="item?.fields?.length > 0"
                   [dataStep]="item"
+                  [typeView]="'0'"
                   [showColumnControl]="showColumnControl(item.stepID)"
                   [isUpdate]="
                     dataSelect.write &&
