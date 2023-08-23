@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CodxWrService } from '../../codx-wr.service';
 import { ApiHttpService, CallFuncService } from 'codx-core';
 
@@ -28,6 +34,14 @@ export class ViewListWrComponent {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      // if (changes['taskID'].currentValue === this.id) return;
+      // this.id = changes['taskID'].currentValue;
+      // this.loadedHisPro = false;
+      // this.getTaskDetail();
+    }
   }
 
   dbClick(data) {

@@ -1,5 +1,11 @@
-import { Component, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ChangeDetectorRef, Component, Optional } from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  Util,
+} from 'codx-core';
 
 @Component({
   selector: 'lib-popup-add-customerwr',
@@ -11,14 +17,18 @@ export class PopupAddCustomerWrComponent {
   dialog: DialogRef;
   title = '';
   radioChecked = true;
+  userID: any;
   constructor(
     private api: ApiHttpService,
+    private authstore: AuthStore,
+    private changeDetectoref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.userID = this.authstore?.get()?.userID;
   }
 
   //#region
@@ -26,8 +36,8 @@ export class PopupAddCustomerWrComponent {
     if (this.data.customerName == null || this.data.customerName.trim() == '') {
       return;
     }
+    this.dialog.close([this.data, this.radioChecked]);
 
-    this.dialog.close(this.data);
   }
   //#endregion
 
@@ -38,7 +48,9 @@ export class PopupAddCustomerWrComponent {
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
       this.data.category = '2';
+      this.data.customerID = Util.uid();
     }
+    this.changeDetectoref.detectChanges();
   }
 
   setDataNull() {
@@ -46,7 +58,9 @@ export class PopupAddCustomerWrComponent {
     this.data.customerName = '';
     this.data.custGroupID = '';
     this.data.category = '';
+    this.data.contactName = '';
     this.data.phone = '';
+    this.data.mobile = '';
     this.data.email = '';
     this.data.address = '';
     this.data.country = '';
@@ -71,7 +85,7 @@ export class PopupAddCustomerWrComponent {
             this.data.custGroupID = res?.custGroupID;
             this.data.category = res?.category;
             this.data.phone = res?.phone;
-            this.data.email = res?.email;
+            this.data.email = res?.category == '2' ? res?.email : '';
             this.data.address = res?.address;
             this.data.country = res?.countryID;
             this.data.province = res?.provinceID;
@@ -88,13 +102,20 @@ export class PopupAddCustomerWrComponent {
                 .subscribe((ele) => {
                   if (ele) {
                     this.data.mobile = ele?.mobile;
+                    this.data.email = ele?.email;
                   }
                 });
             }
           }
+          this.changeDetectoref.detectChanges();
         });
     }
   }
 
-  valueChange(e) {}
+  valueChange(e) {
+    if (e?.data != this.data[e?.field]) {
+      this.data[e?.field] = e?.data;
+    }
+    this.changeDetectoref.detectChanges();
+  }
 }

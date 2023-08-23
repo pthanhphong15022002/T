@@ -130,7 +130,6 @@ export class PopupMoveReasonComponent implements OnInit {
             nextStep:this.nextStep
           };
           this.dialog.close(objApplyFor);
-
         }
         else {
           var obj ={
@@ -140,7 +139,6 @@ export class PopupMoveReasonComponent implements OnInit {
           };
           this.dialog.close(obj);
         }
-
         this.notiService.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
       }
