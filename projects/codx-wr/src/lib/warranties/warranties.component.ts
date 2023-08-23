@@ -13,14 +13,19 @@ import {
   AuthStore,
   ButtonModel,
   CacheService,
+  CallFuncService,
+  DialogModel,
   FormModel,
   NotificationsService,
   ResourceModel,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupAddWarrantyComponent } from './popup-add-warranty/popup-add-warranty.component';
+import { PopupUpdateReasonCodeComponent } from './popup-update-reasoncode/popup-update-reasoncode.component';
 
 @Component({
   selector: 'lib-warranties',
@@ -39,7 +44,6 @@ export class WarrantiesComponent
 
   // extension core
   views: Array<ViewModel> = [];
-  viewsDefault: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   formModel: FormModel;
 
@@ -48,23 +52,37 @@ export class WarrantiesComponent
   @Input() funcID: any;
 
   // region LocalVariable
+  viewMode = 1;
   vllStatus = '';
   dataSelected: any;
-  idField = 'recID';
-  service = 'WR';
-  assemblyName = 'ERM.Business.WR';
-  entityName = 'WR_Products';
-  className = 'ProductsBusiness';
-  method = 'FunctionTest';
+  viewCrr: any;
   request: ResourceModel;
-  button?: ButtonModel;
+  button?: ButtonModel = { id: 'btnAdd' };
   readonly btnAdd: string = 'btnAdd';
+  funcIDCrr: any;
   titleAction = '';
   user: any;
+  gridViewSetup: any;
+  moreFuncInstance: any;
+
+  // config api get data
+  service = 'WR';
+  assemblyName = 'ERM.Business.WR';
+  entityName = 'WR_WorkOrders';
+  className = 'WorkOrdersBusiness';
+  method = 'GetListWorkOrdersAsync';
+  idField = 'recID';
+  // idField = 'recID';
+  // service = 'WR';
+  // assemblyName = 'ERM.Business.WR';
+  // entityName = 'WR_Products';
+  // className = 'ProductsBusiness';
+  // method = 'GetListProductsAsync';
 
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
+    private callFc: CallFuncService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -72,26 +90,11 @@ export class WarrantiesComponent
     private authStore: AuthStore
   ) {
     super(inject);
-    this.user = this.authStore.get();
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
+    this.executeApiCalls();
     // this.loadParam();
-    // this.cache.functionList(this.funcID).subscribe((f) => {
-    //   this.funcIDCrr = f;
-    //   this.functionModule = f.module;
-    //   this.nameModule = f.customName;
-    //   this.executeApiCallFunctionID(f.formName, f.gridViewName);
-    // });
-    // this.getColorReason();
-
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-
-    // this.codxCmService.getProcessDefault('1').subscribe((res) => {
-    //   if (res) {
-    //     this.processIDDefault = res.recID;
-    //     this.processIDKanban = res.recID;
-    //   }
-    // });
   }
 
   onInit(): void {
@@ -99,14 +102,30 @@ export class WarrantiesComponent
     this.button = {
       id: this.btnAdd,
     };
+    // this.loadViewModel();
   }
 
   ngAfterViewInit(): void {
-    console.log(this.view.dataService);
-    this.viewsDefault = [
+    setTimeout(() => console.log(this.view.dataService), 5000);
+    this.loadViewModel();
+    this.view.dataService.methodSave = 'AddWorkOrderAsync';
+    this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
+    this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
+
+    this.detectorRef.detectChanges();
+  }
+
+  searchChanged(e) {}
+
+  onLoading(e) {
+    // this.loadViewModel();
+  }
+
+  loadViewModel() {
+    this.views = [
       {
         type: ViewType.list,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template: this.itemViewList,
@@ -123,68 +142,15 @@ export class WarrantiesComponent
       },
     ];
 
-    this.views = this.viewsDefault;
-  }
-
-  onLoading(e) {
-    console.log('Not implemented');
-    // if (!this.funCrr) {
-    //   this.getColumsGrid(this.gridViewSetup);
-    //   return;
-    // }
-
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-    // else if (this.processIDKanban)
-    //   this.dataObj = { processID: this.processIDKanban };
-    // this.cache.viewSettings(this.funcID).subscribe((views) => {
-    //   if (views) {
-    //     this.afterLoad();
-    //     this.views = [];
-    //     let idxActive = -1;
-    //     let viewOut = false;
-    //     this.viewsDefault.forEach((v, index) => {
-    //       let idx = views.findIndex((x) => x.view == v.type);
-    //       if (idx != -1) {
-    //         v.hide = false;
-    //         if (v.type != this.viewCrr) v.active = false;
-    //         else v.active = true;
-    //         if (views[idx].isDefault) idxActive = index;
-    //       } else {
-    //         v.hide = true;
-    //         v.active = false;
-    //         if (this.viewCrr == v.type) viewOut = true;
-    //       }
-    //       if (v.type == 6) {
-    //         v.request.dataObj = this.dataObj;
-    //         v.request2.dataObj = this.dataObj;
-    //       }
-    //       //  if (!(this.funcID == 'CM0201' && v.type == '6'))
-    //       this.views.push(v);
-    //       //  else viewOut = true;
-    //     });
-    //     if (!this.views.some((x) => x.active)) {
-    //       if (idxActive != -1) this.views[idxActive].active = true;
-    //       else this.views[0].active = true;
-
-    //       let viewModel =
-    //         idxActive != -1 ? this.views[idxActive] : this.views[0];
-    //       this.view.viewActiveType = viewModel.type;
-    //       this.view.viewChange(viewModel);
-    //       if (viewOut) this.view.load();
-    //     }
-    //     if ((this.view?.currentView as any)?.kanban) this.loadKanban();
-    //   }
-    // });
+    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'WR';
     this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'ProductsBusiness';
-    this.request.method = 'FunctionTest';
+    this.request.className = 'WorkOrdersBusiness';
+    this.request.method = 'GetListWorkOrdersAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
 
@@ -196,6 +162,29 @@ export class WarrantiesComponent
     // this.resourceKanban.dataObj = this.dataObj;
   }
 
+  executeApiCalls() {
+    try {
+      this.getFuncID(this.funcID);
+      // this.getColorReason();
+      // this.getCurrentSetting();
+      this.getValuelistStatus();
+    } catch (error) {}
+  }
+
+  async getValuelistStatus() {
+    console.log('Not implemented');
+    // this.cache.valueList('CRM041').subscribe((func) => {
+    //   if (func) {
+    //     this.valueListStatus = func.datas
+    //       .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+    //       .map((item) => ({
+    //         text: item.text,
+    //         value: item.value,
+    //       }));
+    //   }
+    // });
+  }
+
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
     switch (evt.id) {
@@ -205,99 +194,94 @@ export class WarrantiesComponent
     }
   }
 
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  changeMoreMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
-    console.log('Not implemented');
-    // switch (e.functionID) {
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     break;
-    //   case 'SYS04':
-    //     this.copy(data);
-    //     break;
-    //   case 'SYS02':
-    //     this.delete(data);
-    //     break;
-    //   case 'CM0201_1':
-    //     this.moveStage(data);
-    //     break;
-    //   case 'CM0201_2':
-    //     this.handelStartDay(data);
-    //     break;
-    //   case 'CM0201_3':
-    //     this.moveReason(data, true);
-    //     break;
-    //   case 'CM0201_4':
-    //     this.moveReason(data, false);
-    //     break;
-    //   case 'CM0201_8':
-    //     this.openOrCloseDeal(data, true);
-    //     break;
-    //   case 'CM0201_7':
-    //     this.popupOwnerRoles(data);
-    //     break;
-    //   case 'CM0201_9':
-    //     this.openOrCloseDeal(data, false);
-    //     break;
-    //   case 'CM0201_5':
-    //     this.exportFile(data);
-    //     break;
-    //   case 'CM0201_6':
-    //     this.approvalTrans(data);
-    //     break;
-    //   case 'CM0201_12':
-    //     this.confirmOrRefuse(true, data);
-    //     break;
-    //   case 'CM0201_13':
-    //     this.confirmOrRefuse(false, data);
-    //     break;
-    //   case 'CM0201_14':
-    //     this.openFormBANT(data);
-    //     break;
-    //   //cancel Aprover
-    //   case 'CM0201_16':
-    //     this.cancelApprover(data);
-    //     break;
-    //   case 'SYS002':
-    //     this.exportFiles(e, data);
-    //     break;
-
-    //   case 'CM0201_15':
-    //     this.popupPermissions(data);
-    //     break;
-    //   default:
-    //     var customData = {
-    //       refID: data.processID,
-    //       refType: 'DP_Processes',
-    //       dataSource: '', // truyen sau
-    //     };
-    //     this.codxShareService.defaultMoreFunc(
-    //       e,
-    //       data,
-    //       this.afterSave.bind(this),
-    //       this.view.formModel,
-    //       this.view.dataService,
-    //       this,
-    //       customData
-    //     );
-    //     this.detectorRef.detectChanges();
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        // this.delete(data);
+        break;
+      default:
+        var customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+          dataSource: '', // truyen sau
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        this.detectorRef.detectChanges();
+        break;
+    }
   }
 
   changeDataMF($event, data, type = null) {
-    console.log('Not implemented');
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     mappingFunction && mappingFunction(eventItem, data);
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
+        const functionID = eventItem.functionID;
+        // const mappingFunction = this.getRoleMoreFunction(functionID);
+        // mappingFunction && mappingFunction(eventItem, data);
+      }
+    }
+  }
+
+  async getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        this.vllStatus =
+          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+        // this.vllApprove =
+        //   this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
+      }
+    });
+  }
+
+  async getFuncID(funcID) {
+    this.cache.functionList(funcID).subscribe((f) => {
+      if (f) {
+        this.funcIDCrr = f;
+        this.getGridViewSetup(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
+        this.getMoreFunction(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
+      }
+    });
+  }
+
+  async getMoreFunction(formName, gridViewName) {
+    this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
+      if (res && res.length > 0) {
+        this.moreFuncInstance = res;
+      }
+    });
   }
 
   selectedChange(data) {
@@ -306,37 +290,13 @@ export class WarrantiesComponent
   }
 
   changeView(e) {
-    console.log('Not implemented');
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.viewCrr = e?.view?.type;
-    // //xu ly view fitter
-    // this.changeFilter();
+    // if (this.crrFuncID != this.funcID) {
+    //   this.crrFuncID = this.funcID;
+    // }
+    this.viewCrr = e?.view?.type;
     // if (this.viewCrr == 6) {
     //   this.kanban = (this.view?.currentView as any)?.kanban;
-    // }
-
-    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    // if (this.processID) this.dataObj = { processID: this.processID };
-    // else if (this.processIDKanban)
-    //   this.dataObj = { processID: this.processIDKanban };
-
-    // if (this.funCrr != this.funcID) {
-    //   this.funCrr = this.funcID;
-    // } else if (
-    //   this.funcID == 'CM0201' &&
-    //   this.viewCrr == 6 &&
-    //   this.processIDKanban != this.crrProcessID &&
-    //   (this.view?.currentView as any)?.kanban
-    // ) {
-    //   this.crrProcessID = this.processIDKanban;
-    //   this.dataObj = { processID: this.processIDKanban };
-    //   this.view.views.forEach((x) => {
-    //     if (x.type == 6) {
-    //       x.request.dataObj = this.dataObj;
-    //       x.request2.dataObj = this.dataObj;
-    //     }
-    //   });
-    //   this.loadKanban();
     // }
   }
 
@@ -365,22 +325,139 @@ export class WarrantiesComponent
     // }
   }
 
-  // region CRUD
+  //#region  CRUD
   add() {
-    this.addWarranty();
-  }
-
-  addWarranty() {
-    this.view.dataService.addNew().subscribe((res) => {
-      console.log('Not implemented');
-      // let option = new SidebarModel();
-      // option.DataService = this.view.dataService;
-      // option.FormModel = this.view.formModel;
-      // var formMD = new FormModel();
-      // option.Width = '800px';
-      // option.zIndex = 1001;
-      // this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
-      // this.openFormDeal(formMD, option, 'add');
+    this.view.dataService.addNew().subscribe((res: any) => {
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '550px';
+        var obj = {
+          action: 'add',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddWarrantyComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
     });
   }
+
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '550px';
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddWarrantyComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
+  }
+
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '550px';
+        var obj = {
+          action: 'copy',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddWarrantyComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+    });
+  }
+  //#endregion
+
+  //#region update reason code
+  updateReasonCode(data) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 1010;
+    dialogModel.FormModel = this.view?.formModel;
+    let obj = {
+      title: this.titleAction,
+    };
+    this.callFc
+      .openForm(
+        PopupUpdateReasonCodeComponent,
+        '',
+        600,
+        700,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 }

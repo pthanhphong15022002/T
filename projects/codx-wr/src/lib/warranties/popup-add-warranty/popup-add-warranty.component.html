@@ -1,0 +1,274 @@
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [data]="data"
+>
+  <ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="form-group">
+        <ng-container>
+          <div
+            class="d-flex align-items-center justify-content-between mt-3 mb-4"
+          >
+            <div class="d-flex align-items-center">
+              <div class="text-primary">
+                <codx-label
+                  class="fw-bold fs-6"
+                  name="lblInformationCustomer"
+                  [formModel]="form.formModel"
+                  default="Thông tin khách hàng"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end align-content-center">
+              <button
+                [ngClass]="action == 'edit' ? 'disabled' : ''"
+                type="button"
+                class="btn btn-sm btn-icon btn-light-primary"
+                (click)="clickAddCustomer()"
+              >
+                <span class="icon-person_add_alt_1 icon-16"></span>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex w-100" *ngIf="data?.customerID">
+            <div class="me-3 d-flex align-items-center">
+              <codx-img
+                [objectId]="data?.customerID"
+                [objectName]="data?.customerName"
+                [referType]="'avt'"
+                [objectType]="'CM_Customers'"
+                [width]="35"
+              >
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column">
+              <div
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
+              >
+                <div class="d-flex mb-2">
+                  <div
+                    class="fw-bold fs-6 text-dark me-3"
+                    [innerHTML]="
+                      data?.customerName
+                        | formatvalue : form.formModel : 'customerName'
+                        | async
+                    "
+                  ></div>
+                  <div
+                    class=""
+                    [innerHTML]="
+                      data?.custGroupID
+                        | formatvalue : form.formModel : 'custGroupID'
+                        | async
+                    "
+                  ></div>
+                </div>
+                <div
+                  class="d-flex justify-content-end action-menu-od me-1"
+                  *ngIf="data?.customerID && action != 'edit'"
+                  (click)="removeUser()"
+                >
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <div class="me-3 d-flex align-items-center">
+                  <span
+                    class="icon-16 text-primary me-2 text-hover-primary text-gray-700"
+                    [ngClass]="data?.phone ? '' : 'icon-phone_iphone'"
+                  ></span>
+                  <span
+                    class="text-gray-600 text-primary text-hover-primary"
+                    [innerHTML]="
+                      data?.phone
+                        | formatvalue : form.formModel : 'phone'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="text-primary me-2 text-hover-primary icon-16 text-gray-700"
+                    [ngClass]="data?.email ? '' : 'icon-email'"
+                  ></span>
+                  <span
+                    class="text-gray-900 text-primary"
+                    [innerHTML]="
+                      data?.email
+                        | formatvalue : form.formModel : 'Email'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <span
+                  [ngbTooltip]="popupAddress"
+                  class="icon-16 me-2 text-gray-600 fs-7"
+                  [ngClass]="data?.address ? '' : 'icon-location_on'"
+                  ><ng-template #popupAddress>
+                    <codx-label
+                      fiedName="Address"
+                      [formModel]="form.formModel"
+                    ></codx-label>
+                  </ng-template>
+                </span>
+                <span
+                  class="text-gray-600"
+                  [innerHTML]="
+                    data?.address
+                      | formatvalue : form.formModel : 'address'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="form-group">
+        <div class="text-primary mb-1">
+          <codx-label
+            class="fw-bold fs-6"
+            fiedName="ServiceTag"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="col-10">
+            <codx-input
+              field="serviceTag"
+              [formModel]="form.formModel"
+              [crrValue]="data?.serviceTag"
+              [disabled]="action == 'edit'"
+              (valueChange)="valueChange($event)"
+            ></codx-input>
+          </div>
+          <div class="col-2 ms-1">
+            <button
+              style="width: 100% !important; height: 32px !important"
+              type="button"
+              [ngClass]="
+                data.customerID == null ||
+                data.customerID?.trim() == '' ||
+                action == 'edit'
+                  ? 'disabled'
+                  : ''
+              "
+              class="btn btn-primary"
+              (click)="clickAddServiceTag()"
+            >
+              <codx-label
+                name="lblAdd"
+                [formModel]="form.formModel"
+                default="Thêm"
+              ></codx-label>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex w-100 mt-1" *ngIf="data?.serviceTag">
+          <div class="me-3 d-flex align-items-center">
+            <codx-img
+              [objectId]="data?.serviceTag"
+              [objectName]="'ADMIN'"
+              [referType]="'avt'"
+              [objectType]="'WR_Products'"
+              [width]="35"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="d-flex mb-2">
+              <div
+                class="fw-bold fs-6 text-dark me-3"
+                [innerHTML]="
+                  data?.productID
+                    | formatvalue : form.formModel : 'productID'
+                    | async
+                "
+              ></div>
+            </div>
+            <div
+              class="d-flex align-items-center mb-2"
+              class="fw-bold me-1"
+              [innerHTML]="
+                data?.productDesc
+                  | formatvalue : form.formModel : 'ProductDesc'
+                  | async
+              "
+            ></div>
+            <div class="d-flex align-items-center">
+              <span
+                [ngbTooltip]="popupExpi"
+                class="icon-date_range icon-16 me-1 text-gray-900 fs-7"
+                ><ng-template #popupExpi>
+                  <codx-label
+                    fiedName="WarrantyExpired"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                </ng-template>
+              </span>
+              <codx-label
+                class="text-gray-600 me-1 label-colon"
+                fiedName="WarrantyExpired"
+                [formModel]="form.formModel"
+              ></codx-label>
+              <span
+                class="fw-bold me-1"
+                [innerHTML]="
+                  data?.warrantyExpired
+                    | formatvalue : form.formModel : 'warrantyExpired'
+                    | async
+                "
+              >
+              </span>
+              <span *ngIf="data?.warrantyExpired && !data.oow" class="me-1">-</span>
+              <span *ngIf="data?.warrantyExpired" [ngClass]="data.oow ? '' : 'text-danger'">
+                <codx-label *ngIf="!data.oow" name="lblOOW" [formModel]="form.formModel" default="Đã hết hạn"></codx-label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Problem">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="problem"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Comment">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="comment"
+        ></codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

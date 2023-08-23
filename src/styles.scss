@@ -1570,6 +1570,9 @@ a {
   padding-top: 5px !important;
 }
 
+codx-label.label-colon{
+  white-space: nowrap;
+}
 codx-label.label-colon span{
   padding-right: 7px;
   min-height: 18px;
@@ -1935,10 +1938,10 @@ codx-calendar .e-tab{
     //width: 130px !important;
     max-width: 130px !important;
   }
-  .e-tab-header.e-vertical:before {
+ // .e-tab-header.e-vertical:before {
     //border-color: var(--gray-200);
     //left: 20%;
-  }
+ // }
 }
 
 
@@ -2162,9 +2165,9 @@ codx-calendar {
   .e-tab .e-tab-header.e-vertical .e-toolbar-item {
     border-left: 3px transparent solid !important;
   }
-  .e-tab > .e-content{
+  //.e-tab > .e-content{
     //margin-left: 140px;
-  }
+ // }
 }
 .w-550px.dropdown-menu{
   codx-calendar {
@@ -2179,9 +2182,13 @@ erm-quick-links-inner .dropdown-menu {
   overflow: auto;
 }
 
-lib-dynamic-process .card-header.m-h-auto.p-0 {
-  border: 0;
+lib-dynamic-process{
+  .card-header.m-h-auto.p-0 {
+    border: 0;
+    margin-bottom: 10px;
+  }
 }
+
 .card.rounded-2 .codx-image {
   border-radius: 0.4rem 0.4rem 0 0 !important;
 }
@@ -2252,7 +2259,21 @@ lib-dynamic-process .card-header.m-h-auto.p-0 {
   ) {
   border-radius: 26px !important;
 }
-
+.input-pill{
+  .e-input-group:not(.e-success):not(.e-warning):not(.e-error), .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
+    border-radius: 20px !important;
+    height: 28px!important;
+  }
+  input.e-input {
+    height: 28px !important;
+    line-height: 28px;
+    text-indent: 4px!important;
+  }
+  .e-input-group .e-input-group-icon, .e-input-group.e-control-wrapper .e-input-group-icon {
+    min-height: 26px;
+    border-radius: 20px!important;
+  }
+}
 .codx-detail-footer.dialog-footer {
   position: relative;
 }
@@ -3317,17 +3338,36 @@ codx-card-center .card.codx_cardcenter{
   .e-tab .e-tab-header .e-tab-wrap{
     min-width: auto;
   }
-  &.width-20{
-    min-width: 250px;
-  }
+   &.width-20{
+    // min-width: 250px;
+    left: -16px;
+   }
   &.width-0{
     box-shadow: none;
     border-color:transparent!important ;
   }
+  .e-tab .e-tab-header .e-toolbar-items {
+    height: auto;
+    margin: 0;
+    min-height: 36px;
+    position: relative;
+  }
+  &.filter-form {
+    top: -16px;
+    //left: -6px;
+    box-shadow: #c1b0b03b 0 5px 5px;
+  }
+  .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+    height: 34px;
+  }
+}
+
+#Content-Fillter.filter-form {
+  height: calc(100% + 16px);
 }
 .card-body.fillter-card-body{
-  padding-left: 0!important;
-  padding-right: 0!important;
+  padding-left: 0px!important;
+  padding-right: 12px!important;
 }
 
 /***/
@@ -3436,9 +3476,7 @@ lib-layoutonlyheader{
 //   margin-bottom: 0!important;
 // }
 
-#Content-Fillter.filter-form {
-  height: calc(100% + 10px);
-}
+
 #viewModeDetail{
   max-height: none!important;
 }
@@ -3659,14 +3697,54 @@ codx-view-tree-targets .menu-sub{
 
 
 @media (min-width: 992px){
-  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended) .menu-item, [data-kt-aside-minimize=on].aside-minimize-icon-title .aside:not(:hover):not(.aside-extended) .menu-item {
-    display: block;
-    .menu-icon{
-      margin-right: 0;
-    }  
+  [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended){
+    .menu-item{
+      display: block;
+    }
+    .aside-secondary .menu-title{
+      text-align: left!important;
+    }
+    .aside-secondary  .menu-icon{
+      margin-right: 0.5rem!important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
-  .aside-secondary .menu-title{
-    text-align: left!important;
+  .aside .aside-footer {
+    min-height: 65px;
+    .menu-link{
+      padding-top: 10px;
+      height: 65px;
+    }
   }
 }
 
+
+.aside {
+  transition: width 0.2s ease;
+}
+.contract-grid .e-table{
+  width: 100%!important;
+}
+codx-attachment.h-35px{
+  .overflow-auto.mh-200px{
+    min-height: 35px;
+  }
+}
+
+.badge-light {
+  color:var(--gray-400);
+  background-color:var(--gray-150);
+}
+.badge-with-delete .badge{
+  padding-right: 24px!important;
+}
+.badge-with-delete .btn.btn-icon.btn-sm{
+  margin-left: -18px;
+  border-radius: 50%!important;
+  width: 20px!important;
+  height: 20px!important;
+  min-width: 20px!important;
+  min-height: 20px!important;
+}

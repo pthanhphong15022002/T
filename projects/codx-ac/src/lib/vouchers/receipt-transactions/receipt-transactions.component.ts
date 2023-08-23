@@ -132,7 +132,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
   ngAfterViewInit() {
 
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
+    this.cache.functionList(this.view.funcID).pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.funcName = res.defaultName;
     });
 

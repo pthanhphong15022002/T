@@ -3,6 +3,7 @@
         <ng-template [ngTemplateOutlet]="brand" ></ng-template>
         <ng-template [ngTemplateOutlet]="title" ></ng-template>
    </div>
+   <ng-template [ngTemplateOutlet]="funcLists" ></ng-template>
    <div class="d-flex align-items-center">
      <codx-chat></codx-chat>
      <codx-notes></codx-notes>
@@ -10,42 +11,41 @@
      <codx-activies-approval-list></codx-activies-approval-list>
      <!-- Home -->
     <div class="align-items-center d-flex ms-1 ms-lg-3">
-        <a
-          class="d-flex align-items-center"
-          (click)="codxService.navigate(null, '/')"
+      <a
+        class="d-flex align-items-center"
+        (click)="codxService.navigate(null, '/')"
+      >
+        <!-- begin::Menu wrapper -->
+        <div
+          class="btn btn-icon btn-clean position-relative"
+          [ngClass]="codxService.toolbarButtonHeightClass"
+          id=""
         >
-          <!-- begin::Menu wrapper -->
-          <div
-            class="btn btn-icon btn-clean position-relative"
-            [ngClass]="codxService.toolbarButtonHeightClass"
-            id=""
-          >
-            <span
-              [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
-              class="svg-icon"
-              [ngClass]="codxService.toolbarButtonIconSizeClass"
-            ></span>
-          </div>
-          <!-- end::Menu wrapper -->
-        </a>
-      </div>
-      <!--end Home -->
-      <!-- Quick links -->
-      <erm-quick-links-inner
-        [buttonMarginClass]="codxService.toolbarButtonMarginClass"
-        [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-        [buttonHeightClass]="codxService.toolbarButtonHeightClass"
-      ></erm-quick-links-inner>
-      <!-- End: Quick links -->
-  
-      <!-- begin::User -->
-      <codx-user-inner
-        [user]="user"
-        (onAvatarChanged)="this.reloadAvatar($event)"
-        [buttonMarginClass]="codxService.toolbarButtonMarginClass"
-      ></codx-user-inner>
-      <!-- end::User -->
+          <span
+            [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
+            class="svg-icon"
+            [ngClass]="codxService.toolbarButtonIconSizeClass"
+          ></span>
+        </div>
+        <!-- end::Menu wrapper -->
+      </a>
     </div>
+    <!--end Home -->
+    <!-- Quick links -->
+    <erm-quick-links-inner
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+    ></erm-quick-links-inner>
+    <!-- End: Quick links -->
+    <!-- begin::User -->
+    <codx-user-inner
+      [user]="user"
+      (onAvatarChanged)="this.reloadAvatar($event)"
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+    ></codx-user-inner>
+    <!-- end::User -->
+  </div>
 </div>
 <!-- begin::Brand -->
 <ng-template #brand>
@@ -82,6 +82,16 @@
 
 <!-- begin::Title -->
 <ng-template #title>
-    <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3"><span class="text-dark text-hover-primary cursor-pointer">{{title$ | async}}</span></h1>
+    <h1 class="d-flex align-items-center text-dark fw-bolder ms-2 my-1 fs-3"><span class="text-dark text-hover-primary cursor-pointer">{{title$ | async}}</span></h1>
+</ng-template>
+<!-- end::Title  -->
+
+<!-- begin::Danh sách function list -->
+<ng-template #funcLists>
+  <div class="d-flex align-items-center ws-fc-list">
+    <div *ngFor="let item of funcList , let i = index" class="py-3 px-5 cursor-pointer fw-bold" [class.active]="selectedIndex == i" (click)="selectedChange(i , item)">
+      {{item.defaultName}}
+    </div>
+  </div>
 </ng-template>
 <!-- end::Title  -->

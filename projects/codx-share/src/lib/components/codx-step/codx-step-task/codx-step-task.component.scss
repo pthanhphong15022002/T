@@ -321,9 +321,9 @@ li {
     color: #fff;
   }
 }
-::ng-deep .popover {
+:host ::ng-deep .main-step .popover {
   box-shadow: 0 0px 5px 1px #a1a1a1;
 }
-::ng-deep .popover-arrow {
+:host ::ng-deep .main-step .popover-arrow {
   transform: translate(10px, 0px) !important;
 }

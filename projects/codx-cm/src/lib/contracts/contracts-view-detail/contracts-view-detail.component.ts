@@ -37,6 +37,7 @@ export class ContractsViewDetailComponent
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
@@ -66,19 +67,24 @@ export class ContractsViewDetailComponent
       isActive: false,
       template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+    },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
       isActive: false,
       template: null,
     },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
+    // {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
   fmQuotationLines: FormModel = {
     funcID: 'CM02021',
@@ -224,8 +230,20 @@ export class ContractsViewDetailComponent
       icon: 'icon-monetization_on',
       template: this.quotationsTab,
     };
+    // let quotations = {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   icon: 'icon-i-link',
+    //   template: this.quotationsTab,
+    // };
     let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
+  }
+  checkSusscess(e){
+    if(e){
+      this.isSusscess.emit(true);
+    }
   }
 }

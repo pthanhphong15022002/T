@@ -1286,7 +1286,8 @@ export class PopupAddSignFileComponent implements OnInit {
         this.dialog && this.dialog.close(this.data);
       } else if (this.isSaved) {
         this.esService.deleteSignFile(this.data.recID).subscribe((res) => {
-          if (res) {
+          if (res) {             
+            this.codxShareService.deleteByObjectWithAutoCreate(this.data.recID, this.data?.refType,true,'3').subscribe();   
             this.dialog && this.dialog.close();
           }
         });
@@ -1315,7 +1316,10 @@ export class PopupAddSignFileComponent implements OnInit {
         this.dialogSignFile.invalid &&
         this.isSaved == false)
     ) {
+      
+      this.codxShareService.deleteByObjectWithAutoCreate(this.data.recID, this.data?.refType,true,'3').subscribe();
       this.dialog && this.dialog.close();
+
     } else if (this.processTab > 0 && this.isAddNew == true) {
       if (this.data?.files.length == 0) {
         if (this.isSaved && this.isEdit) {

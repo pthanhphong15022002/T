@@ -62,6 +62,10 @@ export class CodxCmService {
     );
   }
 
+  getAdminRolesByModule(){
+    return this.api.exec<any>('AD', 'UserRolesBusiness', 'GetListUserIDByADMinStrAsync', ['CM']);
+  }
+
   getAvatar(avata) {
     return this.api.exec<any>('DM', 'FileBussiness', 'GetAvatarAsync', [avata]);
   }
@@ -79,10 +83,9 @@ export class CodxCmService {
     );
   }
 
-  getOneCustomer(recID, entityName) {
-    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
+  getOneCompetitor(recID) {
+    return this.api.exec<any>('CM', 'CompetitorsBusiness', 'GetOneAsync', [
       recID,
-      entityName,
     ]);
   }
 
@@ -165,7 +168,7 @@ export class CodxCmService {
   addCompetitorByName(name) {
     return this.api.exec<any>(
       'CM',
-      'CustomersBusiness',
+      'CompetitorsBusiness',
       'AddCompetitorByDealCompetitorAsync',
       [name]
     );
@@ -435,6 +438,14 @@ export class CodxCmService {
       'DP',
       'InstancesBusiness',
       'GetInstanceStepById',
+      data
+    );
+  }
+  moveReasonByIdInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveReasonByIdInstnaceAsync',
       data
     );
   }

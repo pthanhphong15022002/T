@@ -1479,7 +1479,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      this.shareService.changeMFApproval(e, data);
+      this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
       var bm = e.filter(

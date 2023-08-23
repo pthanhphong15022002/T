@@ -23,12 +23,14 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
   views: Array<ViewModel> = []
   button: ButtonModel = null;
+  showButton: boolean = true;
   funcID: string = null;
   grvSetup: any;
   grvEDaysOff: any;
   popupLoading: boolean = false;
   request: ResourceModel;
   lang: any;
+
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
 
@@ -77,6 +79,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     //   });
   }
   ngAfterViewInit(): void {
+    this.button = { id: 'btnAdd' , text: 'Thêm'};
     this.initRequest();
     this.initViewSetting();
     this.getEDaysOffGrvSetUp();
@@ -119,8 +122,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   initViewSetting() {
     switch (this.funcID) {
       case 'HRTAL01':
-        this.button = { id: 'btnAdd' }
-        // this.button = null;
+        this.showButton = false;
         this.views = [
           {
             // id: ViewType.list.toString(),
@@ -149,7 +151,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
         ];
         break;
       case 'HRTAL02':
-        this.button = { id: 'btnAdd' }
+        this.showButton = true;
         this.views = [
           {
             // id: ViewType.list.toString(),
@@ -201,7 +203,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     if (event?.view?.type === 1 || event?.type === 1) {
       if (this.resetView) {
         this.view.dataService.data = [];
-        //this.view.dataService.oriData = [];
+        this.view.dataService.oriData = [];
         this.view.loadData();
         this.resetView = false;
       }
@@ -229,7 +231,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
     popup.closed.subscribe(e => {
       if (e?.event) {
-
+        this.view.dataService.data = [];
+        this.view.dataService.oriData = [];
+        this.view.loadData();
       }
     })
   }

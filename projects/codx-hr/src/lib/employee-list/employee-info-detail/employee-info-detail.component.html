@@ -259,16 +259,23 @@
                                   fiedName="lineManager"
                                 >
                                 </codx-label>
-                                <span class="text-dark fw-bold">
+                                <span *ngIf="loadedLineManager">
                                   <span
-                                    [innerHTML]="
-                                      infoPersonal?.lineManager
-                                        | formatvalue
-                                          : eInfoFormModel
-                                          : 'lineManager'
-                                        | async
-                                    "
-                                  ></span>
+                      *ngIf="lineManager; else noLineManagerInfo2"
+                      class="fw-bold text-dark"
+                    >
+                      {{ lineManager?.employeeName }}
+                    </span>
+                    <ng-template #noLineManagerInfo2>
+                      <span
+                        class="fw-bold text-dark"
+                        [innerHTML]="
+                          null
+                            | formatvalue : eInfoFormModel : 'lineManager'
+                            | async
+                        "
+                      ></span>
+                    </ng-template>
                                 </span>
                               </div>
 
@@ -2785,7 +2792,7 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center" *ngIf="loadedLineManager">
                     <span
                       *ngIf="lineManager; else noLineManagerInfo"
                       class="fw-bold text-dark"
@@ -2796,7 +2803,7 @@
                       <span
                         class="fw-bold text-dark"
                         [innerHTML]="
-                          infoPersonal?.lineManager
+                          null
                             | formatvalue : eInfoFormModel : 'lineManager'
                             | async
                         "
@@ -2804,7 +2811,7 @@
                     </ng-template>
                   </div>
                 </div>
-                <div class="col-8">
+                <div class="col-8" >
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="IndirectManager"
@@ -2813,7 +2820,7 @@
                     >
                     </codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center" *ngIf="loadedIndirectManager">
                     <span
                       *ngIf="indirectManager; else noIndirectManagerInfo"
                       class="fw-bold text-dark"
@@ -2824,7 +2831,7 @@
                       <span
                         class="fw-bold text-dark"
                         [innerHTML]="
-                          infoPersonal?.indirectManager
+                          null
                             | formatvalue : eInfoFormModel : 'indirectManager'
                             | async
                         "
@@ -2889,11 +2896,12 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="me-2" *ngIf="infoPersonal?.isTUnion">
+                    <span class="me-2">
                       <codx-input
-                        field="IsTUnion"
+                        field="isTUnion"
+                        [type]="'checkbox'"
+                        [Group]="eInfoFormGroup"
                         [formModel]="eInfoFormModel"
-                        [crrValue]="infoPersonal?.isTUnion"
                         [disabled]="true"
                       ></codx-input>
                     </span>
@@ -2907,7 +2915,7 @@
                     ></span>
                   </div>
                 </div>
-                <div class="col" *ngIf="infoPersonal?.isExpertRecruit">
+                <div class="col">
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="IsExpertRecruit"
@@ -2918,14 +2926,15 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <codx-input
-                      field="IsExpertRecruit"
+                      field="isExpertRecruit"
+                      [Group]="eInfoFormGroup"
+                      [type]="'checkbox'"
                       [formModel]="eInfoFormModel"
-                      [crrValue]="infoPersonal?.isExpertRecruit"
                       [disabled]="true"
                     ></codx-input>
                   </div>
                 </div>
-                <div class="col" *ngIf="infoPersonal?.isExpertTrain">
+                <div class="col">
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="IsExpertTrain"
@@ -2936,9 +2945,10 @@
                   </div>
                   <div class="d-flex align-items-center">
                     <codx-input
-                      field="IsExpertTrain"
+                      field="isExpertTrain"
+                      [Group]="eInfoFormGroup"
                       [formModel]="eInfoFormModel"
-                      [crrValue]="infoPersonal?.isExpertTrain"
+                      [type]="'checkbox'"
                       [disabled]="true"
                     ></codx-input>
                   </div>

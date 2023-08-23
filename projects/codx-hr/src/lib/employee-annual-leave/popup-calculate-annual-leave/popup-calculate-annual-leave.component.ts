@@ -54,6 +54,8 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
   inYearValue: any = new Date();
   currentStep = 1;
   searchText: string = '';
+
+  hasAddData: boolean = false; 
   constructor(
     // private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -127,7 +129,8 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.inputData[event.field] = event.data.value | event.data;
         break;
       case 'isExcept':
-        this.inputData[event.field] = event.data.value | event.data;
+        let result = event.data.value | event.data;
+        this.inputData[event.field] = result == 1 ? true : false;
         break;
       case 'inMonth':
         this.inputData[event.field] = event.data.value | event.data;
@@ -148,11 +151,10 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.inputEmployeeList = this.inputEmployeeList.filter(x => x.employeeID != data.employeeID);
         this.excludedEmployeeList.unshift(data);
         break;
-      case 'exEmployeeID':
-        this.excludedEmployeeList = this.excludedEmployeeList.filter(x => x.employeeID != data.employeeID);
-        this.inputEmployeeList.unshift(data);
-        break;
-
+      // case 'exEmployeeID':
+      //   this.excludedEmployeeList = this.excludedEmployeeList.filter(x => x.employeeID != data.employeeID);
+      //   this.inputEmployeeList.unshift(data);
+      //   break;
     }
   }
   yearChange(data: boolean) {
@@ -189,7 +191,9 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
     this.hrService.calculateAnnualLeaveAsync(this.inputData.alYear, this.inputData.alObjectID,
       this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
       .subscribe(res => {
-        if (res[0]?.length > 0) {
+        console.log(res);
+        if (res[2]?.count > 0) {
+          this.hasAddData = true;
           //this.dialogRef.close(res[0]);
         }
       })
@@ -205,8 +209,7 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
     //   this.currentStep = 2;
   }
   cancel() {
-    this.stepper.nativeElement.goNext();
-    //this.dialogRef.close();
+    this.dialogRef.close(this.hasAddData);
   }
 }
 export class CalculateInputData {

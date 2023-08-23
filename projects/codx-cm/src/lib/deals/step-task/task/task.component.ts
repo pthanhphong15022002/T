@@ -21,11 +21,14 @@ import {
   DP_Activities_Roles,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -213,9 +216,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP07': // view
         this.viewTask(task, task?.taskType || 'T');
         break;
-      // case 'DP13': //giao viec
-      //   this.assignTask(e.data, task);
-      //   break;
+      case 'DP13': //giao viec
+        this.assignTask(e.data, task);
+        break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(task, 'T');
         break;
@@ -290,7 +293,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event,
+          taskOutput?.event, this.entityName
         ])
         .subscribe((res) => {
           if (res) {
@@ -312,7 +315,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       if (x.event && x.event.status == 'Y') {
         this.api
           .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
-            task?.recID,
+            task?.recID,this.entityName
           ])
           .subscribe((res) => {
             if (res) {
@@ -571,4 +574,64 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     let type = this.listTaskType?.find(task => task?.value == taskType);
     return type?.text;
   }
+  //#region giao việc
+  assignTask(moreFunc, data) {
+    if (data?.assigned == '1') {
+      this.notiService.notify('tesst kiem tra da giao task');
+      return;
+    }
+    let frmModelInstancesTask = {
+      funcID: 'DPT040102',
+      formName: 'DPInstancesStepsTasks',
+      entityName: 'DP_Instances_Steps_Tasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    
+    var task = new TM_Tasks();
+    task.taskName = data.taskName;
+    task.refID = data?.recID;
+    task.refType = 'DP_Instances_Steps_Tasks';
+    task.dueDate = data?.endDate;
+    // task.sessionID = this.currentStep?.instanceID;
+    let dataReferences = [
+      {
+        recIDReferences: data.recID,
+        refType: 'DP_Instances_Steps_Tasks',
+        createdOn: data.createdOn,
+        memo: data.taskName,
+        createdBy: data.createdBy,
+      },
+    ];
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM001',
+      title: moreFunc.customName,
+      vllShare: 'TM003',
+      task: task,
+    };
+    let option = new SidebarModel();
+    option.FormModel = frmModelInstancesTask;
+    option.Width = '550px';
+    var dialogAssign = this.callFunc.openSide(
+      AssignInfoComponent,
+      assignModel,
+      option
+    );
+    dialogAssign.closed.subscribe((e) => {
+      var doneSave = false;
+      if (e && e.event != null) {
+        doneSave = true;
+        this.api
+          .execSv<any>(
+            'DP',
+            'DP',
+            'InstanceStepsBusiness',
+            'UpdatedAssignedStepTasksAsync',
+            [data.stepID, data.recID]
+          )
+          .subscribe();
+      }
+      // this.saveAssign.emit(doneSave);
+    });
+  }
+  //#endregion
 }

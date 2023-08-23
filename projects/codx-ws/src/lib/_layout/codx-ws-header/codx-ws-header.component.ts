@@ -1,5 +1,8 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
+import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { CacheService, CodxService, LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
+import { CodxWsService } from '../../codx-ws.service';
+import { isObservable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'codx-ws-header',
@@ -7,27 +10,65 @@ import { LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core'
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
-  override onAfterViewInit(): void {
-    throw new Error('Method not implemented.');
-  }
 
   title$:any;
   asideTheme:any;
   logo$:any;
-
-  override onInit(): void {
-    this.title$ = this.pageTitle.title.asObservable();
-    this.asideTheme = this.layout.getProp('aside.theme') as string;
-    this.logo$ = this.layout.logo.asObservable();
-  }
- 
+  funcList:any;
+  selectedIndex = 0;
+  funcID:any;
+  
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
+    override codxService: CodxService,
+    private codxWsService: CodxWsService,
   ) {
     super(inject);
     this.module = 'WS';
   }
 
+  override onInit(): void {
+    this.title$ = this.pageTitle.title.asObservable();
+    this.asideTheme = this.layout.getProp('aside.theme') as string;
+    this.logo$ = this.layout.logo.asObservable();
 
+    this.getFuncChange();
+  }
+ 
+  override onAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
+  
+  getFuncChange()
+  {
+    this.codxWsService.funcChange.subscribe(item=>{
+      if(item) this.getFuncList(item);
+    })
+  }
+
+  getFuncList(funcID:any)
+  {
+    var fucList = this.codxWsService.loadFuncList("WS") as any;
+
+    if(isObservable(fucList))
+    {
+      fucList.subscribe((item : any)=>{
+        if(item) {
+          this.funcList = item.filter(x=>!x.parentID && x.functionType == "T");
+          this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
+        }
+      })
+    }
+    else {
+      this.funcList = fucList.filter(x=>!x.parentID && x.functionType == "T");
+      this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
+    }
+  }
+
+  selectedChange(i:any , item:any)
+  {
+    this.selectedIndex = i;
+    this.codxService.navigate("","/"+item.url)
+  }
 }

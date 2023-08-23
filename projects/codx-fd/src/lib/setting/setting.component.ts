@@ -1,31 +1,15 @@
-import { DOCUMENT } from '@angular/common';
-import {
-  HostListener,
-  Inject,
-  Output,
-  TemplateRef,
-  EventEmitter,
-} from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { CodxFdService } from './../codx-fd.service';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Injector,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ApiHttpService,
-  TenantStore,
+  LayoutService,
+  PageTitleService,
   UIComponent,
   ViewModel,
   ViewType,
+  ViewsComponent,
 } from 'codx-core';
-import { Observable } from 'rxjs';
-import { SettingService } from './setting.service';
 
 @Component({
   selector: 'app-setting',
@@ -33,209 +17,110 @@ import { SettingService } from './setting.service';
   styleUrls: ['./setting.component.scss'],
 })
 export class SettingComponent extends UIComponent implements OnInit {
-  tenant: string;
-  func = {};
-  funcChildFED2042 = [];
-  range = [];
-  parameter;
-  titlePage = 'Thiết lập';
-  modelForm = { title: '', fieldName: 0, number: 0 };
-  functionList: any;
-  range$: Observable<any>;
-  lstChildOfFED2041$: Observable<any>;
-  views: Array<ViewModel> = [];
-  funcChildFDS02$: Observable<any>;
-  currentActive = 1;
-  funcID: any;
-
-  @ViewChild('notificationFedback') notificationFedback: ElementRef;
-  @ViewChild('itemCategory') itemCategory: ElementRef;
-  @ViewChild('itemRankDedication') itemRankDedication: ElementRef;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-
-  @Output() scrollPosition: EventEmitter<number> = new EventEmitter<number>();
-  @ViewChild('elementId', { static: true }) ell: ElementRef;
-
   constructor(
     private injector: Injector,
-    private changedr: ChangeDetectorRef,
-    private tenantStore: TenantStore,
-    private at: ActivatedRoute,
-    private fdsv: CodxFdService,
-    private settingSV: SettingService,
-    private modalService: NgbModal
+    private fdService: CodxFdService,
+    private layout: LayoutService,
+    private pageTitle: PageTitleService
   ) {
     super(injector);
-    this.tenant = this.tenantStore.get()?.tenant;
-    this.at.params.subscribe((params) => {
-      if (params.funcID) {
-        this.funcID = params.funcID;
-      }
-    });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
+    this.cache.valueList(this.vllFD013).subscribe((res) => {
+      this.lstCategory = res?.datas;
+      console.log('lstCategory', this.lstCategory);
     });
   }
+
+  // Get Data
+  groupSettings: Map<string, any[]>;
+  setingValues: Map<string, Map<string, string>>;
+  lstCategory = [];
+
+  //default value
+  formName = 'FDParameters';
+  vllFD013 = 'FD013';
+  views: Array<ViewModel> = [];
+  curLineType = 1;
+  curGroup = null;
+  refQueue = [];
+  //ViewChild
+  @ViewChild('tabsTmpl') tabsTmpl: TemplateRef<any>;
 
   onInit(): void {
-    this.LoadData();
-    this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
-      'KUDOS',
-    ]);
-    this.funcChildFDS02$ = this.api.exec(
-      'SYS',
-      'FunctionListBusiness',
-      'GetFuncByPredicateAsync',
-      ['ParentID=@0', 'FDS02']
-    );
-    this.getParameter();
+    this.fdService
+      .getSettings(this.formName)
+      .subscribe((res: Map<string, any[]>) => {
+        this.groupSettings = res;
+        console.log('getSettings', res);
+      });
+
+    this.fdService.getSettingValues(this.formName).subscribe((res) => {
+      this.setingValues = res;
+      console.log('setting values', res);
+    });
+    this.refQueue = [null];
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.views = [
       {
-        active: true,
         type: ViewType.content,
+        active: true,
         sameData: true,
         model: {
-          panelLeftRef: this.panelLeftRef,
+          panelRightRef: this.tabsTmpl,
+          widthLeft: '100%',
         },
       },
     ];
-    let myInterval = setInterval(() => {
-      this.at.queryParamMap.subscribe((params: any) => {
-        if (params && params?.params?.index && params?.params?.redirectPage) {
-          this.currentActive = params && params?.params?.index;
-          this.scrollToID(params?.params?.redirectPage);
-        }
-      });
-    }, 200);
-    setTimeout(() => {
-      clearInterval(myInterval);
-      return;
-    }, 3000);
     this.detectorRef.detectChanges();
   }
 
-  scroll(el: HTMLElement, numberActive) {
-    if (el)
-      el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
-    this.currentActive = numberActive;
+  viewChanged(evt: any, view: ViewsComponent) {
+    this.view = view;
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
   }
 
-  scrollToID(id) {
-    let el = document.getElementById(id);
-    if (el) {
-      var html = el as HTMLElement;
-      if (html)
-        html.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-          inline: 'nearest',
+  changeLineType(row, isNext) {
+    if (isNext) {
+      this.curLineType++;
+      this.refQueue.push(row.recID);
+    } else {
+      this.curLineType--;
+      this.refQueue.pop();
+    }
+    this.curGroup = row;
+
+    this.detectorRef.detectChanges();
+  }
+
+  changeTabs() {
+    this.curLineType = 1;
+    this.detectorRef.detectChanges();
+  }
+
+  changeFieldValue(formName, transType, category, evt) {
+    let isChange = false;
+    if (this.setingValues[transType][evt.field] != evt.data) {
+      isChange = true;
+    }
+    if (typeof evt.data === 'boolean') {
+      this.setingValues[transType][evt.field] = evt.data ? '1' : '0';
+    } else {
+      this.setingValues[transType][evt.field] = evt.data;
+    }
+    if (isChange) {
+      this.fdService
+        .updateSettingValue(
+          formName,
+          transType,
+          category,
+          evt.field,
+          this.setingValues[transType][evt.field]
+        )
+        .subscribe((res) => {
+          console.log('update res', res);
         });
     }
-  }
-
-  LoadData() {
-    this.api
-      .exec('SYS', 'FunctionListBusiness', 'GetFuncByParentAsync', ['FDS'])
-      .subscribe((result) => {
-        if (result) this.func = result;
-      });
-  }
-
-  getParameter() {
-    this.settingSV.getParameter().subscribe((result: any) => {
-      if (result) this.parameter = JSON.parse(result.dataValue);
-    });
-  }
-
-  goHomePage(functionID) {
-    this.codxService.navigate('', 'fd/home/', {
-      queryParams: { funcID: functionID },
-    });
-  }
-
-  LoadDetail(data) {
-    this.codxService.navigate('', data.url);
-  }
-
-  LoadCategory(func) {
-    this.codxService.navigate(func?.functionID);
-  }
-
-  LoadWallet(func) {
-    this.codxService.navigate(func.functionID);
-  }
-
-  LoadDedicationRank(func) {
-    this.codxService.navigate(func);
-  }
-
-  backLocation() {
-    if (this.funcID == 'FDS') {
-      this.goHomePage('FDT01');
-      return;
-    }
-    // this.location.back();
-  }
-
-  valueChange(value) {
-    let item = {};
-    item[value.field] = value.data;
-    this.onSaveParameter(item);
-  }
-
-  onSaveParameter(item) {
-    return this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'SaveParamsOfPolicyAsync',
-        ['FDParameters', null, JSON.stringify(item)]
-      )
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          if (res.msgBodyData[0] == true) {
-            return;
-          }
-        }
-      });
-  }
-
-  valueChangeStatistical(e) {
-    if (e) {
-      this.modelForm.number = e.data;
-    }
-  }
-
-  open(content, typeContent) {
-    this.modelForm.number = this.parameter[typeContent];
-    this.modelForm.fieldName = typeContent;
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'sm',
-    });
-    this.changedr.detectChanges();
-  }
-
-  onSavePopup() {
-    let item = {};
-    item[this.modelForm.fieldName] = this.modelForm.number;
-    this.parameter[this.modelForm.fieldName] = this.modelForm.number;
-    this.onSaveParameter(item);
-    this.modalService.dismissAll();
-  }
-
-  onSectionChange(data: any) {
-    //this.currentSection = sectionId;
-    this.fdsv.active = data.current;
-    this.currentActive = data.index;
   }
 }

@@ -10,6 +10,7 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DataRequest,
@@ -39,6 +40,8 @@ export class CodxListContactsComponent implements OnInit {
   @Input() formModel: FormModel;
   @Input() lstContactRef = [];
   @Input() customerID: any;
+  @Input() isRole = true;
+
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();
@@ -55,21 +58,27 @@ export class CodxListContactsComponent implements OnInit {
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
-  method = 'GetListContactAsync';
+  method = 'GetListByTabAsync';
   isButton = true;
   currentRecID = '';
   lstConvertContact = [];
   isCheckedAll: boolean = false;
   id: any;
   placeholder = 'Nhập vai trò...';
+  user: any;
+  userID: any;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
     private cmSv: CodxCmService,
     private api: ApiHttpService,
+    private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService
-  ) {}
+  ) {
+    this.user = this.authstore.get();
+    this.userID = this.user?.userID;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -80,9 +89,11 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue != null &&
         changes['objectID']?.currentValue?.trim() != ''
       ) {
-        if (changes['objectID']?.currentValue == this.id) return;
-        this.id = changes['objectID']?.currentValue;
-        this.getListContacts();
+        if (this.isRole) {
+          if (changes['objectID']?.currentValue == this.id) return;
+          this.id = changes['objectID']?.currentValue;
+          this.getListContacts();
+        }
       } else {
         if (!this.loaded) this.loaded = true;
       }
@@ -136,8 +147,14 @@ export class CodxListContactsComponent implements OnInit {
   getListContacts() {
     this.loaded = false;
     if (!this.selectAll) {
-      this.request.predicates = 'ObjectID=@0';
-      this.request.dataValues = this.objectID;
+      let predicate = 'ObjectID=@0';
+      let dataValue = this.objectID;
+      // if (this.objectType == '1') {
+      //   predicate += ' and CreatedBy.Contains(@1)';
+      //   dataValue += ';' + this.owner;
+      // }
+      this.request.predicates = predicate;
+      this.request.dataValues = dataValue;
       this.request.pageLoading = false;
       this.request.entityName = 'CM_Contacts';
       this.request.funcID = 'CM0102';

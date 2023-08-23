@@ -5,7 +5,7 @@
   [formModel]="dialog.formModel"
   [dialog]="dialog"
   [data]="master"
-  [customToolbar]="subToolbar"
+  [customToolbar]="customToolbar"
   [openMore]="false"
   class="ac-dialog"
 >
@@ -168,7 +168,7 @@
   </div>
 </ng-template>
 
-<ng-template #subToolbar>
+<ng-template #customToolbar>
   <div class="d-flex align-items-center justify-content-between pt-3 w-100">
     <div class="d-flex justify-content-start align-items-center me-2">
       <div class="btn btn-icon btn-sm btn-primary btn-circle me-4">
@@ -311,7 +311,7 @@
           >
           </codx-input>
         </div>
-        <ng-container *ngIf="master.subType === '2'">
+        <ng-container *ngIf="master.subType !== '2'">
           <div class="col-2 form-group">
             <codx-label
               fiedName="invoiceSeriNo"
@@ -355,7 +355,9 @@
           </div>
         </ng-container>
         <div
-          *ngIf="journal.multiCurrency"
+          *ngIf="
+            journal.multiCurrency && master.currencyID !== acParams.BaseCurr
+          "
           class="form-group"
           [ngClass]="master.subType === '2' ? 'col-2' : 'col-4'"
         >
@@ -406,7 +408,8 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [disabled]="
-              !journal?.multiCurrency || master.currencyID === acParams?.BaseCurr
+              !journal?.multiCurrency ||
+              master.currencyID === acParams?.BaseCurr
             "
             (controlBlur)="onInputChange($event)"
           >

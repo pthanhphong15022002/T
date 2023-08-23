@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
-import { tap } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { CodxService, FormModel } from 'codx-core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CashTransferService {
-  constructor(private api: ApiHttpService) {}
+export class CashtransfersService {
+  fmVATInvoice: FormModel = {
+    entityName: 'AC_VATInvoices',
+    formName: 'VATInvoices',
+    gridViewName: 'grvVATInvoices',
+    entityPer: 'AC_VATInvoices',
+  };
+  fgVatInvoice: FormGroup;
 
-  deleteVatInvoiceByTransID(transId: string): void {
-    this.api
-      .exec(
-        'ERM.Business.AC',
-        'VATInvoicesBusiness',
-        'DeleteByTransIDAsync',
-        transId
-      )
-      .pipe(tap((t) => console.log(t)))
-      .subscribe();
+  constructor(codxService: CodxService) {
+    this.fgVatInvoice = codxService.buildFormGroup(
+      this.fmVATInvoice.formName,
+      this.fmVATInvoice.gridViewName,
+      this.fmVATInvoice.entityName
+    );
   }
 }

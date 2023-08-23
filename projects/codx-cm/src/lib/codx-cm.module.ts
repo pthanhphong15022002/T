@@ -100,6 +100,9 @@ import { PopupPermissionsComponent } from './popup-permissions/popup-permissions
 import { CalendarsComponent } from './calendars/calendars.component';
 import { ViewCalendarComponent } from './calendars/view-calendar/view-calendar.component';
 import { ProgressSliderComponent } from './targets/view-tree-targets/progress-slider/progress-slider.component';
+import { ViewHistoryCustomerComponent } from './cmcustomer/cmcustomer-detail/view-history-customer/view-history-customer.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 export const routes: Routes = [
   {
@@ -148,6 +151,14 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: CmDashboardComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       {
         path: 'targets/:funcID',
@@ -239,10 +250,13 @@ const T_Component: Type<any>[] = [
   PopupBantDealComponent,
   CalendarsComponent,
   PopupPermissionsComponent,
+  ViewCalendarComponent,
+  ProgressSliderComponent,
+  ViewHistoryCustomerComponent,
 ];
 
 @NgModule({
-  declarations: [T_Component, ViewCalendarComponent, ProgressSliderComponent],
+  declarations: [T_Component],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

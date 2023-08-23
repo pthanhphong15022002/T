@@ -72,9 +72,9 @@ export class CmCustomerComponent
   funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  entityName = 'CM_Customers';
-  className = 'CustomersBusiness';
-  method = 'GetListCRMAsync';
+  entityName = '';
+  className = '';
+  method = '';
   idField = 'recID';
   //endregion
 
@@ -115,6 +115,29 @@ export class CmCustomerComponent
       if (param.funcID) {
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
+        switch (this.funcID) {
+          case 'CM0101':
+          case 'CM0105':
+            this.method = 'GetListCustomersAsync';
+            this.className = 'CustomersBusiness';
+            this.entityName = 'CM_Customers';
+            break;
+          case 'CM0102':
+            this.method = 'GetListContactAsync';
+            this.className = 'ContactsBusiness';
+            this.entityName = 'CM_Contacts';
+            break;
+          case 'CM0103':
+            this.method = 'GetListPartnersAsync';
+            this.className = 'PartnersBusiness';
+            this.entityName = 'CM_Partners';
+            break;
+          case 'CM0104':
+            this.method = 'GetListCompetitorsAsync';
+            this.className = 'CompetitorsBusiness';
+            this.entityName = 'CM_Competitors';
+            break;
+        }
         this.isButton = true;
         this.afterLoad();
       }
@@ -171,23 +194,10 @@ export class CmCustomerComponent
   }
 
   async afterLoad() {
-    // this.entityName =
-    //   this.funcID == 'CM0101'
-    //     ? 'CM_Customers'
-    //     : this.funcID == 'CM0102'
-    //     ? 'CM_Contacts'
-    //     : this.funcID == 'CM0103'
-    //     ? 'CM_Partners'
-    //     : 'CM_Competitors';
     let funcID = this.funcID == 'CM0105' ? 'CM0101' : this.funcID;
     this.cache.functionList(funcID).subscribe(async (fun) => {
       var formMD = new FormModel();
       this.entityName = JSON.parse(JSON.stringify(fun?.entityName));
-      // formMD.entityName = JSON.parse(JSON.stringify(fun?.entityName));
-      // formMD.formName = JSON.parse(JSON.stringify(fun?.formName));
-      // formMD.gridViewName = JSON.parse(JSON.stringify(fun?.gridViewName));
-      // formMD.funcID = JSON.parse(JSON.stringify(fun?.funcID));
-      // this.view.formModel = formMD;
       if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
         this.lstCustGroups = await firstValueFrom(
           this.api.execSv<any>(
@@ -279,41 +289,56 @@ export class CmCustomerComponent
   changeDataMF(e, data) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        switch (res.functionID) {
-          case 'CM0105_1':
-          case 'CM0101_1':
-            if (data.isBlackList) res.disabled = true;
-            break;
-          case 'CM0105_3':
-          case 'CM0101_3':
-            if (!data.isBlackList) res.disabled = true;
-            break;
-          case 'CM0102_2':
-            if (
-              data.objectType == null ||
-              data.objectType.trim() == '' ||
-              data.objectType != '1'
-            )
+        if (data?.status != '99') {
+          switch (res.functionID) {
+            case 'CM0105_1':
+            case 'CM0101_1':
+              if (!data.write || data.isBlackList) res.disabled = true;
+              break;
+            case 'CM0105_3':
+            case 'CM0101_3':
+              if (!data.write || !data.isBlackList) res.disabled = true;
+              break;
+            case 'CM0102_4':
+            case 'CM0102_1':
               res.disabled = true;
-            break;
-          case 'CM0102_3':
-            if (
-              data.objectType == null ||
-              data.objectType.trim() == '' ||
-              data.objectType != '3'
-            )
+              break;
+            case 'CM0102_2':
+              if (
+                data.objectType == null ||
+                data.objectType.trim() == '' ||
+                data.objectType != '1'
+              )
+                res.disabled = true;
+              break;
+            case 'CM0102_3':
+              if (
+                data.objectType == null ||
+                data.objectType.trim() == '' ||
+                data.objectType != '3'
+              )
+                res.disabled = true;
+              break;
+            case 'CM0105_4':
+            case 'CM0101_4':
+              if (!data.write || data.status === '99') res.disabled = true;
+              break;
+            case 'CM0105_5':
+            case 'CM0101_5':
+              if (!data.write || data.status !== '99') res.disabled = true;
+              break;
+            default:
+              break;
+          }
+        } else {
+          switch (res.functionID) {
+            case 'CM0105_5':
+            case 'CM0101_5':
+              break;
+            default:
               res.disabled = true;
-            break;
-          case 'CM0105_4':
-          case 'CM0101_4':
-            if (data.status === '99') res.disabled = true;
-            break;
-          case 'CM0105_5':
-          case 'CM0101_5':
-            if (data.status !== '99') res.disabled = true;
-            break;
-          default:
-            break;
+              break;
+          }
         }
       });
     }
@@ -340,42 +365,27 @@ export class CmCustomerComponent
         formMD.funcID = this.funcID;
         option.FormModel = JSON.parse(JSON.stringify(formMD));
         option.Width = '800px';
-
-        this.cmSv
-          .getAutonumber(
-            this.funcID,
-            fun.entityName,
-            this.funcID == 'CM0101' || this.funcID == 'CM0105'
-              ? 'CustomerID'
-              : this.funcID == 'CM0102'
-              ? 'ContactID'
-              : this.funcID == 'CM0103'
-              ? 'PartnerID'
-              : 'CompetitorID'
-          )
-          .subscribe((x) => {
-            var obj = {
-              action: 'add',
-              title: this.titleAction,
-              autoNumber: x,
-            };
-            var dialog = this.callfc.openSide(
-              PopupAddCmCustomerComponent,
-              obj,
-              option
-            );
-            dialog.closed.subscribe((e) => {
-              this.isButton = true;
-              if (!e?.event) this.view.dataService.clear();
-              if (e && e.event != null) {
-                e.event.modifiedOn = new Date();
-                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-                this.view.dataService.update(e?.event).subscribe();
-                this.detectorRef.detectChanges();
-                // this.customerDetail.listTab(this.funcID);
-              }
-            });
-          });
+        var obj = {
+          action: 'add',
+          title: this.titleAction,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddCmCustomerComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          this.isButton = true;
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            e.event.modifiedOn = new Date();
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e?.event).subscribe();
+            // this.customerDetail.loadTag(this.dataSelected);
+            this.detectorRef.detectChanges();
+            // this.customerDetail.listTab(this.funcID);
+          }
+        });
       });
     });
   }
@@ -551,48 +561,12 @@ export class CmCustomerComponent
         }
       });
 
-    // this.cmSv.checkCustomerIDByDealsAsync(data?.recID).subscribe((res) => {
-    //   if (res) {
-    //     this.notiService.notifyCode(
-    //       'Đang tồn tại trong cơ hội, không được xóa'
-    //     );
-    //     return;
-    //   } else {
-    //     this.view.dataService
-    //       .delete([this.view.dataService.dataSelected], true, (opt) =>
-    //         this.beforeDel(opt)
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) {
-    //           this.view.dataService.onAction.next({
-    //             type: 'delete',
-    //             data: data,
-    //           });
-    //         }
-    //       });
-    //   }
-    // });
-    // } else {
-    //   this.view.dataService
-    //     .delete([this.view.dataService.dataSelected], true, (opt) =>
-    //       this.beforeDel(opt)
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.view.dataService.onAction.next({
-    //           type: 'delete',
-    //           data: data,
-    //         });
-    //       }
-    //     });
-    // }
-
     this.detectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteCmAsync';
-    opt.data = [itemSelected.recID, this.funcID, this.entityName];
+    opt.data = [itemSelected.recID, this.entityName];
     return true;
   }
 

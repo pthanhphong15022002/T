@@ -109,6 +109,8 @@ export class PopupConvertLeadComponent implements OnInit {
   planceHolderAutoNumber = '';
   lstPermissions: CM_Permissions[] = [];
   recIDContact: any;
+  //
+  applyFor: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -122,6 +124,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.dialog = dialog;
     this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.titleAction = dt?.data?.title;
+    this.applyFor = dt?.data?.applyFor;
     this.recIDAvt = this.lead?.recID;
     this.nameAvt = this.lead?.leadName;
     this.modifyOnAvt = this.lead?.modifiedOn;
@@ -401,6 +404,22 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async onConvert() {
+
+    let result = [];
+
+    if(this.lead.applyProcess) {
+      let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
+      result = await firstValueFrom(
+        this.api.execSv<any>(
+          'DP',
+          'ERM.Business.DP',
+          'InstanceStepsBusiness',
+          'MoveReasonByIdInstnaceAsync',
+          dataDP
+        )
+      );
+    }
+
     var data = [];
     data = [
       this.lead.recID,
@@ -408,7 +427,9 @@ export class PopupConvertLeadComponent implements OnInit {
       this.deal,
       this.isCheckContact ? this.lstContactDeal : null,
       this.recIDContact,
+      this.lead.applyProcess ? result[0]?.stepID: '',
     ];
+
     await this.api
       .execSv<any>(
         'CM',
@@ -420,7 +441,7 @@ export class PopupConvertLeadComponent implements OnInit {
       .subscribe(async (res) => {
         if (res) {
           if (this.radioChecked) {
-            this.dialog.close(res);
+            // this.dialog.close(res);
           } else {
             if (this.avatarChange) {
               await firstValueFrom(
@@ -435,7 +456,6 @@ export class PopupConvertLeadComponent implements OnInit {
                 )
               );
             }
-            this.dialog.close(res);
           }
           await firstValueFrom(
             this.api.execSv<any>(
@@ -446,8 +466,11 @@ export class PopupConvertLeadComponent implements OnInit {
               [this.instance, this.listInstanceSteps, null]
             )
           );
-        } else {
-          this.dialog.close(false);
+          let obj = {
+            lead: res,
+            listStep: result[1],
+          };
+          this.dialog.close(obj);
         }
       });
   }
@@ -682,6 +705,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.channelID = this.lead?.channelID;
     this.customer.headcounts = this.lead?.headcounts;
     this.customer.address = this.lead?.address;
+    this.customer.owner = this.deal.owner;
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
   }
@@ -718,6 +742,9 @@ export class PopupConvertLeadComponent implements OnInit {
         this.listParticipants.find((x) => x.userID == e),
         'O'
       );
+      if (!this.radioChecked) {
+        this.customer.owner = this.deal.owner;
+      }
     }
   }
   valueChangeCustomer(e) {
@@ -788,7 +815,7 @@ export class PopupConvertLeadComponent implements OnInit {
       perm.allowPermit = roleType == 'O' ? true : false;
       perm.roleType = roleType;
       perm.allowUpdateStatus = '1';
-      perm.memberType = '1';
+      perm.memberType = '0';
       this.lstPermissions.push(perm);
     } else {
       this.lstPermissions[index].objectID =

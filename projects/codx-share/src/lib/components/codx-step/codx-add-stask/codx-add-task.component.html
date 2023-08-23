@@ -205,7 +205,7 @@
     </div>
     <!--End ten Cong Viec -->
 
-    <div class="form-group d-flex justify-content-between" *ngIf="isStart">
+    <div class="form-group d-flex justify-content-between" *ngIf="this.action == 'add' && isStart && stepsTasks.status == '1'">
       <div class="me-2">
         <codx-label
           fiedName="startDate"
@@ -242,7 +242,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="this.action == 'add' && isStart && stepsTasks.status == '1'">
       <div class="d-flex justify-content-between row">
         <div class="col-6">
           <codx-label
@@ -390,7 +390,20 @@
       </codx-input>
     </div>
 
-    <div class="form-group d-flex align-item-center">
+    <div class="form-group">
+      <ng-container *ngFor="let item of listField">
+        <codx-input-custom-field
+        [customField]="item"
+        [objectId]="item.recID"
+        [objectType]="'DP_Instances_Steps_Fields'"
+        [formModel]="dialog.formModel"
+        (valueChangeCustom)="valueChangeCustom($event)"
+        (addFileCompleted)="addFileCompleted($event)"
+      ></codx-input-custom-field>
+      </ng-container>
+    </div>
+
+    <div class="form-group d-flex align-item-center" *ngIf="isBoughtTM && action == 'add' && isStart && stepsTasks.status == '1'">
       <codx-input
         type="switch"
         class="test-check"
