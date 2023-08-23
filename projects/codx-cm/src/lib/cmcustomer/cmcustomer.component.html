@@ -171,7 +171,12 @@
           ></codx-label>
         </ng-template>
       </span>
-      <span class="fs-7 text-gray-600">{{ data.address }}</span>
+      <span
+        class="fs-7 text-gray-600"
+        [innerHTML]="
+          data?.address | formatvalue : view.formModel : 'address' | async
+        "
+      ></span>
     </div>
     <div
       *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"

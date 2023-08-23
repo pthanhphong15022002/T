@@ -48,7 +48,6 @@ export class PopupEBasicSalariesComponent
   actionArray = ['add', 'edit', 'copy'];
   fromListView: boolean = false; //check where to open the form
   showEmpInfo: boolean = true;
-  useForQTNS: boolean = false;
   loaded: boolean = false;
   moment = moment;
   employeeSign;
@@ -74,7 +73,6 @@ export class PopupEBasicSalariesComponent
     }
     this.formModel = dialog?.formModel;
     this.fromListView = data?.data?.fromListView;
-    this.useForQTNS = data?.data?.useForQTNS;
     if (data?.data?.salaryObj) {
       this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
     } else {
@@ -243,15 +241,16 @@ export class PopupEBasicSalariesComponent
         this.actionType === 'view'
       ) {
         this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.autoNumField = res.key ? res.key : null}
-        })
+          .getDataDefault(
+            this.formModel.funcID,
+            this.formModel.entityName,
+            this.idField
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.autoNumField = res.key ? res.key : null;
+            }
+          });
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
             this.EBasicSalaryObj.effectedDate = null;
@@ -303,7 +302,7 @@ export class PopupEBasicSalariesComponent
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
-        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj, this.useForQTNS)
+        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
@@ -313,10 +312,7 @@ export class PopupEBasicSalariesComponent
         });
     } else {
       this.hrService
-        .UpdateEmployeeBasicSalariesInfo(
-          this.formModel.currentData,
-          this.useForQTNS
-        )
+        .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');

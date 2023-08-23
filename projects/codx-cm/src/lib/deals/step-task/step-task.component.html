@@ -45,14 +45,10 @@
         [ngbPopover]="'Thêm công việc'"
         (mouseenter)="addTaskTootip.open()"
         (mouseleave)="addTaskTootip.close()"
+        *ngIf="dataSelected?.status == '2'"
       >
-        <i *ngIf="isShowElement" class="icon-20 icon-add_task text-primary"></i>
+        <i class="icon-20 icon-add_task text-primary"></i>
       </div>
-      <!-- <codx-valuelist
-         [valueSelected]="type"
-         [name]="'DP034'"
-         (valueChange)="changeValue($event)"
-      ></codx-valuelist> -->
       <div *ngIf="type == 'G'" class="me-3 value-30px">
         <codx-input
           type="valuelist"

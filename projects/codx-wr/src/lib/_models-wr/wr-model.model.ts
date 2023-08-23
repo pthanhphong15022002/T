@@ -22,10 +22,11 @@ export class WR_WorkOrders {
   zone: string;
   zone2: string;
   seriNo: string;
-  serviceTag;
+  serviceTag: string;
   lob: string;
-  productType: string;
+  productID: string;
   productBrand: string;
+  productModel: string;
   productDesc: string;
   warrantyExpired?: Date;
   oow: boolean;

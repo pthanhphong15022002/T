@@ -69,6 +69,7 @@ export class PopupJobComponent implements OnInit {
   isHaveFile = false;
   showLabelAttachment = false;
   user: any;
+  isBoughtTM = false;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -90,6 +91,7 @@ export class PopupJobComponent implements OnInit {
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
+    this.isBoughtTM = dt?.data?.isBoughtTM;
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
     if (dt?.data?.listGroup) { // remove group task recID null
@@ -106,6 +108,7 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
+      this.stepsTasks['createTask'] = this.isBoughtTM;
     } else if (this.action == 'copy') {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();

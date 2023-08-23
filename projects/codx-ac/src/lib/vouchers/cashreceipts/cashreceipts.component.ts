@@ -672,7 +672,7 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data 
    */
   validateVourcher(data: any) {
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data])
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
@@ -764,20 +764,20 @@ export class CashreceiptsComponent extends UIComponent {
     if (ele) {
       ele.hideTab(0, false);
       switch (type) {
-        case '1':
-        case '3':
-        case '4':
+        case '11':
+        //case '3':
+        //case '4':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
-        case '2':
+        case '12':
           ele.hideTab(1, false);
           ele.hideTab(2, true);
           break;
-        case '9':
-          ele.hideTab(1, false);
-          ele.hideTab(2, false);
-          break;
+        // case '9':
+        //   ele.hideTab(1, false);
+        //   ele.hideTab(2, false);
+        //   break;
       }
     }
   }

@@ -14,6 +14,9 @@ import { HeaderComponent } from './workspace/header/header.component';
 import { PersonalComponent } from './personal/personal.component';
 import { MenuListComponent } from './personal/menu-list/menu-list.component';
 import { MasterDetailComponent } from './personal/master-detail/master-detail.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
+import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-list-approval.component';
+
 
 const routes: Routes = [
   {
@@ -31,6 +34,10 @@ const routes: Routes = [
       {
         path: 'personal/:funcID',
         component: PersonalComponent,
+      },
+      {
+        path: 'approvals/:funcID',
+        component: ApprovalsComponent,
       },
       {
         path: '',
@@ -56,7 +63,9 @@ const routes: Routes = [
     HeaderComponent,
     PersonalComponent,
     MenuListComponent,
-    MasterDetailComponent
+    MasterDetailComponent,
+    ApprovalsComponent,
+    MenuListApprovalComponent
   ],
   imports: [
     RouterModule.forChild(routes),
