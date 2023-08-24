@@ -1290,17 +1290,17 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         this.notification.notifyCode('AC0012');
       }
     }
-    if (isAddnew) {
-      this.api
-        .execAction<any>('AC_CashPaymentsLines', [event], 'SaveAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {});
-    } else {
-      this.api
-        .execAction<any>('AC_CashPaymentsLines', [event], 'UpdateAsync')
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {});
-    }
+    // if (isAddnew) {
+    //   this.api
+    //     .execAction<any>('AC_CashPaymentsLines', [event], 'SaveAsync')
+    //     .pipe(takeUntil(this.destroy$))
+    //     .subscribe((res: any) => {});
+    // } else {
+    //   this.api
+    //     .execAction<any>('AC_CashPaymentsLines', [event], 'UpdateAsync')
+    //     .pipe(takeUntil(this.destroy$))
+    //     .subscribe((res: any) => {});
+    // }
   }
 
   /**
