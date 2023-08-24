@@ -48,7 +48,17 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.action != 'add') {
+      if (new Date(this.data.warrantyExpired) > new Date()) {
+        this.data.oow = true;
+      } else {
+        this.data.oow = false;
+      }
+    } else {
+      this.data.oow = true;
+    }
+  }
 
   //#region onSave
   beforeSave(op) {
@@ -198,9 +208,17 @@ export class PopupAddWarrantyComponent implements OnInit {
         var keySv = Object.keys(serviceTag);
         for (let index = 0; index < key.length; index++) {
           for (let i = 0; i < keySv.length; i++) {
-            if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-              this.data[key[index]] = serviceTag[keySv[i]];
-            }
+            if (
+              key[index].toLowerCase() != 'owner' &&
+              key[index].toLowerCase() != 'buid' &&
+              key[index].toLowerCase() != 'CreatedOn' &&
+              key[index].toLowerCase() != 'CreatedBy' &&
+              key[index].toLowerCase() != 'ModifiedOn' &&
+              key[index].toLowerCase() != 'ModifiedBy'
+            )
+              if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
+                this.data[key[index]] = serviceTag[keySv[i]];
+              }
           }
         }
         if (new Date(this.data.warrantyExpired) > new Date()) {
