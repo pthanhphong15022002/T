@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopAddFiscalPeriodsComponent } from './pop-add-fiscal-periods/pop-add-fiscal-periods.component';
+import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods-add/fiscal-periods-auto-create.component';
 
 @Component({
   selector: 'lib-fiscal-periods',
@@ -71,6 +72,9 @@ export class FiscalPeriodsComponent extends UIComponent{
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'ACS25301':
+        this.openFormAddFiscalYear();
         break;
     }
   }
@@ -155,6 +159,35 @@ export class FiscalPeriodsComponent extends UIComponent{
     });
   }
 
+  openFormAddFiscalYear() {
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'FiscalPeriodsAutoCreate';
+    dataModel.gridViewName = 'grvFiscalPeriodsAutoCreate';
+    dataModel.entityName = 'AC_FiscalPeriodsAutoCreate';
+    opt.FormModel = dataModel;
+    opt.DataService = this.view.dataService;
+    this.cache
+      .gridViewSetup('FiscalPeriodsAutoCreate', 'grvFiscalPeriodsAutoCreate')
+      .subscribe((res) => {
+        if (res) {
+          var obj = {
+            gridViewSetup: res,
+          };
+          var dialogs = this.callfc.openForm(
+            FiscalPeriodsAutoCreateComponent,
+            '',
+            400,
+            600,
+            '',
+            obj,
+            '',
+            opt
+          );
+        }
+      });
+  }
+
   hideMoreFunction(e: any)
   {
     var bm = e.filter(
@@ -165,6 +198,14 @@ export class FiscalPeriodsComponent extends UIComponent{
     bm.forEach((morefunction) => {
       morefunction.disabled = true;
     });
+
+    this.cache.moreFunction('FiscalPeriods', 'grvFiscalPeriods')
+    .subscribe((res: any) => {
+      if(res)
+      {
+        console.log(res);
+      }
+    })
   }
   //End Function
 }

@@ -25,7 +25,7 @@ export class SearchingComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.content,
+        type: ViewType.smallcard,
         active: true,
         sameData: true,
         model: {

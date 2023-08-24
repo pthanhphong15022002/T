@@ -132,7 +132,7 @@
       </div>
       <div class="col-2 d-flex align-items-center">
         <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
-            (click)="submit()">
+            (click)="submit(0)">
             <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
           </button>
       </div>
@@ -164,7 +164,7 @@
       </div>
       <div class="col-2 d-flex align-items-center">
         <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
-            (click)="submit()">
+            (click)="submit(1)">
             <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Cấn trừ"></codx-label>
           </button>
       </div>
@@ -240,10 +240,9 @@
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div [class]="type === 0 ? 'tabset-content position-relative' : 'tabset-content position-relative hidden-checkbox-mutilple'">
-    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName" [showEmptyRecord]="false"
-      [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
-      service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false" [rowHeight]="35"
+  <div class="tabset-content position-relative">
+    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"
+      [entityName]="formModel.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)" service="AC"
       (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" hideMoreFunc="true"
       (eventAction)="actions($event)"></codx-gridview-v2>
   </div>

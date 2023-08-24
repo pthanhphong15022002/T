@@ -407,7 +407,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
     let result = [];
 
-    if(this.lead.applyProcess) {
+    if(this.lead.applyProcess && this.lead.status != '3') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
@@ -427,7 +427,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.deal,
       this.isCheckContact ? this.lstContactDeal : null,
       this.recIDContact,
-      this.lead.applyProcess ? result[0]?.stepID: '',
+      this.lead.applyProcess && this.lead.status != '3' ? result[0]?.stepID: '',
     ];
 
     await this.api
@@ -469,6 +469,8 @@ export class PopupConvertLeadComponent implements OnInit {
           let obj = {
             lead: res,
             listStep: result[1],
+            salespersonID: this.deal.salespersonID,
+            consultantID: this.deal.consultantID
           };
           this.dialog.close(obj);
         }
