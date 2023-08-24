@@ -64,6 +64,11 @@ export class DealDetailComponent implements OnInit {
     gridViewName: 'grvCMLeads',
     entityName: 'CM_Leads',
   };
+  formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
 
   isDataLoading: boolean = true;
 
@@ -332,8 +337,6 @@ export class DealDetailComponent implements OnInit {
         this.listSteps = res;
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
-      } else {
-        this.listSteps = null;
       }
     });
   }

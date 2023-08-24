@@ -1,5 +1,5 @@
 import { firstValueFrom } from 'rxjs';
-import { Component, Optional, OnInit } from '@angular/core';
+import { Component, Optional, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   ApiHttpService,
   DialogData,
@@ -20,6 +20,7 @@ export class PopupAddServicetagComponent implements OnInit {
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private changeDetector: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -68,7 +69,13 @@ export class PopupAddServicetagComponent implements OnInit {
   valueChange(e) {
     if (this.data[e?.field] != e?.data) {
       this.data[e?.field] = e?.data;
+      if (e?.field == 'productID') {
+        this.data.productType = e?.component?.itemsSelected[0]?.ProductType;
+        this.data.productBrand = e?.component?.itemsSelected[0]?.ProductBrand;
+        this.data.productModel = e?.component?.itemsSelected[0]?.ProductModel;
+      }
     }
+    this.changeDetector.detectChanges();
   }
 
   valueChangeDate(e) {
@@ -80,5 +87,6 @@ export class PopupAddServicetagComponent implements OnInit {
         this.data.oow = false;
       }
     }
+    this.changeDetector.detectChanges();
   }
 }

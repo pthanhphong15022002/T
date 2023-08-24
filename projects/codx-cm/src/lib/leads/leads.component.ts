@@ -938,13 +938,14 @@ export class LeadsComponent
               dialog.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event) {
+                  this.dataSelected.salespersonID = e.event.salespersonID;
+                  this.dataSelected.consultantID = e.event.consultantID;
                   this.dataSelected.status = '11';
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.dataSelected.applyProcess &&
-                    this.detailViewLead.reloadListStep(e.event.listStep);
+                  this.dataSelected.applyProcess &&this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });
