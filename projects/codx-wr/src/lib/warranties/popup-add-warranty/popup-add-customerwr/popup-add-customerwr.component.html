@@ -58,10 +58,9 @@
   <ng-template #systemCustomer>
     <div class="form-group mt-5">
       <codx-input
-        type="combobox"
+        [formModel]="form.formModel"
         field="customerID"
         [crrValue]="data?.customerID"
-        [refValue]="'CMCustomers'"
         (valueChange)="valueChangeCbx($event)"
       >
       </codx-input>

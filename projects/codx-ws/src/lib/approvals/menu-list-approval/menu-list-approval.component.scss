@@ -1,0 +1,19 @@
+.ws-accordion.e-accordion
+{
+    border: none;
+    .e-acrdn-header
+    {
+        border-width: 0 !important;
+        padding: 0;
+        min-height: 0;
+    }
+    .e-toggle-icon
+    {
+        height: 0;
+        min-height: 0;
+    }
+    .e-acrdn-header-content
+    {
+        color: black;
+    }
+}
