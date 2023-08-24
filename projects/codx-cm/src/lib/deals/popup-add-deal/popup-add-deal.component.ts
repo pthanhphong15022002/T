@@ -448,7 +448,6 @@ export class PopupAddDealComponent
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
         this.lstContactDeal = res;
-
         if (this.action === this.actionEdit && this.isLoad) {
           this.lstContactOld = JSON.parse(JSON.stringify(res));
           this.isLoad = false;
@@ -551,7 +550,7 @@ export class PopupAddDealComponent
       if (this.isLoading) {
         if (this.action !== this.actionEdit) {
           await this.addDealForDP();
-          await this.insertInstance();
+           this.insertInstance();
         } else {
           await this.editDealForDP();
           await this.editInstance();
@@ -559,7 +558,6 @@ export class PopupAddDealComponent
       } else {
         if (this.action !== this.actionEdit) {
           await this.insertInstance();
-          await this.onAdd();
         } else {
           await this.editInstance();
           await this.onEdit();
@@ -694,7 +692,7 @@ export class PopupAddDealComponent
     await this.getParamatersProcessDefault();
   }
 
-  async onAdd() {
+  onAdd() {
     this.addPermission(this.deal.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
@@ -850,6 +848,7 @@ export class PopupAddDealComponent
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
+        this.onAdd();
       }
     });
   }
