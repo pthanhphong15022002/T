@@ -294,17 +294,17 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
    * @param columnsGrid : danh sách cột của lưới
    */
-  beforeInitGridCashpayments(grid) {
+  beforeInitGridCashpayments(eleGrid:CodxGridviewV2Component) {
     //* Thiết lập format number theo đồng tiền hạch toán
-    // if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'B';
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'B';
-    // } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'S';
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'S';
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR2')].dataFormat = 'B';
-    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR2')].dataFormat = 'B';
-    // }
+    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('dr','B');
+      eleGrid.setFormatField('cr','B');
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('dr','S');
+      eleGrid.setFormatField('cr','S');
+      eleGrid.setFormatField('dR2','B');
+      eleGrid.setFormatField('cR2','B');
+    }
 
     //* Thiết lập datasource combobox theo sổ nhật ký
     let preAccountID = '';
@@ -317,136 +317,63 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     let dtvDIM2 = '';
     let preDIM3 = '';
     let dtvDIM3 = '';
+    this.hideFieldsCashpayment = [];
+
     if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') { //? nếu tài khoản nợ là mặc định hoặc trong danh sách
       preAccountID = '@0.Contains(AccountID)';
       dtvAccountID = `[${this.journal?.drAcctID}]`;
     }
-    
-    // columnsGrid[
-    //   columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
-    // ].predicate = preAccountID;
-    // grid.columnsGrid[
-    //   grid.columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
-    // ].dataValue = dtvAccountID;
+    eleGrid.setPredicates('accountID',preAccountID,dtvAccountID);
 
-    if (
-      (this.journal.crAcctControl == '1' ||
-        this.journal.crAcctControl == '2') &&
-      this.journal.entryMode == '1'
-    ) {
-      //? nếu tài khoản có là mặc định hoặc trong danh sách
+    if ((this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') && this.journal.entryMode == '1') { //? nếu tài khoản có là mặc định hoặc trong danh sách
       preOffsetAcctID = '@0.Contains(AccountID)';
       dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
     }
-    grid.columnsGrid[
-      grid.columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
-    ].predicate = preOffsetAcctID;
-    grid.columnsGrid[
-      grid.columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
-    ].dataValue = dtvOffsetAcctID;
-
-    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') {
-      //? nếu phòng ban là mặc định hoặc trong danh sách
+    eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
+    
+    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
       preDIM1 = '@0.Contains(DepartmentID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
-    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].predicate =
-      preDIM1;
-      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].dataValue =
-      dtvDIM1;
+    eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
+    
 
-    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') {
-      //? nếu TTCP là mặc định hoặc trong danh sách
+    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
       preDIM2 = '@0.Contains(CostCenterID)';
       dtvDIM2 = `[${this.journal?.diM2}]`;
     }
-    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].predicate =
-      preDIM2;
-      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].dataValue =
-      dtvDIM2;
+    eleGrid.setPredicates('diM2',preDIM2,dtvDIM2);
 
-    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') {
-      //? nếu mục phí là mặc định hoặc trong danh sách
+    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') { //? nếu mục phí là mặc định hoặc trong danh sách
       preDIM3 = '@0.Contains(CostItemID)';
       dtvDIM3 = `[${this.journal?.diM3}]`;
     }
-    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].predicate =
-      preDIM3;
-      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].dataValue =
-      dtvDIM3;
-
-    //* Thiết lập các field ẩn cho 2 mode tài khoản
-    let hDR2 = true;
-    let hCR2 = this.journal.entryMode == '1' ? false : true;
-
-    if (this.journal.entryMode == '1') {
-      if (this.cashpayment.currencyID == this.baseCurr) {
-        //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-        hDR2 = false; //? => ẩn field tiền Nợ,HT
-      }
-    } else {
-      //? nếu loại mode 1 tài khoản trên nhiều dòng
-      if (this.cashpayment.currencyID == this.baseCurr) {
-        //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-        hDR2 = false; //? => ẩn field tiền Có,HT
-        hCR2 = false; //? => ẩn field tiền Nợ,HT
-      }
-    }
-    if (grid.columnsGrid.findIndex((x) => x.fieldName == 'DR2') > -1) {
-      grid.columnsGrid[
-        grid.columnsGrid.findIndex((x) => x.fieldName == 'DR2')
-      ].isVisible = hDR2;
-    }
-    if (grid.columnsGrid.findIndex((x) => x.fieldName == 'CR2') > -1) {
-      grid.columnsGrid[
-        grid.columnsGrid.findIndex((x) => x.fieldName == 'CR2')
-      ].isVisible = hCR2;
-    }
+    eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
 
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    this.hideFieldsCashpayment = [];
-    if (
-      this.dialogData?.data.hideFields &&
-      this.dialogData?.data.hideFields.length > 0
-    ) {
+    
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       this.hideFieldsCashpayment = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    if (
-      !this.hideFieldsCashpayment.includes('Settlement') &&
-      this.cashpayment.subType == '1'
-    ) {
-      //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
+    if (!this.hideFieldsCashpayment.includes('Settlement') && this.cashpayment.subType == '1') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
       this.hideFieldsCashpayment.push('Settlement'); //? => ẩn field phương pháp cấn trừ
     }
-    let arrColumnOfJournal = [
-      //? danh sách các cột từ sổ nhật kí
-      'DIM1',
-      'DIM2',
-      'DIM3',
-      'ProjectID',
-      'ContractID',
-      'AssetGroupID',
-      'ObjectID',
-      'Settlement',
-    ];
-    arrColumnOfJournal.forEach((fieldName) => {
-      if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-        if (this.hideFieldsCashpayment.includes(fieldName)) {
-          //? nếu field ẩn có trong danh sách
-          if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-            grid.columnsGrid[
-              grid.columnsGrid.findIndex((x) => x.fieldName == fieldName)
-            ].isVisible = false; //? => ẩn cột
-          }
-        } else {
-          if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-            grid.columnsGrid[
-              grid.columnsGrid.findIndex((x) => x.fieldName == fieldName)
-            ].isVisible = true; //? => hiện cột
-          }
-        }
+
+    //* Thiết lập các field ẩn cho 2 mode tài khoản
+
+    if (this.journal.entryMode == '1') {
+      if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+        this.hideFieldsCashpayment.push('DR2'); //? => ẩn field tiền Nợ,HT
       }
-    });
+    } else { //? nếu loại mode 1 tài khoản trên nhiều dòng
+      if (this.cashpayment.currencyID == this.baseCurr) {
+        //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+        this.hideFieldsCashpayment.push('DR2'); //? => ẩn field tiền Có,HT
+        this.hideFieldsCashpayment.push('CR2'); //? => ẩn field tiền Nợ,HT
+      }
+    }
+    
+    eleGrid.showHideColumns(this.hideFieldsCashpayment);
   }
 
   /**
