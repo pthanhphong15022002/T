@@ -522,9 +522,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let isGroup = false;
       let isTask = false;
       if (!this.isRoleAll) {
-        isGroup = this.checRoleTask(groupTask, 'O');
+        isGroup = this.checRoleOwner(groupTask);
         if (!isGroup) {
-          isTask = this.checRoleTask(task, 'O');
+          isTask = this.checRoleOwner(task);
         }
       }
       event.forEach((res) => {
@@ -541,25 +541,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS03': //sửa
-            if (!this.isOnlyView) {
+            if (!(this.isRoleAll || isGroup || isTask)) {
               res.disabled = true;
             } else {
-              if (!(this.isRoleAll || isGroup || isTask)) {
+              if (task?.isTaskDefault && !this.isEditTimeDefault) {
                 res.disabled = true;
-              } else {
-                if (task?.isTaskDefault && !this.isEditTimeDefault) {
-                  res.disabled = true;
-                }
               }
             }
             break;
           case 'SYS04': //copy
-            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup))) {
               res.disabled = true;
             }
             break;
           case 'SYS003': //đính kèm file
-            if (!task?.isTaskDefault && !this.isOnlyView) {
+            if (!task?.isTaskDefault) {
               res.isblur = true;
             }
             break;
@@ -655,7 +651,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (event != null) {
       let isGroup = false;
       if (!this.isRoleAll) {
-        isGroup = this.checRoleTask(group, 'O');
+        isGroup = this.checRoleOwner(group);
       }
       event.forEach((res) => {
         switch (res.functionID) {
@@ -680,7 +676,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS04': //copy
-            if (!this.isRoleAll || !this.isOnlyView) {
+            if (!this.isRoleAll) {
               res.disabled = true;
             }
             break;
@@ -695,7 +691,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP08': // thêm công việc
-            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup))) {
               res.isblur = true;
             }
             break;
@@ -1770,13 +1766,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   //#region cheack
-  checRoleTask(data, type) {
-    return (
-      data.roles?.some(
-        (element) =>
-          element?.objectID == this.user.userID && element.roleType == type
-      ) || false
-    );
+  checRoleOwner(data) {
+    return this.user.userID == data?.owner;
   }
 
   checkTaskLink(task) {
