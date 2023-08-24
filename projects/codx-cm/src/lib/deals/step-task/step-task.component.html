@@ -80,7 +80,7 @@
 </div>
 
 <div *ngIf="typeTask == 2">
-  <task [customerID]="customerID" [isPause]="isPause" [entityName]="entityName"></task>
+  <task [customerID]="customerID" [isPause]="isPause" [entityName]="entityName" [owner]="owner" (saveAssign)="handelSaveAssignTask($event)"></task>
 </div>
 
 <ng-template #taskTem>
@@ -190,7 +190,7 @@
             </div>
           </div>
 
-          <div class="mt-3 ms-9">
+          <div class="mt-3 ms-9" >
             <div class="mb-3">
               <codx-label
                 class="fs-6 fw-bold"

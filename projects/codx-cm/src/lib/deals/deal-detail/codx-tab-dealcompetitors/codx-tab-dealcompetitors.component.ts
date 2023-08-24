@@ -66,9 +66,9 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   async ngOnInit() {
     this.formModel = await this.cmSv.getFormModel('CM02011');
     let dataModel = new FormModel();
-    dataModel.formName = 'AddressBook';
-    dataModel.gridViewName = 'grvAddressBook';
-    dataModel.entityName = 'BS_AddressBook';
+    dataModel.formName = 'CMCompetitors';
+    dataModel.gridViewName = 'grvCMCompetitors';
+    dataModel.entityName = 'CM_Competitors';
     this.formModelAddress = dataModel;
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {

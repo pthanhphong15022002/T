@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -26,6 +27,7 @@ import {
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddWarrantyComponent } from './popup-add-warranty/popup-add-warranty.component';
 import { PopupUpdateReasonCodeComponent } from './popup-update-reasoncode/popup-update-reasoncode.component';
+import { PopupAssignEngineerComponent } from './popup-assign-engineer/popup-assign-engineer.component';
 
 @Component({
   selector: 'lib-warranties',
@@ -106,7 +108,7 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => console.log(this.view.dataService), 5000);
+    // setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
@@ -141,19 +143,16 @@ export class WarrantiesComponent
         },
       },
     ];
-
-    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'WR';
-    this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'WorkOrdersBusiness';
-    this.request.method = 'GetListWorkOrdersAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
+    // this.request = new ResourceModel(); //Phúc comment lại vì cái này để chạy những view kanban schudule, tự chạy hàm riêng, request riêng.
+    // this.request.service = 'WR';
+    // this.request.assemblyName = 'ERM.Business.WR';
+    // this.request.className = 'WorkOrdersBusiness';
+    // this.request.method = 'GetListWorkOrdersAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
     // this.resourceKanban = new ResourceModel();
     // this.resourceKanban.service = 'DP';
     // this.resourceKanban.assemblyName = 'DP';
@@ -213,7 +212,13 @@ export class WarrantiesComponent
         this.copy(data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
+        break;
+      case 'WR0101_1':
+        this.updateReasonCode(data);
+        break;
+      case 'WR0101_2':
+        this.updateAssignEngineer(data);
         break;
       default:
         var customData = {
@@ -230,9 +235,9 @@ export class WarrantiesComponent
           this,
           customData
         );
-        this.detectorRef.detectChanges();
         break;
     }
+    this.detectorRef.detectChanges();
   }
 
   changeDataMF($event, data, type = null) {
@@ -341,6 +346,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -379,6 +385,7 @@ export class WarrantiesComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
           };
           var dialog = this.callfc.openSide(
             PopupAddWarrantyComponent,
@@ -415,6 +422,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'copy',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -432,22 +440,88 @@ export class WarrantiesComponent
       });
     });
   }
+
+  async delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteWorkOrderAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
   //#endregion
 
   //#region update reason code
   updateReasonCode(data) {
+    this.cache
+      .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
+      .subscribe((res) => {
+        if (res) {
+          let dialogModel = new DialogModel();
+          dialogModel.zIndex = 1010;
+          let formModel = new FormModel();
+
+          formModel.entityName = 'WR_WorkOrderUpdates';
+          formModel.formName = 'WRWorkOrderUpdates';
+          formModel.gridViewName = 'grvWRWorkOrderUpdates';
+          dialogModel.FormModel = formModel;
+          let obj = {
+            title: this.titleAction,
+            data: data,
+            gridViewSetup: res,
+          };
+          this.callFc
+            .openForm(
+              PopupUpdateReasonCodeComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e?.event && e?.event != null) {
+                this.detectorRef.detectChanges();
+              }
+            });
+        }
+      });
+  }
+  //#endregion
+
+  //#region Update assign engineer
+  updateAssignEngineer(data) {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.view?.formModel;
+    dialogModel.FormModel = this.view.formModel;
     let obj = {
       title: this.titleAction,
+      data: data,
     };
     this.callFc
       .openForm(
-        PopupUpdateReasonCodeComponent,
+        PopupAssignEngineerComponent,
         '',
-        600,
-        700,
+        500,
+        400,
         '',
         obj,
         '',
@@ -455,6 +529,9 @@ export class WarrantiesComponent
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
+          this.dataSelected.engineerID = e?.event[0];
+          this.dataSelected.comment = e?.event[1];
+          this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });

@@ -11,8 +11,13 @@ import {
 } from 'codx-core';
 import { Observable, Subject, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
-import { IJournal } from './interfaces/IJournal.interface';
-import { HiddenFieldName as HiddenFieldName } from './models/HiddenFieldName.model';
+import {
+  IJournal,
+  Vll004,
+  Vll067,
+  Vll075,
+} from './interfaces/IJournal.interface';
+import { HiddenFieldName } from './models/HiddenFieldName.model';
 
 @Injectable({
   providedIn: 'root',
@@ -68,8 +73,8 @@ export class JournalService {
     saveFunction: () => void
   ): void {
     if (
-      journal.assignRule === '0' && // thu cong
-      this.duplicateVoucherNo === '0' &&
+      journal.assignRule === Vll075.ThuCong &&
+      this.duplicateVoucherNo === '2' &&
       model.voucherNo
     ) {
       const options = new DataRequest();
@@ -122,35 +127,35 @@ export class JournalService {
   ): string[] {
     let hiddenFields: string[] = [];
 
-    if (journal?.drAcctControl == '9') {
+    if (journal?.drAcctControl == Vll067.KhongKiemSoat) {
       hiddenFields.push(hiddenFieldName.drAcctControl);
     }
 
-    if (journal?.crAcctControl == '9') {
+    if (journal?.crAcctControl == Vll067.KhongKiemSoat) {
       hiddenFields.push(hiddenFieldName.crAcctControl);
     }
 
-    if (journal?.diM1Control == '9') {
+    if (journal?.diM1Control == Vll067.KhongKiemSoat) {
       hiddenFields.push('DIM1');
     }
 
-    if (journal?.diM2Control == '9') {
+    if (journal?.diM2Control == Vll067.KhongKiemSoat) {
       hiddenFields.push('DIM2');
     }
 
-    if (journal?.diM3Control == '9') {
+    if (journal?.diM3Control == Vll067.KhongKiemSoat) {
       hiddenFields.push('DIM3');
     }
 
-    if (journal?.projectControl == '0') {
+    if (journal?.projectControl == Vll004.KhongSuDung) {
       hiddenFields.push(hiddenFieldName.projectControl);
     }
 
-    if (journal?.assetControl == '0') {
+    if (journal?.assetControl == Vll004.KhongSuDung) {
       hiddenFields.push(hiddenFieldName.assetControl);
     }
 
-    if (journal?.loanControl === '0') {
+    if (journal?.loanControl === Vll004.KhongSuDung) {
     }
 
     if (journal?.vatControl == '0') {
@@ -190,8 +195,9 @@ export class JournalService {
     patchKey: string,
     isEdit: boolean
   ): void {
-    // co dinh, danh sach
-    if (['1', '2'].includes(journal[vll067Prop])) {
+    if (
+      [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(journal[vll067Prop])
+    ) {
       (cbx.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
         [`@0.Contains(${filterKey})`],
         [`[${journal[valueProp]}]`]
@@ -199,19 +205,14 @@ export class JournalService {
     }
 
     // mac dinh, co dinh
-    if (['0', '1'].includes(journal[vll067Prop]) && !isEdit) {
+    if (
+      [Vll067.MacDinh, Vll067.GiaTriCoDinh].includes(journal[vll067Prop]) &&
+      !isEdit
+    ) {
       formGroup?.patchValue({
         [patchKey]: journal[valueProp],
       });
     }
-  }
-
-  getVoucherNoPlaceholderText(): Observable<string> {
-    return this.acService.getDefaultNameFromMoreFunctions(
-      'AutoVoucherNumber',
-      'grvAutoVoucherNumber',
-      'ACT04'
-    );
   }
 
   hasVouchers(journal: IJournal): Observable<boolean> {
@@ -259,21 +260,5 @@ export class JournalService {
 
   getUsers(): Observable<any[]> {
     return this.acService.loadComboboxData('Share_Users', 'AD');
-  }
-
-  getRoleType(field: string): string {
-    if (field === 'creater') {
-      return '1';
-    } else if (field === 'approver') {
-      return '2';
-    } else if (field === 'poster') {
-      return '3';
-    } else if (field === 'unposter') {
-      return '4';
-    } else if (field === 'sharer') {
-      return '6';
-    }
-
-    return null;
   }
 }

@@ -433,8 +433,11 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll">
-          <div class="btn btn-white btn-icon tab-action">
+        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+          <div
+            class="btn btn-white btn-icon tab-action"
+            (click)="clickShowTab(!isShow)"
+          >
             <span class="icon-unfold_more icon-20"></span>
           </div>
           <div class="instance-select">

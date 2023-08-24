@@ -24,7 +24,10 @@ import {
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Observable, lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import {
+  IJournal,
+  Vll075,
+} from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
@@ -75,7 +78,6 @@ export class SalesinvoicesAddComponent
     allowDeleting: true,
     mode: 'Normal',
   };
-  voucherNoPlaceholderText$: Observable<string>;
 
   isEdit: boolean = false;
   isReturnInvoice: boolean;
@@ -126,17 +128,14 @@ export class SalesinvoicesAddComponent
         this.gvsSalesInvoices = res;
       });
 
-    this.cache.companySetting().subscribe(res => {
+    this.cache.companySetting().subscribe((res) => {
       this.baseCurr = res[0]?.baseCurr;
-    })
-
-    this.voucherNoPlaceholderText$ =
-      this.journalService.getVoucherNoPlaceholderText();
+    });
 
     this.editSettings.mode =
       this.journal.addNewMode == '2' ? 'Dialog' : 'Normal';
 
-    if (this.journal.assignRule === '2') {
+    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
       this.ignoredFields.push('VoucherNo');
     }
 
@@ -466,7 +465,7 @@ export class SalesinvoicesAddComponent
 
     // bùa 🤬
     // edit => escape => edit again => lỗi
-    if (e.type === "closeEdit" && !e.data.isAddNew) {
+    if (e.type === 'closeEdit' && !e.data.isAddNew) {
       this.lines[e.data._rowIndex] = e.data;
     }
   }

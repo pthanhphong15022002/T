@@ -161,6 +161,7 @@
         [formModel]="formModel"
         [Group]="formGroup"
         (valueChange)="valueChange($event)"
+        (render)="renderChange($event)"
       ></codx-input>
     </div>
     <div class="col-6">
@@ -510,7 +511,7 @@
   <button
     type="button"
     class="btn btn-sm btn-light-primary"
-    (click)="addBenefit('add',null)"
+    (click)="addBenefit('add', null)"
     *ngIf="actionType != 'view'"
   >
     <i class="icon-add icon-16 ms-n1"></i>
@@ -559,13 +560,13 @@
             ></span>
           </div>
           <codx-mfunc
-          [formModel]="benefitFormModel"
-          (clickMF)="clickMF($event, benefit)"
-          type="hover"
-          [dataItem]="benefit"
-         (changeDataMF)="handleShowHideMF($event)"
-        >
-        </codx-mfunc>
+            [formModel]="benefitFormModel"
+            (clickMF)="clickMF($event, benefit)"
+            type="hover"
+            [dataItem]="benefit"
+            (changeDataMF)="handleShowHideMF($event)"
+          >
+          </codx-mfunc>
         </div>
       </div>
     </div>

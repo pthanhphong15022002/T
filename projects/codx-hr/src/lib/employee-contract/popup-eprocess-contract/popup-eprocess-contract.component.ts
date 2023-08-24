@@ -439,7 +439,11 @@ export class PopupEProcessContractComponent
       return;
     }
 
-    if (this.data.limitMonths === null && this.data.expiredDate === null) {
+    if (
+      this.data.limitMonths === null &&
+      this.itemContractGroup !== '1' &&
+      this.data.expiredDate === null
+    ) {
       this.notify.notifyCode(
         'SYS009',
         0,
@@ -532,6 +536,13 @@ export class PopupEProcessContractComponent
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
+    }
+  }
+
+  renderChange(event) {
+    let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
+    if (tmp) {
+      this.itemContractGroup = tmp;
     }
   }
 

@@ -6,6 +6,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { AuthStore, ButtonModel, DialogModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupCalculateAnnualLeaveComponent } from './popup-calculate-annual-leave/popup-calculate-annual-leave.component';
+import { EmployeeAnnualLeaveByOrgComponent } from './employee-annual-leave-by-org/employee-annual-leave-by-org.component';
 
 @Component({
   selector: 'lib-employee-annual-leave',
@@ -30,6 +31,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   popupLoading: boolean = false;
   request: ResourceModel;
   lang: any;
+  @ViewChild('treeViewDetail') treeViewDetail: EmployeeAnnualLeaveByOrgComponent;
 
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
@@ -202,6 +204,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     // reset view data and recall get data
     if (event?.view?.type === 1 || event?.type === 1) {
       if (this.resetView) {
+        // this.view.currentView.dataService.data = [];
+        // this.view.currentView.dataService.oriData = [];
         this.view.dataService.data = [];
         this.view.dataService.oriData = [];
         this.view.loadData();
@@ -231,9 +235,25 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
     popup.closed.subscribe(e => {
       if (e?.event) {
-        this.view.dataService.data = [];
-        this.view.dataService.oriData = [];
-        this.view.loadData();
+        if(this.view.currentView.viewModel.type == 1){
+          this.view.dataService.data = [];
+          this.view.dataService.oriData = [];
+          this.view.loadData();
+        }else if(this.view.currentView.viewModel.type == 151){
+          if(this.treeViewDetail){
+            let ins = setInterval(() => {
+              if (this.treeViewDetail) {
+                // this.grid.dataService.rowCount = 0;
+                // this.grid.dataService.data = [];
+                clearInterval(ins);
+                this.treeViewDetail.grid.refresh();
+              }
+            }, 500);
+        
+            this.detectorRef.detectChanges();
+          }
+        }
+
       }
     })
   }

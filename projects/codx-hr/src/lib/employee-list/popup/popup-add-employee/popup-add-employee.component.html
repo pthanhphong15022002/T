@@ -33,13 +33,9 @@
         <div>
           <codx-label [formModel]="formModel" name="lblEmployeeInfor" [default]="'THÔNG TIN NHÂN VIÊN'"
             [classList]="'text-primary fs-6 d-block mb-2'"></codx-label>
-          <codx-img #codxImg [objectId]="data.employeeID" 
-            [objectType]="'HR_Employees'" [funcId]="formModel.funcID"
-            [isAllowEdit]="true" [imgOn]="codxModifiedOn" [width]="90" 
-            [imageType]="'circle'" 
-            [updateDirect]="true"
-            [funcId]="'HRT03a1'" 
-            [isAllowChangeInputID]="true"
+          <codx-img #codxImg [objectId]="data.employeeID" [objectName]="data?.employeeName"
+            [objectType]="'HR_Employees'" [funcId]="formModel.funcID" [isAllowEdit]="true" [imgOn]="codxModifiedOn"
+            [width]="90" [imageType]="'circle'" [updateDirect]="true" [funcId]="'HRT03a1'" [isAllowChangeInputID]="true"
             (reloadChanged)="action === 'edit' || action === 'add' ? changeAvatar($event) : null">
           </codx-img>
           <!-- <codx-img [funcId]="'HRT03a1'" [objectId]="data?.employeeID" [objectName]="data?.employeeName"
@@ -545,7 +541,8 @@
 <!-- footer -->
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="clickBtnSave()" [disabled]="!hasChangedData && action == 'edit'">
+    <button type="button" class="btn btn-primary" (click)="clickBtnSave()"
+      [disabled]="!hasChangedData && action == 'edit'">
       <codx-label [formModel]="formModel" name="lblSubmit" [default]="'Lưu'">
       </codx-label>
     </button>
