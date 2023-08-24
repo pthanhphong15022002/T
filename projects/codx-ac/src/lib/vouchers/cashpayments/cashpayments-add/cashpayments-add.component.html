@@ -588,10 +588,10 @@
             : 'grvCashPaymentsLinesOneAccount'
         " [editSettings]="editSettingsGrid" entityName="AC_CashPaymentsLines" [allowFiltering]="true"
         predicates="TransID=@0" [dataValues]="cashpayment.recID" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
-        service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
+        service="AC" [editOnClick]="true" [autoFitColumns]="false"
         (gridInit)="beforeInitGridCashpayments($event)" rowHeight="35" [showEmptyRecord]="false" rowNoField="rowNo"
         (onAddNew)="onSaveLine($event, true)" (eventAction)="onActionGridCashpayment($event)"
-        (onEdit)="onSaveLine($event, false)" (cellChanged)="cellLineChange($event)"
+        (onEdit)="onSaveLine($event, false)" (cellChanged)="cellLineChange($event)" (actionCompleted)="actionComplete($event)"
         [isCustom]="false"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
