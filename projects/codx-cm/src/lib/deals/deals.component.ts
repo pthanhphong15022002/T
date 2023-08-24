@@ -1127,7 +1127,6 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.detailViewDeal.promiseAllAsync();
         this.view.dataService.update(e.event).subscribe();
         //up kaban
         if (this.kanban) {
@@ -1136,6 +1135,7 @@ export class DealsComponent
           this.renderTotal(dt.stepID, 'add', money);
           this.kanban.refresh();
         }
+     //   this.detailViewDeal.promiseAllAsync();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1170,7 +1170,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.detailViewDeal.promiseAllAsync();
+
             this.view.dataService.update(e.event).subscribe();
             //up kaban
             if (
@@ -1188,6 +1188,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
+            this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
         });
