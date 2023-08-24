@@ -252,6 +252,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 });
                 //this.attachment2.saveFiles();
                 //Upload file
+                debugger
                 this.attachment2.saveFilesObservable().then((saveFile) => {
                   if (saveFile) {
                     saveFile.subscribe((saved: any) => {

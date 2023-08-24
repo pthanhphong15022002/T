@@ -85,13 +85,13 @@
           ></span>
         </ng-template> -->
         <div class="d-flex mb-1" *ngIf="getAddress(data?.competitorID)">
-          <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+          <span class="icon-16 me-1 text-gray-700"></span>
           <span
             [ngbTooltip]="address"
             class="text-gray-900 line-clamp line-clamp-1"
             [innerHTML]="
               getAddress(data?.competitorID)
-                | formatvalue : formModelAddress : 'AdressName'
+                | formatvalue : formModelAddress : 'Address'
                 | async
             "
           ></span>
