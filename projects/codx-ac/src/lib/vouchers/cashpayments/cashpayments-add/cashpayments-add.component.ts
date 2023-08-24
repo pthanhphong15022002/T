@@ -296,15 +296,15 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   beforeInitGridCashpayments(grid) {
     //* Thiết lập format number theo đồng tiền hạch toán
-    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'B';
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'B';
-    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'S';
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'S';
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR2')].dataFormat = 'B';
-      columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR2')].dataFormat = 'B';
-    }
+    // if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'B';
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'B';
+    // } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'S';
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR')].dataFormat = 'S';
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR2')].dataFormat = 'B';
+    //   columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'CR2')].dataFormat = 'B';
+    // }
 
     //* Thiết lập datasource combobox theo sổ nhật ký
     let preAccountID = '';
@@ -322,12 +322,12 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       dtvAccountID = `[${this.journal?.drAcctID}]`;
     }
     
-    columnsGrid[
-      columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
-    ].predicate = preAccountID;
-    grid.columnsGrid[
-      grid.columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
-    ].dataValue = dtvAccountID;
+    // columnsGrid[
+    //   columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
+    // ].predicate = preAccountID;
+    // grid.columnsGrid[
+    //   grid.columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
+    // ].dataValue = dtvAccountID;
 
     if (
       (this.journal.crAcctControl == '1' ||
