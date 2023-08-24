@@ -234,27 +234,28 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       option);
 
     popup.closed.subscribe(e => {
-      if (e?.event) {
-        if(this.view.currentView.viewModel.type == 1){
-          this.view.dataService.data = [];
-          this.view.dataService.oriData = [];
-          this.view.loadData();
-        }else if(this.view.currentView.viewModel.type == 151){
-          if(this.treeViewDetail){
-            let ins = setInterval(() => {
-              if (this.treeViewDetail) {
-                // this.grid.dataService.rowCount = 0;
-                // this.grid.dataService.data = [];
-                clearInterval(ins);
-                this.treeViewDetail.grid.refresh();
-              }
-            }, 500);
+      // if (e?.event) {
+      //   if(this.view.currentView.viewModel.type == 1){
+      //     this.view.dataService.data = [];
+      //     this.view.dataService.oriData = [];
+      //     this.view.loadData();
+      //   }else if(this.view.currentView.viewModel.type == 151){
+      //     if(this.treeViewDetail){
+      //       let ins = setInterval(() => {
+      //         if (this.treeViewDetail) {
+      //           // this.grid.dataService.rowCount = 0;
+      //           // this.grid.dataService.data = [];
+      //           clearInterval(ins);
+      //           this.treeViewDetail.grid.refresh();
+      //         }
+      //       }, 500);
         
-            this.detectorRef.detectChanges();
-          }
-        }
+      //       this.detectorRef.detectChanges();
+      //     }
+      //   }
 
-      }
+      // }
+      this.view.dataService.removeIndex(1).subscribe();
     })
   }
   getLanguage() {

@@ -43,7 +43,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   dataVllSupplier: any;
   fromDateFormat;
   toDateFormat;
-  ops = ['m', 'y'];
+  ops = ['d', 'm', 'y'];
   headerTextCalendar: any = [];
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
@@ -162,13 +162,6 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-    if (this.trainCourseObj) {
-      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
-    } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
-    }
   }
 
   setTitle(evt: any){
@@ -178,6 +171,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
 
   onInit(): void {
+    if (this.trainCourseObj) {
+      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         this.formModel = formModel;
@@ -347,6 +347,14 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         this.trainCourseObj.trainTo = strDay;
       }
       this.trainCourseObj.trainToDate = event.fromDate;
+    }
+    this.formGroup.patchValue(this.trainCourseObj);
+    if (this.trainCourseObj) {
+      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
     }
   }
   getFormatDate(trainFrom: string) {
