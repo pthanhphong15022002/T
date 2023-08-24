@@ -70,7 +70,7 @@
 </ng-template>
 <ng-template #colALPreYearHRTAL01 let-data>
     <div class="d-flex align-items-center p-3">
-        <span #emailField class="data-text-color" *ngIf="data?.alPreYear;else noALPreYear">
+        <span class="data-text-color" *ngIf="data?.alPreYear >= 0;else noALPreYear">
             {{data.alPreYear}}
         </span>
         <ng-template #noALPreYear>
@@ -80,7 +80,7 @@
 </ng-template>
 <ng-template #colALThisYearHRTAL01 let-data>
     <div class="d-flex align-items-center p-3">
-        <span #emailField class="data-text-color fw-bold" *ngIf="data?.alThisYear;else noALThisYear">
+        <span class="data-text-color fw-bold" *ngIf="data?.alThisYear;else noALThisYear">
             {{data.alThisYear}}
         </span>
         <ng-template #noALThisYear>
@@ -208,7 +208,7 @@
     <div class="d-flex flex-column p-3">
         <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
             [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
-            <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
+            <span class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                 {{data.alYearMonth}}
             </span>
             <ng-template #noALYearMonth>

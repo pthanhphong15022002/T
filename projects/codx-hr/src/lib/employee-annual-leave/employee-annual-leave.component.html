@@ -431,7 +431,7 @@
 
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
-    <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
+    <lib-employee-annual-leave-by-org #treeViewDetail [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
         [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff" [rowHeight]="70">
     </lib-employee-annual-leave-by-org>
 </ng-template>

@@ -39,7 +39,7 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 30px;" *ngIf="action == 'add' || cashpayment?.status == '0'"
+      <div style="margin-left: 30px" *ngIf="action == 'add' || cashpayment?.status == '0'"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #cbxSub [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
           cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
@@ -60,14 +60,14 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
-  <div style="height: 250px !important;">
+  <div style="height: 250px !important">
     <ejs-tab enablePersistence="true" (selected)="tabSelectedMaster($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral"
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
                 [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
             </div>
           </ng-template>
@@ -79,7 +79,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-file-earmark-text icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral2"
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral2"
                 [formModel]="dialog.formModel" default="Thông tin chuyển khoản"></codx-label>
             </div>
           </ng-template>
@@ -91,15 +91,16 @@
     </ejs-tab>
   </div>
   <!-- End: Tab General -->
-  <div style="height: calc(100vh - 436px)!important;">
-     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)" (selected)="tabSelectedDetail($event)">
+  <div style="height: calc(100vh - 436px) !important">
+    <!-- Start: Tab Detail -->
+    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)"
+      (selected)="tabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-format_list_numbered icon-18 me-2"></i>
-              <codx-label style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail1"
+              <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
                 [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
             </div>
           </ng-template>
@@ -110,14 +111,20 @@
         <e-tabitem tabIndex="-1" aria-hidden="true">
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
-              <i *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '12' || cashpayment?.subType == '3' || cashpayment?.subType == '4'"
-                class="icon-format_list_numbered icon-18 me-2"></i>
+              <i *ngIf="
+                  cashpayment?.subType == '2' ||
+                  cashpayment?.subType == '12' ||
+                  cashpayment?.subType == '3' ||
+                  cashpayment?.subType == '4'
+                " class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="cashpayment?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label
-                *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '3' || cashpayment?.subType == '4'"
-                style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail2" [formModel]="dialog.formModel"
-                default="Chi tiết"></codx-label>
-              <codx-label *ngIf="cashpayment?.subType == '9'" style="font-size: 14px !important;" class="fw-bold"
+              <codx-label *ngIf="
+                  cashpayment?.subType == '2' ||
+                  cashpayment?.subType == '3' ||
+                  cashpayment?.subType == '4'
+                " style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail2"
+                [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
+              <codx-label *ngIf="cashpayment?.subType == '9'" style="font-size: 14px !important" class="fw-bold"
                 fiedName="lblDetail2" [formModel]="dialog.formModel" default="Hóa đơn công nợ"></codx-label>
             </div>
           </ng-template>
@@ -129,7 +136,7 @@
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-graph-up icon-18 me-2"></i>
-              <codx-label style="font-size: 14px !important;" class="fw-bold" fiedName="lblDetail3"
+              <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail3"
                 [formModel]="dialog.formModel" default="Hóa đơn GTGT"></codx-label>
             </div>
           </ng-template>
@@ -139,11 +146,10 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-     <!-- End: Tab Detail -->
+    <!-- End: Tab Detail -->
   </div>
-  <div class="row ac-empty-record">
-  </div>
-  <div style="height: 35px !important;" class="listcash-content row">
+  <div class="row ac-empty-record"></div>
+  <div style="height: 35px !important" class="listcash-content row">
     <div class="row align-items-center">
       <div *ngIf="formCashPayment.formGroup" id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
@@ -159,28 +165,28 @@
 
 <!-- Start: Footer -->
 <ng-template #TmpFooter>
-  <div style="display: grid !important;" ngClass="collape"
+  <div style="display: grid !important" ngClass="collape"
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="cashpayment">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button tab-index="15" *ngIf="cashpayment?.status == '0'" style="border: 1px solid;" id="discard" type="button"
-        class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscardVoucher(); $event.preventDefault();"
-        (click)="onDiscardVoucher()">
+      <button tab-index="15" *ngIf="cashpayment?.status == '0'" style="border: 1px solid" id="discard" type="button"
+        class="btn btn-md btn-light-danger me-2 rounded-15"
+        (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
           <i class="icon-cancel icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button tab-index="16" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important;"
+      <button tab-index="16" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important"
         type="button" class="btn btn-md btn-light-primary me-2 rounded-15"
-        (keydown.enter)="onSaveAddVoucher(); $event.preventDefault();" (click)="onSaveAddVoucher()">
+        (keydown.enter)="onSaveAddVoucher(); $event.preventDefault()" (click)="onSaveAddVoucher()">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
       <button tab-index="17" id="save" type="button" class="btn btn-md btn-light-primary rounded-15"
-        style="border: 1px solid var(--primary-dark) !important;" (keydown.enter)="onSaveVoucher(); $event.preventDefault();"
-        (click)="onSaveVoucher()">
+        style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSaveVoucher(); $event.preventDefault()" (click)="onSaveVoucher()">
         <div class="d-flex align-items-center">
           <i class="icon-save_alt icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
@@ -188,12 +194,22 @@
       </button>
     </div>
     <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel" [objectID]="cashpayment?.recID"
-    [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+      [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </div>
 </ng-template>
 <!-- End: Footer -->
 
 <!-- Start: TmpTabGeneral -->
+
+<ng-template #TmpTabGeneral1>
+  <ng-container *ngIf="formCashPayment.formGroup">
+    <codx-input #tVourcherNo [Group]="formCashPayment.formGroup" field="voucherNo"
+      [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)"
+      [disabled]="journal?.assignRule != '0'">
+    </codx-input>
+  </ng-container>
+</ng-template>
+
 <ng-template #TmpTabGeneral>
   <ng-container *ngIf="formCashPayment.formGroup">
     <div class="p-3 tab-basic ac-form-master">
@@ -203,7 +219,7 @@
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="CashBookID"
+                  <codx-label style="white-space: nowrap !important" fiedName="CashBookID"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -215,7 +231,7 @@
               </div>
               <div class="col-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="TotalAmt"
+                  <codx-label style="white-space: nowrap !important" fiedName="TotalAmt"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -227,7 +243,7 @@
               <div class="col-3">
                 <div class="form-group">
                   <div class="form-group">
-                    <codx-label style="white-space: nowrap !important;" fiedName="ReasonID"
+                    <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                       [formModel]="formCashPayment.formModel">
                     </codx-label>
                     <div class="ac-input">
@@ -243,33 +259,36 @@
               <div class="col-6">
                 <div class="form-group">
                   <div class="form-group">
-                    <codx-label style="white-space: nowrap !important;" *ngIf="
-                        cashpayment.subType == '1' || cashpayment.subType == '2'" [formModel]="formCashPayment.formModel" default="Nhà cung cấp">
+                    <codx-label style="white-space: nowrap !important" *ngIf="
+                        cashpayment.subType == '1' || cashpayment.subType == '2'
+                      " [formModel]="formCashPayment.formModel" default="Nhà cung cấp">
                     </codx-label>
-                    <codx-label style="white-space: nowrap !important;" *ngIf="
+                    <codx-label style="white-space: nowrap !important" *ngIf="
                         cashpayment.subType == '3' || cashpayment.subType == '4'
                       " [formModel]="formCashPayment.formModel" default="Nhân viên">
                     </codx-label>
-                    <codx-label style="white-space: nowrap !important;" *ngIf="cashpayment.subType == '9'
-                      " fiedName="ObjectID" [formModel]="formCashPayment.formModel" default="Đối tượng">
+                    <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '9'"
+                      fiedName="ObjectID" [formModel]="formCashPayment.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
                       <codx-input #eleCbxObjectID [Group]="formCashPayment.formGroup"
-                        [formModel]="formCashPayment.formModel" field="objectID" (valueChange)="valueChangeMaster($event)">
+                        [formModel]="formCashPayment.formModel" field="objectID"
+                        (valueChange)="valueChangeMaster($event)">
                       </codx-input>
                     </div>
                   </div>
                 </div>
               </div>
-              <div [style]="cashpayment.subType == '3' || cashpayment.subType == '4'
+              <div [style]="
+                  cashpayment.subType == '3' || cashpayment.subType == '4'
                     ? 'display:inline'
                     : 'display:none'
                 " class="col-3 ac-type-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" *ngIf="cashpayment.subType == '3'"
+                  <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '3'"
                     default="Đề nghị tạm ứng" fiedName="RefID" [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-label style="white-space: nowrap !important;" *ngIf="cashpayment.subType == '4'"
+                  <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '4'"
                     default="Đề nghị thanh toán" fiedName="RefID" [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -285,10 +304,10 @@
                     : 'display:none'
                 " class="col-3 ac-type-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" *ngIf="cashpayment.subType == '3'"
+                  <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '3'"
                     fiedName="lblCashAdvance" default="Số tiền tạm ứng" [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-label style="white-space: nowrap !important;" *ngIf="cashpayment.subType == '4'"
+                  <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '4'"
                     fiedName="lblCashAdvance" default="Số tiền thanh toán" [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -296,23 +315,28 @@
                       [crrValue]="dRAdv">
                     </codx-input>
                   </div>
-
                 </div>
               </div>
-              <div [style]="cashpayment.subType != '3' && cashpayment.subType != '4' ? 'display:inline' : 'display:none'" class="col-6 ac-type-1">
+              <div [style]="
+                  cashpayment.subType != '3' && cashpayment.subType != '4'
+                    ? 'display:inline'
+                    : 'display:none'
+                " class="col-6 ac-type-1">
                 <div class="form-group">
                   <div class="form-group">
-                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0410'" style="white-space: nowrap !important;" fiedName="Payee"
-                      [formModel]="formCashPayment.formModel">
+                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0410'" style="white-space: nowrap !important"
+                      fiedName="Payee" [formModel]="formCashPayment.formModel">
                     </codx-label>
-                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0429'" style="white-space: nowrap !important;" fiedName="BankAcctID"
-                      [formModel]="formCashPayment.formModel">
+                    <codx-label *ngIf="dialog.formModel.funcID == 'ACT0429'" style="white-space: nowrap !important"
+                      fiedName="BankAcctID" [formModel]="formCashPayment.formModel">
                     </codx-label>
                     <div class="ac-input">
-                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0410'" #eleCbxPayee [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
-                        field="payee" (valueChange)="valueChangeMaster($event)"></codx-input>
-                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0429'" #eleCbxBankAcct [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel"
-                        field="bankAcctID" (valueChange)="valueChangeMaster($event)"></codx-input>
+                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0410'" #eleCbxPayee
+                        [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel" field="payee"
+                        (valueChange)="valueChangeMaster($event)"></codx-input>
+                      <codx-input *ngIf="dialog.formModel.funcID == 'ACT0429'" #eleCbxBankAcct
+                        [Group]="formCashPayment.formGroup" [formModel]="formCashPayment.formModel" field="bankAcctID"
+                        (valueChange)="valueChangeMaster($event)"></codx-input>
                     </div>
                   </div>
                 </div>
@@ -321,7 +345,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-group mb-0">
-                  <codx-label style="white-space: nowrap !important;" fiedName="Memo"
+                  <codx-label style="white-space: nowrap !important" fiedName="Memo"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -339,26 +363,35 @@
             <div *ngIf="journal" class="row justify-content-end">
               <div class="col-5">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="CurrencyID"
+                  <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <div [class]="(!journal.multiCurrency) ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input #cbxCurrencyID [disabled]="(!journal.multiCurrency)" [Group]="formCashPayment.formGroup"
-                      field="currencyID" [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)">
+                  <div [class]="
+                      !journal.multiCurrency ? 'ac-input-disable' : 'ac-input'
+                    ">
+                    <codx-input #cbxCurrencyID [disabled]="!journal.multiCurrency" [Group]="formCashPayment.formGroup"
+                      field="currencyID" [formModel]="formCashPayment.formModel"
+                      (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
                 </div>
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="ExchangeRate"
+                  <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <div
-                    [class]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr) ? 'ac-input-disable' : 'ac-input'">
-                    <codx-input #tExchange [disabled]="(!journal.multiCurrency || cashpayment.currencyID == baseCurr)"
-                      [Group]="formCashPayment.formGroup" field="exchangeRate" [formModel]="formCashPayment.formModel"
-                      (controlBlur)="valueChangeNumber($event)">
+                  <div [class]="
+                      !journal.multiCurrency ||
+                      cashpayment.currencyID == baseCurr
+                        ? 'ac-input-disable'
+                        : 'ac-input'
+                    ">
+                    <codx-input #tExchange [disabled]="
+                        !journal.multiCurrency ||
+                        cashpayment.currencyID == baseCurr
+                      " [Group]="formCashPayment.formGroup" field="exchangeRate"
+                      [formModel]="formCashPayment.formModel" (controlBlur)="valueChangeNumber($event)">
                     </codx-input>
                   </div>
                 </div>
@@ -367,22 +400,27 @@
             <div class="row justify-content-end">
               <div class="col-5">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="VoucherDate"
+                  <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
                     <codx-input #tVoucherDate [Group]="formCashPayment.formGroup"
-                      [formModel]="formCashPayment.formModel" field="voucherDate" (valueChange)="valueChangeMaster($event)">
+                      [formModel]="formCashPayment.formModel" field="voucherDate"
+                      (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
                 </div>
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="VoucherNo"
+                  <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <div [class]="journal?.assignRule != '0' ? 'ac-input-disable' : 'ac-input'">
+                  <div [class]="
+                      journal?.assignRule != '0'
+                        ? 'ac-input-disable'
+                        : 'ac-input'
+                    ">
                     <codx-input #tVourcherNo [Group]="formCashPayment.formGroup" field="voucherNo"
                       [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)"
                       [disabled]="journal?.assignRule != '0'">
@@ -394,7 +432,7 @@
             <div class="row justify-content-end">
               <div class="col-9">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="PostedDate"
+                  <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -424,7 +462,7 @@
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankPay" default="Tài khoản chi"
+                  <codx-label style="white-space: nowrap !important" fiedName="lblBankPay" default="Tài khoản chi"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input [crrValue]="bankAcctIDPay" field="lblBankPay" disabled="true" type="text">
@@ -433,7 +471,7 @@
               </div>
               <div class="col-5">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
+                  <codx-label style="white-space: nowrap !important" fiedName="lblBankName" default="Ngân hàng"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input [crrValue]="bankNamePay" field="lblBankName" disabled="true" type="text">
@@ -442,11 +480,11 @@
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
-                      [formModel]="formCashPayment.formModel">
-                    </codx-label>
-                    <codx-input [crrValue]="legalName"  field="lblOwner" disabled="true" type="text">
-                    </codx-input>
+                  <codx-label style="white-space: nowrap !important" fiedName="lblOwner" default="Tên chủ tài khoản"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input [crrValue]="legalName" field="lblOwner" disabled="true" type="text">
+                  </codx-input>
                 </div>
               </div>
             </div>
@@ -459,8 +497,8 @@
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblAccountReceive" default="Tài khoản nhận"
-                    [formModel]="formCashPayment.formModel">
+                  <codx-label style="white-space: nowrap !important" fiedName="lblAccountReceive"
+                    default="Tài khoản nhận" [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input [crrValue]="bankAcctIDReceive" field="cashBookID" disabled="true" type="text">
                   </codx-input>
@@ -468,7 +506,7 @@
               </div>
               <div class="col-5">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblBankName" default="Ngân hàng"
+                  <codx-label style="white-space: nowrap !important" fiedName="lblBankName" default="Ngân hàng"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input [crrValue]="bankReceiveName" field="lblBankName" disabled="true" type="text">
@@ -477,11 +515,11 @@
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblOwner" default="Tên chủ tài khoản"
-                      [formModel]="formCashPayment.formModel">
-                    </codx-label>
-                    <codx-input [crrValue]="ownerReceive" field="lblOwner" disabled="true" type="text">
-                    </codx-input>
+                  <codx-label style="white-space: nowrap !important" fiedName="lblOwner" default="Tên chủ tài khoản"
+                    [formModel]="formCashPayment.formModel">
+                  </codx-label>
+                  <codx-input [crrValue]="ownerReceive" field="lblOwner" disabled="true" type="text">
+                  </codx-input>
                 </div>
               </div>
             </div>
@@ -494,7 +532,7 @@
             <div class="row">
               <div class="col-3">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblAmout" default="Số tiền"
+                  <codx-label style="white-space: nowrap !important" fiedName="lblAmout" default="Số tiền"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input field="lblAmout" disabled="true" type="text">
@@ -503,7 +541,7 @@
               </div>
               <div class="col-5">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="lblAlphabet" default="Bảng chữ"
+                  <codx-label style="white-space: nowrap !important" fiedName="lblAlphabet" default="Bảng chữ"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <codx-input field="lblAlphabet" disabled="true" type="text">
@@ -512,7 +550,7 @@
               </div>
               <div class="col-4">
                 <div class="form-group">
-                  <codx-label style="white-space: nowrap !important;" fiedName="Memo2"
+                  <codx-label style="white-space: nowrap !important" fiedName="Memo2"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
                   <div class="ac-input">
@@ -533,28 +571,44 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="((cashpayment?.subType == '1') || (cashpayment?.subType == '9') || (cashpayment?.subType == '3' && subTypeAdv == '1') || (cashpayment?.subType == '4' && subTypeAdv == '1'))">
+  <ng-container *ngIf="
+      cashpayment?.subType == '1' ||
+      cashpayment?.subType == '9' ||
+      (cashpayment?.subType == '3' && subTypeAdv == '1') ||
+      (cashpayment?.subType == '4' && subTypeAdv == '1')
+    ">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [allowRowDragAndDrop]="true" autoAddRow="false"
-        [formName]="journal.entryMode == '1' ? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'" [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'" [editSettings]="editSettingsGrid"
-        entityName="AC_CashPaymentsLines" [allowFiltering]="true" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
-        [dataSource]="cashpaymentline" service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
+      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [allowRowDragAndDrop]="true" autoAddRow="false" [formName]="
+          journal.entryMode == '1'
+            ? 'CashPaymentsLines'
+            : 'CashPaymentsLinesOneAccount'
+        " [gridViewName]="
+          journal.entryMode == '1'
+            ? 'grvCashPaymentsLines'
+            : 'grvCashPaymentsLinesOneAccount'
+        " [editSettings]="editSettingsGrid" entityName="AC_CashPaymentsLines" [allowFiltering]="true"
+        predicates="TransID=@0" [dataValues]="cashpayment.recID" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
+        service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
         (gridInit)="beforeInitGridCashpayments($event)" rowHeight="35" [showEmptyRecord]="false" rowNoField="rowNo"
-        (onAddNew)="onSaveLine($event,true)" (eventAction)="onActionGridCashpayment($event)" (onEdit)="onSaveLine($event,false)"
-        (cellChanged)="cellLineChange($event)" [isCustom]="false"></codx-gridview-v2>
+        (onAddNew)="onSaveLine($event, true)" (eventAction)="onActionGridCashpayment($event)"
+        (onEdit)="onSaveLine($event, false)" (cellChanged)="cellLineChange($event)"
+        [isCustom]="false"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="cashpayment?.subType == '1'|| cashpayment?.subType == '11' || cashpayment?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="9" id="btnadd"
-              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="saveMasterBeforeAddRow('1'); $event.preventDefault();"
+          <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
+            <button style="border: 1px solid !important;" tab-index="10" id="btnadd"
+              class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="saveMasterBeforeAddRow('1'); $event.preventDefault();"
               (click)="saveMasterBeforeAddRow('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
           <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="10" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault();" (click)="saveMasterBeforeAddRow('2')">
+            <button style="border: 1px solid !important" tab-index="10" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="
+                saveMasterBeforeAddRow('2'); $event.preventDefault()
+              " (click)="saveMasterBeforeAddRow('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat"
                 default="Chọn đề nghị tạm ứng"></codx-label>
@@ -569,38 +623,55 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="((cashpayment?.subType == '2') ||(cashpayment?.subType == '3' && subTypeAdv == '2') || (cashpayment?.subType == '4' && subTypeAdv == '2')  || (cashpayment?.subType == '9'))">
+  <ng-container *ngIf="
+      cashpayment?.subType == '2' ||
+      (cashpayment?.subType == '3' && subTypeAdv == '2') ||
+      (cashpayment?.subType == '4' && subTypeAdv == '2') ||
+      cashpayment?.subType == '9'
+    ">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices" [showEmptyRecord]="false"
-        entityName="AC_SettledInvoices" showRowNumber="true" rowHeight="35" [editOnClick]="true" [allowFiltering]="true"
-        [autoAddRow]="true" [allowSorting]="true" [hideMoreFunc]="true"
+      <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
+        [showEmptyRecord]="false" entityName="AC_SettledInvoices" showRowNumber="true" rowHeight="35"
+        [editOnClick]="true" [allowFiltering]="true" [autoAddRow]="true" [allowSorting]="true" [hideMoreFunc]="true"
         service="AC" [autoLoad]="false" [autoFitColumns]="false" [dataSource]="settledInvoices"
         (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="cellLineChangeSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
         <div class="d-flex align-items-center">
-          <div
-            *ngIf="action != 'edit' && (cashpayment?.subType == '2' || cashpayment?.subType == '9' || cashpayment?.subType == '12' )">
-            <button style="border: 1px solid !important;" tab-index="9" id="btnset"
-              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="setTypeSettledInvoices(0);saveMasterBeforeAddRow('3'); $event.preventDefault();"
-              (click)="setTypeSettledInvoices(0);saveMasterBeforeAddRow('3')">
+          <div *ngIf="
+              action != 'edit' &&
+              (cashpayment?.subType == '2' ||
+                cashpayment?.subType == '9' ||
+                cashpayment?.subType == '12')
+            ">
+            <button style="border: 1px solid !important" tab-index="9" id="btnset"
+              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
+                setTypeSettledInvoices(0);
+                saveMasterBeforeAddRow('3');
+                $event.preventDefault()
+              " (click)="setTypeSettledInvoices(0); saveMasterBeforeAddRow('3')">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
                 default="Đề xuất thanh toán"></codx-label>
             </button>
           </div>
-          <div *ngIf="(cashpayment?.subType == '2') || (cashpayment?.subType == '9')"
-            class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="10" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="setTypeSettledInvoices(1);saveMasterBeforeAddRow('3'); $event.preventDefault();" (click)="setTypeSettledInvoices(1);saveMasterBeforeAddRow('3')">
+          <div *ngIf="cashpayment?.subType == '2' || cashpayment?.subType == '9'" class="ms-2">
+            <button style="border: 1px solid !important" tab-index="10" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="
+                setTypeSettledInvoices(1);
+                saveMasterBeforeAddRow('3');
+                $event.preventDefault()
+              " (click)="setTypeSettledInvoices(1); saveMasterBeforeAddRow('3')">
               <i class="icon-i-clipboard-plus icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice"
                 default="Cấn trừ tự động"></codx-label>
             </button>
           </div>
           <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="9" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault();" (click)="saveMasterBeforeAddRow('2')">
+            <button style="border: 1px solid !important" tab-index="9" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="
+                saveMasterBeforeAddRow('2'); $event.preventDefault()
+              " (click)="saveMasterBeforeAddRow('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat"
                 default="Chọn đề nghị tạm ứng"></codx-label>
@@ -623,20 +694,23 @@
 
 <!-- Start: Grid VATInvoices -->
 <ng-template #TmpTabVATInvoices>
-  <ng-container *ngIf="(cashpayment?.subType == '9')">
+  <ng-container *ngIf="cashpayment?.subType == '9'">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices"
-        [editOnClick]="true" entityName="AC_VATInvoices" rowHeight="35" [editSettings]="editSettingsGrid" rowNoField="rowNo"
-        (cellChanged)="cellLineChangeVATInvoices($event)" [allowFiltering]="true" [autoAddRow]="false" [allowSorting]="true"
-        (onAddNew)="onSaveLineVATInvoices($event,true)" (eventAction)="onActionGridVatInvoice($event)" (onEdit)="onSaveLineVATInvoices($event,false)"
+      <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices" [editOnClick]="true"
+        entityName="AC_VATInvoices" rowHeight="35" [editSettings]="editSettingsGrid" rowNoField="rowNo"
+        (cellChanged)="cellLineChangeVATInvoices($event)" [allowFiltering]="true" [autoAddRow]="false"
+        [allowSorting]="true" (onAddNew)="onSaveLineVATInvoices($event, true)"
+        (eventAction)="onActionGridVatInvoice($event)" (onEdit)="onSaveLineVATInvoices($event, false)"
         [hideMoreFunc]="true" service="AC" [autoLoad]="false" [autoFitColumns]="false" [showEmptyRecord]="false"
         [dataSource]="_vatInvoices">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="14" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('4'); $event.preventDefault();" (click)="saveMasterBeforeAddRow('4')">
+            <button style="border: 1px solid !important" tab-index="14" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="
+                saveMasterBeforeAddRow('4'); $event.preventDefault()
+              " (click)="saveMasterBeforeAddRow('4')">
               <i class="icon-i-graph-up icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
             </button>
@@ -650,9 +724,7 @@
 
 <!-- Start: More function Cashpayment -->
 <ng-template #TmpMFCashpayment let-data>
-  <codx-mfunc [formModel]="fmCashpaymentLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
+  <codx-mfunc [formModel]="fmCashpaymentLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)"
+    type="view"></codx-mfunc>
 </ng-template>
 <!-- End: More function Cashpayment -->
-
-
-

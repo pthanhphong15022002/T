@@ -497,7 +497,12 @@
       </div>
 
       <div class="text-dark fw-bold mt-5 mb-3">Thông tin thẻ đơn vị</div>
-      <select class="form-select" #teams (change)="onSelected(teams.value)">
+      <select
+        id="teams"
+        class="form-select"
+        #teams
+        (change)="onSelected(teams, teams.value)"
+      >
         <option
           value="Yes"
           [selected]="this.dataTree.isGetManager === 'Yes' ? true : false"
@@ -510,6 +515,26 @@
         >
           Chỉ hiển thị tên đơn vị
         </option>
+      </select>
+
+      <div class="text-dark fw-bold mt-5 mb-3">Load theo cấp</div>
+      <select
+        id="level"
+        class="form-select"
+        #level
+        (change)="onSelected(level, level.value)"
+      >
+        <option
+          *ngFor="let data of treeLevel"
+          [value]="data.value"
+          [selected]="this.dataTree.level == data.value ? true : false"
+        >
+          {{ data.name }}
+        </option>
+        <!-- <option value="0" [selected]="this.dataTree.level">1 Cấp</option>
+        <option value="1" [selected]="this.dataTree.level">2 Cấp</option>
+        <option value="2" [selected]="this.dataTree.level">3 Cấp</option>
+        <option value="10" [selected]="this.dataTree.level">Tất cả</option> -->
       </select>
     </div>
 
@@ -2745,7 +2770,7 @@
 </ng-template>
 <div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
-    [cursorItem]="0"
+    [cursorItem]="cursorItem"
     [highlightItem]="0"
     [navigationMode]="navigationMode"
     [items]="items"

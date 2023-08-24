@@ -163,13 +163,12 @@ export class DealDetailComponent implements OnInit {
           icon: 'icon-i-link',
         };
         this.tabControl.push(references);
-
         this.getTags(this.dataSelected);
-        this.dataSelected = this.dataSelected;
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
+        this.dataSelected = this.dataSelected;
       }
     }
   }

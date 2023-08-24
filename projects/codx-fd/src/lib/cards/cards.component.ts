@@ -31,7 +31,7 @@ export class CardsComponent extends UIComponent {
   service = 'FD';
   assemblyName = 'ERM.Business.FD';
   className = 'CardsBusiness';
-  method = 'GetListDataByWebAsync';
+  method = 'GetListCardAsync';//'GetListDataByWebAsync';
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
 
