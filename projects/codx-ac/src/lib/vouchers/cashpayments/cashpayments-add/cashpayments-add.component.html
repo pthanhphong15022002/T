@@ -544,8 +544,8 @@
         (cellChanged)="cellLineChange($event)" [isCustom]="false"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="cashpayment?.subType == '1'|| cashpayment?.subType == '11' || cashpayment?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="9" id="btnadd"
+          <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
+            <button style="border: 1px solid !important;" tab-index="10" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="saveMasterBeforeAddRow('1'); $event.preventDefault();"
               (click)="saveMasterBeforeAddRow('1')">
               <i class="icon-playlist_add icon-16"></i>
