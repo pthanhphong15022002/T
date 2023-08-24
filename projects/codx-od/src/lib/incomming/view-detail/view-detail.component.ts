@@ -1746,7 +1746,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               refType: this.formModel?.entityName,
               refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
-              approverProcess:ap,
+              approverProcess:ap,// thêm điều kiện
             },
             '',
             dialogModel
