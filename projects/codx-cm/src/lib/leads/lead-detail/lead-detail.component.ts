@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CRUDService,
   CacheService,
   DataRequest,
@@ -46,6 +47,7 @@ export class LeadDetailComponent implements OnInit {
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('comment') comment: TemplateRef<any>;
 
+  seesionID = '';
   viewTag: string = '';
   tabControl = [];
   listRoles = [];
@@ -80,7 +82,8 @@ export class LeadDetailComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private api: ApiHttpService,
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
@@ -196,8 +199,9 @@ export class LeadDetailComponent implements OnInit {
   }
 
   async promiseAllLoad() {
+    this.seesionID = this.dataSelected.applyProcess ? this.dataSelected.refID : this.dataSelected.recID;
+    this.loadTree(this.seesionID);
     this.isDataLoading = true;
-    this.getTree();
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
     this.dataSelected.dealID && (await this.getTmpDeal());
   }
@@ -315,7 +319,7 @@ export class LeadDetailComponent implements OnInit {
     let transferControl = this.dataSelected.steps.transferControl;
     if (transferControl == '0') return;
   }
-  saveAssignTask(e) {}
+
   changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
@@ -337,6 +341,26 @@ export class LeadDetailComponent implements OnInit {
       : this.dataSelected.recID;
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
+    });
+  }
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.seesionID);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
     });
   }
 }
