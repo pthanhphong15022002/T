@@ -43,24 +43,29 @@
     </div>
 
     <div class="w-20 min-w-150px px-2">
-      {{ data.percentage }}
-      <span *ngIf="data.hasIncludeBenefits == 1">
-        <i class="border-0 text-primary icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
-      </span>
+      <div class="d-flex align-items-center tooltip-benefits">
+        <span>{{ data.percentage }}</span>
+        <div class="ms-2" *ngIf="data.hasIncludeBenefits == 1">
+          <i class="text-hover-primary icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
+        </div>
+      </div>
     </div>
     <ng-template #toolTipBenefits>
-      <div>
-        <codx-label 
+    <div class="d-flex flex-column py-2 ps-2 min-w-300px bg-body">
+      <div class="d-flex align-items-center">
+        <codx-label class="text-dark fw-bold me-2"
         name="lblPercentageOnHover"
         [formModel]="view.formModel"
         [default]="'Tỷ lệ (%):'"
       >
       </codx-label>
+      <span class="text-gray-600">
         {{ data.percentage }}%
+      </span>
       </div>
 
-      <div class="mt-3">
-        <codx-label 
+      <div class="mt-3 d-flex align-items-center">
+        <codx-label class="text-dark fw-bold"
           name="lblSalaryOnHover"
           [formModel]="view.formModel"
           [default]="'Mức lương:'"
@@ -75,13 +80,13 @@
         </span>
       </div>
       <div class="mt-3">
-        <codx-label 
+        <codx-label class="text-dark fw-bold"
           name="lblIncludeBenefitsOnHover"
           [formModel]="view.formModel"
           [default]="'Phụ cấp:'"
         >
         </codx-label>
-        <span class="badge badge-success border-0 ms-2">
+        <span class="badge badge-success border-0 mt-1">
             <span *ngFor="let item of data?.includeBenefits.split(';')">
               <span
               class="badge badge-success border-0 ms-2"
@@ -102,6 +107,7 @@
             </span>
         </span>
       </div>
+    </div>
     </ng-template>
 
     <div class="w-25 min-w-300px px-2">
