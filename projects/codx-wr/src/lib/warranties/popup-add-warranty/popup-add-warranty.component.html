@@ -247,14 +247,14 @@
             <button
               [ngClass]="action == 'edit' ? 'disabled' : ''"
               type="button"
-              class="btn btn-sm btn-primary"
+              class="btn btn-outline-primary"
               (click)="clickAddCustomer('switch')"
             >
               <i class="icon-person_add_alt_1 icon-16 me-1"></i>
               <codx-label
                 name="lblSwitchCustomer"
                 [formModel]="form.formModel"
-                default="Đổi khách hàng"
+                default="Đổi thông tin bảo hành"
               ></codx-label>
             </button>
           </div>

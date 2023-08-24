@@ -122,27 +122,15 @@ implements OnInit{
   };
   
   formGroupPolicyConstraints;
-  constraintsObj = {
-    policyID: '',
-    gender: '',
-    ageFrom: 0,
-    policyType: 'Benefit',
-    ageTo: 0,
-    relative: '',
-    relativeAgeFrom: 0,
-    relativeAgeTo: 0,
-    trainLevel: '',
-    trainField: '',
-    certificate: ''
-  };
+  constraintsObj : any;
 
   fmKow: FormModel = {
 
   };
 
-  grvSetup
-  grvSetupPolicyDetail
-  grvSetupPolicyConstraint
+  grvSetup: any;
+  grvSetupPolicyDetail : any;
+  grvSetupPolicyConstraint : any;
   benefitFuncID = 'HRTEM0403'
 
   isHiddenCbxConstraint = true;
@@ -603,6 +591,7 @@ implements OnInit{
       );
       popup.closed.subscribe((res) => {
         if(res.event){
+          debugger
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
           if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
@@ -874,6 +863,8 @@ implements OnInit{
     )
     .subscribe((res) => {
       this.grvSetup = res;
+      console.log('grv setup ne', this.grvSetup);
+      
     });
 
     this.cache
@@ -909,11 +900,21 @@ implements OnInit{
             
             this.formModel.currentData = this.benefitPolicyObj;
             this.formGroup.patchValue(this.benefitPolicyObj);
-            if(this.constraintsObj){
-              debugger
+              this.constraintsObj = {
+                policyID: '',
+                gender: '',
+                ageFrom: 0,
+                policyType: 'Benefit',
+                ageTo: 0,
+                relative: '',
+                relativeAgeFrom: 0,
+                relativeAgeTo: 0,
+                trainLevel: '',
+                trainField: '',
+                certificate: ''
+              };
               this.formGroupPolicyConstraints?.patchValue(this.constraintsObj);
               this.fmPolicyConstraints.currentData = this.constraintsObj;
-            }
             this.df.detectChanges();
             this.isAfterRender = true;
           }
@@ -927,6 +928,7 @@ implements OnInit{
             return parseInt(a) - parseInt(b);
           });
           this.GetPolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+            console.log('constraint obj ne', this.constraintsObj);
             this.constraintsObj = res;
             this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
             this.fmPolicyConstraints.currentData = this.constraintsObj;
