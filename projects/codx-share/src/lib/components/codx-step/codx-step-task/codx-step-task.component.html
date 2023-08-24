@@ -198,12 +198,11 @@
                     </div>
 
                     <div class="ms-5">
-                      <!-- <codx-fields-detail-temp
- 
-                      [dataStep]="currentStep?.fields[0]"
+                      <codx-fields-detail-temp
+                      [dataStep]="currentStep"
                       [showColumnControl]="1"
                     >
-                    </codx-fields-detail-temp> -->
+                    </codx-fields-detail-temp>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
