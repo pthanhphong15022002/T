@@ -213,7 +213,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree) tree.setNodeTree(item);
+        if (tree && (this.funcID != "DMT00" || (this.funcID == "DMT00" && this.codxview?.currentView?.currentComponent?.treeView?.data[0]?.items && this.codxview?.currentView?.currentComponent?.treeView?.data[0]?.items.length > 0))) tree.setNodeTree(item);
         if(this.view.dataService.data.length == 0)
           this.view.dataService.data.push(item);
         // var ele = document.getElementsByClassName('item-selected');
