@@ -6,6 +6,7 @@ import {
   DialogRef,
   Util,
 } from 'codx-core';
+import { CodxWrService } from '../../../codx-wr.service';
 
 @Component({
   selector: 'lib-popup-add-customerwr',
@@ -22,6 +23,7 @@ export class PopupAddCustomerWrComponent {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private changeDetectoref: ChangeDetectorRef,
+    private wrSv: CodxWrService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -37,7 +39,6 @@ export class PopupAddCustomerWrComponent {
       return;
     }
     this.dialog.close([this.data, this.radioChecked]);
-
   }
   //#endregion
 
@@ -91,20 +92,15 @@ export class PopupAddCustomerWrComponent {
             this.data.province = res?.provinceID;
             this.data.district = res?.districtID;
             if (this.data.category == '1') {
-              this.api
-                .execSv<any>(
-                  'CM',
-                  'ERM.Business.CM',
-                  'CustomersBusiness',
-                  'GetOneAsync',
-                  [e?.data]
-                )
-                .subscribe((ele) => {
-                  if (ele) {
-                    this.data.mobile = ele?.mobile;
-                    this.data.email = ele?.email;
-                  }
-                });
+              this.wrSv.getOneContact(res?.recID).subscribe((ele) => {
+                if (ele) {
+                  this.data.contactName = ele?.contactName;
+                  this.data.mobile = ele?.mobile;
+                  this.data.email = ele?.email;
+                }
+              });
+            }else{
+              this.data.contactName = '';
             }
           }
           this.changeDetectoref.detectChanges();
@@ -115,6 +111,9 @@ export class PopupAddCustomerWrComponent {
   valueChange(e) {
     if (e?.data != this.data[e?.field]) {
       this.data[e?.field] = e?.data;
+      if(this.data.category == '2'){
+        this.data.contactName = '';
+      }
     }
     this.changeDetectoref.detectChanges();
   }
