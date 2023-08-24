@@ -192,8 +192,9 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
       this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
       .subscribe(res => {
         console.log(res);
-        if (res[2]?.count > 0) {
+        if (res[2]?.count > 0 || res[0].count > 0) {
           this.hasAddData = true;
+          this.dialogRef.close(this.hasAddData);
           //this.dialogRef.close(res[0]);
         }
       })

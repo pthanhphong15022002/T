@@ -46,7 +46,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
-    <div tabindex="-1" style="height: calc(90vh - 325px) !important;">
+    <div tabindex="-1" style="height: calc(90vh - 348px) !important;">
       <ejs-tab #tabObj>
         <e-tabitems>
           <e-tabitem>
@@ -87,6 +87,89 @@
 <ng-template #tabBasic>
   <div class="p-3 bg-gray-100 tab-basic ac-form-master">
     <div class="row">
+      <div class="col-3">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="objectID" default="Đối tượng">
+          </codx-label>
+          <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
+        </div>
+      </div>
+      <div class="col-1">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="AccountID"
+            [formModel]="dialog.formModel">
+          </codx-label>
+          <codx-input type="combobox" refType="4" refValue="AccountsAC" field="accountID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="lblVoucherType"
+            [formModel]="dialog.formModel" default="Loại hóa đơn">
+          </codx-label>
+          <codx-input field="voucherType" [crrValue]="'0'" type="valuelist" refValue="AC082"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="InvoiceDueDate"
+            [formModel]="dialog.formModel" default="Lọc từ ngày">
+          </codx-label>
+          <codx-input field="invoiceDueDate" (valueChange)="valueChange($event)" type="datetime" format="d" placeholder=" ">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="lblDate" default="Xét trong khoảng">
+          </codx-label>
+          <codx-input type="text" field="date" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-2 d-flex align-items-center">
+        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
+            (click)="submit(0)">
+            <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
+          </button>
+      </div>
+    </div>
+    <div class="row"> 
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
+          </codx-label>
+          <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)"
+            (keyUpEnter)="payAmtEnter($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-1">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
+          </codx-label>
+          <codx-input field="currencyID" (valueChange)="valueChange($event)" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <codx-label style="white-space: nowrap !important;" fiedName="lblType" [formModel]="dialog.formModel" default="Cấn trừ hóa đơn">
+          </codx-label>
+          <codx-input type="valuelist" [crrValue]="'2'" refValue="AC083" field="payType"
+            (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+      <div class="col-2 d-flex align-items-center">
+        <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
+            (click)="submit(1)">
+            <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Cấn trừ"></codx-label>
+          </button>
+      </div>
+    </div>
+    <!-- <div class="row">
       <div class="col-12 ac-left">
         <div class="row">
           <div class="col-4">
@@ -139,8 +222,8 @@
           </ng-container>
         </div>
       </div>
-    </div>
-    <div class="row">
+    </div> -->
+    <!-- <div class="row">
       <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
             (click)="submit()">
@@ -151,16 +234,15 @@
             </div>
           </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 <!-- End: Tab basic -->
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
-  <div [class]="type === 0 ? 'tabset-content position-relative' : 'tabset-content position-relative hidden-checkbox-mutilple'">
-    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName" [showEmptyRecord]="false"
-      [gridViewName]="formModel.gridViewName" [entityName]="formModel.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
-      service="AC" [autoLoad]="false" [editSettings]="editSettings" [autoFitColumns]="false" [rowHeight]="35"
+  <div class="tabset-content position-relative">
+    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"
+      [entityName]="formModel.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)" service="AC"
       (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" hideMoreFunc="true"
       (eventAction)="actions($event)"></codx-gridview-v2>
   </div>

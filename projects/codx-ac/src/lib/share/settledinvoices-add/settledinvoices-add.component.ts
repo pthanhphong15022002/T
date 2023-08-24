@@ -41,7 +41,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   dialog!: DialogRef;
   title: string;
   cashpayment: any;
-  type: number;
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
@@ -60,12 +59,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   morefunction: any;
   payAmt: number = 0;
   sort:any = Array<SortModel> ;
-  editSettings: any = {
-    allowAdding: true,
-    allowDeleting: true,
-    allowEditing: true,
-    mode: 'Normal',
-  };
   isInit:any = false;
   private destroy$ = new Subject<void>();
   constructor(
@@ -80,7 +73,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.cashpayment = dialogData.data.cashpayment;
     this.objectName = dialogData.data.objectName;
-    this.type = dialogData.data.typeSettledInvoices;
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
@@ -107,10 +99,8 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
     this.mapPredicates.set('objectID', 'ObjectID = @0');
     this.mapDataValues.set('objectID', this.cashpayment.objectID);
-    if(this.type == 1){
-      this.payAmt = this.cashpayment.totalAmt;
-      this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
-    }  
+    this.payAmt = this.cashpayment.totalAmt;
+    this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
   }
   //#endregion
 
@@ -260,7 +250,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     }
   }
 
-  submit() {
+  submit(type:number) {
     let predicates = Array.from(
       this.mapPredicates,
       ([name, value]) => value
@@ -272,16 +262,19 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
 
     this.gridModel.predicates = predicates;
     this.gridModel.dataValues = dataValues;
-    this.loadData();
+    this.loadData(type);
   }
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    this.dialog.close(data);
-    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'AddListAsync', [
-      this.cashpayment,
-      data,
-    ]).pipe(takeUntil(this.destroy$)).subscribe();
+    data.forEach(item => {
+      item.transID = this.cashpayment.recID;
+    });
+    this.api.execAction('AC_SettledInvoices',data,'SaveAsync',true).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (!res.error) {
+        this.dialog.close(data);
+      }
+    })
   }
 
   paymentAmt(data) {
@@ -362,7 +355,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     });
   }
 
-  loadData() {
+  loadData(type) {
     // this.gridModel.predicate = this.morefunction.predicate;
     // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
@@ -377,12 +370,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       this.cashpayment.currencyID,
       this.cashpayment.exchangeRate,
       this.payAmt,
-      this.type,
+      type,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
       if (res && res.length) {
         if (res[0].length > 0) {
           this.subInvoices = res[0];
-          if (this.type == 1) {
+          if (type == 1) {
             setTimeout(() => {
               this.grid.gridRef?.selectRows(res[2]);
             }, 100);

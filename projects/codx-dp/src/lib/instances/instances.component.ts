@@ -1252,11 +1252,11 @@ export class InstancesComponent
   changeView(e) {
     switch (e?.view.type) {
       case 2:
-        this.showButtonAdd = true;
+        // this.showButtonAdd = true;
         this.viewsCurrent = 'd-';
         break;
       case 6:
-        this.showButtonAdd = true;
+        // this.showButtonAdd = true;
         if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
         else this.kanban = (this.view.currentView as any).kanban;
         this.viewsCurrent = 'k-';

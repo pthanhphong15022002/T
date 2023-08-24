@@ -7,7 +7,6 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { Layout } from '@syncfusion/ej2-angular-diagrams';
 import {
   ApiHttpService,
   AuthService,
@@ -19,7 +18,7 @@ import {
 } from 'codx-core';
 import { LayoutComponent } from '../_layout/layout.component';
 import { GridModels } from '../models/tmpModel';
-import { Browser } from '@syncfusion/ej2-base';
+
 import {
   AccumulationChart,
   AccumulationChartComponent,

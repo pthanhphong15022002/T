@@ -1045,14 +1045,14 @@ codx-header
   box-shadow: none !important;
 }
 
-.e-toolbar .e-tbar-btn:focus,
-.e-toolbar .e-tbar-btn:hover,
-.e-toolbar .e-active-view .e-tbar-btn,
-.e-toolbar .e-active-view .e-tbar-btn:hover {
-  background: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: var(--white);
-}
+// .e-toolbar .e-tbar-btn:focus,
+// .e-toolbar .e-tbar-btn:hover,
+// .e-toolbar .e-active-view .e-tbar-btn,
+// .e-toolbar .e-active-view .e-tbar-btn:hover {
+//   background: var(--primary) !important;
+//   border-color: var(--primary) !important;
+//   color: var(--white);
+// }
 
 .codx-theme .e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text {
   color: var(--white) !important;
@@ -3361,6 +3361,10 @@ codx-card-center .card.codx_cardcenter{
     height: 34px;
   }
 }
+.tm-meeting #Content-Fillter.width-20 {
+  left: 0px;
+  top: 0;
+}
 
 #Content-Fillter.filter-form {
   height: calc(100% + 16px);
@@ -3537,9 +3541,6 @@ codx-view-list-tree{
 .e-pane .aside-menu{
   .menu-nav .menu-item >.d-flex.align-items-center:hover{
     background-color: transparent;
-    span{
-      color: var(--gray-600);
-    }
   }
   .menu-nav .menu-item .item-selected{
     color: var(--primary-dark);
@@ -3727,11 +3728,7 @@ codx-view-tree-targets .menu-sub{
 .contract-grid .e-table{
   width: 100%!important;
 }
-codx-attachment.h-35px{
-  .overflow-auto.mh-200px{
-    min-height: 35px;
-  }
-}
+
 
 .badge-light {
   color:var(--gray-400);
@@ -3747,4 +3744,10 @@ codx-attachment.h-35px{
   height: 20px!important;
   min-width: 20px!important;
   min-height: 20px!important;
+}
+.tooltip-benefits{
+ .tooltip-inner{
+  min-width: 350px;
+  text-align: left;
+ }
 }

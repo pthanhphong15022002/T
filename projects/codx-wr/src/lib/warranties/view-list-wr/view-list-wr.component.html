@@ -78,18 +78,27 @@
     class="d-flex align-items-center justify-content-between"
     (dblclick)="dbClick(data)"
   >
-    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
+    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
       <div class="mb-1">
-        ROF:
+        <codx-label
+          style="white-space: nowrap"
+          class="text-dark fw-bold"
+          fiedName="ROF"
+          [formModel]="formModel"
+        ></codx-label>
         <span
-          [innerHTML]="
-            data.orderNo | formatvalue : formModel : 'OrderNo' | async
-          "
+          class="text-primary fw-bold"
+          [innerHTML]="data.sla | formatvalue : formModel : 'SLA' | async"
         ></span>
       </div>
 
       <div class="mb-1">
-        SLA:
+        <codx-label
+          style="white-space: nowrap"
+          class="text-dark fw-bold"
+          fiedName="SLA"
+          [formModel]="formModel"
+        ></codx-label>
         <span
           [innerHTML]="data.sla | formatvalue : formModel : 'SLA' | async"
         ></span>
@@ -97,7 +106,7 @@
       <div class="mb-1 d-flex flex-row">
         <span class="icon-home_work icon-16 me-2 text-gray-700 fs-7"
           ><ng-template>
-            <codx-label fiedName="Address" [formModel]="formModel"></codx-label>
+            <codx-label fiedName="SiteID" [formModel]="formModel"></codx-label>
           </ng-template>
         </span>
         <span
@@ -110,11 +119,12 @@
       </div>
     </div>
 
-    <div class="w-250px min-w-250px pe-6 d-flex flex-column">
+    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
       <div class="mb-1">
         <span
+          class="text-dark fw-bold"
           [innerHTML]="
-            data.contactName | formatvalue : formModel : 'ContactName' | async
+            data.customerName | formatvalue : formModel : 'CustomerName' | async
           "
         ></span>
       </div>
@@ -133,11 +143,9 @@
         ></span>
       </div>
       <div class="mb-1 d-flex flex-row">
-        <span class="icon-mail icon-16 me-2 text-gray-700 fs-7"
-          ><ng-template>
-            <codx-label fiedName="Email" [formModel]="formModel"></codx-label>
-          </ng-template>
-        </span>
+        <ng-template>
+          <codx-label fiedName="Email" [formModel]="formModel"></codx-label>
+        </ng-template>
         <span
           class="text-gray-700 fs-7"
           [ngbTooltip]="data?.email"
@@ -160,14 +168,16 @@
       </div>
     </div>
 
-    <div class="w-250px min-w-250px pe-6 d-flex flex-column">
+    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
       <div class="mb-1">
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
-            data.productLine | formatvalue : formModel : 'ProductLine' | async
+            data.productType | formatvalue : formModel : 'productType' | async
           "
         ></span>
         <span
+          class="fw-bold text-dark"
           [innerHTML]="
             data.productDesc | formatvalue : formModel : 'ProductDesc' | async
           "
@@ -175,49 +185,78 @@
       </div>
 
       <div class="mb-1">
-        Seri/IME:
+        <codx-label
+          style="white-space: nowrap"
+          class="fw-bold text-dark"
+          fiedName="SeriNo"
+          [formModel]="formModel"
+        ></codx-label>
         <span
+          class="fw-bold text-primary"
           [innerHTML]="data.seriNo | formatvalue : formModel : 'SeriNo' | async"
         ></span>
       </div>
     </div>
 
-    <div class="w-250px min-w-250px pe-6 d-flex flex-column">
-      <div class="mb-1">
-        <span>Mô tả lỗi: </span>
+    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
+      <div class="mb-1 line-clamp line-clamp-3">
+        <codx-label
+          style="white-space: nowrap"
+          class="text-danger d-inline-block"
+          fiedName="Comment"
+          [formModel]="formModel"
+        ></codx-label>
         <span
-          class="line-clamp line-clamp-3"
           [innerHTML]="
             data.comment | formatvalue : formModel : 'Comment' | async
           "
         ></span>
       </div>
-      <div class="mb-1">
-        <span>Hiện trạng: </span>
+      <div class="mb-1 line-clamp line-clamp-2">
+        <codx-label
+          style="white-space: nowrap"
+          class="text-primary d-inline-block"
+          fiedName="CurrentState"
+          [formModel]="formModel"
+        ></codx-label>
         <span
-          class="line-clamp line-clamp-2"
           [innerHTML]="
             data.currentState | formatvalue : formModel : 'CurrentState' | async
           "
         ></span>
       </div>
       <div class="mb-1">
-        Ghi chú:
+        <codx-label
+          style="white-space: nowrap"
+          class="text-warning d-inline-block"
+          fiedName="Note"
+          [formModel]="formModel"
+        ></codx-label>
         <span
           [innerHTML]="data.note | formatvalue : formModel : 'Note' | async"
         ></span>
       </div>
     </div>
 
-    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
+    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
       <div class="mb-1">
-        ETA:
+        <codx-label
+          style="white-space: nowrap"
+          class="fw-bold text-dark"
+          fiedName="ETA"
+          [formModel]="formModel"
+        ></codx-label>
         <span
           [innerHTML]="data.eta | formatvalue : formModel : 'ETA' | async"
         ></span>
       </div>
       <div class="mb-1">
-        Cập nhật lần cuối:
+        <codx-label
+          style="white-space: nowrap"
+          class="text-dark"
+          fiedName="LastUpdatedOn"
+          [formModel]="formModel"
+        ></codx-label>
         <span
           [innerHTML]="
             data.lastUpdatedOn
@@ -228,7 +267,7 @@
       </div>
     </div>
 
-    <div class="w-100px min-w-50px pe-6 d-flex flex-column">
+    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
       <div class="mb-1">
         <span
           [innerHTML]="
@@ -236,7 +275,7 @@
           "
         ></span>
       </div>
-      <div>
+      <div class="d-flex flex-row-reverse">
         <codx-temp-full
           cardCss="card-template list-task"
           [imageId]="data.recID"
