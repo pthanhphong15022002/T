@@ -16,6 +16,7 @@ import { MenuListComponent } from './personal/menu-list/menu-list.component';
 import { MasterDetailComponent } from './personal/master-detail/master-detail.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-list-approval.component';
+import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 
 
 const routes: Routes = [
@@ -70,7 +71,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
-    CodxShareModule
+    CodxShareModule,
+    AccordionModule
   ],
   exports: [RouterModule],
 })
