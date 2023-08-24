@@ -1041,4 +1041,7 @@ export class ContractsComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
+  autoOpenPopupSusscess(e){
+    e && this.moveReason(this.itemSelected, true);
+  }
 }

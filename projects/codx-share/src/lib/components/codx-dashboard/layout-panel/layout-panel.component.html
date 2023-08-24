@@ -1,6 +1,6 @@
 <div
   class="codx-form card w-100 h-100 rounded-0 border-0"
-  style="height: calc(100% - 38px) !important;"
+  style="height: calc(100% - 38px) !important"
 >
   <div
     *ngIf="isEditMode"
@@ -41,7 +41,11 @@
       </div>
     </div>
   </div>
-  <div class="card-body" (scroll)="scroll($event)">
+  <div
+    class="card-body"
+    style="height: calc(100% + 38px) !important"
+    (scroll)="scroll($event)"
+  >
     <ng-container *ngIf="body" class="container">
       <ng-container *ngTemplateOutlet="selectedTemplate"></ng-container>
     </ng-container>

@@ -160,7 +160,7 @@
           <div class="w-100 d-flex flex-column">
             <div class="d-flex align-items-top justify-content-between">
               <div class="w-100 d-flex flex-column">
-                <div class="d-flex align-items-top">
+                <div class="d-flex align-items-top" *ngIf="dataSelected.category == '1'">
                   <codx-label
                     fiedName="Industries"
                     class="text-dark fw-bold label-colon"
@@ -594,14 +594,28 @@
                   <div class="col-6">
                     <div class="mb-5px d-flex align-items-top">
                       <div
+                      *ngIf="companyNo || customerNo"
                         class="w-150px min-w-150px text-gray-600 codx-textlabel"
                       >
-                        <codx-label
-                          fiedName="LeadID"
-                          class="nowrap label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                        ></codx-label>
+                        <div *ngIf="dataSelected.category == '1'; else default">
+                          <codx-label
+                            name="lblLeadID"
+                            [default]="companyNo"
+                            class="nowrap label-colon"
+                            [setRequire]="false"
+                            [formModel]="formModel"
+                          ></codx-label>
+                        </div>
+                        <ng-template #default>
+                          <codx-label
+                            name="lblLeadID"
+                            [default]="customerNo"
+                            class="nowrap label-colon"
+                            [setRequire]="false"
+                            [formModel]="formModel"
+                          ></codx-label>
+                        </ng-template>
+
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
@@ -646,15 +660,27 @@
                 <div class="d-flex">
                   <div class="col-6">
                     <div class="mb-5px d-flex align-items-top">
-                      <div
+                      <div *ngIf="companyName || customerName"
                         class="w-150px min-w-150px text-gray-600 codx-textlabel"
                       >
+                      <div *ngIf="dataSelected.category == '1'; else default">
                         <codx-label
-                          fiedName="CompanyPhone"
+                          name="lblCompanyPhone"
+                          [default]="companyName"
                           class="nowrap label-colon"
                           [setRequire]="false"
                           [formModel]="formModel"
                         ></codx-label>
+                      </div>
+                      <ng-template #default>
+                        <codx-label
+                          name="lblCustomerName"
+                          [default]="customerName"
+                          class="nowrap label-colon"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
                       </div>
                       <div class="text-dark fw-bold codx-textcontent">
                         <span
@@ -873,6 +899,7 @@
                   !dataSelected?.full ||
                   dataSelected.closed
                 "
+                (saveAssignTask)="saveAssign($event)"
               ></step-task>
             </div>
           </ng-template>
@@ -898,7 +925,7 @@
                 [listInstanceStep]="listSteps"
                 [applyFor]="'5'"
                 (continueStep)="continueStep($event)"
-                (saveAssignTask)="saveAssignTask($event)"
+                (saveAssignTask)="saveAssign($event)"
               ></step-task>
             </div>
           </ng-template>
@@ -1077,5 +1104,4 @@
 <ng-template #noData>
   <codx-no-data> </codx-no-data>
 </ng-template>
-<ng-template #information> </ng-template>
 <ng-template #defaultNull> <span class="pe-1">0</span></ng-template>

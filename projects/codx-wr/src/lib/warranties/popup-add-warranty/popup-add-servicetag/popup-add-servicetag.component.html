@@ -26,38 +26,39 @@
           field="warrantyExpired"
           [formModel]="form.formModel"
           [crrValue]="data?.warrantyExpired"
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueChangeDate($event)"
         ></codx-input>
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="ProductName" [formModel]="form.formModel">
+      <codx-label fiedName="ProductID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="productName"
+        field="productID"
         [formModel]="form.formModel"
-        [crrValue]="data?.productName"
+        [crrValue]="data?.productID"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Configuration" [formModel]="form.formModel">
+      <codx-label fiedName="ProductDesc" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="configuration"
+        field="productDesc"
         [formModel]="form.formModel"
-        [crrValue]="data?.configuration"
+        [crrValue]="data?.productDesc"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
     <div class="form-group row">
       <div class="col-4">
-        <codx-label fiedName="ProductID" [formModel]="form.formModel">
+        <codx-label fiedName="ProductType" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          field="productID"
+        [disabled]="true"
+          field="productType"
           [formModel]="form.formModel"
-          [crrValue]="data?.productID"
+          [crrValue]="data?.productType"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
@@ -66,6 +67,7 @@
         </codx-label>
         <codx-input
           field="productBrand"
+          [disabled]="true"
           [formModel]="form.formModel"
           [crrValue]="data?.productBrand"
           (valueChange)="valueChange($event)"
@@ -76,6 +78,7 @@
         </codx-label>
         <codx-input
           field="productModel"
+          [disabled]="true"
           [formModel]="form.formModel"
           [crrValue]="data?.productModel"
           (valueChange)="valueChange($event)"

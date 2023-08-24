@@ -163,13 +163,12 @@ export class DealDetailComponent implements OnInit {
           icon: 'icon-i-link',
         };
         this.tabControl.push(references);
-
         this.getTags(this.dataSelected);
-        this.dataSelected = this.dataSelected;
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
+        this.dataSelected = this.dataSelected;
       }
     }
   }
@@ -177,8 +176,8 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      await this.getTree(); //ve cay giao viec
       await this.getListInstanceStep();
+      await this.getTree(); //ve cay giao viec
       await this.getContactByDeaID(this.dataSelected.recID);
       await this.getHistoryByDeaID();
     } catch (error) {}

@@ -21,16 +21,24 @@
         <div class="d-flex justify-content-between">
           <div class="col-10">
             <codx-input
-              field="serviceTag"
+              field="seriNo"
               [formModel]="form.formModel"
-              [crrValue]="data?.serviceTag"
-              (valueChange)="valueChange($event)"
+              [crrValue]="data?.seriNo"
+              [disabled]="action == 'edit'"
+              (valueChange)="valueChangeCbx($event)"
             ></codx-input>
           </div>
           <div class="col-2 ms-1">
             <button
               style="width: 100% !important; height: 32px !important"
               type="button"
+              [ngClass]="
+                data.customerID == null ||
+                data.customerID?.trim() == '' ||
+                action == 'edit'
+                  ? 'disabled'
+                  : ''
+              "
               class="btn btn-primary"
               (click)="clickAddServiceTag()"
             >
@@ -42,11 +50,11 @@
             </button>
           </div>
         </div>
-        <div class="d-flex w-100 mt-1">
+        <div class="d-flex w-100 mt-1" *ngIf="data?.serviceTag">
           <div class="me-3 d-flex align-items-center">
             <codx-img
               [objectId]="data?.serviceTag"
-              [objectName]="'ADMIN'"
+              [objectName]="data?.serviceTag"
               [referType]="'avt'"
               [objectType]="'WR_Products'"
               [width]="35"
@@ -58,23 +66,14 @@
               <div
                 class="fw-bold fs-6 text-dark me-3"
                 [innerHTML]="
-                  data?.productLine
-                    | formatvalue : form.formModel : 'ProductLine'
-                    | async
-                "
-              ></div>
-              <div
-                class="fw-bold fs-6 text-dark"
-                [innerHTML]="
-                  data?.productModel
-                    | formatvalue : form.formModel : 'ProductModel'
+                  data?.productID
+                    | formatvalue : form.formModel : 'productID'
                     | async
                 "
               ></div>
             </div>
             <div
-              class="d-flex align-items-center mb-2"
-              class="fw-bold me-1"
+              class="d-flex align-items-center fw-bold mb-2"
               [innerHTML]="
                 data?.productDesc
                   | formatvalue : form.formModel : 'ProductDesc'
@@ -106,13 +105,20 @@
                 "
               >
               </span>
-              <span class="me-1">-</span>
+              <span *ngIf="data?.warrantyExpired && !data.oow" class="me-1"
+                >-</span
+              >
               <span
-                class="text-primary"
-                [innerHTML]="
-                  data?.oow | formatvalue : form.formModel : 'OOW' | async
-                "
-              ></span>
+                *ngIf="data?.warrantyExpired"
+                [ngClass]="data.oow ? '' : 'text-danger'"
+              >
+                <codx-label
+                  *ngIf="!data.oow"
+                  name="lblOOW"
+                  [formModel]="form.formModel"
+                  default="Đã hết hạn"
+                ></codx-label>
+              </span>
             </div>
           </div>
         </div>
@@ -135,19 +141,20 @@
             </div>
             <div class="d-flex justify-content-end align-content-center">
               <button
+                [ngClass]="action == 'edit' ? 'disabled' : ''"
                 type="button"
                 class="btn btn-sm btn-icon btn-light-primary"
-                (click)="clickAddCustomer()"
+                (click)="clickAddCustomer('add')"
               >
                 <span class="icon-person_add_alt_1 icon-16"></span>
               </button>
             </div>
           </div>
-          <div class="d-flex w-100">
+          <div class="d-flex w-100" *ngIf="data?.customerID">
             <div class="me-3 d-flex align-items-center">
               <codx-img
-                [objectId]="'ADMIN'"
-                [objectName]="'ADMIN'"
+                [objectId]="data?.customerID"
+                [objectName]="data?.customerName"
                 [referType]="'avt'"
                 [objectType]="'CM_Customers'"
                 [width]="35"
@@ -155,32 +162,69 @@
               </codx-img>
             </div>
             <div class="d-flex flex-column">
-              <div class="d-flex mb-2">
-                <div class="fw-bold fs-6 text-dark me-3">
-                  Lê phạm hoài thương
+              <div
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
+              >
+                <div class="d-flex mb-2">
+                  <div
+                    class="fw-bold fs-6 text-dark me-3"
+                    [innerHTML]="
+                      data?.customerName
+                        | formatvalue : form.formModel : 'customerName'
+                        | async
+                    "
+                  ></div>
+                  <div
+                    class=""
+                    [innerHTML]="
+                      data?.custGroupID
+                        | formatvalue : form.formModel : 'custGroupID'
+                        | async
+                    "
+                  ></div>
                 </div>
-                <div class="">custgroup</div>
+                <div
+                  class="d-flex justify-content-end action-menu-od me-1"
+                  *ngIf="data?.customerID && action != 'edit'"
+                  (click)="removeUser()"
+                >
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
               </div>
-              <div class="d-flex flex-wrap me-4 mb-2">
-                <div class="me-3 d-flex align-items-center">
+              <div class="d-flex flex-wrap mb-2">
+                <div class="me-3 d-flex align-items-center" *ngIf="data?.phone">
                   <span
-                    class="icon-14 text-primary me-2 text-hover-primary icon-phone_iphone text-gray-700"
+                    class="icon-16 text-primary me-2 text-hover-primary text-gray-700"
                   ></span>
-                  <span class="text-gray-600 text-primary text-hover-primary">
-                    mobile
+                  <span
+                    class="text-gray-600 text-primary text-hover-primary"
+                    [innerHTML]="
+                      data?.phone
+                        | formatvalue : form.formModel : 'phone'
+                        | async
+                    "
+                  >
                   </span>
                 </div>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center" *ngIf="data?.email">
                   <span
-                    class="icon-email text-primary me-2 text-hover-primary icon-14 text-gray-700"
+                    class="text-primary me-2 text-hover-primary icon-16 text-gray-700"
                   ></span>
-                  <span class="text-gray-900 text-primary"> email </span>
+                  <span
+                    class="text-gray-900 text-primary"
+                    [innerHTML]="
+                      data?.email
+                        | formatvalue : form.formModel : 'Email'
+                        | async
+                    "
+                  >
+                  </span>
                 </div>
               </div>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center" *ngIf="data?.address">
                 <span
                   [ngbTooltip]="popupAddress"
-                  class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
+                  class="icon-16 me-2 text-gray-600 fs-7"
                   ><ng-template #popupAddress>
                     <codx-label
                       fiedName="Address"
@@ -188,9 +232,31 @@
                     ></codx-label>
                   </ng-template>
                 </span>
-                <span class="text-gray-600">địa chỉ</span>
+                <span
+                  class="text-gray-600"
+                  [innerHTML]="
+                    data?.address
+                      | formatvalue : form.formModel : 'address'
+                      | async
+                  "
+                ></span>
               </div>
             </div>
+          </div>
+          <div class="d-flex align-items-center mt-2" *ngIf="data?.customerID">
+            <button
+              [ngClass]="action == 'edit' ? 'disabled' : ''"
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="clickAddCustomer('switch')"
+            >
+              <i class="icon-person_add_alt_1 icon-16 me-1"></i>
+              <codx-label
+                name="lblSwitchCustomer"
+                [formModel]="form.formModel"
+                default="Đổi khách hàng"
+              ></codx-label>
+            </button>
           </div>
         </ng-container>
       </div>

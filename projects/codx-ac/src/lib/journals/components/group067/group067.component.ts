@@ -3,7 +3,9 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormModel, UIComponent } from 'codx-core';
@@ -13,7 +15,7 @@ import { FormModel, UIComponent } from 'codx-core';
   templateUrl: './group067.component.html',
   styleUrls: ['./group067.component.css'],
 })
-export class Group067Component extends UIComponent {
+export class Group067Component extends UIComponent implements OnChanges {
   //#region Constructor
   @Input() formModel: FormModel;
   @Input() formGroup: FormGroup;
@@ -28,6 +30,11 @@ export class Group067Component extends UIComponent {
   constructor(injector: Injector) {
     super(injector);
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.data) {
+      console.log("hi");
+    }
+  }
   //#endregion
 
   //#region Init
@@ -35,7 +42,7 @@ export class Group067Component extends UIComponent {
   //#endregion
 
   //#region Event
-  onChange(e): void {
+  onInputChange(e): void {
     this.change.emit(e);
   }
 

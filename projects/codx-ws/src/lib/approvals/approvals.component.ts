@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-approvals',
@@ -8,7 +9,5 @@ import { WSUIComponent } from '../default/wsui.component';
 })
 export class ApprovalsComponent extends WSUIComponent{
   override onInit(): void {
-    throw new Error('Method not implemented.');
   }
-
 }

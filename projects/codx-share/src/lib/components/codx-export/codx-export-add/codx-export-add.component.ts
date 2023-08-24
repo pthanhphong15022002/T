@@ -247,7 +247,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
                 this.attachment2.objectId = item[1].recID;
-                this.attachment2.objectType = 'AD_ExcelTemplates';
+                this.attachment2.fileUploadList.forEach(elm=>{
+                  elm.objectType ='AD_ExcelTemplates';
+                });
                 //this.attachment2.saveFiles();
                 //Upload file
                 this.attachment2.saveFilesObservable().then((saveFile) => {
@@ -282,7 +284,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment2.objectId = item[1][0].recID;
-              this.attachment2.objectType = 'AD_ExcelTemplates';
+              this.attachment2.fileUploadList.forEach(elm=>{
+                elm.objectType ='AD_ExcelTemplates';
+              });
               if (this.fileCount > 0) {
                 /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                   console.log(item);
@@ -325,9 +329,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
-              this.attachment1.objectType = 'AD_WordTemplates';
+              this.attachment1.fileUploadList.forEach(elm=>{
+                elm.objectType ='AD_ExcelTemplates';
+              });
               this.onSaveWord();
-              this.dialog.close([item[1][0], this.type]);
+              debugger
+              this.dialog.close([item[1][0], this.type,this.nameFile]);
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {

@@ -65,13 +65,10 @@
                 [entityName]="fmPurchaseInvoicesLines.entityName"
                 [templateMore]="morefunction"
                 [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [autoLoad]="false"
-                [rowHeight]="35"
                 [dataSource]="lines"
                 [showRowNumber]="true"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew($event)"
@@ -121,12 +118,10 @@
                 [entityName]="fmVATInvoices.entityName"
                 [templateMore]="morefunction"
                 [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
                 [dataSource]="vatInvoices"
-                [rowHeight]="35"
                 [showRowNumber]="true"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (gridInit)="onGridInit($event)"
                 (onAddNew)="onEndAddNew2($event)"
                 (onEdit)="onEndEdit2($event)"
@@ -212,8 +207,8 @@
       [isMulti]="false"
       type="valuelist"
       field="subType"
-      [refValue]="grvPurchaseInvoices['SubType'].referedValue"
-      [emptyText]="grvPurchaseInvoices.SubType?.headerText"
+      refValue="AC129"
+      emptyText="Loại phiếu"
       [value]="master.subType"
       (valueChange)="onSubTypeChange($event)"
     ></codx-dropdown-select>
@@ -445,7 +440,7 @@
             [disabled]="journal?.assignRule != '0'"
             [placeholder]="
               journal?.assignRule == '2'
-                ? (voucherNoPlaceholderText$ | async)
+                ? ('AC0028' | mssg | async)
                 : ''
             "
           >
@@ -476,7 +471,7 @@
     [dataItem]="data"
     [formModel]="form.formModel"
     (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onChangeMF($event)"
+    (changeDataMF)="onInitMF($event)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>

@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -106,8 +107,13 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => console.log(this.view.dataService), 5000);
+    // setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
+    this.view.dataService.methodSave = 'AddWorkOrderAsync';
+    this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
+    this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
+
+    this.detectorRef.detectChanges();
   }
 
   searchChanged(e) {}
@@ -137,17 +143,16 @@ export class WarrantiesComponent
       },
     ];
 
-    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'WR';
-    this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'WorkOrdersBusiness';
-    this.request.method = 'GetListWorkOrdersAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
+    // this.request = new ResourceModel(); //Phúc comment lại vì cái này để chạy những view kanban schudule, tự chạy hàm riêng, request riêng.
+    // this.request.service = 'WR';
+    // this.request.assemblyName = 'ERM.Business.WR';
+    // this.request.className = 'WorkOrdersBusiness';
+    // this.request.method = 'GetListWorkOrdersAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
 
     // this.resourceKanban = new ResourceModel();
     // this.resourceKanban.service = 'DP';
@@ -202,14 +207,16 @@ export class WarrantiesComponent
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS03':
-        // this.edit(data);
-        this.updateReasonCode(data);
+        this.edit(data);
         break;
       case 'SYS04':
-        // this.copy(data);
+        this.copy(data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
+        break;
+      case 'WR0101_1':
+        this.updateReasonCode(data);
         break;
       default:
         var customData = {
@@ -232,17 +239,16 @@ export class WarrantiesComponent
   }
 
   changeDataMF($event, data, type = null) {
-    console.log('Not implemented');
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     mappingFunction && mappingFunction(eventItem, data);
-    //   }
-    // }
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
+        const functionID = eventItem.functionID;
+        // const mappingFunction = this.getRoleMoreFunction(functionID);
+        // mappingFunction && mappingFunction(eventItem, data);
+      }
+    }
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -282,9 +288,8 @@ export class WarrantiesComponent
   }
 
   selectedChange(data) {
-    console.log('Not implemented');
-    // if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    // this.changeDetectorRef.detectChanges();
+    if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
+    this.changeDetectorRef.detectChanges();
   }
 
   changeView(e) {
@@ -339,6 +344,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -348,7 +354,6 @@ export class WarrantiesComponent
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
             this.view.dataService.update(e?.event).subscribe();
             this.detectorRef.detectChanges();
@@ -357,30 +362,144 @@ export class WarrantiesComponent
       });
     });
   }
+
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '550px';
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddWarrantyComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
+  }
+
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      this.cache.functionList(this.funcID).subscribe((fun) => {
+        var formMD = new FormModel();
+        formMD.entityName = fun.entityName;
+        formMD.formName = fun.formName;
+        formMD.gridViewName = fun.gridViewName;
+        formMD.funcID = this.funcID;
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '550px';
+        var obj = {
+          action: 'copy',
+          title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
+        };
+        var dialog = this.callfc.openSide(
+          PopupAddWarrantyComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e && e.event != null) {
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+            this.view.dataService.update(e.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+    });
+  }
+
+  async delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteWorkOrderAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
   //#endregion
 
   //#region update reason code
-  updateReasonCode(data){
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.view?.formModel;
-    let obj = {
-      title: this.titleAction,
-    };
-    this.callFc
-      .openForm(
-        PopupUpdateReasonCodeComponent,
-        '',
-        600,
-        700,
-        '',
-        obj,
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.detectorRef.detectChanges();
+  updateReasonCode(data) {
+    this.cache
+      .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
+      .subscribe((res) => {
+        if (res) {
+          let dialogModel = new DialogModel();
+          dialogModel.zIndex = 1010;
+          let formModel = new FormModel();
+
+          formModel.entityName = 'WR_WorkOrderUpdates';
+          formModel.formName = 'WRWorkOrderUpdates';
+          formModel.gridViewName = 'grvWRWorkOrderUpdates';
+          dialogModel.FormModel = formModel;
+          let obj = {
+            title: this.titleAction,
+            data: data,
+            gridViewSetup: res,
+          };
+          this.callFc
+            .openForm(
+              PopupUpdateReasonCodeComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e?.event && e?.event != null) {
+                this.detectorRef.detectChanges();
+              }
+            });
         }
       });
   }

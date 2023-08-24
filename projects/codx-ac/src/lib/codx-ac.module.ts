@@ -24,9 +24,9 @@ import { DropdownDetailComponent } from './journals/components/dropdown-detail/d
 import { GroupShareComponent } from './journals/components/group-share/group-share.component';
 import { Group067Component } from './journals/components/group067/group067.component';
 import { JournalsComponent } from './journals/journals.component';
-import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
+import { MultiSelectPopupComponent } from './journals/components/multi-select-popup/multi-select-popup.component';
 import { JournalsAddComponent } from './journals/journals-add/journals-add.component';
-import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
+import { JournalspermissionEditComponent } from './journals/journalspermission-edit/journalspermission-edit.component';
 import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
 import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
 import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
@@ -276,7 +276,7 @@ export const routes: Routes = [
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,
-    PopupPermissionComponent,
+    JournalspermissionEditComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,
     AllocateToolsComponent,

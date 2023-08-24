@@ -105,7 +105,7 @@ export class DynamicFormComponent extends UIComponent {
     //   .gridViewSetup(view.function.formName, view.function.gridViewName)
     //   .subscribe(() => {});
     this.view = view;
-    var formName = view.function!.formName;
+    //var formName = view.function!.formName;
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
   }

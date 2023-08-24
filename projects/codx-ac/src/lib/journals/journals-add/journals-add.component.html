@@ -25,17 +25,32 @@
     <div class="row">
       <div class="col-8 row">
         <div class="form-group">
-          <codx-label
-            fiedName="journalType"
-            [formModel]="form.formModel"
-            default="Loại nghiệp vụ"
-          ></codx-label>
-          <codx-input
-            field="journalType"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="onInputChange2($event)"
-          ></codx-input>
+          <ng-container *ngIf="journal.isTemplate; else normalTemplate">
+            <codx-label
+              fiedName="journalType"
+              [formModel]="form.formModel"
+              default="Loại nghiệp vụ"
+            ></codx-label>
+            <codx-input
+              field="journalType"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onInputChange2($event)"
+            ></codx-input>
+          </ng-container>
+          <ng-template #normalTemplate>
+            <codx-label
+              fiedName="journalName"
+              [formModel]="form.formModel"
+              default="Nhật ký mẫu"
+            ></codx-label>
+            <codx-input
+              field="journalName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onJournalNameChange($event)"
+            ></codx-input>
+          </ng-template>
         </div>
 
         <div class="col-6 form-group">
@@ -47,7 +62,7 @@
           <ejs-combobox
             [dataSource]="fiscalYears"
             [value]="journal.fiscalYear"
-            (select)="onSelect($event)"
+            (select)="onFiscalYearSelect($event)"
           >
           </ejs-combobox>
         </div>
@@ -260,10 +275,10 @@
               field="voucherFormat"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [disabled]="journal.assignRule === '0'"
+              [disabled]="journal.assignRule === eVll075.ThuCong"
             ></codx-input>
           </div>
-          <div class="w-auto" *ngIf="journal.assignRule !== '0'">
+          <div class="w-auto" *ngIf="journal.assignRule !== eVll075.ThuCong">
             <button
               type="button"
               class="btn btn-icon btn-light-primary"
