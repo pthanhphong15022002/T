@@ -60,7 +60,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   // orgNote: string = '';
 
   hasChangedData: boolean = false;
-
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -77,10 +76,11 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     this.funcID = this.routerActive.snapshot.params['funcID'];
-    if (this.dialogRef.dataService.keyField === 'EmployeeID') {
-      this.employeeIDDisable = true;
-    } else this.employeeIDDisable = false;
+
     if (this.action === 'edit') this.employeeIDDisable = true;
+    else{
+      this.employeeIDDisable = this.dialogRef.dataService.keyField ? true : false;
+    }
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);

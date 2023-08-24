@@ -198,6 +198,12 @@
                     </div>
 
                     <div class="ms-5">
+                      <!-- <codx-fields-detail-temp
+ 
+                      [dataStep]="currentStep?.fields[0]"
+                      [showColumnControl]="1"
+                    >
+                    </codx-fields-detail-temp> -->
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
@@ -315,7 +321,7 @@
 <ng-template #buttonTemplate let-data="value">
   <div
     class="d-flex justify-content-center mt-3"
-    *ngIf="isShowBtnAddTask && !isViewStep && !isMoveStage"
+    *ngIf="isShowBtnAddTask && !isViewStep && !isMoveStage && isRoleAll"
   >
     <button
       type="button"

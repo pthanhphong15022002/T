@@ -60,7 +60,10 @@
       </div>
     </div>
     <!--End Link group -->
-    <div *ngIf="this.action == 'add' && isStart" class="form-group d-flex align-item-center">
+    <div 
+      *ngIf="(this.action == 'add' || this.action == 'copy') && isStart" 
+      class="form-group d-flex align-item-center"
+    >
       <codx-label
         class="label-colon"
         fiedName="status"
@@ -107,13 +110,6 @@
           </codx-label>
         </div>
         <div>
-          <!-- <ejs-dropdownlist
-            [dataSource]="listGroup"
-            [fields]="fieldsGroup"
-            [value]="stepsTasks?.taskGroupID"
-            (valueChange)="filterText($event, 'taskGroupID')"
-            [readonly]="stepsTasks?.isTaskDefault || groupTaskID"
-          ></ejs-dropdownlist> -->
           <ejs-combobox
             #sample
             [dataSource]="listGroup"
@@ -121,8 +117,8 @@
             [value]="stepsTasks?.taskGroupID"
             (change)="filterText($event, 'taskGroupID')"
             [allowCustom]="false"
+            [readonly]="stepsTasks?.isTaskDefault || action == 'copy'"
           ></ejs-combobox>
-          <!-- [readonly]="groupTaskID" -->
         </div>
       </div>
     </div>
@@ -368,6 +364,20 @@
         [type]="'all'"
       ></codx-role>
     </div>
+
+    <div class="form-group">
+      <ng-container *ngFor="let item of listField">
+        <codx-input-custom-field
+        [customField]="item"
+        [objectId]="item.recID"
+        [objectType]="dialog.formModel.entityName"
+        [formModel]="dialog.formModel"
+        (valueChangeCustom)="valueChangeCustom($event)"
+        (addFileCompleted)="addFileCompleted($event)"
+      ></codx-input-custom-field>
+      </ng-container>
+    </div>
+
     <div class="form-group">
       <div>
         <codx-label
@@ -388,19 +398,6 @@
         [disabled]="stepsTasks?.isTaskDefault"
       >
       </codx-input>
-    </div>
-
-    <div class="form-group">
-      <ng-container *ngFor="let item of listField">
-        <codx-input-custom-field
-        [customField]="item"
-        [objectId]="item.recID"
-        [objectType]="dialog.formModel.entityName"
-        [formModel]="dialog.formModel"
-        (valueChangeCustom)="valueChangeCustom($event)"
-        (addFileCompleted)="addFileCompleted($event)"
-      ></codx-input-custom-field>
-      </ng-container>
     </div>
 
     <div class="form-group d-flex align-item-center" *ngIf="isBoughtTM && isAddTM">

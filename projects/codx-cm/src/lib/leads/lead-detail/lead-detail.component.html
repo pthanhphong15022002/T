@@ -872,13 +872,7 @@
                 [typeTask]="2"
                 [customerID]="dataSelected?.recID"
                 [entityName]="'CM_Leads'"
-                [isPause]="
-                  ['0', '1', '3', '5', '13', '11'].includes(
-                    dataSelected.status
-                  ) ||
-                  !dataSelected?.full ||
-                  dataSelected.closed
-                "
+                [isPause]="!dataSelected?.full"
                 (saveAssignTask)="saveAssign($event)"
               ></step-task>
             </div>
