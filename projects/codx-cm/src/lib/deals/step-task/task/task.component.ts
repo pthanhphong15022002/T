@@ -340,6 +340,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     dataCopy['recID'] = Util.uid();
     dataCopy['progress'] = 0;
     dataCopy['isTaskDefault'] = false;
+    dataCopy['status'] = '1';
     delete dataCopy?.id;
     dataCopy['modifiedOn'] = null;
     dataCopy['modifiedBy'] = null;

@@ -197,11 +197,8 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
-        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
-        {
-          this.releasePost(this.data)
-          .subscribe();
-        }
+        if(res && ((typeof res == 'object' && res?.status == 0) || (Array.isArray(res) && res[0]?.status == 0)))
+          this.releasePost(this.data).subscribe();
         else
         {
           let fileNames = this.fileUpload.map(x => x.fileName).join(";");
@@ -380,7 +377,7 @@ export class PopupAddComponent implements OnInit {
       this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res:any) => {
-        if(res && ((typeof res == 'object' && res?.status != 0) || (Array.isArray(res) && res[0]?.status != 0)))
+        if(res && ((typeof res == 'object' && res?.status == 0) || (Array.isArray(res) && res[0]?.status == 0)))
         {
           this.updatePost(this.data)
           .subscribe();

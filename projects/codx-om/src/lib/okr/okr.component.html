@@ -1,4 +1,4 @@
-<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false">
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="curUser.employee!=null">
 </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white rounded-2 pt-5 d-flex flex-column">
@@ -137,6 +137,18 @@
                   [orgUnitTree]="orgUnitTree" [okrGrv]="okrGrv" [currentOrgID]="curOrgID"></lib-okr-trees>
               </div> -->
                 <div class="om-ejs-tab" *ngIf="!planNull && orgUnitTree != null; else defaultEmpty">
+                  <!-- <div class="ms-2 me-2" >
+                    <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+                      (click)="collapeTree(!treeCollapsed)" *ngIf="treeCollapsed == true">
+                      <i class="icon-i-arrows-collapse me-2"></i>
+                      <codx-label default="Thu gọn" fiedName="lblCollapse"></codx-label>
+                    </div>
+                    <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"
+                      (click)="collapeTree(!treeCollapsed)" *ngIf="treeCollapsed == false">
+                      <i class="icon-i-arrows-expand me-2"></i>
+                      <codx-label default="Mở rộng" fiedName="lblExpand"></codx-label>
+                    </div>
+                  </div> -->
                   <div class="container okr-treeview">
                     <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="orgUnitTree"
                       [enableCheck]="false" idField="orgUnitID" parentIdField="parentID" [autoLoad]="false"

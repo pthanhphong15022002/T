@@ -135,7 +135,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'inquery/:funcID',
+        path: 'accountingquery/:funcID',
         component: SearchingComponent,
         data: { noReuse: true },
       },

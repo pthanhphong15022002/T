@@ -1459,9 +1459,10 @@ export class CodxShareService {
     this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
       (exportedFile: any) => {
         if (exportedFile) {
-          let signFile = this.createSignFile(approveProcess, [exportedFile]);
+          //Nhận thông tin file trả lên sau khi export
           this.getFileByObjectID(approveProcess.recID).subscribe(
             (lstFile: any) => {
+            let signFile = this.createSignFile(approveProcess, lstFile);
               if (lstFile?.length > 0) {
                 this.openPopupSignFile(
                   approveProcess,

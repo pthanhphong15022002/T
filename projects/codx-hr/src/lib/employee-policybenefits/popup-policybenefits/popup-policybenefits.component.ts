@@ -476,7 +476,10 @@ implements OnInit{
 
     if(hasKow == false){
       this.benefitPolicyObj.isAdjustKow = false;
-      this.isHidden = true;
+    }
+    else{
+      this.benefitPolicyObj.isAdjustKow = true;
+      this.onClickOpenCbxKow()
     }
   }
 
@@ -497,6 +500,10 @@ implements OnInit{
 
     if(flag == false){
       this.benefitPolicyObj.hasIncludeObjects = false;
+    }
+    else if(flag == true){
+      this.benefitPolicyObj.hasIncludeObjects = true;
+      this.onClickOpenSelectIncludeObj()
     }
   }
 
@@ -1099,6 +1106,10 @@ implements OnInit{
 
     if(flag == false){
       this.benefitPolicyObj.hasExcludeObjects = false;
+    }
+    else if(flag == true){
+      this.benefitPolicyObj.hasExcludeObjects = true;
+      this.onClickOpenSelectExcludeObj()
     }
   }
 
