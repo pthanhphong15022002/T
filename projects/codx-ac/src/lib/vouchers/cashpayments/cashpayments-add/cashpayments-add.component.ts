@@ -216,6 +216,13 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     };
   }
 
+  actionComplete(e:any){
+    if(e.type=='delete'){
+
+    }
+  }
+
+
   /**
    * *Hàm khởi tạo các tab detail khi mở form(ẩn hiện tab theo loại chứng từ)
    * @param event
@@ -287,7 +294,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
    * @param columnsGrid : danh sách cột của lưới
    */
-  beforeInitGridCashpayments(columnsGrid) {
+  beforeInitGridCashpayments(grid) {
     //* Thiết lập format number theo đồng tiền hạch toán
     if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DR')].dataFormat = 'B';
@@ -318,8 +325,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     columnsGrid[
       columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
     ].predicate = preAccountID;
-    columnsGrid[
-      columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
+    grid.columnsGrid[
+      grid.columnsGrid.findIndex((x) => x.fieldName == 'AccountID')
     ].dataValue = dtvAccountID;
 
     if (
@@ -331,11 +338,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       preOffsetAcctID = '@0.Contains(AccountID)';
       dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
     }
-    columnsGrid[
-      columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
+    grid.columnsGrid[
+      grid.columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
     ].predicate = preOffsetAcctID;
-    columnsGrid[
-      columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
+    grid.columnsGrid[
+      grid.columnsGrid.findIndex((x) => x.fieldName == 'OffsetAcctID')
     ].dataValue = dtvOffsetAcctID;
 
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') {
@@ -343,9 +350,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       preDIM1 = '@0.Contains(DepartmentID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].predicate =
+    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].predicate =
       preDIM1;
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].dataValue =
+      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM1')].dataValue =
       dtvDIM1;
 
     if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') {
@@ -353,9 +360,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       preDIM2 = '@0.Contains(CostCenterID)';
       dtvDIM2 = `[${this.journal?.diM2}]`;
     }
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].predicate =
+    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].predicate =
       preDIM2;
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].dataValue =
+      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM2')].dataValue =
       dtvDIM2;
 
     if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') {
@@ -363,9 +370,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       preDIM3 = '@0.Contains(CostItemID)';
       dtvDIM3 = `[${this.journal?.diM3}]`;
     }
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].predicate =
+    grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].predicate =
       preDIM3;
-    columnsGrid[columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].dataValue =
+      grid.columnsGrid[grid.columnsGrid.findIndex((x) => x.fieldName == 'DIM3')].dataValue =
       dtvDIM3;
 
     //* Thiết lập các field ẩn cho 2 mode tài khoản
@@ -385,14 +392,14 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         hCR2 = false; //? => ẩn field tiền Nợ,HT
       }
     }
-    if (columnsGrid.findIndex((x) => x.fieldName == 'DR2') > -1) {
-      columnsGrid[
-        columnsGrid.findIndex((x) => x.fieldName == 'DR2')
+    if (grid.columnsGrid.findIndex((x) => x.fieldName == 'DR2') > -1) {
+      grid.columnsGrid[
+        grid.columnsGrid.findIndex((x) => x.fieldName == 'DR2')
       ].isVisible = hDR2;
     }
-    if (columnsGrid.findIndex((x) => x.fieldName == 'CR2') > -1) {
-      columnsGrid[
-        columnsGrid.findIndex((x) => x.fieldName == 'CR2')
+    if (grid.columnsGrid.findIndex((x) => x.fieldName == 'CR2') > -1) {
+      grid.columnsGrid[
+        grid.columnsGrid.findIndex((x) => x.fieldName == 'CR2')
       ].isVisible = hCR2;
     }
 
@@ -423,18 +430,18 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       'Settlement',
     ];
     arrColumnOfJournal.forEach((fieldName) => {
-      if (columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
+      if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
         if (this.hideFieldsCashpayment.includes(fieldName)) {
           //? nếu field ẩn có trong danh sách
-          if (columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-            columnsGrid[
-              columnsGrid.findIndex((x) => x.fieldName == fieldName)
+          if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
+            grid.columnsGrid[
+              grid.columnsGrid.findIndex((x) => x.fieldName == fieldName)
             ].isVisible = false; //? => ẩn cột
           }
         } else {
-          if (columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-            columnsGrid[
-              columnsGrid.findIndex((x) => x.fieldName == fieldName)
+          if (grid.columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
+            grid.columnsGrid[
+              grid.columnsGrid.findIndex((x) => x.fieldName == fieldName)
             ].isVisible = true; //? => hiện cột
           }
         }

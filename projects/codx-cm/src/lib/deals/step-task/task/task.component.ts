@@ -271,7 +271,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
-      this.activitie.status = '1';
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
           this.activitie,this.entityName
@@ -340,6 +339,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     dataCopy['recID'] = Util.uid();
     dataCopy['progress'] = 0;
     dataCopy['isTaskDefault'] = false;
+    dataCopy['status'] = '1';
     delete dataCopy?.id;
     dataCopy['modifiedOn'] = null;
     dataCopy['modifiedBy'] = null;

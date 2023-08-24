@@ -252,6 +252,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 });
                 //this.attachment2.saveFiles();
                 //Upload file
+                debugger
                 this.attachment2.saveFilesObservable().then((saveFile) => {
                   if (saveFile) {
                     saveFile.subscribe((saved: any) => {
@@ -329,11 +330,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
+              this.attachment1.objectType = 'AD_ExcelTemplates';
               this.attachment1.fileUploadList.forEach(elm=>{
                 elm.objectType ='AD_ExcelTemplates';
               });
               this.onSaveWord();
-              debugger
               this.dialog.close([item[1][0], this.type,this.nameFile]);
             } else this.notifySvr.notifyCode('SYS023');
           });
@@ -364,7 +365,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   .subscribe((res) => {
                     if (res) {
                       this.attachment1.objectId = this.data.recID;
-                      this.attachment1.objectType = 'AD_WordTemplates';
+                      this.attachment1.objectType = 'AD_ExcelTemplates';
+                      this.attachment1.fileUploadList.forEach(elm=>{
+                        elm.objectType ='AD_ExcelTemplates';
+                      });
                       this.onSaveWord();
                     }
                   });

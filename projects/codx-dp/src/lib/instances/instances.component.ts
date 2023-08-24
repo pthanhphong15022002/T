@@ -1252,7 +1252,6 @@ export class InstancesComponent
   changeView(e) {
     switch (e?.view.type) {
       case 2:
-        this.showButtonAdd = true;
         this.viewsCurrent = 'd-';
         break;
       case 6:
