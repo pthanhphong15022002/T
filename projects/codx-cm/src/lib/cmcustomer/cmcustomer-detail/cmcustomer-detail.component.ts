@@ -101,6 +101,7 @@ export class CmCustomerDetailComponent implements OnInit {
   category = '';
   isAdmin = false;
   user: any;
+  isShow = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -397,6 +398,11 @@ export class CmCustomerDetailComponent implements OnInit {
     } else {
       return data.competitorName;
     }
+  }
+
+  clickShowTab(isShow){
+    this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
   }
 
   ReadExcel(e) {

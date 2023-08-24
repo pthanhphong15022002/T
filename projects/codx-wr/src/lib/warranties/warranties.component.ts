@@ -107,7 +107,7 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => console.log(this.view.dataService), 5000);
+    // setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
@@ -143,17 +143,16 @@ export class WarrantiesComponent
       },
     ];
 
-    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'WR';
-    this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'WorkOrdersBusiness';
-    this.request.method = 'GetListWorkOrdersAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
+    // this.request = new ResourceModel(); //Phúc comment lại vì cái này để chạy những view kanban schudule, tự chạy hàm riêng, request riêng.
+    // this.request.service = 'WR';
+    // this.request.assemblyName = 'ERM.Business.WR';
+    // this.request.className = 'WorkOrdersBusiness';
+    // this.request.method = 'GetListWorkOrdersAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
 
     // this.resourceKanban = new ResourceModel();
     // this.resourceKanban.service = 'DP';
@@ -345,7 +344,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
-          gridViewSetup: this.gridViewSetup
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -384,7 +383,7 @@ export class WarrantiesComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
-            gridViewSetup: this.gridViewSetup
+            gridViewSetup: this.gridViewSetup,
           };
           var dialog = this.callfc.openSide(
             PopupAddWarrantyComponent,
@@ -421,7 +420,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'copy',
           title: this.titleAction,
-          gridViewSetup: this.gridViewSetup
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -468,26 +467,39 @@ export class WarrantiesComponent
 
   //#region update reason code
   updateReasonCode(data) {
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.view?.formModel;
-    let obj = {
-      title: this.titleAction,
-    };
-    this.callFc
-      .openForm(
-        PopupUpdateReasonCodeComponent,
-        '',
-        600,
-        700,
-        '',
-        obj,
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.detectorRef.detectChanges();
+    this.cache
+      .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
+      .subscribe((res) => {
+        if (res) {
+          let dialogModel = new DialogModel();
+          dialogModel.zIndex = 1010;
+          let formModel = new FormModel();
+
+          formModel.entityName = 'WR_WorkOrderUpdates';
+          formModel.formName = 'WRWorkOrderUpdates';
+          formModel.gridViewName = 'grvWRWorkOrderUpdates';
+          dialogModel.FormModel = formModel;
+          let obj = {
+            title: this.titleAction,
+            data: data,
+            gridViewSetup: res,
+          };
+          this.callFc
+            .openForm(
+              PopupUpdateReasonCodeComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e?.event && e?.event != null) {
+                this.detectorRef.detectChanges();
+              }
+            });
         }
       });
   }

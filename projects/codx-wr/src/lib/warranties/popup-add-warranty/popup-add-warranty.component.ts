@@ -15,6 +15,7 @@ import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-se
 import { PopupAddCustomerWrComponent } from './popup-add-customerwr/popup-add-customerwr.component';
 import { WR_WorkOrders } from '../../_models-wr/wr-model.model';
 import { firstValueFrom } from 'rxjs';
+import { CodxWrService } from '../../codx-wr.service';
 
 @Component({
   selector: 'lib-popup-add-warranty',
@@ -36,6 +37,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     private callFc: CallFuncService,
     private api: ApiHttpService,
     private authstore: AuthStore,
+    private wrSv: CodxWrService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -51,10 +53,11 @@ export class PopupAddWarrantyComponent implements OnInit {
   //#region onSave
   beforeSave(op) {
     var data = [];
+    data = [this.data];
     op.method =
       this.action != 'edit' ? 'AddWorkOrderAsync' : 'UpdateWorkOrderAsync';
     op.className = 'WorkOrdersBusiness';
-    op.data = this.data;
+    op.data = data;
     return true;
   }
 
@@ -93,11 +96,11 @@ export class PopupAddWarrantyComponent implements OnInit {
       return;
     }
 
-    if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
+    if (this.data?.seriNo == null || this.data?.seriNo?.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
-        '"' + this.gridViewSetup?.ServiceTag?.headerText + '"'
+        '"' + this.gridViewSetup?.SeriNo?.headerText + '"'
       );
       return;
     }
@@ -180,6 +183,42 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   valueChange(e) {}
 
+  async valueChangeCbx(e) {
+    if (e?.data != this.data.seriNo) {
+      // this.data.seriNo = e?.data;
+      // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
+      // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+
+      let serviceTag = await firstValueFrom(
+        this.wrSv.getOneServiceTag(e?.data)
+      );
+
+      if (serviceTag != null) {
+        var key = Object.keys(this.data);
+        var keySv = Object.keys(serviceTag);
+        for (let index = 0; index < key.length; index++) {
+          for (let i = 0; i < keySv.length; i++) {
+            if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
+              this.data[key[index]] = serviceTag[keySv[i]];
+            }
+          }
+        }
+        if (new Date(this.data.warrantyExpired) > new Date()) {
+          this.data.oow = true;
+        } else {
+          this.data.oow = false;
+        }
+      }
+      // let customer = await firstValueFrom(
+      //   this.wrSv.getOneCustomer(this.data.customerID)
+      // );
+      // if (customer != null) {
+      //   var key = Object.keys(this.data);
+      // }
+    }
+
+    this.detectorRef.detectChanges();
+  }
   //#region popup add
 
   clickAddServiceTag() {
@@ -209,7 +248,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       });
   }
 
-  clickAddCustomer() {
+  clickAddCustomer(type) {
     this.radioChecked = true;
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
@@ -231,7 +270,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          if (this.data.customerID != e?.event[0]?.customerID)
+          if (this.data.customerID != e?.event[0]?.customerID && type == 'add')
             this.setServiceTagEmtry();
           this.data = e?.event[0];
           this.radioChecked = e?.event[1];
@@ -263,7 +302,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   }
 
   setServiceTagEmtry() {
-    this.data.seriNo = '';
+    this.data.seriNo = null;
     this.data.serviceTag = '';
     this.data.lob = '';
     this.data.productID = '';

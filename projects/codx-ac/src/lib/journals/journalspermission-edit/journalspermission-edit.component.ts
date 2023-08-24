@@ -6,10 +6,10 @@ import { JournalPermission } from '../models/JournalPermission.model';
 
 @Component({
   selector: 'lib-popup-permission',
-  templateUrl: './popup-permission.component.html',
-  styleUrls: ['./popup-permission.component.scss'],
+  templateUrl: './journalspermission-edit.component.html',
+  styleUrls: ['./journalspermission-edit.component.scss'],
 })
-export class PopupPermissionComponent extends UIComponent {
+export class JournalspermissionEditComponent extends UIComponent {
   //#region Constructor
   permissions: IJournalPermission[] = [];
   selectedIndex: number;
@@ -42,7 +42,7 @@ export class PopupPermissionComponent extends UIComponent {
     this.permissions = e.data.map(
       (m) =>
         new JournalPermission(
-          this.journalService.getRoleType(e.field),
+          JournalPermission.getRoleType(e.field),
           m.objectType,
           m.id,
           m.text

@@ -741,7 +741,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe();
+            if (x.event) {
+              this.data = x.event;
+              this.view.dataService.update(x.event).subscribe();
+            }
           });
         break;
       }

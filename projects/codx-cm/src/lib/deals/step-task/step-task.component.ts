@@ -42,6 +42,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
   @Input() entityName = '';
+  @Input() owner: string;
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();

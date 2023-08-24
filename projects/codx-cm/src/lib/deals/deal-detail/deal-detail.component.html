@@ -924,7 +924,6 @@
             </div>
           </ng-template>
           <ng-template #content let-data="value">
-            <div *ngIf="listSteps?.length > 0 && listSteps">
               <step-task
                 [isDataLoading]="isDataLoading"
                 [dataSelected]="dataSelected"
@@ -935,7 +934,6 @@
                 (saveAssignTask)="saveAssignTask($event)"
                 (changeProgress)="autoStart($event)"
               ></step-task>
-            </div>
           </ng-template>
         </e-tabitem>
       </e-tabitems>

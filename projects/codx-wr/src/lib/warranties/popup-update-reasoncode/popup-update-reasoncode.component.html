@@ -41,11 +41,11 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
+      <codx-label fiedName="Comment" [formModel]="form.formModel"> </codx-label>
       <codx-input
-        field="note"
+        field="comment"
         [formModel]="form.formModel"
-        [crrValue]="data?.note"
+        [crrValue]="data?.comment"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
