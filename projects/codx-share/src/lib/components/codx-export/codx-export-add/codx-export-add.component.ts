@@ -329,9 +329,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item && item.length > 1) {
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
-              this.attachment1.objectType = 'AD_ExcelTemplates';
+              this.attachment1.objectType = 'AD_WordTemplates';
               this.attachment1.fileUploadList.forEach(elm=>{
-                elm.objectType ='AD_ExcelTemplates';
+                elm.objectType ='AD_WordTemplates';
               });
               this.onSaveWord();
               this.dialog.close([item[1][0], this.type,this.nameFile]);
@@ -364,9 +364,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   .subscribe((res) => {
                     if (res) {
                       this.attachment1.objectId = this.data.recID;
-                      this.attachment1.objectType = 'AD_ExcelTemplates';
+                      this.attachment1.objectType = 'AD_WordTemplates';
                       this.attachment1.fileUploadList.forEach(elm=>{
-                        elm.objectType ='AD_ExcelTemplates';
+                        elm.objectType ='AD_WordTemplates';
                       });
                       this.onSaveWord();
                     }
