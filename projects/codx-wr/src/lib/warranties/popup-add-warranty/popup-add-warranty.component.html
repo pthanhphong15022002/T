@@ -21,6 +21,7 @@
         <div class="d-flex justify-content-between">
           <div class="col-10">
             <codx-input
+              #codxInputSeri
               field="seriNo"
               [formModel]="form.formModel"
               [crrValue]="data?.seriNo"
@@ -64,10 +65,37 @@
           <div class="d-flex flex-column">
             <div class="d-flex mb-2">
               <div
-                class="fw-bold fs-6 text-dark me-3"
+                class="fw-bold fs-6 text-dark me-1"
                 [innerHTML]="
                   data?.productID
                     | formatvalue : form.formModel : 'productID'
+                    | async
+                "
+              ></div>
+              <div
+                *ngIf="data?.productType"
+                class="fw-bold fs-6 text-dark me-1"
+                [innerHTML]="
+                  data?.productType
+                    | formatvalue : form.formModel : 'productType'
+                    | async
+                "
+              ></div>
+              <div
+                *ngIf="data?.productBrand"
+                class="fw-bold fs-6 text-dark me-1"
+                [innerHTML]="
+                  data?.productBrand
+                    | formatvalue : form.formModel : 'productBrand'
+                    | async
+                "
+              ></div>
+              <div
+                *ngIf="data?.productModel"
+                class="fw-bold fs-6 text-dark me-1"
+                [innerHTML]="
+                  data?.productModel
+                    | formatvalue : form.formModel : 'productModel'
                     | async
                 "
               ></div>
