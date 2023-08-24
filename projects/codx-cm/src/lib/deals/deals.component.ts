@@ -1605,6 +1605,9 @@ export class DealsComponent
         )
         .subscribe((x) => {
           if (x?.event?.status == 'Y') {
+            this.startDeal(data);
+          }
+          else {
             this.codxCmService
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {

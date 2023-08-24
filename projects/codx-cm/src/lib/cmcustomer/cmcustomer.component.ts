@@ -99,12 +99,40 @@ export class CmCustomerComponent
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
+    this.loadMethod();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
   }
+
+  loadMethod(){
+    switch (this.funcID) {
+      case 'CM0101':
+      case 'CM0105':
+        this.method = 'GetListCustomersAsync';
+        this.className = 'CustomersBusiness';
+        this.entityName = 'CM_Customers';
+        break;
+      case 'CM0102':
+        this.method = 'GetListContactAsync';
+        this.className = 'ContactsBusiness';
+        this.entityName = 'CM_Contacts';
+        break;
+      case 'CM0103':
+        this.method = 'GetListPartnersAsync';
+        this.className = 'PartnersBusiness';
+        this.entityName = 'CM_Partners';
+        break;
+      case 'CM0104':
+        this.method = 'GetListCompetitorsAsync';
+        this.className = 'CompetitorsBusiness';
+        this.entityName = 'CM_Competitors';
+        break;
+    }
+  }
+
   onInit(): void {
     this.button = {
       id: this.btnAdd,
@@ -115,29 +143,7 @@ export class CmCustomerComponent
       if (param.funcID) {
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
-        switch (this.funcID) {
-          case 'CM0101':
-          case 'CM0105':
-            this.method = 'GetListCustomersAsync';
-            this.className = 'CustomersBusiness';
-            this.entityName = 'CM_Customers';
-            break;
-          case 'CM0102':
-            this.method = 'GetListContactAsync';
-            this.className = 'ContactsBusiness';
-            this.entityName = 'CM_Contacts';
-            break;
-          case 'CM0103':
-            this.method = 'GetListPartnersAsync';
-            this.className = 'PartnersBusiness';
-            this.entityName = 'CM_Partners';
-            break;
-          case 'CM0104':
-            this.method = 'GetListCompetitorsAsync';
-            this.className = 'CompetitorsBusiness';
-            this.entityName = 'CM_Competitors';
-            break;
-        }
+
         this.isButton = true;
         this.afterLoad();
       }

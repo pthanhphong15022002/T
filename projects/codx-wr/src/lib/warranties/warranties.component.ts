@@ -107,7 +107,7 @@ export class WarrantiesComponent
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => console.log(this.view.dataService), 5000);
+    // setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
@@ -143,17 +143,16 @@ export class WarrantiesComponent
       },
     ];
 
-    this.detectorRef.detectChanges();
   }
 
   afterLoad() {
-    this.request = new ResourceModel();
-    this.request.service = 'WR';
-    this.request.assemblyName = 'ERM.Business.WR';
-    this.request.className = 'WorkOrdersBusiness';
-    this.request.method = 'GetListWorkOrdersAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
+    // this.request = new ResourceModel(); //Phúc comment lại vì cái này để chạy những view kanban schudule, tự chạy hàm riêng, request riêng.
+    // this.request.service = 'WR';
+    // this.request.assemblyName = 'ERM.Business.WR';
+    // this.request.className = 'WorkOrdersBusiness';
+    // this.request.method = 'GetListWorkOrdersAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
 
     // this.resourceKanban = new ResourceModel();
     // this.resourceKanban.service = 'DP';
