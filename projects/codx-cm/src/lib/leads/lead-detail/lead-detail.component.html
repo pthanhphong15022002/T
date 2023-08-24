@@ -899,6 +899,7 @@
                   !dataSelected?.full ||
                   dataSelected.closed
                 "
+                (saveAssignTask)="saveAssign($event)"
               ></step-task>
             </div>
           </ng-template>
@@ -924,7 +925,7 @@
                 [listInstanceStep]="listSteps"
                 [applyFor]="'5'"
                 (continueStep)="continueStep($event)"
-                (saveAssignTask)="saveAssignTask($event)"
+                (saveAssignTask)="saveAssign($event)"
               ></step-task>
             </div>
           </ng-template>
