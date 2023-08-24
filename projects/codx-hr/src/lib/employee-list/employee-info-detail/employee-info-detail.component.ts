@@ -4116,6 +4116,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   HandleEmployeeESkillsInfo(actionHeaderText, actionType: string, data: any) {
+    console.log('data nhan vao tu ben ngoai', data);
+    
     let option = new SidebarModel();
     option.DataService = this.skillGrid?.dataService;
     option.FormModel = this.eSkillFormmodel;
