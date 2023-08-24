@@ -117,7 +117,7 @@
             [value]="stepsTasks?.taskGroupID"
             (change)="filterText($event, 'taskGroupID')"
             [allowCustom]="false"
-            [readonly]="stepsTasks?.isTaskDefault"
+            [readonly]="stepsTasks?.isTaskDefault || action == 'copy'"
           ></ejs-combobox>
         </div>
       </div>
