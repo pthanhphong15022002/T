@@ -78,6 +78,10 @@ export class CodxAddTaskComponent implements OnInit {
   listFieldCopy = [];
   listField = [];
 
+  isShowDate = false;
+  isShowTime = false;
+  isAddTM = false;
+
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -88,6 +92,7 @@ export class CodxAddTaskComponent implements OnInit {
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
+
 
   constructor(
     private cache: CacheService,
@@ -163,6 +168,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields)); 
       this.listField = this.listFieldCopy?.filter((field) => fieldID?.includes(field?.recID));
     }
+    this.checkStatusShowForm();
     if(this.isBoughtTM == undefined){
       this.adService
         .getLstBoughtModule()
@@ -455,6 +461,7 @@ export class CodxAddTaskComponent implements OnInit {
   valueChangeRadio(event){
     this.stepsTasks.status = event?.field ;
     this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
+    this.checkStatusShowForm();
   }
   //#region save
   async beforeSave() {
@@ -469,21 +476,24 @@ export class CodxAddTaskComponent implements OnInit {
       this.notiService.notifyCode('DP020');
       return;
     }
+
+    if (!this.stepsTasks['taskName']?.trim()) {
+      message.push(this.view['taskName']);
+    }
+    if (this.stepsTasks?.roles?.length <= 0) {
+      message.push(this.view['roles']);
+    }
+
     if(this.isStart){
-      for (let key of this.REQUIRE) {
-        if (
-          (typeof this.stepsTasks[key] === 'string' &&
-            !this.stepsTasks[key].trim()) ||
-          !this.stepsTasks[key] ||
-          this.stepsTasks[key]?.length === 0
-        ) {
-          message.push(this.view[key]);
+      if(this.stepsTasks?.status != '3'){
+        if (!this.stepsTasks?.startDate) {
+          message.push(this.view['startDate']);
+        }
+        if (!this.stepsTasks?.endDate) {
+          message.push(this.view['endDate']);
         }
       }
     }else{
-      if (!this.stepsTasks['taskName']?.trim()) {
-        message.push(this.view['taskName']);
-      }
       if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
         message.push(this.view['durationDay']);
       }
@@ -607,5 +617,35 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  checkStatusShowForm(){
+    if(this.action == 'add' || this.action == 'copy'){
+      if(this.isStart){
+        if(this.stepsTasks.status == '3'){
+          this.isShowDate = false;
+          this.isShowTime = false;
+          this.isAddTM = false;
+        }else{
+          this.isShowDate = true;
+          this.isShowTime = true;
+          this.isAddTM = true;
+        }
+      }else{
+        this.isShowDate = false;
+        this.isShowTime = true;
+        this.isAddTM = true;
+      }
+    }else{//edit
+      if(this.isStart){
+        this.isShowDate = true;
+        this.isShowTime = true;
+        this.isAddTM = true;
+      }else{
+        this.isShowDate = false;
+        this.isShowTime = true;
+        this.isAddTM = true;
+      }
+    }
   }
 }

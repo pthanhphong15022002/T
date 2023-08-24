@@ -1605,7 +1605,7 @@ export class DealsComponent
         )
         .subscribe((x) => {
           if (x?.event?.status == 'Y') {
-            this.startDeal(this.dataSelected);
+            this.startDeal(data);
           }
           else {
             this.codxCmService
