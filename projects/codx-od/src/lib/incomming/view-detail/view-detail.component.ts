@@ -58,6 +58,7 @@ import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
 import { Permission } from '@shared/models/file.model';
 import { UpdateVersionComponent } from '../updateversion/updateversion.component';
+import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'app-view-detail',
@@ -1727,6 +1728,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               signFile.files.push(file);
             }
           }
+          let ap= new ApproveProcess();
+          ap.funcID= this.view?.formModel?.funcID;
+          ap.entityName= this.view?.formModel?.entityName;
+          ap.module= 'OD';
           let dialogApprove = this.callfunc.openForm(
             PopupAddSignFileComponent,
             'Chỉnh sửa',
@@ -1741,6 +1746,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               refType: this.formModel?.entityName,
               refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
+              approverProcess:ap,// thêm điều kiện
             },
             '',
             dialogModel

@@ -393,7 +393,9 @@ export class CasesComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        eventItem.isblur = data.approveStatus == '3';
+        eventItem.isblur =
+          data.approveStatus == '3' &&
+          (this.funcID == 'CM0401' || this.funcID == 'CM0402'); // de duyet ko bị isblur more
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {

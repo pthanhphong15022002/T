@@ -65,7 +65,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     }
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
-    debugger
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
     console.log('skill obj nhan vao', this.skillObj);
     
@@ -171,7 +170,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
-        debugger
         if (p != null) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(p);
@@ -241,7 +239,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   getFormatDate(trainFrom: string) {
     let resultDate = '';
     if (trainFrom) {
-      debugger
       let arrDate = trainFrom.split('/');
       resultDate =
         arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
