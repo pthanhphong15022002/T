@@ -1093,7 +1093,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @returns
    */
   onSaveVoucher() {
-    var a = this.formCashPayment.validation();
+    //var a = this.formCashPayment.validation();
     if (
       !this.acService.validateFormData(
         this.formCashPayment.formGroup,
