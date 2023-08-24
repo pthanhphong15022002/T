@@ -381,7 +381,7 @@ export class LeadsComponent
     if ($event != null && data != null) {
       for (let eventItem of $event) {
         if (type == 11) eventItem.isbookmark = false;
-        eventItem.isblur = data.approveStatus == '3';
+        eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -492,7 +492,10 @@ export class LeadsComponent
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.full
-        ? data.closed || data.applyProcess || this.checkMoreReason(data) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
+        ? data.closed ||
+          data.applyProcess ||
+          this.checkMoreReason(data) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
@@ -926,7 +929,7 @@ export class LeadsComponent
                 action: 'edit',
                 title: this.titleAction,
                 gridViewSetup: res,
-                applyFor: this.applyForLead
+                applyFor: this.applyForLead,
               };
               var dialog = this.callfc.openSide(
                 PopupConvertLeadComponent,
@@ -941,7 +944,8 @@ export class LeadsComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.dataSelected.applyProcess && this.detailViewLead.reloadListStep(e.event.listStep);
+                  this.dataSelected.applyProcess &&
+                    this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1525,20 +1529,22 @@ export class LeadsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData: any;
-    debugger;
+    let formatDatas = JSON.stringify(data).toString();
+    formatDatas = formatDatas.replace('\\', '');
+
+    let customData = {
+      refID: data.recID,
+      refType: this.view.entityName,
+      dataSource: '',
+    };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
+          // let object = Object.assign({}, data, JSON.parse(dts));
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',
             dataSource: dts,
-          };
-        } else {
-          customData = {
-            refID: data.recID,
-            refType: this.view.entityName,
           };
         }
         this.codxShareService.defaultMoreFunc(
@@ -1553,10 +1559,6 @@ export class LeadsComponent
         this.detectorRef.detectChanges();
       });
     } else {
-      customData = {
-        refID: data.recID,
-        refType: this.view.entityName,
-      };
       this.codxShareService.defaultMoreFunc(
         e,
         data,
