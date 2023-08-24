@@ -32,13 +32,16 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
-  ops = ['m', 'y'];
+  ops = ['d','m', 'y'];
   result;
   fromDateFormat;
   toDateFormat;
   headerTextCalendar: any = [];
   isNullFrom : boolean = true;
   disabledInput = false;
+
+  initValueTrainFromDate :any;
+  initValueTrainToDate :any;
 
   isNullTo: boolean = true;
 
@@ -62,7 +65,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     }
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
+    debugger
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
+    console.log('skill obj nhan vao', this.skillObj);
+    
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
@@ -98,11 +104,15 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
         this.cr.detectChanges();
         if(this.skillObj.trainFromDate == null)
-        this.isNullFrom = false;
+          this.isNullFrom = false;
         if(this.skillObj.trainToDate == null)
-        this.isNullTo = false;
+          this.isNullTo = false;
       }
     }
+
+  }
+
+  onInit(): void {
     if (this.skillObj) {
       this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
@@ -110,9 +120,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.fromDateFormat = this.getFormatDate(null);
       this.toDateFormat = this.getFormatDate(null);
     }
-  }
-
-  onInit(): void {
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
@@ -194,6 +201,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
+    debugger
     let yearFromDate = event.fromDate.getFullYear();
     let monthFromDate = event.fromDate.getMonth() + 1;
     let dayFromDate = event.fromDate.getDate();
@@ -221,10 +229,19 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       }
       this.skillObj.trainToDate = event.fromDate;
     }
+    this.formGroup.patchValue(this.skillObj);
+    if (this.skillObj) {
+      this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
   }
   getFormatDate(trainFrom: string) {
     let resultDate = '';
     if (trainFrom) {
+      debugger
       let arrDate = trainFrom.split('/');
       resultDate =
         arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
