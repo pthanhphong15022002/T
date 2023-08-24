@@ -59,6 +59,7 @@ import { PopAddItemSeriesComponent } from './item-series/pop-add-item-series/pop
 import { VATCodesComponent } from './vatcodes/vatcodes.component';
 import { PopAddVatcodesComponent } from './vatcodes/pop-add-vatcodes/pop-add-vatcodes.component';
 import { PopAddVatpostingComponent } from './vatcodes/pop-add-vatposting/pop-add-vatposting.component';
+import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods/fiscal-periods-add/fiscal-periods-auto-create.component';
 
 var routes: Routes = [
   {
@@ -193,6 +194,7 @@ var routes: Routes = [
     VATCodesComponent,
     PopAddVatcodesComponent,
     PopAddVatpostingComponent,
+    FiscalPeriodsAutoCreateComponent,
   ],
   imports: [
     CommonModule,

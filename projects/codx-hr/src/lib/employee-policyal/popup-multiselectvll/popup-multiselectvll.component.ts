@@ -61,12 +61,22 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
 
   onChangeSelect(event, data){
     debugger
-    if(event.data == true){
+    if(event.data == true && data.checked == false){
       this.lstDataSelected.push(data.value);
+      for(let i = 0; i < this.lstData.length; i++){
+        if(this.lstData[i].value == data.value){
+          this.lstData[i].checked = true;
+        }
+      }
     }
-    else if(event.data == false){
+    else if(event.data == false && data.checked == true){
       let index = this.lstDataSelected.indexOf(data.value);
       this.lstDataSelected.splice(index,1);
+      for(let i = 0; i < this.lstData.length; i++){
+        if(this.lstData[i].value == data.value){
+          this.lstData[i].checked = false;
+        }
+      }
     }
   }
 
@@ -75,5 +85,6 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
     for(let i = 0; i < this.lstData.length; i++){
         this.lstData[i].checked = false;
     }
+    this.cr.detectChanges()
   }
 }
