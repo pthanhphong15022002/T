@@ -81,6 +81,8 @@ export class CodxAddTaskComponent implements OnInit {
   isShowDate = false;
   isShowTime = false;
   isAddTM = false;
+  startDayOld;
+  endDayOld;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -461,6 +463,14 @@ export class CodxAddTaskComponent implements OnInit {
   valueChangeRadio(event){
     this.stepsTasks.status = event?.field ;
     this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
+    if(event?.field == "3"){
+      [this.startDayOld,this.endDayOld] =  [this.stepsTasks?.startDate,this.stepsTasks?.endDate];
+      [this.stepsTasks.startDate,this.stepsTasks.endDate] = [null, null];
+    }
+    if(event?.field == "1"){
+      this.stepsTasks.startDate = this.startDayOld ? this.startDayOld : this.stepsTasks?.startDate;
+      this.stepsTasks.endDate = this.endDayOld ? this.endDayOld : this.stepsTasks?.endDate;
+    }
     this.checkStatusShowForm();
   }
   //#region save
@@ -638,9 +648,15 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }else{//edit
       if(this.isStart){
-        this.isShowDate = true;
-        this.isShowTime = true;
-        this.isAddTM = true;
+        if(!this.stepsTasks?.endDate || !this.stepsTasks?.startDate){
+          this.isShowDate = false;
+          this.isShowTime = false;
+          this.isAddTM = false;
+        }else{
+          this.isShowDate = true;
+          this.isShowTime = true;
+          this.isAddTM = true;
+        }
       }else{
         this.isShowDate = false;
         this.isShowTime = true;
