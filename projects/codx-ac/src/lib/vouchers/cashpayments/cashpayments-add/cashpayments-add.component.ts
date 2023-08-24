@@ -380,29 +380,15 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm khởi tạo trước khi init của lưới SettledInvoices (Ẩn hiện các cột theo đồng tiền hạch toán)
    * @param columnsGrid danh sách cột của lưới
    */
-  beforeInitGridSettledInvoices(columnsGrid) {
+  beforeInitGridSettledInvoices(eleGrid) {
+    //* Thiết lập các field ẩn theo đồng tiền hạch toán
     this.hideFieldsSettledInvoices = [];
-    if (this.cashpayment.currencyID == this.baseCurr) {
-      //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       this.hideFieldsSettledInvoices.push('BalAmt2'); //? ẩn cột tiền Số dư, HT của SettledInvoices
       this.hideFieldsSettledInvoices.push('SettledAmt2'); //? ẩn cột tiền thanh toán,HT của SettledInvoices
       this.hideFieldsSettledInvoices.push('SettledDisc2'); //? ẩn cột chiết khấu thanh toán, HT của SettledInvoices
     }
-    let arrColumnSettledInvoices = ['BalAmt2', 'SettledAmt2', 'SettledDisc2']; //? danh sách các cột của SettledInvoices
-    arrColumnSettledInvoices.forEach((fieldName) => {
-      if (columnsGrid.findIndex((x) => x.fieldName == fieldName) > -1) {
-        if (this.hideFieldsSettledInvoices.includes(fieldName)) {
-          //? nếu field ẩn có trong danh sách
-          columnsGrid[
-            columnsGrid.findIndex((x) => x.fieldName == fieldName)
-          ].isVisible = false; //? => ẩn cột
-        } else {
-          columnsGrid[
-            columnsGrid.findIndex((x) => x.fieldName == fieldName)
-          ].isVisible = true; //? => hiện cột
-        }
-      }
-    });
+    eleGrid.showHideColumns(this.hideFieldsSettledInvoices);
   }
   //#endregion Init
 

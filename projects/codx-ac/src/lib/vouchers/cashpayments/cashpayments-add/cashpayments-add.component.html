@@ -154,7 +154,7 @@
       <div *ngIf="formCashPayment.formGroup" id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
-        <codx-input #cbxRefdoc style="width: 100%" class="fw-bold" [Group]="formCashPayment.formGroup" field="refDocs"
+        <codx-input tab-index="13" #cbxRefdoc style="width: 100%" class="fw-bold" [Group]="formCashPayment.formGroup" field="refDocs"
           [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)">
         </codx-input>
       </div>
@@ -168,7 +168,7 @@
   <div style="display: grid !important" ngClass="collape"
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="cashpayment">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button tab-index="15" *ngIf="cashpayment?.status == '0'" style="border: 1px solid" id="discard" type="button"
+      <button tab-index="14" *ngIf="cashpayment?.status == '0'" style="border: 1px solid" id="discard" type="button"
         class="btn btn-md btn-light-danger me-2 rounded-15"
         (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
@@ -176,7 +176,7 @@
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button tab-index="16" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important"
+      <button tab-index="15" *ngIf="action != 'edit'" style="border: 1px solid var(--primary-dark) !important"
         type="button" class="btn btn-md btn-light-primary me-2 rounded-15"
         (keydown.enter)="onSaveAddVoucher(); $event.preventDefault()" (click)="onSaveAddVoucher()">
         <div class="d-flex align-items-center">
@@ -184,7 +184,7 @@
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
         </div>
       </button>
-      <button tab-index="17" id="save" type="button" class="btn btn-md btn-light-primary rounded-15"
+      <button tab-index="16" id="save" type="button" class="btn btn-md btn-light-primary rounded-15"
         style="border: 1px solid var(--primary-dark) !important"
         (keydown.enter)="onSaveVoucher(); $event.preventDefault()" (click)="onSaveVoucher()">
         <div class="d-flex align-items-center">
@@ -578,7 +578,7 @@
       (cashpayment?.subType == '4' && subTypeAdv == '1')
     ">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine"
+      <codx-gridview-v2 #eleGridCashPayment class="tabLine" 
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="cashpayment.recID" [editSettings]="editSettingsGrid"
@@ -588,7 +588,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '1' || cashpayment?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="9" id="btnadd"
+            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="saveMasterBeforeAddRow('1'); $event.preventDefault();"
               (click)="saveMasterBeforeAddRow('1')">
@@ -596,8 +596,8 @@
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
-          <!-- <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="9" class="btn btn-sm btn-light-primary rounded-15"
+          <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
+            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault()" (click)="saveMasterBeforeAddRow('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label *ngIf="cashpayment.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
@@ -605,7 +605,7 @@
               <codx-label *ngIf="cashpayment.subType == '4'" [formModel]="dialog.formModel" fiedName="lblAddVat"
                 default="Thêm đề nghị thanh toán"></codx-label>
             </button>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -635,7 +635,7 @@
                 cashpayment?.subType == '9' ||
                 cashpayment?.subType == '12')
             ">
-            <button style="border: 1px solid !important" tab-index="9" id="btnset"
+            <button style="border: 1px solid !important" tab-index="12" id="btnset"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="saveMasterBeforeAddRow('3');$event.preventDefault()" (click)="saveMasterBeforeAddRow('3')">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
@@ -643,7 +643,7 @@
             </button>
           </div>
           <div *ngIf="cashpayment?.subType == '3' || cashpayment?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="9" class="btn btn-sm btn-light-primary rounded-15"
+            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault()" (click)="saveMasterBeforeAddRow('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label *ngIf="cashpayment.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
@@ -679,7 +679,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashpayment?.subType == '9'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="14" class="btn btn-sm btn-light-primary rounded-15"
+            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="
                 saveMasterBeforeAddRow('4'); $event.preventDefault()
               " (click)="saveMasterBeforeAddRow('4')">
