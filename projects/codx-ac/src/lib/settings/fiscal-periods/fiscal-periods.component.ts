@@ -171,13 +171,16 @@ export class FiscalPeriodsComponent extends UIComponent{
       .gridViewSetup('FiscalPeriodsAutoCreate', 'grvFiscalPeriodsAutoCreate')
       .subscribe((res) => {
         if (res) {
+          var obj = {
+            gridViewSetup: res,
+          };
           var dialogs = this.callfc.openForm(
             FiscalPeriodsAutoCreateComponent,
             '',
             400,
             600,
             '',
-            '',
+            obj,
             '',
             opt
           );
