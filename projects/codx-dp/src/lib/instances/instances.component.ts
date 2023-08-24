@@ -1152,6 +1152,7 @@ export class InstancesComponent
 
   viewDetail(data) {
     this.dataSelected = data;
+    debugger;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;

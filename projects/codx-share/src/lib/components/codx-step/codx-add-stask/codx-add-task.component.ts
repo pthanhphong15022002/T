@@ -23,6 +23,8 @@ import {
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-add-stask',
@@ -71,6 +73,7 @@ export class CodxAddTaskComponent implements OnInit {
   showLabelAttachment = false;
   isStatusNew = true;
   isStart = false;
+  isBoughtTM = false;
 
   listFieldCopy = [];
   listField = [];
@@ -91,6 +94,7 @@ export class CodxAddTaskComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private stepService: StepService,
+    private adService: CodxAdService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -102,10 +106,11 @@ export class CodxAddTaskComponent implements OnInit {
     this.action = dt?.data?.action;
     this.isStart = dt?.data?.isStart
     this.typeTask = dt?.data?.taskType;
+    this.ownerParenr = dt?.data?.owner;
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
+    this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
-    this.ownerParenr = dt?.data?.owner;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave =
@@ -148,6 +153,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
       this.stepsTasks.status = "1";
+      this.stepsTasks.createTask = this.isBoughtTM;
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }
@@ -156,6 +162,22 @@ export class CodxAddTaskComponent implements OnInit {
       let fieldID = this.stepsTasks?.fieldID;
       this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields)); 
       this.listField = this.listFieldCopy?.filter((field) => fieldID?.includes(field?.recID));
+    }
+    if(this.isBoughtTM == undefined){
+      this.adService
+        .getLstBoughtModule()
+        .subscribe((res: Array<TN_OrderModule>) => {
+          if (res) {
+            let lstModule = res;
+            this.isBoughtTM = lstModule?.some(
+              (md) =>
+                !md?.boughtModule?.refID &&
+                md.bought &&
+                md.boughtModule?.moduleID == 'TM1'
+            );
+            this.stepsTasks.createTask = this.isBoughtTM;
+          }
+        });
     }
   }
 

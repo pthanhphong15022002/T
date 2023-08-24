@@ -69,6 +69,17 @@ export class PopupAddLeadComponent
   oldIdInstance: string = '';
   currencyIDDefault: string;
 
+
+  companyNo:string = '';
+  customerNo:string = '';
+  companyPhone:string = '';
+  customerPhone:string = '';
+  companyName:string = '';
+  customerName:string = '';
+  company:string = '';
+  customer:string = '';
+
+
   // Data struct Opportunity
   lead: CM_Leads = new CM_Leads();
 
@@ -87,7 +98,7 @@ export class PopupAddLeadComponent
   lstContact: any[] = [];
   lstContactDeletes: any[] = [];
   listIndustries: any[] = [];
-
+  listCategory:any[]=[];
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -180,16 +191,18 @@ export class PopupAddLeadComponent
     this.applyFor = dt?.data?.applyFor;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.currencyIDDefault = dt?.data?.currencyIDDefault;
+    this.getValuelistCategory(dt?.data?.listCategory);
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
+      this.contactId = this.action === this.actionCopy ? dt?.data?.contactIdOld:  this.lead.contactID;
+      this.leadId = this.action === this.actionCopy ?  dt?.data?.leadIdOld:  this.lead.recID;
       if (this.action === this.actionCopy) {
-        this.leadId = dt?.data?.leadIdOld;
-        this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
-
         this.lead.leadID = '';
+        this.lead.contactID = Util.uid();
+        this.lead.recID = Util.uid();
       } else {
         this.planceHolderAutoNumber = this.lead.leadID;
       }
@@ -213,7 +226,7 @@ export class PopupAddLeadComponent
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
       } else if ($event.field == 'industries') {
-        let owner = $event.component.itemsSelected[0].Owner;
+        let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
           let index = this.listParticipants.findIndex((x) => x.userID);
@@ -258,6 +271,22 @@ export class PopupAddLeadComponent
             this.lead.exchangeRate = exchangeRateNew;
           }
         });
+    }
+  }
+  getValuelistCategory(listCategory) {
+    const mappings = {
+      '5': 'companyNo',
+      '6': 'customerNo',
+      '7': 'companyPhone',
+      '8': 'customerPhone',
+      '3': 'companyName',
+      '4': 'customerName',
+      '1': 'company',
+      '2': 'customer'
+    };
+    for (const key in mappings) {
+      const value = mappings[key];
+      this[value] = listCategory.find(x => x.value === key)?.text || '';
     }
   }
   valueChangeDate($event) {
@@ -321,7 +350,7 @@ export class PopupAddLeadComponent
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
-        )[0].userName;
+        )[0]?.userName;
       }
       this.searchOwner('1','O','0',this.owner,ownerName);
     }
@@ -375,7 +404,6 @@ export class PopupAddLeadComponent
   // }
 
   addPermission(processId:any) {
-
     var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
     if (result) {
       let permissionsDP = result?.permissionRoles;

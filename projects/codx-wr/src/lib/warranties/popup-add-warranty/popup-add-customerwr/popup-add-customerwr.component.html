@@ -62,7 +62,7 @@
         field="customerID"
         [crrValue]="data?.customerID"
         [refValue]="'CMCustomers'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeCbx($event)"
       >
       </codx-input>
     </div>
@@ -79,12 +79,12 @@
       ></codx-input>
     </div>
     <div class="form-group">
-      <codx-label fiedName="CustomerType" [formModel]="form.formModel">
+      <codx-label fiedName="CustGroupID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="customerType"
+        field="custGroupID"
         [formModel]="form.formModel"
-        [crrValue]="data?.customerType"
+        [crrValue]="data?.custGroupID"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -98,7 +98,7 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="data?.category == '1'">
       <codx-label fiedName="ContactName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
@@ -109,7 +109,7 @@
       ></codx-input>
     </div>
     <div class="form-group row">
-      <div class="col-6">
+      <div class="col-6" *ngIf="data?.category == '1'">
         <codx-label fiedName="Mobile" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -119,7 +119,7 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <div class="col-6">
+      <div [ngClass]="data?.category == '1' ? 'col-6' : ''">
         <codx-label fiedName="Phone" [formModel]="form.formModel"> </codx-label>
         <codx-input
           field="phone"
@@ -146,28 +146,6 @@
         [crrValue]="data?.address"
         (valueChange)="valueChange($event)"
       ></codx-input>
-    </div>
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="Jobtitle" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          field="jobtitle"
-          [formModel]="form.formModel"
-          [crrValue]="data?.jobtitle"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="Occupation" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          field="occupation"
-          [formModel]="form.formModel"
-          [crrValue]="data?.occupation"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
-      </div>
     </div>
   </ng-template>
   <ng-template #footer>

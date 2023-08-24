@@ -231,7 +231,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
     popup.closed.subscribe(e => {
       if (e?.event) {
-
+        this.view.dataService.data = [];
+        this.view.dataService.oriData = [];
+        this.view.loadData();
       }
     })
   }

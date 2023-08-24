@@ -91,9 +91,10 @@ export class LeadsComponent
 
   // data structure
   listCustomer: CM_Customers[] = [];
+  listCategory:any[]=[];
+
 
   // type of string
-  customerName: string = '';
   oldIdDeal: string = '';
 
   @Input() showButtonAdd = false;
@@ -110,16 +111,15 @@ export class LeadsComponent
   vllStatus = 'DP041';
   vllPriority = 'TM005';
   crrFuncID = '';
-  // viewMode = 2;
+  viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = false;
+
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
-  applyProcess: boolean = true;
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
@@ -136,7 +136,13 @@ export class LeadsComponent
   currencyIDDefault: any;
   statusDefault: any;
   valueListStatus: any;
+
+
+
+
   isLoading = false;
+  hideMoreFC = false;
+  applyProcess: boolean = true;
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
@@ -190,6 +196,7 @@ export class LeadsComponent
     this.getFuncID(this.funcID);
     this.getColorReason();
     this.getValuelistStatus();
+    this.getValuelistCategory();
     this.getProcessSetting();
   }
   getValuelistStatus() {
@@ -204,7 +211,14 @@ export class LeadsComponent
       }
     });
   }
-  getProcessSetting() {
+  getValuelistCategory(){
+    this.cache.valueList('CRM058').subscribe((res) => {
+      if (res) {
+        this.listCategory = res.datas;
+      }
+    });
+  }
+  async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
       .subscribe((res) => {
@@ -437,7 +451,7 @@ export class LeadsComponent
     let isConvertLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['13', '3'].includes(data.status) || data.closed
+        ? !['13', '3', '2'].includes(data.status) || data.closed
         : true;
     };
     let isMergeLead = (eventItem, data) => {
@@ -479,7 +493,7 @@ export class LeadsComponent
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
       eventItem.disabled = data.full
-        ? data.closed || data.applyProcess || this.checkMoreReason(data)
+        ? data.closed || data.applyProcess || this.checkMoreReason(data) || ( !this.checkApplyProcess(data) &&  ['3', '5'].includes(data.status) )
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
@@ -793,6 +807,7 @@ export class LeadsComponent
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected.applyProcess,
+      listCategory: this.listCategory
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -812,7 +827,7 @@ export class LeadsComponent
 
   edit(data) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -830,6 +845,7 @@ export class LeadsComponent
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
+          listCategory: this.listCategory
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -913,6 +929,7 @@ export class LeadsComponent
                 action: 'edit',
                 title: this.titleAction,
                 gridViewSetup: res,
+                applyFor: this.applyForLead
               };
               var dialog = this.callfc.openSide(
                 PopupConvertLeadComponent,
@@ -927,6 +944,7 @@ export class LeadsComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
+                  this.dataSelected.applyProcess && this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });

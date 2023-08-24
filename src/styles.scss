@@ -3340,7 +3340,7 @@ codx-card-center .card.codx_cardcenter{
   }
    &.width-20{
     // min-width: 250px;
-    left: -6px;
+    left: -16px;
    }
   &.width-0{
     box-shadow: none;
@@ -3362,9 +3362,12 @@ codx-card-center .card.codx_cardcenter{
   }
 }
 
+#Content-Fillter.filter-form {
+  height: calc(100% + 16px);
+}
 .card-body.fillter-card-body{
-  padding-left: 0!important;
-  padding-right: 0!important;
+  padding-left: 0px!important;
+  padding-right: 12px!important;
 }
 
 /***/
@@ -3473,9 +3476,7 @@ lib-layoutonlyheader{
 //   margin-bottom: 0!important;
 // }
 
-#Content-Fillter.filter-form {
-  height: calc(100% + 10px);
-}
+
 #viewModeDetail{
   max-height: none!important;
 }

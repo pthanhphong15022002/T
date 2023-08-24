@@ -44,4 +44,8 @@ export class MenuListComponent implements OnInit{
     this.selectedChange.emit(item);
   }
 
+  imgToSvg(e:any)
+  {
+
+  }
 }

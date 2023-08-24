@@ -33,7 +33,6 @@ implements OnInit, AfterViewInit {
   @Input() funcID: string; //True - Khách hàng; False - Liên hệ
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @Output() saveAssign = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('tabCaseDetailComponent') tabCaseDetailComponent: TabCasesDetailComponent;
@@ -72,6 +71,7 @@ implements OnInit, AfterViewInit {
     },
   ];
 
+  id = '';
   treeTask = [];
   listCategory = [];
   listStepsProcess = [];
@@ -110,7 +110,8 @@ implements OnInit, AfterViewInit {
         this.dataSelected =this.dataSelected;
         this.caseId = changes['dataSelected'].currentValue?.recID;
         this.getContactByObjectID(this.dataSelected.contactID ,this.dataSelected.customerID);
-        this.getTree(); //v
+        this.id = this.dataSelected.applyProcess ? this.dataSelected?.refID : this.dataSelected?.recID;
+        this.loadTree(this.id);
       }
     }
   }
@@ -248,7 +249,24 @@ implements OnInit, AfterViewInit {
     }
     return check;
   }
-  saveAssignTask(e) {
-    if (e) this.saveAssign.emit(e);
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.id);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
+    });
   }
 }
