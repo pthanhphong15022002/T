@@ -22,9 +22,9 @@
     <div class="d-flex justify-content-between w-100 mb-5">
       <div class="d-flex flex-row">
         <div class="d-flex flex-column w-400px min-w-400px">
-          <div class="me-4 d-flex fw-bold fs-5-sm mb-1">
+          <div class="me-4 d-flex fw-bold fs-6 mb-1">
             <span
-              class="me-2 icon-18"
+              class="me-2 icon-16"
               [ngClass]="
                 data.type == '1'
                   ? 'icon-monetization_on'
@@ -63,7 +63,7 @@
           </div>
           <div
             class="text-dark fw-bold"
-            [ngClass]="data.parentID == null ? 'fs-5' : 'fs-6'"
+            [ngClass]="data.parentID == null ? 'fs-5-sm' : 'fs-6'"
           >
             {{ data.name }}
           </div>

@@ -983,7 +983,7 @@
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <e-tabitem *ngIf="canHighLight">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight4"

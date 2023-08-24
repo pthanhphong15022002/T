@@ -19,9 +19,8 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { IJournal, Vll075 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
@@ -68,7 +67,6 @@ export class CashtransferAddComponent extends UIComponent {
     { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'link', textDefault: 'Liên kết', isActive: false },
   ];
-  voucherNoPlaceholderText$: Observable<string>;
   journal: IJournal;
   hiddenFields: string[] = [];
   ignoredFields: string[] = [];
@@ -158,9 +156,6 @@ export class CashtransferAddComponent extends UIComponent {
       this.baseCurr = res[0]?.baseCurr;
     });
 
-    this.voucherNoPlaceholderText$ =
-      this.journalService.getVoucherNoPlaceholderText();
-
     this.journalService
       .getJournal(this.cashTransfer.journalNo)
       .subscribe((res) => {
@@ -187,7 +182,7 @@ export class CashtransferAddComponent extends UIComponent {
           this.isEdit
         );
 
-        if (this.journal.assignRule === '2') {
+        if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
           this.ignoredFields.push('VoucherNo');
         }
 

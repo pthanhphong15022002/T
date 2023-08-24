@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -41,6 +43,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() owner: string;
   @Input() isPause = false;
   @Input() entityName = '';
+  @Output() saveAssign = new EventEmitter<any>(); 
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
@@ -592,7 +595,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instances_Steps_Tasks';
     task.dueDate = data?.endDate;
-    // task.sessionID = this.currentStep?.instanceID;
+    task.sessionID = this.customerID;
     let dataReferences = [
       {
         recIDReferences: data.recID,
@@ -630,7 +633,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           )
           .subscribe();
       }
-      // this.saveAssign.emit(doneSave);
+      this.saveAssign.emit(doneSave);
     });
   }
   //#endregion

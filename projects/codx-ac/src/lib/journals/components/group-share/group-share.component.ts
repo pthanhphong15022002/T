@@ -51,7 +51,7 @@ export class GroupShareComponent extends UIComponent implements OnChanges {
       data: e.data?.map(
         (m) =>
           new JournalPermission(
-            this.journalService.getRoleType(e.field),
+            JournalPermission.getRoleType(e.field),
             m.objectType,
             m.id,
             m.text

@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CRUDService,
   CacheService,
   DataRequest,
@@ -39,17 +40,21 @@ export class LeadDetailComponent implements OnInit {
   @Input() colorReasonFail: any;
   @Input() action: any;
   @Input() applyProcess: any;
+  @Input() listCategory: any;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('comment') comment: TemplateRef<any>;
 
+  seesionID = '';
   viewTag: string = '';
   tabControl = [];
   listRoles = [];
   listSteps = [];
   listStepsProcess = [];
+  treeTask = [];
+  listCategoryTmp = [] = [];
 
   tmpDeal: any;
   oCountFooter: any = {};
@@ -60,17 +65,25 @@ export class LeadDetailComponent implements OnInit {
 
   isDataLoading = false;
 
+  // type of string
   oldRecId: string = '';
-  isHidden: boolean = true;
+  companyNo:string = '';
+  customerNo:string = '';
+  companyName:string = '';
+  customerName:string = '';
 
+
+  isHidden: boolean = true;
   isBool: boolean = false;
-  hasRunOnce = false;
-  treeTask = [];
+  hasRunOnce: boolean = false;
+
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private api: ApiHttpService,
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
@@ -153,6 +166,11 @@ export class LeadDetailComponent implements OnInit {
       }
       this.getTags(this.dataSelected);
     }
+    if (changes['listCategory']?.currentValue && this.listCategoryTmp.length <= 0) {
+        this.listCategoryTmp = changes['listCategory'].currentValue;
+        this.getValuelistCategory(this.listCategoryTmp);
+    }
+
   }
 
   clickMF(e, data) {
@@ -181,16 +199,31 @@ export class LeadDetailComponent implements OnInit {
   }
 
   async promiseAllLoad() {
+    this.seesionID = this.dataSelected.applyProcess ? this.dataSelected.refID : this.dataSelected.recID;
+    this.loadTree(this.seesionID);
     this.isDataLoading = true;
-    this.getTree();
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
     this.dataSelected.dealID && (await this.getTmpDeal());
   }
   async executeApiCalls() {
+
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
-  }
 
+  }
+  getValuelistCategory(listCategory) {
+    const mappings = {
+      '5': 'companyNo',
+      '6': 'customerNo',
+      '3': 'companyName',
+      '4': 'customerName'
+    };
+    for (const key in mappings) {
+      const value = mappings[key];
+      this[value] = listCategory.find(x => x.value === key)?.text || '';
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   async getGridViewSetupDeal() {
     this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
     this.gridViewSetupDeal = await firstValueFrom(
@@ -286,7 +319,7 @@ export class LeadDetailComponent implements OnInit {
     let transferControl = this.dataSelected.steps.transferControl;
     if (transferControl == '0') return;
   }
-  saveAssignTask(e) {}
+
   changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
@@ -308,6 +341,26 @@ export class LeadDetailComponent implements OnInit {
       : this.dataSelected.recID;
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
+    });
+  }
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.seesionID);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
     });
   }
 }

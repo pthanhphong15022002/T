@@ -31,6 +31,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   @Input() showColumnControl = 1;
   @Input() currentElmID: any;
   @Input() viewsCurrent = '';
+  @Input() typeView = '1';
   @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
   @Input() isShowTitle = true;
@@ -60,12 +61,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     this.formModel.formName = 'DPInstancesStepsFields';
     this.formModel.gridViewName = 'grvDPInstancesStepsFields';
     this.formModel.entityName = 'DP_Instances_Steps_Fields';
-    if(!this.titleHeaderFormCF){
-      this.cache.functionList('DPT0301').subscribe(f=>{
+    if (!this.titleHeaderFormCF) {
+      this.cache.functionList('DPT0301').subscribe((f) => {
         this.titleHeaderFormCF = f?.customName || f?.description;
-      })
+      });
     }
-  
+
     this.cache.valueList('DP0274').subscribe((res) => {
       if (res) this.dtFormatDate = res.datas;
     });

@@ -129,6 +129,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   curPermission: any;
   fullRolePlan = false;
   showOKRMF =true;
+  treeCollapsed=false;
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -1032,6 +1033,29 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   clickTreeNode(evt: any) {
     evt.stopPropagation();
     evt.preventDefault();
+  }
+  collapeTree(collapsed: boolean) {
+    this.dataOKR.forEach((group) => {
+      if(group?.listOKR?.length>0){
+        group?.listOKR.forEach((ob) => {          
+          ob.isCollapse = collapsed;
+        });
+      }
+    });
+    this.detectorRef.detectChanges();
+    this.dataOKR.forEach((group) => {
+      if(group?.listOKR?.length>0){
+        group?.listOKR.forEach((ob) => {          
+          if (ob.items != null && ob.items.length > 0) {
+            ob.items.forEach((kr) => {
+              kr.isCollapse = collapsed;
+            });
+          }
+        });
+      }
+    });    
+    this.treeCollapsed = collapsed;
+    this.detectorRef.detectChanges();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//

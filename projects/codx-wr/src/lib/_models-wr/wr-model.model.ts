@@ -8,7 +8,7 @@ export class WR_WorkOrders {
   custGroupID: string;
   customerID: string;
   customerName: string;
-  contactname: string;
+  contactName: string;
   mobile: string;
   phone: string;
   email: string;
@@ -22,10 +22,12 @@ export class WR_WorkOrders {
   zone: string;
   zone2: string;
   seriNo: string;
-  serviceTag;
+  serviceTag: string;
   lob: string;
+  productID: string;
   productType: string;
   productBrand: string;
+  productModel: string;
   productDesc: string;
   warrantyExpired?: Date;
   oow: boolean;
