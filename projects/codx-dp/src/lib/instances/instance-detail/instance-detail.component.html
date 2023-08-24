@@ -341,8 +341,9 @@
               </ng-container>
             </div>
             <ng-container *ngIf="viewModelDetail == 'F'">
-              <ng-container *ngFor="let item of listSteps">
-                <!-- <codx-field-detail
+              <div class="px-2">
+                <ng-container *ngFor="let item of listSteps">
+                  <!-- <codx-field-detail
                 *ngIf="item?.fields?.length > 0"
                 [dataStep]="item"
                 [showColumnControl]="showColumnControl(item.stepID)"
@@ -361,27 +362,28 @@
                 (saveDataStep)="saveDataStep($event)"
               >
               </codx-field-detail> -->
-                <codx-fields-detail-temp
-                  *ngIf="item?.fields?.length > 0"
-                  [dataStep]="item"
-                  [typeView]="'0'"
-                  [showColumnControl]="showColumnControl(item.stepID)"
-                  [isUpdate]="
-                    dataSelect.write &&
-                    !dataSelect.closed &&
-                    (dataSelect.status == '1' || dataSelect.status == '2') &&
-                    dataSelect?.approveStatus != '3'
-                  "
-                  [currentElmID]="currentElmID"
-                  (inputElmIDCF)="inputElmIDCustomField($event)"
-                  [isSaving]="isSaving"
-                  (actionSaveCF)="actionSaveCustomField($event)"
-                  [titleHeaderFormCF]="titleDefault"
-                  [viewsCurrent]="viewsCurrent"
-                  (saveDataStep)="saveDataStep($event)"
-                >
-                </codx-fields-detail-temp>
-              </ng-container>
+                  <codx-fields-detail-temp
+                    *ngIf="item?.fields?.length > 0"
+                    [dataStep]="item"
+                    [typeView]="'0'"
+                    [showColumnControl]="showColumnControl(item.stepID)"
+                    [isUpdate]="
+                      dataSelect.write &&
+                      !dataSelect.closed &&
+                      (dataSelect.status == '1' || dataSelect.status == '2') &&
+                      dataSelect?.approveStatus != '3'
+                    "
+                    [currentElmID]="currentElmID"
+                    (inputElmIDCF)="inputElmIDCustomField($event)"
+                    [isSaving]="isSaving"
+                    (actionSaveCF)="actionSaveCustomField($event)"
+                    [titleHeaderFormCF]="titleDefault"
+                    [viewsCurrent]="viewsCurrent"
+                    (saveDataStep)="saveDataStep($event)"
+                  >
+                  </codx-fields-detail-temp>
+                </ng-container>
+              </div>
             </ng-container>
           </div>
         </div>

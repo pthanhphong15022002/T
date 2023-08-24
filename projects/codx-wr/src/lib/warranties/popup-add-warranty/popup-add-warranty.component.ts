@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Optional, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Optional,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
   AuthStore,
@@ -23,6 +29,7 @@ import { CodxWrService } from '../../codx-wr.service';
   styleUrls: ['./popup-add-warranty.component.css'],
 })
 export class PopupAddWarrantyComponent implements OnInit {
+  @ViewChild('codxInputSeri') codxInputSeri: any;
   data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
@@ -194,39 +201,42 @@ export class PopupAddWarrantyComponent implements OnInit {
   valueChange(e) {}
 
   async valueChangeCbx(e) {
-    if (e?.data != this.data.seriNo) {
-      // this.data.seriNo = e?.data;
-      // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
-      // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+    if (e?.data) {
+      if (e?.data != this.data.seriNo) {
+        // this.data.seriNo = e?.data;
+        // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
+        // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
 
-      let serviceTag = await firstValueFrom(
-        this.wrSv.getOneServiceTag(e?.data)
-      );
+        let serviceTag = await firstValueFrom(
+          this.wrSv.getOneServiceTag(e?.data)
+        );
 
-      if (serviceTag != null) {
-        var key = Object.keys(this.data);
-        var keySv = Object.keys(serviceTag);
-        for (let index = 0; index < key.length; index++) {
-          for (let i = 0; i < keySv.length; i++) {
-            if (
-              key[index].toLowerCase() != 'owner' &&
-              key[index].toLowerCase() != 'buid' &&
-              key[index].toLowerCase() != 'CreatedOn' &&
-              key[index].toLowerCase() != 'CreatedBy' &&
-              key[index].toLowerCase() != 'ModifiedOn' &&
-              key[index].toLowerCase() != 'ModifiedBy'
-            )
-              if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-                this.data[key[index]] = serviceTag[keySv[i]];
-              }
+        if (serviceTag != null) {
+          var key = Object.keys(this.data);
+          var keySv = Object.keys(serviceTag);
+          for (let index = 0; index < key.length; index++) {
+            for (let i = 0; i < keySv.length; i++) {
+              if (
+                key[index].toLowerCase() != 'owner' &&
+                key[index].toLowerCase() != 'buid' &&
+                key[index].toLowerCase() != 'CreatedOn' &&
+                key[index].toLowerCase() != 'CreatedBy' &&
+                key[index].toLowerCase() != 'ModifiedOn' &&
+                key[index].toLowerCase() != 'ModifiedBy'
+              )
+                if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
+                  this.data[key[index]] = serviceTag[keySv[i]];
+                }
+            }
+          }
+          if (new Date(this.data.warrantyExpired) > new Date()) {
+            this.data.oow = true;
+          } else {
+            this.data.oow = false;
           }
         }
-        if (new Date(this.data.warrantyExpired) > new Date()) {
-          this.data.oow = true;
-        } else {
-          this.data.oow = false;
-        }
       }
+
       // let customer = await firstValueFrom(
       //   this.wrSv.getOneCustomer(this.data.customerID)
       // );
@@ -300,7 +310,7 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   removeUser() {
     this.setCustomerEmtry();
-    this.setServiceTagEmtry();
+    // this.setServiceTagEmtry();
     this.detectorRef.detectChanges();
   }
 
@@ -320,7 +330,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   }
 
   setServiceTagEmtry() {
-    this.data.seriNo = null;
+    this.data.seriNo = '';
     this.data.serviceTag = '';
     this.data.lob = '';
     this.data.productID = '';
@@ -330,5 +340,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.data.productDesc = '';
     this.data.note = '';
     this.data.warrantyExpired = null;
+    this.codxInputSeri.value = '';
+    this.codxInputSeri.crrValue = '';
   }
 }
