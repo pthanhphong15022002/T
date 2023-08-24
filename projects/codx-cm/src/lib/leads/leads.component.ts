@@ -91,8 +91,7 @@ export class LeadsComponent
 
   // data structure
   listCustomer: CM_Customers[] = [];
-  listCategory:any[]=[];
-
+  listCategory: any[] = [];
 
   // type of string
   oldIdDeal: string = '';
@@ -136,9 +135,6 @@ export class LeadsComponent
   currencyIDDefault: any;
   statusDefault: any;
   valueListStatus: any;
-
-
-
 
   isLoading = false;
   hideMoreFC = false;
@@ -211,7 +207,7 @@ export class LeadsComponent
       }
     });
   }
-  getValuelistCategory(){
+  getValuelistCategory() {
     this.cache.valueList('CRM058').subscribe((res) => {
       if (res) {
         this.listCategory = res.datas;
@@ -810,7 +806,7 @@ export class LeadsComponent
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected.applyProcess,
-      listCategory: this.listCategory
+      listCategory: this.listCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -848,7 +844,7 @@ export class LeadsComponent
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
-          listCategory: this.listCategory
+          listCategory: this.listCategory,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -1532,22 +1528,62 @@ export class LeadsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let formatDatas = JSON.stringify(data).toString();
-    formatDatas = formatDatas.replace('\\', '');
+    // let formatDatas = JSON.stringify(data);
+    //  let formatDatas = formatDatas.replace('\\', '');
+    // let datas = [
+    //   // {
+    //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //   // dia_chi: '06 Lê Lợi, Huế',
+    //   // ma_so_thue: '1111111111111',
+    //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //   // tai_khoan: 'VCB-012024554565',
+    //   // san_pham: 'Sản phẩm quần què',
+    //   // dien_tich: '0',
+    //   // so_luong: 1,
+    //   // don_gia: 100000,
 
+    //   // datas: [
+    //   {
+    //     customerID: 'Sản phẩm quần què 1',
+    //     Industries: '0',
+    //     BusinessLineID: 3333333333,
+    //     don_gia: 100000,
+    //   },
+    //   {
+    //     customerID: ' nhu ga',
+    //     Industries: '0',
+    //     BusinessLineID: 99999999,
+    //     don_gia: 5000,
+    //   },
+    //   // ,
+    //   // ],
+    //   //  }
+    // ];
+
+    // let formatDatas = JSON.stringify(datas);
+
+    let formatDatas = data.datas ?? '';
     let customData = {
       refID: data.recID,
       refType: this.view.entityName,
-      dataSource: '',
+      dataSource: formatDatas,
     };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
           // let object = Object.assign({}, data, JSON.parse(dts));
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
+
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',
-            dataSource: dts,
+            dataSource: formatDatas,
           };
         }
         this.codxShareService.defaultMoreFunc(
