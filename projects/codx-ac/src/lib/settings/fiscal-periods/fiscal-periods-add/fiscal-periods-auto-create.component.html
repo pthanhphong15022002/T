@@ -1,0 +1,257 @@
+<codx-form
+  #form
+  [headerText]=""
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  subToolbarCss="text-end"
+  [customToolbar]="subToolbar"
+  [data]="fiscalPeriodsAutoCreate"
+>
+</codx-form>
+
+<ng-template #subToolbar>
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-2">
+      <div class="d-flex justify-content-start me-2">
+        <div class="mt-1 btn btn-icon btn-sm btn-primary btn-circle me-4 bg">
+          <i class="icon-add_box icon-16"></i>
+        </div>
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <div
+              class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase"
+            >
+              {{ headerText }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="ms-2">
+          <div
+            class="btn btn-icon btn-sm btn-light-primary btn-circle bg"
+            (click)="close()"
+          >
+            <i class="icon-close icon-16"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <ng-container>
+      <div class="row">
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="FiscalYear"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (controlBlur)="valueChange($event)"
+              field="fiscalYear"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <ejs-tab>
+        <e-tabitems>
+          <!-- Tab tùy chọn -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-3">
+                <span
+                  [innerHTML]="'5' | vll : 'AC073' : 'text' | async"
+                  class="fw-bold fs-5-sm text-uppercase"
+                >
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div class="mt-5">
+                <ng-container *ngTemplateOutlet="tabOptions"></ng-container>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end me-3">
+        <div class="ms-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 60px"
+            (click)="onSave()"
+          >
+            <codx-label
+              class="fs-6 fw-normal"
+              fiedName="lblSave"
+              default="Lưu"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+</ng-template>
+
+<ng-template #tabOptions>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          field="periodControl"
+        >
+        </codx-input>
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="PeriodControl"
+          style="padding-left: 5px;"
+        >
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          field="moduleControl"
+        >
+        </codx-input>
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="ModuleControl"
+          style="padding-left: 5px;"
+        >
+        </codx-label>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="fiscalPeriodsAutoCreate.periodControl == true">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="OldFiscalYear"
+          >
+          </codx-label>
+          <ejs-combobox
+            [dataSource]="listFiscalYear"
+            [value]="fiscalPeriodsAutoCreate.oldFiscalYear"
+            field="oldFiscalYear"
+            (select)="onSelectCbx($event)"
+          >
+          </ejs-combobox>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="fiscalPeriodsAutoCreate.moduleControl == true">
+    <div class="row">
+      <div class="form-group">
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+          field="fiscalPeriodControl"
+        >
+        </codx-input>
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="FiscalPeriodControl"
+          style="padding-left: 5px;"
+        >
+        </codx-label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+              [formModel]="form.formModel"
+              fiedName="StartDate"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="fiscalPeriodsAutoCreate.fiscalPeriodControl == true"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (valueChange)="valueChange($event)"
+              field="startDate"
+            >
+            </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+              [formModel]="form.formModel"
+              fiedName="EndDate"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="fiscalPeriodsAutoCreate.fiscalPeriodControl == true"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (valueChange)="valueChange($event)"
+              field="endDate"
+            >
+            </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label
+              [formModel]="form.formModel"
+              fiedName="PeriodUoM"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (valueChange)="valueChange($event)"
+              field="periodUoM"
+            >
+            </codx-input>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="form-group">
+          <codx-label
+              [formModel]="form.formModel"
+              fiedName="Period"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="fiscalPeriodsAutoCreate.fiscalPeriodControl == true"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (valueChange)="valueChange($event)"
+              field="period"
+            >
+            </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
