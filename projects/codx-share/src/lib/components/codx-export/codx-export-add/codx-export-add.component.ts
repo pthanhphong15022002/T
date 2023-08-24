@@ -333,7 +333,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 elm.objectType ='AD_ExcelTemplates';
               });
               this.onSaveWord();
-              this.dialog.close([item[1][0], this.type]);
+              debugger
+              this.dialog.close([item[1][0], this.type,this.nameFile]);
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {

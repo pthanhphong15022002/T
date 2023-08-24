@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -213,7 +214,10 @@ export class WarrantiesComponent
         this.copy(data);
         break;
       case 'SYS02':
-        // this.delete(data);
+        this.delete(data);
+        break;
+      case 'WR0101_1':
+        this.updateReasonCode(data);
         break;
       default:
         var customData = {
@@ -341,6 +345,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'add',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -379,6 +384,7 @@ export class WarrantiesComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
           };
           var dialog = this.callfc.openSide(
             PopupAddWarrantyComponent,
@@ -415,6 +421,7 @@ export class WarrantiesComponent
         var obj = {
           action: 'copy',
           title: this.titleAction,
+          gridViewSetup: this.gridViewSetup,
         };
         var dialog = this.callfc.openSide(
           PopupAddWarrantyComponent,
@@ -432,30 +439,68 @@ export class WarrantiesComponent
       });
     });
   }
+
+  async delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
+
+    this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteWorkOrderAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
   //#endregion
 
   //#region update reason code
   updateReasonCode(data) {
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.view?.formModel;
-    let obj = {
-      title: this.titleAction,
-    };
-    this.callFc
-      .openForm(
-        PopupUpdateReasonCodeComponent,
-        '',
-        600,
-        700,
-        '',
-        obj,
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.detectorRef.detectChanges();
+    this.cache
+      .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
+      .subscribe((res) => {
+        if (res) {
+          let dialogModel = new DialogModel();
+          dialogModel.zIndex = 1010;
+          let formModel = new FormModel();
+
+          formModel.entityName = 'WR_WorkOrderUpdates';
+          formModel.formName = 'WRWorkOrderUpdates';
+          formModel.gridViewName = 'grvWRWorkOrderUpdates';
+          dialogModel.FormModel = formModel;
+          let obj = {
+            title: this.titleAction,
+            data: data,
+            gridViewSetup: res,
+          };
+          this.callFc
+            .openForm(
+              PopupUpdateReasonCodeComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e?.event && e?.event != null) {
+                this.detectorRef.detectChanges();
+              }
+            });
         }
       });
   }

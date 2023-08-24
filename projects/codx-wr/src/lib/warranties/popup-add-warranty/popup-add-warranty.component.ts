@@ -8,6 +8,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-servicetag.component';
@@ -27,7 +28,10 @@ export class PopupAddWarrantyComponent implements OnInit {
   userID: any;
   radioChecked = true;
   action = '';
+  gridViewSetup: any;
+
   constructor(
+    private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private api: ApiHttpService,
@@ -40,6 +44,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.title = dt?.data?.title;
     this.userID = this.authstore?.get()?.userID;
     this.action = dt?.data?.action;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {}
 
@@ -80,10 +85,20 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   onSave() {
     if (this.data?.customerID == null || this.data?.customerID?.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.CustomerID?.headerText + '"'
+      );
       return;
     }
 
     if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.ServiceTag?.headerText + '"'
+      );
       return;
     }
 

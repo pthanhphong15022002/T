@@ -1482,9 +1482,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return;
     }
     let askUpdateParent = false;
-    let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some(
-      (id) => id == data?.taskGroupID
-    );
+    let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some((id) => id == data?.taskGroupID);
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
