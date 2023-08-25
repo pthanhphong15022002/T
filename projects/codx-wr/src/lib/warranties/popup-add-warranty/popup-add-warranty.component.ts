@@ -207,38 +207,36 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   async valueChangeCbx(e) {
     if (e?.data) {
-      if (e?.data != this.data.seriNo) {
-        // this.data.seriNo = e?.data;
-        // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
-        // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
+      // this.data.seriNo = e?.data;
+      // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
+      // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
 
-        let serviceTag = await firstValueFrom(
-          this.wrSv.getOneServiceTag(e?.data)
-        );
+      let serviceTag = await firstValueFrom(
+        this.wrSv.getOneServiceTag(e?.data)
+      );
 
-        if (serviceTag != null) {
-          var key = Object.keys(this.data);
-          var keySv = Object.keys(serviceTag);
-          for (let index = 0; index < key.length; index++) {
-            for (let i = 0; i < keySv.length; i++) {
-              if (
-                key[index].toLowerCase() != 'owner' &&
-                key[index].toLowerCase() != 'buid' &&
-                key[index].toLowerCase() != 'CreatedOn' &&
-                key[index].toLowerCase() != 'CreatedBy' &&
-                key[index].toLowerCase() != 'ModifiedOn' &&
-                key[index].toLowerCase() != 'ModifiedBy'
-              )
-                if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-                  this.data[key[index]] = serviceTag[keySv[i]];
-                }
-            }
+      if (serviceTag != null) {
+        var key = Object.keys(this.data);
+        var keySv = Object.keys(serviceTag);
+        for (let index = 0; index < key.length; index++) {
+          for (let i = 0; i < keySv.length; i++) {
+            if (
+              key[index].toLowerCase() != 'owner' &&
+              key[index].toLowerCase() != 'buid' &&
+              key[index].toLowerCase() != 'CreatedOn' &&
+              key[index].toLowerCase() != 'CreatedBy' &&
+              key[index].toLowerCase() != 'ModifiedOn' &&
+              key[index].toLowerCase() != 'ModifiedBy'
+            )
+              if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
+                this.data[key[index]] = serviceTag[keySv[i]];
+              }
           }
-          if (new Date(this.data.warrantyExpired) > new Date()) {
-            this.data.oow = true;
-          } else {
-            this.data.oow = false;
-          }
+        }
+        if (new Date(this.data.warrantyExpired) > new Date()) {
+          this.data.oow = true;
+        } else {
+          this.data.oow = false;
         }
       }
 
@@ -346,9 +344,8 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.data.productDesc = '';
     this.data.note = '';
     this.data.warrantyExpired = null;
-    (
-      this.seriNo.ComponentCurrent as CodxComboboxComponent
-    ).dataService.data = [];
+    (this.seriNo.ComponentCurrent as CodxComboboxComponent).dataService.data =
+      [];
     this.seriNo.crrValue = null;
     this.form.formGroup.patchValue(this.data);
   }
