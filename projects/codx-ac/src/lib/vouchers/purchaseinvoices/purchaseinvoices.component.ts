@@ -12,10 +12,11 @@ import {
   ButtonModel,
   DataRequest,
   FormModel,
+  PageTitleService,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -96,7 +97,8 @@ export class PurchaseinvoicesComponent
     inject: Injector,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private journalService: JournalService,
-    private routerActive: ActivatedRoute
+    private routerActive: ActivatedRoute,
+    private pageTitleService: PageTitleService,
   ) {
     super(inject);
 
@@ -175,7 +177,7 @@ export class PurchaseinvoicesComponent
       this.purchaseInvoiceService.journal = this.journal = journal;
     });
 
-    this.purchaseInvoiceService.initCache();
+    // this.purchaseInvoiceService.initCache();
   }
 
   ngAfterViewInit() {
@@ -271,7 +273,7 @@ export class PurchaseinvoicesComponent
   onSelectChange(e) {
     console.log('onChange', e);
 
-    if (e.data.error?.isError) {
+    if (e.data?.error?.isError) {
       return;
     }
 
@@ -321,7 +323,7 @@ export class PurchaseinvoicesComponent
       });
   }
 
-  onChangeMF(mfs: any, data: IPurchaseInvoice): void {
+  onInitMF(mfs: any, data: IPurchaseInvoice): void {
     let disabledFuncs: MF[] = [
       MF.GuiDuyet,
       MF.GhiSo,
