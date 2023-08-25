@@ -10,7 +10,6 @@ import {
 import { FormGroup } from '@angular/forms';
 import {
   CallFuncService,
-  CodxFormComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -93,7 +92,7 @@ export class PopupEProcessContractComponent
 
   dataCbxContractType: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('form') form: CodxFormComponent;
+  // @ViewChild('form') form: CodxFormComponent;
   @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('tmpAddBenefit', { static: true })
   tmpAddBenefit: TemplateRef<any>;
