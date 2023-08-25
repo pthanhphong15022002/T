@@ -30,7 +30,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   grvEDaysOff: any;
   popupLoading: boolean = false;
   request: ResourceModel;
-  requestTree: ResourceModel;
   lang: any;
   @ViewChild('treeViewDetail') treeViewDetail: EmployeeAnnualLeaveByOrgComponent;
 
@@ -72,7 +71,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   onInit(): void {
   }
   ngAfterViewInit(): void {
-    this.button = { id: 'btnAdd' , text: 'Thêm'};
+    this.button = { id: 'btnAdd', text: 'Thêm' };
     this.initRequest();
     this.initViewSetting();
     this.getEDaysOffGrvSetUp();
@@ -109,17 +108,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.request.className = 'EAnnualLeavesBusiness';
     this.request.method = 'GetListEmployeeAnnualLeaveAsync';
     this.request.autoLoad = false;
-    // this.request.parentIDField = 'ParentID';
-    // this.request.idField = 'orgUnitID';
+    this.request.parentIDField = 'ParentID';
+    this.request.idField = 'orgUnitID';
 
-    this.requestTree = new ResourceModel();
-    this.requestTree.service = 'HR';
-    this.requestTree.assemblyName = 'ERM.Business.HR';
-    this.requestTree.className = 'EAnnualLeavesBusiness';
-    this.requestTree.method = 'GetListEmployeeAnnualLeaveAsync';
-    this.requestTree.autoLoad = false;
-    this.requestTree.parentIDField = 'ParentID';
-    this.requestTree.idField = 'orgUnitID';
   }
   initViewSetting() {
     switch (this.funcID) {
@@ -129,8 +120,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.list.toString(),
             type: ViewType.list,
-            request: this.request,
-            sameData: false,
+            sameData: true,
             active: false,
             model: {
               template: this.templateListHRTAL01,
@@ -140,7 +130,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
-            request: this.requestTree,
+            request: this.request,
             sameData: false,
             active: false,
             model: {
@@ -159,8 +149,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.list.toString(),
             type: ViewType.list,
-            request: this.request,
-            sameData: false,
+            sameData: true,
             active: false,
             model: {
               template: this.templateListHRTAL02,
@@ -170,7 +159,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
-            request: this.requestTree,
+            request: this.request,
             sameData: false,
             active: false,
             model: {
@@ -238,21 +227,23 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
     popup.closed.subscribe(e => {
       if (e?.event) {
-        if(this.view.currentView.viewModel.type == 1){
+        if (this.view.currentView.viewModel.type == 1) {
           // this.view.dataService.data = [];
           // this.view.dataService.oriData = [];
           // this.view.currentView.dataService.data  = [];
           // this.view.currentView.dataService.oriData = [];
-          this.view.loadData();
-        }else if(this.view.currentView.viewModel.type == 151){
-          if(this.treeViewDetail){
+          let ins = setInterval(() => {
+            clearInterval(ins);
+            this.view.loadData();
+          }, 500);
+          this.detectorRef.detectChanges();
+        } else if (this.view.currentView.viewModel.type == 151) {
+          if (this.treeViewDetail) {
             let ins = setInterval(() => {
-              if (this.treeViewDetail) {
-                // this.grid.dataService.rowCount = 0;
-                // this.grid.dataService.data = [];
-                clearInterval(ins);
-                this.treeViewDetail.grid.refresh();
-              }
+              // this.grid.dataService.rowCount = 0;
+              // this.grid.dataService.data = [];
+              clearInterval(ins);
+              this.treeViewDetail.grid.refresh();
             }, 500);
             this.detectorRef.detectChanges();
           }
@@ -293,7 +284,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     if (this.listDaysOff?.length <= 0)
       this.popupLoading = true;
     //var item = this.view.dataService.data.findIndex(x => x.recID == data.recID);
-    this.hrService.getDaysOffByEAnnualLeaveAsync(data.employeeID, data.alYear, data.alYearMonth, 
+    this.hrService.getDaysOffByEAnnualLeaveAsync(data.employeeID, data.alYear, data.alYearMonth,
       data.isMonth, this.pageIndex, this.pageSize).subscribe((res: any) => {
         if (res && res.length > 0) {
           //this.view.dataService.data[item].listDaysOff = res;
