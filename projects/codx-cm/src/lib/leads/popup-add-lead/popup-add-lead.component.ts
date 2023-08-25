@@ -518,7 +518,7 @@ export class PopupAddLeadComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        if (res?.save[0] && res?.save) {
+        if (res?.save[0]) {
           //bua save avata
           (this.dialog.dataService as CRUDService)
             .update(res.save[0])
@@ -531,7 +531,7 @@ export class PopupAddLeadComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res?.update[0] && res?.update) {
+        if (res?.update[0]) {
           (this.dialog.dataService as CRUDService)
             .update(res.update[0])
             .subscribe();
