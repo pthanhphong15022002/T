@@ -66,7 +66,7 @@
       </div>
       <div *ngIf="type == 'check' || type == 'list'">
         <ng-container *ngFor="let item of listNote; index as i">
-          <div class="flex align-items-center mb-2">
+          <div class="d-flex align-items-center mb-2">
             <ng-container *ngIf="type == 'check'; else list">
               <codx-input
                 #noteAddText
@@ -118,7 +118,7 @@
       </div>
       <div *ngIf="note?.noteType == 'check' || note?.noteType == 'list'">
         <ng-container *ngFor="let item of note?.checkList; index as i">
-          <div class="flex align-items-center">
+          <div class="d-flex align-items-center">
             <ng-container *ngIf="note?.noteType == 'check'; else list">
               <codx-input
                 #noteAddText
@@ -205,7 +205,7 @@
       >
       </span>
     </div>
-    <div class="test-datetime w-175px border-left">
+    <div class="test-datetime border-left">
       <codx-input
         type="datetime"
         field="StartDate"

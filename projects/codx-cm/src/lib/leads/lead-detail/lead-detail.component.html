@@ -543,7 +543,14 @@
   </codx-detail-tmp>
 </ng-container>
 <ng-template #body let-data>
-  <div style="overflow: hidden">
+  <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+    <div
+      class="btn btn-white btn-icon tab-action"
+      (click)="clickShowTab(!isShow)"
+    >
+      <span class="icon-unfold_more icon-20"></span>
+    </div>
+    <div class="instance-select">
     <ejs-tab #tabObj>
       <e-tabitems>
         <e-tabitem>
@@ -934,6 +941,7 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
+    </div>
   </div>
 </ng-template>
 
