@@ -27,7 +27,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/multi-select-popup/multi-select-popup.component';
+import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 
 @Component({

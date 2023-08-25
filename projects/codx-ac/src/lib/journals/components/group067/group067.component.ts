@@ -3,10 +3,13 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormModel, UIComponent } from 'codx-core';
+import { Vll067 } from '../../interfaces/IJournal.interface';
 
 @Component({
   selector: 'lib-group067',
@@ -20,10 +23,12 @@ export class Group067Component extends UIComponent {
   @Input() fieldName: string;
   @Input() subFieldName: string;
   @Input() subLabel: string;
-  @Input() vll067: string;
+  @Input() vll067: Vll067;
   @Input() data: string;
   @Output() change = new EventEmitter();
   @Output() buttonClick = new EventEmitter();
+
+  eVll067 = Vll067;
 
   constructor(injector: Injector) {
     super(injector);
@@ -31,11 +36,12 @@ export class Group067Component extends UIComponent {
   //#endregion
 
   //#region Init
-  override onInit(): void {}
+  override onInit(): void {
+  }
   //#endregion
 
   //#region Event
-  onChange(e): void {
+  onInputChange(e): void {
     this.change.emit(e);
   }
 

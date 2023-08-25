@@ -37,11 +37,15 @@ export class ContractsViewDetailComponent
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
+  treeTask = [];
+  id='';
+  isShowFull = false;
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -128,9 +132,12 @@ export class ContractsViewDetailComponent
       if (this.contract?.applyProcess) {
         this.getListInstanceStep(this.contract);
         this.listTypeContract = this.contractService.listTypeContract;
+        this.id = this.contract?.refID;
       } else {
         this.listTypeContract = this.contractService.listTypeContractNoTask;
+        this.id = this.contract?.recID;
       }
+      this.loadTree(this.id);
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -222,21 +229,52 @@ export class ContractsViewDetailComponent
   }
 
   loadTabs() {
+    let quotations = {
+      name: 'Quotations',
+      textDefault: 'Báo giá',
+      isActive: false,
+      icon: 'icon-monetization_on',
+      template: this.quotationsTab,
+    };
     // let quotations = {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
     //   isActive: false,
-    //   icon: 'icon-monetization_on',
+    //   icon: 'icon-i-link',
     //   template: this.quotationsTab,
     // };
-    let quotations = {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    };
-    let idx = this.tabControl.findIndex((x) => x.name == 'References');
+    let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
+  }
+
+  checkSusscess(e){
+    if(e){
+      this.isSusscess.emit(true);
+    }
+  }
+
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.id);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
+    });
+  }
+  clickShowTab(event){
+    this.isShowFull = event;
   }
 }

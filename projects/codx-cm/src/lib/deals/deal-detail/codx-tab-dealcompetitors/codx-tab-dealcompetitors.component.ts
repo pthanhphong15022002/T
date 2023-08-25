@@ -45,6 +45,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   vllStatus = '';
   currentRecID = '';
   id: any;
+  formModelAddress: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -64,6 +65,12 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   }
   async ngOnInit() {
     this.formModel = await this.cmSv.getFormModel('CM02011');
+    let dataModel = new FormModel();
+    dataModel.formName = 'CMCompetitors';
+    dataModel.gridViewName = 'grvCMCompetitors';
+    dataModel.entityName = 'CM_Competitors';
+    this.formModelAddress = dataModel;
+
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');

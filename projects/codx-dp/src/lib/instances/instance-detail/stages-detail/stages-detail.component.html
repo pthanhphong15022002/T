@@ -16,11 +16,11 @@
           *ngIf="dataStep?.memo"
           class="icon-event_notes text-hover-primary cursor-pointer text-gray-500 icon-20"
           [ngbPopover]="popperMemo"
-            #p="ngbPopover"
-            (mouseenter)="dataStep?.memo ? p.open() : ''"
-            (mouseleave)="p.close()"
-            placement="right bottom left"
-            container="body"
+          #p="ngbPopover"
+          (mouseenter)="dataStep?.memo ? p.open() : ''"
+          (mouseleave)="p.close()"
+          placement="right bottom left"
+          container="body"
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
@@ -226,7 +226,8 @@
   </div>
 </div>
 
-<div class="instance-info-scroll"
+<div
+  class="instance-info-scroll"
   *ngIf="
     (dataStep.stepStatus !== '' && dataStep.stepStatus !== null) ||
     dataStep.stepStatus === 0
@@ -245,6 +246,7 @@
   </codx-field-detail> -->
     <codx-fields-detail-temp
       [dataStep]="dataStep"
+      [typeView]="'0'"
       [showColumnControl]="showColumnControl"
       [titleDefault]="titleDefault"
       [isUpdate]="
@@ -458,13 +460,18 @@
 </ng-template>
 
 <ng-template #footerFormReName>
-  <button type="button" class="btn btn-primary" (click)="onSaveReason()"     [disabled]="listReasonsClick.length < 0 && !listReasonsClick">
-    <codx-label fiedName="lblSave" default="Lưu" ></codx-label>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="onSaveReason()"
+    [disabled]="listReasonsClick.length < 0 && !listReasonsClick"
+  >
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
 </ng-template>
 <ng-template #popperMemo>
   <div [innerHTML]="dataStep?.memo"></div>
 </ng-template>
 <ng-template #dataIsEmpty>
-<codx-no-data></codx-no-data>
+  <codx-no-data></codx-no-data>
 </ng-template>

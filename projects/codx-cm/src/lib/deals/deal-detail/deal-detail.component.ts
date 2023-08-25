@@ -64,6 +64,11 @@ export class DealDetailComponent implements OnInit {
     gridViewName: 'grvCMLeads',
     entityName: 'CM_Leads',
   };
+  formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
 
   isDataLoading: boolean = true;
 
@@ -89,6 +94,7 @@ export class DealDetailComponent implements OnInit {
   vllStatusLead: any;
   viewSettings: any;
   contactPerson: any;
+  isShow = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -163,13 +169,12 @@ export class DealDetailComponent implements OnInit {
           icon: 'icon-i-link',
         };
         this.tabControl.push(references);
-
         this.getTags(this.dataSelected);
-        this.dataSelected = this.dataSelected;
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
+        this.dataSelected = this.dataSelected;
       }
     }
   }
@@ -177,8 +182,8 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      await this.getTree(); //ve cay giao viec
       await this.getListInstanceStep();
+      await this.getTree(); //ve cay giao viec
       await this.getContactByDeaID(this.dataSelected.recID);
       await this.getHistoryByDeaID();
     } catch (error) {}
@@ -333,8 +338,6 @@ export class DealDetailComponent implements OnInit {
         this.listSteps = res;
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
-      } else {
-        this.listSteps = null;
       }
     });
   }
@@ -564,5 +567,9 @@ export class DealDetailComponent implements OnInit {
 
   autoStart(event) {
     this.changeProgress.emit(event);
+  }
+  clickShowTab(isShow){
+    this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
   }
 }

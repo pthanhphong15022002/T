@@ -50,4 +50,74 @@ export class CodxWsService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+
+  loadFunc(funcID:any): Observable<any>
+  {
+    let paras = ["FuncID",funcID];
+    let keyRoot = "FuncID" + funcID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.functionList(funcID)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
+  loadParentGroup(funcID:any): Observable<any>
+  {
+    let paras = ["WSParentGroup",funcID];
+    let keyRoot = "WSParentGroup" + funcID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv("SYS","SYS","FunctionListBusiness","GetFunctionListBySaleGroupAsync")
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
 }

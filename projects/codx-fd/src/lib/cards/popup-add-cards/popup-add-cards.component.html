@@ -2,11 +2,13 @@
 
 
 <codx-form
+
   headerText="{{ title }}"
   [subHeader]="subheader"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  [formModel]="dialog.formModel"
 ></codx-form>
 
 
@@ -30,9 +32,11 @@
                 <div class="form-group">
                     <codx-label [formModel]="dialog.formModel" name="Receiver" default="Người nhận">
                     </codx-label>
-                    <codx-input type="combobox" name="Users" class=" form-control borderless p-0"
+                    <!-- <codx-input type="combobox" name="Users" class=" form-control borderless p-0"
                         [crrValue]="form.controls['receiver'].value" [loadFull]="true" field="receiver"
                         (valueChange)="valueChange($event)" refValue="Users">
+                    </codx-input> -->
+                    <codx-input ControlName="receiver" [formModel]="dialog.formModel" [Group]="form">
                     </codx-input>
                 </div>
             </ng-container>
@@ -64,8 +68,11 @@
             <ng-container *ngIf="cardType == CARDTYPE_EMNUM.SuggestionImprovement || cardType == CARDTYPE_EMNUM.Share">
                 <div class="form-group">
                     <codx-label [formModel]="dialog.formModel" name="Industry" default="Lĩnh vực"></codx-label>
-                    <codx-input type="combobox" name="Industries" field="industry" [refValue]="'Industries'"
+                    <!-- <codx-input type="combobox" name="Industries" field="industry" [refValue]="'Industries'"
                         [crrValue]="form.controls['industry'].value" (valueChange)="valueChange($event)">
+                    </codx-input> -->
+                    
+                    <codx-input ControlName="industry" [formModel]="dialog.formModel" [Group]="form">
                     </codx-input>
                 </div>
                 <div class="form-group">
@@ -80,9 +87,12 @@
             <div class=" form-group">
                 <codx-label [formModel]="dialog.formModel" name="Situation" default="Nội dung">
                 </codx-label>
-                <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
-                    field="situation" (valueChange)="valueChange($event)">
+                
+                <codx-input ControlName="situation" [formModel]="dialog.formModel" [Group]="form">
                 </codx-input>
+                <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
+                    field="situation" (valueChange)="valueChange($event)">
+                </codx-input> -->
             </div>
             <ng-container *ngIf="cardType == CARDTYPE_EMNUM.Thankyou ||  cardType == CARDTYPE_EMNUM.CommentForChange">
                 <div class="checkbox-inline mb-3 check-1 d-flex">
@@ -186,6 +196,9 @@
                 <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
                     <div class="form-group mt-6">
                         <codx-label [formModel]="dialog.formModel" name="HasGifts" default="Quà tặng"></codx-label>
+                        
+                        <!-- <codx-input ControlName="giftID" [formModel]="dialog.formModel" [Group]="form">
+                        </codx-input> -->
                         <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0"
                             refValue="FDGifts" field="giftID" [crrValue]="form.controls['giftID'].value"
                             (valueChange)="valueChange($event)">
@@ -195,10 +208,12 @@
                         <div class="col-6">
                             <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="Số lượng">
                             </codx-label>
-                            <codx-input type="number" [min]="min" class="form-control" [max]="max"
+                            <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form">
+                            </codx-input>
+                            <!-- <codx-input type="number" [min]="min" class="form-control" [max]="max"
                                 [crrValue]="form.controls['quantity'].value" field="quantity"
                                 (valueChange)="valueChange($event)">
-                            </codx-input>
+                            </codx-input> -->
                         </div>
                         <div class="col-6" #TotalPrice>
                             <codx-label [formModel]="dialog.formModel" name="lblfFDTotalPrice" default="Tổng xu">

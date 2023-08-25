@@ -506,7 +506,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         'EP',
                         item,
                         category,
-                        'EP_Bookings',
+                        this.formModel?.entityName,
                         this.formModel.funcID,
                         item?.title,
                         (res:ResponseModel) => {

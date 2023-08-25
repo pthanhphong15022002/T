@@ -1,0 +1,13 @@
+import { Component } from '@angular/core';
+import { WSUIComponent } from '../default/wsui.component';
+import { isObservable } from 'rxjs';
+
+@Component({
+  selector: 'lib-approvals',
+  templateUrl: './approvals.component.html',
+  styleUrls: ['./approvals.component.css']
+})
+export class ApprovalsComponent extends WSUIComponent{
+  override onInit(): void {
+  }
+}

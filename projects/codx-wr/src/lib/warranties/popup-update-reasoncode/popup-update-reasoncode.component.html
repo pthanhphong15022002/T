@@ -1,0 +1,125 @@
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [data]="data"
+>
+  <ng-template #body>
+    <div class="form-group">
+      <codx-label fiedName="StatusCode" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        field="statusCode"
+        [formModel]="form.formModel"
+        [crrValue]="data?.statusCode"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group row" *ngIf="dateControl">
+      <div class="col-6">
+        <codx-label fiedName="StartDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="startDate"
+          [formModel]="form.formModel"
+          [crrValue]="data?.startDate"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="EndDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="endDate"
+          [formModel]="form.formModel"
+          [crrValue]="data?.endDate"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group" *ngIf="commentControl">
+      <codx-label fiedName="Comment" [formModel]="form.formModel"> </codx-label>
+      <codx-input
+        field="comment"
+        [formModel]="form.formModel"
+        [crrValue]="data?.comment"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <ng-container>
+        <div
+          *ngIf="showLabelAttachment"
+          class="d-flex align-items-center justify-content-between mt-4"
+          style="float: left; clear: left"
+        >
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+            <div class="fw-bold text-primary">
+              <codx-label
+                name="lblAttachments"
+                [formModel]="form.formModel"
+                default="Tài liệu đính kèm"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <codx-attachment
+            #attachment
+            [objectId]="data?.recID"
+            [objectType]="form.formModel.entityName"
+            [referType]="'source'"
+            hideFolder="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            allowMultiFile="1"
+            [formModel]="dialog.formModel"
+            (fileAdded)="fileAdded($event)"
+            (fileCount)="getfileCount($event)"
+            displayThumb="full"
+            showMessage="0"
+            [dataSelected]="data"
+          >
+          </codx-attachment>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button
+        type="button"
+        class="btn btn-light-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            [formModel]="form.formModel"
+            default="Upload File"
+          ></codx-label>
+        </span>
+      </button>
+      <div class="d-flex justify-content-end">
+        <div class="">
+          <button type="button" (click)="onSave()" class="btn btn-primary">
+            <codx-label
+              name="lblSave"
+              [formModel]="dialog.formModel"
+              default="Đồng ý"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

@@ -197,7 +197,7 @@
         </codx-label>
       </div>
       <div class="AttachmentFile-group flex-nowrap">
-        <codx-attachment #attachment [objectType]="'EP_Bookings'" [showMessage]="0" hideBtnSave="1" hideFolder="1"
+        <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1" hideFolder="1"
           hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
           [objectId]="data?.recID" allowMultiFile="1" [idBrowse]="'add'" displayThumb="full"
           [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" [referType]="'source'">

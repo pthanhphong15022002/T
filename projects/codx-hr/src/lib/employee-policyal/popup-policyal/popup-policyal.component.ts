@@ -1237,7 +1237,7 @@ export class PopupPolicyalComponent
         if(res.event){
           this.alpolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
-          if(this.lstSelectedObj.length > 0){
+          if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
             this.addApplyObj()
           }
           this.df.detectChanges();
@@ -1256,7 +1256,7 @@ export class PopupPolicyalComponent
         450,
         null,
         {
-          headerText: 'Chọn đối tượng áp dụng',
+          headerText: 'Chọn đối tượng loại trừ',
           vllName : 'HRObject',
           formModel: this.formModel,
           dataSelected: this.alpolicyObj.excludeObjects
@@ -1267,7 +1267,7 @@ export class PopupPolicyalComponent
       popup.closed.subscribe((res) => {
         this.alpolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
-        if(this.lstSelectedExcludeObj.length > 0){
+        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
           this.addExcludeObj()
         }
         this.df.detectChanges();

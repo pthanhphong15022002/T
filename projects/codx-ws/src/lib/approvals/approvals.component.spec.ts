@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxWrComponent } from './codx-wr.component';
+import { ApprovalsComponent } from './approvals.component';
 
-describe('CodxWrComponent', () => {
-  let component: CodxWrComponent;
-  let fixture: ComponentFixture<CodxWrComponent>;
+describe('ApprovalsComponent', () => {
+  let component: ApprovalsComponent;
+  let fixture: ComponentFixture<ApprovalsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CodxWrComponent]
+      declarations: [ApprovalsComponent]
     });
-    fixture = TestBed.createComponent(CodxWrComponent);
+    fixture = TestBed.createComponent(ApprovalsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

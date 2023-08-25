@@ -69,6 +69,17 @@ export class PopupAddLeadComponent
   oldIdInstance: string = '';
   currencyIDDefault: string;
 
+
+  companyNo:string = '';
+  customerNo:string = '';
+  companyPhone:string = '';
+  customerPhone:string = '';
+  companyName:string = '';
+  customerName:string = '';
+  company:string = '';
+  customer:string = '';
+
+
   // Data struct Opportunity
   lead: CM_Leads = new CM_Leads();
 
@@ -87,7 +98,7 @@ export class PopupAddLeadComponent
   lstContact: any[] = [];
   lstContactDeletes: any[] = [];
   listIndustries: any[] = [];
-
+  listCategory:any[]=[];
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -108,8 +119,8 @@ export class PopupAddLeadComponent
     subText: 'General information',
   };
   menuGeneralSystem = {
-    icon: 'icon-read_more',
-    text: 'Thông tin hệ thống',
+    icon: 'icon-reorder',
+    text: 'Thông tin mở rộng',
     name: 'GeneralSystem',
     subName: 'General system',
     subText: 'General system',
@@ -180,16 +191,18 @@ export class PopupAddLeadComponent
     this.applyFor = dt?.data?.applyFor;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.currencyIDDefault = dt?.data?.currencyIDDefault;
+    this.getValuelistCategory(dt?.data?.listCategory);
     if (this.action !== this.actionAdd) {
       this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.customerIDOld = this.lead?.customerID;
+      this.contactId = this.action === this.actionCopy ? dt?.data?.contactIdOld:  this.lead.contactID;
+      this.leadId = this.action === this.actionCopy ?  dt?.data?.leadIdOld:  this.lead.recID;
       if (this.action === this.actionCopy) {
-        this.leadId = dt?.data?.leadIdOld;
-        this.contactId = dt?.data?.contactIdOld;
         this.oldIdInstance = this.lead.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
-
         this.lead.leadID = '';
+        this.lead.contactID = Util.uid();
+        this.lead.recID = Util.uid();
       } else {
         this.planceHolderAutoNumber = this.lead.leadID;
       }
@@ -213,7 +226,7 @@ export class PopupAddLeadComponent
       if ($event.field == 'currencyID') {
         this.loadExchangeRate();
       } else if ($event.field == 'industries') {
-        let owner = $event.component.itemsSelected[0].Owner;
+        let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
           let index = this.listParticipants.findIndex((x) => x.userID);
@@ -226,8 +239,15 @@ export class PopupAddLeadComponent
           this.owner = owner;
           ownerName = '';
         }
-        this.checkOwner(this.owner, ownerName);
+        this.searchOwner('1','O','0',this.lead.owner,ownerName);
       }
+      else if($event.field === 'salespersonID') {
+        this.searchOwner('U','S','0',this.lead.salespersonID,$event?.component?.itemsSelected[0]?.UserName);
+      }
+      else if($event.field === 'consultantID') {
+        this.searchOwner('U','C','0',this.lead.consultantID,$event?.component?.itemsSelected[0]?.UserName);
+      }
+
     }
   }
 
@@ -251,6 +271,22 @@ export class PopupAddLeadComponent
             this.lead.exchangeRate = exchangeRateNew;
           }
         });
+    }
+  }
+  getValuelistCategory(listCategory) {
+    const mappings = {
+      '5': 'companyNo',
+      '6': 'customerNo',
+      '7': 'companyPhone',
+      '8': 'customerPhone',
+      '3': 'companyName',
+      '4': 'customerName',
+      '1': 'company',
+      '2': 'customer'
+    };
+    for (const key in mappings) {
+      const value = mappings[key];
+      this[value] = listCategory.find(x => x.value === key)?.text || '';
     }
   }
   valueChangeDate($event) {
@@ -306,47 +342,60 @@ export class PopupAddLeadComponent
       if (view === this.viewOwnerDefault) {
         this.owner = $event?.data;
         ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      } else {
-        this.owner = $event;
-        if (this.listParticipants.length > 0 && this.listParticipants) {
-          ownerName = this.listParticipants.filter(
-            (x) => x.userID === this.owner
-          )[0].userName;
-        }
       }
-      this.checkOwner(this.owner, ownerName);
+      this.searchOwner('1','O','0',this.owner,ownerName);
     } else if (view === this.viewOwnerProcess) {
-      this.owner = '';
+      this.owner = $event;
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.owner
+        )[0]?.userName;
+      }
+      this.searchOwner('1','O','0',this.owner,ownerName);
     }
   }
-  checkOwner(owner: any, ownerName: any) {
-    if (owner) {
-      let index = this.lead.permissions.findIndex(
-        (x) => x.objectType == '1' && x.roleType === 'O' && x.memberType == '0'
-      );
-      if (index !== -1) {
-        this.lead.permissions[index].objectID = owner;
-        this.lead.permissions[index].objectName = ownerName;
-      } else {
-        var permission = new CM_Permissions();
-        permission.objectID = owner;
-        permission.objectName = ownerName;
-        permission.objectType = '1';
-        permission.roleType = 'O';
-        permission.full = true;
-        permission.read = true;
-        permission.update = true;
-        permission.assign = true;
-        permission.delete = true;
-        permission.upload = true;
-        permission.download = true;
-        permission.isActive = true;
-        permission.memberType = '0';
-        permission.allowPermit = true;
-        permission.allowUpdateStatus = '1';
-        this.lead.permissions.push(permission);
+  searchOwner(objectType:any,roleType:any, memberType: any,owner:any, ownerName:any ){
+    if(owner&& ownerName) {
+      let index  = -1;
+      if(this.lead?.permissions?.length > 0 && this.lead?.permissions) {
+        index = this.lead?.permissions.findIndex(
+          (x) => x.objectType == objectType && x.roleType === roleType && x.memberType == memberType
+        );
+        if (index != -1 ) {
+          this.lead.permissions[index].objectID = owner;
+          this.lead.permissions[index].objectName = ownerName;
+          if(this.action == this.actionEdit) {
+            this.lead.permissions[index].modifiedBy = this.user.userID;
+            this.lead.permissions[index].modifiedOn = new Date();
+          }
+
+        }
+      }
+      if(index == -1) {
+        this.addOwner(owner,ownerName,roleType,objectType);
       }
     }
+
+  }
+  addOwner(owner,ownerName,roleType,objectType) {
+    var permission = new CM_Permissions();
+    permission.objectID = owner;
+    permission.objectName = ownerName;
+    permission.objectType = objectType;
+    permission.roleType = roleType;
+    permission.memberType = '0';
+    permission.full = true;
+    permission.read = true;
+    permission.update = true;
+    permission.upload = true;
+    permission.download = true;
+    permission.allowUpdateStatus = roleType === 'O' || roleType === 'S' ? '1': '0';
+    permission.full =  roleType === 'O';
+    permission.assign =  roleType === 'O';
+    permission.delete = roleType === 'O';
+    permission.allowPermit = roleType === 'O';
+    this.lead.permissions.push(permission);
   }
   // valueChangeIndustries($event) {
   //   if ($event && $event.data) {
@@ -355,7 +404,6 @@ export class PopupAddLeadComponent
   // }
 
   addPermission(processId:any) {
-
     var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
     if (result) {
       let permissionsDP = result?.permissionRoles;
@@ -495,11 +543,15 @@ export class PopupAddLeadComponent
   }
 
   async promiseSaveFile() {
+    if(this.owner) {
+      this.lead.owner = this.owner;
+    }
     this.lead.applyProcess &&
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
-    this.lead.owner = this.owner;
+
+
     if (this.avatarChangeLead) {
       await this.saveFileLead(this.leadId);
     }
@@ -582,6 +634,7 @@ export class PopupAddLeadComponent
     if (!this.lead.applyProcess) {
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTab(false);
+      this.owner = this.lead.owner;
     } else await this.getListInstanceSteps(this.lead.processID);
   }
   async getListInstanceSteps(processId: any) {

@@ -10,16 +10,21 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxWsService } from '../codx-ws.service';
+import { ApiHttpService } from 'codx-core';
 
 @Component({ template: '' })
 export abstract class WSUIComponent implements OnInit {
+    funcID:any;
+
     abstract onInit(): void;
     protected route!: ActivatedRoute;
     protected codxWsService!: CodxWsService;
+    protected api: ApiHttpService;
     constructor(inject: Injector) 
     {
         this.route = inject.get(ActivatedRoute);
         this.codxWsService = inject.get(CodxWsService);
+        this.api = inject.get(ApiHttpService);
     }
       
     ngOnInit(): void {
@@ -29,7 +34,7 @@ export abstract class WSUIComponent implements OnInit {
     
     getFuncID()
     {
-        var funcID = this.route.snapshot.paramMap.get('funcID');
-        this.codxWsService.funcChange.next(funcID);
+        this.funcID = this.route.snapshot.paramMap.get('funcID');
+        this.codxWsService.funcChange.next(this.funcID);
     }
 }

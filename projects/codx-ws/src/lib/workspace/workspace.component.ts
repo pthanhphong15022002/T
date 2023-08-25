@@ -15,6 +15,5 @@ export class WorkspaceComponent extends WSUIComponent{
   }
 
   override onInit(): void {
-    throw new Error('Method not implemented.');
   }
 }

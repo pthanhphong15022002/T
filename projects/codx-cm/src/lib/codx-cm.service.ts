@@ -84,7 +84,7 @@ export class CodxCmService {
   }
 
   getOneCompetitor(recID) {
-    return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
+    return this.api.exec<any>('CM', 'CompetitorsBusiness', 'GetOneAsync', [
       recID,
     ]);
   }
@@ -438,6 +438,14 @@ export class CodxCmService {
       'DP',
       'InstancesBusiness',
       'GetInstanceStepById',
+      data
+    );
+  }
+  moveReasonByIdInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveReasonByIdInstnaceAsync',
       data
     );
   }

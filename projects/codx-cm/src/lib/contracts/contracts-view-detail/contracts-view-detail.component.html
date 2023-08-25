@@ -239,12 +239,14 @@
 </ng-template>
 
 <ng-template #mainRightTemp>
-  <div class="d-flex flex-column">
+  <!-- [ngClass]="isShowFull ? 'cm-full' : ''" -->
+  <div class="d-flex flex-column cm-scroll" [ngClass]="isShowFull ? 'cm-full' : ''">
     <div>
       <codx-taskbar
         [change]="contract"
         [listTab]="listTypeContract"
         (tab)="changeTab($event)"
+        (isShowFull)="clickShowTab($event)"
         size="18"
         class="mt-5"
       ></codx-taskbar>
@@ -806,6 +808,7 @@
     [objectID]="contract.recID"
     [funcID]="formModel.funcID"
     [transID]="contract.recID"
+    [dataTree]="treeTask"
     [approveStatus]="contract.approveStatus"
   ></codx-tabs>
 </ng-template>
@@ -816,17 +819,26 @@
       [dataSelected]="contract"
       [listInstanceStep]="listInsStep"
       (changeProgress)="autoStart($event)"
+      (isSusscess)="checkSusscess($event)"
+      (saveAssignTask)="saveAssign($event)"
     ></step-task>
   </div>
 </ng-template>
 <ng-template #task let-data="value">
-  <div>
+  <step-task
+    [typeTask]="2"
+    [customerID]="contract?.recID"
+    [entityName]="'CM_Contracts'"
+    [owner]="contract?.owner"
+    (saveAssignTask)="saveAssign($event)"
+  ></step-task>
+  <!-- <div>
     <task
       [customerID]="contract?.recID"
       [owner]="contract?.owner"
       [entityName]="'CM_Contracts'"
     ></task>
-  </div>
+  </div> -->
 </ng-template>
 
 <!-- báo giá -->

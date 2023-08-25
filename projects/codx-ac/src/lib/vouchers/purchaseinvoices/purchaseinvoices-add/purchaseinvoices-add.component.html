@@ -65,17 +65,14 @@
                 [entityName]="fmPurchaseInvoicesLines.entityName"
                 [templateMore]="morefunction"
                 [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [autoLoad]="false"
-                [rowHeight]="35"
-                [dataSource]="lines"
+                service="AC"
+                predicates="TransID=@0"
+                [dataValues]="master.recID"
                 [showRowNumber]="true"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
-                (onAddNew)="onEndAddNew($event)"
-                (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
               ></codx-gridview-v2>
               <ng-template #dialogMode> </ng-template>
@@ -121,15 +118,13 @@
                 [entityName]="fmVATInvoices.entityName"
                 [templateMore]="morefunction"
                 [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [dataSource]="vatInvoices"
-                [rowHeight]="35"
+                service="AC"
+                predicates="TransID=@0"
+                [dataValues]="master.recID"
                 [showRowNumber]="true"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (gridInit)="onGridInit($event)"
-                (onAddNew)="onEndAddNew2($event)"
-                (onEdit)="onEndEdit2($event)"
                 (eventAction)="onActionEvent2($event)"
               ></codx-gridview-v2>
 
@@ -180,7 +175,7 @@
       <div
         class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1"
       >
-        {{ formTitle }}
+        {{ dialogData.data?.formTitle }}
       </div>
       <div class="input-circle input-sm" *ngIf="form?.formGroup">
         <span class="me-2">
@@ -212,8 +207,8 @@
       [isMulti]="false"
       type="valuelist"
       field="subType"
-      [refValue]="grvPurchaseInvoices['SubType'].referedValue"
-      [emptyText]="grvPurchaseInvoices.SubType?.headerText"
+      refValue="AC129"
+      emptyText="Loại phiếu"
       [value]="master.subType"
       (valueChange)="onSubTypeChange($event)"
     ></codx-dropdown-select>
@@ -444,9 +439,7 @@
             [Group]="form.formGroup"
             [disabled]="journal?.assignRule != '0'"
             [placeholder]="
-              journal?.assignRule == '2'
-                ? (voucherNoPlaceholderText$ | async)
-                : ''
+              journal?.assignRule == '2' ? ('AC0028' | mssg | async) : ''
             "
           >
           </codx-input>
@@ -476,7 +469,7 @@
     [dataItem]="data"
     [formModel]="form.formModel"
     (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onChangeMF($event)"
+    (changeDataMF)="onInitMF($event)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>

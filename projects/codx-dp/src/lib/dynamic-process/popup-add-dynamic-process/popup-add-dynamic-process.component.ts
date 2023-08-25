@@ -59,6 +59,8 @@ import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/c
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -314,6 +316,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     navy: '#192440',
   };
   isEditReason = false;
+  isBoughtTM = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -325,7 +328,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private auth: AuthService,
     private formBuilder: FormBuilder,
     private codxService: CodxService,
-
+    private adService: CodxAdService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -376,6 +379,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   async ngOnInit() {
     this.loading();
     this.formModelGroup = await this.getFormModel('DPS0105');
+    this.getDefaultCM();
   }
 
   async loading(): Promise<void> {
@@ -2511,10 +2515,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew['processID'] = this.process?.recID;
       this.stepNew['stepNo'] = countStep + 1;
       this.stepNew['createdBy'] = this.userId;
-      this.stepNew['instanceProgress'] = this.stepList[countStep - 1]?.instanceProgress || 0;
-      this.stepNew['iconColor'] = "#808080";
-      this.stepNew['textColor'] = "#808080";
-      this.stepNew['backgroundColor'] = "#fff";
+      this.stepNew['instanceProgress'] =
+        this.stepList[countStep - 1]?.instanceProgress || 0;
+      this.stepNew['iconColor'] = '#808080';
+      this.stepNew['textColor'] = '#808080';
+      this.stepNew['backgroundColor'] = '#fff';
     } else if (type === 'copy') {
       this.stepNew = step;
     } else {
@@ -2738,13 +2743,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
       taskGroup['indexNo'] = index + 1;
-      let isGroupNull = this.taskGroupList?.some((taskGroup) => !taskGroup?.recID);
-      if(isGroupNull){ // nếu có group rỗng thì thêm sau nó
+      let isGroupNull = this.taskGroupList?.some(
+        (taskGroup) => !taskGroup?.recID
+      );
+      if (isGroupNull) {
+        // nếu có group rỗng thì thêm sau nó
         this.taskGroupList.splice(index - 1, 0, taskGroup);
-      }else{
+      } else {
         this.taskGroupList.push(taskGroup);
       }
-      
+
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
@@ -2845,6 +2853,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       listTask: this.taskList,
       groupTaskID: this.groupTaskID,
       listFileTask: this.listFileTask,
+      isBoughtTM: this.isBoughtTM,
     };
     let functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -2892,7 +2901,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let index = this.taskGroupList.findIndex(
       (group) => group.recID == taskData.taskGroupID
     );
-    if (this.taskGroupList?.length == 0 || (index < 0 && !this.taskGroupList?.some((group) => !group.recID))) {
+    if (
+      this.taskGroupList?.length == 0 ||
+      (index < 0 && !this.taskGroupList?.some((group) => !group.recID))
+    ) {
       let taskGroupNull = new DP_Steps_TaskGroups();
       taskGroupNull['task'] = [taskData];
       taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
@@ -3614,7 +3626,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.objectID == task?.owner) || task?.roles[0];
+      task?.roles.find((role) => role.objectID == task?.owner) ||
+      task?.roles[0];
     return role?.objectName;
   }
 
@@ -3946,7 +3959,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       let inxIsExist = this.step.reasons.findIndex(
         (x) =>
           x.reasonName.trim().toLowerCase() ===
-          this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
+            this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
       );
       if (inxIsExist !== -1) {
         this.notiService.notifyCode(
@@ -3976,7 +3989,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
-  changeValueReaName($event,recid) {
+  changeValueReaName($event, recid) {
     if ($event) {
       this.reasonName = $event?.data;
       this.reasonId = recid;
@@ -4445,9 +4458,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
 
-  valueChangeChecked(event, data){
-    if(event){
+  valueChangeChecked(event, data) {
+    if (event) {
       data[event.field] = event?.data || false;
     }
+  }
+
+  getDefaultCM() {
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+        }
+      });
   }
 }

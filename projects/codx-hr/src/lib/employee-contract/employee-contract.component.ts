@@ -92,13 +92,11 @@ export class EmployeeContractComponent extends UIComponent {
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
-    this.cache.functionList(funID).subscribe((fuc) => {
-      this.cache
-        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
-        .subscribe((res) => {
-          this.grvSetup = res;
-        });
+    // this.cache.functionList(funID).subscribe((fuc) => {
+    this.cache.gridViewSetup('EContracts', 'grvEContracts').subscribe((res) => {
+      this.grvSetup = res;
     });
+    // });
   }
 
   onInit(): void {
@@ -162,6 +160,7 @@ export class EmployeeContractComponent extends UIComponent {
       null,
       null
     );
+
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         //this.view.dataService.update(res.event[0]).subscribe();
@@ -170,6 +169,19 @@ export class EmployeeContractComponent extends UIComponent {
         if (res.event[1]) {
           this.view.dataService.update(res.event[1]).subscribe();
         }
+
+        if (funcID === 'HRTPro01AU0' || funcID === 'HRTPro01AU9') {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         //Render new data when update new status on view detail
         this.df.detectChanges();
       }
@@ -181,9 +193,8 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   onSaveUpdateForm() {
-    this.hrService.editEContract(this.editStatusObj, true).subscribe((res) => {
+    this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
       if (res != null) {
-        console.log(res);
         this.notify.notifyCode('SYS007');
         res[0].emp = this.currentEmpObj;
         if (res[1]) {
@@ -303,7 +314,6 @@ export class EmployeeContractComponent extends UIComponent {
       // case 'SYS004': {
       //   this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
       //   this.dialog.closed.subscribe((x) => {
-      //     console.log(x);
       //     if (x.event != null) {
       //       this.itemDetail = x.event[0];
       //       this.itemDetail.lstUserID = getListImg(x.event[0].relations);
@@ -355,7 +365,6 @@ export class EmployeeContractComponent extends UIComponent {
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         funcID: this.view.funcID,
         openFrom: 'empContractProcess',
-        useForQTNS: true,
       },
       option
     );
@@ -408,22 +417,31 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eContractsObj = parsedJSON[index];
-          if (eContractsObj['ApprovalRule'] == '1') {
-            this.release();
-          }
+    //Validate backend send approval
+    this.hrService
+      .validateBeforeReleaseContract(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let eContractsObj = parsedJSON[index];
+                  if (eContractsObj['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
   }
 
   release() {
@@ -445,7 +463,7 @@ export class EmployeeContractComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .editEContract(this.itemDetail, true)
+                  .editEContract(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService

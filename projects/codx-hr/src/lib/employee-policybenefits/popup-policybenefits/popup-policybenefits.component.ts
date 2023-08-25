@@ -122,27 +122,15 @@ implements OnInit{
   };
   
   formGroupPolicyConstraints;
-  constraintsObj = {
-    policyID: '',
-    gender: '',
-    ageFrom: 0,
-    policyType: 'Benefit',
-    ageTo: 0,
-    relative: '',
-    relativeAgeFrom: 0,
-    relativeAgeTo: 0,
-    trainLevel: '',
-    trainField: '',
-    certificate: ''
-  };
+  constraintsObj : any;
 
   fmKow: FormModel = {
 
   };
 
-  grvSetup
-  grvSetupPolicyDetail
-  grvSetupPolicyConstraint
+  grvSetup: any;
+  grvSetupPolicyDetail : any;
+  grvSetupPolicyConstraint : any;
   benefitFuncID = 'HRTEM0403'
 
   isHiddenCbxConstraint = true;
@@ -476,7 +464,10 @@ implements OnInit{
 
     if(hasKow == false){
       this.benefitPolicyObj.isAdjustKow = false;
-      this.isHidden = true;
+    }
+    else{
+      this.benefitPolicyObj.isAdjustKow = true;
+      this.onClickOpenCbxKow()
     }
   }
 
@@ -486,8 +477,9 @@ implements OnInit{
     if(constraintOther == false){
       this.benefitPolicyObj.isConstraintOther = false;
     }
-    else{
+    else if(constraintOther == true){
       this.benefitPolicyObj.isConstraintOther = true;
+      this.onClickOpenVllIsConstraintOther();
     }
   }
 
@@ -496,6 +488,10 @@ implements OnInit{
 
     if(flag == false){
       this.benefitPolicyObj.hasIncludeObjects = false;
+    }
+    else if(flag == true){
+      this.benefitPolicyObj.hasIncludeObjects = true;
+      this.onClickOpenSelectIncludeObj()
     }
   }
 
@@ -576,6 +572,7 @@ implements OnInit{
 
   onClickOpenSelectIncludeObj(){
     if(this.benefitPolicyObj.hasIncludeObjects){
+      debugger
       let opt = new DialogModel();
       let popup = this.callfunc.openForm(
         PopupMultiselectvllComponent,
@@ -594,9 +591,10 @@ implements OnInit{
       );
       popup.closed.subscribe((res) => {
         if(res.event){
+          debugger
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
-          if(this.lstSelectedObj.length > 0){
+          if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
             this.addApplyObj()
           }
           this.df.detectChanges();
@@ -615,7 +613,7 @@ implements OnInit{
         450,
         null,
         {
-          headerText: 'Chọn đối tượng áp dụng',
+          headerText: 'Chọn đối tượng loại trừ',
           vllName : 'HRObject',
           formModel: this.formModel,
           dataSelected: this.benefitPolicyObj.excludeObjects
@@ -626,7 +624,7 @@ implements OnInit{
       popup.closed.subscribe((res) => {
         this.benefitPolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
-        if(this.lstSelectedExcludeObj.length > 0){
+        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
           this.addExcludeObj()
         }
         this.df.detectChanges();
@@ -635,7 +633,7 @@ implements OnInit{
   }
 
   onClickOpenSelectApplyObjDetail(detail, obj){
-    
+    debugger
     this.currentRec = obj.recID;
     if(this.benefitPolicyObj.hasIncludeObjects){
       if(detail == '5' || detail == '8'){
@@ -865,6 +863,8 @@ implements OnInit{
     )
     .subscribe((res) => {
       this.grvSetup = res;
+      console.log('grv setup ne', this.grvSetup);
+      
     });
 
     this.cache
@@ -900,8 +900,21 @@ implements OnInit{
             
             this.formModel.currentData = this.benefitPolicyObj;
             this.formGroup.patchValue(this.benefitPolicyObj);
-            this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
-            this.fmPolicyConstraints.currentData = this.constraintsObj;
+              this.constraintsObj = {
+                policyID: '',
+                gender: '',
+                ageFrom: 0,
+                policyType: 'Benefit',
+                ageTo: 0,
+                relative: '',
+                relativeAgeFrom: 0,
+                relativeAgeTo: 0,
+                trainLevel: '',
+                trainField: '',
+                certificate: ''
+              };
+              this.formGroupPolicyConstraints?.patchValue(this.constraintsObj);
+              this.fmPolicyConstraints.currentData = this.constraintsObj;
             this.df.detectChanges();
             this.isAfterRender = true;
           }
@@ -915,6 +928,7 @@ implements OnInit{
             return parseInt(a) - parseInt(b);
           });
           this.GetPolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
+            console.log('constraint obj ne', this.constraintsObj);
             this.constraintsObj = res;
             this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
             this.fmPolicyConstraints.currentData = this.constraintsObj;
@@ -1084,6 +1098,9 @@ implements OnInit{
       this.benefitPolicyObj.includeBenefits = ''
       this.formGroup.patchValue(this.benefitPolicyObj)
     }
+    else if(flag == true){
+      this.onClickOpenSelectIncludeBenefits();
+    }
   }
 
   ValChangeHasExcludeObj(event){
@@ -1091,6 +1108,10 @@ implements OnInit{
 
     if(flag == false){
       this.benefitPolicyObj.hasExcludeObjects = false;
+    }
+    else if(flag == true){
+      this.benefitPolicyObj.hasExcludeObjects = true;
+      this.onClickOpenSelectExcludeObj()
     }
   }
 
@@ -1572,7 +1593,7 @@ implements OnInit{
             }
 
             if(this.benefitPolicyObj.isConstraintOther && this.benefitPolicyObj.constraintBy){
-              this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+              this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
               this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 
               })
@@ -1603,7 +1624,7 @@ implements OnInit{
             if(this.benefitPolicyObj.constraintBy){
               this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
                 if(this.benefitPolicyObj.isConstraintOther){
-                  this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                  this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
                   this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                   })
                 }
@@ -1622,7 +1643,7 @@ implements OnInit{
             this.notify.notifyCode('SYS007');
             this.DeletePolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
                 if(this.benefitPolicyObj.constraintBy){
-                this.constraintsObj.policyID = this.benefitPolicyObj.policyID;
+                this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
                 this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                 })
               }
@@ -1648,6 +1669,150 @@ implements OnInit{
       }
     }
 }
+
+deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
+  switch(data){
+    case '1':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, orgUnitID: null }));
+      // lstBeneficiaries.orgUnitID = null
+      break;
+    case '2':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, jobLevel: null }));
+      // lstBeneficiaries.jobLevel = null
+      break;
+    case '3':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, positionID: null }));
+      // lstBeneficiaries.positionID = null
+      break;
+    case '4':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeTypeID: null }));
+      // lstBeneficiaries.employeeTypeID = null
+      break;
+    case '5':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, labourType: null }));
+      // lstBeneficiaries.labourType = null
+      break;
+    case '6':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, contractTypeID: null }));
+      // lstBeneficiaries.contractTypeID = null
+      break;
+    case '7':
+      debugger
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeID: null }));
+      // lstBeneficiaries.employeeID = null
+      break;
+    case '8':
+      lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeStatus: null }));
+      // lstBeneficiaries.employeeStatus = null
+      break;
+  }
+
+  switch(from){
+    case 'lstSelectedObj':
+      debugger
+      this.lstPolicyBeneficiariesApply = lstBeneficiaries;
+      let index = this.lstSelectedObj.indexOf(data);
+      this.lstSelectedObj.splice(index,1);
+      this.benefitPolicyObj.includeObjects = this.lstSelectedObj.join(';');
+      break;
+    case 'lstSelectedExcludeObj':
+      this.lstPolicyBeneficiariesExclude = lstBeneficiaries;
+      let index2 = this.lstSelectedExcludeObj.indexOf(data);
+      this.lstSelectedExcludeObj.splice(index2,1);
+      this.benefitPolicyObj.excludeObjects = this.lstSelectedExcludeObj.join(';');
+      break;
+  }
+}
+
+deleteApplyExcludeObj(data, from, crrObj?){
+  switch(from){
+      case 'lstPositionID':
+        let index = this.lstPositionID.indexOf(data);
+        this.lstPositionID.splice(index,1);
+        let lstId = this.lstPositionID.map(item => item.id);
+        crrObj.positionID = lstId.join(';');
+        break;
+      case 'lstOrgUnitID':
+        let index2 = this.lstOrgUnitID.indexOf(data);
+        this.lstOrgUnitID.splice(index2,1);
+        let lstId2 = this.lstOrgUnitID.map(item => item.id);
+        crrObj.orgUnitID = lstId2.join(';');
+        break;
+      case 'lstJobLevel':
+        let index3 = this.lstJobLevel.indexOf(data);
+        this.lstJobLevel.splice(index3,1);
+        let lstId3 = this.lstJobLevel.map(item => item.id);
+        crrObj.jobLevel = lstId3.join(';');
+        break;
+      case 'lstEmployeeTypeID':
+        let index4 = this.lstEmployeeTypeID.indexOf(data);
+        this.lstEmployeeTypeID.splice(index4,1);
+        let lstId4 = this.lstEmployeeTypeID.map(item => item.id);
+        crrObj.employeeTypeID = lstId4.join(';');
+        break;
+      case 'lstLabourType':
+        let index5 = this.lstLabourType.indexOf(data);
+        this.lstLabourType.splice(index5,1);
+        let lstId5 = this.lstLabourType.map(item => item.id);
+        crrObj.labourType = lstId5.join(';');
+        break;
+      case 'lstContractTypeID':
+        let index6 = this.lstContractTypeID.indexOf(data);
+        this.lstContractTypeID.splice(index6,1);
+        let lstId6 = this.lstContractTypeID.map(item => item.id);
+        crrObj.contractTypeID = lstId6.join(';');
+        break;
+      case 'lstEmployeeID':
+        let index7 = this.lstEmployeeID.indexOf(data);
+        this.lstEmployeeID.splice(index7,1);
+        let lstId7 = this.lstEmployeeID.map(item => item.id);
+        crrObj.employeeID = lstId7.join(';');
+        break;
+      case 'lstEmpStatus':
+        let index8 = this.lstEmpStatus.indexOf(data);
+        this.lstEmpStatus.splice(index8,1);
+        let lstId8 = this.lstEmpStatus.map(item => item.id);
+        crrObj.employeeStatus = lstId8.join(';');
+        break;
+      case 'lstSelectedBenefits':
+        let index9 = this.lstSelectedBenefits.indexOf(data);
+        this.lstSelectedBenefits.splice(index9,1);
+        this.benefitPolicyObj.includeBenefits = this.lstSelectedBenefits.join(';');
+        break;
+      case 'lstKow':
+        let index10 = this.lstKow.indexOf(data);
+        this.lstKow.splice(index10,1);
+        this.benefitPolicyObj.adjustKows = this.lstKow.join(';');
+        break;
+      case 'lstMinKows':
+        let index11 = this.lstMinKows.indexOf(data);
+        this.lstMinKows.splice(index11,1);
+        this.benefitPolicyObj.minKows = this.lstMinKows.join(';');
+        break;
+      case 'lstMaxKows':
+        let index12 = this.lstMaxKows.indexOf(data);
+        this.lstMaxKows.splice(index12,1);
+        this.benefitPolicyObj.maxKows = this.lstMaxKows.join(';');
+        break;
+      case 'lstSelectedConstraintTrainLevel':
+        let index13 = this.lstSelectedConstraintTrainLevel.indexOf(data);
+        this.lstSelectedConstraintTrainLevel.splice(index13,1);
+        this.constraintsObj.trainLevel = this.lstSelectedConstraintTrainLevel.join(';');
+        break;
+      case 'lstSelectedConstraintTrainField':
+        let index14 = this.lstSelectedConstraintTrainField.indexOf(data);
+        this.lstSelectedConstraintTrainField.splice(index14,1);
+        this.constraintsObj.trainField = this.lstSelectedConstraintTrainField.join(';');
+        break;
+      case 'lstSelectedConstraintCertificate':
+        let index15 = this.lstSelectedConstraintCertificate.indexOf(data);
+        this.lstSelectedConstraintCertificate.splice(index15,1);
+        this.constraintsObj.certificate = this.lstSelectedConstraintCertificate.join(';');
+        break;
+    }
+    this.df.detectChanges();
+}
+
 onClickOpenCbxKow(){
   if(this.benefitPolicyObj.isAdjustKow){
     this.isHidden3 = false;

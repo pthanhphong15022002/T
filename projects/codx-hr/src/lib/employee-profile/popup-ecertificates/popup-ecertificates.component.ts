@@ -35,7 +35,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
-  ops = ['m', 'y'];
+  ops = ['d', 'm', 'y'];
   dataVllSupplier: any;
   fromDateFormat;
   toDateFormat;
@@ -146,13 +146,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         this.isNullTo = false;
       }
     }
-    if (this.certificateObj) {
-      this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
-    } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
-    }
   }
 
   setTitle(evt: any){
@@ -162,6 +155,13 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
 
 
   onInit(): void {
+    if (this.certificateObj) {
+      this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     })
@@ -325,6 +325,14 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         this.certificateObj.trainTo = strDay;
       }
       this.certificateObj.trainToDate = event.fromDate;
+      this.formGroup.patchValue(this.certificateObj);
+      if (this.certificateObj) {
+        this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
+        this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+      } else {
+        this.fromDateFormat = this.getFormatDate(null);
+        this.toDateFormat = this.getFormatDate(null);
+      }
     }
   }
   getFormatDate(trainFrom: string) {

@@ -1,0 +1,114 @@
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [data]="data"
+>
+  <ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="ServiceTag" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="serviceTag"
+            [formModel]="form.formModel"
+            [crrValue]="data?.serviceTag"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="WarrantyExpired" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="warrantyExpired"
+            [formModel]="form.formModel"
+            [crrValue]="data?.warrantyExpired"
+            (valueChange)="valueChangeDate($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="ProductID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="productID"
+          [formModel]="form.formModel"
+          [crrValue]="data?.productID"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="ProductDesc" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="productDesc"
+          [formModel]="form.formModel"
+          [crrValue]="data?.productDesc"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="form-group row">
+        <div class="col-4">
+          <codx-label fiedName="ProductType" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            #productType
+            [disabled]="true"
+            field="productType"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-4">
+          <codx-label fiedName="ProductBrand" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            #productBrand
+            field="productBrand"
+            [disabled]="true"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-4">
+          <codx-label fiedName="ProductModel" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            #productModel
+            field="productModel"
+            [disabled]="true"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [crrValue]="data?.note"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

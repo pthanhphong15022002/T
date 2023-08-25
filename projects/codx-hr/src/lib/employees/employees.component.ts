@@ -173,11 +173,9 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
-    debugger
     if (event?.text) {
       this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {
-          debugger;
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
@@ -273,7 +271,6 @@ export class EmployeesComponent extends UIComponent {
           funcID: this.view.funcID,
           action: event.text,
         };
-        debugger;
         let popup = this.callfc.openSide(
           PopupAddEmployeesComponent,
           object,

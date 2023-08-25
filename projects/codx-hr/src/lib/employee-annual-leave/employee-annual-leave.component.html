@@ -1,8 +1,9 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
-    [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
-    [selectedFirst]="true" (selectedChange)="selectedChange($event)" (viewChanging)="viewChanging($event)"
-    (viewChanged)="viewChanged($event)" (buttonClick)="clickButton($event)">
+    [entityName]="entityName" [className]="className" [method]="method" [button]="button" [showButton]="showButton"
+    [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)" [autoLoad]="false"
+    (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)" (buttonClick)="clickButton($event)">
 </codx-views>
+
 
 
 <!-- #region ListView-Mode HRTAL01 -->
@@ -431,7 +432,7 @@
 
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
-    <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
+    <lib-employee-annual-leave-by-org #treeViewDetail [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
         [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff" [rowHeight]="70">
     </lib-employee-annual-leave-by-org>
 </ng-template>

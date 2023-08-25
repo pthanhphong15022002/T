@@ -72,7 +72,7 @@
         <div class="d-flex flex-column">
           <div class="d-flex align-items-top mb-1" *ngIf="addressNameCM">
             <span
-              class="icon-location_on icon-16 me-1 text-gray-600"
+              class="icon-16 me-1 text-gray-600"
               [ngbTooltip]="popupAddress"
               ><ng-template #popupAddress>
                 <codx-label
@@ -80,7 +80,12 @@
                   [formModel]="formModel"
                 ></codx-label> </ng-template
             ></span>
-            <span class="text-gray-600">{{ addressNameCM }}</span>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                addressNameCM | formatvalue : formModel : 'Address' | async
+              "
+            ></span>
           </div>
           <div *ngIf="funcID != 'CM0102'">
             <codx-tag
@@ -121,9 +126,10 @@
         <span
           *ngIf="data?.allowCall"
           class="text-gray-900 text-primary"
-          [innerHTML]="data?.mobile | formatvalue : formModel : 'mobile' | async"
-          ></span
-        >
+          [innerHTML]="
+            data?.mobile | formatvalue : formModel : 'mobile' | async
+          "
+        ></span>
         <span *ngIf="!data?.allowCall" class="text-gray-900">{{
           data?.mobile
         }}</span>

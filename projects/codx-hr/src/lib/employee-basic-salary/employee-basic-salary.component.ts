@@ -290,7 +290,6 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         funcID: this.view.funcID,
         salaryObj: data,
         fromListView: true,
-        useForQTNS: true,
       },
       option
     );
@@ -338,7 +337,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   }
   onSaveUpdateForm() {
     this.hrService
-      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj, true)
+      .UpdateEmployeeBasicSalariesInfo(this.editStatusObj)
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
@@ -372,22 +371,46 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   //#region gửi duyệt
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eBasicSalaryObj = parsedJSON[index];
-          if (eBasicSalaryObj['ApprovalRule'] == '1') {
-            this.release();
-          }
+    this.hrService
+      .validateBeforeReleaseBasicslaries(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let data = parsedJSON[index];
+                  if (data['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
+    // let category = '4';
+    // let formName = 'HRParameters';
+    // this.hrService.getSettingValue(formName, category).subscribe((res) => {
+    //   if (res) {
+    //     let parsedJSON = JSON.parse(res?.dataValue);
+    //     let index = parsedJSON.findIndex(
+    //       (p) => p.Category == this.view.formModel.entityName
+    //     );
+    //     if (index > -1) {
+    //       let eBasicSalaryObj = parsedJSON[index];
+    //       if (eBasicSalaryObj['ApprovalRule'] == '1') {
+    //         this.release();
+    //       }
+    //     }
+    //   }
+    // });
   }
   release() {
     this.hrService
@@ -408,7 +431,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail, false)
+                  .UpdateEmployeeBasicSalariesInfo(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService

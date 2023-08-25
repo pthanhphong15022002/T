@@ -1,4 +1,4 @@
-<div class="view-details-header">
+<div class="view-details-header d-flex justify-content-between">
   <div class="nav nav-tabs">
     <ng-container *ngFor="let item of listTaskConvert">
         <a 
@@ -19,5 +19,8 @@
         </codx-label>
       </a>
     </ng-container>
+  </div>
+  <div class="d-flex align-items-center justify-content-center">
+    <span (click)="clickShowTab()" class="icon-unfold_more icon-20"></span>
   </div>
 </div>

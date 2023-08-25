@@ -393,7 +393,9 @@ export class CasesComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        eventItem.isblur = data.approveStatus == '3';
+        eventItem.isblur =
+          data.approveStatus == '3' &&
+          (this.funcID == 'CM0401' || this.funcID == 'CM0402'); // de duyet ko bị isblur more
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -1498,9 +1500,11 @@ export class CasesComponent
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dts,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1514,13 +1518,19 @@ export class CasesComponent
         this.detectorRef.detectChanges();
       });
     } else {
+      customData = {
+        refID: data.recID,
+        refType: this.view.entityName,
+      };
+
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave,
         this.view.formModel,
         this.view.dataService,
-        this
+        this,
+        customData
       );
       this.detectorRef.detectChanges();
     }

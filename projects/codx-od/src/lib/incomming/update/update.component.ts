@@ -27,6 +27,7 @@ export class UpdateExtendComponent implements OnInit {
   updateForm :FormGroup;
   fileCount: 0 
   percentage100 = false;
+  disableResult = false;
   constructor(
     private odService: DispatchService,
     private notifySvr : NotificationsService,
@@ -72,8 +73,8 @@ export class UpdateExtendComponent implements OnInit {
   }
   valueChangePercentage100(e:any)
   {
-    if(e?.data)
-      this.updateForm.controls['percentage'].setValue(100);
+    this.disableResult = e?.data
+    if(e?.data) this.updateForm.controls['percentage'].setValue(100);
     else this.updateForm.controls['percentage'].setValue(this.preValue);
     /* if()
     this.updateForm.value.percentage */

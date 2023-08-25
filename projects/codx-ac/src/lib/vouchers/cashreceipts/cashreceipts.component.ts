@@ -224,7 +224,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'add', //? trạng thái của form (thêm mới)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...this.dataDefaultCashreceipts}, //?  data của cashpayment
+      dataCashreceipts: {...this.dataDefaultCashreceipts}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
@@ -245,7 +245,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'edit', //? trạng thái của form (chỉnh sửa)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...dataEdit}, //?  data của cashpayment
+      dataCashreceipts: {...dataEdit}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
@@ -267,7 +267,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'copy', //? trạng thái của form (chỉnh sửa)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...dataCopy}, //?  data của cashpayment
+      dataCashreceipts: {...dataCopy}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
@@ -672,7 +672,7 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data 
    */
   validateVourcher(data: any) {
-    this.api.exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data])
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
@@ -764,20 +764,20 @@ export class CashreceiptsComponent extends UIComponent {
     if (ele) {
       ele.hideTab(0, false);
       switch (type) {
-        case '1':
-        case '3':
-        case '4':
+        case '11':
+        //case '3':
+        //case '4':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
-        case '2':
+        case '12':
           ele.hideTab(1, false);
           ele.hideTab(2, true);
           break;
-        case '9':
-          ele.hideTab(1, false);
-          ele.hideTab(2, false);
-          break;
+        // case '9':
+        //   ele.hideTab(1, false);
+        //   ele.hideTab(2, false);
+        //   break;
       }
     }
   }
