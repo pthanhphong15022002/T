@@ -25,7 +25,7 @@ import { Observable, lastValueFrom } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { MultiSelectPopupComponent } from '../components/multi-select-popup/multi-select-popup.component';
-import { IJournal, Vll075 } from '../interfaces/IJournal.interface';
+import { IJournal, Vll067, Vll075 } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
 import { JournalService } from '../journals.service';
 
@@ -369,7 +369,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     this.journalService.getJournal(e.data).subscribe((journal: IJournal) => {
       const { journalNo, recID, journalName, isTemplate, status, ...rest } =
         journal;
-        // this.form.formGroup.controls["hi"].patchValue();
+      // this.form.formGroup.controls["hi"].patchValue();
       this.form.formGroup.patchValue(rest);
       Object.assign(this.journal, rest);
     });
@@ -784,11 +784,16 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
 
   /** When vll067 has values of 0, 1 and 2, this.journal[propName] must not be left empty */
   validateVll067(
-    vll067: string,
+    vll067: Vll067,
     propName: string,
     gvsPropName: string
   ): boolean {
-    if (['0', '1', '2'].includes(vll067) && !this.journal[propName]) {
+    if (
+      [Vll067.MacDinh, Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
+        vll067
+      ) &&
+      !this.journal[propName]
+    ) {
       this.notiService.notifyCode(
         'AC0009',
         null,

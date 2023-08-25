@@ -45,6 +45,7 @@ export class ContractsViewDetailComponent
   tabClicked = '';
   treeTask = [];
   id='';
+  isShowFull = false;
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -118,25 +119,12 @@ export class ContractsViewDetailComponent
       this.contract = dt?.data?.contract;
     }
     this.isView = dt?.data?.isView;
-    if (this.isView) {
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
-      this.getPayMentByContractID(this.contract?.recID);
-    }
+   
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
-      this.getPayMentByContractID(this.contract?.recID);
-      if (this.contract?.applyProcess) {
-        this.getListInstanceStep(this.contract);
-        this.listTypeContract = this.contractService.listTypeContract;
-        this.id = this.contract?.refID;
-      } else {
-        this.listTypeContract = this.contractService.listTypeContractNoTask;
-        this.id = this.contract?.recID;
-      }
-      this.loadTree(this.id);
+      this.setDataInput();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -146,10 +134,28 @@ export class ContractsViewDetailComponent
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
+    if (this.isView) {
+      this.setDataInput();
+    }
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.getAccount();
     this.loadTabs();
   }
+
+  setDataInput(){
+    this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
+    this.getPayMentByContractID(this.contract?.recID);
+    if (this.contract?.applyProcess) {
+      this.getListInstanceStep(this.contract);
+      this.listTypeContract = this.contractService.listTypeContract;
+      this.id = this.contract?.refID;
+    } else {
+      this.listTypeContract = this.contractService.listTypeContractNoTask;
+      this.id = this.contract?.recID;
+    }
+    this.loadTree(this.id);
+  }
+
   changeTab(e) {
     this.tabClicked = e;
   }
@@ -272,5 +278,8 @@ export class ContractsViewDetailComponent
       ).subscribe((res) => {
         this.treeTask = res ? res : []; 
     });
+  }
+  clickShowTab(event){
+    this.isShowFull = event;
   }
 }

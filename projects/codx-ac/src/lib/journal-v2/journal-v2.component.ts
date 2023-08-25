@@ -279,7 +279,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.route.navigate([urlRedirect], {
           queryParams: {
             journalNo: data.journalNo,
-            parent: this.view.funcID,
+            // parent: this.view.funcID,
           },
         });
       }

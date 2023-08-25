@@ -239,12 +239,14 @@
 </ng-template>
 
 <ng-template #mainRightTemp>
-  <div class="d-flex flex-column">
+  <!-- [ngClass]="isShowFull ? 'cm-full' : ''" -->
+  <div class="d-flex flex-column cm-scroll" [ngClass]="isShowFull ? 'cm-full' : ''">
     <div>
       <codx-taskbar
         [change]="contract"
         [listTab]="listTypeContract"
         (tab)="changeTab($event)"
+        (isShowFull)="clickShowTab($event)"
         size="18"
         class="mt-5"
       ></codx-taskbar>
@@ -280,10 +282,6 @@
           *ngSwitchCase="'steps'"
           [ngTemplateOutlet]="steps"
         ></some-element>
-        <!-- <some-element
-          *ngSwitchCase="'termsAndRelated'"
-          [ngTemplateOutlet]="termsAndRelatedTemplate"
-        ></some-element> -->
         <some-element *ngSwitchDefault></some-element>
       </container-element>
     </div>
