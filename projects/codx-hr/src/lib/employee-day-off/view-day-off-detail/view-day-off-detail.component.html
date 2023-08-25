@@ -14,7 +14,8 @@
       <codx-temp-full
         [title]="itemDetail?.ownerName"
         [imageId]="itemDetail?.emp?.employeeID"
-        imageObjType="'HR_Employees'"
+        [imageObjName]="itemDetail?.emp?.employeeName"
+        [imageObjType]="'HR_Employees'"
         [imageWidth]="50"
         [titleTmp]="title"
       >
