@@ -259,15 +259,15 @@
               <div class="col-6">
                 <div class="form-group">
                   <div class="form-group">
-                    <codx-label style="white-space: nowrap !important" *ngIf="
+                    <!-- <codx-label #elelblObjectID style="white-space: nowrap !important" *ngIf="
                         cashpayment.subType == '1' || cashpayment.subType == '2'
                       " [formModel]="formCashPayment.formModel" default="Nhà cung cấp">
                     </codx-label>
-                    <codx-label style="white-space: nowrap !important" *ngIf="
+                    <codx-label #elelblObjectID style="white-space: nowrap !important" *ngIf="
                         cashpayment.subType == '3' || cashpayment.subType == '4'
                       " [formModel]="formCashPayment.formModel" default="Nhân viên">
-                    </codx-label>
-                    <codx-label style="white-space: nowrap !important" *ngIf="cashpayment.subType == '9'"
+                    </codx-label> -->
+                    <codx-label #elelblObjectID style="white-space: nowrap !important"
                       fiedName="ObjectID" [formModel]="formCashPayment.formModel" default="Đối tượng">
                     </codx-label>
                     <div class="ac-input">
@@ -421,7 +421,7 @@
                         ? 'ac-input-disable'
                         : 'ac-input'
                     ">
-                    <codx-input #tVourcherNo [Group]="formCashPayment.formGroup" field="voucherNo"
+                    <codx-input [Group]="formCashPayment.formGroup" field="voucherNo"
                       [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)"
                       [disabled]="journal?.assignRule != '0'">
                     </codx-input>
