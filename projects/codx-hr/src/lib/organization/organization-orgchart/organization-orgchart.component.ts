@@ -119,8 +119,8 @@ export class OrganizationOrgchartComponent {
   showFrame: boolean = false;
   maximumColumnsInMatrix: number;
   minimumVisibleLevels: number;
-  markerWidth: number = 8;
-  markerHeight: number = 8;
+  markerWidth: number = 40;
+  markerHeight: number = 40;
   minimizedItemCornerRadius: number;
   selectCheckBoxLabel: string;
   hightlightleft: number;
