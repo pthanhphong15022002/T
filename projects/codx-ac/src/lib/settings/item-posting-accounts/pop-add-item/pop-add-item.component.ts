@@ -143,7 +143,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
-            opt.className = 'IVPostingAccountsBusiness';
+            opt.className = 'PostingAccountsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
             opt.data = [this.itemposting];
@@ -163,7 +163,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'UpdateAsync';
-            opt.className = 'IVPostingAccountsBusiness';
+            opt.className = 'PostingAccountsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
             opt.data = [this.itemposting];
@@ -187,7 +187,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
-          opt.className = 'IVPostingAccountsBusiness';
+          opt.className = 'PostingAccountsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
           opt.data = [this.itemposting];
