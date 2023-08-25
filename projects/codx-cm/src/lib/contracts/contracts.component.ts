@@ -39,6 +39,7 @@ import { AddContractsComponent } from './add-contracts/add-contracts.component';
 import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-payment.component';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
+import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -59,12 +60,11 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('tempCustomerID') tempCustomerID: TemplateRef<any>;
   @ViewChild('tempContractAmt') tempContractAmt: TemplateRef<any>;
   @ViewChild('tempPaidAmt') tempPaidAmt: TemplateRef<any>;
-  @ViewChild('tempRemainAmt') tempRemainAmt: TemplateRef<any>;
-  @ViewChild('tempEffectiveFrom') tempEffectiveFrom: TemplateRef<any>;
-  @ViewChild('tempEffectiveTo') tempEffectiveTo: TemplateRef<any>;
-  @ViewChild('tempDealID') tempDealID: TemplateRef<any>;
-  @ViewChild('tempQuotationID') tempQuotationID: TemplateRef<any>;
+  @ViewChild('tempCurrencyID') tempCurrencyID: TemplateRef<any>;
+  @ViewChild('tempApplyProcess') tempApplyProcess: TemplateRef<any>;
+  @ViewChild('tempStepID') tempStepID: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
+  @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
 
   listClicked = [];
   views: Array<ViewModel> = [];
@@ -240,7 +240,7 @@ export class ContractsComponent extends UIComponent {
     this.changeDataMF(e.e, e.data);
   }
 
-  changeDataMF(event, data) {
+  changeDataMF(event, data, isDetail = false) {
     if (event != null) {
       event.forEach((res) => {
         res.isblur = data.approveStatus == '3';
@@ -292,7 +292,9 @@ export class ContractsComponent extends UIComponent {
             break;
 
           case 'CM0204_7': // Xem chi tiết
-            res.disabled = true;
+            if(!isDetail){
+              res.disabled = true;          
+            }
             break;
 
           case 'CM0204_8': // chuyển giai đoạn
@@ -395,13 +397,11 @@ export class ContractsComponent extends UIComponent {
       case 'SYS002':
         this.exportFiles(e, data);
         break;
+      case 'CM0204_7':
+        this.viewDetailContract(data);
+        break;
       default: {
         var customData: any = null;
-        // var customData = {
-        //   refID: data.processID,
-        //   refType: 'DP_Processes',
-        //   dataSource: '', // truyen sau
-        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -428,6 +428,29 @@ export class ContractsComponent extends UIComponent {
       }
       this.view.dataService.update(this.itemSelected).subscribe();
     }
+  }
+
+  viewDetailContract(contract){
+    let data = {
+      formModel:this.view.formModel,
+      contract:contract,
+      isView: true,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popupContract = this.callFunc.openForm(
+      ContractsViewDetailComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    );
   }
 
   async addContract() {
@@ -708,6 +731,7 @@ export class ContractsComponent extends UIComponent {
   }
   //end duyet
   //--------------------------------------------------------------------//
+// "Permissions", "Closed", "ClosedOn", "ClosedBy"
   getColumsGrid(grvSetup) {
     this.columnGrids = [];
     this.arrFieldIsVisible.forEach((key) => {
@@ -715,35 +739,32 @@ export class ContractsComponent extends UIComponent {
       let template: any;
       let colums: any;
       switch (key) {
-        case 'contractName':
+        case 'ContractName':
           template = this.tempContractName;
           break;
-        case 'customerID':
+        case 'CustomerID':
           template = this.tempCustomerID;
           break;
-        case 'contractAmt':
+        case 'ContractAmt':
           template = this.tempContractAmt;
           break;
-        case 'paidAmt':
+        case 'PaidAmt':
           template = this.tempPaidAmt;
           break;
-        case 'remainAmt':
-          template = this.tempRemainAmt;
+        case 'CurrencyID':
+          template = this.tempCurrencyID;
           break;
-        case 'effectiveFrom':
-          template = this.tempEffectiveFrom;
+        // case 'ApplyProcess':
+        //   template = this.tempApplyProcess;
+        //   break;
+        case 'StepID':
+          template = this.tempStepID;
           break;
-        case 'effectiveTo':
-          template = this.tempEffectiveTo;
-          break;
-        case 'dealID':
-          template = this.tempDealID;
-          break;
-        case 'quotationID':
-          template = this.tempQuotationID;
-          break;
-        case 'status':
+        case 'Status':
           template = this.tempStatus;
+          break;
+        case 'Owner':
+          template = this.tempOwner;
           break;
         default:
           break;
@@ -784,7 +805,6 @@ export class ContractsComponent extends UIComponent {
         model: {
           resources: this.columnGrids,
           template2: this.templateMore,
-          // frozenColumns: 1,
         },
       },
     ];
