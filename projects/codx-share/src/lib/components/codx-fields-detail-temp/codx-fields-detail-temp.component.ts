@@ -79,7 +79,10 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.listFields);
+    
+  }
   ngOnChanges() {
     this.changeDetectorRef.detectChanges();
   }

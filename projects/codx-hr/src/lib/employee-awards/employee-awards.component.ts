@@ -364,24 +364,48 @@ export class EmployeeAwardsComponent extends UIComponent {
 
   //#region gui duyet
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eBasicSalaryObj = parsedJSON[index];
-          if (eBasicSalaryObj['ApprovalRule'] == '1') {
-            this.release();
-          } else {
-            //đợi BA mô tả
-          }
+    this.hrService
+      .validateBeforeReleaseAward(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let data = parsedJSON[index];
+                  if (data['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
+    // let category = '4';
+    // let formName = 'HRParameters';
+    // this.hrService.getSettingValue(formName, category).subscribe((res) => {
+    //   if (res) {
+    //     let parsedJSON = JSON.parse(res?.dataValue);
+    //     let index = parsedJSON.findIndex(
+    //       (p) => p.Category == this.view.formModel.entityName
+    //     );
+    //     if (index > -1) {
+    //       let eBasicSalaryObj = parsedJSON[index];
+    //       if (eBasicSalaryObj['ApprovalRule'] == '1') {
+    //         this.release();
+    //       } else {
+    //         //đợi BA mô tả
+    //       }
+    //     }
+    //   }
+    // });
   }
   release() {
     this.hrService

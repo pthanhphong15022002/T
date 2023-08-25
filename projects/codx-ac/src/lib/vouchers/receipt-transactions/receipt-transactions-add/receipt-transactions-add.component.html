@@ -74,6 +74,7 @@
         >
           <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
           <codx-input
+            tab-index="8"
             style="width: 100%"
             class="fw-bold border-0"
             [Group]="form.formGroup"
@@ -264,7 +265,7 @@
             </div>
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                <codx-label [setRequire]="journal.assignRule === '2' ? false : true" fiedName="VoucherNo" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
@@ -286,32 +287,23 @@
 
 <!-- Start:VouchersLine -->
 <ng-template #tabLine>
-  <ng-container *ngIf="modeGrid == '1'">
+  <ng-container>
     <div class="position-relative h-100">
       <codx-gridview-v2
-        #gridVouchersLine
+        #grvVouchersLine
         [formName]="fmVouchersLines.formName"
         [gridViewName]="fmVouchersLines.gridViewName"
         [entityName]="fmVouchersLines.entityName"
         [templateMore]="morefunction"
         [editSettings]="editSettings"
         predicates="TransID=@0"
-        [allowFiltering]="true"
-        [allowSorting]="true"
-        [dataValues]="form.data.recID"
-        [dataSource]="vouchersLines"
+        [dataValues]="vouchers.recID"
         service="IV"
-        [autoLoad]="false"
-        [autoFitColumns]="false"
-        [autoAddRow]="false"
         [showEmptyRecord]="false"
         [showRowNumber]="true"
         [editOnClick]="true"
-        [isCustom]="false"
         (eventAction)="endEdit($event)"
         (gridInit)="gridInit($event)"
-        (onAddNew)="onSaveLine($event, 'isAddNew')"
-        (onEdit)="onSaveLine($event, 'isEdit')"
         (cellChanged)="lineChanged($event)"
       ></codx-gridview-v2>
 
@@ -334,7 +326,7 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
+  <!-- <ng-container *ngIf="form?.formGroup && modeGrid == 2">
     <div class="table-responsive table-content mt-3">
       <table
         style="table-layout: fixed"
@@ -697,7 +689,7 @@
         >Tổng cộng: {{ total.toLocaleString("it-IT") }}</span
       >
     </div>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: VouchersLine -->
 
@@ -856,7 +848,7 @@
           [isMulti]="false"
           type="valuelist"
           field="subType"
-          [refValue]="gridViewSetup['SubType'].referedValue"
+          [refValue]=""
           [value]="vouchers.subType"
           emptyText="Loại phiếu"
           (valueChange)="subTypeChange($event)"
@@ -867,7 +859,7 @@
         *ngIf="formType == 'edit' && vouchers?.status != '0'"
       >
         <codx-vll
-          [name]="gridViewSetup['SubType'].referedValue"
+          [name]=""
           [formModel]="form.formModel"
           [field]="'SubType'"
           [value]="vouchers?.subType"
