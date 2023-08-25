@@ -14,6 +14,7 @@ import { ReceiptTransactionsLineAddComponent } from '../receipt-transactions-lin
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
+import { Validators } from '@angular/forms';
 
 
 @Component({
@@ -27,14 +28,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Constructor
 
-  @ViewChild('gridVouchersLine')
-  public gridVouchersLine: CodxGridviewV2Component;
+  @ViewChild('grvVouchersLine')
+  public grvVouchersLine: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
-  @ViewChild('inventoryRef') inventoryRef: ElementRef;
-  @ViewChild('noteRef') noteRef: ElementRef;
-  @ViewChild('tabObj') tabObj: TabComponent;
-  @ViewChild('warehouse') warehouse: CodxInputComponent;
   @ViewChild('tab') tab: TabComponent;
 
   private destroy$ = new Subject<void>();
@@ -46,13 +42,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   dialog!: DialogRef;
   vouchers: Vouchers;
   formType: any;
-  gridViewSetup: any;
-  gridViewSetupLine: any;
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
-  vouchersLines: Array<VouchersLines> = [];
-  vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
   hideFields = [];
   total: any = 0;
@@ -122,22 +114,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
-    this.cache
-      .gridViewSetup(this.fmVouchers.formName, this.fmVouchers.gridViewName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-    this.cache
-      .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetupLine = res;
-        }
-      });
   }
 
   //#endregion
@@ -149,6 +125,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngAfterViewInit() {
+    //Loại bỏ requied khi VoucherNo tạo khi lưu
+    if(this.journal.assignRule == '2')
+    {
+      this.form.formGroup.controls['voucherNo'].removeValidators(
+        Validators.required
+      );
+      this.form.formGroup.updateValueAndValidity();
+    }
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
@@ -164,19 +148,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   loadInit() {
-    if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
-          this.vouchers.recID,
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.vouchersLines = res;
-          }
-        });
-    }
     if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
@@ -184,8 +155,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //end Init Master
 
   //Init Line
-  gridInit(columnsGrid) {
-    this.showHideColumns(columnsGrid);
+  gridInit(eleGrid:CodxGridviewV2Component) {
+    eleGrid.showHideColumns(this.hideFields);
     this.dt.detectChanges();
   }
   //end Init Line
@@ -370,12 +341,12 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         this.addVoucherLine();
         break;
       case 'add':
-        if (this.gridVouchersLine.autoAddRow) {
+        if (this.grvVouchersLine.autoAddRow) {
           this.addVoucherLine();
         }
         break;
       case 'endEdit':
-        if (!this.gridVouchersLine.autoAddRow) {
+        if (!this.grvVouchersLine.autoAddRow) {
           setTimeout(() => {
             let element = document.getElementById('btnadd');
             element.focus();
@@ -388,16 +359,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //#endregion Event
 
   //#region Method
-  //Method Master
   onSaveAdd() {
-    this.checkValidate();
+    if(this.form.formGroup?.invalid)
+      return;
     this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
       if (this.modeGrid == 1) {
-        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+        if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
           this.save(false);
       }
       else {
@@ -407,14 +378,15 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onSave() {
-    this.checkValidate();
+    if(this.form.formGroup?.invalid)
+      return;
     this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
       if (this.modeGrid == 1) {
-        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+        if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
           this.save(true);
       }
       else {
@@ -536,43 +508,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         break;
     }
   }
-  //end Method Master
-
-  //Method Line
-  onSaveLine(e: any, type: any) {
-    this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      e.isAddNew = true;
-      this.notification.notifyCode('SYS023', 0, '');
-      return;
-    } else {
-      if (type == 'isAddNew') {
-        this.api
-          .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((save) => {
-            if (save) {
-              this.notification.notifyCode('SYS006', 0, '');
-              this.hasSaved = true;
-            }
-          });
-      }
-      else if (type == 'isEdit') {
-        this.api
-          .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((save) => {
-            if (save) {
-              this.notification.notifyCode('SYS007', 0, '');
-              this.hasSaved = true;
-            }
-          });
-      }
-
-    }
-  }
-  //end Method Line
   //#endregion Method
 
   //#region Function
@@ -581,41 +516,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
-  }
-
-  checkValidate() {
-    // tu dong khi luu, khong check voucherNo
-    let ignoredFields: string[] = [];
-    if (this.journal.assignRule === '2') {
-      ignoredFields.push('VoucherNo');
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.vouchers);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
-          continue;
-        }
-
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.vouchers[keymodel[i]] == null ||
-              String(this.vouchers[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
   }
 
   checkTransLimit(isShowNotify: boolean) {
@@ -627,7 +527,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   clearVouchers() {
-    this.vouchersLines = [];
+    this.grvVouchersLine.dataSource = [];
   }
 
   setReason(field, text, idx) {
@@ -723,9 +623,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       e.target.closest('.e-popup') == null &&
       e.target.closest('.edit-value') == null
     ) {
-      if (this.gridVouchersLine && this.gridVouchersLine.gridRef.isEdit) {
-        this.gridVouchersLine.autoAddRow = false;
-        this.gridVouchersLine.endEdit();
+      if (this.grvVouchersLine && this.grvVouchersLine.gridRef.isEdit) {
+        this.grvVouchersLine.autoAddRow = false;
+        this.grvVouchersLine.endEdit();
       }
     }
   }
@@ -733,7 +633,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //Function Line
   addVoucherLine() {
-    this.checkValidate();
+    if(this.form.formGroup?.invalid)
+      return;
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -808,12 +709,12 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         if (res) {
           switch (this.modeGrid) {
             case '1':
-              idx = this.gridVouchersLine.dataSource.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
-              this.gridVouchersLine.addRow(res, idx);
+              this.grvVouchersLine.addRow(res, idx);
               break;
             case '2':
-              idx = this.vouchersLines.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               this.openPopupLine(res, 'add');
               break;
@@ -826,7 +727,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     var obj = {
       headerText: this.headerText,
       data: { ...data },
-      dataline: this.vouchersLines,
+      dataline: this.grvVouchersLine.dataSource,
       dataVouchers: this.vouchers,
       hideFields: this.hideFields,
       type: type,
@@ -860,7 +761,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
               if (res.event != null) {
                 var dataline = res.event['data'];
                 if (dataline) {
-                  this.vouchersLines.push(dataline);
+                  this.grvVouchersLine.dataSource.push(dataline);
                 }
                 this.hasSaved = true;
               }
@@ -872,11 +773,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   editRow(data) {
     switch (this.modeGrid) {
       case '1':
-        this.gridVouchersLine.gridRef.selectRow(Number(data.index));
-        this.gridVouchersLine.gridRef.startEdit();
+        this.grvVouchersLine.gridRef.selectRow(Number(data.index));
+        this.grvVouchersLine.gridRef.startEdit();
         break;
       case '2':
-        let index = this.vouchersLines.findIndex(
+        let index = this.grvVouchersLine.dataSource.findIndex(
           (x) => x.recID == data.recID
         );
         var obj = {
@@ -916,7 +817,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                 .subscribe((res) => {
                   if (res.event != null) {
                     var dataline = res.event['data'];
-                    this.vouchersLines[index] = dataline;
+                    this.grvVouchersLine.dataSource[index] = dataline;
                     this.hasSaved = true;
                   }
                 });
@@ -938,13 +839,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         if (res) {
           switch (this.modeGrid) {
             case '1':
-              idx = this.gridVouchersLine.dataSource.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               res.recID = Util.uid();
-              this.gridVouchersLine.addRow(res, idx);
+              this.grvVouchersLine.addRow(res, idx);
               break;
             case '2':
-              idx = this.vouchersLines.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.openPopupLine(res, 'copy');
@@ -955,79 +856,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   deleteRow(data) {
-    this.notification.alertCode('SYS030', null)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res.event.status === 'Y') {
-          switch (this.modeGrid) {
-            case '1':
-              this.gridVouchersLine.deleteRow(data);
-              if (this.gridVouchersLine.dataSource.length > 0) {
-                for (
-                  let i = 0;
-                  i < this.gridVouchersLine.dataSource.length;
-                  i++
-                ) {
-                  this.gridVouchersLine.dataSource[i].rowNo = i + 1;
-                }
-              }
-              this.vouchersLines = this.gridVouchersLine.dataSource;
-              break;
-            case '2':
-              let index = this.vouchersLines.findIndex(
-                (x) => x.recID == data.recID
-              );
-              this.vouchersLines.splice(index, 1);
-              for (let i = 0; i < this.vouchersLines.length; i++) {
-                this.vouchersLines[i].rowNo = i + 1;
-              }
-              break;
-          }
-          this.api
-            .execAction<any>(this.fmVouchersLines.entityName, [data], 'DeleteAsync')
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.hasSaved = true;
-                this.api
-                  .exec(
-                    'IV',
-                    'VouchersLinesBusiness',
-                    'UpdateAfterDelete',
-                    [this.vouchersLines]
-                  )
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe((res) => {
-                    this.notification.notifyCode('SYS008', 0, '');
-                  });
-              }
-            });
-        }
-      });
-  }
-
-  checkValidateLine(e) {
-    var keygrid = Object.keys(this.gridViewSetupLine);
-    var keymodel = Object.keys(e);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetupLine[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              e[keymodel[i]] == null ||
-              String(e[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetupLine[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
+    this.grvVouchersLine.deleteRow(data);
   }
 
   costPrice_Change(line: any) {
@@ -1063,36 +892,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }
     }
     return true;
-  }
-
-  showHideColumns(columnsGrid) {
-    let arr = [
-      'IDIM0',
-      'IDIM1',
-      'IDIM2',
-      'IDIM3',
-      'IDIM4',
-      'IDIM5',
-      'IDIM6',
-      'IDIM7',
-      'IDIM8',
-      'IDIM9',
-    ];
-
-    arr.forEach((fieldName) => {
-      if (this.hideFields.includes(fieldName)) {
-        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-        if (i > -1) {
-          columnsGrid[i].isVisible = false;
-        }
-      }
-      else {
-        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-        if (i > -1) {
-          columnsGrid[i].isVisible = true;
-        }
-      }
-    });
   }
   //end Function Line
   //#endregion

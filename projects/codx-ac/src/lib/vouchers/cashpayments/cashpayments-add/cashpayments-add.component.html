@@ -658,14 +658,6 @@
           </div>
         </div>
       </div>
-      <!-- <div *ngIf="loadingform" class="ac-load-grid">
-          <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-            [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
-            <e-progressbar-annotations>
-              <e-progressbar-annotation content=" "> </e-progressbar-annotation>
-            </e-progressbar-annotations>
-          </ejs-progressbar>
-        </div> -->
     </div>
   </ng-container>
 </ng-template>
@@ -679,7 +671,7 @@
         entityName="AC_VATInvoices" rowNoField="rowNo" (cellChanged)="cellLineChangeVATInvoices($event)"
         [editSettings]="editSettingsGrid" (onAddNew)="onSaveLineVATInvoices($event, true)"
         (eventAction)="onActionGridVatInvoice($event)" predicates="TransID=@0" [dataValues]="cashpayment.recID"
-        (onEdit)="onSaveLineVATInvoices($event, false)" [hideMoreFunc]="true" service="AC" [dataSource]="_vatInvoices">
+        (onEdit)="onSaveLineVATInvoices($event, false)" [hideMoreFunc]="true" service="AC">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
