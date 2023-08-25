@@ -303,16 +303,16 @@ export class WarrantiesComponent
   }
 
   changeDataMF($event, data, type = null) {
-    if ($event != null && data != null) {
-      for (let eventItem of $event) {
-        if (type == 11) {
-          eventItem.isbookmark = false;
-        }
-        const functionID = eventItem.functionID;
-        // const mappingFunction = this.getRoleMoreFunction(functionID);
-        // mappingFunction && mappingFunction(eventItem, data);
-      }
-    }
+    // if ($event != null && data != null) {
+    //   for (let eventItem of $event) {
+    //     if (type == 11) {
+    //       eventItem.isbookmark = false;
+    //     }
+    //     const functionID = eventItem.functionID;
+    //     // const mappingFunction = this.getRoleMoreFunction(functionID);
+    //     // mappingFunction && mappingFunction(eventItem, data);
+    //   }
+    // }
   }
 
   async getGridViewSetup(formName, gridViewName) {

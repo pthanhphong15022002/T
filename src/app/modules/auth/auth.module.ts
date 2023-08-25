@@ -27,6 +27,7 @@ import {
   RecaptchaModule,
   RecaptchaSettings,
 } from 'ng-recaptcha';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {
         siteKey: environment.captchaKey,
       } as RecaptchaSettings,
     },
+    AngularDeviceInformationService,
   ],
 })
 export class AuthModule {}

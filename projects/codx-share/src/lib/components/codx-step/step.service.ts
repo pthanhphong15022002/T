@@ -27,6 +27,7 @@ import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car
 import { CodxCalendarService } from '../codx-calendar/codx-calendar.service';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
+import { PopupAddMeetingComponent } from '../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 
 @Injectable({
   providedIn: 'root',
@@ -544,5 +545,167 @@ export class StepService {
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
+  }
+
+  async createMeeting(data, titleAction) {
+    this.getDefault('TMT0501', 'CO_Meetings')
+      .subscribe(async (res) => {
+        if (res && res?.data) {
+          let meeting = res.data;
+          meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
+          meeting['idField'] = 'meetingID';
+          meeting.meetingName = data?.taskName;
+          meeting.meetingType = '1';
+          meeting.refID = data.recID;
+          meeting.refType = 'DP_Instances_Steps_Tasks';
+          meeting.meetingType = '1';
+          meeting.reminder = Number.isNaN(data.reminders)
+            ? 0
+            : Number.parseInt(data.reminders);
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.zIndex = 1011;
+          let formModel = new FormModel();
+
+          let preside;
+          let participants;
+          let listPermissions = '';
+          if (data?.roles?.length > 0) {
+            preside = data?.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+            if (preside) listPermissions += preside;
+            participants = data?.roles.filter((x) => x.roleType == 'P');
+            if (participants?.length) {
+              let userIDPar = await this.getListUserIDByOther(participants);
+              if (userIDPar?.length > 0) {
+                let idxPre = userIDPar.findIndex((x) => x == preside);
+                if (idxPre != -1) userIDPar.splice(idxPre, 1);
+                listPermissions += ';' + userIDPar.join(';');
+              }
+            }
+          }
+
+          this.cache.functionList('TMT0501').subscribe((f) => {
+            if (f) {
+              this.cache.gridView(f.gridViewName).subscribe((res) => {
+                this.cache
+                  .gridViewSetup(f.formName, f.gridViewName)
+                  .subscribe((grvSetup) => {
+                    if (grvSetup) {
+                      formModel.funcID = 'TMT0501';
+                      formModel.entityName = f.entityName;
+                      formModel.formName = f.formName;
+                      formModel.gridViewName = f.gridViewName;
+                      option.FormModel = formModel;
+                      option.Width = '800px';
+                      let obj = {
+                        action: 'add',
+                        titleAction: titleAction,
+                        disabledProject: false,
+                        preside: preside,
+                        data: meeting,
+                        listPermissions: listPermissions,
+                        isOtherModule: true,
+                      };
+                      let dialog = this.callfc.openSide(
+                        PopupAddMeetingComponent,
+                        obj,
+                        option
+                      );
+                      dialog.closed.subscribe((e) => {
+                        if (e?.event) {
+                          data.actionStatus = '2';
+                          this.notiService.notifyCode(
+                            'E0322',
+                            0,
+                            '"' + titleAction + '"'
+                          );
+                        }
+                      });
+                    }
+                  });
+              });
+            }
+          });
+        }
+      });
+  }
+  
+  async getListUserIDByOther(list = []) {
+    let lstUserID = [];
+    if (list != null && list.length > 0) {
+      lstUserID = list
+        .filter((x) => x.objectType == 'U' || x.objectType == '1')
+        .map((x) => x.objectID);
+      //org
+      let listO = list
+        .filter((x) => x.objectType == 'O')
+        .map((x) => x.objectID);
+
+      if (listO?.length > 0) {
+        let userIDO = await firstValueFrom(this.getListUserIDBy(listO, 'O'));
+        if (userIDO?.length > 0) {
+          const set = new Set(lstUserID.concat(userIDO));
+          lstUserID = [...set];
+        }
+      }
+      // dep
+      let listD = list
+        .filter((x) => x.objectType == 'D')
+        .map((x) => x.objectID);
+
+      if (listD?.length > 0) {
+        let userIDD = await firstValueFrom(this.getListUserIDBy(listD, 'D'));
+        if (userIDD?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDD));
+          lstUserID = [...set];
+        }
+      }
+
+      let listP = list
+        .filter((x) => x.objectType == 'P')
+        .map((x) => x.objectID);
+      // positon
+      if (listP?.length > 0) {
+        let userIDP = await firstValueFrom(this.getListUserIDBy(listP, 'P'));
+        if (userIDP?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDP));
+          lstUserID = [...set];
+        }
+      }
+
+      // Role
+      let listR = list
+        .filter((x) => x.objectType == 'R')
+        .map((x) => x.objectID);
+
+      if (listR?.length > 0) {
+        let userIDR = await firstValueFrom(this.getListUserIDByRoleID(listR));
+        if (userIDR?.length > 0) {
+          let set = new Set(lstUserID.concat(userIDR));
+          lstUserID = [...set];
+        }
+      }
+    }
+    return lstUserID;
+  }
+
+  getListUserIDBy(lstId, type) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListODPIDAsync',
+      [lstId, type]
+    );
+  }
+
+  getListUserIDByRoleID(id) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserByRoleIDAsync',
+      [id]
+    );
   }
 }

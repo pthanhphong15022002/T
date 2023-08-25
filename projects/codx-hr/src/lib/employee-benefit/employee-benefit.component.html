@@ -359,6 +359,7 @@
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
+    [imageObjName]="data?.emp?.employeeName"
     [imageObjType]="'HR_Employees'"
     [imageWidth]="35"
     [formModel]="view.formModel"
@@ -369,7 +370,9 @@
     [titleCss]="'fs-6'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
-      data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
+      data.emp.positionID || data?.positionID
+        | formatvalue : view.formModel : 'PositionID'
+        | async
     "
     [subTitleCss]="'fs-7 text-gray-600'"
     [descTmp]="descTmp"

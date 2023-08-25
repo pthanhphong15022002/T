@@ -3,18 +3,18 @@
   [views]="views"
   [button]="button"
   [autoLoad]="true"
-  entityName="AC_IVPostingAccounts"
+  [entityName]="entityName"
   (buttonClick)="toolBarClick($event)"
 >
 </codx-views>
 <ng-template #templateLeft>
-  <div class="d-flex flex-row-fluid bg-white rounded-2 w-100 h-100 setting-menuleft">
+  <div class="aside-secondary d-flex flex-row-fluid bg-white h-100 rounded-2 min-w-200p">
     <!--begin::Workspace-->
-    <div class="aside-workspace px-4 w-100 h-100" id="kt_aside_wordspace">
-      <div class="d-flex h-100 flex-column">
+    <div class="aside-workspace px-4" id="kt_aside_wordspace">
+      <div class="d-flex flex-column">
         <!--begin::Wrapper-->
         <div
-          class="flex-column-fluid scroll-y h-100"
+          class="flex-column-fluid h-auto"
           data-kt-scroll="true"
           data-kt-scroll-activate="true"
           data-kt-scroll-height="auto"
@@ -46,8 +46,9 @@
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let item of menuInventory">
                         <a
-                          class="menu-link without-sub active"
+                          class="menu-link without-sub"
                           (click)="load('postType', item.value)"
+                          [class]="{ active: item.value === postTypeInventory }"
                         >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
@@ -74,8 +75,9 @@
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let item of menuPurchase">
                         <a
-                          class="menu-link without-sub active"
+                          class="menu-link without-sub"
                           (click)="load('postType', item.value)"
+                          [class]="{ active: item.value === postTypePurchase }"
                         >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
@@ -102,8 +104,9 @@
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let item of menuSell">
                         <a
-                          class="menu-link without-sub active"
+                          class="menu-link without-sub"
                           (click)="load('postType', item.value)"
+                          [class]="{ active: item.value === postTypeSell }"
                         >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
@@ -130,8 +133,9 @@
                   <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item" *ngFor="let item of menuManufacture">
                       <a
-                        class="menu-link without-sub active"
+                        class="menu-link without-sub"
                         (click)="load('postType', item.value)"
+                        [class]="{ active: item.value === postManufacture }"
                       >
                         <span class="menu-bullet">
                           <span class="bullet bullet-dot"></span>
@@ -158,8 +162,9 @@
                 <div class="menu-sub menu-sub-accordion">
                   <div class="menu-item" *ngFor="let item of menuProject">
                     <a
-                      class="menu-link without-sub active"
+                      class="menu-link without-sub"
                       (click)="load('postType', item.value)"
+                      [class]="{ active: item.value === postProject }"
                     >
                       <span class="menu-bullet">
                         <span class="bullet bullet-dot"></span>
@@ -186,7 +191,7 @@
       #grid
       funcID="ACS248"
       [dataService]="view.dataService"
-      entityName="AC_IVPostingAccounts"
+      [entityName]="entityName"
       class="h-100"
       idField="recID"
       [templateMore]="morefunction"

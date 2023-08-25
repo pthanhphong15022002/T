@@ -1325,7 +1325,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       groupCopy['isTaskDefault'] = false;
       let taskOutput = await this.openPopupGroup('copy', groupCopy);
-      if (taskOutput?.event.groupTask) {
+      if (taskOutput?.event?.groupTask) {
         let data = taskOutput?.event;
         this.currentStep?.taskGroups?.push(data.groupTask);
         this.currentStep.tasks =
@@ -2232,5 +2232,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           );
         }
       });
+  }
+  getFields(listField, fieldID){
+    if(listField?.length > 0){
+      let a = listField?.filter(field => fieldID.includes(field?.recID));
+      return a;
+    }
+    return null;
   }
 }

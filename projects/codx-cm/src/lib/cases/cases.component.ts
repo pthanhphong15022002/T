@@ -1496,14 +1496,25 @@ export class CasesComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData: any;
+    let formatDatas = data.datas ?? '';
+    let customData = {
+      refID: data.recID,
+      refType: this.view.entityName,
+      dataSource: formatDatas,
+    };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',
-            dataSource: dts,
+            dataSource: formatDatas,
           };
         }
         this.codxShareService.defaultMoreFunc(
@@ -1518,11 +1529,6 @@ export class CasesComponent
         this.detectorRef.detectChanges();
       });
     } else {
-      customData = {
-        refID: data.recID,
-        refType: this.view.entityName,
-      };
-
       this.codxShareService.defaultMoreFunc(
         e,
         data,

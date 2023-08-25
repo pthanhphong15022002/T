@@ -12,12 +12,14 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   @Input() class = '';
   @Input() change: any;
   @Input() isStart: any;
+  @Output() isShowFull = new EventEmitter();
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
   sizeText = '';
   listTaskConvert = [];
   tabOld;
+  isShow = false;
   constructor() {
 
   }
@@ -32,9 +34,12 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       this.listTaskConvert = this.listTab.map((item) => {
         return {...item, isActive: false}
       })
-      this.listTaskConvert[0].isActive = true;
-      this.tabOld = this.listTaskConvert[0];
-      this.tab.emit(this.listTaskConvert[0].name); 
+      if(this.listTaskConvert?.length > 0){
+        this.listTaskConvert[0].isActive = true;
+        this.tabOld = this.listTaskConvert[0];
+        this.tab.emit(this.listTaskConvert[0].name); 
+      }
+     
     }
 
     if(changes.change){
@@ -42,9 +47,11 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
         this.listTaskConvert = this.listTab.map((item) => {
           return {...item, isActive: false}
         })
-        this.listTaskConvert[0].isActive = true;
-        this.tabOld = this.listTaskConvert[0];
-        this.tab.emit(this.listTaskConvert[0].name);
+        if(this.listTaskConvert?.length > 0){
+          this.listTaskConvert[0].isActive = true;
+          this.tabOld = this.listTaskConvert[0];
+          this.tab.emit(this.listTaskConvert[0].name);
+        }
       }else{
         if(this.tabOld){
           this.tab.emit(this.tabOld.name);
@@ -52,9 +59,11 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
           this.listTaskConvert = this.listTab.map((item) => {
             return {...item, isActive: false}
           })
-          this.listTaskConvert[0].isActive = true;
-          this.tabOld = this.listTaskConvert[0];
-          this.tab.emit(this.listTaskConvert[0].name);
+          if(this.listTaskConvert?.length > 0){
+            this.listTaskConvert[0].isActive = true;
+            this.tabOld = this.listTaskConvert[0];
+            this.tab.emit(this.listTaskConvert[0].name);
+          }
         }
       }
     }
@@ -66,5 +75,10 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       this.tabOld = item;
       this.tab.emit(item.name);
     }
+  }
+  clickShowTab(){
+    this.isShow = !this.isShow;
+    this.isShowFull.emit(this.isShow);
+    // this.changeDetectorRef.detectChanges();
   }
 }
