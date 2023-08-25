@@ -176,7 +176,6 @@ export class ListContractsComponent implements OnInit, OnChanges {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'CM0204_4':
-          case 'CM0204_7':
             res.disabled = true;
             break;
         }
@@ -196,7 +195,7 @@ export class ListContractsComponent implements OnInit, OnChanges {
       case 'SYS04': // copy
         this.copyContract(contract);
         break;
-      case 'CM0202_5': // copy
+      case 'CM0204_7': // copy
         this.viewContract(contract);
         break;
     }

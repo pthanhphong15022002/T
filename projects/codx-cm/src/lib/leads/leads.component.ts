@@ -945,7 +945,8 @@ export class LeadsComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.dataSelected.applyProcess &&this.detailViewLead.reloadListStep(e.event.listStep);
+                  this.dataSelected.applyProcess &&
+                    this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1573,7 +1574,6 @@ export class LeadsComponent
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          // let object = Object.assign({}, data, JSON.parse(dts));
           if (formatDatas) {
             formatDatas = JSON.stringify([
               ...JSON.parse(formatDatas),
