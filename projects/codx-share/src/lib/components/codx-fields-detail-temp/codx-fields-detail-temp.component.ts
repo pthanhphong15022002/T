@@ -37,6 +37,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   @Input() isShowTitle = true;
   @Output() actionSaveCF = new EventEmitter<any>();
   @Output() saveDataStep = new EventEmitter<any>();
+  @Input() listFields!: any;
 
   viewsCrr: any;
   currentRate = 0;

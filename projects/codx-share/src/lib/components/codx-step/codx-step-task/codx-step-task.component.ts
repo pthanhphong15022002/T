@@ -186,6 +186,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (this.isOnlyView) {
         this.getTaskEnd();
       }
+      this.isShowElement = this.isOnlyView;
     }
     if (changes?.groupTaskAdd && this.groupTaskAdd) {
       let indexGroupNoID = this.listGroupTask?.findIndex(
