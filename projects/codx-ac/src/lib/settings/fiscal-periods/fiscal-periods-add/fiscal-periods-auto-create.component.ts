@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { CRUDService, CodxFormComponent, DataService, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { CRUDService, CodxFormComponent, DataService, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { FiscalPeriodsAutoCreate } from './model/FiscalPeriodsAutoCreate.model';
 
@@ -14,6 +14,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   @ViewChild('form') public form: CodxFormComponent;
   listReport: Array<any> = [];
   dialog!: DialogRef;
+  gridViewSetup: any;
   headerText: string = 'Thêm mới năm tài chính';
   listFiscalYear: any;
   fiscalPeriodsAutoCreate: FiscalPeriodsAutoCreate = new FiscalPeriodsAutoCreate;
@@ -25,9 +26,11 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     private acService: CodxAcService,
     private dt: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
+    @Optional() dialogData?: DialogData,
   ) {
     super(inject);
     this.dialog = dialog;
+    this.gridViewSetup = dialogData.data?.gridViewSetup;
     this.setDefault();
     this.getListFiscalYear();
   }
@@ -76,17 +79,25 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         break;
       case 'fiscalPeriodControl':
         this.fiscalPeriodsAutoCreate.fiscalPeriodControl = e.data;
-        this.form.formGroup.patchValue({fiscalPeriodControl: this.fiscalPeriodsAutoCreate.fiscalPeriodControl,});
+        if(this.fiscalPeriodsAutoCreate.fiscalPeriodControl == true &&
+            !this.fiscalPeriodsAutoCreate.fiscalYear
+          )
+          {
+            this.fiscalPeriodsAutoCreate.startDate = new Date(new Date().getFullYear(), 0, 1);
+            this.fiscalPeriodsAutoCreate.endDate = new Date(new Date().getFullYear(), 11, 31);
+            this.form.formGroup.patchValue({startDate: this.fiscalPeriodsAutoCreate.startDate});
+            this.form.formGroup.patchValue({endDate: this.fiscalPeriodsAutoCreate.endDate});
+          }
         break;
       case 'startDate':
         this.fiscalPeriodsAutoCreate.startDate = e.data;
         this.validateDate();
-        this.validateFiscalYear();
+        this.validateStartYear();
         break;
       case 'endDate':
         this.fiscalPeriodsAutoCreate.endDate = e.data;
         this.validateDate();
-        this.validateFiscalYear();
+        this.validateEndYear();
         break;
       case 'period':
         this.fiscalPeriodsAutoCreate.period = e.data;
@@ -113,7 +124,10 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     if(!this.validateDate())
       return;
 
-    if(!this.validateFiscalYear())
+    if(!this.validateStartYear())
+      return;
+
+    if(!this.validateEndYear())
       return;
 
     if(this.form.formGroup?.invalid)
@@ -223,20 +237,36 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   }
 
   //Kiểm tra ngày bắt đầu và ngày kết thúc phải nằm trong năm tài chính
-  validateFiscalYear()
+  validateStartYear()
   {
-    if(this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.endDate)
+    if(this.fiscalPeriodsAutoCreate.startDate && this.fiscalPeriodsAutoCreate.fiscalYear)
     {
       var startDate = new Date(this.fiscalPeriodsAutoCreate.startDate);
-      var endDate = new Date(this.fiscalPeriodsAutoCreate.endDate);
-      if(startDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear ||
-        endDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear
-      )
+      if(startDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear)
       {
         this.notification.notifyCode(
-          'AC0024',
+          'AC0023',
           0,
-          '"' + '' + '"'
+          '"' + this.gridViewSetup.StartDate.headerText + '"'
+        );
+        return false;
+      }
+      return true;
+    }
+    return false
+  }
+
+  validateEndYear()
+  {
+    if(this.fiscalPeriodsAutoCreate.fiscalYear && this.fiscalPeriodsAutoCreate.endDate)
+    {
+      var endDate = new Date(this.fiscalPeriodsAutoCreate.endDate);
+      if(endDate.getFullYear() != this.fiscalPeriodsAutoCreate.fiscalYear)
+      {
+        this.notification.notifyCode(
+          'AC0023',
+          0,
+          '"' + this.gridViewSetup.EndDate.headerText + '"'
         );
         return false;
       }
