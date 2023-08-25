@@ -160,6 +160,7 @@ export class EmployeeContractComponent extends UIComponent {
       null,
       null
     );
+
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         //this.view.dataService.update(res.event[0]).subscribe();
@@ -168,6 +169,19 @@ export class EmployeeContractComponent extends UIComponent {
         if (res.event[1]) {
           this.view.dataService.update(res.event[1]).subscribe();
         }
+
+        if (funcID === 'HRTPro01AU0' || funcID === 'HRTPro01AU9') {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         //Render new data when update new status on view detail
         this.df.detectChanges();
       }
@@ -300,7 +314,6 @@ export class EmployeeContractComponent extends UIComponent {
       // case 'SYS004': {
       //   this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
       //   this.dialog.closed.subscribe((x) => {
-      //     console.log(x);
       //     if (x.event != null) {
       //       this.itemDetail = x.event[0];
       //       this.itemDetail.lstUserID = getListImg(x.event[0].relations);

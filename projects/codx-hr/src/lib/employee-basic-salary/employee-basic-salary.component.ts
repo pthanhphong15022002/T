@@ -371,22 +371,46 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   //#region gửi duyệt
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eBasicSalaryObj = parsedJSON[index];
-          if (eBasicSalaryObj['ApprovalRule'] == '1') {
-            this.release();
-          }
+    this.hrService
+      .validateBeforeReleaseBasicslaries(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let data = parsedJSON[index];
+                  if (data['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
+    // let category = '4';
+    // let formName = 'HRParameters';
+    // this.hrService.getSettingValue(formName, category).subscribe((res) => {
+    //   if (res) {
+    //     let parsedJSON = JSON.parse(res?.dataValue);
+    //     let index = parsedJSON.findIndex(
+    //       (p) => p.Category == this.view.formModel.entityName
+    //     );
+    //     if (index > -1) {
+    //       let eBasicSalaryObj = parsedJSON[index];
+    //       if (eBasicSalaryObj['ApprovalRule'] == '1') {
+    //         this.release();
+    //       }
+    //     }
+    //   }
+    // });
   }
   release() {
     this.hrService
