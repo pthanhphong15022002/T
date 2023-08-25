@@ -10,6 +10,9 @@ import {
   AuthStore,
   CRUDService,
   CallFuncService,
+  CodxComboboxComponent,
+  CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -29,7 +32,9 @@ import { CodxWrService } from '../../codx-wr.service';
   styleUrls: ['./popup-add-warranty.component.css'],
 })
 export class PopupAddWarrantyComponent implements OnInit {
-  @ViewChild('codxInputSeri') codxInputSeri: any;
+  @ViewChild('seriNo') seriNo: CodxInputComponent;
+  @ViewChild('form') form: CodxFormComponent;
+
   data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
@@ -271,6 +276,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
           this.data = e?.event;
+          this.form.formGroup.patchValue(this.data);
           this.detectorRef.detectChanges();
         }
       });
@@ -310,7 +316,7 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   removeUser() {
     this.setCustomerEmtry();
-    // this.setServiceTagEmtry();
+    this.setServiceTagEmtry();
     this.detectorRef.detectChanges();
   }
 
@@ -330,7 +336,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   }
 
   setServiceTagEmtry() {
-    this.data.seriNo = '';
+    this.data.seriNo = null;
     this.data.serviceTag = '';
     this.data.lob = '';
     this.data.productID = '';
@@ -340,7 +346,10 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.data.productDesc = '';
     this.data.note = '';
     this.data.warrantyExpired = null;
-    this.codxInputSeri.value = '';
-    this.codxInputSeri.crrValue = '';
+    (
+      this.seriNo.ComponentCurrent as CodxComboboxComponent
+    ).dataService.data = [];
+    this.seriNo.crrValue = null;
+    this.form.formGroup.patchValue(this.data);
   }
 }

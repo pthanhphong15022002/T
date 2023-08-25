@@ -21,10 +21,10 @@
         <div class="d-flex justify-content-between">
           <div class="col-10">
             <codx-input
-              #codxInputSeri
+              #seriNo
               field="seriNo"
               [formModel]="form.formModel"
-              [crrValue]="data?.seriNo"
+              [Group]="form.formGroup"
               [disabled]="action == 'edit'"
               (valueChange)="valueChangeCbx($event)"
             ></codx-input>
@@ -72,7 +72,7 @@
                     | async
                 "
               ></div>
-              <div
+              <!-- <div
                 *ngIf="data?.productType"
                 class="fw-bold fs-6 text-dark me-1"
                 [innerHTML]="
@@ -98,7 +98,7 @@
                     | formatvalue : form.formModel : 'productModel'
                     | async
                 "
-              ></div>
+              ></div> -->
             </div>
             <div
               class="d-flex align-items-center fw-bold mb-2"

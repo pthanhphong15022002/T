@@ -303,15 +303,15 @@ export class EmployeeListComponent extends UIComponent {
   delete(data: any) {
     if (data) {
       this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'CheckIfDeleteEmployeeAsync', [data])
-        .subscribe(res => { 
+        .subscribe(res => {
           if (res) {
             this.view.dataService
-            .delete([data], true, (opt: any) => this.beforDelete(opt, data))
-            .subscribe(res => { if (res) this.hasChangedData = true });
-          }else{
-            this.notificationSv.notifyCode('SYS007');
+              .delete([data], true, (opt: any) => this.beforDelete(opt, data), null, 'HR035')
+              .subscribe(res => { if (res) this.hasChangedData = true });
+          } else {
+            this.notificationSv.notifyCode('HR034');
           }
-        } );
+        });
 
     }
   }

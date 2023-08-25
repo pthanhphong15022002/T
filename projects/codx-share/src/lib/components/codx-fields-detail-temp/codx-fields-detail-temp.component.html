@@ -64,10 +64,11 @@
     }}"
     class="main"
     [ngClass]="'show-main'"
+    *ngIf="dataStep?.fields != null && dataStep?.fields?.length > 0"
   >
     <div
       class="d-flex row class-field my-3"
-      *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
+     
     >
       <ng-container *ngFor="let field of dataStep.fields">
         <div
@@ -84,6 +85,31 @@
       </ng-container>
     </div>
   </div>
+  <!-- nvthuan viết để hiển thị field trong task -->
+  <div
+    class="main"
+    [ngClass]="'show-main'"
+    *ngIf="listFields?.length > 0"
+  >
+    <div
+      class="d-flex row class-field my-3"
+    >
+      <ng-container *ngFor="let field of listFields">
+        <div
+          class="col-{{
+            12 / showColumnControl
+          }} has-action-menu crr-fiels mb-1"
+        >
+          <!-- p-3 -->
+          <ng-container
+            [ngTemplateOutlet]="viewDetailFieldCurrent"
+            [ngTemplateOutletContext]="{ $implicit: field }"
+          ></ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+   <!-- end -->
 </div>
 
 <ng-template #viewCustomFields let-data>
@@ -246,7 +272,7 @@
 
 <ng-template #viewDetailFieldCurrent let-data>
   <div class="d-flex mb-1 {{ typeView == '1' ? '' : 'ms-3' }}">
-    <span class="w-150px min-w-150px">
+    <span class="text-nowrap" [ngClass]="showColumnControl == 1 ? 'min-w-150px' : 'me-1'">
       <span class="text-gray-600">{{ data.title }}</span>
       <span *ngIf="data.isRequired">
         <codx-label

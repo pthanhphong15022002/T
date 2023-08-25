@@ -249,11 +249,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
                 this.treeViewDetail.grid.refresh();
               }
             }, 500);
-        
             this.detectorRef.detectChanges();
           }
         }
-
       }
     })
   }

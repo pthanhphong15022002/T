@@ -2,7 +2,6 @@ import { CodxHrService } from './../../codx-hr.service';
 import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
-  CodxFormComponent,
   DataRequest,
   DialogData,
   DialogRef,
@@ -44,7 +43,7 @@ export class PopupEmployeeBenefitComponent
   employeeSign;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
-  @ViewChild('form') form: CodxFormComponent;
+  // @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
@@ -271,29 +270,25 @@ export class PopupEmployeeBenefitComponent
     }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrSevice
-        .AddEBenefit(this.currentEJobSalaries, this.useForQTNS)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            this.dialog && this.dialog.close(p);
-            p[0].emp = this.employeeObj;
-            if (p[1]) {
-              p[1].emp = this.employeeObj;
-            }
-          } else {
-            this.notify.notifyCode('SYS023');
+      this.hrSevice.AddEBenefit(this.currentEJobSalaries).subscribe((p) => {
+        if (p != null) {
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(p);
+          p[0].emp = this.employeeObj;
+          if (p[1]) {
+            p[1].emp = this.employeeObj;
           }
-        });
+        } else {
+          this.notify.notifyCode('SYS023');
+        }
+      });
     } else {
-      this.hrSevice
-        .EditEBenefit(this.formModel.currentData, this.useForQTNS)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
-        });
+      this.hrSevice.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+        if (p != null) {
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS021');
+      });
     }
   }
 

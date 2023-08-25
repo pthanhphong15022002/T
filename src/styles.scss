@@ -1130,16 +1130,22 @@ codx-layout-add .card-header {
   font-size: inherit !important;
 }
 
-.header-fixed.toolbar-fixed .wrapper .fillter-card-body {
-  //height: calc(100vh - 228px);
-  max-height: calc(100vh - 228px);
-  overflow: auto;
-}
+// .header-fixed.toolbar-fixed .wrapper .fillter-card-body {
+//   //height: calc(100vh - 228px);
+//   max-height: calc(100vh - 190px);
+//   overflow: auto;
+//   padding-bottom: 5px!important;
+//   border: 1px rgb(81, 255, 0) solid;
+// }
 
 .header-fixed.toolbar-enabled .wrapper .fillter-card-body {
-  //height: calc(100vh - 228px);
-  max-height: calc(100vh - 245px);
+  max-height: calc(100vh - 190px);
   overflow: auto;
+  padding-bottom: 5px!important;
+}
+
+.header-fixed.toolbar-enabled .wrapper .fillter-card-header + .fillter-card-body {
+  max-height: calc(100vh - 228px);
 }
 
 .card .card-header.fillter-card-header {

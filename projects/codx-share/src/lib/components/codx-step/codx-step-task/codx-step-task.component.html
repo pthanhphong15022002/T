@@ -199,8 +199,10 @@
 
                     <div class="ms-5">
                       <codx-fields-detail-temp
-                      [dataStep]="currentStep"
-                      [showColumnControl]="1"
+                      *ngIf="task?.fieldID"
+                      [listFields]="getFields(currentStep?.fields, task?.fieldID)"
+                      [showColumnControl]="4"
+                      [isShowTitle]="false"
                     >
                     </codx-fields-detail-temp>
                       <ng-container
