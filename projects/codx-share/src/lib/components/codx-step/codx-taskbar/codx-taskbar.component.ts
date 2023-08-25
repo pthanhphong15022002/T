@@ -12,12 +12,14 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
   @Input() class = '';
   @Input() change: any;
   @Input() isStart: any;
+  @Output() isShowFull = new EventEmitter();
   @Output() tab = new EventEmitter(); // giá trị trả về khi chọn => name
 
   sizeIcon = '';
   sizeText = '';
   listTaskConvert = [];
   tabOld;
+  isShow = false;
   constructor() {
 
   }
@@ -66,5 +68,9 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       this.tabOld = item;
       this.tab.emit(item.name);
     }
+  }
+  clickShowTab(isShow){
+    this.isShowFull.emit(isShow);
+    // this.changeDetectorRef.detectChanges();
   }
 }
