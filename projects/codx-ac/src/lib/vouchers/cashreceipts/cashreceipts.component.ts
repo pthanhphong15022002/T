@@ -224,7 +224,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'add', //? trạng thái của form (thêm mới)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...this.dataDefaultCashreceipts}, //?  data của cashpayment
+      dataCashreceipts: {...this.dataDefaultCashreceipts}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
@@ -245,7 +245,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'edit', //? trạng thái của form (chỉnh sửa)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...dataEdit}, //?  data của cashpayment
+      dataCashreceipts: {...dataEdit}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
@@ -267,7 +267,7 @@ export class CashreceiptsComponent extends UIComponent {
       action: 'copy', //? trạng thái của form (chỉnh sửa)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
-      dataCashpayment: {...dataCopy}, //?  data của cashpayment
+      dataCashreceipts: {...dataCopy}, //?  data của Cashreceipts
       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
     };
