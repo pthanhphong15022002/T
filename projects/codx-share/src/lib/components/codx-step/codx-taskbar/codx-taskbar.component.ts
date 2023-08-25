@@ -34,9 +34,12 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       this.listTaskConvert = this.listTab.map((item) => {
         return {...item, isActive: false}
       })
-      this.listTaskConvert[0].isActive = true;
-      this.tabOld = this.listTaskConvert[0];
-      this.tab.emit(this.listTaskConvert[0].name); 
+      if(this.listTaskConvert?.length > 0){
+        this.listTaskConvert[0].isActive = true;
+        this.tabOld = this.listTaskConvert[0];
+        this.tab.emit(this.listTaskConvert[0].name); 
+      }
+     
     }
 
     if(changes.change){
@@ -44,9 +47,11 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
         this.listTaskConvert = this.listTab.map((item) => {
           return {...item, isActive: false}
         })
-        this.listTaskConvert[0].isActive = true;
-        this.tabOld = this.listTaskConvert[0];
-        this.tab.emit(this.listTaskConvert[0].name);
+        if(this.listTaskConvert?.length > 0){
+          this.listTaskConvert[0].isActive = true;
+          this.tabOld = this.listTaskConvert[0];
+          this.tab.emit(this.listTaskConvert[0].name);
+        }
       }else{
         if(this.tabOld){
           this.tab.emit(this.tabOld.name);
@@ -54,9 +59,11 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
           this.listTaskConvert = this.listTab.map((item) => {
             return {...item, isActive: false}
           })
-          this.listTaskConvert[0].isActive = true;
-          this.tabOld = this.listTaskConvert[0];
-          this.tab.emit(this.listTaskConvert[0].name);
+          if(this.listTaskConvert?.length > 0){
+            this.listTaskConvert[0].isActive = true;
+            this.tabOld = this.listTaskConvert[0];
+            this.tab.emit(this.listTaskConvert[0].name);
+          }
         }
       }
     }
