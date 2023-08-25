@@ -153,32 +153,30 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   onSaveUpdateForm() {
-    this.hrService
-      .EditEmployeeBenefitMoreFunc(this.editStatusObj, true)
-      .subscribe((res) => {
-        if (res != null) {
-          console.log(res);
-          this.notify.notifyCode('SYS007');
-          res[0].emp = this.currentEmpObj;
-          if (res[1]) {
-            res[1].emp = this.currentEmpObj;
-          }
-          this.view.formModel.entityName;
-          this.hrService
-            .addBGTrackLog(
-              res[0].recID,
-              this.cmtStatus,
-              this.view.formModel.entityName,
-              'C1',
-              null,
-              'EBenefitsBusiness'
-            )
-            .subscribe((res) => {
-              //console.log('kq luu track log', res);
-            });
-          this.dialogEditStatus && this.dialogEditStatus.close(res);
+    this.hrService.EditEBenefit(this.editStatusObj).subscribe((res) => {
+      console.log(res);
+      if (res != null) {
+        this.notify.notifyCode('SYS007');
+        res[0].emp = this.currentEmpObj;
+        if (res[1]) {
+          res[1].emp = this.currentEmpObj;
         }
-      });
+        this.view.formModel.entityName;
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EBenefitsBusiness'
+          )
+          .subscribe((res) => {
+            //console.log('kq luu track log', res);
+          });
+        this.dialogEditStatus && this.dialogEditStatus.close(res);
+      }
+    });
   }
 
   ValueChangeComment(evt) {
@@ -234,7 +232,7 @@ export class EmployeeBenefitComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeBenefitMoreFunc(this.itemDetail, false)
+                  .EditEBenefit(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService
@@ -278,23 +276,47 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   beforeRelease() {
-    let category = '4';
-    let formName = 'HRParameters';
-    this.hrService.getSettingValue(formName, category).subscribe((res) => {
-      if (res) {
-        let parsedJSON = JSON.parse(res?.dataValue);
-        let index = parsedJSON.findIndex(
-          (p) => p.Category == this.view.formModel.entityName
-        );
-        if (index > -1) {
-          let eJobSalaryObj = parsedJSON[index];
-          if (eJobSalaryObj['ApprovalRule'] == '1') {
-            this.release();
-          } else {
-          }
+    this.hrService
+      .validateBeforeReleaseBenefit(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let data = parsedJSON[index];
+                  if (data['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
         }
-      }
-    });
+      });
+    // let category = '4';
+    // let formName = 'HRParameters';
+    // this.hrService.getSettingValue(formName, category).subscribe((res) => {
+    //   if (res) {
+    //     let parsedJSON = JSON.parse(res?.dataValue);
+    //     let index = parsedJSON.findIndex(
+    //       (p) => p.Category == this.view.formModel.entityName
+    //     );
+    //     if (index > -1) {
+    //       let eJobSalaryObj = parsedJSON[index];
+    //       if (eJobSalaryObj['ApprovalRule'] == '1') {
+    //         this.release();
+    //       } else {
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   //#endregion
@@ -418,7 +440,9 @@ export class EmployeeBenefitComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      console.log(res.event);
+      if (res.event[0].emp?.emp) {
+        res.event[0].emp = res.event[0].emp.emp;
+      }
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});

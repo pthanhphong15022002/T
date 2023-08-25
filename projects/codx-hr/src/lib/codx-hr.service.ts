@@ -682,6 +682,15 @@ export class CodxHrService {
     );
   }
 
+  validateBeforeReleaseAward(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAwardsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
+    );
+  }
   //#endregion
 
   //#region EDisciplinesBusiness
@@ -731,6 +740,16 @@ export class CodxHrService {
       'EDisciplinesBusiness',
       'GetListDisciplineByDataRequestAsync',
       data
+    );
+  }
+
+  validateBeforeReleaseDiscipline(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EDisciplinesBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
     );
   }
   //#endregion
@@ -837,6 +856,15 @@ export class CodxHrService {
     );
   }
 
+  validateBeforeReleaseDayoff(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EDayOffsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
+    );
+  }
   //#endregion
 
   //#region EAssetBusiness
@@ -977,6 +1005,16 @@ export class CodxHrService {
       'EAppointionsBusiness',
       'EditEAppointionsMoreFuncAsync',
       data
+    );
+  }
+
+  validateBeforeReleaseAppointion(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAppointionsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
     );
   }
 
@@ -1377,6 +1415,16 @@ export class CodxHrService {
       'EBasicSalariesBusiness',
       'GetOldBasicSalaryAsync',
       data
+    );
+  }
+
+  validateBeforeReleaseBasicslaries(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EBasicSalariesBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
     );
   }
   //#endregion
@@ -1811,23 +1859,23 @@ export class CodxHrService {
     );
   }
 
-  AddEBenefit(data: any, useForQTNS: boolean) {
+  AddEBenefit(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'AddEBenefitAsync',
-      [data, useForQTNS]
+      data
     );
   }
 
-  EditEBenefit(data: any, useForQTNS: boolean) {
+  EditEBenefit(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'EditEBenefitAsync',
-      [data, useForQTNS]
+      data
     );
   }
 
@@ -1841,13 +1889,23 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeBenefitMoreFunc(data: any, useForQTNS: boolean) {
+  EditEmployeeBenefitMoreFunc(data: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBenefitsBusiness',
       'EditEmployeeBenefitMoreFunc',
-      [data, useForQTNS]
+      data
+    );
+  }
+
+  validateBeforeReleaseBenefit(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
     );
   }
   //#endregion
@@ -1904,6 +1962,15 @@ export class CodxHrService {
     );
   }
 
+  validateBeforeReleaseBusiness(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
+    );
+  }
   //#endregion
 
   //#region Common
