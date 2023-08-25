@@ -55,6 +55,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   headerText: string = '';
   btnCalculate: string = 'Tính';
   btnCancel: string = 'Hủy';
+  preFuncID: any;
   constructor(
     private injector: Injector,
     private hrService: CodxHrService,
@@ -69,6 +70,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     })
   }
   onInit(): void {
+    this.preFuncID = this.funcID;
   }
   ngAfterViewInit(): void {
     this.button = { id: 'btnAdd', text: 'Thêm' };
@@ -188,22 +190,33 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       this.view.dataService.idField = 'recID';
       this.view.idField = 'recID';
     }
+    
   }
   viewChanged(event: any) {
-    // fix bug when chang funcID and from first view tree to  list
-    // the view reuse data because same data of list is true
-    // reset view data and recall get data
-    // if (event?.view?.type === 1 || event?.type === 1) {
-    //   if (this.resetView) {
-    //     this.view.currentView.dataService.data = [];
-    //     this.view.currentView.dataService.oriData = [];
-    //     this.view.dataService.data = [];
-    //     this.view.dataService.oriData = [];
-    //     this.view.dataService.page = 0;
-    //     this.view.loadData();
-    //     this.resetView = false;
-    //   }
-    // }
+    if (this.funcID !== this.preFuncID) {
+      this.preFuncID = this.funcID;
+      if (this.currentViewModel?.type === this.views[1].type) {
+        this.views[1].active = true;
+        this.view.viewChange(this.views[1])
+      }
+    } else {
+
+      // fix bug when chang funcID and from first view tree to  list
+      // the view reuse data because same data of list is true
+      // reset view data and recall get data
+      if (event?.view?.type === 1 || event?.type === 1) {
+        if (this.resetView) {
+          this.view.currentView.dataService.data = [];
+          this.view.currentView.dataService.oriData = [];
+          this.view.dataService.data = [];
+          this.view.dataService.oriData = [];
+          this.view.dataService.page = 0;
+          this.view.loadData();
+          this.resetView = false;
+        }
+      }
+    }
+    this.currentViewModel = event.view || event
   }
   clickButton(event) {
     let popupData = {
