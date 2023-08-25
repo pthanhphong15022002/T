@@ -94,6 +94,7 @@ export class DealDetailComponent implements OnInit {
   vllStatusLead: any;
   viewSettings: any;
   contactPerson: any;
+  isShow = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -566,5 +567,9 @@ export class DealDetailComponent implements OnInit {
 
   autoStart(event) {
     this.changeProgress.emit(event);
+  }
+  clickShowTab(isShow){
+    this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
   }
 }
