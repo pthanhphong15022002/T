@@ -46,6 +46,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   dialog!: DialogRef;
   vouchers: Vouchers;
   formType: any;
+  gridViewSetup: any;
+  gridViewSetupLine: any;
   validate: any = 0;
   journalNo: any;
   modeGrid: any;
@@ -120,6 +122,22 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.modeGrid = this.journal.addNewMode;
     }
     this.funcID = dialog.formModel.funcID;
+    this.cache
+      .gridViewSetup(this.fmVouchers.formName, this.fmVouchers.gridViewName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
+    this.cache
+      .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetupLine = res;
+        }
+      });
   }
 
   //#endregion
@@ -372,8 +390,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //#region Method
   //Method Master
   onSaveAdd() {
-    if(this.form.formGroup.invalid)
-      return;
+    this.checkValidate();
     this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
@@ -390,8 +407,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onSave() {
-    if(this.form.formGroup.invalid)
-      return;
+    this.checkValidate();
     this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
@@ -524,6 +540,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //Method Line
   onSaveLine(e: any, type: any) {
+    this.checkValidateLine(e);
     if (this.validate > 0) {
       this.validate = 0;
       e.isAddNew = true;
@@ -564,6 +581,41 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
+  }
+
+  checkValidate() {
+    // tu dong khi luu, khong check voucherNo
+    let ignoredFields: string[] = [];
+    if (this.journal.assignRule === '2') {
+      ignoredFields.push('VoucherNo');
+    }
+    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.vouchers);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+          continue;
+        }
+
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.vouchers[keymodel[i]] == null ||
+              String(this.vouchers[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
   }
 
   checkTransLimit(isShowNotify: boolean) {
@@ -681,8 +733,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //Function Line
   addVoucherLine() {
-    if(this.form.formGroup.invalid)
-      return;
+    this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -953,6 +1004,30 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             });
         }
       });
+  }
+
+  checkValidateLine(e) {
+    var keygrid = Object.keys(this.gridViewSetupLine);
+    var keymodel = Object.keys(e);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetupLine[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              e[keymodel[i]] == null ||
+              String(e[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetupLine[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
   }
 
   costPrice_Change(line: any) {

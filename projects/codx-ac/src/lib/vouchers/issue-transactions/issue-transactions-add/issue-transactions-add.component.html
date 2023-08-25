@@ -334,7 +334,7 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="form?.formGroup && modeGrid == 2">
+  <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
     <div class="table-responsive table-content mt-3">
       <table
         style="table-layout: fixed"
@@ -842,7 +842,7 @@
         </div>
       </div>
     </div>
-    <!-- <ng-container>
+    <ng-container>
       <div
         style="margin-left: 30px"
         *ngIf="formType == 'add' || vouchers?.status == '0'"
@@ -868,40 +868,6 @@
       >
         <codx-vll
           [name]="gridViewSetup['SubType'].referedValue"
-          [formModel]="form.formModel"
-          [field]="'SubType'"
-          [value]="vouchers?.subType"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light-primary badge-lg mt-1"
-        >
-        </codx-vll>
-      </span>
-    </ng-container> -->
-    <ng-container>
-      <div
-        style="margin-left: 30px"
-        *ngIf="formType == 'add' || vouchers?.status == '0'"
-        class="input-circle h-20px input-border-0 w-400px mb-1"
-      >
-        <codx-dropdown-select
-          #cbxSub
-          [isToolbar]="false"
-          [cssClass]="'border-0'"
-          cssPopup="h-350px w-550px"
-          [isMulti]="false"
-          type="valuelist"
-          field="subType"
-          [value]="vouchers.subType"
-          emptyText="Loại phiếu"
-          (valueChange)="subTypeChange($event)"
-        ></codx-dropdown-select>
-      </div>
-      <span
-        style="margin-left: 30px"
-        *ngIf="formType == 'edit' && vouchers?.status != '0'"
-      >
-        <codx-vll
           [formModel]="form.formModel"
           [field]="'SubType'"
           [value]="vouchers?.subType"
