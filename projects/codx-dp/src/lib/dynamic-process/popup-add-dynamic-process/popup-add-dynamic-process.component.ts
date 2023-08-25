@@ -2875,6 +2875,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             option
           );
           dialog.closed.subscribe((e) => {
+            this.taskGroupList
             if (e?.event) {
               let taskData = e?.event?.data;
               if (e.event?.status === 'add' || e.event?.status === 'copy') {

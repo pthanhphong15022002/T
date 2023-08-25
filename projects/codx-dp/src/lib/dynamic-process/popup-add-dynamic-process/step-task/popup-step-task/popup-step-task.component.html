@@ -78,7 +78,7 @@
         <div>
           <ejs-combobox
             #sample
-            [dataSource]="listGroupTask"
+            [dataSource]="listGroupTaskCombobox"
             (change)="changeCombobox($event, 'taskGroupID')"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
@@ -281,12 +281,12 @@
       </div>
       <div>
         <ejs-multiselect
-          #multiselect
           [dataSource]="listTaskLink"
           [mode]="'Default'"
           [fields]="fieldsTask"
           [value]="listParentID"
           (valueChange)="parentIDChange($event)"
+          [showDropDownIcon]="true"
         ></ejs-multiselect>
         <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
@@ -303,12 +303,12 @@
       </div>
       <div>
         <ejs-multiselect
-          #multiselect2 
           [dataSource]="listFields"
           [mode]="'Default'"
           [fields]="fieldsFields"
           [value]="listFieldID"
           (valueChange)="fieldIDChange($event)"
+          [showDropDownIcon]="true"
         ></ejs-multiselect>
         <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
