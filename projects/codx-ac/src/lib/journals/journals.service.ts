@@ -159,7 +159,7 @@ export class JournalService {
     }
 
     if (journal?.vatControl == '0') {
-      hiddenFields.push('VATID', 'VATBase', 'VATAmt');
+      hiddenFields.push('VATID', 'VATBase', 'VATAmt', "VATPct");
     }
 
     if (!journal?.useDutyTax) {

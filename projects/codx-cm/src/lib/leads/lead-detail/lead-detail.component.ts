@@ -76,6 +76,7 @@ export class LeadDetailComponent implements OnInit {
   isHidden: boolean = true;
   isBool: boolean = false;
   hasRunOnce: boolean = false;
+  isShow = false;
 
 
 
@@ -360,7 +361,11 @@ export class LeadDetailComponent implements OnInit {
         'GetListTaskTreeBySessionIDAsync',
         recID
       ).subscribe((res) => {
-        this.treeTask = res ? res : []; 
+        this.treeTask = res ? res : [];
     });
+  }
+  clickShowTab(isShow){
+    this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
   }
 }

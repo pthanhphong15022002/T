@@ -45,6 +45,7 @@ export class ContractsViewDetailComponent
   tabClicked = '';
   treeTask = [];
   id='';
+  isShowFull = false;
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -272,5 +273,8 @@ export class ContractsViewDetailComponent
       ).subscribe((res) => {
         this.treeTask = res ? res : []; 
     });
+  }
+  clickShowTab(event){
+    this.isShowFull = event;
   }
 }
