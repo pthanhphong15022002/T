@@ -296,14 +296,15 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   beforeInitGridCashpayments(eleGrid:CodxGridviewV2Component) {
     //* Thiết lập format number theo đồng tiền hạch toán
+      let setting = eleGrid.systemSetting;
     if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      eleGrid.setFormatField('dr','B');
-      eleGrid.setFormatField('cr','B');
+      eleGrid.setFormatField('dr','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('cr','n'+(setting.dBaseCurr || 0));
     } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
-      eleGrid.setFormatField('dr','S');
-      eleGrid.setFormatField('cr','S');
-      eleGrid.setFormatField('dR2','B');
-      eleGrid.setFormatField('cR2','B');
+      eleGrid.setFormatField('dr','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('cr','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('dR2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('cR2','n'+(setting.dSourceCurr || 0));
     }
 
     //* Thiết lập datasource combobox theo sổ nhật ký
@@ -330,13 +331,13 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
     }
     eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
-    
+
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
       preDIM1 = '@0.Contains(DepartmentID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
-    
+
 
     if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
       preDIM2 = '@0.Contains(CostCenterID)';
@@ -351,7 +352,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
 
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    
+
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       this.hideFieldsCashpayment = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
@@ -372,7 +373,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         this.hideFieldsCashpayment.push('CR2'); //? => ẩn field tiền Nợ,HT
       }
     }
-    
+    //debugger
     eleGrid.showHideColumns(this.hideFieldsCashpayment);
   }
 
