@@ -30,6 +30,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   grvEDaysOff: any;
   popupLoading: boolean = false;
   request: ResourceModel;
+  requestTree: ResourceModel;
   lang: any;
   @ViewChild('treeViewDetail') treeViewDetail: EmployeeAnnualLeaveByOrgComponent;
 
@@ -69,16 +70,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     })
   }
   onInit(): void {
-    // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeavesBusiness', 'AddEmployeeAnnualLeaveAsync')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //     }
-    //   });
-    // this.api.execSv<any>("HR", "ERM.Business.HR", 'EAnnualLeavesBusiness', 'AddEmployeeAnnualLeaveMonthAsync')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //     }
-    //   });
   }
   ngAfterViewInit(): void {
     this.button = { id: 'btnAdd' , text: 'Thêm'};
@@ -118,8 +109,17 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.request.className = 'EAnnualLeavesBusiness';
     this.request.method = 'GetListEmployeeAnnualLeaveAsync';
     this.request.autoLoad = false;
-    this.request.parentIDField = 'ParentID';
-    this.request.idField = 'orgUnitID';
+    // this.request.parentIDField = 'ParentID';
+    // this.request.idField = 'orgUnitID';
+
+    this.requestTree = new ResourceModel();
+    this.requestTree.service = 'HR';
+    this.requestTree.assemblyName = 'ERM.Business.HR';
+    this.requestTree.className = 'EAnnualLeavesBusiness';
+    this.requestTree.method = 'GetListEmployeeAnnualLeaveAsync';
+    this.requestTree.autoLoad = false;
+    this.requestTree.parentIDField = 'ParentID';
+    this.requestTree.idField = 'orgUnitID';
   }
   initViewSetting() {
     switch (this.funcID) {
@@ -129,7 +129,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.list.toString(),
             type: ViewType.list,
-            sameData: true,
+            request: this.request,
+            sameData: false,
             active: false,
             model: {
               template: this.templateListHRTAL01,
@@ -139,7 +140,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
-            request: this.request,
+            request: this.requestTree,
             sameData: false,
             active: false,
             model: {
@@ -158,7 +159,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.list.toString(),
             type: ViewType.list,
-            sameData: true,
+            request: this.request,
+            sameData: false,
             active: false,
             model: {
               template: this.templateListHRTAL02,
@@ -168,7 +170,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
           {
             // id: ViewType.tree_list.toString(),
             type: ViewType.tree_list,
-            request: this.request,
+            request: this.requestTree,
             sameData: false,
             active: false,
             model: {
@@ -202,16 +204,17 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     // fix bug when chang funcID and from first view tree to  list
     // the view reuse data because same data of list is true
     // reset view data and recall get data
-    if (event?.view?.type === 1 || event?.type === 1) {
-      if (this.resetView) {
-        // this.view.currentView.dataService.data = [];
-        // this.view.currentView.dataService.oriData = [];
-        this.view.dataService.data = [];
-        this.view.dataService.oriData = [];
-        this.view.loadData();
-        this.resetView = false;
-      }
-    }
+    // if (event?.view?.type === 1 || event?.type === 1) {
+    //   if (this.resetView) {
+    //     this.view.currentView.dataService.data = [];
+    //     this.view.currentView.dataService.oriData = [];
+    //     this.view.dataService.data = [];
+    //     this.view.dataService.oriData = [];
+    //     this.view.dataService.page = 0;
+    //     this.view.loadData();
+    //     this.resetView = false;
+    //   }
+    // }
   }
   clickButton(event) {
     let popupData = {
@@ -236,8 +239,10 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     popup.closed.subscribe(e => {
       if (e?.event) {
         if(this.view.currentView.viewModel.type == 1){
-          this.view.dataService.data = [];
-          this.view.dataService.oriData = [];
+          // this.view.dataService.data = [];
+          // this.view.dataService.oriData = [];
+          // this.view.currentView.dataService.data  = [];
+          // this.view.currentView.dataService.oriData = [];
           this.view.loadData();
         }else if(this.view.currentView.viewModel.type == 151){
           if(this.treeViewDetail){

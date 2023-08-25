@@ -1030,13 +1030,26 @@ export class ContractsComponent extends UIComponent {
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData: any;
+    let formatDatas = data.datas ?? '';
+    let customData = {
+      refID: data.recID,
+      refType: this.view.entityName,
+      dataSource: formatDatas,
+    };
     if (data?.refID) {
       this.cmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: formatDatas,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1061,7 +1074,7 @@ export class ContractsComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-  autoOpenPopupSusscess(e){
+  autoOpenPopupSusscess(e) {
     e && this.moveReason(this.itemSelected, true);
   }
 }
