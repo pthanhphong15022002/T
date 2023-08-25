@@ -3,7 +3,7 @@
   [views]="views"
   [button]="button"
   [autoLoad]="true"
-  entityName="AC_IVPostingAccounts"
+  [entityName]="entityName"
   (buttonClick)="toolBarClick($event)"
 >
 </codx-views>
@@ -186,7 +186,7 @@
       #grid
       funcID="ACS248"
       [dataService]="view.dataService"
-      entityName="AC_IVPostingAccounts"
+      [entityName]="entityName"
       class="h-100"
       idField="recID"
       [templateMore]="morefunction"

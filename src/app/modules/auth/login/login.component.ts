@@ -278,8 +278,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   submit(type?: string) {
-    if (type) this.extendLogin(type);
-    else this.login();
+    let loginType = ['', 'otp', 'qr'];
+    if (loginType.includes(type)) {
+      this.login(type);
+    } else {
+      this.extendLogin(type);
+    }
   }
 
   submitChangePass() {
@@ -351,9 +355,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   //#region Login
-  private login() {
+  private login(type: string) {
     const loginSubscr = this.authService
-      .login(this.f.email.value, this.f.password.value)
+      .login(this.f.email.value, this.f.password.value, type)
       .pipe()
       .subscribe((data) => {
         this.loginAfter(data);
@@ -399,7 +403,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     } else {
       if (data.error.errorCode === 'AD027') return this.router.navigate(['/']);
-      this.notificationsService.notify(data.error.errorMessage);
+      // this.notificationsService.notify(data.error.errorMessage);
     }
     return false;
   }

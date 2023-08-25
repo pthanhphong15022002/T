@@ -8,7 +8,7 @@
 </codx-form>
 
 <ng-template #body>
-  <div class="mb-5"> 
+  <div class="d-flex align-items-center mb-4"> 
     <i class="icon-how_to_reg text-primary me-3"></i>
     <codx-label
         class="fw-bold"
@@ -18,14 +18,14 @@
     ></codx-label>
   </div>
   <div *ngFor="let obj of lstPolicyBeneficiariesApply; let last = last">
-    <div class="border content-hover">
+    <div class="border rounded-1 content-hover">
       <div
         class="d-flex mb-3 fw-bold align-items-center justify-content-between border-bottom"
       >
-        <div class="text-primary ms-3">{{ obj.priority }}</div>
+        <div class="text-primary ms-2 p-2">{{ obj.priority }}</div>
       </div>
       <div *ngFor="let detail of lstSelectedObj">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-1">
           <codx-vll
             [showText]="true"
             [showBgColor]="false"
@@ -35,20 +35,20 @@
           >
           </codx-vll>
         </div>
-        <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
+        <div class="mb-5 ms-3" *ngIf="detail == '1' && !obj.orgUnitID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
+        <div class="mb-5 ms-3" *ngIf="obj.orgUnitID && detail == '1'">
           <span *ngFor="let org of lstOrgUnitID">
             <span
               *ngIf="org.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 org.id
                   | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
@@ -58,20 +58,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
+        <div class="mb-5 ms-3" *ngIf="detail == '2' && !obj.jobLevel">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
+        <div class="mb-5 ms-3" *ngIf="obj.jobLevel && detail == '2'">
           <span *ngFor="let joblevel of lstJobLevel">
             <span
               *ngIf="joblevel.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 joblevel.id
                   | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
@@ -81,20 +81,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
+        <div class="mb-5 ms-3" *ngIf="detail == '3' && !obj.positionID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
+        <div class="mb-5 ms-3" *ngIf="obj.positionID && detail == '3'">
           <span *ngFor="let position of lstPositionID">
             <span
               *ngIf="position.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 position.id
                   | formatvalue : fmPolicyBeneficiaries : 'PositionID'
@@ -104,20 +104,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '4' && !obj.employeeTypeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeTypeID && detail == '4'">
           <span *ngFor="let empType of lstEmployeeTypeID">
             <span
               *ngIf="empType.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 empType.id
                   | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
@@ -127,16 +127,16 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
+        <div class="mb-5 ms-3" *ngIf="detail == '5' && !obj.labourType">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
+        <div class="mb-5 ms-3" *ngIf="obj.labourType && detail == '5'">
           <span *ngFor="let labourType of lstLabourType">
             <span *ngIf="labourType.rec == obj.recID">
               <codx-vll
@@ -144,26 +144,26 @@
                 [showBgColor]="false"
                 name="HR022"
                 [value]="labourType.id"
-                ngClass="badge badge-success border-0 ms-2"
+                ngClass="badge badge-success border-0 me-2 mb-2"
               >
               </codx-vll>
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '6' && !obj.contractTypeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
+        <div class="mb-5 ms-3" *ngIf="obj.contractTypeID && detail == '6'">
           <span *ngFor="let contractType of lstContractTypeID">
             <span
               *ngIf="contractType.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 contractType.id
                   | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
@@ -173,20 +173,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '7' && !obj.employeeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeID && detail == '7'">
           <span *ngFor="let emp of lstEmployeeID">
             <!-- <span
               *ngIf="emp.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 emp.id
                   | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
@@ -214,16 +214,16 @@
             </div>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
+        <div class="mb-5 ms-3" *ngIf="detail == '8' && !obj.employeeStatus">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeStatus && detail == '8'">
           <span *ngFor="let empStatus of lstEmpStatus">
             <span *ngIf="empStatus.rec == obj.recID">
               <codx-vll
@@ -231,7 +231,7 @@
                 [showBgColor]="false"
                 name="HR003"
                 [value]="empStatus.id"
-                ngClass="badge badge-success border-0 ms-2"
+                ngClass="badge badge-success border-0 me-2 mb-2"
               >
               </codx-vll>
             </span>
@@ -267,7 +267,7 @@
       </div>
 
       <div *ngFor="let detail of lstSelectedExcludeObj">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-1">
           <codx-vll
             [showText]="true"
             [showBgColor]="false"
@@ -277,20 +277,20 @@
           >
           </codx-vll>
         </div>
-        <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
+        <div class="mb-5 ms-3" *ngIf="detail == '1' && !obj.orgUnitID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
+        <div class="mb-5 ms-3" *ngIf="obj.orgUnitID && detail == '1'">
           <span *ngFor="let org of lstOrgUnitID">
             <span
               *ngIf="org.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 org.id
                   | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
@@ -300,20 +300,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
+        <div class="mb-5 ms-3" *ngIf="detail == '2' && !obj.jobLevel">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
+        <div class="mb-5 ms-3" *ngIf="obj.jobLevel && detail == '2'">
           <span *ngFor="let joblevel of lstJobLevel">
             <span
               *ngIf="joblevel.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 joblevel.id
                   | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
@@ -323,20 +323,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
+        <div class="mb-5 ms-3" *ngIf="detail == '3' && !obj.positionID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
+        <div class="mb-5 ms-3" *ngIf="obj.positionID && detail == '3'">
           <span *ngFor="let position of lstPositionID">
             <span
               *ngIf="position.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 position.id
                   | formatvalue : fmPolicyBeneficiaries : 'PositionID'
@@ -346,20 +346,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '4' && !obj.employeeTypeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeTypeID && detail == '4'">
           <span *ngFor="let empType of lstEmployeeTypeID">
             <span
               *ngIf="empType.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 empType.id
                   | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
@@ -369,16 +369,16 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
+        <div class="mb-5 ms-3" *ngIf="detail == '5' && !obj.labourType">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
+        <div class="mb-5 ms-3" *ngIf="obj.labourType && detail == '5'">
           <span *ngFor="let labourType of lstLabourType">
             <span *ngIf="labourType.rec == obj.recID">
               <codx-vll
@@ -386,26 +386,26 @@
                 [showBgColor]="false"
                 name="HR022"
                 [value]="labourType.id"
-                ngClass="badge badge-success border-0 ms-2"
+                ngClass="badge badge-success border-0 me-2 mb-2"
               >
               </codx-vll>
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '6' && !obj.contractTypeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
+        <div class="mb-5 ms-3" *ngIf="obj.contractTypeID && detail == '6'">
           <span *ngFor="let contractType of lstContractTypeID">
             <span
               *ngIf="contractType.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 contractType.id
                   | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
@@ -415,20 +415,20 @@
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
+        <div class="mb-5 ms-3" *ngIf="detail == '7' && !obj.employeeID">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeID && detail == '7'">
           <span *ngFor="let emp of lstEmployeeID">
             <!-- <span
               *ngIf="emp.rec == obj.recID"
-              class="badge badge-success border-0 ms-2"
+              class="badge badge-success border-0 me-2 mb-2"
               [innerHTML]="
                 emp.id
                   | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
@@ -457,16 +457,16 @@
             </div>
           </span>
         </div>
-        <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
+        <div class="mb-5 ms-3" *ngIf="detail == '8' && !obj.employeeStatus">
           <span>
             <span
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-success border-0 me-2 mb-2"
             [innerHTML]="'Tất cả'"
             >
             </span>
           </span>
         </div>
-        <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
+        <div class="mb-5 ms-3" *ngIf="obj.employeeStatus && detail == '8'">
           <span *ngFor="let empStatus of lstEmpStatus">
             <span *ngIf="empStatus.rec == obj.recID">
               <codx-vll
@@ -474,7 +474,7 @@
                 [showBgColor]="false"
                 name="HR003"
                 [value]="empStatus.id"
-                ngClass="badge badge-success border-0 ms-2"
+                ngClass="badge badge-success border-0 me-2 mb-2"
               >
               </codx-vll>
             </span>
