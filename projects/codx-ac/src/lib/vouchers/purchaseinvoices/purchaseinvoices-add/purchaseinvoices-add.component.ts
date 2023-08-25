@@ -226,54 +226,6 @@ export class PurchaseinvoicesAddComponent
         `[${this.journal.diM3}]`
       );
     }
-
-    // ❌ cache problem
-    // let toggleFields: string[] = [
-    //   ...Array.from({ length: 3 }, (_, i) => 'DIM' + (i + 1)),
-    //   ...Array.from({ length: 10 }, (_, i) => 'IDIM' + i),
-    // ];
-    // for (const c of columns) {
-    //   if (toggleFields.includes(c.fieldName)) {
-    //     c.isVisible = true;
-    //   }
-
-    //   if (this.hiddenFields.includes(c.fieldName)) {
-    //     c.isVisible = false;
-    //   }
-
-    //   if (
-    //     c.fieldName === 'DIM1' &&
-    //     [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-    //       this.journal.diM1Control
-    //     )
-    //   ) {
-    //     c.isRequire = true;
-    //     c.predicate = '@0.Contains(ProfitCenterID)';
-    //     c.dataValue = `[${this.journal.diM1}]`;
-    //   }
-
-    //   if (
-    //     c.fieldName === 'DIM2' &&
-    //     [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-    //       this.journal.diM2Control
-    //     )
-    //   ) {
-    //     c.isRequire = true;
-    //     c.predicate = '@0.Contains(CostCenterID)';
-    //     c.dataValue = `[${this.journal.diM2}]`;
-    //   }
-
-    //   if (
-    //     c.fieldName === 'DIM3' &&
-    //     [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-    //       this.journal.diM3Control
-    //     )
-    //   ) {
-    //     c.isRequire = true;
-    //     c.predicate = '@0.Contains(CostItemID)';
-    //     c.dataValue = `[${this.journal.diM3}]`;
-    //   }
-    // }
   }
 
   onClickAddRow(): void {
