@@ -557,8 +557,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.notification.notifyCode('SYS023', 0, '');
       return;
     } else {
-      this.updateFixedDims(e);
-
       if (type == 'isAddNew') {
         this.api
           .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
@@ -662,17 +660,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       memo: this.vouchers.memo,
     });
   }
-
-  updateFixedDims(line: any) {
-    let fixedDims: string[] = Array(10).fill('0');
-    for (let i = 0; i < 10; i++) {
-      if (line['idiM' + i]) {
-        fixedDims[i] = '1';
-      }
-    }
-    line.fixedDIMs = fixedDims.join('');
-  }
-
+  
   // setTabindex() {
   //   let ins = setInterval(() => {
   //     let eleInput = document

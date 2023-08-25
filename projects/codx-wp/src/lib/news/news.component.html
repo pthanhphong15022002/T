@@ -193,7 +193,7 @@
 </ng-template>
 <ng-template #itemTemplate let-item>
   <ng-container *ngIf="item.type == 'text';else tmpData">
-    <div class="row">
+    <div>
       <span *ngIf="category == 'home';else oldNews" class="fw-bolder fs-2">{{item.subject}}</span>
       <ng-template #oldNews>
         <codx-label [classList]="'fw-bold fs-2'" [formModel]="view.formModel" name="lblOldNews" default="Tin cũ hơn"></codx-label>
