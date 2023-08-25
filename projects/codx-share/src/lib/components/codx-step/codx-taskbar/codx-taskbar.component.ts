@@ -69,8 +69,9 @@ export class CodxTaskbarComponent implements OnInit,OnChanges {
       this.tab.emit(item.name);
     }
   }
-  clickShowTab(isShow){
-    this.isShowFull.emit(isShow);
+  clickShowTab(){
+    this.isShow = !this.isShow;
+    this.isShowFull.emit(this.isShow);
     // this.changeDetectorRef.detectChanges();
   }
 }
