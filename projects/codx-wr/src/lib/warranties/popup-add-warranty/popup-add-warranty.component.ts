@@ -9,6 +9,7 @@ import {
   ApiHttpService,
   AuthStore,
   CRUDService,
+  CacheService,
   CallFuncService,
   CodxComboboxComponent,
   CodxFormComponent,
@@ -42,7 +43,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   radioChecked = true;
   action = '';
   gridViewSetup: any;
-
+  moreFuncAdd = '';
   constructor(
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
@@ -50,6 +51,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private wrSv: CodxWrService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -70,6 +72,12 @@ export class PopupAddWarrantyComponent implements OnInit {
     } else {
       this.data.oow = true;
     }
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncAdd = m.customName;
+      }
+    });
   }
 
   //#region onSave
@@ -143,7 +151,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     if (this.data?.address != null && this.data?.address?.trim() != '') {
       var tmp = {};
       tmp['recID'] = Util.uid();
-      tmp['adressType'] = '6';
+      tmp['adressType'] = '0';
       tmp['adressName'] = this.data.address;
       tmp['isDefault'] = true;
       lstAddress.push(Object.assign({}, tmp));
@@ -184,7 +192,7 @@ export class PopupAddWarrantyComponent implements OnInit {
               tmpContact['owner'] = data?.owner;
               tmpContact['address'] = this.data?.address;
               if (lstAddress != null && lstAddress.length > 0) {
-                lstAddress[0].adressType = '5';
+                lstAddress[0].adressType = '19';
               }
               await firstValueFrom(
                 this.api.execSv<any>(
@@ -261,7 +269,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
-      title: 'Thêm',
+      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
       data: this.data,
     };
     this.callFc
@@ -290,7 +298,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
-      title: 'Thêm',
+      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
       data: this.data,
     };
     this.callFc

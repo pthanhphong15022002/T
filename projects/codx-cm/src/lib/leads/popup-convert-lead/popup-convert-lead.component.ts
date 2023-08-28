@@ -165,8 +165,32 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.radioChecked) {
       this.countAddSys++;
     }
-
+    // this.setCurrentID();
     this.changeDetectorRef.detectChanges();
+  }
+
+  async setCurrentID(){
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter(
+        (x) => x.category == '1' && !x.transType
+      )[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.deal.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        let exchangeRateCurrent = await firstValueFrom(
+          this.cmSv.getExchangeRate(this.deal.currencyID, new Date())
+        );
+        if (exchangeRateCurrent?.exchRate > 0) {
+          this.deal.exchangeRate = exchangeRateCurrent?.exchRate;
+        } else {
+          this.deal.exchangeRate = 1;
+          this.deal.currencyID = 'VND';
+        }
+      }
+    }
   }
 
   onSelect(e): void {
