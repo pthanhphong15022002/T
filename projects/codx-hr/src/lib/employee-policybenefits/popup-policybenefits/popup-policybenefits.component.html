@@ -1290,19 +1290,18 @@
               <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
                     [objectName]="emp.info?.employeeName" [width]="30">
               </codx-img>
-                <div class="d-flex flex-column w-350px">
-          <span class="badge-with-delete">
-                    <span #employeeName class="fs-6 line-clamp line-clamp-1">
-                        {{emp.info?.employeeName}}
-                        <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
-                          <span class="icon-close icon-16"></span>
-                        </button>
+              <div class="d-flex flex-column w-350px">
+                  <span class="badge-with-delete">
+                      <span #employeeName class="text-dark fw-bold line-clamp line-clamp-1">
+                          {{emp.info?.employeeName}}
+                          <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
+                            <span class="icon-close icon-16"></span>
+                          </button>
                       </span>
-                    <span #positionName class="text-gray-600 line-clamp line-lamp-1">
-                        {{emp.positionName}}
-                    </span>
-  
-          </span>
+                      <span #positionName class="text-gray-500 fs-7 line-clamp line-lamp-1">
+                          {{emp.positionName}}
+                      </span>
+                  </span>
             </div>
           </div>
         </span>
@@ -1713,13 +1712,13 @@
             </codx-img>
               <div class="d-flex flex-column w-350px">
           <span class="badge-with-delete">
-                  <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                  <span #employeeName class="fw-bold text-dark line-clamp line-clamp-1">
                       {{emp.info?.employeeName}}
                       <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
                         <span class="icon-close icon-16"></span>
                       </button>
                     </span>
-                  <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                  <span #positionName class="text-gray-500 fs-7 line-clamp line-lamp-1">
                       {{emp.positionName}}
                   </span>
                     <!-- <ng-template #positionTooltip>

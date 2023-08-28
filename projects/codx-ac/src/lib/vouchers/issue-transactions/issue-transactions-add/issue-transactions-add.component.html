@@ -302,7 +302,7 @@
         [showEmptyRecord]="false"
         [showRowNumber]="true"
         [editOnClick]="true"
-        (eventAction)="endEdit($event)"
+        (eventAction)="onEventAction($event)"
         (gridInit)="gridInit($event)"
         (cellChanged)="lineChanged($event)"
       ></codx-gridview-v2>
@@ -314,8 +314,8 @@
           type="button"
           tab-index="7"
           class="btn btn-sm btn-light-primary rounded-15"
-          (keydown.enter)="addVoucherLine(); $event.preventDefault()"
-          (click)="addVoucherLine()"
+          (keydown.enter)="saveMasterBeforeAddLine(); $event.preventDefault()"
+          (click)="saveMasterBeforeAddLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
           <codx-label
@@ -745,8 +745,8 @@
         tab-index="10"
         type="button"
         class="btn btn-md btn-light-primary me-2 rounded-15"
-        (keydown.enter)="onSaveAdd(); $event.preventDefault()"
-        (click)="onSaveAdd()"
+        (keydown.enter)="onSave(false); $event.preventDefault()"
+        (click)="onSave(false)"
       >
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
@@ -763,8 +763,8 @@
         type="button"
         class="btn btn-md btn-light-primary rounded-15"
         style="border: 1px solid var(--primary-dark) !important"
-        (keydown.enter)="onSave(); $event.preventDefault()"
-        (click)="onSave()"
+        (keydown.enter)="onSave(true); $event.preventDefault()"
+        (click)="onSave(true)"
       >
         <div class="d-flex align-items-center">
           <i class="icon-save_alt icon-16"></i>

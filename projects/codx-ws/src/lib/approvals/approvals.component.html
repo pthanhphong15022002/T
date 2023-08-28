@@ -1,3 +1,19 @@
 <div class="d-flex w-100 h-100 mt-3 ms-3">
-    <lib-menu-list-approval [funcID]="funcID"></lib-menu-list-approval>
+    <ng-container *ngTemplateOutlet="menu"></ng-container>
+    <ng-container *ngTemplateOutlet="master"></ng-container>
+    <ng-container *ngTemplateOutlet="detail"></ng-container>
 </div>
+
+<ng-template #menu>
+    <lib-menu-list-approval [funcID]="funcID"></lib-menu-list-approval>
+</ng-template>
+
+<ng-template #master>
+    <div class="bg-white h-100 w-40 ms-3">
+    </div>
+</ng-template>
+
+<ng-template #detail>
+    <div class="bg-white h-100 w-100 ms-3">
+    </div>
+</ng-template>

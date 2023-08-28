@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -40,7 +41,6 @@ export class WarrantiesComponent
 {
   // ViewChild
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
-
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail!: TemplateRef<any>;
 
@@ -66,6 +66,8 @@ export class WarrantiesComponent
   user: any;
   gridViewSetup: any;
   moreFuncInstance: any;
+  columnGrids = [];
+  arrFieldIsVisible: any[];
 
   // config api get data
   service = 'WR';
@@ -74,12 +76,6 @@ export class WarrantiesComponent
   className = 'WorkOrdersBusiness';
   method = 'GetListWorkOrdersAsync';
   idField = 'recID';
-  // idField = 'recID';
-  // service = 'WR';
-  // assemblyName = 'ERM.Business.WR';
-  // entityName = 'WR_Products';
-  // className = 'ProductsBusiness';
-  // method = 'GetListProductsAsync';
 
   constructor(
     private inject: Injector,
@@ -104,11 +100,9 @@ export class WarrantiesComponent
     this.button = {
       id: this.btnAdd,
     };
-    // this.loadViewModel();
   }
 
   ngAfterViewInit(): void {
-    // setTimeout(() => console.log(this.view.dataService), 5000);
     this.loadViewModel();
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
@@ -120,6 +114,65 @@ export class WarrantiesComponent
   searchChanged(e) {}
 
   onLoading(e) {
+    this.getColumsGrid(this.gridViewSetup);
+    return;
+  }
+
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    if (this.arrFieldIsVisible?.length > 0) {
+      this.arrFieldIsVisible.forEach((key) => {
+        let field = Util.camelize(key);
+        let template: any;
+        let colums: any;
+        switch (key) {
+          // case 'CustomerID':
+          //   template = this.templateCustomer;
+          //   break;
+          // case 'BusinessLineID':
+          //   template = this.templateBusinessLines;
+          //   break;
+          // case 'DealValue':
+          //   template = this.templateDealValue;
+          //   break;
+          // case 'Status':
+          //   template = this.templateStatus;
+          //   break;
+          // case 'Owner':
+          //   template = this.templateOwner;
+          //   break;
+          // case 'StepID':
+          //   template = this.templateSteps;
+          //   break;
+          // case 'ConsultantID':
+          //   template = this.templateConsultant;
+          //   break;
+          // case 'ExpectedClosed':
+          //   template = this.templateExpectedClosed;
+          //   break;
+
+          default:
+            break;
+        }
+        if (template) {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+            template: template,
+            // textAlign: 'center',
+          };
+        } else {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+          };
+        }
+        this.columnGrids.push(colums);
+      });
+    }
+
     // this.loadViewModel();
   }
 
@@ -127,15 +180,24 @@ export class WarrantiesComponent
     this.views = [
       {
         type: ViewType.list,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemViewList,
         },
       },
+      // {
+      //   type: ViewType.grid,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     template2: this.itemViewList,
+      //     resources: this.columnGrids,
+      //   },
+      // },
       {
         type: ViewType.listdetail,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -261,6 +323,16 @@ export class WarrantiesComponent
           this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
         // this.vllApprove =
         //   this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
+        //lay grid view
+        let arrField = Object.values(this.gridViewSetup).filter(
+          (x: any) => x.isVisible
+        );
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          // this.getColumsGrid(this.gridViewSetup);
+        }
       }
     });
   }
@@ -483,7 +555,8 @@ export class WarrantiesComponent
           dialogModel.FormModel = formModel;
           let obj = {
             title: this.titleAction,
-            data: data,
+            transID: data?.recID,
+            engineerID: data?.engineerID,
             gridViewSetup: res,
           };
           this.callFc
@@ -499,6 +572,9 @@ export class WarrantiesComponent
             )
             .closed.subscribe((e) => {
               if (e?.event && e?.event != null) {
+                this.dataSelected.statusCode = e?.event?.statusCode;
+                this.dataSelected.scheduleStart = e?.event?.scheduleStart;
+                this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
                 this.detectorRef.detectChanges();
               }
             });

@@ -109,6 +109,8 @@ export class WR_WorkOrderUpdates {
   scheduleTime: string;
   startDate: Date;
   endDate: Date;
+  scheduleStart: Date;
+  scheduleEnd: Date;
   engineerID: string;
   deadLine: Date;
   hours: string;

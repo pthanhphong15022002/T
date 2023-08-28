@@ -59,7 +59,6 @@
               <codx-gridview-v2
                 *ngIf="journal?.addNewMode === '1'; else dialogMode"
                 #gridPurchaseInvoiceLines
-                class="tabLine"
                 [formName]="fmPurchaseInvoicesLines.formName"
                 [gridViewName]="fmPurchaseInvoicesLines.gridViewName"
                 [entityName]="fmPurchaseInvoicesLines.entityName"
@@ -79,6 +78,7 @@
 
               <button
                 id="btnAddLine"
+                tab-index="16"
                 class="btn btn-light-primary btn-sm rounded-5 d-flex align-items-center position-absolute end-0"
                 style="
                   top: -32px;
@@ -88,7 +88,7 @@
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
-                  fiedName="lblAddLine2"
+                  fiedName="lblAddLine"
                   [formModel]="fmPurchaseInvoicesLines"
                   default="Thêm dòng"
                 ></codx-label>
@@ -129,6 +129,7 @@
               ></codx-gridview-v2>
 
               <button
+                tab-index="16"
                 id="btnAddLine2"
                 class="btn btn-light-primary btn-sm rounded-5 d-flex align-items-center position-absolute end-0"
                 style="
@@ -139,7 +140,7 @@
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
-                  fiedName="lblAddLine"
+                  fiedName="lblAddLine2"
                   [formModel]="fmVATInvoices"
                   default="Thêm dòng"
                 ></codx-label>
@@ -153,6 +154,7 @@
     <div class="d-flex align-items-center">
       <i class="icon-i-pencil-square fs-1 text-dark"></i>
       <codx-input
+        tab-index="17"
         field="memo"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -494,6 +496,7 @@
       style="top: 4px"
     >
       <button
+        tab-index="18"
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
         (click)="onClickDiscard()"
@@ -509,6 +512,7 @@
       </button>
 
       <button
+        tab-index="19"
         *ngIf="!isEdit"
         type="button"
         style="border: 1px solid var(--primary-dark) !important"
@@ -525,6 +529,7 @@
       </button>
 
       <button
+        tab-index="20"
         type="button"
         style="
           min-width: 60px;

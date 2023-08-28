@@ -56,6 +56,7 @@ import { CodxGetTemplateSignFileComponent } from './components/codx-approval-pro
 import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
+import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 
 @Injectable({
   providedIn: 'root',
@@ -1318,9 +1319,12 @@ export class CodxShareService {
             }
           });
           break;
-
-        //Tự động Export và gửi duyệt ngầm
+        //Export và view trc khi gửi duyệt
         case '3':
+          
+          break;
+        //Tự động Export và gửi duyệt ngầm
+        case '4':
           this.releaseInBackground(approveProcess, releaseCallback);
           break;
       }
@@ -1369,6 +1373,7 @@ export class CodxShareService {
     template: any,
     releaseBackground: boolean = false
   ) {
+    approveProcess.template=template;
     if (template?.templateID == null && template?.templateType == null) {
       //TemplateID null -> bật form kí số nhưng ko có file
       //Copy file từ template mẫu
@@ -1433,10 +1438,10 @@ export class CodxShareService {
             this.exportFileRelease(
               approveProcess,
               releaseCallback,
-              exportUpload
+              exportUpload,
             );
           } else {
-            exportUpload.dataJson = template?.templateType == 'AD_ExcelTemplates' ? JSON.stringify([approveProcess?.data]) : JSON.stringify([approveProcess?.data]);
+            exportUpload.dataJson = template?.templateType == 'AD_ExcelTemplates' ? JSON.stringify([approveProcess?.data]) : JSON.stringify(approveProcess?.data);
             this.exportFileRelease(
               approveProcess,
               releaseCallback,
@@ -1470,6 +1475,12 @@ export class CodxShareService {
                   signFile,
                   lstFile
                 );
+                // this.openViewSignFile(//test
+                //   approveProcess,
+                //   releaseCallback,
+                //   approveProcess.template,
+                //   lstFile
+                // );
               } else {
                 this.notificationsService.notify(
                   'Không tìm thấy tài liệu!',
@@ -1516,6 +1527,41 @@ export class CodxShareService {
         );
         return;
       }
+    });
+  }
+
+  openViewSignFile(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel, component: any) => void,
+    signFile: ES_SignFile,
+    listFile: Array<any> = []
+  ) {
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
+    let dialogSF = this.callfunc.openForm(
+      CodxViewReleaseSignFileComponent,
+      'Thêm mới',
+      700,
+      650,
+      '',
+      {
+        signFile: signFile,
+        files: listFile,
+        approveProcess:approveProcess
+      },
+      '',
+      dialogModel
+    );
+    dialogSF.closed.subscribe((res) => {
+      // if (res?.event && res?.event?.approved == true) {
+      //   let respone = new ResponseModel();
+      //   respone.msgCodeError = res?.event?.responseModel?.msgCodeError;
+      //   respone.rowCount = res?.event?.responseModel?.rowCount;
+      //   releaseCallback && releaseCallback(respone, this.callBackComponent);
+      // } else {
+      //   //Lưu - Tắt form kí số khi chưa gửi duyệt
+      // }
     });
   }
 
