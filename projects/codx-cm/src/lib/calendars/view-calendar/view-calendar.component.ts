@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  ButtonModel,
   FormModel,
   ResourceModel,
   UIComponent,
@@ -68,6 +69,11 @@ export class ViewCalendarComponent
     formName: 'DPActivities',
   };
   viewCrr: any;
+
+  titleAction: string;
+  button: ButtonModel = {
+    id: 'btnAdd',
+  };
 
   constructor(
     private inject: Injector,
@@ -242,6 +248,17 @@ export class ViewCalendarComponent
     //   this.view.currentView.refesh();
     // }
   }
+
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  add() {}
 
   settingViews() {}
 }
