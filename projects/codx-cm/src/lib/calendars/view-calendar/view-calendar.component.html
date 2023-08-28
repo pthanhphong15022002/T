@@ -125,11 +125,11 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <h5
-    class="fw-bold {{
-      data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'
-    }}"
-  >
+  <h5 class="fw-bold">
+    <i
+      style="color: black"
+      [ngClass]="data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'"
+    ></i>
     {{ data?.taskName }}
   </h5>
 </ng-template>

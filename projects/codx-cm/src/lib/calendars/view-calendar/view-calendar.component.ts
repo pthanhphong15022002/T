@@ -258,7 +258,9 @@ export class ViewCalendarComponent
     }
   }
 
-  add() {}
+  add() {
+    console.log('Event add dp_actived or dp_instance_Step_task');
+  }
 
   settingViews() {}
 }
