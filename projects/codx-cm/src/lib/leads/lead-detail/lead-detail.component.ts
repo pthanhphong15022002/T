@@ -49,12 +49,11 @@ export class LeadDetailComponent implements OnInit {
 
   seesionID = '';
   viewTag: string = '';
-  tabControl = [];
   listRoles = [];
   listSteps = [];
   listStepsProcess = [];
   treeTask = [];
-  listCategoryTmp = [] = [];
+  listCategoryTmp = ([] = []);
 
   tmpDeal: any;
   oCountFooter: any = {};
@@ -67,64 +66,54 @@ export class LeadDetailComponent implements OnInit {
 
   // type of string
   oldRecId: string = '';
-  companyNo:string = '';
-  customerNo:string = '';
-  companyName:string = '';
-  customerName:string = '';
-
+  companyNo: string = '';
+  customerNo: string = '';
+  companyName: string = '';
+  customerName: string = '';
 
   isHidden: boolean = true;
   isBool: boolean = false;
   hasRunOnce: boolean = false;
   isShow = false;
 
-
+  tabControl = [
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      template: null,
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      template: null,
+    },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+    },
+    {
+      name: 'Approve',
+      textDefault: 'Ký duyệt',
+      isActive: false,
+      template: null,
+    },
+  ];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService,
+    private api: ApiHttpService
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
   }
 
-  ngOnInit(): void {
-    this.tabControl = [
-      {
-        name: 'History',
-        textDefault: 'Lịch sử',
-        isActive: true,
-        template: null,
-      },
-      {
-        name: 'Attachment',
-        textDefault: 'Đính kèm',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'AssignTo',
-        textDefault: 'Giao việc',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'Approve',
-        textDefault: 'Ký duyệt',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'Deal',
-        textDefault: 'Liên kết',
-        isActive: false,
-        template: this.referencesDeal,
-        icon: 'icon-i-link',
-      },
-    ];
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {}
   ngAfterViewChecked() {
@@ -167,11 +156,13 @@ export class LeadDetailComponent implements OnInit {
       }
       this.getTags(this.dataSelected);
     }
-    if (changes['listCategory']?.currentValue && this.listCategoryTmp.length <= 0) {
-        this.listCategoryTmp = changes['listCategory'].currentValue;
-        this.getValuelistCategory(this.listCategoryTmp);
+    if (
+      changes['listCategory']?.currentValue &&
+      this.listCategoryTmp.length <= 0
+    ) {
+      this.listCategoryTmp = changes['listCategory'].currentValue;
+      this.getValuelistCategory(this.listCategoryTmp);
     }
-
   }
 
   clickMF(e, data) {
@@ -200,28 +191,28 @@ export class LeadDetailComponent implements OnInit {
   }
 
   async promiseAllLoad() {
-    this.seesionID = this.dataSelected.applyProcess ? this.dataSelected.refID : this.dataSelected.recID;
+    this.seesionID = this.dataSelected.applyProcess
+      ? this.dataSelected.refID
+      : this.dataSelected.recID;
     this.loadTree(this.seesionID);
     this.isDataLoading = true;
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
     this.dataSelected.dealID && (await this.getTmpDeal());
   }
   async executeApiCalls() {
-
     await this.getValueListRole();
     await this.getGridViewSetupDeal();
-
   }
   getValuelistCategory(listCategory) {
     const mappings = {
       '5': 'companyNo',
       '6': 'customerNo',
       '3': 'companyName',
-      '4': 'customerName'
+      '4': 'customerName',
     };
     for (const key in mappings) {
       const value = mappings[key];
-      this[value] = listCategory.find(x => x.value === key)?.text || '';
+      this[value] = listCategory.find((x) => x.value === key)?.text || '';
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -351,20 +342,17 @@ export class LeadDetailComponent implements OnInit {
   }
 
   loadTree(recID) {
-    if(!recID){
+    if (!recID) {
       this.treeTask = [];
       return;
     }
-    this.api.exec<any>(
-        'TM',
-        'TaskBusiness',
-        'GetListTaskTreeBySessionIDAsync',
-        recID
-      ).subscribe((res) => {
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
         this.treeTask = res ? res : [];
-    });
+      });
   }
-  clickShowTab(isShow){
+  clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
   }
