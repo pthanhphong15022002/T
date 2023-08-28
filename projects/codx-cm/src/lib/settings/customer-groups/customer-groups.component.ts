@@ -114,19 +114,11 @@ export class CustomerGroupsComponent extends UIComponent {
         case 'Icon':
           template = this.icon;
           break;
-        case 'CreatedOn':
-          template = this.createdOn;
-          break;
-        case 'ModifiedOn':
-          template = this.modifiedOn;
-          break;
-        default:
-          break;
       }
       if (template) {
         colums = {
           field: field,
-          headerText: grid[key].headerText,
+          headerText: grid[key].headerText ?? key,
           width: grid[key].width,
           template: template,
           // textAlign: 'center',
@@ -134,7 +126,7 @@ export class CustomerGroupsComponent extends UIComponent {
       } else {
         colums = {
           field: field,
-          headerText: grid[key].headerText,
+          headerText: grid[key].headerText ?? key,
           width: grid[key].width,
         };
       }
@@ -225,9 +217,9 @@ export class CustomerGroupsComponent extends UIComponent {
 
       popupAdd.closed.subscribe((res) => {
         if (!res?.event) this.view.dataService.clear();
-        else {
-          this.view.dataService.update(res.event).subscribe();
-        }
+        // else {
+        //   this.view.dataService.update(res.event).subscribe();
+        // }
       });
     });
   }
@@ -249,7 +241,7 @@ export class CustomerGroupsComponent extends UIComponent {
             PopupAddCustomerGroupsComponent,
             {
               data: data,
-              isAdd: 'edit',
+              action: 'edit',
               headerText:
                 evt.text +
                 ' ' +
@@ -287,7 +279,7 @@ export class CustomerGroupsComponent extends UIComponent {
         PopupAddCustomerGroupsComponent,
         {
           data: data,
-          isAdd: 'copy',
+          action: 'copy',
           headerText:
             evt.text +
             ' ' +

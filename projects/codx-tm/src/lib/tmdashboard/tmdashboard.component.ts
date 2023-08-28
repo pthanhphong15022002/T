@@ -16,6 +16,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import {
   ButtonModel,
+  CallFuncService,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -47,6 +48,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('assign_dashboard') templates3: QueryList<any>;
 
   @ViewChild('annotation1') annotation: ProgressBar;
+  @ViewChild('showTask1') showTask1: any;
+  @ViewChild('showTask2') showTask2: any;
+  @ViewChild('showTask3') showTask3: any;
 
   @Input() panels1: any;
   @Input() datas1: any;
@@ -360,7 +364,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     inject: Injector,
     private pageTitle: PageTitleService,
     private routerActive: ActivatedRoute,
-    private tmDBService: TMDashboardService
+    private tmDBService: TMDashboardService,
+    private callfunc: CallFuncService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -574,6 +579,30 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   toFixed(value: number) {
+    if (!value) {
+      return 0;
+    }
     return value % 1 === 0 ? value : value.toFixed(2);
+  }
+
+  predicates: string;
+  dataValues: string;
+
+  showTasks(predicates: string, dataValues: string, funcID: string) {
+    this.predicates = predicates;
+    this.dataValues = dataValues;
+    switch (funcID) {
+      case 'TMT0202':
+        this.callfunc.openForm(this.showTask2, '', 1280, 720, null);
+        break;
+      case 'TMT0203':
+        this.callfunc.openForm(this.showTask3, '', 1280, 720, null);
+        break;
+      default:
+        this.callfunc.openForm(this.showTask1, '', 1280, 720, null);
+        break;
+    }
+
+    this.detectorRef.detectChanges();
   }
 }

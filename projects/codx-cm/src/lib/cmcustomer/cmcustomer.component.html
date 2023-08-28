@@ -109,8 +109,12 @@
         ></codx-label>
       </ng-template>
       <span
-        [ngClass]="data.allowCall ? 'text-primary text-hover-primary' : 'icon-phonelink_erase'"
-        class="icon-16 me-2 "
+        [ngClass]="
+          data.allowCall
+            ? 'text-primary text-hover-primary'
+            : 'icon-phonelink_erase  me-2'
+        "
+        class="icon-16"
       ></span>
       <span
         *ngIf="data?.allowCall"
@@ -129,8 +133,12 @@
       [ngbTooltip]="popupAllowEmail"
     >
       <span
-        [ngClass]="data.allowEmail ? 'text-primary text-hover-primary' : 'icon-print_disabled'"
-        class="icon-16 me-2 "
+        [ngClass]="
+          data.allowEmail
+            ? 'text-primary text-hover-primary'
+            : 'icon-print_disabled  me-2'
+        "
+        class="icon-16"
         ><ng-template #popupAllowEmail>
           <codx-label
             name="lblAllowEmail"
@@ -152,18 +160,19 @@
       <span *ngIf="!data?.allowEmail">{{ data.personalEmail }}</span>
     </div>
     <div class="mb-1 d-flex align-items-top" *ngIf="data.address">
+      <span class="icon-16 text-gray-700"> </span>
       <span
-        class="icon-location_on icon-16 me-2 text-gray-700"
+        class="fs-7 text-gray-600"
         [ngbTooltip]="popupAddress"
-      >
-        <ng-template #popupAddress>
+        [innerHTML]="
+          data?.address | formatvalue : view.formModel : 'address' | async
+        "
+        ><ng-template #popupAddress>
           <codx-label
             fiedName="Address"
             [formModel]="view.formModel"
-          ></codx-label>
-        </ng-template>
-      </span>
-      <span class="fs-7 text-gray-600">{{ data.address }}</span>
+          ></codx-label> </ng-template
+      ></span>
     </div>
     <div
       *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"

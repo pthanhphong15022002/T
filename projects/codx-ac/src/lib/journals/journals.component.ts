@@ -12,11 +12,11 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
-import { NameByIdPipe } from '../pipes/nameById.pipe';
-import { IJournalPermission } from './interfaces/IJournalPermission.interface';
-import { JournalService } from './journals.service';
-import { JournalsAddComponent } from './journals-add/journals-add.component';
+import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { IJournal } from './interfaces/IJournal.interface';
+import { IJournalPermission } from './interfaces/IJournalPermission.interface';
+import { JournalsAddComponent } from './journals-add/journals-add.component';
+import { JournalService } from './journals.service';
 
 @Component({
   selector: 'lib-journal',
@@ -248,8 +248,8 @@ export class JournalsComponent extends UIComponent {
     });
   }
 
-  onChange(e): void {
-    console.log('onChange', e);
+  onActions(e): void {
+    console.log('onActions', e);
 
     if (e.type === 'edit') {
       this.dbClick(e.data);
@@ -259,12 +259,9 @@ export class JournalsComponent extends UIComponent {
 
   //#region Method
   add(e): void {
-    console.log(`${e.text} ${this.functionName}`);
-
     this.view.dataService
-      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync'))
-      .subscribe((res) => {
-        console.log(res);
+      .addNew(() => this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', false))
+      .subscribe(() => {
         const options = new SidebarModel();
         options.Width = '800px';
         options.DataService = this.view.dataService;

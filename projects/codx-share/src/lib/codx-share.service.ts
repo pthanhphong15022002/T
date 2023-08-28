@@ -39,7 +39,11 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
 import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
-import { ApproveProcess, Approver, ResponseModel } from './models/ApproveProcess.model';
+import {
+  ApproveProcess,
+  Approver,
+  ResponseModel,
+} from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -51,6 +55,7 @@ import { ES_File } from './components/codx-approval-procress/model/codx-approval
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
+import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 
 @Injectable({
   providedIn: 'root',
@@ -232,7 +237,7 @@ export class CodxShareService {
             //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
-            if (x?.event?.msgCodeError == null && x?.event?.rowCount>0) {
+            if (x?.event?.msgCodeError == null && x?.event?.rowCount > 0) {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
@@ -350,19 +355,38 @@ export class CodxShareService {
         break;
       }
       //Đính kèm file
-      case 'SYS003':
-      {
-        var datas = 
-        {
-          headerText : val?.data?.customName,
-          objectID : data?.recID,
+      case 'SYS003': {
+        var datas = {
+          headerText: val?.data?.customName,
+          objectID: data?.recID,
           dataSelected: data,
           referType: customData?.referType,
-          addPermissions: customData?.addPermissions
+          addPermissions: customData?.addPermissions,
         };
-        this.callfunc.openForm(CodxFilesAttachmentViewComponent,"",700,600,"",datas)
+        this.callfunc.openForm(
+          CodxFilesAttachmentViewComponent,
+          '',
+          700,
+          600,
+          '',
+          datas
+        );
+        break;
       }
-
+      //Gửi mail
+      case 'SYS004': {
+        var dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+        dialog.closed.subscribe((x) => {
+          if (x.event) {
+            var result = {
+              funcID: funcID,
+              result: x.event,
+            };
+            afterSave(result);
+          }
+        });
+        break;
+      }
     }
   }
 
@@ -1125,6 +1149,15 @@ export class CodxShareService {
       recID
     );
   }
+  deleteByObjectWithAutoCreate(objectID:string, objectType:string, delForever:boolean, autoCreate:string) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectWithAutoCreateAsync',
+      [objectID,objectType,delForever,autoCreate]
+    );
+  }
   getSignFileTemplateByRefType(refType) {
     return this.api.execSv(
       'ES',
@@ -1379,7 +1412,7 @@ export class CodxShareService {
           return;
         }
       });
-    } else {
+    } else if(template?.templateID!=null && template?.templateID !=null){
       let exportUpload = new ExportUpload();
       exportUpload.templateRecID = template?.templateID;
       exportUpload.templateType = template?.templateType;
@@ -1403,10 +1436,7 @@ export class CodxShareService {
               exportUpload
             );
           } else {
-            exportUpload.dataJson =
-              template?.templateType == 'AD_ExcelTemplates'
-                ? JSON.stringify([approveProcess?.data])
-                : JSON.stringify([approveProcess?.data]);
+            exportUpload.dataJson = template?.templateType == 'AD_ExcelTemplates' ? JSON.stringify([approveProcess?.data]) : JSON.stringify([approveProcess?.data]);
             this.exportFileRelease(
               approveProcess,
               releaseCallback,
@@ -1416,19 +1446,23 @@ export class CodxShareService {
         }
       );
     }
+    else {
+      this.notificationsService.notify("Vui lòng kiểm tra lại mẫu thiết lập",'2');
+      return;
+    }
   }
   exportFileRelease(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
     exportUpload: ExportUpload
   ) {
-    
     this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
       (exportedFile: any) => {
         if (exportedFile) {
-          let signFile = this.createSignFile(approveProcess, [exportedFile]);
+          //Nhận thông tin file trả lên sau khi export
           this.getFileByObjectID(approveProcess.recID).subscribe(
             (lstFile: any) => {
+            let signFile = this.createSignFile(approveProcess, lstFile);
               if (lstFile?.length > 0) {
                 this.openPopupSignFile(
                   approveProcess,

@@ -88,6 +88,7 @@ export class PopupPolicyalComponent
   
   lstPolicyBeneficiariesApply: any = []
   lstPolicyBeneficiariesExclude: any = []
+  hasApplyExcludeObjAtBeginning = false;
 
   // policyBeneficiariesDetail = {
   //   recId: '',
@@ -216,7 +217,6 @@ export class PopupPolicyalComponent
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     if(this.alpolicyObj && this.actionType == 'edit'){
       this.originPolicyId = this.alpolicyObj.policyID;
-      
     }
   }
 
@@ -251,6 +251,97 @@ export class PopupPolicyalComponent
       empID
     )
   }
+
+  deleteApplyExcludeObj(data, from, crrObj?){
+    switch(from){
+        case 'lstPositionID':
+          let index = this.lstPositionID.indexOf(data);
+          this.lstPositionID.splice(index,1);
+          let lstId = this.lstPositionID.map(item => item.id);
+          crrObj.positionID = lstId.join(';');
+          break;
+        case 'lstOrgUnitID':
+          let index2 = this.lstOrgUnitID.indexOf(data);
+          this.lstOrgUnitID.splice(index2,1);
+          let lstId2 = this.lstOrgUnitID.map(item => item.id);
+          crrObj.orgUnitID = lstId2.join(';');
+          break;
+        case 'lstJobLevel':
+          let index3 = this.lstJobLevel.indexOf(data);
+          this.lstJobLevel.splice(index3,1);
+          let lstId3 = this.lstJobLevel.map(item => item.id);
+          crrObj.jobLevel = lstId3.join(';');
+          break;
+        case 'lstEmployeeTypeID':
+          let index4 = this.lstEmployeeTypeID.indexOf(data);
+          this.lstEmployeeTypeID.splice(index4,1);
+          let lstId4 = this.lstEmployeeTypeID.map(item => item.id);
+          crrObj.employeeTypeID = lstId4.join(';');
+          break;
+        case 'lstLabourType':
+          let index5 = this.lstLabourType.indexOf(data);
+          this.lstLabourType.splice(index5,1);
+          let lstId5 = this.lstLabourType.map(item => item.id);
+          crrObj.labourType = lstId5.join(';');
+          break;
+        case 'lstContractTypeID':
+          let index6 = this.lstContractTypeID.indexOf(data);
+          this.lstContractTypeID.splice(index6,1);
+          let lstId6 = this.lstContractTypeID.map(item => item.id);
+          crrObj.contractTypeID = lstId6.join(';');
+          break;
+        case 'lstEmployeeID':
+          let index7 = this.lstEmployeeID.indexOf(data);
+          this.lstEmployeeID.splice(index7,1);
+          let lstId7 = this.lstEmployeeID.map(item => item.id);
+          crrObj.employeeID = lstId7.join(';');
+          break;
+        case 'lstEmpStatus':
+          let index8 = this.lstEmpStatus.indexOf(data);
+          this.lstEmpStatus.splice(index8,1);
+          let lstId8 = this.lstEmpStatus.map(item => item.id);
+          crrObj.employeeStatus = lstId8.join(';');
+          break;
+      }
+      this.df.detectChanges();
+  }
+
+  deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
+    switch(data){
+      case '1':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, orgUnitID: null }));
+        // lstBeneficiaries.orgUnitID = null
+        break;
+      case '2':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, jobLevel: null }));
+        // lstBeneficiaries.jobLevel = null
+        break;
+      case '3':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, positionID: null }));
+        // lstBeneficiaries.positionID = null
+        break;
+      case '4':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeTypeID: null }));
+        // lstBeneficiaries.employeeTypeID = null
+        break;
+      case '5':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, labourType: null }));
+        // lstBeneficiaries.labourType = null
+        break;
+      case '6':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, contractTypeID: null }));
+        // lstBeneficiaries.contractTypeID = null
+        break;
+      case '7':
+        debugger
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeID: null }));
+        // lstBeneficiaries.employeeID = null
+        break;
+      case '8':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeStatus: null }));
+        // lstBeneficiaries.employeeStatus = null
+        break;
+    }}
 
   onInit(): void {
     if(!this.columnGrid1){
@@ -439,7 +530,6 @@ export class PopupPolicyalComponent
 
           this.lstPolicyBeneficiariesExclude = res.filter((obj) => obj.category == 1);
         this.lstPolicyBeneficiariesExclude = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
-
           this.SplitToSubList(this.lstPolicyBeneficiariesExclude);
           this.formGroup.patchValue(this.alpolicyObj);
           this.formModel.currentData = this.alpolicyObj;
@@ -871,6 +961,16 @@ export class PopupPolicyalComponent
       return;
     }
 
+    if(this.alpolicyObj.hasIncludeObjects == true && (this.alpolicyObj.includeObjects?.length < 1 || this.lstPolicyBeneficiariesApply?.length < 1)){
+      this.notify.notifyCode('HR032')
+      return
+    }
+
+    if(this.alpolicyObj.hasExcludeObjects == true && (this.alpolicyObj.excludeObjects?.length < 1 || this.lstPolicyBeneficiariesExclude?.length < 1)){
+      this.notify.notifyCode('HR033')
+      return
+    }
+
     if(
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
@@ -882,19 +982,21 @@ export class PopupPolicyalComponent
           });
       }
 
+
+
       if(this.alpolicyObj.hasIncludeObjects == false){
         this.alpolicyObj.includeObjects = ''
       }
       if(this.alpolicyObj.hasExcludeObjects == false){
         this.alpolicyObj.excludeObjects = ''
       }
+
+
       if(this.actionType === 'add' || this.actionType === 'copy'){
         this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
-          debugger
           if(res){
               this.notify.notifyCode('SYS006');
               for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                
                 this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   
                 })
@@ -916,21 +1018,20 @@ export class PopupPolicyalComponent
           this.EditPolicyALPolicyIDChanged().subscribe((res) => {
             if(res){
               this.notify.notifyCode('SYS007');
-              this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+
+              this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+            if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                  
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                    
                   })
                 }
                 for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                  
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                    
                   })
                 }
-                this.dialog && this.dialog.close(this.alpolicyObj);
+              }
               })
+              this.dialog && this.dialog.close(this.alpolicyObj);
             }
             else{
               this.notify.notifyCode('SYS023');
@@ -942,6 +1043,7 @@ export class PopupPolicyalComponent
             if(res){
               this.notify.notifyCode('SYS007');
               this.DeletePolicyBeneficiaries(this.alpolicyObj.policyID).subscribe((res) => {
+            if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                     
@@ -952,8 +1054,9 @@ export class PopupPolicyalComponent
                     
                   })
                 }
-                this.dialog && this.dialog.close(this.alpolicyObj);
+              }
               })
+              this.dialog && this.dialog.close(this.alpolicyObj);
             }
             else{
               this.notify.notifyCode('SYS023');
@@ -964,10 +1067,8 @@ export class PopupPolicyalComponent
 }
 
   addRowGrid1(){
-    
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
-        
         if(res[0] == true){
           this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView1.dataSource.length;
@@ -994,10 +1095,8 @@ export class PopupPolicyalComponent
   }
 
   addRowGrid2(){
-    
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
-        
         if(res[0] == true){
           this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView2.dataSource.length;
@@ -1021,8 +1120,6 @@ export class PopupPolicyalComponent
     else{
       this.notify.notifyCode('HR027');
     }
-
-
   }
 
   onAddNewGrid1(evt){
@@ -1178,6 +1275,10 @@ export class PopupPolicyalComponent
     if(flag == false){
       this.alpolicyObj.hasIncludeObjects = false;
     }
+    else if(flag == true){
+      this.alpolicyObj.hasIncludeObjects = true;
+      this.onClickOpenSelectIncludeObj();
+    }
   }
 
   ValChangeHasExcludeObj(event){
@@ -1185,6 +1286,10 @@ export class PopupPolicyalComponent
 
     if(flag == false){
       this.alpolicyObj.hasExcludeObjects = false;
+    }
+    else if(flag == true){
+      this.alpolicyObj.hasExcludeObjects = true;
+      this.onClickOpenSelectExcludeObj();
     }
   }
 
@@ -1231,6 +1336,9 @@ export class PopupPolicyalComponent
         if(res.event){
           this.alpolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
+          if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
+            this.addApplyObj()
+          }
           this.df.detectChanges();
         }
       });
@@ -1247,7 +1355,7 @@ export class PopupPolicyalComponent
         450,
         null,
         {
-          headerText: 'Chọn đối tượng áp dụng',
+          headerText: 'Chọn đối tượng loại trừ',
           vllName : 'HRObject',
           formModel: this.formModel,
           dataSelected: this.alpolicyObj.excludeObjects
@@ -1258,6 +1366,9 @@ export class PopupPolicyalComponent
       popup.closed.subscribe((res) => {
         this.alpolicyObj.excludeObjects = res.event
         this.lstSelectedExcludeObj = res.event.split(';')
+        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
+          this.addExcludeObj()
+        }
         this.df.detectChanges();
       });
     }
@@ -1683,10 +1794,6 @@ export class PopupPolicyalComponent
               id:lstId[i]
             });
           }
-          // let indexEmpty = this.lstRecEmptyorgUnitID.indexOf(this.currentRec);
-          // if(indexEmpty !== -1){
-          //   this.lstRecEmptyorgUnitID.splice(indexEmpty,1);
-          // }
           break;
         case 'JobLevels':
           if(this.currentTab == 'applyObj'){
@@ -1773,38 +1880,3 @@ export class PopupPolicyalComponent
   }
 }
 }
-
-
-// this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
-//   if(res){
-//     console.log('info nv',  res[0]);
-//     this.infoPersonal = res[0];
-//     this.infoPersonal.PositionName = res[1]
-//     // this.lstOrg = res[2]
-//     this.orgUnitStr = res[2]
-//     this.DepartmentStr = res[3]
-//     this.LoadedEInfo = true;
-//     this.df.detectChanges();
-//   }
-// }
-
-// <div class="d-flex align-items-centerp py-1 h-50px">
-//                         <codx-img [objectId]="emp?.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
-//                             [objectName]="emp.employeeName" [width]="30">
-//                         </codx-img>
-//                         <div class="d-flex flex-column w-350px">
-//                             <span #employeeName class="fs-6 line-clamp line-clamp-1"
-//                                 [ngbTooltip]="employeeName.scrollHeight > employeeName.clientHeight? positionTooltip: null">
-//                                 {{emp.employeeName}}</span>
-//                             <span #positionName class="text-gray-600 line-clamp line-lamp-1"
-//                                 [ngbTooltip]="positionName.scrollHeight > positionName.clientHeight? positionTooltip: null">
-//                                 {{emp.positionName}}
-//                             </span>
-//                             <ng-template #positionTooltip>
-//                                 {{emp.positionName}}
-//                             </ng-template>
-//                             <ng-template #employeeNameTooltip>
-//                                 {{emp.positionName}}
-//                             </ng-template>
-//                         </div>
-//                     </div>

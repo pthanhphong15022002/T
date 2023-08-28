@@ -133,6 +133,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
     } else {
       this.refValueCbx = 'CMPartners';
     }
+    if (this.funcID == 'CM0102') {
+      if (this.action == 'add') {
+        this.data.owner = null;
+        this.data.contactType = null;
+        this.data.objectType = null;
+      }
+    }
   }
 
   async ngOnInit() {
@@ -157,17 +164,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.disabledShowInput = false;
         }
       });
-    if (this.action == 'edit') {
-      this.checkContact = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContactsBusiness',
-          'CheckContactDealAsync',
-          [this.data?.recID]
-        )
-      );
-    }
 
     if (this.action == 'add' || this.action == 'copy') {
       this.data.address = null;
@@ -189,9 +185,26 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
-    if (this.data?.objectID) {
-      this.getListContactByObjectID(this.data?.objectID);
+    if (this.funcID == 'CM0102') {
+      if (this.action == 'edit') {
+        this.api
+          .execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'ContactsBusiness',
+            'CheckContactDealAsync',
+            [this.data?.recID]
+          )
+          .subscribe((res) => {
+            this.checkContact = res;
+            console.log(this.checkContact);
+          });
+      }
+      if (this.data?.objectID) {
+        this.getListContactByObjectID(this.data?.objectID);
+      }
     }
+
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup(
         this.dialog.formModel.formName,
@@ -405,6 +418,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
           : null;
       this.getListContactByObjectID(this.data.objectID);
     }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueChecked(e) {
+    if (e) {
+      this.data.isDefault = e?.data;
+    }
   }
 
   valueChangeIndustries(e) {
@@ -422,28 +442,50 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.objectName = null;
       this.data.isDefault = false;
     }
-    if (this.action === 'add' || this.action == 'copy') {
-      op.method = 'AddCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.listAddress,
-      ];
-    } else {
-      op.method = 'UpdateCrmAsync';
-      op.className = 'CustomersBusiness';
-      data = [
-        this.data,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        this.lstContact,
-        this.lstContactDeletes,
-        this.listAddress,
-        this.listAddressDelete,
-      ];
+    op.method = this.action != 'edit' ? 'AddCrmAsync' : 'UpdateCrmAsync';
+
+    switch (this.funcID) {
+      case 'CM0101':
+      case 'CM0105':
+        op.className = 'CustomersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0102':
+        op.className = 'ContactsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
+      case 'CM0103':
+        op.className = 'PartnersBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.lstContact, this.listAddress]
+            : [
+                this.data,
+                this.lstContact,
+                this.lstContactDeletes,
+                this.listAddress,
+                this.listAddressDelete,
+              ];
+        break;
+      case 'CM0104':
+        op.className = 'CompetitorsBusiness';
+        data =
+          this.action != 'edit'
+            ? [this.data, this.listAddress]
+            : [this.data, this.listAddress, this.listAddressDelete];
+        break;
     }
 
     op.data = data;
@@ -524,9 +566,33 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.count > 0) {
       return;
     }
+    let check = false;
+    check = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CustomersBusiness',
+        'IsExitCoincideIDAsync',
+        [
+          this.data?.recID,
+          this.funcID == 'CM0102'
+            ? this.data?.contactID
+            : this.funcID == 'CM0103'
+            ? this.data?.partnerID
+            : this.funcID == 'CM0104'
+            ? this.data?.competitorID
+            : this.data?.customerID,
+          this.dialog?.formModel?.entityName,
+        ]
+      )
+    );
+    if (check) {
+      this.notiService.notifyCode('Trùng mã khách hàng');
+      return;
+    }
 
     if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
-      var check = await firstValueFrom(
+      check = await firstValueFrom(
         this.api.execSv<any>(
           'CM',
           'ERM.Business.CM',

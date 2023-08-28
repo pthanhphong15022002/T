@@ -1040,7 +1040,7 @@ export class CodxAddBookingCarComponent
                     'EP',
                     this.returnData,
                     category,
-                    'EP_Bookings',
+                    this.formModel?.entityName,
                     this.formModel.funcID,
                     this.returnData?.title,
                     (res: ResponseModel) => {

@@ -85,6 +85,7 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
           this.formGroup = res;
         });
     }
+
   }
 
   addPolicyBenefit(evt) {
@@ -97,7 +98,6 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
     }
 
     // this.add().subscribe((res) => {
-      
     // })
   }
 
@@ -111,11 +111,44 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
     );
   }
 
+  DeletePolicyDetailByPolicyID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyALBusiness',
+      'DeletePolicyDetailByPolicyIDAsync',
+      data
+    );
+  }
+
+  DeletePolicyConstraint(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBenefitsBusiness',
+      'DeletePolicyConstraintsByPolicyIDAsync',
+      policyID
+    );
+  }
+
+  DeletePolicyBeneficiaries(policyID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyBeneficiariesBusiness',
+      'DeletePolicyBeneficiariesAsync',
+      policyID
+    );
+  }
+
   onClickOpenPopupDetailInfo(){
 
   }
 
   ViewIncludeExcludeObjects(data: any){
+    if(data.hasIncludeObjects == false && data.hasExcludeObjects == false){
+      return;
+    }
     debugger
     let option = new DialogModel();
     option.zIndex = 999;
@@ -156,8 +189,20 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
 
       case 'SYS02': //delete
       this.view.dataService.delete([data]).subscribe((res) => {
-        this.deleteFile(data).subscribe((res) => {
-          debugger
+        debugger
+        if(data.attachments > 0){
+          this.deleteFile(data).subscribe((res) => {
+          })
+        }
+        if(data.hasIncludeObjects == true || data.hasExcludeObjects == true){
+          this.DeletePolicyBeneficiaries(data.policyID).subscribe((res) =>{
+          })
+        }
+        if(data.isConstraintOther){
+          this.DeletePolicyConstraint(data.policyID).subscribe((res) => {
+          })
+        }
+        this.DeletePolicyDetailByPolicyID(data).subscribe((res) => {
         })
       });
         break;

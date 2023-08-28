@@ -20,11 +20,13 @@ import {
   NotificationsService,
   Util,
   ApiHttpService,
+  AuthStore,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
 import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
 import * as XLSX from 'xlsx';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -97,20 +99,31 @@ export class CmCustomerDetailComponent implements OnInit {
   loaded: boolean;
   addressNameCM: any;
   category = '';
+  isAdmin = false;
+  user: any;
+  isShow = false;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
     private cmSv: CodxCmService,
     private api: ApiHttpService,
+    private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService
-  ) {}
+  ) {
+    this.user = this.authstore.get();
+  }
 
   async ngOnInit() {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
+    this.checkAdmin();
     this.getFormModelAddress();
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102' || this.funcID == 'CM0105') {
+    if (
+      this.funcID == 'CM0101' ||
+      this.funcID == 'CM0102' ||
+      this.funcID == 'CM0105'
+    ) {
       this.tabControl = [
         {
           name: 'History',
@@ -183,16 +196,31 @@ export class CmCustomerDetailComponent implements OnInit {
   ngAfterViewInit(): void {}
 
   getOneCustomerDetail(dataSelected) {
-    this.viewTag = '';
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.addressNameCM = this.dataSelected?.address;
-    setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags;
-    }, 100);
+    this.loadTag(this.dataSelected);
     this.listTab(this.funcID);
     this.loaded = true;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  loadTag(data) {
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = data?.tags;
+    }, 100);
+  }
+
+  async checkAdmin() {
+    let data = await firstValueFrom(this.cmSv.getAdminRolesByModule());
+    let isAdmin = false;
+    if (data) {
+      let lstId = data.split(';');
+      isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
+    }
+    this.isAdmin = isAdmin || this.user.administrator;
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
@@ -372,6 +400,11 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
+  clickShowTab(isShow){
+    this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
+  }
+
   ReadExcel(e) {
     let file = e?.target?.files[0];
     let fileRead = new FileReader();
@@ -407,7 +440,6 @@ export class CmCustomerDetailComponent implements OnInit {
         }
 
         if (item['Tên'] != null && item['Tên']?.trim() != '') {
-
           tmpContact['lastName'] = item['Họ & đệm']?.trim();
           tmpContact['firstName'] = item['Tên']?.trim();
           tmpContact['contactName'] =

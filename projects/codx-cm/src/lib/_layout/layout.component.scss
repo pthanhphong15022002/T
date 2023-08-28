@@ -26,4 +26,41 @@ codx-cmcustomer-detail .codx-detail-main{
  	overflow: auto;
 }
 */
-
+.cm-scroll{
+  position: relative;
+  .btn.tab-action{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 99;
+  }
+  &.cm-full{
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    background-color: var(--bg-body);
+    //border: 1px greenyellow solid;
+    .e-content{
+      height: calc(100vh - 244px)!important;
+      overflow: auto;
+      //border: 1px rgb(241, 29, 178) solid;
+    }
+  }
+  .e-dlg-content .cm-scroll.cm-full{
+    top: 25px;
+    .e-content {
+      height: calc(100vh - 165px) !important;
+      overflow: auto;
+      overflow-x: hidden;
+  }
+  }
+  ejs-tab{
+    height: 100%!important;
+   // border: 1px rgb(0, 17, 255) solid;
+  }
+  // .mb-5px {
+  //   margin-bottom: 50px;
+  // }
+}

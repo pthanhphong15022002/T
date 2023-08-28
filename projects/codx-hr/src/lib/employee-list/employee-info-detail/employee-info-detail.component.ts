@@ -69,6 +69,7 @@ import { PopupEProcessContractComponent } from '../../employee-contract/popup-ep
 import { PopupForeignWorkerComponent } from '../../employee-profile/popup-foreign-worker/popup-foreign-worker.component';
 import { PopupViewAllComponent } from './pop-up/popup-view-all/popup-view-all.component';
 import { PopupEquitjobComponent } from '../../employee-profile/popup-equitjob/popup-equitjob.component';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -673,6 +674,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   benefitFormodel: FormModel;
   EBusinessTravelFormodel: FormModel;
   eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
+  eInfoFormGroup: FormGroup;
   eFamilyFormModel: FormModel; //Quan hệ gia đình
   ePassportFormModel: FormModel; //Hộ chiếu
   eQuitJobFormModel: FormModel; //Nghỉ việc
@@ -738,6 +740,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   addHeaderText;
   editHeaderText;
   //#endregion
+
+  loadedLineManager = false;
+  loadedIndirectManager = false;
 
   //#region filter variables of form main eDayoffs
   filterByKowIDArr: any = [];
@@ -920,6 +925,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           if(res){
             console.log('info nv',  res[0]);
             this.infoPersonal = res[0];
+          this.getManagerEmployeeInfoById();
             this.infoPersonal.PositionName = res[1]
             // this.lstOrg = res[2]
             this.orgUnitStr = res[2]
@@ -953,7 +959,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             this.loadEBenefit = true;
             this.crrEContract = res[7];
           }
-          this.getManagerEmployeeInfoById();
         })
       }
       if (this.employeeID) {
@@ -1006,6 +1011,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
       this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
         this.eInfoFormModel = res;
+        this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName).then((fg) =>{
+          this.eInfoFormGroup = fg;
+          this.eInfoFormGroup.patchValue(this.infoPersonal);
+          this.eInfoFormModel.currentData = this.infoPersonal;
+        })
       });
     }
     
@@ -3104,9 +3114,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           break;
 
         case this.jobInfoFuncID:
-          debugger
           this.lineManager = null;
           this.indirectManager = null;
+          this.loadedLineManager = false;
+          this.loadedIndirectManager = false;
+          this.getManagerEmployeeInfoById();
           this.lstBtnAdd = []
           this.lstFuncJobInfo = res;
           for(let i = 0; i < res.length; i++){
@@ -3462,6 +3474,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             });
         }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.eInfoFormGroup.patchValue(this.infoPersonal);
+        this.eInfoFormModel.currentData = this.infoPersonal;
         if(oldManagerID != res.event.lineManager || indirectManagerID != res.event.indirectManager){
           this.getManagerEmployeeInfoById();
         }
@@ -4102,6 +4116,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   HandleEmployeeESkillsInfo(actionHeaderText, actionType: string, data: any) {
+    console.log('data nhan vao tu ben ngoai', data);
+    
     let option = new SidebarModel();
     option.DataService = this.skillGrid?.dataService;
     option.FormModel = this.eSkillFormmodel;
@@ -5789,10 +5805,17 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       empRequest.predicates = 'EmployeeID=@0';
       empRequest.pageLoading = false;
       this.hrService.loadData('HR', empRequest).subscribe((res: any) => {
+        console.log('line manager', res);
         if (Array.isArray(res) && res[1] > 0) {
           this.lineManager = res[0][0];
+          this.loadedLineManager = true;
+          this.df.detectChanges()
         }
       });
+    }
+    else{
+      this.loadedLineManager = true;
+      this.df.detectChanges()
     }
     if (this.infoPersonal?.indirectManager) {
       let empRequest = new DataRequest();
@@ -5803,8 +5826,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
         if (emp[1] > 0) {
           this.indirectManager = emp[0][0];
+          this.loadedIndirectManager = true;
+          this.df.detectChanges()
         }
       });
+    }
+    else{
+      this.loadedIndirectManager = true;
+      this.df.detectChanges()
     }
   }
 }

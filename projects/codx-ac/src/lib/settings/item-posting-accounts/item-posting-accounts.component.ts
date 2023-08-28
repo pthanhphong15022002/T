@@ -37,6 +37,8 @@ export class ItempostingaccountsComponent extends UIComponent {
   @ViewChild('grid') grid: CodxGridviewComponent;
   views: Array<ViewModel> = [];
   dialog: DialogRef;
+  entityName: any;
+  funcID: any = 'ACS248';
   menuInventory: Array<any> = [];
   menuPurchase: Array<any> = [];
   menuSell: Array<any> = [];
@@ -70,6 +72,12 @@ export class ItempostingaccountsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.cache.functionList(this.funcID).subscribe((res: any) => {
+      if(res)
+      {
+        this.entityName = res.entityName;
+      }
+    })
   }
   //#endregion
 
@@ -118,7 +126,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         active: true,
         model: {
           panelLeftRef: this.templateLeft,
-          widthLeft: '22%',
+          widthLeft: '25%',
           panelRightRef: this.templateRight,
         },
       },

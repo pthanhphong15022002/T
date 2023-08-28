@@ -9,7 +9,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NosubAsideComponent } from '../_noSubAside/nosub-aside.component';
-import { NameByIdPipe } from '../pipes/nameById.pipe';
+import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
@@ -59,6 +59,7 @@ import { PopAddItemSeriesComponent } from './item-series/pop-add-item-series/pop
 import { VATCodesComponent } from './vatcodes/vatcodes.component';
 import { PopAddVatcodesComponent } from './vatcodes/pop-add-vatcodes/pop-add-vatcodes.component';
 import { PopAddVatpostingComponent } from './vatcodes/pop-add-vatposting/pop-add-vatposting.component';
+import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods/fiscal-periods-add/fiscal-periods-auto-create.component';
 
 var routes: Routes = [
   {
@@ -193,6 +194,7 @@ var routes: Routes = [
     VATCodesComponent,
     PopAddVatcodesComponent,
     PopAddVatpostingComponent,
+    FiscalPeriodsAutoCreateComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,356 @@
+<ng-container *ngIf="isRole; else noData">
+  <ng-container *ngIf="loaded">
+    <codx-treeview
+      id="treeView"
+      #treeView
+      [itemTemplate]="templateTree"
+      [data]="listHistory"
+      [enableCheck]="false"
+      idField="recID"
+      parentIdField="parentID"
+      fieldCheck="hasChildren"
+      [autoLoad]="false"
+      [isOutput]="true"
+      [isLoadChild]="true"
+    >
+    </codx-treeview>
+  </ng-container>
+</ng-container>
+
+<ng-template #templateTree let-data>
+  <div (click)="clickTreeNode($event)">
+    <div class="d-flex justify-content-between w-100 mb-5">
+      <div class="d-flex flex-row">
+        <div class="d-flex flex-column w-400px min-w-400px">
+          <div class="me-4 d-flex fw-bold fs-6 mb-1">
+            <span
+              class="me-2 icon-16"
+              [ngClass]="
+                data.type == '1'
+                  ? 'icon-monetization_on'
+                  : data.type == '2'
+                  ? 'icon-shopping_bag'
+                  : 'icon-monetization_on'
+              "
+            ></span>
+            <codx-label
+              *ngIf="data?.type == '1'"
+              name="lblDeal"
+              default="Cơ hội"
+              [formModel]="formModelDeal"
+            ></codx-label>
+            <codx-label
+              *ngIf="data?.type == '2'"
+              name="lblContract"
+              default="Hợp đồng"
+              [formModel]="formModelContract"
+            ></codx-label>
+            <codx-label
+              *ngIf="data?.type == '3'"
+              name="lblQuotation"
+              default="Báo giá"
+              [formModel]="formModelQuotation"
+            ></codx-label>
+            <span
+              *ngIf="data.type == '3'"
+              class="ms-2"
+              [innerHTML]="
+                data.version
+                  | formatvalue : formModelQuotation : 'Version'
+                  | async
+              "
+            ></span>
+          </div>
+          <div
+            class="text-dark fw-bold"
+            [ngClass]="data.parentID == null ? 'fs-5-sm' : 'fs-6'"
+          >
+            {{ data.name }}
+          </div>
+          <div
+            class="d-flex mt-1"
+            *ngIf="data.type == '1'"
+            [ngbTooltip]="popupBusinessLines"
+          >
+            <span class="me-2 icon-16 icon-corporate_fare"></span>
+            <div
+              class="text-gray-600"
+              [innerHTML]="
+                data.businessLineID
+                  | formatvalue : formModelDeal : 'BusinessLineID'
+                  | async
+              "
+            ></div>
+            <ng-template #popupBusinessLines>
+              <codx-label
+                [setRequire]="false"
+                fiedName="BusinessLineID"
+                [formModel]="formModelDeal"
+              ></codx-label>
+            </ng-template>
+          </div>
+          <div
+            class="d-flex"
+            *ngIf="data.type != '1'"
+            [ngbTooltip]="popupCustomer"
+          >
+            <span class="me-2 icon-16 icon-corporate_fare"></span>
+            <div
+              class="text-gray-600"
+              [innerHTML]="
+                data.customerID
+                  | formatvalue : formModelDeal : 'CustomerID'
+                  | async
+              "
+            ></div>
+            <ng-template #popupCustomer>
+              <codx-label
+                [setRequire]="false"
+                fiedName="CustomerID"
+                [formModel]="formModelQuotation"
+              ></codx-label>
+            </ng-template>
+          </div>
+          <div class="d-flex flex-wrap align-items-top">
+            <div class="d-flex mt-1 me-4" [ngbTooltip]="popupDealValue">
+              <span class="icon-money icon-16 me-2">
+                <ng-template #popupDealValue>
+                  <codx-label
+                    *ngIf="data.type == '1'"
+                    [setRequire]="false"
+                    fiedName="DealValue"
+                    [formModel]="formModelDeal"
+                  ></codx-label>
+                  <codx-label
+                    *ngIf="data.type == '2'"
+                    [setRequire]="false"
+                    fiedName="ContractAmt"
+                    [formModel]="formModelContract"
+                  ></codx-label>
+                  <codx-label
+                    *ngIf="data.type == '3'"
+                    fiedName="TotalAmt"
+                    [formModel]="formModelQuotation"
+                  ></codx-label> </ng-template
+              ></span>
+              <span
+                class="ms-1 text-dark fw-bold"
+                [innerHTML]="
+                  data.dealValue
+                    | formatvalue : formModelDeal : 'DealValue'
+                    | async
+                "
+              ></span>
+              <span
+                class="ms-1 text-dark"
+                [innerHTML]="
+                  data.currencyID
+                    | formatvalue : formModelDeal : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="data.type == '1'">
+            <span
+              class="icon-offline_pin icon-16 me-2"
+              [ngbTooltip]="popupProbability"
+            >
+              <ng-template #popupProbability>
+                <codx-label
+                  fiedName="Probability"
+                  [formModel]="formModelDeal"
+                ></codx-label> </ng-template
+            ></span>
+            <codx-label
+              class="label-colon text-gray-600 me-1"
+              [formModel]="formModelDeal"
+              fiedName="Probability"
+            ></codx-label>
+            <span
+              class="me-1 text-dark fw-bold"
+              [innerHTML]="
+                data.probability
+                  | formatvalue : formModelDeal : 'Probability'
+                  | async
+              "
+            ></span
+            ><span class="text-dark fw-bold">%</span>
+          </div>
+
+          <div class="d-flex" *ngIf="data.type == '2'">
+            <codx-label
+              class="label-colon text-gray-600"
+              fiedName="PmtStatus"
+              [formModel]="formModelContract"
+              [setRequire]="false"
+            ></codx-label>
+            <span
+              class="me-3 text-dark fw-bold"
+              [innerHTML]="
+                data?.pmtStatus
+                  | formatvalue : formModelContract : 'PmtStatus'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-top ms-4">
+        <div class="d-flex flex-column w-130px min-w-130px">
+          <div class="d-flex align-items-center justify-content-end mb-1">
+            <ng-container *ngIf="data.type == '1'">
+              <div
+                *ngIf="data.status == '2'"
+                style="border-radius: 23px; padding: 0px 8px 0px"
+                [ngStyle]="{
+                  'background-color': getStep(data?.stepID)?.backgroundColor
+                }"
+                class="d-flex align-items-center"
+              >
+                <span
+                  [ngClass]="getStep(data?.stepID)?.icon"
+                  [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
+                  class="me-1"
+                ></span>
+                <div
+                  [ngbPopover]="getStep(data?.stepID)?.stepName"
+                  #pStep="ngbPopover"
+                  [openDelay]="500"
+                  (mouseenter)="pStep.open()"
+                  (mouseleave)="pStep.close()"
+                  placement="left bottom right top"
+                >
+                  <span
+                    class="line-clamp line-clamp-1"
+                    [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
+                    [innerHTML]="getStep(data?.stepID)?.stepName"
+                  ></span>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-end mb-1"
+                *ngIf="data.status != '2'"
+              >
+                <codx-vll
+                  [name]="gridViewSetupDeal?.Status?.referedValue"
+                  [field]="'Status'"
+                  [value]="data?.status"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-sm"
+                >
+                </codx-vll>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="data.type == '2'">
+              <codx-vll
+                [name]="gridViewSetupContract?.Status?.referedValue"
+                [field]="'Status'"
+                [value]="data?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm"
+              >
+              </codx-vll>
+            </ng-container>
+            <ng-container *ngIf="data.type == '3'">
+              <codx-vll
+                [name]="gridViewSetupQuotation?.Status?.referedValue"
+                [field]="'Status'"
+                [value]="data?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm"
+              >
+              </codx-vll>
+            </ng-container>
+          </div>
+          <div
+            class="ms-1 d-flex justify-content-end align-items-center mt-1"
+            [ngbTooltip]="popupCreatedOn"
+          >
+            <span class="icon-date_range icon-16 text-gray-800 me-1"
+              ><ng-template #popupCreatedOn>
+                <codx-label
+                  fiedName="CreatedOn"
+                  [formModel]="formModelDeal"
+                ></codx-label> </ng-template
+            ></span>
+            <span
+              class="text-gray-700"
+              [innerHTML]="
+                data.createdOn
+                  | formatvalue : formModelDeal : 'CreatedOn'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div
+          class="ms-5"
+          *ngIf="data?.owner && data.type == '1'"
+          [ngbTooltip]="popupOwner"
+        >
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="30"
+            [objectId]="data.owner"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+          <ng-template #popupOwner>
+            <codx-label
+              [setRequire]="false"
+              fiedName="Owner"
+              [formModel]="formModelDeal"
+            ></codx-label>
+          </ng-template>
+        </div>
+        <div
+          class="ms-5"
+          *ngIf="data.type != '1'"
+          [ngbTooltip]="popupCreatedBy"
+        >
+          <codx-imgs
+            [isToolTip]="true"
+            [width]="30"
+            [objectId]="data.createdBy"
+            ojectType="AD_Users"
+            [numberImages]="1"
+          >
+          </codx-imgs>
+          <ng-template #popupCreatedBy>
+            <codx-label
+              [setRequire]="false"
+              fiedName="CreatedBy"
+              [formModel]="formModelDeal"
+            ></codx-label>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="isRole">
+            {{ "SYS011" | mssg | async }}
+          </div>
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="!isRole">
+            {{ "SYS032" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

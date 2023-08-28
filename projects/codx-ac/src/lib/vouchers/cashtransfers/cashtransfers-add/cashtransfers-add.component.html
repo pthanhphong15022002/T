@@ -1,95 +1,199 @@
-<codx-form #form [body]="body" [footer]="footer" [formModel]="dialogRef.formModel" [dialog]="dialogRef"
-  [customToolbar]="customToolbar" [data]="cashTransfer" ngClass="ac-dialog">
+<codx-form
+  #form
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialogRef.formModel"
+  [dialog]="dialogRef"
+  [customToolbar]="customToolbar"
+  [data]="cashTransfer"
+  ngClass="ac-dialog"
+>
 </codx-form>
 
 <ng-template #body>
   <div class="mt-3">
-    <ejs-tab #tabGeneralInfo class="popup-cash-transfer">
+    <ejs-tab>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
         <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneralInfoTab"
-                [formModel]="form.formModel" default="Thông tin chung"></codx-label>
+              <codx-label
+                class="fw-bold"
+                style="font-size: 14px !important"
+                fiedName="lblGeneralInfoTab"
+                [formModel]="form.formModel"
+                default="Thông tin chung"
+              ></codx-label>
             </div>
           </ng-template>
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
-
           </ng-template>
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
   </div>
 </ng-template>
+
 <ng-template #tabBasic>
   <div class="row mt-5">
     <div class="col-7 ac-left">
       <div class="mw-750px">
         <div class="row">
           <div class="col-4 form-group">
-            <codx-label fiedName="cashBookID" [formModel]="form.formModel" default="Chuyển từ"></codx-label>
-            <codx-input field="cashBookID" [formModel]="form.formModel" [Group]="form.formGroup"
-              (valueChange)="onInputChange($event)"></codx-input>
+            <codx-label
+              fiedName="cashBookID"
+              [formModel]="form.formModel"
+              default="Chuyển từ"
+            ></codx-label>
+            <codx-input
+              field="cashBookID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onInputChange($event)"
+            ></codx-input>
           </div>
           <div class="col-4 form-group">
-            <codx-label fiedName="cashBookName1" [formModel]="form.formModel" default="Đối tượng chuyển"></codx-label>
-            <codx-input type="text" field="cashBookName1" [disabled]="true" [formModel]="form.formModel"
-              [crrValue]="cashBookName1"></codx-input>
+            <codx-label
+              fiedName="cashBookName1"
+              [formModel]="form.formModel"
+              default="Đối tượng chuyển"
+            ></codx-label>
+            <codx-input
+              type="text"
+              field="cashBookName1"
+              [disabled]="true"
+              [formModel]="form.formModel"
+              [crrValue]="cashBookName1"
+            ></codx-input>
           </div>
           <div class="col-4 form-group">
-            <codx-label fiedName="reasonID" [formModel]="form.formModel" default="Lý do"></codx-label>
-            <codx-input field="reasonID" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            <codx-label
+              fiedName="reasonID"
+              [formModel]="form.formModel"
+              default="Lý do"
+            ></codx-label>
+            <codx-input
+              field="reasonID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onInputChange($event)"
+            ></codx-input>
           </div>
         </div>
 
         <div class="row">
           <div class="col-4 form-group">
-            <codx-label fiedName="cashBookID2" [formModel]="form.formModel" default="Chuyển đến"></codx-label>
-            <codx-input field="cashBookID2" [formModel]="form.formModel" [Group]="form.formGroup"
-              (valueChange)="onInputChange($event)"></codx-input>
+            <codx-label
+              fiedName="cashBookID2"
+              [formModel]="form.formModel"
+              default="Chuyển đến"
+            ></codx-label>
+            <codx-input
+              field="cashBookID2"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onInputChange($event)"
+            ></codx-input>
           </div>
           <div class="col-8 form-group">
-            <codx-label fiedName="cashBookName2" [formModel]="form.formModel" default="Đối tượng nhận"></codx-label>
-            <codx-input type="text" field="cashBookName2" [disabled]="true" [formModel]="form.formModel"
-              [crrValue]="cashBookName2"></codx-input>
+            <codx-label
+              fiedName="cashBookName2"
+              [formModel]="form.formModel"
+              default="Đối tượng nhận"
+            ></codx-label>
+            <codx-input
+              type="text"
+              field="cashBookName2"
+              [disabled]="true"
+              [formModel]="form.formModel"
+              [crrValue]="cashBookName2"
+            ></codx-input>
           </div>
         </div>
 
         <div class="row">
           <div class="col-12 form-group">
-            <codx-label fiedName="memo" [formModel]="form.formModel" default="Diễn giải"></codx-label>
-            <codx-input field="memo" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            <codx-label
+              fiedName="memo"
+              [formModel]="form.formModel"
+              default="Diễn giải"
+            ></codx-label>
+            <codx-input
+              field="memo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
           </div>
         </div>
 
         <div class="row">
           <div class="col-3 form-group">
-            <codx-label fiedName="cashAcctID" [formModel]="form.formModel" default="Tài khoản nợ"></codx-label>
-            <codx-input #cbxCashAcctID field="cashAcctID" [formModel]="form.formModel"
-              [Group]="form.formGroup"></codx-input>
+            <codx-label
+              fiedName="cashAcctID"
+              [formModel]="form.formModel"
+              default="Tài khoản nợ"
+            ></codx-label>
+            <codx-input
+              #cbxCashAcctID
+              field="cashAcctID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
           </div>
           <div class="col-3 form-group">
-            <codx-label fiedName="offsetAcctID" [formModel]="form.formModel" default="Tài khoản có"></codx-label>
-            <codx-input #cbxOffsetAcctID field="offsetAcctID" [formModel]="form.formModel"
-              [Group]="form.formGroup"></codx-input>
+            <codx-label
+              fiedName="offsetAcctID"
+              [formModel]="form.formModel"
+              default="Tài khoản có"
+            ></codx-label>
+            <codx-input
+              #cbxOffsetAcctID
+              field="offsetAcctID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
           </div>
           <div class="col-2 form-group">
-            <codx-label fiedName="exchangeAmt" [formModel]="form.formModel" default="Số tiền"></codx-label>
-            <codx-input field="exchangeAmt" [formModel]="form.formModel" [Group]="form.formGroup"
-              (controlBlur)="onInputChange($event)"></codx-input>
+            <codx-label
+              fiedName="exchangeAmt"
+              [formModel]="form.formModel"
+              default="Số tiền"
+            ></codx-label>
+            <codx-input
+              field="exchangeAmt"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (controlBlur)="onInputChange($event)"
+            ></codx-input>
           </div>
           <div class="col-2 form-group">
-            <codx-label fiedName="fees" [formModel]="form.formModel" default="Tiền phí"></codx-label>
-            <codx-input field="fees" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            <codx-label
+              fiedName="fees"
+              [formModel]="form.formModel"
+              default="Tiền phí"
+            ></codx-label>
+            <codx-input
+              field="fees"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
           </div>
           <div class="col-2 form-group">
-            <codx-label fiedName="feeControl" [formModel]="form.formModel" default="Phí trong"></codx-label>
+            <codx-label
+              fiedName="feeControl"
+              [formModel]="form.formModel"
+              default="Phí trong"
+            ></codx-label>
             <div>
-              <codx-input field="feeControl" [formModel]="form.formModel" [Group]="form.formGroup"
-                (keyup.enter)="onKeyUpEnter()"></codx-input>
+              <codx-input
+                field="feeControl"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                (keyup.enter)="onKeyUpEnter()"
+              ></codx-input>
             </div>
           </div>
         </div>
@@ -100,29 +204,65 @@
       <div class="d-flex flex-column mw-300px">
         <div class="row">
           <div class="col-6 form-group">
-            <codx-label fiedName="currencyID" [formModel]="form.formModel" default="Tiền tệ"></codx-label>
-            <codx-input field="currencyID" [formModel]="form.formModel" [Group]="form.formGroup"
-              (valueChange)="onInputChange($event)" [disabled]="!journal?.multiCurrency"></codx-input>
+            <codx-label
+              fiedName="currencyID"
+              [formModel]="form.formModel"
+              default="Tiền tệ"
+            ></codx-label>
+            <codx-input
+              field="currencyID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="onInputChange($event)"
+              [disabled]="!journal?.multiCurrency"
+            ></codx-input>
           </div>
           <div class="col-6 form-group">
-            <codx-label fiedName="exchangeRate" [formModel]="form.formModel" default="Tỷ giá"></codx-label>
-            <codx-input field="exchangeRate" [formModel]="form.formModel" [Group]="form.formGroup"
-              [disabled]="!journal?.multiCurrency"></codx-input>
+            <codx-label
+              fiedName="exchangeRate"
+              [formModel]="form.formModel"
+              default="Tỷ giá"
+            ></codx-label>
+            <codx-input
+              field="exchangeRate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [disabled]="
+                !journal?.multiCurrency || cashTransfer.currencyID === baseCurr
+              "
+            ></codx-input>
           </div>
         </div>
 
         <div class="form-group">
-          <codx-label fiedName="voucherDate" [formModel]="form.formModel" default="Ngày chứng từ"></codx-label>
-          <codx-input field="voucherDate" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+          <codx-label
+            fiedName="voucherDate"
+            [formModel]="form.formModel"
+            default="Ngày chứng từ"
+          ></codx-label>
+          <codx-input
+            field="voucherDate"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
         <div class="form-group">
-          <codx-label fiedName="voucherNo" [formModel]="form.formModel" default="Số chứng từ"></codx-label>
-          <codx-input field="voucherNo" [formModel]="form.formModel" [Group]="form.formGroup"
-            [disabled]="journal?.assignRule != '0'" [placeholder]="
+          <codx-label
+            fiedName="voucherNo"
+            [formModel]="form.formModel"
+            default="Số chứng từ"
+          ></codx-label>
+          <codx-input
+            field="voucherNo"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [disabled]="journal?.assignRule != '0'"
+            [placeholder]="
               journal?.assignRule == '2'
-                ? (voucherNoPlaceholderText$ | async)
+                ? ('AC0028' | mssg | async)
                 : ''
-            "></codx-input>
+            "
+          ></codx-input>
         </div>
       </div>
     </div>
@@ -131,42 +271,91 @@
   <hr />
   <!-- #region Cập nhật hóa đơn -->
   <div class="d-flex gap-2 align-items-top mt-5">
-    <ejs-switch #switchHasInvoice class="me-1" [(checked)]="hasInvoice" (change)="onSwitchChange($event)"
-      (keyup.enter)="onKeyUpEnter2()"></ejs-switch>
-    <codx-label class="fw-bold fs-6" fiedName="hasInvoice" [formModel]="form.formModel"
-      default="Cập nhật hóa đơn"></codx-label>
+    <ejs-switch
+      #switchHasInvoice
+      class="me-1"
+      [(checked)]="hasInvoice"
+      (change)="onSwitchChange($event)"
+      (keyup.enter)="onKeyUpEnter2()"
+    ></ejs-switch>
+    <codx-label
+      class="fw-bold fs-6"
+      fiedName="hasInvoice"
+      [formModel]="form.formModel"
+      default="Cập nhật hóa đơn"
+    ></codx-label>
   </div>
 
   <div class="border mt-2 bg-gray-100 rounded-2 py-4 px-6">
     <div class="row">
       <div class="col-4 row pe-9">
         <div class="col-12 form-group">
-          <codx-label fiedName="ObjectID" [formModel]="fmVATInvoice" default="Đối tượng"></codx-label>
-          <codx-input field="objectID" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-            [disabled]="!hasInvoice"></codx-input>
+          <codx-label
+            fiedName="ObjectID"
+            [formModel]="fmVATInvoice"
+            default="Đối tượng"
+          ></codx-label>
+          <codx-input
+            field="objectID"
+            [formModel]="fmVATInvoice"
+            [Group]="fgVatInvoice"
+            [disabled]="!hasInvoice"
+          ></codx-input>
         </div>
       </div>
       <div class="col-8">
         <div class="row">
           <div class="col-4 form-group">
-            <codx-label fiedName="InvoiceForm" [formModel]="fmVATInvoice" default="Mẫu số"></codx-label>
-            <codx-input field="invoiceForm" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="InvoiceForm"
+              [formModel]="fmVATInvoice"
+              default="Mẫu số"
+            ></codx-label>
+            <codx-input
+              field="invoiceForm"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-2 form-group">
-            <codx-label fiedName="InvoiceSeri" [formModel]="fmVATInvoice" default="Ký hiệu"></codx-label>
-            <codx-input field="invoiceSeri" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="InvoiceSeri"
+              [formModel]="fmVATInvoice"
+              default="Ký hiệu"
+            ></codx-label>
+            <codx-input
+              field="invoiceSeri"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-2 form-group">
-            <codx-label fiedName="InvoiceNo" [formModel]="fmVATInvoice" default="Số hóa đơn"></codx-label>
-            <codx-input field="invoiceNo" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="InvoiceNo"
+              [formModel]="fmVATInvoice"
+              default="Số hóa đơn"
+            ></codx-label>
+            <codx-input
+              field="invoiceNo"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-4 form-group">
-            <codx-label fiedName="InvoiceDate" [formModel]="fmVATInvoice" default="Ngày hóa đơn"></codx-label>
-            <codx-input field="invoiceDate" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="InvoiceDate"
+              [formModel]="fmVATInvoice"
+              default="Ngày hóa đơn"
+            ></codx-label>
+            <codx-input
+              field="invoiceDate"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
         </div>
       </div>
@@ -175,27 +364,59 @@
     <div class="row">
       <div class="col-4 row pe-9">
         <div class="col-12 form-group">
-          <codx-label fiedName="Goods" [formModel]="fmVATInvoice" default="Hàng hóa dịch vụ"></codx-label>
-          <codx-input field="goods" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-            [disabled]="!hasInvoice"></codx-input>
+          <codx-label
+            fiedName="Goods"
+            [formModel]="fmVATInvoice"
+            default="Hàng hóa dịch vụ"
+          ></codx-label>
+          <codx-input
+            field="goods"
+            [formModel]="fmVATInvoice"
+            [Group]="fgVatInvoice"
+            [disabled]="!hasInvoice"
+          ></codx-input>
         </div>
       </div>
       <div class="col-8">
         <div class="row">
           <div class="col-4 form-group">
-            <codx-label fiedName="VATBase" [formModel]="fmVATInvoice" default="Số tiền"></codx-label>
-            <codx-input field="vatBase" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="VATBase"
+              [formModel]="fmVATInvoice"
+              default="Số tiền"
+            ></codx-label>
+            <codx-input
+              field="vatBase"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-4 form-group">
-            <codx-label fiedName="VATID" [formModel]="fmVATInvoice" default="Thuế GTGT"></codx-label>
-            <codx-input field="vatid" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="VATID"
+              [formModel]="fmVATInvoice"
+              default="Thuế GTGT"
+            ></codx-label>
+            <codx-input
+              field="vatid"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-4 form-group">
-            <codx-label fiedName="VATAmt" [formModel]="fmVATInvoice" default="Tiền thuế"></codx-label>
-            <codx-input field="vatAmt" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="VATAmt"
+              [formModel]="fmVATInvoice"
+              default="Tiền thuế"
+            ></codx-label>
+            <codx-input
+              field="vatAmt"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
         </div>
       </div>
@@ -204,54 +425,156 @@
     <div class="row">
       <div class="col-4 row pe-9">
         <div class="col-12">
-          <codx-label class="fw-bold" fiedName="Note" [formModel]="fmVATInvoice" default="Ghi chú"></codx-label>
-          <codx-input field="note" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-            [disabled]="!hasInvoice"></codx-input>
+          <codx-label
+            class="fw-bold"
+            fiedName="Note"
+            [formModel]="fmVATInvoice"
+            default="Ghi chú"
+          ></codx-label>
+          <codx-input
+            field="note"
+            [formModel]="fmVATInvoice"
+            [Group]="fgVatInvoice"
+            [disabled]="!hasInvoice"
+          ></codx-input>
         </div>
       </div>
       <div class="col-8">
         <div class="row">
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
-            <codx-label fiedName="DIM3" [formModel]="fmVATInvoice" default="Mục phí"></codx-label>
-            <codx-input #diM3 field="diM3" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="DIM3"
+              [formModel]="fmVATInvoice"
+              default="Mục phí"
+            ></codx-label>
+            <codx-input
+              #diM3
+              field="diM3"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
-            <codx-label fiedName="DIM1" [formModel]="fmVATInvoice" default="Phòng ban"></codx-label>
-            <codx-input #diM1 field="diM1" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="DIM1"
+              [formModel]="fmVATInvoice"
+              default="Phòng ban"
+            ></codx-label>
+            <codx-input
+              #diM1
+              field="diM1"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')">
-            <codx-label fiedName="DIM2" [formModel]="fmVATInvoice" default="Trung tâm chi phí"></codx-label>
-            <codx-input #diM2 field="diM2" [formModel]="fmVATInvoice" [Group]="fgVatInvoice"
-              [disabled]="!hasInvoice"></codx-input>
+            <codx-label
+              fiedName="DIM2"
+              [formModel]="fmVATInvoice"
+              default="Trung tâm chi phí"
+            ></codx-label>
+            <codx-input
+              #diM2
+              field="diM2"
+              [formModel]="fmVATInvoice"
+              [Group]="fgVatInvoice"
+              [disabled]="!hasInvoice"
+            ></codx-input>
           </div>
         </div>
       </div>
     </div>
-    <!-- #endregion -->
   </div>
+  <!-- #endregion -->
+
   <div class="d-flex justify-content-end me-12 mt-4 mb-5">
     <div class="d-flex align-items-center">
-      <codx-label default="Tổng cộng:" fiedName="lblTotalAmount" [formModel]="form.formModel"
-        class="fw-bold fs-3 me-2 text-dark"></codx-label>
+      <codx-label
+        default="Tổng cộng:"
+        fiedName="lblTotalAmount"
+        [formModel]="form.formModel"
+        class="fw-bold fs-3 me-2 text-dark"
+      ></codx-label>
       <span class="fw-bold fs-3 text-primary">
         {{
-        (cashTransfer?.exchangeAmt || 0) +
-        (cashTransfer?.fees || 0) +
-        (hasInvoice ? vatInvoice?.taxAmt || 0 : 0)
+          (cashTransfer?.exchangeAmt || 0) +
+            (cashTransfer?.fees || 0) +
+            (hasInvoice ? vatInvoice?.taxAmt || 0 : 0)
         }}
       </span>
     </div>
   </div>
 </ng-template>
+
 <ng-template #footer>
-  <div class="ac-dialog-footer">
-    <div class="btn btn-white btn-icon tab-action">
-      <span class="icon-unfold_more icon-20"></span>
+  <div
+    id="footer"
+    class="position-relative codx-detail-footer"
+    style="border-top: 1px solid var(--bs-border-color)"
+  >
+    <codx-tabs
+      [entityName]="form.formModel.entityName"
+      [formModel]="form.formModel"
+      [objectID]="cashTransfer?.recID"
+      [funcID]="form.formModel.funcID"
+      [TabControl]="tabs"
+    ></codx-tabs>
+
+    <div
+      class="d-flex align-items-center gap-1 position-absolute end-0"
+      style="top: 4px"
+    >
+      <button
+        style="border: 1px solid var(--bs-danger) !important"
+        class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
+        (click)="onClickDiscard()"
+        *ngIf="masterService.hasSaved && cashTransfer.status == '0'"
+      >
+        <i class="icon-cancel icon-16"></i>
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblDiscard"
+          [formModel]="form.formModel"
+          default="Hủy bỏ"
+        ></codx-label>
+      </button>
+
+      <button
+        *ngIf="!isEdit"
+        type="button"
+        style="border: 1px solid var(--primary-dark) !important"
+        class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
+        (click)="onClickSave(false)"
+      >
+        <i class="icon-add_to_photos icon-16"></i>
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblSaveAndClear"
+          [formModel]="form.formModel"
+          default="Lưu & thêm"
+        ></codx-label>
+      </button>
+
+      <button
+        type="button"
+        style="
+          min-width: 60px;
+          border: 1px solid var(--primary-dark) !important;
+        "
+        class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
+        (click)="onClickSave(true)"
+      >
+        <i class="icon-save_alt icon-16"></i>
+        <codx-label
+          class="fs-6 fw-normal"
+          fiedName="lblSave"
+          [formModel]="form.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
     </div>
-    <codx-tabs [entityName]="form.formModel.entityName" [formModel]="form.formModel" [objectID]="cashTransfer?.recID"
-      [funcID]="form.formModel.funcID" [TabControl]="tabs"></codx-tabs>
   </div>
 </ng-template>
 
@@ -259,39 +582,32 @@
   <div class="d-flex justify-content-between pt-3 w-100">
     <div class="d-flex align-items-center">
       <div class="btn btn-icon btn-primary btn-circle me-3">
-        <i class="icon-16" [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"></i>
+        <i
+          class="icon-16"
+          [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
+        ></i>
       </div>
       <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold">
         {{ formTitle }}
       </div>
       <div class="ms-3 input-circle input-sm">
-        <codx-vll [formModel]="form.formModel" field="Status" [value]="cashTransfer.status" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md">
+        <codx-vll
+          [formModel]="form.formModel"
+          field="Status"
+          [value]="cashTransfer.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md"
+        >
         </codx-vll>
       </div>
     </div>
 
-    <div class="d-flex align-items-center">
-      <ng-container *ngIf="!isEdit">
-        <button type="button" class="btn btn-sm btn-light-primary" (click)="onClickSave(false)">
-          <codx-label class="fs-6 fw-normal" fiedName="lblSaveAndClear" [formModel]="form.formModel"
-            default="Lưu & thêm"></codx-label>
-        </button>
-      </ng-container>
-
-      <button type="button" class="btn btn-sm btn-primary ms-2 me-2" (click)="onClickSave(true)">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formModel]="form.formModel" default="Lưu"></codx-label>
-      </button>
-
-      <button class="btn btn-sm btn-danger" (click)="onDiscard()"
-        *ngIf="masterService.hasSaved && cashTransfer.status == '0'">
-        <codx-label class="fs-6 fw-normal" fiedName="lblDiscard" [formModel]="form.formModel"
-          default="Hủy bỏ"></codx-label>
-      </button>
-
-      <div class="ms-2 btn btn-icon btn-light-danger btn-circle" (click)="onClickClose()">
-        <i class="icon-close icon-18"></i>
-      </div>
-    </div>
+    <button
+      class="btn btn-icon btn-light-danger btn-circle"
+      (click)="onClickClose()"
+    >
+      <i class="icon-close icon-18"></i>
+    </button>
   </div>
 </ng-template>

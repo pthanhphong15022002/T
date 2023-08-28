@@ -129,7 +129,7 @@
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="Interval" [formModel]="formModel"></codx-label>
           <codx-label
-            [name]="'Interval'"
+            [name]="'headerNoteInterval'"
             [default]="grvSetup.Interval.headerNote"
             [formModel]="formModel"
           ></codx-label>
@@ -147,7 +147,7 @@
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="FixedAmt" [formModel]="formModel"></codx-label>
           <codx-label
-            [name]="'FixedAmt'"
+            [name]="'headerNoteFixedAmt'"
             [default]="grvSetup.FixedAmt.headerNote"
             [formModel]="formModel"
           ></codx-label>
@@ -165,7 +165,7 @@
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="Percentage" [formModel]="formModel"></codx-label>
           <codx-label
-            [name]="'Percentage'"
+            [name]="'headerNotePercentage'"
             [default]="grvSetup.Percentage.headerNote"
             [formModel]="formModel"
           ></codx-label>
@@ -183,7 +183,7 @@
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="PercentageOn" [formModel]="formModel"></codx-label>
           <codx-label
-            [name]="'PercentageOn'"
+            [name]="'headerNotePercentageOn'"
             [default]="grvSetup.PercentageOn.headerNote"
             [formModel]="formModel"
           ></codx-label>
@@ -204,7 +204,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-label
-            [name]="'HasIncludeBenefits'"
+            [name]="'headerNoteHasIncludeBenefits'"
             [default]="grvSetup.HasIncludeBenefits.headerNote"
             [formModel]="formModel"
     ></codx-label>
@@ -242,15 +242,20 @@
             [showBgColor]="true"
             name="HRObject"
             [value]="obj"
-            class="badge badge-success border-0 ms-2"
+            class="badge badge-light-primary badge-md"
           >
           </codx-vll> -->
+        <span class="badge-with-delete">
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md"
           [innerHTML]="obj
               | formatvalue : benefitFormModel : 'benefitID'
               | async"
         ></span>
+        <button (click)="deleteApplyExcludeObj(obj, 'lstSelectedBenefits')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
         </span>
     </span>
 
@@ -261,6 +266,33 @@
           [default]="'File đính kèm'"
         >
         </codx-label>
+      </div>
+
+      <div class="flex-nowrap">
+        <codx-attachment
+          #attachment
+          [objectType]="formModel?.entityName"
+          showMessage="0"
+          hideBtnSave="1"
+          hideFolder="1"
+          hideUploadBtn="1"
+          hideDes="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          [objectId]="benefitPolicyObj?.policyID"
+          [allowMultiFile]="1"
+          [idBrowse]="'add'"
+          displayThumb="full"
+          [functionID]="funcID"
+          (fileAdded)="addFiles($event)">
+          [referType]="'source'"
+          >
+          <!-- [formModel]="formModel"
+          [idField]="'RecID'" -->
+        <!-- (fileDelete)="handleDelete($event)"
+        (fileCount)="getfileCount($event)"
+        (fileGet)="getfileCount($event)" -->
+        </codx-attachment>
       </div>
 
       <codx-combobox-popup
@@ -286,11 +318,20 @@
 </ng-template>
 
 <ng-template #setting>
+  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <codx-label 
+        [formModel]="formModel" 
+        [name]="'lblHeadAdjustBy'"
+        [default]="'Điều chỉnh mức hưởng'"
+    >
+    </codx-label>
+  </div>
+
   <div class="form-group row">
     <div class="col-6 d-flex flex-column">
       <codx-label fiedName="AdjustBy" [formModel]="formModel"></codx-label>
       <codx-label
-        [name]="'AdjustBy'"
+        [name]="'headerNoteAdjustBy'"
         [default]="grvSetup.AdjustBy.headerNote"
         [formModel]="formModel"
       ></codx-label>
@@ -347,7 +388,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-label
-        [name]="'IsAdjustKow'"
+        [name]="'headerNoteIsAdjustKow'"
         [default]="grvSetup.IsAdjustKow.headerNote"
         
         [formModel]="formModel"
@@ -373,12 +414,18 @@
 </div>
 <span *ngIf="benefitPolicyObj.isAdjustKow && lstKow.length > 0">
     <span *ngFor="let kow of lstKow">
+      <span class="badge-with-delete">
+      
       <span
-      class="badge badge-success border-0 ms-2"
+      class="badge badge-light-primary badge-md"
       [innerHTML]="kow
           | formatvalue : formModel : 'adjustKows'
           | async"
     ></span>
+    <button (click)="deleteApplyExcludeObj(kow, 'lstKow')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+      <span class="icon-close icon-16"></span>
+    </button>
+  </span>
     </span>
 </span>
 
@@ -397,7 +444,7 @@
       <div class="col-6 d-flex flex-column">
         <codx-label fiedName="AdjustKowBy" [formModel]="formModel"></codx-label>
         <codx-label
-          [name]="'AdjustKowBy'"
+          [name]="'headerNoteAdjustKowBy'"
           [default]="grvSetup.AdjustKowBy.headerNote"
           [formModel]="formModel"
         ></codx-label>
@@ -411,11 +458,20 @@
       </div>
     </div>
 
+    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+      <codx-label 
+          [formModel]="formModel" 
+          [name]="'lblApplyConstraint'"
+          [default]="'Điều kiện áp dụng'"
+      >
+      </codx-label>
+    </div>
+
     <div class="form-group row">
       <div class="col-6 d-flex flex-column">
         <codx-label fiedName="IsConstraintKow" [formModel]="formModel"></codx-label>
         <codx-label
-          [name]="'IsConstraintKow'"
+          [name]="'headerNoteIsConstraintKow'"
           [default]="grvSetup.IsConstraintKow.headerNote"
           [formModel]="formModel"
         ></codx-label>
@@ -445,7 +501,7 @@
           <codx-label class="ms-6" fiedName="MinValue" [formModel]="formModel"></codx-label>
           <codx-label
           class="ms-6"
-            [name]="'MinValue'"
+            [name]="'headerNoteMinValue'"
             [default]="grvSetup.MinValue.headerNote"
             [formModel]="formModel"
           ></codx-label>
@@ -468,7 +524,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-label
-            [name]="'MinKows'"
+            [name]="'headerNoteMinKows'"
             [default]="grvSetup.MinKows.headerNote"
           class="ms-6"
             [formModel]="formModel"
@@ -487,12 +543,19 @@
     </div>
     <span *ngIf="benefitPolicyObj.isConstraintKow && lstMinKows.length > 0">
         <span *ngFor="let kow of lstMinKows">
+        <span class="badge-with-delete">
+
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md"
           [innerHTML]="kow
               | formatvalue : formModel : 'minKows'
               | async"
         ></span>
+        <button (click)="deleteApplyExcludeObj(kow, 'lstMinKows')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
+
         </span>
     </span>
     </div>
@@ -525,7 +588,7 @@
         <codx-label class="ms-6" fiedName="MaxValue" [formModel]="formModel"></codx-label>
         <codx-label
         class="ms-6"
-          [name]="'MaxValue'"
+          [name]="'headerNoteMaxValue'"
           [default]="grvSetup.MaxValue.headerNote"
           [formModel]="formModel"
         ></codx-label>
@@ -567,12 +630,17 @@
   </div>
   <span *ngIf="benefitPolicyObj.isConstraintKow && lstMaxKows.length > 0">
       <span *ngFor="let kow of lstMaxKows">
+        <span class="badge-with-delete">
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md"
         [innerHTML]="kow
             | formatvalue : formModel : 'maxKows'
             | async"
       ></span>
+      <button (click)="deleteApplyExcludeObj(kow, 'lstMaxKows')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+        <span class="icon-close icon-16"></span>
+      </button>
+    </span>
       </span>
   </span>
   
@@ -596,7 +664,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-label
-        [name]="'IsConstraintOther'"
+        [name]="'headerNoteIsConstraintOther'"
         [default]="grvSetup.IsConstraintOther.headerNote"
         
         [formModel]="formModel"
@@ -619,186 +687,273 @@
         ></i>
       </button>
     </div>
-    <div *ngFor="let constraint of lstSelectedConstraintBy">
+    <div class="ps-6 mt-4" *ngFor="let constraint of lstSelectedConstraintBy">
       <div *ngIf="constraint == '0'">
 
       </div>
-      <div class="form-group row" *ngIf="constraint == '1'">
-          <div class="col-6 d-flex flex-column">
-            <codx-label
-            class="ms-6"
-              fiedName="Gender"
-              [formModel]="fmPolicyConstraints"
-            ></codx-label>
-          </div>
-          <div class="col-6">
-            <codx-input
+      <div class="d-flex align-items-center ps-6 row" *ngIf="constraint == '1' && benefitPolicyObj.isConstraintOther">
+        <div class="col-7">
+          <codx-label
+            fiedName="Gender"
+            [formModel]="fmPolicyConstraints"
+          ></codx-label>
+        </div>
+        <div class="col-5">
+          <codx-input class="w-100"
               field="gender"
               [formModel]="fmPolicyConstraints"
               [Group]="formGroupPolicyConstraints"
             ></codx-input>
         </div>
       </div>
-      <div class="form-group row" *ngIf="constraint == '2'">
-        <div class="col-6">
+      <div class="form-group row d-flex align-items-center ps-6" *ngIf="constraint == '2' && benefitPolicyObj.isConstraintOther">
+        <div class="col-7">
           <codx-label
-          class="ms-6"
+          class=""
             fiedName="AgeFrom"
             [name]="'lblRelationAge'"
-            [default]="'Độ tuổi (thân nhân)'"
+            [default]="'Độ tuổi'"
             [formModel]="fmPolicyConstraints"
           ></codx-label>
         </div>
-        <div class="form-group row">
-          <div class="col-2">
-            <codx-input
-              field="ageFrom"
-              [formModel]="fmPolicyConstraints"
-              [Group]="formGroupPolicyConstraints"
-            ></codx-input>
-          </div>
-          <codx-label
-            class="ms-6"
-              [name]="'lblAgeTo'"
-              [default]="'Đến'"
-              [formModel]="fmPolicyConstraints"
-            ></codx-label>
-          <div class="col-2">
-            <codx-input
-              field="ageTo"
-              [formModel]="fmPolicyConstraints"
-              [Group]="formGroupPolicyConstraints"
-            ></codx-input>
+        <div class="col-5">
+          <div class="d-flex align-items-center">
+            <div class="col-4">
+              <codx-input class="w-100"
+                field="ageFrom"
+                [formModel]="fmPolicyConstraints"
+                [Group]="formGroupPolicyConstraints"
+              ></codx-input>
+            </div>
+            <div class="col-4">
+              <div class="w-100 d-flex justify-content-center">
+                <codx-label
+                  class=""
+                    [name]="'lblAgeTo'"
+                    [default]="'Đến'"
+                    [formModel]="fmPolicyConstraints"
+                  ></codx-label>
+              </div>
+            </div>
+            <div class="col-4">
+              <codx-input class="w-100"
+                field="ageTo"
+                [formModel]="fmPolicyConstraints"
+                [Group]="formGroupPolicyConstraints"
+              ></codx-input>
+            </div>
           </div>
         </div>
       </div>
-      <div *ngIf="constraint == '3'">
-        <div class="form-group row">
-          <div class="col-6 d-flex flex-column">
+      <div *ngIf="constraint == '3' && benefitPolicyObj.isConstraintOther">
+        <div class="d-flex align-items-center justify-content-between ms-6">
+          <div class="col-7">
             <codx-label
-            class="ms-6"
               fiedName="Relative"
               [formModel]="fmPolicyConstraints"
             ></codx-label>
           </div>
-          <div class="col-6">
-            <codx-input
+          <div class="col-5">
+            <codx-input class="w-100"
               field="relative"
               [formModel]="fmPolicyConstraints"
               [Group]="formGroupPolicyConstraints"
             ></codx-input>
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-2">
-          <codx-input
-            field="relativeAgeFrom"
-            [formModel]="fmPolicyConstraints"
-            [Group]="formGroupPolicyConstraints"
-          ></codx-input>
+        <div class="form-group row ms-12 mt-3">
+          <div class="form-group row">
+            <div class="col-7">
+              <codx-label
+                fiedName="RelativeAgeFrom"
+                [name]="'lblRelationAge'"
+                [default]="'Độ tuổi (thân nhân)'"
+                [formModel]="fmPolicyConstraints"
+              ></codx-label>
+            </div>
+            <div class="col-5">
+              <div class="d-flex align-items-center">
+                <div class="col-4">
+                  <codx-input class="w-100"
+                    field="relativeAgeFrom"
+                    [formModel]="fmPolicyConstraints"
+                    [Group]="formGroupPolicyConstraints"
+                  ></codx-input>
+                </div>
+                <div class="col-4">
+                  <div class="d-flex justify-content-center">
+                  <codx-label
+                    class=""
+                      [name]="'lblRelativeAgeTo'"
+                      [default]="'Đến'"
+                      [formModel]="fmPolicyConstraints"
+                    ></codx-label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <codx-input class="w-100"
+                    field="relativeAgeTo"
+                    [formModel]="fmPolicyConstraints"
+                    [Group]="formGroupPolicyConstraints"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
-        <codx-label
-          class="ms-6"
-            [name]="'lblRelativeAgeTo'"
-            [default]="'Đến'"
-            [formModel]="fmPolicyConstraints"
-          ></codx-label>
-        <div class="col-2">
-          <codx-input
-            field="relativeAgeTo"
-            [formModel]="fmPolicyConstraints"
-            [Group]="formGroupPolicyConstraints"
-          ></codx-input>
-        </div>
-      </div>
 
       </div>
-      <div *ngIf="constraint == '4'">
+      <!-- <div *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
         <div class="form-group row">
-          <div class="col-6 d-flex flex-column">
+          <div class="col-7">
+            <codx-label
+            class=""
+              fiedName="AgeFrom"
+              [name]="'lblRelationAge'"
+              [default]="'Độ tuổi (thân nhân)'"
+              [formModel]="fmPolicyConstraints"
+            ></codx-label>
+          </div>
+          <div class="col-5">
+            <div class="d-flex align-items-center">
+              <div class="col-4">
+                <codx-input class="w-100"
+                  field="relativeAgeFrom"
+                  [formModel]="fmPolicyConstraints"
+                  [Group]="formGroupPolicyConstraints"
+                ></codx-input>
+              </div>
+              <div class="col-4">
+                <div class="d-flex justify-content-center">
+                <codx-label
+                  class=""
+                    [name]="'lblRelativeAgeTo'"
+                    [default]="'Đến'"
+                    [formModel]="fmPolicyConstraints"
+                  ></codx-label>
+                </div>
+              </div>
+              <div class="col-4">
+                <codx-input class="w-100"
+                  field="relativeAgeTo"
+                  [formModel]="fmPolicyConstraints"
+                  [Group]="formGroupPolicyConstraints"
+                ></codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="ms-6" *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="w-100">
               <codx-label
                   fiedName="TrainLevel"
-            class="ms-6"
                   [formModel]="fmPolicyConstraints"
               ></codx-label>
           </div>
-          <div class="col-6 d-flex flex-row">
-              <button
-              class="btn btn-icon ms-3"
-              (click)="onClickOpenComboboxConstraint('trainLevel')"
+          <div class="w-25px h-25px">
+              <button type="button"
+                class="btn btn-icon btn-sm btn-light-primary"
+                (click)="onClickOpenComboboxConstraint('trainLevel')"
+                >
+                <i class="icon-edit-one icon-16" 
+                >
+              </i>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+          <div class="mb-1 me-1" *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
+        <span class="badge-with-delete">
+            <span
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="trainlevel
+                | formatvalue : fmPolicyConstraints : 'trainLevel'
+                | async"
+          ></span>
+          <button (click)="deleteApplyExcludeObj(trainlevel, 'lstSelectedConstraintTrainLevel')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
+        </div>
+        </div>
+      </div>
+      <div class="ms-6" *ngIf="constraint == '5' && benefitPolicyObj.isConstraintOther">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="w-100">
+              <codx-label
+                  fiedName="TrainField"
+                  [formModel]="fmPolicyConstraints"
+              ></codx-label>
+          </div>
+          <div class="w-25px h-25px">
+              <button type="button"
+              class="btn btn-icon btn-sm btn-light-primary"
+              (click)="onClickOpenComboboxConstraint('trainField')"
             >
-              <i class="icon-edit-one icon-18 text-dark" 
+              <i class="icon-edit-one icon-16" 
               >
               <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
             </i>
             </button>
           </div>
         </div>
-        <span *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
-          <span
-          class="badge badge-success border-0 ms-2"
-          [innerHTML]="trainlevel
-              | formatvalue : fmPolicyConstraints : 'trainLevel'
-              | async"
-        ></span></span>
-    </div>
-      <div *ngIf="constraint == '5'">
-        <div class="form-group row">
-          <div class="col-6 d-flex flex-column">
-              <codx-label
-                  fiedName="TrainField"
-            class="ms-6"
-                  [formModel]="fmPolicyConstraints"
-              ></codx-label>
-          </div>
-          <div class="col-6 d-flex flex-row">
-              <button
-              class="btn btn-icon ms-3"
-              (click)="onClickOpenComboboxConstraint('trainField')"
-            >
-              <i class="icon-edit-one icon-18 text-dark" 
-              >
-              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
-            </i>
-            </button>
-          </div>
+        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+          <div class="mb-1 me-1" *ngFor="let trainField of lstSelectedConstraintTrainField">
+        <span class="badge-with-delete">
+            <span
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="trainField
+                | formatvalue : fmPolicyConstraints : 'trainField'
+                | async"
+          ></span>
+          <button (click)="deleteApplyExcludeObj(trainField, 'lstSelectedConstraintTrainField')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        
+        </div>
+        </div>
       </div>
-      <span *ngFor="let trainField of lstSelectedConstraintTrainField">
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="trainField
-            | formatvalue : fmPolicyConstraints : 'trainField'
-            | async"
-      ></span></span>
-      </div>
-      <div *ngIf="constraint == '6'">
-        <div class="form-group row">
-          <div class="col-6 d-flex flex-column">
+      <div class="ms-6" *ngIf="constraint == '6' && benefitPolicyObj.isConstraintOther">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="w-100">
               <codx-label
                   fiedName="Certificate"
-            class="ms-6"
                   [formModel]="fmPolicyConstraints"
               ></codx-label>
           </div>
-          <div class="col-6 d-flex flex-row">
+          <div class="w-25px h-25px">
               <button
-              class="btn btn-icon ms-3"
+              class="btn btn-icon btn-sm btn-light-primary"
               (click)="onClickOpenComboboxConstraint('certificate')"
             >
-              <i class="icon-edit-one icon-18 text-dark" 
+              <i class="icon-edit-one icon-16" 
               >
               <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
             </i>
             </button>
           </div>
-      </div>
-      <span *ngFor="let cert of lstSelectedConstraintCertificate">
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="cert
-            | formatvalue : fmPolicyConstraints : 'certificate'
-            | async"
-      ></span></span>
+        </div>
+        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+          <div class="mb-1 me-1" *ngFor="let cert of lstSelectedConstraintCertificate">
+        <span class="badge-with-delete">
+            <span
+              class="badge badge-light-primary badge-md"
+              [innerHTML]="cert
+                  | formatvalue : fmPolicyConstraints : 'certificate'
+                  | async"
+              ></span>
+              <button (click)="deleteApplyExcludeObj(cert, 'lstSelectedConstraintCertificate')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+                <span class="icon-close icon-16"></span>
+              </button>
+        </span>
+
+          </div>
+        </div>
       </div>
 
       <codx-combobox-popup
@@ -824,14 +979,14 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-label
-        [name]="'HasIncludeObjects'"
+        [name]="'headerNoteHasIncludeObjects'"
         [default]="grvSetup.HasIncludeObjects.headerNote"
         [formModel]="formModel"
 ></codx-label>
     </div>
     <div class="col-6 d-flex flex-row">
         <codx-input
-            class="mt-2"
+            class="mt-1"
             field="hasIncludeObjects"
             [formModel]="formModel"
             [Group]="formGroup"
@@ -844,32 +999,38 @@
         [Group]="formGroup"
         (valueChange)="ValChangeSelectObj($event)"
     ></codx-input> -->
-        <button
+        <button type="button"
         class="btn btn-icon ms-3"
         (click)="onClickOpenSelectIncludeObj()"
       >
-        <i class="icon-edit-one icon-18" 
+        <i class="icon-edit-one icon-16" 
         [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
         ></i>
       </button>
     </div>
 </div>
 <span *ngIf="benefitPolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
-    <span *ngFor="let obj of lstSelectedObj">
+    <span class="me-1 mb-1" *ngFor="let obj of lstSelectedObj">
       <!-- <span
-      class="badge badge-success border-0 ms-2"
+      class="badge badge-light-primary badge-md"
       [innerHTML]="obj
           | formatvalue : benefitFormModel : 'benefitID'
           | async"
     ></span> -->
+    <span class="badge-with-delete">
         <codx-vll
         [showText]="true"
         [showBgColor]="true"
         name="HRObject"
         [value]="obj"
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md"
       >
       </codx-vll>
+      <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedObj', lstPolicyBeneficiariesApply)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+        <span class="icon-close icon-16"></span>
+      </button>
+    </span>
+
       <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"
@@ -880,9 +1041,9 @@
     </button> -->
     </span>
 </span>
-<div class="form-group row w-100 mt-8" *ngIf="lstPolicyBeneficiariesApply.length > 0">
+<div class="form-group row w-100 mt-6" *ngIf="lstPolicyBeneficiariesApply.length > 0">
 
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary" *ngIf="benefitPolicyObj.hasIncludeObjects">
     <codx-label
     [formModel]="formModel"
     [name]="'lblDetailApplyObj'"
@@ -907,254 +1068,295 @@
   </div> -->
 </div>
 
-<div *ngFor="let obj of lstPolicyBeneficiariesApply; let last = last">
-  <div class="w-auto btn-hover">
-    <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesApply.length > 1">
-
+<div *ngIf="benefitPolicyObj.hasIncludeObjects">
+  <div *ngFor="let obj of lstPolicyBeneficiariesApply; let last = last">
+    <div class="w-auto btn-hover">
+      <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesApply.length > 1">
+  
+        <button
+        (click)="onClickMoveObjDown(obj)"
+        *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesApply.length"
+        class="btn btn-icon ms-3"
+        >
+        <i class="icon-arrow_drop_down icon-32" 
+        [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
+        ></i>
+      </button>
       <button
-      (click)="onClickMoveObjDown(obj)"
-      *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesApply.length"
+      (click)="onClickMoveObjUp(obj)"
       class="btn btn-icon ms-3"
+      *ngIf="obj.priority < lstPolicyBeneficiariesApply.length + 1 && obj.priority > 1"
       >
-      <i class="icon-arrow_drop_down icon-32" 
+      <i class="icon-arrow_drop_up icon-32" 
       [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
       ></i>
     </button>
-    <button
-    (click)="onClickMoveObjUp(obj)"
-    class="btn btn-icon ms-3"
-    *ngIf="obj.priority < lstPolicyBeneficiariesApply.length + 1 && obj.priority > 1"
-    >
-    <i class="icon-arrow_drop_up icon-32" 
-    [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
-    ></i>
-  </button>
-
-  </div>
-  </div>
-  <div class="border content-hover">
-  <div class="d-flex mb-3 fw-bold align-items-center justify-content-between border-bottom">
-  <div class="text-primary ms-3">{{obj.priority}}</div>
-  <div class="text-dark me-3 btn btn-icon" (click)="onClickDeleteObject(obj)">x</div>
-</div>
-  <div *ngFor="let detail of lstSelectedObj">
-    <div class="d-flex justify-content-between">
-      <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HRObject"
-        [value]="detail"
-        class="ms-3"
-      >
-      </codx-vll>
-            <button
-      class="btn btn-icon ms-3"
-      (click)="onClickOpenSelectApplyObjDetail(detail, obj)"
-    >
-      <i class="icon-edit-one icon-18 me-3" 
-      [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
-      ></i>
-    </button>
+  
     </div>
-    <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
-      <span>
+    </div>
+    <div class="border content-hover px-5 py-3 rounded-2">
+    <div class="d-flex mb-3 align-items-center justify-content-between border-bottom pb-2">
+      <div class="fw-bold text-primary w-100">{{obj.priority}}</div>
+      <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="onClickDeleteObject(obj)">
+        <i class="icon-close icon-16"></i>
+      </button>
+    </div>
+    <div *ngFor="let detail of lstSelectedObj">
+      <div class="d-flex mb-2">
+        <span class="fw-bold text-dark">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="false"
+            name="HRObject"
+            [value]="detail"
+          >
+          </codx-vll>
+        </span>
+        <button
+          class="btn btn-icon btn-sm btn-light-primary"
+          (click)="onClickOpenSelectApplyObjDetail(detail, obj)"
+        >
+          <i class="icon-edit-one icon-16" 
+          [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
+          ></i>
+        </button>
+      </div>
+      <div class="mb-1" *ngIf="detail == '1' && !obj.orgUnitID">
         <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+      </div>
+      <div class="mb-1" *ngIf="obj.orgUnitID && detail == '1'">
+        <div class="mb-1 me-1" *ngFor="let org of lstOrgUnitID">
+          <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="org.id
+              | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
         </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
-      <span *ngFor="let org of lstOrgUnitID">
-        <span *ngIf="org.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="org.id
-            | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
-      <span *ngFor="let joblevel of lstJobLevel">
-        <span *ngIf="joblevel.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="joblevel.id
-            | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
-      <span *ngFor="let position of lstPositionID">
-        <span *ngIf="position.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="position.id
-            | formatvalue : fmPolicyBeneficiaries : 'PositionID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
-      <span *ngFor="let empType of lstEmployeeTypeID">
-        <span *ngIf="empType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="empType.id
-            | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
-      <span *ngFor="let labourType of lstLabourType">
-        <span *ngIf="labourType.rec == obj.recID">
-        <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HR022"
-        [value]="labourType.id"
-        ngClass="badge badge-success border-0 ms-2"
-      >
-      </codx-vll>
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
-      <span *ngFor="let contractType of lstContractTypeID">
-        <span *ngIf="contractType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="contractType.id
-            | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
-      <span *ngFor="let emp of lstEmployeeID">
-        <!-- <span *ngIf="emp.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="emp.id
-            | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
-            | async"
-        >
-        </span> -->
-        <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
-            <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
-                  [objectName]="emp.info?.employeeName" [width]="30">
-            </codx-img>
-              <div class="d-flex flex-column w-350px">
-                  <span #employeeName class="fs-6 line-clamp line-clamp-1">
-                      {{emp.info?.employeeName}}</span>
-                  <span #positionName class="text-gray-600 line-clamp line-lamp-1">
-                      {{emp.positionName}}
-                  </span>
-          </div>
         </div>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
-      <span>
+      </div>
+      <div class="mb-1" *ngIf="detail == '2' && !obj.jobLevel">
+        <div class="mb-1 me-1">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </div>
+      </div>
+      <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.jobLevel && detail == '2'">
+        <div class="mb-1 me-1" *ngFor="let joblevel of lstJobLevel">
+          <span class="badge-with-delete" *ngIf="joblevel.rec == obj.recID">
+            <span 
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="joblevel.id
+                | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+                | async"
+            >
+            </span>
+            <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-16"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="mb-1" *ngIf="detail == '3' && !obj.positionID">
         <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+      </div>
+      <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.positionID && detail == '3'">
+        <div class="mb-1 me-1" *ngFor="let position of lstPositionID">
+          <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
+            <span 
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="position.id
+                | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+                | async"
+            >
+            </span>
+            <button (click)="deleteApplyExcludeObj(position, 'lstPositionID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-16"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="mb-1" *ngIf="detail == '4' && !obj.employeeTypeID">
+        <div class="mb-1 me-1">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </div>
+      </div>
+      <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.employeeTypeID && detail == '4'">
+        <div class="mb-1 me-1" *ngFor="let empType of lstEmployeeTypeID">
+          <span class="badge-with-delete"  *ngIf="empType.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="empType.id
+              | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(empType, 'lstEmployeeTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </div>
+      </div>
+      <div class="mb-1" *ngIf="detail == '5' && !obj.labourType">
+        <div class="mb-1 me-1">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </div>
+      </div>
+      <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.labourType && detail == '5'">
+        <div class="mb-1 me-1" *ngFor="let labourType of lstLabourType">
+          <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
+          <span >
+          <codx-vll
+          [showText]="true"
+          [showBgColor]="false"
+          name="HR022"
+          [value]="labourType.id"
+          ngClass="badge badge-light-primary badge-md"
         >
+        </codx-vll>
+          </span>
+          <button (click)="deleteApplyExcludeObj(labourType, 'lstLabourType', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
         </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
-      <span *ngFor="let empStatus of lstEmpStatus">
-        <span *ngIf="empStatus.rec == obj.recID">
-        <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HR003"
-        [value]="empStatus.id"
-        ngClass="badge badge-success border-0 ms-2"
-      >
-      </codx-vll>
+        </div>
+      </div>
+      <div class="mb-1" *ngIf="detail == '6' && !obj.contractTypeID">
+        <div class="mb-1 me-1">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </div>
+      </div>
+      <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.contractTypeID && detail == '6'">
+        <div class="mb-1 me-1" *ngFor="let contractType of lstContractTypeID">
+          <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="contractType.id
+              | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
         </span>
-      </span>
+        </div>
+      </div>
+      <div class="mb-1" *ngIf="detail == '7' && !obj.employeeID">
+        <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+      </div>
+      <div class="mb-2" *ngIf="obj.employeeID && detail == '7'">
+        <span *ngFor="let emp of lstEmployeeID">
+          <!-- <span *ngIf="emp.rec == obj.recID"
+          class="badge badge-light-primary border-0 ms-2"
+          [innerHTML]="emp.id
+              | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+              | async"
+          >
+          </span> -->
+          <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+              <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                    [objectName]="emp.info?.employeeName" [width]="30">
+              </codx-img>
+                <div class="d-flex flex-column w-350px">
+          <span class="badge-with-delete">
+                    <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                        {{emp.info?.employeeName}}
+                        <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
+                          <span class="icon-close icon-16"></span>
+                        </button>
+                      </span>
+                    <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                        {{emp.positionName}}
+                    </span>
+  
+          </span>
+            </div>
+          </div>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
+        <span>
+          <span
+          class="badge badge-light-primary border-0 ms-2"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
+        <span *ngFor="let empStatus of lstEmpStatus">
+          <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
+          <span >
+          <codx-vll
+          [showText]="true"
+          [showBgColor]="false"
+          name="HR003"
+          [value]="empStatus.id"
+          ngClass="badge badge-light-primary border-0 ms-2"
+        >
+        </codx-vll>
+          </span>
+          <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
     </div>
   </div>
-</div>
-
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
-    <codx-label
-    default="Hoặc"
-    name="lblOr"
-    [formModel]="formModel"
-  ></codx-label>
+  
+    <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
+      <codx-label
+      default="Hoặc"
+      name="lblOr"
+      [formModel]="formModel"
+    ></codx-label>
+    </div>
   </div>
+  <codx-combobox-popup
+  *ngIf="!isHidden"
+  [comboboxName]="currentCbxName"
+  [multiple]="true"
+  [width]="600"
+  [height]="500"
+  [value]="currentCbxValue"
+  (clickSave)="onClickHideComboboxPopup($event)"
+  >
+  </codx-combobox-popup>
 </div>
-<codx-combobox-popup
-*ngIf="!isHidden"
-[comboboxName]="currentCbxName"
-[multiple]="true"
-[width]="600"
-[height]="500"
-[value]="currentCbxValue"
-(clickSave)="onClickHideComboboxPopup($event)"
->
-</codx-combobox-popup>
 
 <div class="d-flex justify-content-end mt-3" *ngIf="benefitPolicyObj.hasIncludeObjects">
   <button
@@ -1191,7 +1393,7 @@
             [formModel]="formModel"
         ></codx-label>
         <codx-label
-        [name]="'HasExcludeObjects'"
+        [name]="'headerNoteHasExcludeObjects'"
         [default]="grvSetup.HasExcludeObjects.headerNote"
         [formModel]="formModel"
 ></codx-label>
@@ -1224,19 +1426,25 @@
 <span *ngIf="benefitPolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
     <span *ngFor="let obj of lstSelectedExcludeObj">
       <!-- <span
-      class="badge badge-success border-0 ms-2"
+      class="badge badge-light-primary badge-md"
       [innerHTML]="obj
           | formatvalue : benefitFormModel : 'benefitID'
           | async"
     ></span> -->
+    <span class="badge-with-delete">
         <codx-vll
         [showText]="true"
         [showBgColor]="true"
         name="HRObject"
         [value]="obj"
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md"
       >
       </codx-vll>
+      <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedExcludeObj', lstPolicyBeneficiariesExclude)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+        <span class="icon-close icon-16"></span>
+      </button>
+    </span>
+
       <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"
@@ -1247,9 +1455,9 @@
     </button> -->
     </span>
 </span>
-<div class="form-group row w-100 mt-8" *ngIf="lstPolicyBeneficiariesExclude.length > 0">
+<div class="form-group row w-100" *ngIf="lstPolicyBeneficiariesExclude.length > 0">
 
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-5 fw-bold text-primary mt-6 mb-3" *ngIf="benefitPolicyObj.hasExcludeObjects">
     <codx-label
     [formModel]="formModel"
     [name]="'lblDetailApplyObj'"
@@ -1274,248 +1482,294 @@
   </div> -->
 </div>
 
-<div *ngFor="let obj of lstPolicyBeneficiariesExclude; let last = last">
-  <div class="w-auto btn-hover">
-    <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesExclude.length > 1">
+<div *ngIf="benefitPolicyObj.hasExcludeObjects">
+  <div *ngFor="let obj of lstPolicyBeneficiariesExclude; let last = last">
+    <div class="w-auto btn-hover">
+      <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesExclude.length > 1">
+        <button
+        (click)="onClickMoveObjDown(obj)"
+        *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesExclude.length"
+        class="btn btn-icon ms-3"
+        >
+        <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
+        <i class="icon-arrow_drop_down icon-32" 
+        [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-primary':'text-gray-400'"
+        ></i>
+      </button>
       <button
-      (click)="onClickMoveObjDown(obj)"
-      *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesExclude.length"
+      (click)="onClickMoveObjUp(obj)"
       class="btn btn-icon ms-3"
+      *ngIf="obj.priority < lstPolicyBeneficiariesExclude.length + 1 && obj.priority > 1"
       >
       <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
-      <i class="icon-arrow_drop_down icon-32" 
+      <i class="icon-arrow_drop_up icon-32" 
       [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-primary':'text-gray-400'"
       ></i>
     </button>
-    <button
-    (click)="onClickMoveObjUp(obj)"
-    class="btn btn-icon ms-3"
-    *ngIf="obj.priority < lstPolicyBeneficiariesExclude.length + 1 && obj.priority > 1"
-    >
-    <!-- (click)="onClickOpenCbxSelectIncludeObj()" -->
-    <i class="icon-arrow_drop_up icon-32" 
-    [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-primary':'text-gray-400'"
-    ></i>
-  </button>
+    </div>
+    </div>
+    <div class="border content-hover">
+      <div class="d-flex mb-3 align-items-center justify-content-between border-bottom">
+    <div class="text-primary ms-3">{{obj.priority}}</div>
+    <div class="fw-bold btn btn-icon me-3" (click)="onClickDeleteObject(obj)">x</div>
   </div>
-  </div>
-  <div class="border content-hover">
-    <div class="d-flex mb-3 align-items-center justify-content-between border-bottom">
-  <div class="text-primary ms-3">{{obj.priority}}</div>
-  <div class="fw-bold btn btn-icon me-3" (click)="onClickDeleteObject(obj)">x</div>
-</div>
-
-  <div *ngFor="let detail of lstSelectedExcludeObj">
-    <div class="d-flex justify-content-between">
-      <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HRObject"
-        [value]="detail"
-        class="ms-3"
-      >
-      </codx-vll>
-            <button
-      class="btn btn-icon ms-3"
-      (click)="onClickOpenSelectExcludeObjDetail(detail, obj)"
-    >
-      <i class="icon-edit-one icon-18 me-3" 
-      [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
-      ></i>
-    </button>
-    </div>
-    <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.orgUnitID && detail == '1'">
-      <span *ngFor="let org of lstOrgUnitID">
-        <span *ngIf="org.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="org.id
-            | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.jobLevel && detail == '2'">
-      <span *ngFor="let joblevel of lstJobLevel">
-        <span *ngIf="joblevel.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="joblevel.id
-            | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.positionID && detail == '3'">
-      <span *ngFor="let position of lstPositionID">
-        <span *ngIf="position.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="position.id
-            | formatvalue : fmPolicyBeneficiaries : 'PositionID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.employeeTypeID && detail == '4'">
-      <span *ngFor="let empType of lstEmployeeTypeID">
-        <span *ngIf="empType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="empType.id
-            | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.labourType && detail == '5'">
-      <span *ngFor="let labourType of lstLabourType">
-        <span *ngIf="labourType.rec == obj.recID">
+  
+    <div *ngFor="let detail of lstSelectedExcludeObj">
+      <div class="d-flex mb-2">
+        <span class="fw-bold text-dark">
         <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HR022"
-        [value]="labourType.id"
-        ngClass="badge badge-success border-0 ms-2"
+          [showText]="true"
+          [showBgColor]="false"
+          name="HRObject"
+          [value]="detail"
+          class="ms-3"
+        >
+        </codx-vll>
+      </span>
+              <button
+              class="btn btn-icon btn-sm btn-light-primary"
+        (click)="onClickOpenSelectExcludeObjDetail(detail, obj)"
       >
-      </codx-vll>
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.contractTypeID && detail == '6'">
-      <span *ngFor="let contractType of lstContractTypeID">
-        <span *ngIf="contractType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="contractType.id
-            | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
-            | async"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
-        >
-        </span>
-      </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.employeeID && detail == '7'">
-      <span *ngFor="let emp of lstEmployeeID">
-        <!-- <span *ngIf="emp.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="emp.id
-            | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
-            | async"
-        >
-        </span> -->
-        <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
-          <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
-                [objectName]="emp.info?.employeeName" [width]="30">
-          </codx-img>
-            <div class="d-flex flex-column w-350px">
-                <span #employeeName class="fs-6 line-clamp line-clamp-1">
-                    {{emp.info?.employeeName}}</span>
-                <span #positionName class="text-gray-600 line-clamp line-lamp-1">
-                    {{emp.positionName}}
-                </span>
-                  <!-- <ng-template #positionTooltip>
-                    {{emp.positionName}}
-                </ng-template>
-                  <ng-template #employeeNameTooltip>
-                    {{emp.positionName}}
-            </ng-template> -->
-        </div>
+        <i class="icon-edit-one icon-16" 
+        [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
+        ></i>
+      </button>
       </div>
-      </span>
-    </div>
-    <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
-      <span>
-        <span
-        class="badge badge-success border-0 ms-2"
-        [innerHTML]="'Tất cả'"
+      <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.orgUnitID && detail == '1'">
+        <span *ngFor="let org of lstOrgUnitID">
+          <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="org.id
+              | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.jobLevel && detail == '2'">
+        <span *ngFor="let joblevel of lstJobLevel">
+          <span class="badge-with-delete"  *ngIf="joblevel.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="joblevel.id
+              | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.positionID && detail == '3'">
+        <span *ngFor="let position of lstPositionID">
+          <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="position.id
+              | formatvalue : fmPolicyBeneficiaries : 'PositionID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(position, 'lstPositionID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+  
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.employeeTypeID && detail == '4'">
+        <span *ngFor="let empType of lstEmployeeTypeID">
+          <span class="badge-with-delete" *ngIf="empType.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="empType.id
+              | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(empType, 'lstEmployeeTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.labourType && detail == '5'">
+        <span *ngFor="let labourType of lstLabourType">
+          <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
+          <span >
+          <codx-vll
+          [showText]="true"
+          [showBgColor]="false"
+          name="HR022"
+          [value]="labourType.id"
+          ngClass="badge badge-light-primary badge-md"
         >
+        </codx-vll>
+          </span>
+          <button (click)="deleteApplyExcludeObj(labourType, 'lstLabourType', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.contractTypeID && detail == '6'">
+        <span *ngFor="let contractType of lstContractTypeID">
+          <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
+          <span 
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="contractType.id
+              | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+              | async"
+          >
+          </span>
+          <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.employeeID && detail == '7'">
+        <span *ngFor="let emp of lstEmployeeID">
+          <!-- <span *ngIf="emp.rec == obj.recID"
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="emp.id
+              | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
+              | async"
+          >
+          </span> -->
+          <div *ngIf="emp.rec == obj.recID" class="ms-2 d-flex align-items-centerp py-1 h-50px">
+            <codx-img [objectId]="emp?.id" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                  [objectName]="emp.info?.employeeName" [width]="30">
+            </codx-img>
+              <div class="d-flex flex-column w-350px">
+          <span class="badge-with-delete">
+                  <span #employeeName class="fs-6 line-clamp line-clamp-1">
+                      {{emp.info?.employeeName}}
+                      <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
+                        <span class="icon-close icon-16"></span>
+                      </button>
+                    </span>
+                  <span #positionName class="text-gray-600 line-clamp line-lamp-1">
+                      {{emp.positionName}}
+                  </span>
+                    <!-- <ng-template #positionTooltip>
+                      {{emp.positionName}}
+                  </ng-template>
+                    <ng-template #employeeNameTooltip>
+                      {{emp.positionName}}
+              </ng-template> -->
+            </span>
+          </div>
+        </div>
+        </span>
+      </div>
+      <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
+        <span>
+          <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="'Tất cả'"
+          >
+          </span>
+        </span>
+      </div>
+      <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">
+        <span *ngFor="let empStatus of lstEmpStatus">
+          <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
+          <span >
+          <codx-vll
+          [showText]="true"
+          [showBgColor]="false"
+          name="HR003"
+          [value]="empStatus.id"
+          ngClass="badge badge-light-primary badge-md"
+        >
+        </codx-vll>
+          </span>
+          <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
         </span>
       </span>
-    </div>
-    <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">
-      <span *ngFor="let empStatus of lstEmpStatus">
-        <span *ngIf="empStatus.rec == obj.recID">
-        <codx-vll
-        [showText]="true"
-        [showBgColor]="false"
-        name="HR003"
-        [value]="empStatus.id"
-        ngClass="badge badge-success border-0 ms-2"
-      >
-      </codx-vll>
-        </span>
-      </span>
+      </div>
     </div>
   </div>
-</div>
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
-    <codx-label
-    default="Hoặc"
-    name="lblOr"
-    [formModel]="formModel"
-  ></codx-label>
+    <div class="fs-6 fw-bold text-primary mt-6 mb-3" *ngIf="!last">
+      <codx-label
+      default="Hoặc"
+      name="lblOr"
+      [formModel]="formModel"
+    ></codx-label>
+    </div>
   </div>
 </div>
 
@@ -1537,7 +1791,7 @@
 
 <ng-template #footer>
 <div class="d-flex justify-content-between">
-    <!-- <button
+    <button
     class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
     (click)="openFormUploadFile()"
 >
@@ -1546,7 +1800,7 @@
     default="Đính kèm file"
     [formModel]="formModel"
     ></codx-label>
-</button> -->
+</button>
 
     <button class="btn btn-primary" (click)="onSaveForm()">
     <i class="icon-save"></i>

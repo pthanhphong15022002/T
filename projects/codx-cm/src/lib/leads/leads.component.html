@@ -19,7 +19,6 @@
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
   (onMoreMulti)="onMoreMulti($event)"
-  [viewActiveType]="viewMode"
 ></codx-views>
 
 <ng-template #itemTemplate let-data>
@@ -52,7 +51,7 @@
   <div class="d-flex flex-column w-100">
     <div
       class="d-flex justify-content-start mb-1 w-100"
-      [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+      [ngbTooltip]="gridViewSetup?.BusinessLineID?.headerText"
     >
       <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
       <div>
@@ -143,7 +142,7 @@
         <div class="d-flex align-items-center text-gray-600">
           <span
             class="text-gray-700 fs-7 line-clamp-menu"
-            [ngbTooltip]="gridViewSetup['ModifiedOn']?.headerText"
+            [ngbTooltip]="gridViewSetup?.ModifiedOn?.headerText"
             #modifiedOn
             [innerHTML]="
               data?.modifiedOn
@@ -189,6 +188,7 @@
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     [funcID]="funcID"
+    [listCategory]="listCategory"
     [applyProcess]="checkApplyProcess(dataSelected)"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
@@ -234,7 +234,7 @@
     <div class="'d-flex flex-column w-100">
       <div
         class="d-flex justify-content-start mb-1 w-100"
-        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+        [ngbTooltip]="gridViewSetup?.BusinessLineID?.headerText"
       >
         <i class="icon-add_shopping_cart icon-16 me-2 text-gray-700"></i>
 

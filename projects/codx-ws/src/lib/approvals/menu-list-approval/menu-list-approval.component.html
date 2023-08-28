@@ -1,0 +1,24 @@
+<div class="d-flex flex-column w-250px bg-white h-100 p-5">
+    <div class="d-flex align-items-center" *ngFor="let item of funcList">
+        <i [ngClass]="item?.largeIcon"></i>
+        <span class="fw-bold ms-2">{{item?.customName}}</span>
+    </div>
+    <ejs-accordion class="ws-accordion">
+        <e-accordionitems>
+            <ng-container *ngFor="let item of listParentGroup">
+                <e-accordionitem expanded='true'>
+                    <ng-template #header>
+                        <div>{{item?.customName}}</div>
+                      </ng-template>
+                      <ng-template #content>
+                        {{""}}
+                        <div class="d-flex align-items-center" *ngFor="let itemChild of item?.child">
+                            {{itemChild?.customName}}
+                        </div>
+                    </ng-template>
+                </e-accordionitem>
+            </ng-container>
+        </e-accordionitems>
+    </ejs-accordion>
+</div>
+

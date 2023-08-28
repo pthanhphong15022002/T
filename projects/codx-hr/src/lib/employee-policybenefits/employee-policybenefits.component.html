@@ -43,34 +43,71 @@
     </div>
 
     <div class="w-20 min-w-150px px-2">
-      {{ data.percentage }}
-      <button class="text-primary border-0" *ngIf="data.hasIncludeBenefits == 1">
-        <i class="icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
-      </button>
+      <div class="d-flex align-items-center tooltip-benefits">
+        <span>{{ data.percentage }}</span>
+        <div class="ms-2" *ngIf="data.hasIncludeBenefits == 1">
+          <i class="text-hover-primary icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
+        </div>
+      </div>
     </div>
     <ng-template #toolTipBenefits>
-      <div>
-        <codx-label fieldName="Percentage" [formModel]="view.formModel">
-        </codx-label>
-        {{ data.percentage }}
+    <div class="d-flex flex-column py-2 ps-2 min-w-300px bg-body">
+      <div class="d-flex align-items-center">
+        <codx-label class="text-dark fw-bold me-2"
+        name="lblPercentageOnHover"
+        [formModel]="view.formModel"
+        [default]="'Tỷ lệ (%):'"
+      >
+      </codx-label>
+      <span class="text-gray-600">
+        {{ data.percentage }}%
+      </span>
       </div>
 
-      <div>
-        <codx-label fieldName="PercentageOn" [formModel]="view.formModel">
+      <div class="mt-3 d-flex align-items-center">
+        <codx-label class="text-dark fw-bold"
+          name="lblSalaryOnHover"
+          [formModel]="view.formModel"
+          [default]="'Mức lương:'"
+        >
         </codx-label>
-        <span class="badge badge-success border-0 ms-2">
-          {{ data.percentageOn }}
+        <span class="badge badge-success border-0 ms-2"
+        [innerHTML]="data.percentageOn
+        | formatvalue : view.formModel : 'percentageOn'
+        | async"
+        >
+          <!-- {{ data.percentageOn }} -->
         </span>
       </div>
-      <div>
-        <codx-label fieldName="IncludeBenefits" [formModel]="view.formModel">
+      <div class="mt-3">
+        <codx-label class="text-dark fw-bold"
+          name="lblIncludeBenefitsOnHover"
+          [formModel]="view.formModel"
+          [default]="'Phụ cấp:'"
+        >
         </codx-label>
-        <span class="badge badge-success border-0 ms-2">
-            <span *ngFor="let item of Getchildbenefits(data.benefitID)">
-
+        <span class="badge badge-success border-0 mt-1">
+            <span *ngFor="let item of data?.includeBenefits.split(';')">
+              <span
+              class="badge badge-success border-0 ms-2"
+              [innerHTML]="item
+                  | formatvalue : view.formModel : 'benefitID'
+                  | async"
+            ></span>
+              <!-- <span *ngIf="item.policyID == data.policyID">
+                <span *ngFor="let obj of item.lstBenefit">
+                <span
+                class="badge badge-success border-0 ms-2"
+                [innerHTML]="obj
+                    | formatvalue : view.formModel : 'benefitID'
+                    | async"
+              ></span>
+              </span>
+              </span> -->
             </span>
         </span>
       </div>
+    </div>
     </ng-template>
 
     <div class="w-25 min-w-300px px-2">
@@ -94,7 +131,7 @@
             *ngIf="data.hasIncludeObjects == 1 && data.hasExcludeObjects == 0"
             (click)="onClickOpenPopupDetailInfo()"
           >
-            <i class="icon-how_to_reg text-primary"></i>
+            <i class="icon-how_to_reg text-success"></i>
           </button>
 
           <button
@@ -103,7 +140,7 @@
             *ngIf="data.hasIncludeObjects == 0 && data.hasExcludeObjects == 1"
             (click)="onClickOpenPopupDetailInfo()"
           >
-            <i class="icon-person_remove text-primary"></i>
+            <i class="icon-person_remove text-danger"></i>
           </button>
 
           <button
@@ -113,8 +150,8 @@
             (click)="onClickOpenPopupDetailInfo()"
           >
             <span>
-              <i class="icon-how_to_reg text-primary"></i>
-              <i class="icon-person_remove text-primary"></i>
+              <i class="icon-how_to_reg text-success"></i>
+              <i class="icon-person_remove text-danger"></i>
             </span>
           </button>
         </span>

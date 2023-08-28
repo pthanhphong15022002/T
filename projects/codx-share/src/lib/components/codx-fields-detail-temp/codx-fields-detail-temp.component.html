@@ -1,10 +1,12 @@
-<div class="back-info-1">
+<div class="{{ typeView == '1' ? 'back-info-1' : 'back-info' }} ">
   <div
     *ngIf="isShowTitle"
-    class="header-info py-1 d-flex align-items-center justify-content-between mb-0"
+    class="header-info py-1 d-flex align-items-center justify-content-between mb-0 {{
+      typeView == '1' ? '' : 'px-3'
+    }} "
   >
     <div class="d-flex align-items-center">
-      <span class="fs-" *ngIf="titleDefault">
+      <span class="" *ngIf="titleDefault">
         <codx-label
           class="title"
           name="titleDefault"
@@ -20,9 +22,11 @@
           >
           </codx-label> -->
       </span>
-      <span class="title-1 fw-bold text-primary" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
+      <span class="title-1 fw-bold text-primary" *ngIf="!titleDefault">{{
+        dataStep.stepName
+      }}</span>
     </div>
-    
+
     <div class="d-flex align-items-center justify-content-end">
       <div class="group-button">
         <button
@@ -53,7 +57,6 @@
         -->
       </div>
     </div>
-    
   </div>
   <div
     id="{{
@@ -61,10 +64,11 @@
     }}"
     class="main"
     [ngClass]="'show-main'"
+    *ngIf="dataStep?.fields != null && dataStep?.fields?.length > 0"
   >
     <div
       class="d-flex row class-field my-3"
-      *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
+     
     >
       <ng-container *ngFor="let field of dataStep.fields">
         <div
@@ -81,6 +85,31 @@
       </ng-container>
     </div>
   </div>
+  <!-- nvthuan viết để hiển thị field trong task -->
+  <div
+    class="main"
+    [ngClass]="'show-main'"
+    *ngIf="listFields?.length > 0"
+  >
+    <div
+      class="d-flex row class-field my-3"
+    >
+      <ng-container *ngFor="let field of listFields">
+        <div
+          class="col-{{
+            12 / showColumnControl
+          }} has-action-menu crr-fiels mb-1"
+        >
+          <!-- p-3 -->
+          <ng-container
+            [ngTemplateOutlet]="viewDetailFieldCurrent"
+            [ngTemplateOutletContext]="{ $implicit: field }"
+          ></ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+   <!-- end -->
 </div>
 
 <ng-template #viewCustomFields let-data>
@@ -242,8 +271,8 @@
 </ng-template>
 
 <ng-template #viewDetailFieldCurrent let-data>
-  <div class="d-flex mb-1">
-    <span class="w-150px min-w-150px">
+  <div class="d-flex mb-1 {{ typeView == '1' ? '' : 'ms-3' }}">
+    <span class="text-nowrap" [ngClass]="showColumnControl == 1 ? 'min-w-150px' : 'me-1'">
       <span class="text-gray-600">{{ data.title }}</span>
       <span *ngIf="data.isRequired">
         <codx-label

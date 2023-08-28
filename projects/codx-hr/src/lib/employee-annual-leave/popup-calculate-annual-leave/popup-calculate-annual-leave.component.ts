@@ -1,5 +1,5 @@
-import { take, filter } from 'rxjs';
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { take, filter, concat } from 'rxjs';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ApiHttpService, NotificationsService, DialogData, DialogRef, AuthStore, CodxFormComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
@@ -20,6 +20,7 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
   @Input() view: any;
 
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('stepper') stepper: any;
 
   inputData: CalculateInputData = {
     alYear: null,
@@ -40,14 +41,21 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
   employeeList: any = [];
   empIDList: string = '';
 
+  inputEmployeeList: any = [];
+  excludedEmployeeList: any = [];
+
   orgUnitList: any = [];
   orgUnitIDList: string = '';
 
   alObjectList: any = [];
   alObjectIDList: string = '';
 
-  inMonthValue: any = new Date().getMonth() + '/'+ new Date().getFullYear();
-  inYearValue: any =  new Date();
+  inMonthValue: any = new Date().getMonth() + '/' + new Date().getFullYear();
+  inYearValue: any = new Date();
+  currentStep = 1;
+  searchText: string = '';
+
+  hasAddData: boolean = false; 
   constructor(
     // private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -81,9 +89,9 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
           }));
           this.inputData[event.field] = event.data?.value;
         } else {
-          this.employeeList = null;
+          this.employeeList = [];
           this.empIDList = '';
-          this.inputData[event.field] = null;
+          this.inputData[event.field] = [];
         };
         break;
       case 'orgUnitID':
@@ -95,9 +103,9 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
           }));
           this.inputData[event.field] = event.data?.value;
         } else {
-          this.orgUnitList = null;
+          this.orgUnitList = [];
           this.orgUnitIDList = '';
-          this.inputData[event.field] = null;
+          this.inputData[event.field] = [];
         };
         break;
       case 'alObjectID':
@@ -109,9 +117,9 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
           }));
           this.inputData[event.field] = event.data?.value;
         } else {
-          this.alObjectList = null;
+          this.alObjectList = [];
           this.alObjectIDList = '';
-          this.inputData[event.field] = null;
+          this.inputData[event.field] = [];
         };
         break;
       case 'calculateALBy':
@@ -121,15 +129,16 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.inputData[event.field] = event.data.value | event.data;
         break;
       case 'isExcept':
-        this.inputData[event.field] = event.data.value | event.data;
+        let result = event.data.value | event.data;
+        this.inputData[event.field] = result == 1 ? true : false;
         break;
       case 'inMonth':
         this.inputData[event.field] = event.data.value | event.data;
         break;
     }
   }
-  deleteItem(data: any, fieldName: string){
-    switch (fieldName){ 
+  deleteItem(data: any, fieldName: string) {
+    switch (fieldName) {
       case 'alObjectID':
         this.alObjectList = this.alObjectList.filter(x => x.alObjectID !== data.alObjectID);
         this.alObjectIDList = this.alObjectList.map(x => x.alObjectID).join(';');
@@ -138,41 +147,69 @@ export class PopupCalculateAnnualLeaveComponent implements OnInit {
         this.orgUnitList = this.orgUnitList.filter(x => x.orgUnitID !== data.orgUnitID);
         this.orgUnitIDList = this.orgUnitList.map(x => x.orgUnitID).join(';');
         break;
+      case 'employeeID':
+        this.inputEmployeeList = this.inputEmployeeList.filter(x => x.employeeID != data.employeeID);
+        this.excludedEmployeeList.unshift(data);
+        break;
+      // case 'exEmployeeID':
+      //   this.excludedEmployeeList = this.excludedEmployeeList.filter(x => x.employeeID != data.employeeID);
+      //   this.inputEmployeeList.unshift(data);
+      //   break;
     }
   }
-  yearChange(data: boolean){
-    if(data) {
-      this.inYearValue ++;
-    }else{
-      this.inYearValue --;
+  yearChange(data: boolean) {
+    if (data) {
+      this.inYearValue++;
+    } else {
+      this.inYearValue--;
     }
     this.inputData.alYear = this.inYearValue;
   }
-  yearSelect(data: any){
-    if(data?.fromDate != null){
+  yearSelect(data: any) {
+    if (data?.fromDate != null) {
       this.inYearValue = data.fromDate.getFullYear();
       this.inputData.alYear = this.inYearValue;
-    }else{
+    } else {
       this.inYearValue = null;
       this.inputData.alYear = null;
     }
   }
-  monthSelect(data: any){
-    if(data?.toDate){
+  monthSelect(data: any) {
+    if (data?.toDate) {
       this.inputData.alMonth = data?.toDate;
-    }else{
-      this.inputData.alMonth;
+    } else {
+      this.inputData.alMonth = null;
     }
   }
+  stepChange(data: number) {
+    this.currentStep = data;
+  }
+  searchEmp(data: any){
+    this.searchText = data.toString();
+  }
   confirm() {
-    this.hrService.getEmployeeListByPopupCalculateAnnualLeaveAsync(this.inputData.alYear, this.inputData.alObjectID,
-      this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth)
+    this.hrService.calculateAnnualLeaveAsync(this.inputData.alYear, this.inputData.alObjectID,
+      this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
       .subscribe(res => {
-        //this.dialogRef.close();
+        if (res[2]?.count > 0 || res[0].count > 0) {
+          this.hasAddData = true;
+          this.dialogRef.close(this.hasAddData);
+          //this.dialogRef.close(res[0]);
+        }
       })
+    // this.inputEmployeeList = [];
+    // this.excludedEmployeeList = [];
+    // this.hrService.getEmployeeListByPopupCalculateAnnualLeaveAsync(this.inputData.alYear, this.inputData.alObjectID,
+    //   this.inputData.orgUnitID, this.inputData.employeeID, this.inputData.calculateALBy, this.inputData.alMonth, this.inputData.isExcept)
+    //   .subscribe((res: any) => {
+    //     if (res?.length > 0) {
+    //       this.inputEmployeeList = res;
+    //     }
+    //   })
+    //   this.currentStep = 2;
   }
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.hasAddData);
   }
 }
 export class CalculateInputData {

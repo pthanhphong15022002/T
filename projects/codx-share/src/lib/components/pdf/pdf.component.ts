@@ -624,6 +624,7 @@ export class PdfComponent
           );
         } else {
           this.tr?.resizeEnabled(
+            this.isEditable == false ? false :
             area.allowEditAreas == false
               ? false
               : area.isLock == true
@@ -632,6 +633,7 @@ export class PdfComponent
           );
 
           this.tr?.enabledAnchors(
+            this.isEditable == false ? [] :
             area.allowEditAreas == false
               ? []
               : area.isLock == true
@@ -643,6 +645,7 @@ export class PdfComponent
               : this.textAnchor
           );
           this.tr?.draggable(
+            this.isEditable == false ? false :
             area.allowEditAreas == false
               ? false
               : area.isLock == true

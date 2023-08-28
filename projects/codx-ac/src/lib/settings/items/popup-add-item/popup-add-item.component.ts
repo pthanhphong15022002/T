@@ -404,17 +404,17 @@ export class PopupAddItemComponent
     if (!this.item.purchase) {
       this.disabledTabs.set('purchase', '3');
     } else {
-      this.disabledTabs.delete("purchase");
+      this.disabledTabs.delete('purchase');
     }
     if (!this.item.sales) {
       this.disabledTabs.set('sales', '4');
     } else {
-      this.disabledTabs.delete("sales");
+      this.disabledTabs.delete('sales');
     }
     if (!this.item.production) {
       this.disabledTabs.set('production', '5');
     } else {
-      this.disabledTabs.delete("production")
+      this.disabledTabs.delete('production');
     }
     this.form.setDisabled([...this.disabledTabs.values()].join(';'));
   }

@@ -1,8 +1,9 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
-    [entityName]="entityName" [className]="className" [method]="method" [button]="button" [idField]="idField"
-    [selectedFirst]="true" (selectedChange)="selectedChange($event)" (viewChanging)="viewChanging($event)"
-    (viewChanged)="viewChanged($event)" (buttonClick)="clickButton($event)">
+    [entityName]="entityName" [className]="className" [method]="method" [button]="button" [showButton]="showButton"
+    [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
+    (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)" (buttonClick)="clickButton($event)">
 </codx-views>
+
 
 
 <!-- #region ListView-Mode HRTAL01 -->
@@ -68,16 +69,16 @@
         </div>
         <!-- Tồn năm trước -->
         <div class="w-20 p-3">
-            <span #emailField class="data-text-color" *ngIf="data?.alPreYear;else noALPreYear">
-                {{data.alPreYear}}
-            </span>
+            <ng-container *ngIf="data?.alPreYear >= 0;else noALPreYear">
+                <span class="data-text-color"> {{data.alPreYear}} </span>
+            </ng-container>
             <ng-template #noALPreYear>
                 <span class="place-holder">{{grvSetup['ALPreYear'].headerText}}</span>
             </ng-template>
         </div>
         <!-- Tiêu chuẩn năm nay -->
         <div class="w-25 p-3">
-            <span #emailField class="data-text-color fw-bold" *ngIf="data?.alThisYear;else noALThisYear">
+            <span class="data-text-color fw-bold" *ngIf="data?.alThisYear >= 0;else noALThisYear">
                 {{data.alThisYear}}
             </span>
             <ng-template #noALThisYear>
@@ -88,7 +89,7 @@
         <div class="w-30 p-3">
             <div class="d-flex flex-column" *ngIf="data.seniorityMonth">
                 <div class="align-items-center1 mb-1">
-                    <div #senorityMonth class="line-clamp line-clamp-1" [ngbTooltip]="(senorityMonth.scrollHeight > senorityMonth.clientHeight
+                    <div #seniorityMonth class="line-clamp line-clamp-1" [ngbTooltip]="(seniorityMonth.scrollHeight > seniorityMonth.clientHeight
                         && data.seniorityMonth) ? seniorityMonthToolTip: null">
                         <codx-label class="label-colon label-text-color" [setRequire]="false"
                             [fiedName]="'SeniorityMonth'" [formModel]="view.formModel"
@@ -204,7 +205,7 @@
             <div class="d-flex flex-column">
                 <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
                     [ngbTooltip]="alYearMonth.scrollHeight > alYearMonth.clientHeight? alYearMonthTooltip: null">
-                    <span #emailField class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
+                    <span class="data-text-color" *ngIf="data?.alYearMonth;else noALYearMonth">
                         {{data.alYearMonth}}
                     </span>
                     <ng-template #noALYearMonth>
@@ -431,7 +432,7 @@
 
 <!-- #region tree-view HRTAL01 -->
 <ng-template #rightTemplateHRTAL01>
-    <lib-employee-annual-leave-by-org [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
+    <lib-employee-annual-leave-by-org #treeViewDetail [orgUnitID]="itemSelected?.orgUnitID" [funcID]="funcID" [grvSetup]="grvSetup"
         [view]="view" [formModel]="view.formModel" [grvDaysOff]="grvEDaysOff" [rowHeight]="70">
     </lib-employee-annual-leave-by-org>
 </ng-template>

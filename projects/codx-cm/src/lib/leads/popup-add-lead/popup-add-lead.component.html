@@ -19,7 +19,7 @@
             type="radio"
             style="width: 100%"
             [field]="radioCompany"
-            [label]="'Công ty'"
+            [label]="company"
             [checked]="isCategory"
             [disabled]="action === actionEdit"
             [crrValue]="isCategory"
@@ -36,7 +36,7 @@
             type="radio"
             style="width: 100%"
             [field]="radioCustomer"
-            [label]="'Cá nhân'"
+            [label]="customer"
             [disabled]="action === actionEdit"
             [checked]="!isCategory"
             [crrValue]="isCategory"
@@ -64,13 +64,33 @@
           </codx-input>
         </div>
         <div class="form-group">
+
+
+          <div *ngIf="lead.category == '1'; else default">
+            <codx-label
+              name="lblLeadID"
+              [default]="companyNo"
+              [setRequire]="false"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+          <ng-template #default>
+            <codx-label
+              name="lblLeadID"
+              [default]="customerNo"
+              [setRequire]="false"
+              [formModel]="formModel"
+            ></codx-label>
+          </ng-template>
+
+<!--
           <codx-label
             [formModel]="form.formModel"
             fiedName="LeadID"
             [Group]="form.formGroup"
             default="Mã tiềm năng"
           >
-          </codx-label>
+          </codx-label> -->
           <codx-input
             field="leadID"
             type="text"
@@ -128,8 +148,27 @@
   <div class="row">
     <div class="col-12">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="LeadName">
-        </codx-label>
+        <!-- <codx-label [formModel]="form.formModel" fiedName="LeadName">
+        </codx-label> -->
+
+        <div *ngIf="lead.category == '1'; else defaultName">
+          <codx-label
+            name="lblLeadName"
+            [default]="companyName"
+            [setRequire]="false"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <ng-template #defaultName>
+          <codx-label
+            name="lblLeadName"
+            [default]="customerName"
+            [setRequire]="false"
+            [formModel]="formModel"
+          ></codx-label>
+        </ng-template>
+
+
         <codx-input
           field="leadName"
           [formModel]="form.formModel"
@@ -159,21 +198,29 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label
+        <!-- <codx-label
           fiedName="CompanyPhone"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
-        </codx-label>
-        <!-- <codx-input
-          field="companyPhone"
-          type="text"
-          [placeholder]="gridViewSetup?.CompanyPhone?.description"
-          [crrValue]="lead?.companyPhone"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
+        </codx-label> -->
 
+        <div *ngIf="lead.category == '1'; else defaultPhone">
+          <codx-label
+            name="lblCompanyPhone"
+            [default]="companyPhone"
+            [setRequire]="false"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <ng-template #defaultPhone>
+          <codx-label
+            name="lblCompanyPhone"
+            [default]="customerPhone"
+            [setRequire]="false"
+            [formModel]="formModel"
+          ></codx-label>
+        </ng-template>
         <codx-input
           field="companyPhone"
           [formModel]="form.formModel"

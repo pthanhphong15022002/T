@@ -1,4 +1,4 @@
-<div id="id" class="main" [ngClass]="'show-main'">
+<div id="id" class="main-step" [ngClass]="'show-main'">
   <div
     class="d-flex align-items-center justify-content-between me-5"
     *ngIf="isShowStep && currentStep"
@@ -198,6 +198,13 @@
                     </div>
 
                     <div class="ms-5">
+                      <codx-fields-detail-temp
+                      *ngIf="task?.fieldID"
+                      [listFields]="getFields(currentStep?.fields, task?.fieldID)"
+                      [showColumnControl]="4"
+                      [isShowTitle]="false"
+                    >
+                    </codx-fields-detail-temp>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
@@ -315,7 +322,7 @@
 <ng-template #buttonTemplate let-data="value">
   <div
     class="d-flex justify-content-center mt-3"
-    *ngIf="isShowBtnAddTask && !isViewStep && !isMoveStage"
+    *ngIf="isShowBtnAddTask && !isViewStep && !isMoveStage && isRoleAll"
   >
     <button
       type="button"

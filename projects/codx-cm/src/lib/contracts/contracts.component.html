@@ -151,12 +151,26 @@
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
+    (isSusscess)="autoOpenPopupSusscess($event)"
   ></contracts-view-detail>
 </ng-template>
 
+<!--more function -->
+<ng-template #templateMore let-data>
+  <div class=""> 
+    <codx-mfunc
+      [type]="'hover'"
+      [dataItem]="moreDefaut"
+      [formModel]="view.formModel"
+      (changeDataMF)="changeDataMF($event, data, true)"
+      (clickMF)="clickMF($event, data)"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
 <!--Tên hợp đồng -->
 <ng-template #contractName let-data>
-  <div class="">
+  <div class=""> 
     <span
       [innerHTML]="
         data?.contractName | formatvalue : view.formModel : 'ContractName' | async
@@ -164,38 +178,105 @@
     ></span>
   </div>
 </ng-template>
+<!--Giá trị hợp đồng -->
+<ng-template #tempContractAmt let-data>
+  <div class=""> 
+    <span
+      [innerHTML]="
+        data?.contractAmt | formatvalue : view.formModel : 'ContractAmt' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!--Số tiền đã thanh toán -->
+<ng-template #tempPaidAmt let-data>
+  <div class=""> 
+    <span
+      *ngIf="data?.paidAmt > 0"
+      [innerHTML]="
+        data?.paidAmt | formatvalue : view.formModel : 'PaidAmt' | async
+      "
+    ></span>
+    <span *ngIf="data?.paidAmt <= 0"> 
+      0
+    </span>
+  </div>
+</ng-template>
+<!--Tiền tệ -->
+<ng-template #tempCurrencyID let-data>
+  <div class=""> 
+    <span
+      [innerHTML]="
+        data?.currencyID | formatvalue : view.formModel : 'CurrencyID' | async
+      "
+    ></span>
+  </div>
+</ng-template>
+<!--Trạng thái-->
+<ng-template #tempStatus let-data>
+  <div class="d-flex justify-content-center">
+    <codx-vll
+      [name]="vllStatus"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-primary badge-sm"
+    ></codx-vll>
+  </div>
+</ng-template>
 <!-- Khách hàng -->
-<!-- báo giá -->
-<!-- Giá trị hợp đồng -->
-<ng-template #templateTotalAmt let-data>
+<ng-template #tempCustomerID let-data>
   <div class="">
+    <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
     <span
       [innerHTML]="
-        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+        data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
       "
     ></span>
   </div>
 </ng-template>
-<!-- Cơ hội -->
-<ng-template #templateTotalAmt let-data>
+<!-- Áp dụng quy trình -->
+<ng-template #tempApplyProcess let-data>
   <div class="">
     <span
       [innerHTML]="
-        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
+        data?.applyProcess | formatvalue : view.formModel : 'ApplyProcess' | async
       "
     ></span>
   </div>
 </ng-template>
-<!-- Giá trị hợp đồng -->
-<ng-template #templateTotalAmt let-data>
-  <div class="">
+<!-- giai đoạn hiện tại -->
+<ng-template #tempStepID let-data>
+  <div
+    [ngStyle]="{
+      'background-color': data?.steps['backgroundColor']
+    }"
+    class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+  >
     <span
-      [innerHTML]="
-        data?.totalAmt | formatvalue : view.formModel : 'totalAmt' | async
-      "
+      [ngClass]="data?.steps['icon']"
+      [ngStyle]="{ color: data?.steps['iconColor'] }"
+      class="me-1"
     ></span>
+    <span
+      class="text-ellipsis line-clamp line-clamp-1"
+      [ngbTooltip]="data?.currentStepName"
+      [ngStyle]="{ color: data?.steps['textColor'] }"
+      >{{ data?.currentStepName }}</span
+    >
   </div>
 </ng-template>
-<!-- Số tiền đã thanh toán -->
+<!--Người phụ trách-->
+<ng-template #tempOwner let-data>
+  <div class="d-flex justify-content-center">
+    <codx-imgs
+      [width]="25"
+      [objectId]="data.owner"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    ></codx-imgs>
+  </div>
+</ng-template>
 <!-- Số tiền còn lại -->
 <!-- Trạng thái -->

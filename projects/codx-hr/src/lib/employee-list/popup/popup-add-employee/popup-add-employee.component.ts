@@ -60,8 +60,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   // orgNote: string = '';
 
   hasChangedData: boolean = false;
-
-  onFirstInit: boolean = true;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -78,10 +76,11 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     this.funcID = this.routerActive.snapshot.params['funcID'];
-    if (this.dialogRef.dataService.keyField === 'EmployeeID') {
-      this.employeeIDDisable = true;
-    } else this.employeeIDDisable = false;
+
     if (this.action === 'edit') this.employeeIDDisable = true;
+    else{
+      this.employeeIDDisable = this.dialogRef.dataService.keyField ? true : false;
+    }
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
@@ -100,7 +99,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.hasChangedData = false;
           }
         })
-    }
+    }else this.hasChangedData = true;
   }
 
   //get grvSetup
@@ -115,7 +114,9 @@ export class PopupAddEmployeeComponent implements OnInit {
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-
+  hasChangeAva(event){
+    this.hasChangedData = true;
+  }
   //value change
   valueChange(event: any) {
     if (event) {
@@ -147,7 +148,6 @@ export class PopupAddEmployeeComponent implements OnInit {
                 }
               });
           }
-          this.onFirstInit = false;
           break;
         case 'orgUnitID':
           // this.getOrgNote();
@@ -196,9 +196,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainLevel':
           if (this.data[field]) {
             this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainFieldID){
+              this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + ' ',"");
             }
           } else {
             this.trainLevel = null;
@@ -207,9 +210,12 @@ export class PopupAddEmployeeComponent implements OnInit {
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
-            if (this.trainLevel && this.trainFieldID && !this.data['degreeName']) {
+            if (this.trainLevel && this.trainFieldID) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+            if(!this.trainLevel){
+              this.trainLevel = this.data['degreeName'].replace(' ' + this.trainFieldID,"");
             }
           } else {
             this.trainFieldID = null;

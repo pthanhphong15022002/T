@@ -37,11 +37,15 @@ export class ContractsViewDetailComponent
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
   isView = false;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
+  treeTask = [];
+  id='';
+  isShowFull = false;
 
   listPaymentHistory: CM_ContractsPayments[] = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -66,19 +70,24 @@ export class ContractsViewDetailComponent
       isActive: false,
       template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
+    {
+      name: 'AssignTo',
+      textDefault: 'Giao việc',
+      isActive: false,
+      template: null,
+    },
     {
       name: 'Approve',
       textDefault: 'Ký duyệt',
       isActive: false,
       template: null,
     },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
+    // {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   template: null,
+    // },
   ];
   fmQuotationLines: FormModel = {
     funcID: 'CM02021',
@@ -110,22 +119,12 @@ export class ContractsViewDetailComponent
       this.contract = dt?.data?.contract;
     }
     this.isView = dt?.data?.isView;
-    if (this.isView) {
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract.quotationID);
-      this.getPayMentByContractID(this.contract?.recID);
-    }
+   
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
-      this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
-      this.getPayMentByContractID(this.contract?.recID);
-      if (this.contract?.applyProcess) {
-        this.getListInstanceStep(this.contract);
-        this.listTypeContract = this.contractService.listTypeContract;
-      } else {
-        this.listTypeContract = this.contractService.listTypeContractNoTask;
-      }
+      this.setDataInput();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -135,10 +134,28 @@ export class ContractsViewDetailComponent
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
     );
+    if (this.isView) {
+      this.setDataInput();
+    }
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.getAccount();
     this.loadTabs();
   }
+
+  setDataInput(){
+    this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
+    this.getPayMentByContractID(this.contract?.recID);
+    if (this.contract?.applyProcess) {
+      this.getListInstanceStep(this.contract);
+      this.listTypeContract = this.contractService.listTypeContract;
+      this.id = this.contract?.refID;
+    } else {
+      this.listTypeContract = this.contractService.listTypeContractNoTask;
+      this.id = this.contract?.recID;
+    }
+    this.loadTree(this.id);
+  }
+
   changeTab(e) {
     this.tabClicked = e;
   }
@@ -224,8 +241,45 @@ export class ContractsViewDetailComponent
       icon: 'icon-monetization_on',
       template: this.quotationsTab,
     };
+    // let quotations = {
+    //   name: 'References',
+    //   textDefault: 'Liên kết',
+    //   isActive: false,
+    //   icon: 'icon-i-link',
+    //   template: this.quotationsTab,
+    // };
     let idx = this.tabControl.findIndex((x) => x.name == 'Quotations');
     if (idx != -1) this.tabControl.splice(idx, 1);
     this.tabControl.push(quotations);
+  }
+
+  checkSusscess(e){
+    if(e){
+      this.isSusscess.emit(true);
+    }
+  }
+
+  saveAssign(e) {
+    if (e) {
+      this.loadTree(this.id);
+    }
+  }
+
+  loadTree(recID) {
+    if(!recID){
+      this.treeTask = [];
+      return;
+    }
+    this.api.exec<any>(
+        'TM',
+        'TaskBusiness',
+        'GetListTaskTreeBySessionIDAsync',
+        recID
+      ).subscribe((res) => {
+        this.treeTask = res ? res : []; 
+    });
+  }
+  clickShowTab(event){
+    this.isShowFull = event;
   }
 }

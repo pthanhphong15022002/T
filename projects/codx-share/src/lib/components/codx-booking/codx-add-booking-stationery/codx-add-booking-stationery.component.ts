@@ -506,7 +506,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         'EP',
                         item,
                         category,
-                        'EP_Bookings',
+                        this.formModel?.entityName,
                         this.formModel.funcID,
                         item?.title,
                         (res:ResponseModel) => {
@@ -514,9 +514,9 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                             item.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                             item.write = false;
                             item.delete = false;
-                            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+                            (this.dialogRef.dataService as CRUDService).update(item).subscribe();
                             this.notificationsService.notifyCode('SYS034');
-                            this.dialogRef && this.dialogRef.close(this.returnData);
+                            this.dialogRef && this.dialogRef.close(item);
                           } else {
                             this.notificationsService.notifyCode(
                               res?.msgCodeError

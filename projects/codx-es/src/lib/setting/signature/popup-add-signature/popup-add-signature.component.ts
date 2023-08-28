@@ -90,7 +90,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.type = data?.data?.type;
     this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.funcID = this.formModel?.funcID;
   }
 
   ngAfterViewInit(): void {
@@ -354,6 +354,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   passwordChange(evt:any){
     if(evt){
       this.data.password= evt?.data;
+      this.form?.formGroup.patchValue({
+        password: this.data?.password,
+      });
       this.cr.detectChanges();
     }
   }

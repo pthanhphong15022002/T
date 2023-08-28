@@ -13,6 +13,7 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   lstDataSelected: any =[];
   vllName: any;
   headerText: '';
+  isAfterRender = false;
   formModel: '';
   @ViewChild('form') form: CodxFormComponent;
   constructor(
@@ -24,6 +25,7 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
   ) {
     super(injector);
     this.dialog = dialog
+    debugger
     this.headerText = data?.data?.headerText;
     this.vllName = data?.data?.vllName;
     this.formModel = data?.data?.formModel;
@@ -48,6 +50,8 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
           }
         }
       }
+
+    this.isAfterRender = true;
     })
   }
 
@@ -57,12 +61,30 @@ export class PopupMultiselectvllComponent extends UIComponent implements OnInit{
 
   onChangeSelect(event, data){
     debugger
-    if(event.data == true){
+    if(event.data == true && data.checked == false){
       this.lstDataSelected.push(data.value);
+      for(let i = 0; i < this.lstData.length; i++){
+        if(this.lstData[i].value == data.value){
+          this.lstData[i].checked = true;
+        }
+      }
     }
-    else if(event.data == false){
+    else if(event.data == false && data.checked == true){
       let index = this.lstDataSelected.indexOf(data.value);
       this.lstDataSelected.splice(index,1);
+      for(let i = 0; i < this.lstData.length; i++){
+        if(this.lstData[i].value == data.value){
+          this.lstData[i].checked = false;
+        }
+      }
     }
+  }
+
+  onClickUnSelectAll(){
+    this.lstDataSelected = []
+    for(let i = 0; i < this.lstData.length; i++){
+        this.lstData[i].checked = false;
+    }
+    this.cr.detectChanges()
   }
 }

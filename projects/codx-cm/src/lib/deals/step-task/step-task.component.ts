@@ -41,9 +41,12 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
+  @Input() entityName = '';
+  @Input() owner: string;
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() isSusscess = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -73,7 +76,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   stepViews = [];
   isZoomIn = false;
   isZoomOut = false;
-
+  isShow = true;
   // formModel: FormModel = {
   //   entityName: 'DP_Instances_Steps_Reasons',
   //   formName: 'DPInstancesStepsReasons',
@@ -149,6 +152,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.type = e.data;
   }
   changeValueDropdownSelect(e) {
+    this.isShow
     if (e.field == 'status') {
       if (e?.data?.length == 0) {
         this.listInstanceStepShow = this.listInstanceStep;
@@ -162,6 +166,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isShowElement = e.data[0] == '1' ? true : false;
     } else {
       this.isShowElement = true;
+    }
+  }
+
+  handelToggleStep(){
+    this.isShow = !this.isShow;
+    if (this.isShow) {
+      this.isShowElement = true;
+    } else {
+      this.isShowElement = false;
     }
   }
 
@@ -439,5 +452,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     this.isZoomOut = false;
     this.isZoomIn = false;
+  }
+  
+  susscessStepEnd(event, step){
+    let count = this.listInstanceStepShow?.length - 1;
+    let stepEnd;
+    for(let i = count; i >=0 ; i--){
+      if(!this.listInstanceStepShow[i]?.isSuccessStep && !this.listInstanceStepShow[i]?.isFailStep){
+        stepEnd = this.listInstanceStepShow[i];
+        break;
+      }
+    }
+    if(stepEnd?.recID == step?.recID){
+      this.isSusscess.emit(true);
+    }
   }
 }

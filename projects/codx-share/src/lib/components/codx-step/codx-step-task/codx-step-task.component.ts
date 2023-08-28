@@ -45,6 +45,8 @@ import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meetin
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-step-task',
@@ -86,6 +88,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
   @Output() changeProgress = new EventEmitter<any>(); 
+  @Output() isSuccessStep = new EventEmitter<any>(); 
   //#endregion
 
   isUpdate;
@@ -118,6 +121,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   dialogGuide: DialogRef;
   vllDataTask;
   vllDataStep;
+  isBoughtTM = false;
 
   moreDefaut = {
     share: true,
@@ -132,11 +136,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private callfc: CallFuncService,
+    private adService: CodxAdService,
     private codxService: CodxService,
     private stepService: StepService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private calendarService: CodxCalendarService
+    private calendarService: CodxCalendarService,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -157,6 +162,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP048.datas) {
       this.vllDataStep = DP032?.datas;
     }
+    this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
       entityName: 'DP_Instances_Steps_TaskGroups',
@@ -171,8 +177,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    console.log("----------",this.isRoleAll);
-    
     if (changes.dataSources || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
       await this.getStepById();
@@ -182,6 +186,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (this.isOnlyView) {
         this.getTaskEnd();
       }
+      this.isShowElement = this.isOnlyView;
     }
     if (changes?.groupTaskAdd && this.groupTaskAdd) {
       let indexGroupNoID = this.listGroupTask?.findIndex(
@@ -215,6 +220,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.listGroupTask?.forEach((group) => {
           group?.task?.forEach((task) => {
             task['progressOld'] = task.progress;
+            task['statusOld'] = task.status;
             task['isChange'] = false;
           });
           group['progressOld'] = group.progress;
@@ -227,6 +233,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.listGroupTask?.forEach((group) => {
             group?.task?.forEach((task) => {
               task.progress = 100;
+              task.status = '3'
               progressData.push(this.setProgressOutput(task, group));
             });
             group.progress = 100;
@@ -241,6 +248,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             let sumProgress = 0;
             group?.task?.forEach((task) => {
               task.progress = task?.progressOld;
+              task.status = task?.statusOld;
               sumProgress += task?.progress;
               if (task?.isChange) {
                 progressData.push(this.setProgressOutput(task, group));
@@ -259,10 +267,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
 
-    if (
-      changes?.isSuccessTaskDefault &&
-      !changes?.isSuccessTaskDefault?.firstChange
-    ) {
+    if (changes?.isSuccessTaskDefault && !changes?.isSuccessTaskDefault?.firstChange) {
       let progressData = [];
       if (changes?.isSuccessTaskDefault?.currentValue) {
         this.listGroupTask?.forEach((group) => {
@@ -273,6 +278,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = 100;
+                task.status = '3'
                 progressData.push(this.setProgressOutput(task, group));
                 check = true;
               }
@@ -293,6 +299,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group?.task?.forEach((task) => {
               if (task?.requireCompleted) {
                 task.progress = task?.progressOld;
+                task.status = task?.statusOld;
                 if (task?.isChange) {
                   progressData.push(this.setProgressOutput(null, group));
                 }
@@ -516,9 +523,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let isGroup = false;
       let isTask = false;
       if (!this.isRoleAll) {
-        isGroup = this.checRoleTask(groupTask, 'O');
+        isGroup = this.checRoleOwner(groupTask);
         if (!isGroup) {
-          isTask = this.checRoleTask(task, 'O');
+          isTask = this.checRoleOwner(task);
         }
       }
       event.forEach((res) => {
@@ -535,25 +542,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS03': //sửa
-            if (!this.isOnlyView) {
+            if (!(this.isRoleAll || isGroup || isTask)) {
               res.disabled = true;
             } else {
-              if (!(this.isRoleAll || isGroup || isTask)) {
+              if (task?.isTaskDefault && !this.isEditTimeDefault) {
                 res.disabled = true;
-              } else {
-                if (task?.isTaskDefault && !this.isEditTimeDefault) {
-                  res.disabled = true;
-                }
               }
             }
             break;
           case 'SYS04': //copy
-            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup))) {
               res.disabled = true;
             }
             break;
           case 'SYS003': //đính kèm file
-            if (!task?.isTaskDefault && !this.isOnlyView) {
+            if (!task?.isTaskDefault) {
               res.isblur = true;
             }
             break;
@@ -649,7 +652,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (event != null) {
       let isGroup = false;
       if (!this.isRoleAll) {
-        isGroup = this.checRoleTask(group, 'O');
+        isGroup = this.checRoleOwner(group);
       }
       event.forEach((res) => {
         switch (res.functionID) {
@@ -674,7 +677,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS04': //copy
-            if (!this.isRoleAll || !this.isOnlyView) {
+            if (!this.isRoleAll) {
               res.disabled = true;
             }
             break;
@@ -689,7 +692,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP08': // thêm công việc
-            if (!((this.isRoleAll || isGroup) && this.isOnlyView)) {
+            if (!((this.isRoleAll || isGroup))) {
               res.isblur = true;
             }
             break;
@@ -1194,6 +1197,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isEditTimeDefault: this.currentStep?.leadtimeControl,
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isStart: this.isStart,
+      isBoughtTM: this.isBoughtTM,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
@@ -1321,7 +1325,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       groupCopy['isTaskDefault'] = false;
       let taskOutput = await this.openPopupGroup('copy', groupCopy);
-      if (taskOutput?.event.groupTask) {
+      if (taskOutput?.event?.groupTask) {
         let data = taskOutput?.event;
         this.currentStep?.taskGroups?.push(data.groupTask);
         this.currentStep.tasks =
@@ -1475,9 +1479,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return;
     }
     let askUpdateParent = false;
-    let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some(
-      (id) => id == data?.taskGroupID
-    );
+    let checkUpdateGroup = this.listRecIDGroupUpdateProgress.some((id) => id == data?.taskGroupID);
     if (type != 'P' && type != 'G') {
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
@@ -1592,6 +1594,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (dataProgress) {
       if (dataProgress?.type == 'P') {
         this.updateDataProgress(data, dataProgress);
+        if(dataProgress?.progressStep == 100){
+          this.isSuccessStep.emit(true);
+        }
       } else if (dataProgress?.type == 'G') {
         this.updateDataProgress(data, dataProgress);
         let groupData = this.currentStep?.taskGroups?.find(
@@ -1603,6 +1608,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataProgress?.isUpdate) {
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
+          if(dataProgress?.progressStep == 100){
+            this.isSuccessStep.emit(true);
+          }
         }
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
@@ -1644,6 +1652,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
+          if(dataProgress?.progressStep == 100){
+            this.isSuccessStep.emit(true);
+          }
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
@@ -1756,13 +1767,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   //#region cheack
-  checRoleTask(data, type) {
-    return (
-      data.roles?.some(
-        (element) =>
-          element?.objectID == this.user.userID && element.roleType == type
-      ) || false
-    );
+  checRoleOwner(data) {
+    return this.user.userID == data?.owner;
   }
 
   checkTaskLink(task) {
@@ -2173,38 +2179,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           });
       }
     });
-
-    // let option = new DialogModel();
-    // option.FormModel = this.frmModelInstancesTask;
-    // this.callfc
-    //   .openForm(
-    //     CodxAddBookingCarComponent,
-    //     '',
-    //     600,
-    //     800,
-    //     '',
-    //     null,
-    //     '',
-    //     option
-    //   )
-    // .closed.subscribe((returnData) => {
-    //   if (!this.calendarType) {
-    //     this.calendarType = this.defaultCalendar;
-    //   }
-    //   if (returnData.event) {
-    //     this.api
-    //       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-    //         this.calendarType,
-    //       ])
-    //       .subscribe((res: any) => {
-    //         if (res) {
-    //           this.getDataAfterAddEvent(res);
-    //         }
-    //         this.detectorRef.detectChanges();
-    //       });
-    //   }
-    // });
   }
+
   showGuide(p) {
     p.close();
     let option = new DialogModel();
@@ -2241,5 +2217,27 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   setNameTypeTask(taskType){
     let type = this.listTaskType?.find(task => task?.value == taskType);
     return type?.text;
+  }
+  getDefaultCM() {
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+        }
+      });
+  }
+  getFields(listField, fieldID){
+    if(listField?.length > 0){
+      let a = listField?.filter(field => fieldID.includes(field?.recID));
+      return a;
+    }
+    return null;
   }
 }

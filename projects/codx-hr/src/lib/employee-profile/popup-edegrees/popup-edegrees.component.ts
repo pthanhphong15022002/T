@@ -50,7 +50,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   //@ViewChild('listView') listView: CodxListviewComponent;
-  ops = ['m', 'y'];
+  ops = ['d', 'm', 'y'];
   date = new Date();
 
   constructor(
@@ -102,6 +102,14 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         this.degreeObj.trainTo = strDay;
       }
       this.degreeObj.trainToDate = event.fromDate;
+    }
+    this.formGroup.patchValue(this.degreeObj);
+    if (this.degreeObj) {
+      this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
     }
   }
 
@@ -209,6 +217,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.cr.detectChanges();
         }
       });
+  }
+
+  onInit(): void {
     if (this.degreeObj) {
       this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
@@ -216,9 +227,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.fromDateFormat = this.getFormatDate(null);
       this.toDateFormat = this.getFormatDate(null);
     }
-  }
-
-  onInit(): void {
     if (!this.formModel)
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;

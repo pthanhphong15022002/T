@@ -78,7 +78,7 @@
         <div>
           <ejs-combobox
             #sample
-            [dataSource]="listGroupTask"
+            [dataSource]="listGroupTaskCombobox"
             (change)="changeCombobox($event, 'taskGroupID')"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
@@ -281,17 +281,39 @@
       </div>
       <div>
         <ejs-multiselect
-          #multiselect 
           [dataSource]="listTaskLink"
           [mode]="'Default'"
           [fields]="fieldsTask"
           [value]="listParentID"
           (valueChange)="parentIDChange($event)"
+          [showDropDownIcon]="true"
         ></ejs-multiselect>
         <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
     </div>
 
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="fieldID"
+          [formModel]="form?.formModel"
+          default="Trường tùy chỉnh"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-multiselect
+          [dataSource]="listFields"
+          [mode]="'Default'"
+          [fields]="fieldsFields"
+          [value]="listFieldID"
+          (valueChange)="fieldIDChange($event)"
+          [showDropDownIcon]="true"
+        ></ejs-multiselect>
+        <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
+      </div>
+    </div>
+    
     <div class="form-group">
       <div>
         <codx-label
@@ -403,7 +425,7 @@
       </codx-input>
     </div>
 
-    <div class="d-flex align-items-center mb-2">
+    <div class="d-flex align-items-center mb-2" *ngIf="isBoughtTM">
       <codx-input
         type="switch"
         [checked]="stepsTasks?.createTask"
@@ -414,6 +436,7 @@
       <span class="ms-3">
         <codx-label
           name="lblAlert"
+          fiedName="createTask"
           [formModel]="form.formModel"
           default="Tạo task trong phân hệ quản lý công việc"
         >

@@ -195,7 +195,7 @@
             >
           </ng-container>
           <ng-container
-            *ngIf="formModel.funcID != 'ODT42'; else tmpApprovalStatus"
+            *ngIf="funcList?.runMode != '1'; else tmpApprovalStatus"
           >
             <codx-vll
               [showText]="true"

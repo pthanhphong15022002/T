@@ -41,7 +41,7 @@
       </e-tabitems>
     </ejs-tab>
     <ejs-tab
-      tabindex="-1"
+      tabIndex="-1"
       heightAdjustMode="Fill"
       class="overflow-auto mb-4"
       #tab
@@ -74,6 +74,7 @@
         >
           <i class="icon-i-pencil-square w-20px h-20px me-2"></i>
           <codx-input
+            tab-index="8"
             style="width: 100%"
             class="fw-bold border-0"
             [Group]="form.formGroup"
@@ -264,7 +265,7 @@
             </div>
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                <codx-label [setRequire]="journal.assignRule === '2' ? false : true" fiedName="VoucherNo" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input
                   [Group]="form.formGroup"
@@ -286,41 +287,33 @@
 
 <!-- Start:VouchersLine -->
 <ng-template #tabLine>
-  <ng-container *ngIf="modeGrid == '1'">
+  <ng-container>
     <div class="position-relative h-100">
       <codx-gridview-v2
-        #gridVouchersLine
+        #grvVouchersLine
         [formName]="fmVouchersLines.formName"
         [gridViewName]="fmVouchersLines.gridViewName"
         [entityName]="fmVouchersLines.entityName"
         [templateMore]="morefunction"
         [editSettings]="editSettings"
         predicates="TransID=@0"
-        [allowFiltering]="true"
-        [allowSorting]="true"
-        [dataValues]="form.data.recID"
-        [dataSource]="vouchersLines"
+        [dataValues]="vouchers.recID"
         service="IV"
-        [autoLoad]="false"
-        [autoFitColumns]="false"
-        [autoAddRow]="false"
         [showEmptyRecord]="false"
         [showRowNumber]="true"
         [editOnClick]="true"
-        [isCustom]="false"
         (eventAction)="endEdit($event)"
         (gridInit)="gridInit($event)"
-        (onAddNew)="onSaveLine($event, 'isAddNew')"
-        (onEdit)="onSaveLine($event, 'isEdit')"
         (cellChanged)="lineChanged($event)"
       ></codx-gridview-v2>
 
       <div #btnRef class="btn-addline">
         <button
+          style="border: 1px solid !important;"
           id="btnadd"
           type="button"
-          tabindex="8"
-          class="btn btn-sm btn-light-primary"
+          tab-index="7"
+          class="btn btn-sm btn-light-primary rounded-15"
           (keydown.enter)="addVoucherLine(); $event.preventDefault()"
           (click)="addVoucherLine()"
         >
@@ -333,7 +326,7 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="form?.formGroup && modeGrid == 2 && gridViewSetupLine">
+  <!-- <ng-container *ngIf="form?.formGroup && modeGrid == 2">
     <div class="table-responsive table-content mt-3">
       <table
         style="table-layout: fixed"
@@ -667,8 +660,12 @@
       </table>
       <div #btnRef class="btn-addline" style="top: -38px">
         <button
+          style="border: 1px solid !important;"
+          id="btnadd"
           type="button"
-          class="btn btn-sm btn-light-primary"
+          tab-index="7"
+          class="btn btn-sm btn-light-primary rounded-15"
+          (keydown.enter)="addVoucherLine(); $event.preventDefault()"
           (click)="addVoucherLine()"
         >
           <i class="icon-playlist_add icon-16"></i>
@@ -692,7 +689,7 @@
         >Tổng cộng: {{ total.toLocaleString("it-IT") }}</span
       >
     </div>
-  </div>
+  </div> -->
 </ng-template>
 <!-- End: VouchersLine -->
 
@@ -724,16 +721,17 @@
       class="d-flex align-items-center justify-content-end btn-ac-footer mt-1"
     >
       <button
-        *ngIf="formType != 'edit'"
+        *ngIf="formType != 'edit' && hasSaved == true"
+        tab-index="9"
         style="border: 1px solid"
-        tabindex="9"
         id="discard"
         type="button"
-        class="btn btn-md btn-light-danger me-2"
+        class="btn btn-md btn-light-danger me-2 rounded-15"
+        (keydown.enter)="onDiscard(); $event.preventDefault()"
         (click)="onDiscard()"
       >
         <div class="d-flex align-items-center">
-          <i class="icon-delete_outline icon-16"></i>
+          <i class="icon-cancel icon-16"></i>
           <codx-label
             class="fw-normal"
             fiedName="lblDiscard"
@@ -744,9 +742,10 @@
       <button
         *ngIf="formType != 'edit'"
         style="border: 1px solid var(--primary-dark) !important"
-        tabindex="10"
+        tab-index="10"
         type="button"
-        class="btn btn-md btn-light-primary me-2"
+        class="btn btn-md btn-light-primary me-2 rounded-15"
+        (keydown.enter)="onSaveAdd(); $event.preventDefault()"
         (click)="onSaveAdd()"
       >
         <div class="d-flex align-items-center">
@@ -760,10 +759,11 @@
       </button>
       <button
         id="save"
-        tabindex="11"
+        tab-index="11"
         type="button"
-        class="btn btn-md btn-primary"
-        style="min-width: 60px"
+        class="btn btn-md btn-light-primary rounded-15"
+        style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSave(); $event.preventDefault()"
         (click)="onSave()"
       >
         <div class="d-flex align-items-center">
@@ -788,6 +788,7 @@
     [formModel]="form.formModel"
     [objectID]="vouchers.recID"
     [funcID]="form.formModel.funcID"
+    [TabControl]="tabInfo"
   ></codx-tabs>
 </ng-template>
 <!-- End: Tab Referen -->
@@ -823,57 +824,6 @@
         </div>
       </div>
       <div class="d-flex align-items-center me-3">
-        <!-- <div class="d-flex align-items-center justify-content-end">
-          <div *ngIf="formType != 'edit'" class="ms-2">
-            <button
-              type="button"
-              class="btn btn-md btn-light-primary"
-              (click)="onSaveAdd()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-add_to_photos icon-16"></i>
-                <codx-label
-                  class="fw-normal"
-                  fiedName="lblSave"
-                  default="Lưu & thêm"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-          <div class="ms-2 me-2">
-            <button
-              type="button"
-              class="btn btn-md btn-primary"
-              style="min-width: 60px"
-              (click)="onSave()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-save_alt icon-16"></i>
-                <codx-label
-                  class="fw-normal"
-                  fiedName="lblSave"
-                  default="Lưu"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-          <div *ngIf="vouchers?.status == '0'" class="ms-2">
-            <button
-              type="button"
-              class="btn btn-md btn-danger"
-              (click)="onDiscard()"
-            >
-              <div class="d-flex align-items-center">
-                <i class="icon-settings_backup_restore icon-18"></i>
-                <codx-label
-                  class="fs-6 fw-normal"
-                  fiedName="lblDiscard"
-                  default="Hủy bỏ"
-                ></codx-label>
-              </div>
-            </button>
-          </div>
-        </div> -->
         <div class="ms-2">
           <div
             class="btn btn-icon btn-light-danger btn-circle bg"
@@ -884,6 +834,42 @@
         </div>
       </div>
     </div>
+    <ng-container>
+      <div
+        style="margin-left: 30px"
+        *ngIf="formType == 'add' || vouchers?.status == '0'"
+        class="input-circle h-20px input-border-0 w-400px mb-1"
+      >
+        <codx-dropdown-select
+          #cbxSub
+          [isToolbar]="false"
+          [cssClass]="'border-0'"
+          cssPopup="h-350px w-550px"
+          [isMulti]="false"
+          type="valuelist"
+          field="subType"
+          [refValue]=""
+          [value]="vouchers.subType"
+          emptyText="Loại phiếu"
+          (valueChange)="subTypeChange($event)"
+        ></codx-dropdown-select>
+      </div>
+      <span
+        style="margin-left: 30px"
+        *ngIf="formType == 'edit' && vouchers?.status != '0'"
+      >
+        <codx-vll
+          [name]=""
+          [formModel]="form.formModel"
+          [field]="'SubType'"
+          [value]="vouchers?.subType"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light-primary badge-lg mt-1"
+        >
+        </codx-vll>
+      </span>
+    </ng-container>
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->

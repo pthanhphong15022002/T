@@ -23,6 +23,8 @@ import {
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-add-stask',
@@ -71,6 +73,16 @@ export class CodxAddTaskComponent implements OnInit {
   showLabelAttachment = false;
   isStatusNew = true;
   isStart = false;
+  isBoughtTM = false;
+
+  listFieldCopy = [];
+  listField = [];
+
+  isShowDate = false;
+  isShowTime = false;
+  isAddTM = false;
+  startDayOld;
+  endDayOld;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -83,11 +95,13 @@ export class CodxAddTaskComponent implements OnInit {
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
     private authStore: AuthStore,
     private stepService: StepService,
+    private adService: CodxAdService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -99,10 +113,11 @@ export class CodxAddTaskComponent implements OnInit {
     this.action = dt?.data?.action;
     this.isStart = dt?.data?.isStart
     this.typeTask = dt?.data?.taskType;
+    this.ownerParenr = dt?.data?.owner;
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
+    this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
-    this.ownerParenr = dt?.data?.owner;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave =
@@ -138,16 +153,39 @@ export class CodxAddTaskComponent implements OnInit {
     }
 
     this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
-    this.participant = this.roles?.filter((role) => role.roleType !== this.stepsTasks?.owner);
+    this.participant = this.roles?.filter((role) => role.objectID !== this.stepsTasks?.owner);
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
       this.stepsTasks.status = "1";
+      this.stepsTasks.createTask = this.isBoughtTM;
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
       }
+    }
+    if(this.step?.fields?.length > 0 && this.stepsTasks?.fieldID){
+      let fieldID = this.stepsTasks?.fieldID;
+      this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields)); 
+      this.listField = this.listFieldCopy?.filter((field) => fieldID?.includes(field?.recID));
+    }
+    this.checkStatusShowForm();
+    if(this.isBoughtTM == undefined){
+      this.adService
+        .getLstBoughtModule()
+        .subscribe((res: Array<TN_OrderModule>) => {
+          if (res) {
+            let lstModule = res;
+            this.isBoughtTM = lstModule?.some(
+              (md) =>
+                !md?.boughtModule?.refID &&
+                md.bought &&
+                md.boughtModule?.moduleID == 'TM1'
+            );
+            this.stepsTasks.createTask = this.isBoughtTM;
+          }
+        });
     }
   }
 
@@ -425,6 +463,15 @@ export class CodxAddTaskComponent implements OnInit {
   valueChangeRadio(event){
     this.stepsTasks.status = event?.field ;
     this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
+    if(event?.field == "3"){
+      [this.startDayOld,this.endDayOld] =  [this.stepsTasks?.startDate,this.stepsTasks?.endDate];
+      [this.stepsTasks.startDate,this.stepsTasks.endDate] = [null, null];
+    }
+    if(event?.field == "1"){
+      this.stepsTasks.startDate = this.startDayOld ? this.startDayOld : this.stepsTasks?.startDate;
+      this.stepsTasks.endDate = this.endDayOld ? this.endDayOld : this.stepsTasks?.endDate;
+    }
+    this.checkStatusShowForm();
   }
   //#region save
   async beforeSave() {
@@ -439,21 +486,24 @@ export class CodxAddTaskComponent implements OnInit {
       this.notiService.notifyCode('DP020');
       return;
     }
+
+    if (!this.stepsTasks['taskName']?.trim()) {
+      message.push(this.view['taskName']);
+    }
+    if (this.stepsTasks?.roles?.length <= 0) {
+      message.push(this.view['roles']);
+    }
+
     if(this.isStart){
-      for (let key of this.REQUIRE) {
-        if (
-          (typeof this.stepsTasks[key] === 'string' &&
-            !this.stepsTasks[key].trim()) ||
-          !this.stepsTasks[key] ||
-          this.stepsTasks[key]?.length === 0
-        ) {
-          message.push(this.view[key]);
+      if(this.stepsTasks?.status != '3'){
+        if (!this.stepsTasks?.startDate) {
+          message.push(this.view['startDate']);
+        }
+        if (!this.stepsTasks?.endDate) {
+          message.push(this.view['endDate']);
         }
       }
     }else{
-      if (!this.stepsTasks['taskName']?.trim()) {
-        message.push(this.view['taskName']);
-      }
       if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
         message.push(this.view['durationDay']);
       }
@@ -505,9 +555,10 @@ export class CodxAddTaskComponent implements OnInit {
   editTask(task) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', task)
+        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [task, this.listField])
         .subscribe((res) => {
           if (res) {
+          this.step.fields = this.listFieldCopy;
             this.dialog.close({
               task: res,
               progressGroup: null,
@@ -520,4 +571,97 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   //#endregion
+  addFileCompleted(e) {
+    // this.isAddComplete = e;
+  }
+  valueChangeCustom(event) {
+    if (event && event.e && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'R':
+        case 'A':
+          result = event.e;
+          break;
+      }
+
+      var index = this.listField.findIndex((x) => x.recID == field.recID);
+      if (index != -1) {
+        this.listField[index].dataValue = result;
+      }
+      let a = this.step?.fields;
+    }
+  }
+
+  checkFormat(field) {
+    if (field.dataType == 'T') {
+      if (field.dataFormat == 'E') {
+        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!field.dataValue.toLowerCase().match(validEmail)) {
+          //this.notiService.notifyCode('SYS037');
+          this.cache.message('SYS037').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+      if (field.dataFormat == 'P') {
+        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+        if (!field.dataValue.toLowerCase().match(validPhone)) {
+          // this.notiService.notifyCode('RS030');
+          this.cache.message('RS030').subscribe((res) => {
+            if (res) {
+              let errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  checkStatusShowForm(){
+    if(this.action == 'add' || this.action == 'copy'){
+      if(this.isStart){
+        if(this.stepsTasks.status == '3'){
+          this.isShowDate = false;
+          this.isShowTime = false;
+          this.isAddTM = false;
+        }else{
+          this.isShowDate = true;
+          this.isShowTime = true;
+          this.isAddTM = true;
+        }
+      }else{
+        this.isShowDate = false;
+        this.isShowTime = true;
+        this.isAddTM = true;
+      }
+    }else{//edit
+      if(this.isStart){
+        if(!this.stepsTasks?.endDate || !this.stepsTasks?.startDate){
+          this.isShowDate = false;
+          this.isShowTime = false;
+          this.isAddTM = false;
+        }else{
+          this.isShowDate = true;
+          this.isShowTime = true;
+          this.isAddTM = true;
+        }
+      }else{
+        this.isShowDate = false;
+        this.isShowTime = true;
+        this.isAddTM = true;
+      }
+    }
+  }
 }

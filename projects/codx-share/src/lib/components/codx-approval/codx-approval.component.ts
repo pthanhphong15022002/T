@@ -101,6 +101,7 @@ export class CodxApprovalComponent
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
       { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
     this.views = [
       {
@@ -371,8 +372,9 @@ export class CodxApprovalComponent
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          if (x.event?.result) {
-            data.status = x.event?.mode;
+          if (x.event?.rowCount>0 && x.event?.msgCodeError==null) {
+            //return ResponseModel            
+            data.status = x.event?.returnStatus;
             this.view.dataService.update(data).subscribe();
             this.esService.setupChange.next(true);
             this.esService.isStatusChange.subscribe((res) => {

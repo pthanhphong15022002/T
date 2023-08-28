@@ -393,7 +393,9 @@ export class CasesComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        eventItem.isblur = data.approveStatus == '3';
+        eventItem.isblur =
+          data.approveStatus == '3' &&
+          (this.funcID == 'CM0401' || this.funcID == 'CM0402'); // de duyet ko bị isblur more
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -1494,13 +1496,26 @@ export class CasesComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData: any;
+    let formatDatas = data.datas ?? '';
+    let customData = {
+      refID: data.recID,
+      refType: this.view.entityName,
+      dataSource: formatDatas,
+    };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: formatDatas,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1520,7 +1535,8 @@ export class CasesComponent
         this.afterSave,
         this.view.formModel,
         this.view.dataService,
-        this
+        this,
+        customData
       );
       this.detectorRef.detectChanges();
     }

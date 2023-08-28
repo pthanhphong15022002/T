@@ -91,9 +91,9 @@ export class LeadsComponent
 
   // data structure
   listCustomer: CM_Customers[] = [];
+  listCategory: any[] = [];
 
   // type of string
-  customerName: string = '';
   oldIdDeal: string = '';
 
   @Input() showButtonAdd = false;
@@ -115,11 +115,10 @@ export class LeadsComponent
   readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-  hideMoreFC = false;
+
   listHeader: any;
   oldIdContact: string = '';
   oldIdLead: string = '';
-  applyProcess: boolean = true;
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
@@ -136,7 +135,10 @@ export class LeadsComponent
   currencyIDDefault: any;
   statusDefault: any;
   valueListStatus: any;
+
   isLoading = false;
+  hideMoreFC = false;
+  applyProcess: boolean = true;
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
@@ -163,44 +165,12 @@ export class LeadsComponent
     this.button = {
       id: this.btnAdd,
     };
-    this.getProcessSetting();
   }
 
   ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     type: ViewType.listdetail,
-    //     sameData: true,
-    //     model: {
-    //       template: this.itemTemplate,
-    //       panelRightRef: this.templateDetail,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.kanban,
-    //     active: false,
-    //     sameData: false,
-    //     request: this.request,
-    //     request2: this.resourceKanban,
-    //     toolbarTemplate: this.footerButton,
-    //     model: {
-    //       template: this.cardKanban,
-    //       template2: this.viewColumKaban,
-    //       setColorHeader: true,
-    //     },
-    //   },
-    //   {
-    //     type: ViewType.grid,
-    //     active: false,
-    //     sameData: true,
-    //     model: {
-    //       resources: this.columnGrids,
-    //       template2: this.templateMore,
-    //       // frozenColumns: 1,
-    //     },
-    //   },
-    // ];
+    this.loadViewModel();
   }
+
   afterLoad() {
     this.request = new ResourceModel();
     this.request.service = 'CM';
@@ -219,14 +189,13 @@ export class LeadsComponent
   }
 
   executeApiCalls() {
-    try {
-      this.getFuncID(this.funcID);
-      this.getColorReason();
-      // this.getCurrentSetting();
-      this.getValuelistStatus();
-    } catch (error) {}
+    this.getFuncID(this.funcID);
+    this.getColorReason();
+    this.getValuelistStatus();
+    this.getValuelistCategory();
+    this.getProcessSetting();
   }
-  async getValuelistStatus() {
+  getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
       if (func) {
         this.valueListStatus = func.datas
@@ -238,6 +207,13 @@ export class LeadsComponent
       }
     });
   }
+  getValuelistCategory() {
+    this.cache.valueList('CRM058').subscribe((res) => {
+      if (res) {
+        this.listCategory = res.datas;
+      }
+    });
+  }
   async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
@@ -246,43 +222,44 @@ export class LeadsComponent
           this.processId = res.recID;
           this.dataObj = { processID: res.recID };
           this.afterLoad();
-          this.views = [
-            {
-              type: ViewType.listdetail,
-              sameData: true,
-              model: {
-                template: this.itemTemplate,
-                panelRightRef: this.templateDetail,
-              },
-            },
-            // {
-            //   type: ViewType.kanban,
-            //   active: false,
-            //   sameData: false,
-            //   request: this.request,
-            //   request2: this.resourceKanban,
-            //   // toolbarTemplate: this.footerButton,
-            //   model: {
-            //     template: this.cardKanban,
-            //     template2: this.viewColumKaban,
-            //     setColorHeader: true,
-            //   },
-            // },
-            {
-              type: ViewType.grid,
-              active: false,
-              sameData: true,
-              model: {
-                resources: this.columnGrids,
-                template2: this.templateMore,
-                // frozenColumns: 1,
-              },
-            },
-          ];
+          // this.views = [
+          //   {
+          //     type: ViewType.listdetail,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       template: this.itemTemplate,
+          //       panelRightRef: this.templateDetail,
+          //     },
+          //   },
+          //   // {
+          //   //   type: ViewType.kanban,
+          //   //   active: false,
+          //   //   sameData: false,
+          //   //   request: this.request,
+          //   //   request2: this.resourceKanban,
+          //   //   // toolbarTemplate: this.footerButton,
+          //   //   model: {
+          //   //     template: this.cardKanban,
+          //   //     template2: this.viewColumKaban,
+          //   //     setColorHeader: true,
+          //   //   },
+          //   // },
+          //   {
+          //     type: ViewType.grid,
+          //     active: false,
+          //     sameData: true,
+          //     model: {
+          //       // resources: this.columnGrids,
+          //       template2: this.templateMore,
+          //       // frozenColumns: 1,
+          //     },
+          //   },
+          // ];
         }
       });
   }
-  async getColorReason() {
+  getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
         for (let item of res.datas) {
@@ -296,9 +273,7 @@ export class LeadsComponent
     });
   }
 
-  async promiseByFuncID(formName, gridViewName) {}
-
-  async getGridViewSetup(formName, gridViewName) {
+  getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -309,7 +284,9 @@ export class LeadsComponent
       }
     });
   }
-  async getFuncID(funcID) {
+  getFuncID(funcID) {
+    //bua tam
+    // if (funcID == 'CM0504') funcID = 'CM0205';
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
@@ -324,7 +301,7 @@ export class LeadsComponent
       }
     });
   }
-  async getMoreFunction(formName, gridViewName) {
+  getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
@@ -333,38 +310,39 @@ export class LeadsComponent
   }
 
   onLoading(e) {
-    this.loadViewModel();
+    // this.loadViewModel();
   }
 
   loadViewModel() {
     this.views = [
       {
         type: ViewType.listdetail,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
         },
       },
-      {
-        type: ViewType.kanban,
-        active: false,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        // toolbarTemplate: this.footerButton,
-        model: {
-          template: this.cardKanban,
-          template2: this.viewColumKaban,
-          setColorHeader: true,
-        },
-      },
+      // {
+      //   type: ViewType.kanban,
+      //   active: false,
+      //   sameData: false,
+      //   request: this.request,
+      //   request2: this.resourceKanban,
+      //   // toolbarTemplate: this.footerButton,
+      //   model: {
+      //     template: this.cardKanban,
+      //     template2: this.viewColumKaban,
+      //     setColorHeader: true,
+      //   },
+      // },
       {
         type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
-          resources: this.columnGrids,
+          // resources: this.columnGrids,
           template2: this.templateMore,
           // frozenColumns: 1,
         },
@@ -400,7 +378,7 @@ export class LeadsComponent
     if ($event != null && data != null) {
       for (let eventItem of $event) {
         if (type == 11) eventItem.isbookmark = false;
-        eventItem.isblur = data.approveStatus == '3';
+        eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         if (mappingFunction) {
@@ -425,20 +403,26 @@ export class LeadsComponent
     let isCopy = (eventItem, data) => {
       // Thêm, xóa, copy
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data)
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
       // eventItem.disabled  = false;
     };
     let isEdit = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.write
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isDelete = (eventItem, data) => {
       // Chỉnh sửa
       eventItem.disabled = data.delete
-        ? data.closed || (data.status != '13' && this.checkMoreReason(data))
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
     };
     let isClosed = (eventItem, data) => {
@@ -463,7 +447,7 @@ export class LeadsComponent
     let isConvertLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['13', '3'].includes(data.status) || data.closed
+        ? !['13', '3', '2'].includes(data.status) || data.closed
         : true;
     };
     let isMergeLead = (eventItem, data) => {
@@ -492,7 +476,8 @@ export class LeadsComponent
     let isStartFirst = (eventItem, data) => {
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
-        ? !['3', '5'].includes(data.status)
+        ? (!['3', '5'].includes(data.status) && data.applyProcess) ||
+          !data.applyProcess
         : true;
     };
     let isChangeStatus = (eventItem, data) => {
@@ -503,11 +488,18 @@ export class LeadsComponent
 
     let isUpdateProcess = (eventItem, data) => {
       // Đưa quy trình vào sử dụng với tiềm năng  có quy trình
-      eventItem.disabled = data.applyProcess;
+      eventItem.disabled = data.full
+        ? data.closed ||
+          data.applyProcess ||
+          this.checkMoreReason(data) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
+        : true;
     };
     let isDeleteProcess = (eventItem, data) => {
       // Xóa quy trình đang sử dụng với tiềm năng ko có quy trình
-      eventItem.disabled = data.full ? data.closed || !data.applyProcess : true;
+      eventItem.disabled = data.full
+        ? data.closed || !data.applyProcess || this.checkMoreReason(data)
+        : true;
     };
 
     let isApprover = (eventItem, data) => {
@@ -726,10 +718,15 @@ export class LeadsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      var customData: any = null;
-      // var customData = {
-      //   refID: data.processID,
-      //   refType: 'DP_Processes',
+      // var customData: any = null;
+      // // var customData = {
+      // //   refID: data.processID,
+      // //   refType: 'DP_Processes',
+      // //   dataSource: '', // truyen sau
+      // // };
+      // this.customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Deals',
       //   dataSource: '', // truyen sau
       // };
       this.codxShareService.defaultMoreFunc(
@@ -738,8 +735,8 @@ export class LeadsComponent
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        // customData
       );
     }
   }
@@ -809,6 +806,7 @@ export class LeadsComponent
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected.applyProcess,
+      listCategory: this.listCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddLeadComponent,
@@ -819,7 +817,7 @@ export class LeadsComponent
       if (e && e.event != null) {
         e.event.modifiedOn = new Date();
         this.dataSelected = e.event;
-     //   this.detailViewLead.promiseAllLoad();
+        //   this.detailViewLead.promiseAllLoad();
         this.view.dataService.update(this.dataSelected).subscribe();
         this.changeDetectorRef.detectChanges();
       }
@@ -828,7 +826,7 @@ export class LeadsComponent
 
   edit(data) {
     if (data) {
-      this.view.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -846,6 +844,7 @@ export class LeadsComponent
           applyFor: this.applyForLead,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
+          listCategory: this.listCategory,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -929,6 +928,7 @@ export class LeadsComponent
                 action: 'edit',
                 title: this.titleAction,
                 gridViewSetup: res,
+                applyFor: this.applyForLead,
               };
               var dialog = this.callfc.openSide(
                 PopupConvertLeadComponent,
@@ -938,11 +938,15 @@ export class LeadsComponent
               dialog.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event) {
+                  this.dataSelected.salespersonID = e.event.salespersonID;
+                  this.dataSelected.consultantID = e.event.consultantID;
                   this.dataSelected.status = '11';
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
+                  this.dataSelected.applyProcess &&
+                    this.detailViewLead.reloadListStep(e.event.listStep);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1060,7 +1064,6 @@ export class LeadsComponent
       default:
         break;
     }
-    console.log('gộp: ', e);
   }
   //#endregion
 
@@ -1527,13 +1530,62 @@ export class LeadsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    let customData: any;
+    // let formatDatas = JSON.stringify(data);
+    //  let formatDatas = formatDatas.replace('\\', '');
+    // let datas = [
+    //   // {
+    //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //   // dia_chi: '06 Lê Lợi, Huế',
+    //   // ma_so_thue: '1111111111111',
+    //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //   // tai_khoan: 'VCB-012024554565',
+    //   // san_pham: 'Sản phẩm quần què',
+    //   // dien_tich: '0',
+    //   // so_luong: 1,
+    //   // don_gia: 100000,
+
+    //   // datas: [
+    //   {
+    //     customerID: 'Sản phẩm quần què 1',
+    //     Industries: '0',
+    //     BusinessLineID: 3333333333,
+    //     don_gia: 100000,
+    //   },
+    //   {
+    //     customerID: ' nhu ga',
+    //     Industries: '0',
+    //     BusinessLineID: 99999999,
+    //     don_gia: 5000,
+    //   },
+    //   // ,
+    //   // ],
+    //   //  }
+    // ];
+
+    // let formatDatas = JSON.stringify(datas);
+
+    let formatDatas = data.datas ?? '';
+    let customData = {
+      refID: data.recID,
+      refType: this.view.entityName,
+      dataSource: formatDatas,
+    };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
+
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: formatDatas,
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1553,7 +1605,8 @@ export class LeadsComponent
         this.afterSave,
         this.view.formModel,
         this.view.dataService,
-        this
+        this,
+        customData
       );
       this.detectorRef.detectChanges();
     }
@@ -1680,7 +1733,12 @@ export class LeadsComponent
       }
     });
   }
-  formatTitleMore(titleAction){
-    return  titleAction +' ' +  this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() + this.funcIDCrr.customName.slice(1);
-   }
+  formatTitleMore(titleAction) {
+    return (
+      titleAction +
+      ' ' +
+      this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() +
+      this.funcIDCrr.customName.slice(1)
+    );
+  }
 }

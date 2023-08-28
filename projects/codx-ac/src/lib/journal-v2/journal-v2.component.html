@@ -1,68 +1,142 @@
-<codx-views #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0" [dataValues]="status ? status : '1'" [autoLoad]="true">
+<codx-views
+  #view
+  [views]="views"
+  service="AC"
+  entityName="AC_Journals"
+  predicates="Status=@0"
+  [dataValues]="mainFilterValue ?? '1'"
+  [autoLoad]="true"
+>
 </codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="px-4 bg-body list-survey h-100">
-        <div class="d-flex justify-content-between py-2 hhder">
-            <div class="main-list">
-                <div class="my-3 d-flex justify-content-between flex-column">
-                    <div class="codx-breadcrumb">
-                        <ol class="breadcrumb breadcrumb-dash fs-3 fw-semibold">
-                            <li class="breadcrumb-item" *ngFor="let item of vll86">
-                                <a (click)="changePredicate(item.value,'status')" href="javascript:void(0)"
-                                    [ngClass]="item.value == statusFilter ? 'active': ''"
-                                    class="breadcrumb-text">{{item.text}}
-                                </a>
-                            </li>
-
-                        </ol>
-                    </div>
-                    <div class="codx-breadcrumb">
-                        <ol class="breadcrumb breadcrumb-dot fs-6 fw-semibold">
-                            <li class="breadcrumb-item" *ngFor="let item of vll85;let i = index"><a
-                                    href="javascript:void(0)" (click)="changePredicate(item.value,'module')"
-                                    class="text-muted">{{item.text}}</a>
-                                <i *ngIf="i < vll85.length" class="icon-i-caret-down-fill font-12"></i>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex align-items-center">
-                <codx-searchbar class="mt-1" (searchEvent)="search($event)"></codx-searchbar>
-                <div style="margin-top:5px">
-                    <codx-toolbar-button class="ms-1" *ngIf="button" [button]="button" (buttonClick)="add($event)">
-                    </codx-toolbar-button>
-                </div>
-                <codx-toolbar-choose class="mt-2 mx-2" [views]="subViews" (viewChange)="viewChanged($event)">
-                </codx-toolbar-choose>
-            </div>
+  <div class="px-4 bg-body list-survey h-100">
+    <div class="d-flex justify-content-between py-2 hhder">
+      <div class="main-list">
+        <div class="my-3 d-flex justify-content-between flex-column">
+          <div class="codx-breadcrumb">
+            <ol class="breadcrumb breadcrumb-dash fs-3 fw-semibold">
+              <li class="breadcrumb-item" *ngFor="let item of vll86">
+                <a
+                  (click)="changePredicate(item.value, 'mainFilterValue')"
+                  href="javascript:void(0)"
+                  [ngClass]="item.value == mainFilterValue ? 'active' : ''"
+                  class="breadcrumb-text"
+                  >{{ item.text }}
+                </a>
+              </li>
+            </ol>
+          </div>
+          <div class="codx-breadcrumb">
+            <ol class="breadcrumb breadcrumb-dot fs-6 fw-semibold">
+              <li
+                class="breadcrumb-item"
+                [ngClass]="
+                  item.value === subFilterValue ? 'text-dark' : 'text-muted'
+                "
+                *ngFor="let item of vll85; let i = index"
+              >
+                <a
+                  href="javascript:void(0)"
+                  (click)="changePredicate(item.value, 'subFilterValue')"
+                  style="color: inherit"
+                  >{{ item.text }}</a
+                >
+                <i
+                  class="icon-i-caret-down-fill font-12"
+                  style="color: inherit"
+                ></i>
+              </li>
+            </ol>
+          </div>
         </div>
-        <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-            data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper"
-            data-kt-scroll-offset="0px">
-            <div class="h-100" [ngStyle]="viewActive == ViewType.list ? '':{'display': 'none'}"
-                *ngIf="viewComponent.includes(ViewType.list)">
-                <codx-listview #cardView [itemTemplate]="itemTemplate" type="listView" funcId="ACT" service="AC"
-                    entityName="AC_Journals" ngClass="py-5" [dataService]="view.dataService">
-                </codx-listview>
-            </div>
-
-            <div class="h-100" [ngStyle]="viewActive == ViewType.smallcard ?'': {'display': 'none'}"
-                *ngIf="viewComponent.includes(ViewType.smallcard)">
-                <codx-listview [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
-                    entityName="AC_Journals" ngClass="py-5" [dataService]="view.dataService">
-                </codx-listview>
-            </div>
-            <div class="h-100" [ngStyle]="viewActive == ViewType.grid ?'': {'display': 'none'}"
-                *ngIf="viewComponent.includes(ViewType.grid)">
-                <codx-gridview-v2 #grid [itemTemplate]="templateListCard" type="cardView"
-                    [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" funcId="ACT"
-                    service="AC" [dataSource]="view.dataService.data" [isMainView]="true" ngClass="py-5">
-                </codx-gridview-v2>
-            </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-searchbar
+          class="mt-1"
+          (searchEvent)="search($event)"
+        ></codx-searchbar>
+        <div style="margin-top: 5px">
+          <codx-toolbar-button
+            class="ms-1"
+            *ngIf="button"
+            [button]="button"
+            (buttonClick)="add($event)"
+          >
+          </codx-toolbar-button>
         </div>
+        <codx-toolbar-choose
+          class="mt-2 mx-2"
+          [views]="subViews"
+          (viewChange)="viewChanged($event)"
+        >
+        </codx-toolbar-choose>
+      </div>
     </div>
+    <div
+      class="row"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".hhder, .header"
+      data-kt-scroll-wrappers=".wrapper"
+      data-kt-scroll-offset="0px"
+    >
+      <div
+        class="h-100"
+        [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }"
+        *ngIf="viewComponent.includes(ViewType.list)"
+      >
+        <codx-listview
+          #cardView
+          [itemTemplate]="itemTemplate"
+          type="listView"
+          funcId="ACT"
+          service="AC"
+          entityName="AC_Journals"
+          ngClass="py-5"
+          [dataService]="view.dataService"
+        >
+        </codx-listview>
+      </div>
+
+      <div
+        class="h-100"
+        [ngStyle]="viewActive == ViewType.smallcard ? '' : { display: 'none' }"
+        *ngIf="viewComponent.includes(ViewType.smallcard)"
+      >
+        <codx-listview
+          [itemTemplate]="templateListCard"
+          type="cardView"
+          funcId="ACT"
+          service="AC"
+          entityName="AC_Journals"
+          ngClass="py-5"
+          [dataService]="view.dataService"
+        >
+        </codx-listview>
+      </div>
+      <div
+        class="h-100"
+        [ngStyle]="viewActive == ViewType.grid ? '' : { display: 'none' }"
+        *ngIf="viewComponent.includes(ViewType.grid)"
+      >
+        <codx-gridview-v2
+          #grid
+          [itemTemplate]="templateListCard"
+          type="cardView"
+          [gridViewName]="view.formModel.gridViewName"
+          [entityName]="view.formModel.entityName"
+          funcId="ACT"
+          service="AC"
+          [dataSource]="view.dataService.data"
+          [isMainView]="true"
+          ngClass="py-5"
+        >
+        </codx-gridview-v2>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #templateListCard let-data>

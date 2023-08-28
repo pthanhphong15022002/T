@@ -1,0 +1,501 @@
+<ng-container *ngIf="dataSelected?.recID; else noData">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelected"
+    [hideMF]="funcID == 'WR0101'"
+    [footer]="tabs"
+    (changeDataMF)="changeDataMF($event, dataSelected)"
+    (clickMF)="clickMF($event, dataSelected)"
+  >
+    <ng-template #header let-data>
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="mb-2">
+          <div class="d-flex align-items-center">
+            <span
+              class="icon-corporate_fare icon-16 me-2"
+              [ngbTooltip]="OrderNo"
+              ><ng-template #OrderNo>
+                <codx-label
+                  [setRequire]="false"
+                  fiedName="OrderNo"
+                  [formModel]="formModel"
+                ></codx-label> </ng-template
+            ></span>
+            <span
+              class="text-dark fs-6 fw-bold"
+              [innerHTML]="
+                dataSelected?.orderNo
+                  | formatvalue : formModel : 'OrderNo'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mb-2">
+          <codx-mfunc
+            [hideMF]="false"
+            [dataItem]="dataSelected"
+            [formModel]="formModel"
+            (changeDataMF)="changeDataMF($event, dataSelected)"
+            (clickMF)="clickMF($event, dataSelected)"
+            [isBookMark]="true"
+            type="view"
+          ></codx-mfunc>
+        </div>
+      </div>
+
+      <div
+        class="d-flex align-items-center mb-2"
+        *ngIf="dataSelected?.recID && dataSelected?.category == '1'"
+      >
+        <span
+          class="fw-bold text-dark"
+          [innerHTML]="
+            dataSelected?.problem | formatvalue : formModel : 'Problem' | async
+          "
+        ></span>
+      </div>
+
+      <div class="container_detail">
+        <div class="d-flex w-100 cm-scroll-top mb-2">
+          <div class="me-3">
+            <codx-img
+              [objectId]="dataSelected.recID"
+              [objectName]="dataSelected.customerName"
+              [referType]="'avt'"
+              [imgOn]="dataSelected?.customerName"
+              [objectType]="entityName"
+              [width]="35"
+            >
+            </codx-img>
+          </div>
+          <div class="w-100">
+            <div class="d-flex flex-row justify-content-between">
+              <div>
+                <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+                  <div
+                    class="d-flex align-items-center mb-1"
+                    *ngIf="
+                      dataSelected.customerName != null &&
+                      dataSelected.customerName.trim() != ''
+                    "
+                  >
+                    <span
+                      class="text-gray-900"
+                      [innerHTML]="
+                        dataSelected?.customerName
+                          | formatvalue : formModel : 'CustomerName'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div
+                  [ngClass]="
+                    dataSelected?.category == '1'
+                      ? 'd-flex flex-column'
+                      : 'd-flex flex-column-reverse'
+                  "
+                >
+                  <div>
+                    <div
+                      [ngClass]="
+                        dataSelected?.category == '1'
+                          ? 'd-flex align-items-center mb-1'
+                          : 'd-flex align-items-center mt-1'
+                      "
+                      *ngIf="
+                        dataSelected.address != null &&
+                        dataSelected.address.trim() != ''
+                      "
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          dataSelected?.address
+                            | formatvalue : formModel : 'Address'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div
+                      class="d-flex align-items-center me-1"
+                      *ngIf="
+                        dataSelected?.recID && dataSelected?.category == '1'
+                      "
+                    >
+                      <span
+                        class="fw-bold text-dark"
+                        [innerHTML]="
+                          dataSelected?.contactName
+                            | formatvalue : formModel : 'ContactName'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center me-1"
+                      *ngIf="
+                        dataSelected.mobile != null &&
+                        dataSelected.mobile.trim() != ''
+                      "
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          dataSelected?.mobile
+                            | formatvalue : formModel : 'Mobile'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="
+                        dataSelected.email != null &&
+                        dataSelected.email.trim() != ''
+                      "
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          dataSelected?.email
+                            | formatvalue : formModel : 'Email'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column">
+                <div>
+                  {{ dataSelected.status }}
+                </div>
+                <div>
+                  <span
+                    class="text-gray-900"
+                    [innerHTML]="
+                      dataSelected?.lastUpdatedOn
+                        | formatvalue : formModel : 'lastUpdatedOn'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-flex flex-row justify-content-between w-100 cm-scroll-top mb-2"
+        >
+          <div class="w-100 mt-1">
+            <div class="mb-1">
+              <codx-label
+                name="lblProductInfo"
+                [formModel]="formModel"
+                class="fw-bold text-dark"
+                default="Product info"
+              ></codx-label>
+            </div>
+            <div class="d-flex flex-row">
+              <div class="me-3">
+                <codx-img
+                  [objectId]="dataSelected.recID"
+                  [objectName]="dataSelected.customerName"
+                  [referType]="'avt'"
+                  [imgOn]="dataSelected?.customerName"
+                  [objectType]="entityName"
+                  [width]="35"
+                >
+                </codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="mb-1">
+                  <codx-label
+                    style="white-space: nowrap"
+                    class="text-dark me-1"
+                    fiedName="ServiceTag"
+                    [formModel]="formModel"
+                  ></codx-label>
+                  <span
+                    class="text-dark fw-bold"
+                    [innerHTML]="
+                      dataSelected.serviceTag
+                        | formatvalue : formModel : 'ServiceTag'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div class="mb-1">
+                  <span
+                    class="text-dark me-1"
+                    [innerHTML]="
+                      dataSelected.productType
+                        | formatvalue : formModel : 'ProductType'
+                        | async
+                    "
+                  ></span>
+                  <span
+                    class="text-dark"
+                    [innerHTML]="
+                      dataSelected.productModel
+                        | formatvalue : formModel : 'ProductModel'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div
+                  *ngIf="
+                    dataSelected.productDesc != null &&
+                    dataSelected.productDesc.trim() != ''
+                  "
+                >
+                  <span
+                    class="text-gray-700"
+                    [innerHTML]="
+                      dataSelected?.productDesc
+                        | formatvalue : formModel : 'ProductDesc'
+                        | async
+                    "
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center w-100 mt-1">
+            <div class="mb-1">
+              <codx-label
+                name="lblServiceTeam"
+                [formModel]="formModel"
+                class="fw-bold text-dark"
+                default="Service team"
+              ></codx-label>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+              <codx-img
+                [objectId]="dataSelected.recID"
+                [objectName]="dataSelected.owner"
+                [referType]="'avt'"
+                [imgOn]="dataSelected?.owner"
+                [objectType]="entityName"
+                [width]="35"
+              >
+              </codx-img>
+              <codx-img
+                [objectId]="dataSelected.recID"
+                [objectName]="dataSelected.teamLeader"
+                [referType]="'avt'"
+                [imgOn]="dataSelected?.teamLeader"
+                [objectType]="entityName"
+                [width]="35"
+              >
+              </codx-img>
+              <codx-img
+                [objectId]="dataSelected.recID"
+                [objectName]="dataSelected.engineerID"
+                [referType]="'avt'"
+                [imgOn]="dataSelected?.engineerID"
+                [objectType]="entityName"
+                [width]="35"
+              >
+              </codx-img>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body let-data>
+      <div class="cm-scroll">
+        <div class="instance-select">
+          <ejs-tab
+            id="tab_adaptive"
+            #adaptiveTab
+            heightAdjustMode="None"
+            height="250px"
+          >
+            <e-tabitems>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-info text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Thông tin chung"
+                      [formModel]="formModel"
+                      name="lblInformation"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <codx-information
+                      [funcID]="funcID"
+                      [dataSelected]="dataSelected"
+                      [formModel]="formModel"
+                      [gridViewSetup]="gridViewSetup"
+                      [entityName]="entityName"
+                    >
+                    </codx-information>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-i-link text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Lịch sử hoạt động"
+                      [formModel]="formModel"
+                      name="lblHistory"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <!-- <cm-view-history-customer
+                        [customerID]="dataSelected.recID"
+                        [isRole]="
+                          !isAdmin ? user.userID == dataSelected.owner : true
+                        "
+                      ></cm-view-history-customer> -->
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-i-link text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Lịch sử hoạt động"
+                      [formModel]="formModel"
+                      name="lblHistory"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <!-- <cm-view-history-customer
+                        [customerID]="dataSelected.recID"
+                        [isRole]="
+                          !isAdmin ? user.userID == dataSelected.owner : true
+                        "
+                      ></cm-view-history-customer> -->
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-i-link text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Lịch sử hoạt động"
+                      [formModel]="formModel"
+                      name="lblHistory"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <!-- <cm-view-history-customer
+                        [customerID]="dataSelected.recID"
+                        [isRole]="
+                          !isAdmin ? user.userID == dataSelected.owner : true
+                        "
+                      ></cm-view-history-customer> -->
+                  </div>
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+          </ejs-tab>
+        </div>
+      </div>
+      <!-- <ng-template #tabIns let-name>
+          <div id="viewModeDetail" class="view-step-box">
+            <ng-container *ngIf="name == 'Deal'">
+              <codx-list-deals
+                [customerID]="dataSelected.recID"
+              ></codx-list-deals>
+            </ng-container>
+            <ng-container *ngIf="name == 'DealCompetitors'">
+              <codx-view-dealcompetitors
+                [competitorID]="dataSelected.recID"
+              ></codx-view-dealcompetitors>
+            </ng-container>
+            <ng-container *ngIf="name == 'Product'">
+              <ng-container [ngTemplateOutlet]="product"> </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'Quotations'">
+              <codx-quotations-tab-view
+                [funcID]="'CM0202'"
+                [showButton]="false"
+                [customerID]="dataSelected.recID"
+                [predicates]="'CustomerID==@0'"
+                [dataValues]="dataSelected.recID"
+                [disableCusID]="true"
+              ></codx-quotations-tab-view>
+            </ng-container>
+            <ng-container *ngIf="name == 'Contract'">
+              <ng-container
+                [ngTemplateOutlet]="contract"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="name == 'task'">
+              <ng-container
+                [ngTemplateOutlet]="taskTemplate"
+                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+              >
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template> -->
+    </ng-template>
+    <ng-template #tabs let-data>
+      <codx-tabs
+        [entityName]="entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelected.recID"
+        [funcID]="funcID"
+        [dataTree]="treeTask"
+        [funcIDQuotations]="'WR0101'"
+        [customerID]="dataSelected.recID"
+      ></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
+<ng-template #noData>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+            {{ dataSelected?.recID }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

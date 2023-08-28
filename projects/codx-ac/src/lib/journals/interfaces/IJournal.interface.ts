@@ -12,7 +12,7 @@ export interface IJournal {
   reasonID: string;
   status: string;
   voucherFormat: string;
-  assignRule: string;
+  assignRule: Vll075;
   allowEdited: boolean;
   invoiceForm: string;
   currencyID: string;
@@ -25,21 +25,21 @@ export interface IJournal {
   subControl: string;
   settleControl: string;
   brigdeAcctControl: string;
-  drAcctControl: string;
+  drAcctControl: Vll067;
   drAcctID: string;
-  crAcctControl: string;
+  crAcctControl: Vll067;
   crAcctID: string;
-  diM1Control: string;
-  diM2Control: string;
-  diM3Control: string;
+  diM1Control: Vll067;
+  diM2Control: Vll067;
+  diM3Control: Vll067;
   diM1: string;
   diM2: string;
   diM3: string;
   idimControl: string;
   isSettlement: boolean;
-  projectControl: string;
-  assetControl: string;
-  loanControl: string;
+  projectControl: Vll004;
+  assetControl: Vll004;
+  loanControl: Vll004;
   inputControl: string;
   productionControl: string;
   illegalControl: string;
@@ -72,7 +72,26 @@ export interface IJournal {
   hasImage: number;
   addNewMode: string;
   postingMode: string;
+  isTemplate: boolean;
   unbounds: any;
-  // postedDateControl: string;
   entryMode: string;
+}
+
+export enum Vll075 {
+  ThuCong = '0',
+  TuDongKhiTao = '1',
+  TuDongKhiLuu = '2',
+}
+
+export enum Vll067 {
+  KhongKiemSoat = '0',
+  GiaTriCoDinh = '1',
+  TrongDanhSach = '2',
+  TuyChon = '3',
+  MacDinh = '4',
+}
+
+export enum Vll004 {
+  KhongSuDung = '0',
+  CoSuDung = '1',
 }

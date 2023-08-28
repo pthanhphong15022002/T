@@ -212,44 +212,48 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEBenefit(this.benefitObj, this.useForQTNS)
-        .subscribe((p) => {
-          if (this.useForQTNS) {
-            if (p != null) {
-              this.notify.notifyCode('SYS006');
-              this.dialog && this.dialog.close(p);
-              p[0].emp = this.employeeObj;
-              if (p[1]) {
-                p[1].emp = this.employeeObj;
-              }
-            } else {
-              this.notify.notifyCode('SYS023');
+      this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
+        if (this.useForQTNS) {
+          if (p != null) {
+            this.notify.notifyCode('SYS006');
+            p[0].emp = this.employeeObj;
+            if (p[1]) {
+              p[1].emp = this.employeeObj;
             }
+            this.dialog && this.dialog.close(p);
           } else {
-            if (p != null) {
-              if (p.length > 1) {
-                this.benefitObj.recID = p[1].recID;
-              } else this.benefitObj.recID = p[0].recID;
-              this.notify.notifyCode('SYS006');
-              this.successFlag = true;
-              this.dialog && this.dialog.close(this.benefitObj);
-            }
+            this.notify.notifyCode('SYS023');
           }
-        });
+        } else {
+          if (p != null) {
+            if (p.length > 1) {
+              this.benefitObj.recID = p[1].recID;
+            } else this.benefitObj.recID = p[0].recID;
+            this.notify.notifyCode('SYS006');
+            this.successFlag = true;
+            this.dialog && this.dialog.close(this.benefitObj);
+          }
+        }
+      });
     } else {
-      this.hrService
-        .EditEBenefit(this.formModel.currentData, this.useForQTNS)
-        .subscribe((p) => {
-          if (p[0] != null) {
-            this.notify.notifyCode('SYS007');
-            if (this.useForQTNS) {
-              this.dialog && this.dialog.close(p);
-            } else {
-              this.dialog && this.dialog.close(this.benefitObj);
+      this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+        if (p[0] != null) {
+          this.notify.notifyCode('SYS007');
+          if (this.useForQTNS) {
+            console.log(p);
+
+            p[0].emp = this.employeeObj;
+            if (p[1]) {
+              p[1].emp = this.employeeObj;
             }
+
+            console.log(p);
+            this.dialog && this.dialog.close(p);
+          } else {
+            this.dialog && this.dialog.close(this.benefitObj);
           }
-        });
+        }
+      });
     }
   }
 

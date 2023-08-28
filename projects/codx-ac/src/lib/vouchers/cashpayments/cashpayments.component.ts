@@ -63,7 +63,7 @@ export class CashPaymentsComponent extends UIComponent {
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
   userID: any; //?  tên user đăng nhập
   dataCategory: any; //? data của category
-  journal: IJournal; //? data sổ nhật kí
+  journal: any; //? data sổ nhật kí
   totaltransAmt1: any = 0; //? tổng tiền nợ tab hạch toán
   totaltransAmt2: any = 0; //? tông tiền có tab hạch toán
   totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
@@ -74,8 +74,9 @@ export class CashPaymentsComponent extends UIComponent {
   vatInvoices: any; //? data của tab hóa đợn GTGT
   acctTrans: any; //? data của tab hạch toán
   baseCurr: any; //? đồng tiền hạch toán
+  legalName: any; //? tên công ty
   dataDefaultCashpayment: any; //? data default của phiếu
-  isLoadData: any = true; //? trạng thái load data
+  isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   fmCashPaymentsLines: FormModel = {
     //? formModel của cashpaymentlines
@@ -131,8 +132,11 @@ export class CashPaymentsComponent extends UIComponent {
     this.cache
       .companySetting()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+      .subscribe((res: any) => {
+        if (res.length > 0) {
+          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+          this.legalName = res[0].legalName; //? get tên company
+        }
       });
     this.router.queryParams
       .pipe(takeUntil(this.destroy$))
@@ -147,7 +151,7 @@ export class CashPaymentsComponent extends UIComponent {
     jsBh.login('accNet');
   }
   onInit(): void {
-    this.getDataDefaultVoucher(); // lấy data mặc định truyền vào form thêm
+    this.getDataDefaultVoucher(); //? lấy data mặc định truyền vào form thêm
   }
 
   ngAfterViewInit() {
@@ -155,12 +159,12 @@ export class CashPaymentsComponent extends UIComponent {
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res) this.headerText = res.defaultName; // lấy tên chứng từ (Phiếu chi)
+        if (res) this.headerText = res.defaultName; //? lấy tên chứng từ (Phiếu chi)
       });
 
     this.views = [
       {
-        type: ViewType.listdetail, // thiết lập view danh sách chi tiết
+        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
         active: true,
         sameData: true,
 
@@ -170,7 +174,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.list, // thiết lập view danh sách
+        type: ViewType.list, //? thiết lập view danh sách
         active: true,
         sameData: true,
 
@@ -179,7 +183,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid, // thiết lập view lưới
+        type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
         model: {
@@ -198,8 +202,7 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
 
-    this.pageTitle.setChildren(pageLink);
-    // thiết lập cấu hình sidebar
+    //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
@@ -223,7 +226,7 @@ export class CashPaymentsComponent extends UIComponent {
         let ins = setInterval(() => {
           if (this.dataDefaultCashpayment) {
             clearInterval(ins);
-            this.addNewVoucher(); // thêm mới chứng từ
+            this.addNewVoucher(); //? thêm mới chứng từ
           }
         }, 200);
         setTimeout(() => {
@@ -241,31 +244,31 @@ export class CashPaymentsComponent extends UIComponent {
   clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.deleteVoucher(data); // xóa chứng từ
+        this.deleteVoucher(data); //? xóa chứng từ
         break;
       case 'SYS03':
-        this.editVoucher(data); // sửa chứng từ
+        this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        this.copyVoucher(data); // sao chép chứng từ
+        this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        this.exportVoucher(data); // xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT041002':
-        this.releaseVoucher(data); // gửi duyệt chứng từ
+        this.releaseVoucher(data); //? gửi duyệt chứng từ
         break;
       case 'ACT041004':
-        this.cancelReleaseVoucher(data); // hủy yêu cầu duyệt chứng từ
+        this.cancelReleaseVoucher(data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT041009':
-        this.validateVourcher(data); // kiểm tra tính hợp lệ chứng từ
+        this.validateVourcher(data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT041003':
-        this.postVoucher(data); // ghi sổ chứng từ
+        this.postVoucher(data); //? ghi sổ chứng từ
         break;
       case 'ACT041010':
-        this.printVoucher(data, e.functionID); // in chứng từ
+        this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
@@ -278,45 +281,22 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    this.dataDefaultCashpayment.recID = Util.uid(); // tạo recID mới
+    this.dataDefaultCashpayment.recID = Util.uid(); //? tạo recID mới
     let data = {
-      action: 'addNew', // trạng thái của form (thêm mới)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: { ...this.dataDefaultCashpayment }, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'add', //? trạng thái của form (thêm mới)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: { ...this.dataDefaultCashpayment }, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName, //? tên company
     };
-    if (this.journal.assignRule == '1') {
-      // nếu trường hợp chọn tự tạo số tự động từ sổ nhật ký
-      this.acService
-        .execApi(
-          'ERM.Business.AC',
-          'CommonBusiness',
-          'GenerateAutoNumberAsync',
-          this.journal.voucherFormat
-        )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res) {
-            data.dataCashpayment.voucherNo = res; // lấy số chứng từ tự động
-            this.callfc.openSide(
-              CashPaymentAdd,
-              data,
-              this.optionSidebar,
-              this.view.funcID
-            );
-          }
-        });
-    } else {
-      // nếu trường hợp chọn thủ công hoặc tạo trước khi lưu từ sổ nhật ký
-      this.callfc.openSide(
-        CashPaymentAdd,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
+    this.callfc.openSide(
+      CashPaymentAdd,
+      data,
+      this.optionSidebar,
+      this.view.funcID
+    );
   }
 
   /**
@@ -325,12 +305,13 @@ export class CashPaymentsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     let data = {
-      action: 'edit', // trạng thái của form (chỉnh sửa)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: { ...dataEdit }, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'edit', //? trạng thái của form (chỉnh sửa)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: { ...dataEdit }, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName, //? tên company
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -352,12 +333,13 @@ export class CashPaymentsComponent extends UIComponent {
    */
   copyVoucher(dataCopy) {
     let data = {
-      action: 'copy', // trạng thái của form (chỉnh sửa)
-      headerText: this.headerText, // tiêu đề voucher
-      journal: { ...this.journal }, //  data journal
-      dataCashpayment: { ...dataCopy }, //  data của cashpayment
-      hideFields: [...this.hideFields], // array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //  đồng tiền hạch toán
+      action: 'copy', //? trạng thái của form (chỉnh sửa)
+      headerText: this.headerText, //? tiêu đề voucher
+      journal: { ...this.journal }, //?  data journal
+      dataCashpayment: { ...dataCopy }, //?  data của cashpayment
+      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+      legalName: this.legalName, //? tên company
     };
     this.view.dataService.copy().subscribe((res: any) => {
       this.callfc.openSide(
@@ -532,13 +514,13 @@ export class CashPaymentsComponent extends UIComponent {
   changeTmpGridMF(event: any, data: any) {
     let arrBookmark = event.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ
-        x.functionID == 'ACT041002' || // MF gửi duyệt
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || // MF khôi phục
-        x.functionID == 'ACT042901' || // MF chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // MF in
-        x.functionID == 'ACT041009' // MF kiểm tra tính hợp lệ
+        x.functionID == 'ACT041003' || //? MF ghi sổ
+        x.functionID == 'ACT041002' || //? MF gửi duyệt
+        x.functionID == 'ACT041004' || //? MF hủy yêu cầu duyệt
+        x.functionID == 'ACT041008' || //? MF khôi phục
+        x.functionID == 'ACT042901' || //? MF chuyển tiền điện tử
+        x.functionID == 'ACT041010' || //? MF in
+        x.functionID == 'ACT041009' //? MF kiểm tra tính hợp lệ
     );
     if (arrBookmark.length > 0) {
       arrBookmark.forEach((element) => {
@@ -664,7 +646,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   getDatadetail(data) {
-    this.isLoadData = true; // bật progressbar của tab
+    //this.isLoadData = true; // bật progressbar của tab
     this.acctTrans = [];
     this.settledInvoices = [];
     this.vatInvoices = [];
@@ -676,10 +658,12 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.acctTrans = res?.lsAcctrants;
-          this.settledInvoices = res?.lsSettledInvoices;
-          this.vatInvoices = res?.lsVATInvoices;
-          this.isLoadData = false; // tắt progressbar của tab
+          this.acctTrans = res?.lsAcctrants ? res?.lsAcctrants : [];
+          this.settledInvoices = res?.lsSettledInvoices
+            ? res?.lsSettledInvoices
+            : [];
+          this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
+          //this.isLoadData = false; // tắt progressbar của tab
           this.detectorRef.detectChanges();
         }
       });
@@ -712,10 +696,19 @@ export class CashPaymentsComponent extends UIComponent {
             if (result?.msgCodeError == null && result?.rowCount) {
               this.notification.notifyCode('ES007');
               data.status = '3';
-              this.itemSelected = { ...data };
-              this.getDatadetail(this.itemSelected);
-              this.view.dataService.update(data).subscribe((res) => {});
-              this.detectorRef.detectChanges();
+              this.view.dataService.updateDatas.set(data['_uuid'], data);
+              this.view.dataService
+                .save(null, 0, '', '', false)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res: any) => {
+                  if (res && !res.update.error) {
+                    this.itemSelected = res.update.data;
+                    this.getDatadetail(this.itemSelected);
+                    this.detectorRef.detectChanges();
+                  }
+                });
+              // this.getDatadetail(this.itemSelected);
+              // this.view.dataService.update(data).subscribe((res) => {});
             } else this.notification.notifyCode(result?.msgCodeError);
           });
       });
@@ -732,19 +725,15 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
           this.notification.notifyCode('SYS034');
-          this.acService
-            .loadData('AC', 'CashPaymentsBusiness', 'UpdateStatusAsync', [
-              data,
-              '1',
-            ])
+          data.status = '1';
+          this.view.dataService.updateDatas.set(data['_uuid'], data);
+          this.view.dataService
+            .save(null, 0, '', '', false)
             .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.itemSelected = res;
+            .subscribe((res: any) => {
+              if (res && !res.update.error) {
+                this.itemSelected = res.update.data;
                 this.getDatadetail(this.itemSelected);
-                this.view.dataService
-                  .update(this.itemSelected)
-                  .subscribe((res) => {});
                 this.detectorRef.detectChanges();
               }
             });
@@ -757,13 +746,11 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   validateVourcher(data: any) {
-    this.acService
-      .execApi('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
-      .pipe(takeUntil(this.destroy$))
+    this.api
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
       .subscribe((res) => {
         if (res) {
-          data.status = '1';
-          this.itemSelected = data;
+          this.itemSelected = res;
           this.getDatadetail(this.itemSelected);
           this.view.dataService.update(this.itemSelected).subscribe();
           this.detectorRef.detectChanges();

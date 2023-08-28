@@ -94,31 +94,85 @@
     <div>
       <codx-label
         class="fs-5 fw-bold"
-        name="lblPercentageOfBusinessLinesByDeals"
+        name="lblPercentageOfDeals"
         default="Tỷ lệ phân bổ cơ hội"
       ></codx-label>
     </div>
-    <ng-container
-      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
-    >
-      <ejs-treemap
-        class="w-100"
-        style="display: block"
-        [dataSource]="dataSourceBussnessLine ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="palette"
-        [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${businessLineName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
-    </ng-container>
+    <div id="chartPercentageOfDeals" class="mt-3">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isBussinessLine ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btBussinessLine"
+            formModel="CMMyDashboard"
+            default="Dòng sản phẩm"
+            (click)="clickButton('btBussinessLine')"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="
+            !isBussinessLine ? 'button-selected' : 'button-no-selected'
+          "
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btIndustries"
+            formModel="CMMyDashboard"
+            default="Lĩnh vực hoạt động"
+            (click)="clickButton('btIndustries')"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+    <div class="w-100">
+      <ng-container *ngIf="isBussinessLine">
+        <ng-container
+          *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+        >
+          <ejs-treemap
+            class="w-100"
+            [dataSource]="dataSourceBussnessLine ?? []"
+            weightValuePath="quantity"
+            rangeColorValuePath="quantity"
+            [palette]="palette"
+            [leafItemSettings]="leafItemSettings"
+            [tooltipSettings]="{
+              visible: true,
+              format:
+                '${businessLineName}<br>${quantity} ' +
+                this.titLeModule +
+                '-(${percentage} %)'
+            }"
+          >
+          </ejs-treemap>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="!isBussinessLine">
+        <ng-container
+          *ngIf="dataDashBoard?.countsIndustries?.length > 0; else noData"
+        >
+          <ejs-treemap
+            class="w-100"
+            [dataSource]="dataSourceIndustry ?? []"
+            weightValuePath="quantity"
+            rangeColorValuePath="quantity"
+            [palette]="paletteIndustry"
+            [leafItemSettings]="leafItemSettingsIns"
+            [tooltipSettings]="{
+              visible: true,
+              format:
+                '${industryName}<br>${quantity} ' +
+                this.titLeModule +
+                '-(${percentage} %)'
+            }"
+          >
+          </ejs-treemap>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
 
@@ -137,7 +191,7 @@
     <div id="chartBusinessLinesButton" class="mt-3">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          [ngClass]="checkBtnSuscess ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="isSuccess ? 'button-selected' : 'button-no-selected'"
           class="btn-left py-1 d-flex justify-content-center align-items-center"
         >
           <codx-label
@@ -148,7 +202,7 @@
           ></codx-label>
         </div>
         <div
-          [ngClass]="checkBtnFail ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="!isSuccess ? 'button-selected' : 'button-no-selected'"
           class="btn-right py-1 d-flex justify-content-center align-items-center"
         >
           <codx-label
@@ -178,8 +232,9 @@
               *ngFor="let item of dataDashBoard?.countsBussinessLines"
             >
               <e-series
-                *ngIf="checkBtnSuscess"
-                [dataSource]="item?.chartDataSuscess ?? []"
+                [dataSource]="
+                  isSuccess ? item?.chartDataSuscess : item?.chartDataFail ?? []
+                "
                 type="Line"
                 xName="month"
                 yName="percentage"
@@ -188,8 +243,8 @@
                 [fillColor]="item.color"
               ></e-series>
 
-              <e-series
-                *ngIf="checkBtnFail"
+              <!-- <e-series
+                *ngIf="!isSuccess"
                 [dataSource]="item?.chartDataFail ?? []"
                 type="Line"
                 xName="month"
@@ -197,7 +252,7 @@
                 [name]="item.businessLineName"
                 width="3"
                 [fillColor]="item.color"
-              ></e-series>
+              ></e-series> -->
             </ng-container>
           </e-series-collection>
         </ejs-chart>
@@ -220,7 +275,7 @@
     <div class="mt-5" style="overflow-y: auto; max-height: 85%">
       <div class="d-flex justify-content-center align-items-center">
         <div
-          [ngClass]="checkBtnMax ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="isMax ? 'button-selected' : 'button-no-selected'"
           class="btn-left py-1 d-flex justify-content-center align-items-center"
           (click)="clickButton('btnMax')"
         >
@@ -231,7 +286,7 @@
           ></codx-label>
         </div>
         <div
-          [ngClass]="checkBtnMin ? 'button-selected' : 'button-no-selected'"
+          [ngClass]="!isMax ? 'button-selected' : 'button-no-selected'"
           class="btn-right py-1 d-flex justify-content-center align-items-center"
           (click)="clickButton('btnMin')"
         >
@@ -245,7 +300,7 @@
     </div>
 
     <div class="mt-3">
-      <ng-container *ngIf="checkBtnMax">
+      <ng-container *ngIf="isMax">
         <ng-container *ngIf="maxOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of maxOwners; let i = index"
@@ -264,7 +319,7 @@
           </div>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="checkBtnMin">
+      <ng-container *ngIf="!isMax">
         <ng-container *ngIf="minOwners?.length > 0; else noData">
           <div
             *ngFor="let ownerCount of minOwners; let i = index"
@@ -298,12 +353,51 @@
       gridViewName="grvCMMyDashboard"
       default="Lý do thành công"
     ></codx-label>
+
+    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isReasonSuscess ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMax')"
+        >
+          <codx-label
+            name="btnMax"
+            formModel=""
+            default="Cao nhất"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="
+            !isReasonSuscess ? 'button-selected' : 'button-no-selected'
+          "
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+          (click)="clickButton('btnMin')"
+        >
+          <codx-label
+            name="btnMin"
+            formModel=""
+            default="Thấp nhất"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
     <div
-      style="overflow-y: auto; max-height: 95%"
-      *ngIf="dataDashBoard?.countsReasonsSuscess?.length > 0; else noData"
+      style="overflow-y: auto; max-height: 90%"
+      *ngIf="
+        isReasonSuscess
+          ? dataDashBoard?.countsReasonsSuscess?.length > 0
+          : dataDashBoard?.countsReasonsFails?.length > 0;
+        else noData
+      "
     >
       <div
-        *ngFor="let data of dataDashBoard?.countsReasonsSuscess"
+        *ngFor="
+          let data of isReasonSuscess
+            ? dataDashBoard?.countsReasonsSuscess
+            : dataDashBoard?.countsReasonsFails
+        "
         class="mt-4"
       >
         <div class="mx-2 my-5">
@@ -332,6 +426,43 @@
         </div>
       </div>
     </div>
+
+    <!-- <ng-container *ngIf="!isReasonSuscess">
+      <div
+        style="overflow-y: auto; max-height: 95%"
+        *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
+      >
+        <div
+          *ngFor="let data of dataDashBoard?.countsReasonsFails"
+          class="mt-4"
+        >
+          <div class="mx-2 my-5">
+            <div class="d-flex justify-content-between">
+              <div>
+                <span>{{ data?.reasonName }}</span>
+                <span>&nbsp;(</span>
+                <span>{{ data.quantity }}</span>
+                <span>)</span>
+              </div>
+              <div>
+                <span>{{ data?.percentage }}</span
+                ><span>% </span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [ngStyle]="{ backgroundColor: colorReasonFails }"
+                  [style.width]="data.percentage + '%'"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container> -->
   </div>
 </ng-template>
 
@@ -394,23 +525,60 @@
       gridViewName="grvCMMyDashboard"
       default="Tỷ lệ chuyển đổi tiềm năng thành cơ hội"
     ></codx-label>
+
+    <div id="chartCoverionButton" class="mt-3">
+      <div class="d-flex justify-content-center align-items-center">
+        <div
+          [ngClass]="isStatus ? 'button-selected' : 'button-no-selected'"
+          class="btn-left py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btStatus"
+            formModel=""
+            default="Status"
+            (click)="clickButton('btStatus')"
+          ></codx-label>
+        </div>
+        <div
+          [ngClass]="!isStatus ? 'button-selected' : 'button-no-selected'"
+          class="btn-right py-1 d-flex justify-content-center align-items-center"
+        >
+          <codx-label
+            name="btStage"
+            formModel=""
+            default="Stage"
+            (click)="clickButton('btStage')"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
     <div
       style="height: 100% !important"
-      *ngIf="dataSourcePy?.length > 0; else noData"
+      *ngIf="
+        isStatus
+          ? dataSourcePyStatus?.length > 0
+          : dataSourcePyStage?.length > 0;
+        else noData
+      "
     >
       <!-- <div class="control-section">
-        <div> -->
+        <div> tooltipPy -->
       <ejs-accumulationchart
         id="pyramidcontainer"
         #pyramid
         style="height: 100%"
         [legendSettings]="legendSettingsPy"
-        [tooltip]="tooltipPy"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
             name="ConversionRate"
-            [dataSource]="dataSourcePy"
+            [dataSource]="isStatus ? dataSourcePyStatus : dataSourcePyStage"
             xName="name"
             yName="quantity"
             [neckWidth]="neckWidth"

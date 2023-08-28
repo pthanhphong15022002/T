@@ -9,9 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  AuthStore,
   CallFuncService,
-  CodxFormComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -47,7 +45,7 @@ export class PopupEProcessContractComponent
   idField = 'RecID';
   isAfterRender = false;
   autoNumField: string;
-  autoNumField2: string;
+  // autoNumField2: string;
   lstSubContract: any;
   headerText: string;
   openFrom: string;
@@ -55,7 +53,6 @@ export class PopupEProcessContractComponent
 
   loaded: boolean = false;
   disabledInput = false;
-  useForQTNS: boolean = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -74,7 +71,6 @@ export class PopupEProcessContractComponent
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
 
-  user: any;
   fmSubContract: FormModel;
   tabInfo: any[] = [
     {
@@ -96,13 +92,12 @@ export class PopupEProcessContractComponent
 
   dataCbxContractType: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('form') form: CodxFormComponent;
+  // @ViewChild('form') form: CodxFormComponent;
   @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('tmpAddBenefit', { static: true })
   tmpAddBenefit: TemplateRef<any>;
 
   constructor(
-    private authStore: AuthStore,
     private injector: Injector,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
@@ -113,7 +108,6 @@ export class PopupEProcessContractComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
@@ -121,7 +115,6 @@ export class PopupEProcessContractComponent
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.openFrom = data?.data?.openFrom;
-    this.useForQTNS = data?.data?.useForQTNS;
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
@@ -159,9 +152,9 @@ export class PopupEProcessContractComponent
       )
       .subscribe((res: any) => {
         if (res) {
-          if (res.key) {
-            this.autoNumField2 = res.key;
-          }
+          // if (res.key) {
+          //   this.autoNumField2 = res.key;
+          // }
           this.benefitObj = res?.data;
           this.benefitObj.effectedDate = null;
           this.benefitObj.expiredDate = null;
@@ -445,7 +438,11 @@ export class PopupEProcessContractComponent
       return;
     }
 
-    if (this.data.limitMonths === null && this.data.expiredDate === null) {
+    if (
+      this.data.limitMonths === null &&
+      this.itemContractGroup !== '1' &&
+      this.data.expiredDate === null
+    ) {
       this.notify.notifyCode(
         'SYS009',
         0,
@@ -477,7 +474,7 @@ export class PopupEProcessContractComponent
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrSevice
-        .validateBeforeSaveContract(this.data, true, this.useForQTNS)
+        .validateBeforeSaveContract(this.data, true)
         .subscribe((res) => {
           if (res) {
             if (res[0]) {
@@ -491,7 +488,7 @@ export class PopupEProcessContractComponent
                 if (stt?.event?.status == 'Y') {
                   if (res[1] == 'HR010') {
                     this.hrSevice
-                      .addEContract(this.data, this.useForQTNS)
+                      .addEContract(this.data)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -505,7 +502,7 @@ export class PopupEProcessContractComponent
                     this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
                     this.hrSevice
-                      .addEContract(this.data, this.useForQTNS)
+                      .addEContract(this.data)
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
@@ -520,15 +517,13 @@ export class PopupEProcessContractComponent
           }
         });
     } else if (this.actionType == 'edit') {
-      this.hrSevice
-        .editEContract(this.data, this.useForQTNS)
-        .subscribe((res) => {
-          if (res && res[0]) {
-            this.notify.notifyCode('SYS007');
-            res[0].emp = this.employeeObj;
-            this.dialog && this.dialog.close(res[0]);
-          }
-        });
+      this.hrSevice.editEContract(this.data).subscribe((res) => {
+        if (res && res[0]) {
+          this.notify.notifyCode('SYS007');
+          res[0].emp = this.employeeObj;
+          this.dialog && this.dialog.close(res[0]);
+        }
+      });
     }
     this.cr.detectChanges();
   }
@@ -540,6 +535,13 @@ export class PopupEProcessContractComponent
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
+    }
+  }
+
+  renderChange(event) {
+    let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
+    if (tmp) {
+      this.itemContractGroup = tmp;
     }
   }
 

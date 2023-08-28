@@ -152,14 +152,15 @@ export class EmployeePolicyalComponent extends UIComponent{
       case 'SYS02': //delete
       this.view.dataService.delete([data]).subscribe((res)=>{
         debugger
-        this.deleteFile(data).subscribe((res) => {
-          debugger
+        if(data.attachments > 0){
+          this.deleteFile(data).subscribe((res) => {
         })
-        this.DeletePolicyBeneficiaries(data.policyID).subscribe((res) => {
-          debugger
-        })
+      }
+        if(data.hasIncludeObjects == true || data.hasExcludeObjects == true){
+          this.DeletePolicyBeneficiaries(data.policyID).subscribe((res) => {
+          })
+        }
         this.DeletePolicyDetailByPolicyID(data.policyID).subscribe((res) => {
-          debugger
         })
       });
         break;
@@ -180,7 +181,9 @@ export class EmployeePolicyalComponent extends UIComponent{
     });}
 
   ViewIncludeExcludeObjects(data: any){
-    debugger
+    if(data.hasIncludeObjects == false && data.hasExcludeObjects == false){
+      return;
+    }
     let option = new DialogModel();
     option.zIndex = 999;
     let popup = this.callfunc.openForm(

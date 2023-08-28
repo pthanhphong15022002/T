@@ -58,6 +58,7 @@ import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
 import { Permission } from '@shared/models/file.model';
 import { UpdateVersionComponent } from '../updateversion/updateversion.component';
+import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'app-view-detail',
@@ -741,7 +742,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe();
+            if (x.event) {
+              this.data = x.event;
+              this.view.dataService.update(x.event).subscribe();
+            }
           });
         break;
       }
@@ -903,20 +907,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             });
           }
           this.notifySvr.notify(item.message);
-        });
-        break;
-      }
-      //Gửi email
-      case 'SYS004': {
-        // let option = new SidebarModel();
-        // option.DataService = this.view?.currentView?.dataService;
-        this.dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
-        this.dialog.closed.subscribe((x) => {
-          if (x.event != null) {
-            this.data = x.event[0];
-            this.data.lstUserID = getListImg(x.event[0].relations);
-            this.data.listInformationRel = x.event[1];
-          }
         });
         break;
       }
@@ -1403,7 +1393,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   afterSave(e?: any, that: any = null) {
-    // Chú thích ;
+    // Chú thích
     // e:{
     //   funcID: Mã moreFunc ,
     //   result : kết quả trả về sau khi thực hiện,
@@ -1427,6 +1417,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             });
         }
         break;
+      }
+      //Gửi mail
+      case "SYS004":
+      {
+        this.data = e?.result[0];
+        this.data.lstUserID = getListImg(e?.result[0].relations);
+        this.data.listInformationRel = e?.result[1];
+        break; 
       }
     }
   }
@@ -1485,7 +1483,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      this.shareService.changeMFApproval(e, data);
+      this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
       var bm = e.filter(
@@ -1730,6 +1728,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               signFile.files.push(file);
             }
           }
+          let ap= new ApproveProcess();
+          ap.funcID= this.view?.formModel?.funcID;
+          ap.entityName= this.view?.formModel?.entityName;
+          ap.module= 'OD';
           let dialogApprove = this.callfunc.openForm(
             PopupAddSignFileComponent,
             'Chỉnh sửa',
@@ -1744,6 +1746,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               refType: this.formModel?.entityName,
               refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
+              approverProcess:ap,// thêm điều kiện
             },
             '',
             dialogModel

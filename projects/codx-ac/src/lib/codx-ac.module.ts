@@ -24,9 +24,9 @@ import { DropdownDetailComponent } from './journals/components/dropdown-detail/d
 import { GroupShareComponent } from './journals/components/group-share/group-share.component';
 import { Group067Component } from './journals/components/group067/group067.component';
 import { JournalsComponent } from './journals/journals.component';
-import { MultiSelectPopupComponent } from './journals/multi-select-popup/multi-select-popup.component';
+import { MultiSelectPopupComponent } from './journals/components/multi-select-popup/multi-select-popup.component';
 import { JournalsAddComponent } from './journals/journals-add/journals-add.component';
-import { PopupPermissionComponent } from './journals/popup-permission/popup-permission.component';
+import { JournalspermissionEditComponent } from './journals/journalspermission-edit/journalspermission-edit.component';
 import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
 import { PopAddAllocateToolsComponent } from './periodic/allocate-tools/pop-add-allocate-tools/pop-add-allocate-tools.component';
 import { DeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-expenses/deduct-prepaid-expenses.component';
@@ -38,7 +38,7 @@ import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
 import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
-import { NameByIdPipe } from './pipes/nameById.pipe';
+import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
@@ -69,7 +69,6 @@ import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/salesinvoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
-import { CashpaymentSuggestion } from './vouchers/cashpayments/cashpayments-add-cashpaymentsuggestion/cashpayments-add-cashpaymentsuggestion.component';
 import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
 import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
 import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
@@ -79,9 +78,13 @@ import { PurchaseinvoiceslinesAddComponent } from './vouchers/purchaseinvoices/p
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
+import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
+import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
+import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -108,7 +111,7 @@ export const routes: Routes = [
       },
       {
         path: 'cashreceipts/:funcID',
-        component: CashPaymentsComponent,
+        component: CashreceiptsComponent,
         data: { noReuse: true },
       },
       {
@@ -269,11 +272,11 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    CashpaymentSuggestion,
+    AdvancePayment,
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,
-    PopupPermissionComponent,
+    JournalspermissionEditComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,
     AllocateToolsComponent,
@@ -301,6 +304,9 @@ export const routes: Routes = [
     IssueTransactionsComponent,
     IssueTransactionsAddComponent,
     IssueTransactionsLineAddComponent,
+    IsObjectEmptyPipe,
+    CashreceiptsComponent,
+    CashreceiptsAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

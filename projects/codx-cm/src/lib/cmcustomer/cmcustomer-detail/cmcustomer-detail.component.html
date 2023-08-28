@@ -133,9 +133,9 @@
                         [ngClass]="
                           dataSelected?.allowCall
                             ? 'text-primary text-hover-primary'
-                            : 'icon-phonelink_erase'
+                            : 'icon-phonelink_erase me-2'
                         "
-                        class="icon-14 me-2 text-gray-700"
+                        class="icon-14 text-gray-700"
                         ><ng-template #popupAllowCall>
                           <codx-label
                             name="lblAllowCall"
@@ -189,9 +189,9 @@
                         [ngClass]="
                           dataSelected?.allowEmail
                             ? 'text-primary text-hover-primary'
-                            : 'icon-print_disabled'
+                            : 'icon-print_disabled me-2'
                         "
-                        class="icon-14 me-2 text-gray-700"
+                        class="icon-14 text-gray-700"
                         ><ng-template #popupAllowEmail>
                           <codx-label
                             name="lblAllowEmail"
@@ -239,18 +239,23 @@
                   <div
                     class="d-flex align-items-top"
                     *ngIf="addressNameCM != null && addressNameCM.trim() != ''"
+                    [ngbTooltip]="popupAddress"
                   >
+                    <span class="icon-16 text-gray-600 fs-7"> </span>
                     <span
-                      [ngbTooltip]="popupAddress"
-                      class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
-                      ><ng-template #popupAddress>
-                        <codx-label
-                          fiedName="Address"
-                          [formModel]="formModel"
-                        ></codx-label>
-                      </ng-template>
-                    </span>
-                    <span class="text-gray-600">{{ addressNameCM }}</span>
+                      class="text-gray-600"
+                      [innerHTML]="
+                        addressNameCM
+                          | formatvalue : formModel : 'Address'
+                          | async
+                      "
+                    ></span>
+                    <ng-template #popupAddress>
+                      <codx-label
+                        fiedName="Address"
+                        [formModel]="formModel"
+                      ></codx-label>
+                    </ng-template>
                   </div>
                 </div>
                 <div class="d-flex flex-column align-items-start">
@@ -355,7 +360,7 @@
           </div>
           <div
             class="d-flex align-items-start mt-2 h-20px"
-            *ngIf="viewTag && viewTag != ''"
+            *ngIf="viewTag != null && viewTag != ''"
           >
             <codx-tag
               [entityName]="entityName"
@@ -428,7 +433,13 @@
         </div>
       </ng-template>
       <ng-template #body let-data>
-        <div class="cm-scroll">
+        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+          <div
+            class="btn btn-white btn-icon tab-action"
+            (click)="clickShowTab(!isShow)"
+          >
+            <span class="icon-unfold_more icon-20"></span>
+          </div>
           <div class="instance-select">
             <ejs-tab
               id="tab_adaptive"
@@ -499,6 +510,13 @@
                         "
                         [hidenMF]="dataSelected?.status == '99' ? true : false"
                         [type]="'formDetail'"
+                        [isRole]="
+                          funcID == 'CM0101'
+                            ? !isAdmin
+                              ? user.userID == dataSelected.owner
+                              : true
+                            : true
+                        "
                       ></codx-list-contacts>
                     </div>
                   </ng-template>
@@ -529,7 +547,14 @@
                         [funcID]="funcID"
                         [entityName]="entityName"
                         [id]="dataSelected.recID"
-                        [hidden]="dataSelected?.status == '99' ? true : false"
+                        [hidden]="
+                          funcID == 'CM0101'
+                            ? (!isAdmin && user.userID != dataSelected.owner) ||
+                              dataSelected?.status == '99'
+                              ? true
+                              : false
+                            : dataSelected?.status == '99'
+                        "
                         (addressName)="addressName($event)"
                       ></codx-address-cm>
                     </div>
@@ -539,25 +564,28 @@
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
-                        class="icon-add_shopping_cart text-hover-primary icon-16 me-2"
+                        class="icon-i-link text-hover-primary icon-16 me-2"
                       ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
-                        default="Cơ hội"
+                        default="Lịch sử hoạt động"
                         [formModel]="formModel"
-                        name="lblDeal"
+                        name="lblHistory"
                       ></codx-label>
                     </div>
                   </ng-template>
                   <ng-template #content>
                     <div class="mt-5">
-                      <codx-list-deals
+                      <cm-view-history-customer
                         [customerID]="dataSelected.recID"
-                      ></codx-list-deals>
+                        [isRole]="
+                          !isAdmin ? user.userID == dataSelected.owner : true
+                        "
+                      ></cm-view-history-customer>
                     </div>
                   </ng-template>
                 </e-tabitem>
-                <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
+                <!-- <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
                       <span
@@ -607,7 +635,7 @@
                       </ng-container>
                     </div>
                   </ng-template>
-                </e-tabitem>
+                </e-tabitem> -->
                 <e-tabitem *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2">
@@ -656,98 +684,6 @@
                 </e-tabitem>
               </e-tabitems>
             </ejs-tab>
-            <!-- <codx-tab-cm
-              [tabInfo]="tabDetail"
-              [formModel]="formModel"
-              [templates]="
-                funcID == 'CM0101'
-                  ? [
-                      tabInformation,
-                      tabContact,
-                      tabAddress,
-                      tabDeal,
-                      tabQuotations,
-                      tabContract,
-                      tabTask
-                    ]
-                  : funcID == 'CM0102'
-                  ? [tabInformation, tabAddress]
-                  : funcID == 'CM0103'
-                  ? [tabInformation, tabContact]
-                  : [tabInformation, tabDealCompetitors]
-              "
-            >
-              <ng-template #tabInformation>
-                <codx-information
-                  [funcID]="funcID"
-                  [dataSelected]="dataSelected"
-                  [formModel]="formModel"
-                  [gridViewSetup]="gridViewSetup"
-                  [entityName]="entityName"
-                  [listAddress]="listAddress"
-                  [nameCbxCM]="nameCbxCM"
-                >
-                </codx-information>
-              </ng-template>
-              <ng-template #tabContact>
-                <codx-list-contacts
-                  [selectAll]="false"
-                  [funcID]="funcID"
-                  [objectID]="dataSelected.recID"
-                  [objectType]="funcID == 'CM0101' ? '1' : '3'"
-                  [objectName]="
-                    funcID == 'CM0101'
-                      ? dataSelected.customerName
-                      : dataSelected.partnerName
-                  "
-                  [hidenMF]="false"
-                  [type]="'formDetail'"
-                ></codx-list-contacts>
-              </ng-template>
-              <ng-template #tabAddress>
-                <codx-address-cm
-                  [type]="'formDetail'"
-                  [funcID]="funcID"
-                  [entityName]="entityName"
-                  [id]="dataSelected.recID"
-                  (addressName)="addressName($event)"
-                ></codx-address-cm>
-              </ng-template>
-              <ng-template #tabDeal>
-                <codx-list-deals
-                  [customerID]="dataSelected.recID"
-                ></codx-list-deals>
-              </ng-template>
-              <ng-template #tabDealCompetitors>
-                <codx-view-dealcompetitors
-                  [competitorID]="dataSelected.recID"
-                ></codx-view-dealcompetitors>
-              </ng-template>
-              <ng-template #tabQuotations>
-                <codx-quotations-tab-view
-                  [funcID]="'CM0202'"
-                  [showButton]="true"
-                  [customerID]="dataSelected.recID"
-                  [predicates]="'CustomerID==@0'"
-                  [dataValues]="dataSelected.recID"
-                  [disableCusID]="true"
-                ></codx-quotations-tab-view>
-              </ng-template>
-              <ng-template #tabContract>
-                <ng-container
-                  [ngTemplateOutlet]="contract"
-                  [ngTemplateOutletContext]="{ $implicit: dataSelected }"
-                >
-                </ng-container>
-              </ng-template>
-              <ng-template #tabTask>
-                <ng-container
-                  [ngTemplateOutlet]="taskTemplate"
-                  [ngTemplateOutletContext]="{ $implicit: dataSelected }"
-                >
-                </ng-container>
-              </ng-template>
-            </codx-tab-cm>  -->
           </div>
         </div>
         <ng-template #tabIns let-name>
@@ -858,6 +794,9 @@
   <step-task
     [typeTask]="2"
     [customerID]="dataSelected?.recID"
-    [isPause]="dataSelected?.status == '99'"
+    [isPause]="
+      (!isAdmin && user.userID != dataSelected.owner) ||
+      dataSelected?.status == '99'
+    "
   ></step-task>
 </ng-template>

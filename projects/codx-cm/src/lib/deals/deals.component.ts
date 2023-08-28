@@ -92,7 +92,6 @@ export class DealsComponent
   @ViewChild('popUpQuestionStatus', { static: true }) popUpQuestionStatus;
   dialogQuestionForm: DialogRef;
 
-
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -419,7 +418,7 @@ export class DealsComponent
         (data.closed && data.status != '1') ||
         data.status == '0' ||
         data.approveStatus != '3';
-        eventItem.isblur = false;
+      eventItem.isblur = false;
     };
     let isPermission = (eventItem, data) => {
       // Phân quyền
@@ -442,7 +441,7 @@ export class DealsComponent
       // Nhập khẩu dữ liệu
       eventItem.disabled = true;
     };
-    let isChangeStatus = (eventItem, data)  => {
+    let isChangeStatus = (eventItem, data) => {
       eventItem.disabled = data.status != '2';
     };
     functionMappings = {
@@ -472,10 +471,12 @@ export class DealsComponent
       SYS02: isDelete,
       CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
-      SYS004: isEmail,
-      SYS002: isDownload,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
+      SYS004: isEmail,
+      SYS002: isDownload,
+      SYS003: isUpload,
+      SYS001: isUpload,
     };
 
     return functionMappings[type];
@@ -1113,7 +1114,7 @@ export class DealsComponent
     var obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
-      titleAction:this.formatTitleMore(this.titleAction),
+      titleAction: this.formatTitleMore(this.titleAction),
       processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
@@ -1126,7 +1127,6 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.detailViewDeal.promiseAllAsync();
         this.view.dataService.update(e.event).subscribe();
         //up kaban
         if (this.kanban) {
@@ -1135,6 +1135,7 @@ export class DealsComponent
           this.renderTotal(dt.stepID, 'add', money);
           this.kanban.refresh();
         }
+     //   this.detailViewDeal.promiseAllAsync();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1169,7 +1170,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.detailViewDeal.promiseAllAsync();
+
             this.view.dataService.update(e.event).subscribe();
             //up kaban
             if (
@@ -1187,6 +1188,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
+            this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -1604,6 +1606,9 @@ export class DealsComponent
         )
         .subscribe((x) => {
           if (x?.event?.status == 'Y') {
+            this.startDeal(data);
+          }
+          else {
             this.codxCmService
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {
@@ -1731,9 +1736,17 @@ export class DealsComponent
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
         if (dts) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-          customData.dataSource = dts;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dts,
+          };
+        } else {
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: '',
+          };
         }
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1747,6 +1760,11 @@ export class DealsComponent
         this.detectorRef.detectChanges();
       });
     } else {
+      customData = {
+        refID: data.recID,
+        refType: this.view.entityName,
+        dataSource: '',
+      };
       this.codxShareService.defaultMoreFunc(
         e,
         data,
@@ -1847,7 +1865,7 @@ export class DealsComponent
   }
   valueChangeStatusCode($event) {
     if ($event) {
-      this.statusDefault= $event.data;
+      this.statusDefault = $event.data;
     }
   }
   saveStatus() {
@@ -1859,7 +1877,7 @@ export class DealsComponent
       this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
         if (res) {
           this.dialogQuestionForm.close();
-          this.dataSelected.statusCodeID =this.statusDefault;
+          this.dataSelected.statusCodeID = this.statusDefault;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
           this.view.dataService.update(this.dataSelected).subscribe();
