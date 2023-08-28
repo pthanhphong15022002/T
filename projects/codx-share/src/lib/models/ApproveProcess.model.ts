@@ -17,6 +17,7 @@ export class ApproveProcess {
   category : any ;     //ES_Category của nghiệp vụ
   title : string ;     //Tiêu đề
   curComponent:any;
+  template:any;
 }
 export class Approver {
   roleID: string ;
