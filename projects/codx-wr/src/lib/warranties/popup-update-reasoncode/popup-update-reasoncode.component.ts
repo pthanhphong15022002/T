@@ -135,6 +135,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
           this.data.attachments = wordOrder?.attachments ?? 0;
           this.edit = true;
         } else {
+          this.data.recID = Util.uid();
+          this.data.attachments = 0;
+          this.countFile = 0;
           this.edit = false;
         }
       }
