@@ -207,10 +207,10 @@
                 <codx-img
                   [objectId]="dataSelected.recID"
                   [objectName]="dataSelected.customerName"
-                  [referType]="'avt'"
+                  [imageType]="'square'"
                   [imgOn]="dataSelected?.customerName"
                   [objectType]="entityName"
-                  [width]="35"
+                  [width]="50"
                 >
                 </codx-img>
               </div>
@@ -334,15 +334,429 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="mt-5">
-                    <codx-information
-                      [funcID]="funcID"
-                      [dataSelected]="dataSelected"
-                      [formModel]="formModel"
-                      [gridViewSetup]="gridViewSetup"
-                      [entityName]="entityName"
-                    >
-                    </codx-information>
+                  <div class="d-flex flex-column mt-4">
+                    <div class="d-flex flex-row">
+                      <div class="col-6 text-dark fw-bold fs-6 mb-3">
+                        <codx-label
+                          default="Case info"
+                          [formModel]="formModel"
+                          name="lblCaseInfo"
+                        ></codx-label>
+                      </div>
+                      <div class="col-6 text-dark fw-bold fs-6 mb-3">
+                        <codx-label
+                          default="Part"
+                          [formModel]="formModel"
+                          name="lblPart"
+                        ></codx-label>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="OrderNo"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.orderNo
+                                    | formatvalue : formModel : 'OrderNo'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="PartStatus"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.partStatus
+                                    | formatvalue : formModel : 'PartStatus'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="OrderDate"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.orderDate
+                                    | formatvalue : formModel : 'OrderDate'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="PartUpdatedOn"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.partUpdatedOn
+                                    | formatvalue : formModel : 'PartUpdatedOn'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="Category"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.category
+                                    | formatvalue : formModel : 'Category'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="PartETA"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.partETA
+                                    | formatvalue : formModel : 'PartETA'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="SubType"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.subType
+                                    | formatvalue : formModel : 'SubType'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="CompletedOn"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.completedOn
+                                    | formatvalue : formModel : 'CompletedOn'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="SLA"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.sla
+                                    | formatvalue : formModel : 'SLA'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="POH"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.poh
+                                    | formatvalue : formModel : 'POH'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="Deadline"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.deadline
+                                    | formatvalue : formModel : 'Deadline'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="ServiceLocator"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.serviceLocator
+                                    | formatvalue : formModel : 'ServiceLocator'
+                                    | async
+                                "
+                              ></span>
+                              - Zone:
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.zone
+                                    | formatvalue : formModel : 'Zone'
+                                    | async
+                                "
+                              ></span>
+                              - Partner zone: A
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="TeamLeader"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.teamLeader
+                                    | formatvalue : formModel : 'TeamLeader'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="EngineerID"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.engineerID
+                                    | formatvalue : formModel : 'EngineerID'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex">
+                        <div class="col-6">
+                          <div class="mb-5px d-flex align-items-top">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                fiedName="ServiceTime"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.serviceTime
+                                    | formatvalue : formModel : 'ServiceTime'
+                                    | async
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mt-3">
+                      <div class="text-dark text-primary fw-bold fs-6 mb-2">
+                        <codx-label
+                          [setRequire]="false"
+                          class="nowrap"
+                          fiedName="Problem"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </div>
+                      <span class="text-gray-600">
+                        <span
+                          [innerHTML]="
+                            dataSelected?.problem
+                              | formatvalue : formModel : 'Problem'
+                              | async
+                          "
+                        ></span>
+                      </span>
+                    </div>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -354,9 +768,9 @@
                     ></span>
                     <codx-label
                       class="fw-bold text-hover-primary text-dark"
-                      default="Lịch sử hoạt động"
+                      default="Parts"
                       [formModel]="formModel"
-                      name="lblHistory"
+                      name="lblParts"
                     ></codx-label>
                   </div>
                 </ng-template>
@@ -387,7 +801,10 @@
                 </ng-template>
                 <ng-template #content>
                   <div class="mt-5">
-                    <wr-view-tab-update #viewUpdate [transID]="dataSelected?.recID"></wr-view-tab-update>
+                    <wr-view-tab-update
+                      #viewUpdate
+                      [transID]="dataSelected?.recID"
+                    ></wr-view-tab-update>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -399,9 +816,9 @@
                     ></span>
                     <codx-label
                       class="fw-bold text-hover-primary text-dark"
-                      default="Lịch sử hoạt động"
+                      default="More info"
                       [formModel]="formModel"
-                      name="lblHistory"
+                      name="lblMoreInfo"
                     ></codx-label>
                   </div>
                 </ng-template>
@@ -420,47 +837,6 @@
           </ejs-tab>
         </div>
       </div>
-      <!-- <ng-template #tabIns let-name>
-          <div id="viewModeDetail" class="view-step-box">
-            <ng-container *ngIf="name == 'Deal'">
-              <codx-list-deals
-                [customerID]="dataSelected.recID"
-              ></codx-list-deals>
-            </ng-container>
-            <ng-container *ngIf="name == 'DealCompetitors'">
-              <codx-view-dealcompetitors
-                [competitorID]="dataSelected.recID"
-              ></codx-view-dealcompetitors>
-            </ng-container>
-            <ng-container *ngIf="name == 'Product'">
-              <ng-container [ngTemplateOutlet]="product"> </ng-container>
-            </ng-container>
-            <ng-container *ngIf="name == 'Quotations'">
-              <codx-quotations-tab-view
-                [funcID]="'CM0202'"
-                [showButton]="false"
-                [customerID]="dataSelected.recID"
-                [predicates]="'CustomerID==@0'"
-                [dataValues]="dataSelected.recID"
-                [disableCusID]="true"
-              ></codx-quotations-tab-view>
-            </ng-container>
-            <ng-container *ngIf="name == 'Contract'">
-              <ng-container
-                [ngTemplateOutlet]="contract"
-                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
-              >
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="name == 'task'">
-              <ng-container
-                [ngTemplateOutlet]="taskTemplate"
-                [ngTemplateOutletContext]="{ $implicit: dataSelected }"
-              >
-              </ng-container>
-            </ng-container>
-          </div>
-        </ng-template> -->
     </ng-template>
     <ng-template #tabs let-data>
       <codx-tabs
