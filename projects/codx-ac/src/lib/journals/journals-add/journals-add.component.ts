@@ -372,10 +372,11 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     }
 
     this.journalService.getJournal(e.data).subscribe((journal: IJournal) => {
-      const patchObject = this.templateProps127.reduce(
+      const patchObject: any = this.templateProps127.reduce(
         (prev, cur) => ({ ...prev, [cur]: journal[cur] }),
         {}
       );
+      delete patchObject.journalName;
       this.form.formGroup.patchValue(patchObject);
       Object.assign(this.journal, patchObject);
     });
