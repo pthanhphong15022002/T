@@ -1245,7 +1245,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       default: {
 
-        //Biến động tự custom
+        //Biến động , tự custom
         var customData = 
         {
           refID : "",
@@ -1253,6 +1253,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           dataSource: datas,
           addPermissions: this.listPermission
         }
+
         this.shareService.defaultMoreFunc(
           val,
           datas,

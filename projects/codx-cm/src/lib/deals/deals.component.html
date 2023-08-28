@@ -357,7 +357,7 @@
         #dealName
         [innerHTML]="
           data?.dealName
-            | formatvalue : formModel : 'dealName' : dealName
+            | formatvalue : view.formModel : 'dealName' : dealName
             | async
         "
       ></span>
@@ -367,7 +367,7 @@
       <span
         class="text-gray-500 line-clamp-menu"
         #businessLineID
-        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
+        [ngbTooltip]="gridViewSetup?.BusinessLineID?.headerText"
         [innerHTML]="
           data?.businessLineID
             | formatvalue : view.formModel : 'businessLineID' : businessLineID
@@ -435,7 +435,7 @@
         <span
           class="text-gray-700 fs-7 line-clamp-menu"
           #expectedClosed
-          [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
+          [ngbTooltip]="gridViewSetup?.ExpectedClosed?.headerText"
           [innerHTML]="
             data.expectedClosed
               | formatvalue : view.formModel : 'expectedClosed'
@@ -515,7 +515,7 @@
   </div>
 </ng-template>
 <ng-template #footer let-data> </ng-template>
-<ng-template #baseHeaderRightTmp let-data>
+<!-- <ng-template #baseHeaderRightTmp let-data>
   <div>
     <span
       class="icon-14 me-1"
@@ -524,7 +524,7 @@
     >
     </span>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!--list details tempfull-->
 <!--Detail-->

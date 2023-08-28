@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CodxWrService {
+  listOrderUpdateSubject = new BehaviorSubject<any>(null);
+
+
   constructor(private api: ApiHttpService) {}
 
   getOneCustomer(recID) {
