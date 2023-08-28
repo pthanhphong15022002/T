@@ -730,19 +730,25 @@
 <span *ngIf="alpolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
     <span *ngFor="let obj of lstSelectedObj">
       <!-- <span
-      class="badge badge-success border-0 ms-2"
+      class="badge badge-light-primary badge-md ms-2"
       [innerHTML]="obj
           | formatvalue : benefitFormModel : 'benefitID'
           | async"
     ></span> -->
+    <span class="badge-with-delete">
+
         <codx-vll
         [showText]="true"
         [showBgColor]="true"
         name="HRObject"
         [value]="obj"
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
       >
       </codx-vll>
+      <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedObj', lstPolicyBeneficiariesApply)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+        <span class="icon-close icon-16"></span>
+      </button>
+    </span>
       <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"
@@ -812,7 +818,7 @@
     <div class="text-dark me-3 btn btn-icon" (click)="onClickDeleteObject(obj)">x</div>
   </div>
     <div *ngFor="let detail of lstSelectedObj">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex">
         <codx-vll
           [showText]="true"
           [showBgColor]="false"
@@ -833,7 +839,7 @@
       <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -841,19 +847,25 @@
       </div>
       <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
         <span *ngFor="let org of lstOrgUnitID">
-          <span *ngIf="org.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="org.id
               | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
               | async"
           >
           </span>
+          <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -861,19 +873,25 @@
       </div>
       <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
         <span *ngFor="let joblevel of lstJobLevel">
-          <span *ngIf="joblevel.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          <span class="badge-with-delete" *ngIf="joblevel.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="joblevel.id
               | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
               | async"
           >
           </span>
+          <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -881,19 +899,24 @@
       </div>
       <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
         <span *ngFor="let position of lstPositionID">
-          <span *ngIf="position.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="position.id
               | formatvalue : fmPolicyBeneficiaries : 'PositionID'
               | async"
           >
           </span>
+          <button (click)="deleteApplyExcludeObj(position, 'lstPositionID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -901,19 +924,25 @@
       </div>
       <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
         <span *ngFor="let empType of lstEmployeeTypeID">
-          <span *ngIf="empType.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          <span class="badge-with-delete"  *ngIf="empType.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="empType.id
               | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
               | async"
           >
           </span>
+          <button (click)="deleteApplyExcludeObj(empType, 'lstEmployeeTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -921,22 +950,29 @@
       </div>
       <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
         <span *ngFor="let labourType of lstLabourType">
-          <span *ngIf="labourType.rec == obj.recID">
+          <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
+
+          <span>
           <codx-vll
           [showText]="true"
           [showBgColor]="false"
           name="HR022"
           [value]="labourType.id"
-          ngClass="badge badge-success border-0 ms-2"
+          ngClass="badge badge-light-primary badge-md ms-2"
         >
         </codx-vll>
           </span>
+          <button (click)="deleteApplyExcludeObj(labourType, 'lstLabourType', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -944,19 +980,25 @@
       </div>
       <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
         <span *ngFor="let contractType of lstContractTypeID">
-          <span *ngIf="contractType.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
+          <span
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="contractType.id
               | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
               | async"
           >
           </span>
+          <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
         </span>
+      </span>
+
       </div>
       <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -965,7 +1007,7 @@
       <div class="mb-3" *ngIf="obj.employeeID && detail == '7'">
         <span *ngFor="let emp of lstEmployeeID">
           <!-- <span *ngIf="emp.rec == obj.recID"
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="emp.id
               | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
               | async"
@@ -976,8 +1018,14 @@
                     [objectName]="emp.info?.employeeName" [width]="30">
               </codx-img>
                 <div class="d-flex flex-column w-350px">
+          <span class="badge-with-delete">
+
                     <span #employeeName class="fs-6 line-clamp line-clamp-1">
-                        {{emp.info?.employeeName}}</span>
+                        {{emp.info?.employeeName}}
+                        <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
+                          <span class="icon-close icon-16"></span>
+                        </button>
+                      </span>
                     <span #positionName class="text-gray-600 line-clamp line-lamp-1">
                         {{emp.positionName}}
                     </span>
@@ -987,6 +1035,8 @@
                       <ng-template #employeeNameTooltip>
                         {{emp.positionName}}
                 </ng-template> -->
+          </span>
+
             </div>
           </div>
         </span>
@@ -994,7 +1044,7 @@
       <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
         <span>
           <span
-          class="badge badge-success border-0 ms-2"
+          class="badge badge-light-primary badge-md ms-2"
           [innerHTML]="'Tất cả'"
           >
           </span>
@@ -1002,16 +1052,22 @@
       </div>
       <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
         <span *ngFor="let empStatus of lstEmpStatus">
-          <span *ngIf="empStatus.rec == obj.recID">
+          <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
+          <span>
           <codx-vll
           [showText]="true"
           [showBgColor]="false"
           name="HR003"
           [value]="empStatus.id"
-          ngClass="badge badge-success border-0 ms-2"
+          ngClass="badge badge-light-primary badge-md ms-2"
         >
         </codx-vll>
           </span>
+          <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
+          </button>
+        </span>
+
         </span>
       </div>
     </div>
@@ -1094,19 +1150,25 @@
 <span *ngIf="alpolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
     <span *ngFor="let obj of lstSelectedExcludeObj">
       <!-- <span
-      class="badge badge-success border-0 ms-2"
+      class="badge badge-light-primary badge-md ms-2"
       [innerHTML]="obj
           | formatvalue : benefitFormModel : 'benefitID'
           | async"
     ></span> -->
+    <span class="badge-with-delete">
+
         <codx-vll
         [showText]="true"
         [showBgColor]="true"
         name="HRObject"
         [value]="obj"
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
       >
       </codx-vll>
+      <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedExcludeObj', lstPolicyBeneficiariesExclude)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+        <span class="icon-close icon-16"></span>
+      </button>
+    </span>
       <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"
@@ -1177,7 +1239,7 @@
 </div>
 
   <div *ngFor="let detail of lstSelectedExcludeObj">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex">
       <codx-vll
         [showText]="true"
         [showBgColor]="false"
@@ -1198,7 +1260,7 @@
     <div class="mb-3" *ngIf="detail == '1' && !obj.orgUnitID">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1206,19 +1268,24 @@
     </div>
     <div class="mb-3"  *ngIf="obj.orgUnitID && detail == '1'">
       <span *ngFor="let org of lstOrgUnitID">
-        <span *ngIf="org.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
+        <span
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="org.id
             | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
             | async"
         >
         </span>
+        <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1226,19 +1293,24 @@
     </div>
     <div class="mb-3"  *ngIf="obj.jobLevel && detail == '2'">
       <span *ngFor="let joblevel of lstJobLevel">
-        <span *ngIf="joblevel.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        <span class="badge-with-delete"  *ngIf="joblevel.rec == obj.recID">
+        <span
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="joblevel.id
             | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
             | async"
         >
         </span>
+        <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1246,19 +1318,25 @@
     </div>
     <div class="mb-3"  *ngIf="obj.positionID && detail == '3'">
       <span *ngFor="let position of lstPositionID">
-        <span *ngIf="position.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
+        <span
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="position.id
             | formatvalue : fmPolicyBeneficiaries : 'PositionID'
             | async"
         >
         </span>
+        <button (click)="deleteApplyExcludeObj(position, 'lstPositionID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
+
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '4' && !obj.employeeTypeID">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1266,19 +1344,25 @@
     </div>
     <div class="mb-3"  *ngIf="obj.employeeTypeID && detail == '4'">
       <span *ngFor="let empType of lstEmployeeTypeID">
-        <span *ngIf="empType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        <span class="badge-with-delete" *ngIf="empType.rec == obj.recID">
+        <span
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="empType.id
             | formatvalue : fmPolicyBeneficiaries : 'EmployeeTypeID'
             | async"
         >
         </span>
+        <button (click)="deleteApplyExcludeObj(empType, 'lstEmployeeTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
+
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1286,22 +1370,28 @@
     </div>
     <div class="mb-3"  *ngIf="obj.labourType && detail == '5'">
       <span *ngFor="let labourType of lstLabourType">
-        <span *ngIf="labourType.rec == obj.recID">
+        <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
+        <span>
         <codx-vll
         [showText]="true"
         [showBgColor]="false"
         name="HR022"
         [value]="labourType.id"
-        ngClass="badge badge-success border-0 ms-2"
+        ngClass="badge badge-light-primary badge-md ms-2"
       >
       </codx-vll>
         </span>
+        <button (click)="deleteApplyExcludeObj(labourType, 'lstLabourType', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
+
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1309,19 +1399,25 @@
     </div>
     <div class="mb-3"  *ngIf="obj.contractTypeID && detail == '6'">
       <span *ngFor="let contractType of lstContractTypeID">
-        <span *ngIf="contractType.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
+        <span
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="contractType.id
             | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
             | async"
         >
         </span>
+        <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
+
       </span>
     </div>
     <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1330,7 +1426,7 @@
     <div class="mb-3"  *ngIf="obj.employeeID && detail == '7'">
       <span *ngFor="let emp of lstEmployeeID">
         <!-- <span *ngIf="emp.rec == obj.recID"
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="emp.id
             | formatvalue : fmPolicyBeneficiaries : 'EmployeeID'
             | async"
@@ -1341,8 +1437,14 @@
                 [objectName]="emp.info?.employeeName" [width]="30">
           </codx-img>
             <div class="d-flex flex-column w-350px">
+          <span class="badge-with-delete">
+
                 <span #employeeName class="fs-6 line-clamp line-clamp-1">
-                    {{emp.info?.employeeName}}</span>
+                    {{emp.info?.employeeName}}
+                    <button (click)="deleteApplyExcludeObj(emp, 'lstEmployeeID', obj)" type="button" class="ms-3 btn btn-sm btn-icon btn-light-danger">
+                      <span class="icon-close icon-16"></span>
+                    </button>
+                  </span>
                 <span #positionName class="text-gray-600 line-clamp line-lamp-1">
                     {{emp.positionName}}
                 </span>
@@ -1352,6 +1454,8 @@
                   <ng-template #employeeNameTooltip>
                     {{emp.positionName}}
             </ng-template> -->
+          </span>
+
         </div>
       </div>
       </span>
@@ -1359,7 +1463,7 @@
     <div class="mb-3" *ngIf="detail == '8' && !obj.employeeStatus">
       <span>
         <span
-        class="badge badge-success border-0 ms-2"
+        class="badge badge-light-primary badge-md ms-2"
         [innerHTML]="'Tất cả'"
         >
         </span>
@@ -1367,16 +1471,21 @@
     </div>
     <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">
       <span *ngFor="let empStatus of lstEmpStatus">
-        <span *ngIf="empStatus.rec == obj.recID">
+        <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
+        <span>
         <codx-vll
         [showText]="true"
         [showBgColor]="false"
         name="HR003"
         [value]="empStatus.id"
-        ngClass="badge badge-success border-0 ms-2"
+        ngClass="badge badge-light-primary badge-md ms-2"
       >
       </codx-vll>
         </span>
+        <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </span>
       </span>
     </div>
   </div>

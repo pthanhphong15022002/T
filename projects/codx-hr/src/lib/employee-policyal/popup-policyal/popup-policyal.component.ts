@@ -252,6 +252,97 @@ export class PopupPolicyalComponent
     )
   }
 
+  deleteApplyExcludeObj(data, from, crrObj?){
+    switch(from){
+        case 'lstPositionID':
+          let index = this.lstPositionID.indexOf(data);
+          this.lstPositionID.splice(index,1);
+          let lstId = this.lstPositionID.map(item => item.id);
+          crrObj.positionID = lstId.join(';');
+          break;
+        case 'lstOrgUnitID':
+          let index2 = this.lstOrgUnitID.indexOf(data);
+          this.lstOrgUnitID.splice(index2,1);
+          let lstId2 = this.lstOrgUnitID.map(item => item.id);
+          crrObj.orgUnitID = lstId2.join(';');
+          break;
+        case 'lstJobLevel':
+          let index3 = this.lstJobLevel.indexOf(data);
+          this.lstJobLevel.splice(index3,1);
+          let lstId3 = this.lstJobLevel.map(item => item.id);
+          crrObj.jobLevel = lstId3.join(';');
+          break;
+        case 'lstEmployeeTypeID':
+          let index4 = this.lstEmployeeTypeID.indexOf(data);
+          this.lstEmployeeTypeID.splice(index4,1);
+          let lstId4 = this.lstEmployeeTypeID.map(item => item.id);
+          crrObj.employeeTypeID = lstId4.join(';');
+          break;
+        case 'lstLabourType':
+          let index5 = this.lstLabourType.indexOf(data);
+          this.lstLabourType.splice(index5,1);
+          let lstId5 = this.lstLabourType.map(item => item.id);
+          crrObj.labourType = lstId5.join(';');
+          break;
+        case 'lstContractTypeID':
+          let index6 = this.lstContractTypeID.indexOf(data);
+          this.lstContractTypeID.splice(index6,1);
+          let lstId6 = this.lstContractTypeID.map(item => item.id);
+          crrObj.contractTypeID = lstId6.join(';');
+          break;
+        case 'lstEmployeeID':
+          let index7 = this.lstEmployeeID.indexOf(data);
+          this.lstEmployeeID.splice(index7,1);
+          let lstId7 = this.lstEmployeeID.map(item => item.id);
+          crrObj.employeeID = lstId7.join(';');
+          break;
+        case 'lstEmpStatus':
+          let index8 = this.lstEmpStatus.indexOf(data);
+          this.lstEmpStatus.splice(index8,1);
+          let lstId8 = this.lstEmpStatus.map(item => item.id);
+          crrObj.employeeStatus = lstId8.join(';');
+          break;
+      }
+      this.df.detectChanges();
+  }
+
+  deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
+    switch(data){
+      case '1':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, orgUnitID: null }));
+        // lstBeneficiaries.orgUnitID = null
+        break;
+      case '2':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, jobLevel: null }));
+        // lstBeneficiaries.jobLevel = null
+        break;
+      case '3':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, positionID: null }));
+        // lstBeneficiaries.positionID = null
+        break;
+      case '4':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeTypeID: null }));
+        // lstBeneficiaries.employeeTypeID = null
+        break;
+      case '5':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, labourType: null }));
+        // lstBeneficiaries.labourType = null
+        break;
+      case '6':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, contractTypeID: null }));
+        // lstBeneficiaries.contractTypeID = null
+        break;
+      case '7':
+        debugger
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeID: null }));
+        // lstBeneficiaries.employeeID = null
+        break;
+      case '8':
+        lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeStatus: null }));
+        // lstBeneficiaries.employeeStatus = null
+        break;
+    }}
+
   onInit(): void {
     if(!this.columnGrid1){
       this.columnGrid1 = [
@@ -1184,6 +1275,10 @@ export class PopupPolicyalComponent
     if(flag == false){
       this.alpolicyObj.hasIncludeObjects = false;
     }
+    else if(flag == true){
+      this.alpolicyObj.hasIncludeObjects = true;
+      this.onClickOpenSelectIncludeObj();
+    }
   }
 
   ValChangeHasExcludeObj(event){
@@ -1191,6 +1286,10 @@ export class PopupPolicyalComponent
 
     if(flag == false){
       this.alpolicyObj.hasExcludeObjects = false;
+    }
+    else if(flag == true){
+      this.alpolicyObj.hasExcludeObjects = true;
+      this.onClickOpenSelectExcludeObj();
     }
   }
 
