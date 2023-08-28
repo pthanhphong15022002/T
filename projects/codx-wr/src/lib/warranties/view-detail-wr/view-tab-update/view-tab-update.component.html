@@ -1,0 +1,17 @@
+<ng-container *ngIf="loaded">
+  <codx-gridview-v2
+    service="WR"
+    [formName]="formModel.formName"
+    [gridViewName]="formModel.gridViewName"
+    [entityName]="formModel.entityName"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [dataSource]="lstUpdate"
+    [autoLoad]="false"
+    rowHeight="40"
+    [height]="'100%'"
+    [autoAddRow]="true"
+    [hideMoreFunc]="true"
+    [showRowNumber]="false"
+  ></codx-gridview-v2>
+</ng-container>

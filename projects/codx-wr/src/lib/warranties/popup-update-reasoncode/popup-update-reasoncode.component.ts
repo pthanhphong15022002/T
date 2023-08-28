@@ -74,12 +74,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
 
   //#region save
   async onSave() {
-    this.data.scheduleTime =
-      this.data.scheduleStart.getDate().toString() +
-      ' ' +
-      this.startTime +
-      ' : ' +
-      this.endTime;
+    if (this.dateControl) {
+      this.data.scheduleTime =
+        moment(this.data.scheduleStart).format('DD/MM/YYYY') +
+        ' ' +
+        this.startTime +
+        '-' +
+        this.endTime;
+    }
+
     this.data.attachments = this.edit
       ? this.data.attachments + this.countFile - this.countFileDelete
       : this.countFile;
@@ -110,6 +113,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         }
       });
   }
+
   //#endregion
 
   async valueChange(e) {
@@ -245,7 +249,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   }
 
   fileDelete(e) {
-    if(e){
+    if (e) {
       this.countFileDelete = e.length;
     }
     console.log(e);

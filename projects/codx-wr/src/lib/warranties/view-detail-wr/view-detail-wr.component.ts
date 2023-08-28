@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -14,6 +15,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxWrService } from '../../codx-wr.service';
+import { ViewTabUpdateComponent } from './view-tab-update/view-tab-update.component';
 
 @Component({
   selector: 'codx-view-detail-wr',
@@ -26,7 +28,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() funcID = 'WR0101';
   @Input() gridViewSetup: any;
   @Input() entityName = '';
-
+  @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
 
@@ -86,5 +88,10 @@ export class ViewDetailWrComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
+  }
+
+  loadOrderUpdate(){
+    this.viewUpdate.getListOrderUpdate();
+    this.changeDetectorRef.detectChanges();
   }
 }
