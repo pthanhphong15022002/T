@@ -188,12 +188,14 @@ export class PurchaseinvoicesAddComponent
     console.log(this.hiddenFields);
     grid.hideColumns(this.hiddenFields);
 
+    const requiredFields: string[] = [];
+
     if (
       [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
         this.journal.diM1Control
       )
     ) {
-      grid.setRequiredFields(['diM1'], true);
+      requiredFields.push('diM1');
       grid.setPredicates(
         'diM1',
         '@0.Contains(ProfitCenterID)',
@@ -206,7 +208,7 @@ export class PurchaseinvoicesAddComponent
         this.journal.diM2Control
       )
     ) {
-      grid.setRequiredFields(['diM2'], true);
+      requiredFields.push('diM2');
       grid.setPredicates(
         'diM2',
         '@0.Contains(CostCenterID)',
@@ -219,13 +221,15 @@ export class PurchaseinvoicesAddComponent
         this.journal.diM3Control
       )
     ) {
-      grid.setRequiredFields(['diM3'], true);
+      requiredFields.push('diM3');
       grid.setPredicates(
         'diM3',
         '@0.Contains(CostItemID)',
         `[${this.journal.diM3}]`
       );
     }
+
+    grid.setRequiredFields(requiredFields, true);
   }
 
   onClickAddRow(): void {
@@ -301,7 +305,7 @@ export class PurchaseinvoicesAddComponent
   @HostListener('click', ['$event.target'])
   onClick(e: HTMLElement): void {
     if (
-      this.gridPurchaseInvoiceLines.gridRef.isEdit &&
+      this.gridPurchaseInvoiceLines?.gridRef?.isEdit &&
       !e.closest('.edit-value') &&
       !e.closest('.e-gridcontent')
     ) {
