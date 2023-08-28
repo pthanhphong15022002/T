@@ -28,9 +28,9 @@
       </div>
     </ng-template>
     <ng-template #header let-data>
-      <div class="d-flex justify-content-between mb-2">
+      <div class="d-flex align-items-center justify-content-between">
         <div
-          class="text-info d-flex align-items-center"
+          class="mb-2"
           [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
         >
           <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="container_detail mt-1">
-        <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-start">
               <div class="me-4">
@@ -73,7 +73,7 @@
                   [imgOn]="dataSelected?.modifiedOn"
                   [objectType]="'CM_Customers'"
                   [referType]="'avt'"
-                  [width]="35"
+                  [width]="40"
                 >
                 </codx-img>
               </div>
@@ -502,8 +502,7 @@
       <span class="icon-unfold_more icon-20"></span>
     </div>
     <div class="instance-select">
-      <ejs-tab
-      >
+      <ejs-tab>
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
