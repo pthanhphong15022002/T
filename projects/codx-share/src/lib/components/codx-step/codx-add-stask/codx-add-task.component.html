@@ -212,7 +212,7 @@
         <codx-input
           [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
           field="startDate"
-          (valueChange)="changeValueDate($event)"
+          (valueChange)="changeValueDateExpected($event)"
           [crrValue]="stepsTasks?.startDate"
           type="datetime"
           format="F"
@@ -230,7 +230,7 @@
         <codx-input
           [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
           field="endDate"
-          (valueChange)="changeValueDate($event)"
+          (valueChange)="changeValueDateExpected($event)"
           [crrValue]="stepsTasks?.endDate"
           type="datetime"
           format="F"
@@ -238,6 +238,25 @@
         </codx-input>
       </div>
     </div>
+
+    <div class="form-group" *ngIf="!isShowDate">
+      <codx-label
+        fiedName="actualEnd"
+        [formModel]="dialog?.formModel"
+        default="Ngày kết thúc thực tế"
+      >
+      </codx-label>
+      <codx-input
+        [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
+        field="actualEnd"
+        (valueChange)="changeValueDate($event)"
+        [crrValue]="stepsTasks?.actualEnd"
+        type="datetime"
+        format="F"
+      >
+      </codx-input>
+    </div>
+    
     <div class="form-group" *ngIf="isShowTime">
       <div class="d-flex justify-content-between row">
         <div class="col-6">
