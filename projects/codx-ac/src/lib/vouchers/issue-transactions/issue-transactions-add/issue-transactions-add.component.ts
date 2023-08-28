@@ -14,6 +14,7 @@ import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 import { IssueTransactionsLineAddComponent } from '../issue-transactions-line-add/issue-transactions-line-add.component';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'lib-issue-transactions-add',
@@ -26,41 +27,28 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   //#region Constructor
 
-  @ViewChild('gridVouchersLine')
-  public gridVouchersLine: CodxGridviewV2Component;
+  @ViewChild('grvVouchersLine')
+  public grvVouchersLine: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
-  @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
-  @ViewChild('inventoryRef') inventoryRef: ElementRef;
-  @ViewChild('noteRef') noteRef: ElementRef;
-  @ViewChild('tabObj') tabObj: TabComponent;
-  @ViewChild('warehouse') warehouse: CodxInputComponent;
   @ViewChild('tab') tab: TabComponent;
 
   private destroy$ = new Subject<void>();
 
-  keymodel: any = [];
   reason: Array<Reason> = [];
-  warehouseName: any;
   headerText: string;
   dialog!: DialogRef;
   vouchers: Vouchers;
   formType: any;
-  gridViewSetup: any;
-  gridViewSetupLine: any;
   validate: any = 0;
+  //totalAmt: any = 0;
   journalNo: any;
   modeGrid: any;
-  vouchersLines: Array<VouchersLines> = [];
-  vouchersLinesDelete: Array<VouchersLines> = [];
   dataUpdate: VouchersLines = new VouchersLines();
   hideFields = [];
-  total: any = 0;
   hasSaved: any = false;
-  vllReceipt: any = 'AC116';
-  vllIssue: any = 'AC117';
   funcID: any;
   journal: IJournal;
-  voucherNoPlaceholderText$: Observable<string>;
+
   fmVouchers: FormModel = {
     formName: '',
     gridViewName: '',
@@ -78,10 +66,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     allowDeleting: true,
     mode: 'Normal',
   };
-  key: any;
-  columnChange: string = '';
-  vllWarehouse: any;
-  authStore: AuthStore;
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -101,53 +85,47 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
     this.routerActive.queryParams
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res && res?.journalNo) this.journalNo = res.journalNo;
       });
+
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.journal = dialogData.data?.journal;
     this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
+
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
     }
+
     if (this.journal) {
       this.modeGrid = this.journal.addNewMode;
     }
+
     this.funcID = dialog.formModel.funcID;
-    this.cache
-      .gridViewSetup(this.fmVouchers.formName, this.fmVouchers.gridViewName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-    this.cache
-      .gridViewSetup(this.fmVouchersLines.formName, this.fmVouchersLines.gridViewName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetupLine = res;
-        }
-      });
   }
 
   //#endregion
 
-  //#region Init
-  //Init Master
+  //#region Init Master
   onInit(): void {
     this.loadInit();
   }
 
   ngAfterViewInit() {
+    //Loại bỏ requied khi VoucherNo tạo khi lưu
+    if(this.journal.assignRule == '2')
+    {
+      this.form.formGroup.controls['voucherNo'].removeValidators(
+        Validators.required
+      );
+      this.form.formGroup.updateValueAndValidity();
+    }
     this.form.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
@@ -164,35 +142,21 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   loadInit() {
     if (this.formType == 'edit') {
-      this.api
-        .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
-          this.vouchers.recID,
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res.length > 0) {
-            this.keymodel = Object.keys(res[0]);
-            this.vouchersLines = res;
-          }
-        });
-    }
-    if (this.vouchers.status == '0' && this.formType == 'edit') {
       this.hasSaved = true;
     }
   }
-  //end Init Master
+  //endregion Init Master
 
-  //Init Line
-  gridInit(columnsGrid) {
-    this.showHideColumns(columnsGrid);
+  //#region Init Line
+  gridInit(eleGrid:CodxGridviewV2Component) {
+    eleGrid.showHideColumns(this.hideFields);
     this.dt.detectChanges();
   }
-  //end Init Line
+  //#endregion Init Line
 
-  //#endregion
+  //#region Event Master
 
-  //#region Event
-  //Event Master
+  /** Update dữ liệu master khi có trường đc thay đổi */
   valueChange(e: any) {
     let field = e.field.toLowerCase();
     if (e.data) {
@@ -214,7 +178,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           if (e?.component?.itemsSelected[0]?.ReasonID) {
             this.vouchers.reasonID = e?.component?.itemsSelected[0]?.ReasonID;
             let text = e?.component?.itemsSelected[0]?.ReasonName;
-            this.setReason(field, text, 0);
+            this.setMemo(field, text, 0);
           }
           break;
         // case 'objectid':
@@ -249,6 +213,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Update lại loại phiểu khi thay đổi subtype */
   subTypeChange(event: any) {
     if (event && event.data[0]) {
       this.vouchers.subType = event.data[0];
@@ -278,9 +243,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.dialog.close();
     }
   }
-  //end Event Master
+  //#endregion Event Master
 
-  //Event Line
+  //#region Event Line
 
   /** Hàm xử lí khi click more function */
   clickMF(e, data) {
@@ -297,7 +262,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
-  /** Hàm update data khi chỉnh sửa detail */
+  /** Update lại data khi dòng thay đổi */
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
@@ -306,6 +271,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     
   }
 
+  /** Update từ Front End */
   updateFromFrontEnd(e: any)
   {
     switch (e.field) {
@@ -321,6 +287,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Update từ Back End */
   updateFromBackEnd(e: any)
   {
     const postFields: string[] = [
@@ -366,63 +333,74 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   }
 
-  /** Hàm kết thúc chỉnh sửa detail */
-  endEdit(e: any) {
+  /** Nhận các event mà lưới trả về */
+  onEventAction(e: any) {
     switch (e.type) {
-      case 'autoAdd':
-        this.addVoucherLine();
-        break;
+      // case 'autoAdd':
+      //   this.addVoucherLine();
+      //   break;
       case 'add':
-        if (this.gridVouchersLine.autoAddRow) {
-          this.addVoucherLine();
+        if (this.grvVouchersLine.autoAddRow) {
+          this.saveMasterBeforeAddLine();
         }
         break;
       case 'endEdit':
-        if (!this.gridVouchersLine.autoAddRow) {
+        if (!this.grvVouchersLine.autoAddRow) {
           setTimeout(() => {
             let element = document.getElementById('btnadd');
             element.focus();
           }, 100);
         }
         break;
+      case 'closeEdit':
+        setTimeout(() => {
+          let element = document.getElementById('btnadd');
+          element.focus();
+        }, 100);
+        break;
     }
   }
-  //end Event Line
-  //#endregion Event
+  //#endregion Event Line
 
   //#region Method
-  //Method Master
 
-  /** Hàm lưu và thêm mới
-    */
-  onSaveAdd() {
-    this.checkValidate();
-    this.checkTransLimit(true);
+  /** Hàm lưu và thêm mới */
+  // onSaveAdd() {
+  //   if(this.form.formGroup?.invalid)
+  //     return;
+  //   this.checkTransLimit(true);
+  //   if (this.validate > 0) {
+  //     this.validate = 0;
+  //     return;
+  //   } else {
+  //     if (this.modeGrid == 1) {
+  //       if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
+  //         this.save(false);
+  //     }
+  //     else {
+  //       this.save(false);
+  //     }
+  //   }
+  // }
+
+  /** Lưu và đóng form 
+   * Hoặc
+   * Lưu và thêm mới
+  */
+  onSave(isClose: any) {
+    /** isClose = true => Lưu và đóng form
+     * isClose = false => Lưu và thêm mới
+     */
+
+    if(this.form.formGroup?.invalid)
+      return;
+    //this.checkTransLimit(true);
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
       if (this.modeGrid == 1) {
-        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
-          this.save(false);
-      }
-      else {
-        this.save(false);
-      }
-    }
-  }
-
-  /** Hàm lưu và đóng form
-    */
-  onSave() {
-    this.checkValidate();
-    this.checkTransLimit(true);
-    if (this.validate > 0) {
-      this.validate = 0;
-      return;
-    } else {
-      if (this.modeGrid == 1) {
-        if (this.gridVouchersLine && !this.gridVouchersLine.gridRef.isEdit)
+        if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
           this.save(true);
       }
       else {
@@ -545,104 +523,46 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         break;
     }
   }
-  //end Method Master
-
-  //Method Line
-  /** Hàm lưu detail */
-  onSaveLine(e: any, type: any) {
-    this.checkValidateLine(e);
-    if (this.validate > 0) {
-      this.validate = 0;
-      e.isAddNew = true;
-      this.notification.notifyCode('SYS023', 0, '');
-      return;
-    } else {
-      this.updateFixedDims(e);
-
-      if (type == 'isAddNew') {
-        this.api
-          .execAction<any>(this.fmVouchersLines.entityName, [e], 'SaveAsync')
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((save) => {
-            if (save) {
-              this.notification.notifyCode('SYS006', 0, '');
-              this.hasSaved = true;
-            }
-          });
-      }
-      else if (type == 'isEdit') {
-        this.api
-          .execAction<any>(this.fmVouchersLines.entityName, [e], 'UpdateAsync')
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((save) => {
-            if (save) {
-              this.notification.notifyCode('SYS007', 0, '');
-              this.hasSaved = true;
-            }
-          });
-      }
-
-    }
-  }
-  //end Method Line
   //#endregion Method
 
-  //#region Function
-  //Function Master
+  //#region Function Master
+
+  /** Đặt lại giá trị mặc định sau khi lưu */
   setDefault(o) {
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
       this.journalNo,
     ]);
   }
 
-  checkValidate() {
-    // tu dong khi luu, khong check voucherNo
-    let ignoredFields: string[] = [];
-    if (this.journal.assignRule === '2') {
-      ignoredFields.push('VoucherNo');
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
+  /** Kiểm tra tổng tiền phải nhỏ hơn hạn mức giao dịch */
+  // checkTransLimit(isShowNotify: boolean) {
+  //   this.loadTotalAmt();
+  //   if (this.journal.transLimit && this.totalAmt > this.journal.transLimit) {
+  //     if (isShowNotify)
+  //       this.notification.notifyCode('AC0016');
+  //     this.validate++;
+  //   }
+  // }
 
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.vouchers);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
-          continue;
-        }
+  // loadTotalAmt()
+  // {
+  //   if(this.grvVouchersLine.dataSource.length > 0)
+  //   {
+  //     let total = 0
+  //     this.grvVouchersLine.dataSource.forEach((voucherLine: any) => {
+  //       total += voucherLine.costAmt;
+  //     });
+  //     this.totalAmt = total;
+  //   }
+  // }
 
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.vouchers[keymodel[i]] == null ||
-              String(this.vouchers[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  checkTransLimit(isShowNotify: boolean) {
-    if (this.journal.transLimit && this.vouchers.totalAmt > this.journal.transLimit) {
-      if (isShowNotify)
-        this.notification.notifyCode('AC0016');
-      this.validate++;
-    }
-  }
-
+  /** Xóa data lưới khi master thêm mới */
   clearVouchers() {
-    this.vouchersLines = [];
+    this.grvVouchersLine.dataSource = [];
   }
 
-  setReason(field, text, idx) {
+  /** Đặt lại giá trị cho trường ghi chú */
+  setMemo(field, text, idx) {
     if (!this.reason.some((x) => x.field == field)) {
       let transText = new Reason();
       transText.field = field;
@@ -662,17 +582,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       memo: this.vouchers.memo,
     });
   }
-
-  updateFixedDims(line: any) {
-    let fixedDims: string[] = Array(10).fill('0');
-    for (let i = 0; i < 10; i++) {
-      if (line['idiM' + i]) {
-        fixedDims[i] = '1';
-      }
-    }
-    line.fixedDIMs = fixedDims.join('');
-  }
-
+  
   // setTabindex() {
   //   let ins = setInterval(() => {
   //     let eleInput = document
@@ -704,38 +614,39 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   //   }, 10000);
   // }
 
-  @HostListener('keyup', ['$event'])
-  onKeyUp(e: KeyboardEvent): void {
-    if (e.key == 'Tab') {
-      let element;
-      if (document.activeElement.className == 'e-tab-wrap') {
-        element = document.getElementById('btnadd');
-        element.focus();
-      }
-    }
+  // @HostListener('keyup', ['$event'])
+  // onKeyUp(e: KeyboardEvent): void {
+  //   if (e.key == 'Tab') {
+  //     let element;
+  //     if (document.activeElement.className == 'e-tab-wrap') {
+  //       element = document.getElementById('btnadd');
+  //       element.focus();
+  //     }
+  //   }
 
-    if (e.key == 'Enter') {
-      if ((e.target as any).closest('codx-input') != null) {
-        let eleInput = document
-          ?.querySelector('.ac-form-master')
-          ?.querySelectorAll('codx-input');
-        if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
-          let nextIndex = (e.target as HTMLElement).tabIndex + 1;
-          for (let index = 0; index < eleInput.length; index++) {
-            let elechildren = (
-              eleInput[index] as HTMLElement
-            ).getElementsByTagName('input')[0];
-            if (elechildren.tabIndex == nextIndex) {
-              elechildren.focus();
-              elechildren.select();
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
+  //   if (e.key == 'Enter') {
+  //     if ((e.target as any).closest('codx-input') != null) {
+  //       let eleInput = document
+  //         ?.querySelector('.ac-form-master')
+  //         ?.querySelectorAll('codx-input');
+  //       if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+  //         let nextIndex = (e.target as HTMLElement).tabIndex + 1;
+  //         for (let index = 0; index < eleInput.length; index++) {
+  //           let elechildren = (
+  //             eleInput[index] as HTMLElement
+  //           ).getElementsByTagName('input')[0];
+  //           if (elechildren.tabIndex == nextIndex) {
+  //             elechildren.focus();
+  //             elechildren.select();
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
+  /** Cho phép lưu dòng khi click bên ngoài lưới */
   @HostListener('click', ['$event'])
   onClick(e) {
     if (this.modeGrid != 1)
@@ -745,17 +656,18 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       e.target.closest('.e-popup') == null &&
       e.target.closest('.edit-value') == null
     ) {
-      if (this.gridVouchersLine && this.gridVouchersLine.gridRef.isEdit) {
-        this.gridVouchersLine.autoAddRow = false;
-        this.gridVouchersLine.endEdit();
+      if (this.grvVouchersLine && this.grvVouchersLine.gridRef.isEdit) {
+        this.grvVouchersLine.autoAddRow = false;
+        this.grvVouchersLine.endEdit();
       }
     }
   }
-  //end Function Master
+  //#endregion Function Master
 
-  //Function Line
-  addVoucherLine() {
-    this.checkValidate();
+  //#region Function Line
+  saveMasterBeforeAddLine() {
+    if(this.form.formGroup?.invalid)
+      return;
     if (this.validate > 0) {
       this.validate = 0;
       return;
@@ -773,7 +685,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
-                  this.onAddLine();
+                  this.checkModeGridBeforeAddLine();
                 }
               });
           } else {
@@ -792,7 +704,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                     if (res && res.save.data != null) {
                       this.vouchers.voucherNo = res.save.data.voucherNo;
                       this.hasSaved = true;
-                      this.onAddLine();
+                      this.checkModeGridBeforeAddLine();
                     }
                   });
               }
@@ -809,7 +721,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res && res.update.data != false) {
-                this.onAddLine();
+                this.checkModeGridBeforeAddLine();
               }
             });
           break;
@@ -817,7 +729,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
-  onAddLine() {
+  /** Kiểm tra mode grid trước khi thêm dòng */
+  checkModeGridBeforeAddLine() {
     let data = new VouchersLines();
     let idx;
     this.api
@@ -830,12 +743,12 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         if (res) {
           switch (this.modeGrid) {
             case '1':
-              idx = this.gridVouchersLine.dataSource.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
-              this.gridVouchersLine.addRow(res, idx);
+              this.grvVouchersLine.addRow(res, idx);
               break;
             case '2':
-              idx = this.vouchersLines.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               this.openPopupLine(res, 'add');
               break;
@@ -844,11 +757,12 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       });
   }
 
+  /** Mở popup thêm detail */
   openPopupLine(data, type: string) {
     var obj = {
       headerText: this.headerText,
       data: { ...data },
-      dataline: this.vouchersLines,
+      dataline: this.grvVouchersLine.dataSource,
       dataVouchers: this.vouchers,
       hideFields: this.hideFields,
       type: type,
@@ -882,7 +796,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
               if (res.event != null) {
                 var dataline = res.event['data'];
                 if (dataline) {
-                  this.vouchersLines.push(dataline);
+                  this.grvVouchersLine.dataSource.push(dataline);
                 }
                 this.hasSaved = true;
               }
@@ -891,14 +805,15 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       });
   }
 
+  /** Chỉnh sửa detail tùy theo mode grid */
   editRow(data) {
     switch (this.modeGrid) {
       case '1':
-        this.gridVouchersLine.gridRef.selectRow(Number(data.index));
-        this.gridVouchersLine.gridRef.startEdit();
+        this.grvVouchersLine.gridRef.selectRow(Number(data.index));
+        this.grvVouchersLine.gridRef.startEdit();
         break;
       case '2':
-        let index = this.vouchersLines.findIndex(
+        let index = this.grvVouchersLine.dataSource.findIndex(
           (x) => x.recID == data.recID
         );
         var obj = {
@@ -938,7 +853,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 .subscribe((res) => {
                   if (res.event != null) {
                     var dataline = res.event['data'];
-                    this.vouchersLines[index] = dataline;
+                    this.grvVouchersLine.dataSource[index] = dataline;
                     this.hasSaved = true;
                   }
                 });
@@ -948,6 +863,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Sao chép detail dựa trên mode grid */
   copyRow(data) {
     let idx;
     this.api
@@ -960,13 +876,13 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         if (res) {
           switch (this.modeGrid) {
             case '1':
-              idx = this.gridVouchersLine.dataSource.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               res.recID = Util.uid();
-              this.gridVouchersLine.addRow(res, idx);
+              this.grvVouchersLine.addRow(res, idx);
               break;
             case '2':
-              idx = this.vouchersLines.length;
+              idx = this.grvVouchersLine.dataSource.length;
               res.rowNo = idx + 1;
               res.recID = Util.uid();
               this.openPopupLine(res, 'copy');
@@ -976,82 +892,12 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       });
   }
 
+  /** Xóa dòng */
   deleteRow(data) {
-    this.notification.alertCode('SYS030', null)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res.event.status === 'Y') {
-          switch (this.modeGrid) {
-            case '1':
-              this.gridVouchersLine.deleteRow(data);
-              if (this.gridVouchersLine.dataSource.length > 0) {
-                for (
-                  let i = 0;
-                  i < this.gridVouchersLine.dataSource.length;
-                  i++
-                ) {
-                  this.gridVouchersLine.dataSource[i].rowNo = i + 1;
-                }
-              }
-              this.vouchersLines = this.gridVouchersLine.dataSource;
-              break;
-            case '2':
-              let index = this.vouchersLines.findIndex(
-                (x) => x.recID == data.recID
-              );
-              this.vouchersLines.splice(index, 1);
-              for (let i = 0; i < this.vouchersLines.length; i++) {
-                this.vouchersLines[i].rowNo = i + 1;
-              }
-              break;
-          }
-          this.api
-            .execAction<any>(this.fmVouchersLines.entityName, [data], 'DeleteAsync')
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res) {
-                this.hasSaved = true;
-                this.api
-                  .exec(
-                    'IV',
-                    'VouchersLinesBusiness',
-                    'UpdateAfterDelete',
-                    [this.vouchersLines]
-                  )
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe((res) => {
-                    this.notification.notifyCode('SYS008', 0, '');
-                  });
-              }
-            });
-        }
-      });
+    this.grvVouchersLine.deleteRow(data);
   }
 
-  checkValidateLine(e) {
-    var keygrid = Object.keys(this.gridViewSetupLine);
-    var keymodel = Object.keys(e);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetupLine[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              e[keymodel[i]] == null ||
-              String(e[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetupLine[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
-
+  /** Cập nhật thành tiền khi thay đổi đơn giá */
   costPrice_Change(line: any) {
     if (line) {
       if (line.quantity != 0) {
@@ -1063,6 +909,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Cập nhật đơn giá khi thay đổi thành tiền */
   costAmt_Change(line: any) {
     if (line) {
       if (line.quantity != 0) {
@@ -1075,6 +922,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     }
   }
 
+  /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */
   checkDataUpdateFromBackEnd(e: any): boolean {
     if (this.dataUpdate) {
       if (this.dataUpdate.recID &&
@@ -1087,35 +935,5 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     return true;
   }
 
-  showHideColumns(columnsGrid) {
-    let arr = [
-      'IDIM0',
-      'IDIM1',
-      'IDIM2',
-      'IDIM3',
-      'IDIM4',
-      'IDIM5',
-      'IDIM6',
-      'IDIM7',
-      'IDIM8',
-      'IDIM9',
-    ];
-
-    arr.forEach((fieldName) => {
-      if (this.hideFields.includes(fieldName)) {
-        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-        if (i > -1) {
-          columnsGrid[i].isVisible = false;
-        }
-      }
-      else {
-        let i = columnsGrid.findIndex((x) => x.fieldName == fieldName);
-        if (i > -1) {
-          columnsGrid[i].isVisible = true;
-        }
-      }
-    });
-  }
-  //end Function Line
-  //#endregion
+  //#endregion Function Line
 }

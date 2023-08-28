@@ -21,10 +21,10 @@
         <div class="d-flex justify-content-between">
           <div class="col-10">
             <codx-input
-              #codxInputSeri
+              #seriNo
               field="seriNo"
               [formModel]="form.formModel"
-              [crrValue]="data?.seriNo"
+              [Group]="form.formGroup"
               [disabled]="action == 'edit'"
               (valueChange)="valueChangeCbx($event)"
             ></codx-input>

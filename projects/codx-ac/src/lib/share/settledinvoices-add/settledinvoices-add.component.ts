@@ -267,14 +267,17 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
 
   apply() {
     let data = this.grid.arrSelectedRows;
-    data.forEach(item => {
-      item.transID = this.cashpayment.recID;
-    });
-    this.api.execAction('AC_SettledInvoices',data,'SaveAsync',true).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (!res.error) {
-        this.dialog.close(data);
-      }
-    })
+    this.api
+      .exec('AC', 'SettledInvoicesBusiness', 'SaveListSettledInvoicesAsync', [
+        this.cashpayment,
+        data,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.dialog.close(data);
+        }
+      });
   }
 
   paymentAmt(data) {

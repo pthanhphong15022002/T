@@ -407,13 +407,13 @@
 <ng-template #TmpTabLine>
   <ng-container *ngIf="((cashreceipts?.subType == '11'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashreceipts class="tabLine" [allowRowDragAndDrop]="true" autoAddRow="false"
-        [formName]="journal.entryMode == '1' ? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'" [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'" [editSettings]="editSettingsGrid"
-        entityName="AC_CashReceiptsLines" [allowFiltering]="true" [allowSorting]="true" [templateMore]="TmpMFCashpayment"
-        [dataSource]="cashreceiptsline" service="AC" [autoLoad]="false" [editOnClick]="true" [autoFitColumns]="false"
-        (gridInit)="beforeInitGridCashpayments($event)" rowHeight="35" [showEmptyRecord]="false" rowNoField="rowNo"
-        (onAddNew)="onSaveLine($event,true)" (eventAction)="onActionGridCashpayment($event)" (onEdit)="onSaveLine($event,false)"
-        (cellChanged)="cellLineChange($event)" [isCustom]="false"></codx-gridview-v2>
+      <codx-gridview-v2 #eleGridCashreceipts class="tabLine"
+        [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
+        [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
+        entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="cashreceipts.recID"
+        [editSettings]="editSettingsGrid" [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true"
+        (gridInit)="beforeInitGridCashreceipts($event)" rowNoField="rowNo"
+        (eventAction)="onActionGridCashpayment($event)" (cellChanged)="cellLineChange($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="cashreceipts?.subType == '11'">
@@ -441,53 +441,43 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="((cashreceipts?.subType == '2') ||(cashreceipts?.subType == '3' && subTypeAdv == '2') || (cashreceipts?.subType == '4' && subTypeAdv == '2')  || (cashreceipts?.subType == '9'))">
+  <ng-container *ngIf="(cashreceipts?.subType == '12')">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices" [showEmptyRecord]="false"
-        entityName="AC_SettledInvoices" showRowNumber="true" rowHeight="35" [editOnClick]="true" [allowFiltering]="true"
-        [autoAddRow]="true" [allowSorting]="true" [hideMoreFunc]="true"
-        service="AC" [autoLoad]="false" [autoFitColumns]="false" [dataSource]="settledInvoices"
+      <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
+        [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [editOnClick]="true"
+        [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="cashreceipts.recID"
         (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="cellLineChangeSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
         <div class="d-flex align-items-center">
-          <div
-            *ngIf="action != 'edit' && (cashreceipts?.subType == '2' || cashreceipts?.subType == '9' || cashreceipts?.subType == '12' )">
-            <button style="border: 1px solid !important;" tab-index="9" id="btnset"
-              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="setTypeSettledInvoices(0);saveMasterBeforeAddRow('3'); $event.preventDefault();"
-              (click)="setTypeSettledInvoices(0);saveMasterBeforeAddRow('3')">
+          <div *ngIf="
+              action != 'edit' &&
+              (cashreceipts?.subType == '2' ||
+              cashreceipts?.subType == '9' ||
+              cashreceipts?.subType == '12')
+            ">
+            <button style="border: 1px solid !important" tab-index="12" id="btnset"
+              class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="saveMasterBeforeAddRow('3');$event.preventDefault()"
+              (click)="saveMasterBeforeAddRow('3')">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
-                default="Đề xuất thanh toán"></codx-label>
-            </button>
-          </div>
-          <div *ngIf="(cashreceipts?.subType == '2') || (cashreceipts?.subType == '9')"
-            class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="10" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="setTypeSettledInvoices(1);saveMasterBeforeAddRow('3'); $event.preventDefault();" (click)="setTypeSettledInvoices(1);saveMasterBeforeAddRow('3')">
-              <i class="icon-i-clipboard-plus icon-16"></i>
-              <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice"
-                default="Cấn trừ tự động"></codx-label>
+                default="Thêm hóa đơn công nợ"></codx-label>
             </button>
           </div>
           <div *ngIf="cashreceipts?.subType == '3' || cashreceipts?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important;" tab-index="9" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault();" (click)="saveMasterBeforeAddRow('2')">
+            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault()"
+              (click)="saveMasterBeforeAddRow('2')">
               <i class="icon-library_add_check icon-16"></i>
-              <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat"
-                default="Chọn đề nghị tạm ứng"></codx-label>
+              <codx-label *ngIf="cashreceipts.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
+                default="Thêm đề nghị tạm ứng"></codx-label>
+              <codx-label *ngIf="cashreceipts.subType == '4'" [formModel]="dialog.formModel" fiedName="lblAddVat"
+                default="Thêm đề nghị thanh toán"></codx-label>
             </button>
           </div>
         </div>
       </div>
-      <!-- <div *ngIf="loadingform" class="ac-load-grid">
-          <ejs-progressbar #annotationsave id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-            [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
-            <e-progressbar-annotations>
-              <e-progressbar-annotation content=" "> </e-progressbar-annotation>
-            </e-progressbar-annotations>
-          </ejs-progressbar>
-        </div> -->
     </div>
   </ng-container>
 </ng-template>

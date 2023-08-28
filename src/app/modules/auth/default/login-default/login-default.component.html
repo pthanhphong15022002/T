@@ -11,7 +11,7 @@
         class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
         style="background-image: url(/assets/codx/bg/bg-login.png)"
       >
-        <div class="login-container">
+        <div class="login-container position-relative">
           <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
             <div
               class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat"
@@ -33,8 +33,8 @@
                   <!--end::Login Header-->
                   <!--begin::Login Sign in form-->
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-10">
-                      <h3 class="fw-bolder fs-1">
+                    <div class="text-start mb-10 mt-3">
+                      <h3 class="fw-bolder fs-2">
                         <codx-label
                           fiedName="Title"
                           formModel=""
@@ -43,108 +43,372 @@
                         ></codx-label>
                       </h3>
                     </div>
-                    <!--begin::Form-->
-                    <form
-                      class="form fv-plugins-bootstrap fv-plugins-framework"
-                      method="post"
-                      (ngSubmit)="submit()"
-                      [formGroup]="loginForm"
-                      class="form fv-plugins-bootstrap fv-plugins-framework"
-                      novalidate="novalidate"
-                    >
-                      <div class="form-group mb-5 fv-plugins-icon-container">
-                        <label class="fw-bold">
-                          <codx-label
-                            fiedName="Account"
-                            formModel=""
-                            default="Tài khoản"
-                          ></codx-label>
-                        </label>
-                        <div
-                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
-                        >
-                          <!--begin::Text-->
-                          <div class="d-flex flex-column flex-grow-1">
-                            <input
-                              class="form-control border-0 p-0 ps-3"
-                              type="text"
-                              field="email"
-                              data-field="email"
-                              placeholder="Nhập tài khoản"
-                              formControlName="email"
-                            />
-                          </div>
-                          <!--end::Text-->
-                        </div>
-                      </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container">
-                        <label class="fw-bold">
-                          <codx-label
-                            fiedName="Password"
-                            formModel=""
-                            default="Mật khẩu"
-                          ></codx-label
-                        ></label>
-                        <div
-                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
-                        >
-                          <div class="d-flex flex-column flex-grow-1">
-                            <codx-input
-                              type="password"
-                              field="Password"
-                              placeholder="Mật khẩu"
-                              formControlName="password"
-                              [class]="'border-0'"
-                              (valueChange)="valueChange($event)"
-                            >
-                            </codx-input>
-                            <!-- <input class="form-control border-0 p-0 ps-3" type="Password"
-                                                            placeholder="Mật khẩu" formControlName="password"
-                                                            field="Password"> -->
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        *ngIf="isNotADMode"
-                        class="form-group text-end mt-3 mb-3"
+                    <div class="tabs tabs-login" *ngIf="enableMultiLogin; else loginPW">
+                      <ejs-tab
+                        class="h-100 w-100"
+                        overflowMode="Popup"
+                        heightAdjustMode="Auto"
+                        (selected)="selectedTab($event)"
                       >
-                        <a
-                          (click)="forgotPass()"
-                          tabindex="-1"
-                          class="link-dark text-decoration-none"
+                        <e-tabitems>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="nav-item w-100">
+                                <div
+                                  class="d-flex flex-column w-100 text-center"
+                                >
+                                  <div
+                                    [class]="'icon-20 icon-i-key mb-2'"
+                                  ></div>
+                                  <span class="text-gray-700 fw-bold">
+                                    <codx-label
+                                      default="Đăng nhập"
+                                    ></codx-label>
+                                  </span>
+                                </div>
+                              </div>
+                            </ng-template>
+                            <ng-template #content>
+                              <ng-container
+                                *ngTemplateOutlet="loginPW"
+                              ></ng-container>
+                            </ng-template>
+                          </e-tabitem>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="nav-item w-100">
+                                <div
+                                  class="d-flex flex-column w-100 text-center"
+                                >
+                                  <div
+                                    [class]="'icon-20 mb-2 icon-email'"
+                                  ></div>
+                                  <span class="text-gray-700 fw-bold">
+                                    <codx-label default="OTP"></codx-label>
+                                  </span>
+                                </div>
+                              </div>
+                            </ng-template>
+                            <ng-template #content>
+                              <form
+                                class="form fv-plugins-bootstrap fv-plugins-framework"
+                                method="post"
+                                (ngSubmit)="submit('otp')"
+                                [formGroup]="loginForm"
+                                class="form fv-plugins-bootstrap fv-plugins-framework"
+                                novalidate="novalidate"
+                              >
+                                <div
+                                  class="form-group mb-5 fv-plugins-icon-container"
+                                >
+                                  <label class="fw-bold">
+                                    <codx-label
+                                      fiedName="Account"
+                                      formModel=""
+                                      default="Tài khoản"
+                                    ></codx-label>
+                                  </label>
+                                  <div
+                                    class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                                  >
+                                    <!--begin::Text-->
+                                    <div class="d-flex flex-column flex-grow-1">
+                                      <input
+                                        class="form-control border-0 p-0 ps-3"
+                                        type="text"
+                                        placeholder="Nhập tài khoản"
+                                        formControlName="email"
+                                        (change)="changeEmail()"
+                                      />
+                                    </div>
+                                    <!--end::Text-->
+                                  </div>
+                                </div>
+                                <div
+                                  class="form-group mb-5 fv-plugins-icon-container"
+                                >
+                                  <label class="fw-bold">
+                                    <codx-label
+                                      fiedName="otp"
+                                      formModel=""
+                                      default="OTP"
+                                    ></codx-label
+                                  ></label>
+                                  <div
+                                    class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                                  >
+                                    <div class="d-flex flex-column flex-grow-1">
+                                      <codx-input
+                                        type="password"
+                                        field="password"
+                                        placeholder="OTP"
+                                        formControlName="password"
+                                        [class]="'border-0'"
+                                        (valueChange)="valueChange($event)"
+                                      >
+                                      </codx-input>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  *ngIf="isNotADMode"
+                                  class="text-start mt-3 mb-3"
+                                >
+                                  <div class="otp-btn">
+                                    <button
+                                      [disabled]="
+                                        otpTimeout > 0 ||
+                                        email == '' ||
+                                        email == null
+                                      "
+                                      type="button"
+                                      (click)="generateOTP()"
+                                      tabindex="-1"
+                                      class="btn link-dark text-decoration-none border border-primary"
+                                    >
+                                      <codx-label
+                                        formModel=""
+                                        class="text-primary"
+                                        default="Gửi mã OTP"
+                                      ></codx-label>
+                                    </button>
+                                  </div>
+                                  <div class="" *ngIf="otpTimeout > 0">
+                                    <codx-label
+                                      formModel=""
+                                      default="Xác thực sẽ hết hạn sau "
+                                    ></codx-label>
+                                    {{ otpTimeout / 1000 }}
+                                  </div>
+                                </div>
+                                <div class="form-group d-grid gap-2 mb-5">
+                                  <button
+                                    [disabled]="loginForm.invalid"
+                                    type="submit"
+                                    class="btn btn-primary fw-bold px-6 py-3"
+                                  >
+                                    {{
+                                      "Đăng nhập "
+                                        | lang : "Login" : "btnLogin"
+                                        | async
+                                    }}
+                                  </button>
+                                </div>
+                              </form>
+                            </ng-template>
+                          </e-tabitem>
+
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="nav-item w-100">
+                                <div
+                                  class="d-flex flex-column text-center"
+                                >
+                                  <div
+                                    [class]="
+                                      'icon-20 mb-2 icon-qr_code_scanner'
+                                    "
+                                  ></div>
+                                  <span class="text-gray-700 fw-bold">
+                                    <codx-label default="QR"></codx-label>
+                                  </span>
+                                </div>
+                              </div>
+                            </ng-template>
+                            <ng-template #content>
+                              <div
+                                class="w-100 h-100 d-flex flex-column justify-content-center align-items-center mt-3"
+                              >
+                                <div
+                                  class="d-flex flex-column justify-content-center align-items-center p-3"
+                                >
+                                  <div
+                                    *ngIf="!isScaned; else avatar"
+                                    class="img d-flex justify-content-center position-relative rounded-3"
+                                  >
+                                    <img
+                                      class="w-50 h-50 ratio ratio-1x1 rounded-3"
+                                      [src]="qrBase64"
+                                    />
+                                    <div
+                                      class="w-50 bg-secondary ratio ratio-1x1 position-absolute rounded-3"
+                                      [ngClass]="{}"
+                                      [ngStyle]="{
+                                        'z-index': qrTimeout > 0 ? -1 : 1,
+                                        'opacity': qrTimeout > 0 ? 0 : 0.9,
+                                      }"
+                                    ></div>
+                                    <div
+                                      class="otp-btn w-100 h-100 d-flex justify-content-center align-items-center position-absolute"
+                                    >
+                                      <button
+                                        [disabled]="qrTimeout > 0"
+                                        [ngStyle]="{
+                                          'z-index': qrTimeout > 0 ? -1 : 2,
+                                          'border':'none',
+                                          'opacity': 0.8,
+                                          'border-radius': '50%',
+                                        }"
+                                        type="button"
+                                        (click)="generateQR()"
+                                        tabindex="-1"
+                                        class="btn link-dark border border-0 btn-primary w-80px h-80px"
+                                      >
+                                        <div
+                                          class="text-light icon-i-arrow-clockwise"
+                                        ></div>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <ng-template #avatar></ng-template>
+                                  <div class="qr-codx-msg mt-5 text-center">
+                                    <codx-label
+                                      default="Chỉ dùng đăng nhập CoDX trên máy tính"
+                                    ></codx-label>
+                                    <!-- <button
+                                      type="button"
+                                      (click)="testQR()"
+                                      tabindex="-1"
+                                      class="btn link-dark text-decoration-none border border-primary btn-primary"
+                                    >
+                                      <codx-label
+                                        formModel=""
+                                        class="text-primary"
+                                        default="Test QR"
+                                      ></codx-label>
+                                    </button> -->
+                                  </div>
+                                </div>
+                                <div class="d-flex" *ngIf="qrTimeout > 0">
+                                  <codx-label
+                                    formModel=""
+                                    default="Xác thực sẽ hết hạn sau "
+                                  >
+                                  </codx-label>
+                                  <span class="ms-2">
+                                    {{ qrTimeoutMinutes }}:
+                                    {{ qrTimeout % 60 }}
+                                  </span>
+                                </div>
+                                <div
+                                  class="qr-codx-guid font-weight-bold d-flex flex-column text-center"
+                                >
+                                  <codx-label
+                                    default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"
+                                  ></codx-label>
+                                  <!-- <button
+                                    clas="btn btn-primary"
+                                    (click)="openScanQRGuid()"
+                                    tabindex="-1"
+                                  >
+                                    
+                                  </button> -->
+
+                                  <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    (click)="openScanQRGuid()"
+                                  >
+                                    <codx-label
+                                      class="text-primary"
+                                      default="Hướng dẫn quét"
+                                    ></codx-label>
+                                  </button>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </e-tabitem>
+                        </e-tabitems>
+                      </ejs-tab>
+                    </div>
+                    <!--begin::Form-->
+                    <ng-template #loginPW>
+                      <form
+                        class="form fv-plugins-bootstrap fv-plugins-framework"
+                        method="post"
+                        (ngSubmit)="submit('')"
+                        [formGroup]="loginForm"
+                        class="form fv-plugins-bootstrap fv-plugins-framework"
+                        novalidate="novalidate"
+                      >
+                        <div class="form-group mb-5 fv-plugins-icon-container">
+                          <label class="fw-bold">
+                            <codx-label
+                              fiedName="Account"
+                              formModel=""
+                              default="Tài khoản"
+                            ></codx-label>
+                          </label>
+                          <div
+                            class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                          >
+                            <!--begin::Text-->
+                            <div class="d-flex flex-column flex-grow-1">
+                              <input
+                                class="form-control border-0 p-0 ps-3"
+                                type="text"
+                                field="email"
+                                data-field="email"
+                                placeholder="Nhập tài khoản"
+                                formControlName="email"
+                              />
+                            </div>
+                            <!--end::Text-->
+                          </div>
+                        </div>
+                        <div class="form-group mb-5 fv-plugins-icon-container">
+                          <label class="fw-bold">
+                            <codx-label
+                              fiedName="Password"
+                              formModel=""
+                              default="Mật khẩu"
+                            ></codx-label
+                          ></label>
+                          <div
+                            class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                          >
+                            <div class="d-flex flex-column flex-grow-1">
+                              <codx-input
+                                type="password"
+                                field="Password"
+                                placeholder="Mật khẩu"
+                                formControlName="password"
+                                [class]="'border-0'"
+                                (valueChange)="valueChange($event)"
+                              >
+                              </codx-input>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          *ngIf="isNotADMode"
+                          class="form-group text-end mt-3 mb-3"
                         >
-                          <codx-label
-                            fiedName="ForgotPassword"
-                            formModel=""
-                            default="Quên mật khẩu?"
-                          ></codx-label
-                        ></a>
-                      </div>
-                      <div class="form-group d-grid gap-2 mb-5">
-                        <!-- <div
-                          *ngIf="saas == 1"
-                          class="form-group g-recaptcha"
-                          id="captcha"
-                          data-sitekey="siteKey"
-                          data-callback="activeLoginBtn"
-                          data-expired-callback="disabledLoginBtn"
-                          data-error-callback="disabledLoginBtn"
-                        ></div> -->
-                        <re-captcha
-                          *ngIf="enableCaptcha"
-                          formControlName="captCha"
-                        ></re-captcha>
-                        <button
-                          [disabled]="loginForm.invalid"
-                          type="submit"
-                          class="btn btn-primary fw-bold px-6 py-3"
-                        >
-                          {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
-                          }}
-                        </button>
-                      </div>
-                    </form>
+                          <a
+                            (click)="forgotPass()"
+                            tabindex="-1"
+                            class="link-dark text-decoration-none"
+                          >
+                            <codx-label
+                              fiedName="ForgotPassword"
+                              formModel=""
+                              default="Quên mật khẩu?"
+                            ></codx-label
+                          ></a>
+                        </div>
+                        <div class="form-group d-grid gap-2 mb-5">
+                          <button
+                            [disabled]="loginForm.invalid"
+                            type="submit"
+                            class="btn btn-primary fw-bold px-6 py-3"
+                          >
+                            {{
+                              "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                            }}
+                          </button>
+                        </div>
+                      </form>
+                    </ng-template>
                     <div *ngIf="externalLogin">
                       <div
                         class="separator separator-content border-secondary my-10"
@@ -313,8 +577,8 @@
                     </a>
                   </div>
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-10">
-                      <h3 class="fw-bolder fs-1">
+                    <div class="text-start mb-10 mt-3">
+                      <h3 class="fw-bolder fs-2">
                         <codx-label
                           fiedName="ChangePassword"
                           formModel=""
@@ -554,8 +818,8 @@
                     </a>
                   </div>
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-10">
-                      <h3 class="fw-bolder fs-1">Tạo mật khẩu</h3>
+                    <div class="text-start mb-10 mt-3">
+                      <h3 class="fw-bolder fs-2">Tạo mật khẩu</h3>
                     </div>
                     <span #Error></span>
                     <form
@@ -845,3 +1109,88 @@
   </div>
   <!-- End active Tenant -->
 </ng-container>
+<div class="container">
+  <div class="modal" id="scanQRGuid">
+    <div class="modal-dialog w-300px h-700px">
+      <div class="modal-content">
+        <div class="modal-header d-flex flex-column">
+          <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+          <codx-label
+            class="text-primary"
+            default="Hướng dẫn quét mã QR"
+          ></codx-label>
+          <div class="rounded mt-3">
+            <img src="/assets/codx/bg/qrCodx.png" class="h-150px" alt="" />
+          </div>
+        </div>
+        <div class="modal-body">
+          <ol>
+            <li>
+              <codx-label
+                class="text-primary"
+                default="Đăng nhập ứng dụng CoDX trên điện thoại của bạn"
+              ></codx-label>
+            </li>
+            <li>
+              <codx-label
+                class="text-primary"
+                default="Tại ứng dụng chọn biểu tượng"
+              ></codx-label>
+              <span [class]="'icon-20 me-2 icon-qr_code_scanner'"></span>
+            </li>
+            <li>
+              <codx-label
+                class="text-primary"
+                default="Quét mã QR trên màn hình máy tính"
+              ></codx-label>
+            </li>
+          </ol>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="closeScanQRGuid()"
+          >
+            <codx-label class="text-primary" default="Đóng"></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-toggle="modal"
+    data-target="#myModal"
+    (click)="openScanQRGuid()"
+  >
+    Open modal
+  </button>
+
+  <!-- The Modal -->
+  <div class="modal" id="myModal" #content>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Heading</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            (click)="closeScanQRGuid()"
+          >
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">Modal body..</div>
+      </div>
+    </div>
+  </div>
+</div>
