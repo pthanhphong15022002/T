@@ -416,14 +416,11 @@
           </ng-template>
         </ng-container>
         <span
+          *ngIf="data?.signedDate"
           class="me-4"
           [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-          [innerHTML]="
-            data?.signedDate
-              | formatvalue : view.formModel : 'signedDate'
-              | async
-          "
         >
+          {{ data?.signedDate | fmDT : "dmy" }}
         </span>
       </div>
     </div>
