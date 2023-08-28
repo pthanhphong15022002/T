@@ -871,6 +871,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             (taskFind) => taskFind?.recID == task?.recID
           );
           task.status = '2';
+          task.actualStart = res;
           task.modifiedBy = this.user.userID;
           task.modifiedOn = new Date();
           if (indexTaskView >= 0) {

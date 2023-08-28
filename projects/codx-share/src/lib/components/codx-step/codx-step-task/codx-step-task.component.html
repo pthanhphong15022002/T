@@ -352,7 +352,13 @@
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
-    <span
+    <span 
+      #popoverTooltip="ngbPopover"
+      [ngbPopover]="tooltipDate"
+      [placement]="'top-left'"
+      (mouseenter)="popoverTooltip.open()"
+      (mouseleave)="popoverTooltip.close()">
+      <span
       class="date text-nowrap text-gray-500"
       *ngIf="data?.value?.actualStart && data?.value?.status == '3'"
     >
@@ -364,7 +370,8 @@
       *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
         {{ data?.value?.actualEnd | date : dateFomat }}
     </span>
-
+    </span>
+    
     <span class="d-flex align-items-center">
       <codx-imgs
         class="me-2 d-flex align-items-center"
@@ -439,6 +446,13 @@
       *ngIf="currentStep?.memo"
       [innerHTML]="currentStep?.memo | formatvalue : formModel : 'Memo' | async"
     ></div>
+  </div>
+</ng-template>
+
+<ng-template #tooltipDate let-data="value">
+  <div>
+    <div>Ngày bắt đầu</div>
+    <div>Ngày kết thúc</div>
   </div>
 </ng-template>
 <!-- <codx-vll
