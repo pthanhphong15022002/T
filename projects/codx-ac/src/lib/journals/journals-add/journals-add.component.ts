@@ -365,13 +365,20 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
 
   onJournalNameChange(e): void {
     console.log('onJournalNameChange', e);
+    console.log(this.templateProps127);
+
+    if (!e.data) {
+      return;
+    }
 
     this.journalService.getJournal(e.data).subscribe((journal: IJournal) => {
-      const { journalNo, recID, journalName, isTemplate, status, ...rest } =
-        journal;
-      // this.form.formGroup.controls["hi"].patchValue();
-      this.form.formGroup.patchValue(rest);
-      Object.assign(this.journal, rest);
+      const patchObject: any = this.templateProps127.reduce(
+        (prev, cur) => ({ ...prev, [cur]: journal[cur] }),
+        {}
+      );
+      delete patchObject.journalName;
+      this.form.formGroup.patchValue(patchObject);
+      Object.assign(this.journal, patchObject);
     });
   }
 
@@ -412,14 +419,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       return;
     }
 
-    const propNames1: string[] = [
-      'drAcctControl',
-      'crAcctControl',
-      'diM1Control',
-      'diM2Control',
-      'diM3Control',
-    ];
-    const propNames2: string[] = [
+    const propNames: string[] = [
       'drAcctID',
       'crAcctID',
       'diM1',
@@ -433,11 +433,11 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       'DIM2Control',
       'DIM3Control',
     ];
-    for (let i = 0; i < propNames1.length; i++) {
+    for (let i = 0; i < propNames.length; i++) {
       if (
         !this.validateVll067(
-          this.journal[propNames1[i]],
-          propNames2[i],
+          this.journal[Util.camelize(gvsPropNames[i])],
+          propNames[i],
           gvsPropNames[i]
         )
       ) {
@@ -455,11 +455,11 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
 
     this.journal.vatControl = this.journal.vatControl ? '1' : '0';
 
-    const dataValueObj = {};
-    for (const prop of this.extrasProps088) {
-      dataValueObj[prop] = this.journal[prop];
-    }
-    this.journal.extras = JSON.stringify(dataValueObj);
+    const extrasObj = this.extrasProps088.reduce(
+      (prev, cur) => ({ ...prev, [cur]: this.journal[cur] }),
+      {}
+    );
+    this.journal.extras = JSON.stringify(extrasObj);
 
     // don't allow editing some fields if this journal has any vouchers.
     if (this.isEdit && this.hasVouchers) {
@@ -523,13 +523,13 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     comboboxName: string,
     comboboxValue: string,
     propName: string,
-    vll067: string
+    vll067: Vll067
   ): void {
-    if (['0', '1'].includes(vll067)) {
+    if ([Vll067.MacDinh, Vll067.GiaTriCoDinh].includes(vll067)) {
       this.isMultiple = false;
     }
 
-    if (vll067 === '2') {
+    if (vll067 === Vll067.TrongDanhSach) {
       this.isMultiple = true;
     }
 
@@ -782,7 +782,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  /** When vll067 has values of 0, 1 and 2, this.journal[propName] must not be left empty */
+  /** When vll067 has values of 4, 1 and 2, this.journal[propName] must not be left empty */
   validateVll067(
     vll067: Vll067,
     propName: string,

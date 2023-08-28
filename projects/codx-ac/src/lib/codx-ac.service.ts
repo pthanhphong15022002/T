@@ -45,8 +45,8 @@ export class CodxAcService {
     return v;
   }
 
-  getGridViewSetup(formName:any,gridViewName:any){
-    return this.cache.gridViewSetup(formName,gridViewName)
+  getGridViewSetup(formName: any, gridViewName: any) {
+    return this.cache.gridViewSetup(formName, gridViewName);
   }
 
   setCacheFormModel(formModel: FormModel) {
@@ -68,7 +68,12 @@ export class CodxAcService {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
-  execApi(assemblyName: any, className: any, methodName: any, data: any): Observable<any[]>{
+  execApi(
+    assemblyName: any,
+    className: any,
+    methodName: any,
+    data: any
+  ): Observable<any[]> {
     return this.api.exec(assemblyName, className, methodName, data);
   }
 
@@ -171,7 +176,7 @@ export class CodxAcService {
         setTimeout(() => {
           el.querySelector('input').focus();
         }, 100);
-        
+
         break;
       }
     }
@@ -251,7 +256,7 @@ export class CodxAcService {
       )
       .pipe(
         //tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0])),
+        map((p) => JSON.parse(p[0]))
         //tap((p) => console.log(p))
       );
   }
@@ -259,10 +264,7 @@ export class CodxAcService {
   loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
     return this.api
       .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(
-        //tap((r) => console.log(r)),
-        map((r) => r[0])
-      );
+      .pipe(map((r) => r[0]));
   }
 
   createCrudService(
@@ -318,8 +320,8 @@ export class CodxAcService {
     );
   }
 
-  getMorefunction(formName,gridviewName){
-    return this.cache.moreFunction(formName,gridviewName);
+  getMorefunction(formName, gridviewName) {
+    return this.cache.moreFunction(formName, gridviewName);
   }
 
   checkExistAccount(data: any): boolean {

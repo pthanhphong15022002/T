@@ -416,7 +416,7 @@ export class PopupAddItemComponent
     } else {
       this.disabledTabs.delete('production');
     }
-    // this.form.setDisabled([...this.disabledTabs.values()].join(';'));
+    this.form.setDisabled([...this.disabledTabs.values()].join(';'));
   }
 
   onDimGroupIDChange(e): void {
