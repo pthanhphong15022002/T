@@ -263,4 +263,12 @@ export class ViewCalendarComponent
   }
 
   settingViews() {}
+
+  //------------------More Func-----------------//
+  //chua goi tho phan quyền -- đang full true
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {}
+
+  //------------------More Func-----------------//
 }
