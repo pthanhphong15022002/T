@@ -133,7 +133,7 @@
               <div class="d-flex align-items-center justify-content-end mt-1">
                 <div
                   class="d-flex align-items-center"
-                  [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                  [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                 >
                   <span
                     class="icon-check_circle text-green icon-14 me-1"
@@ -141,7 +141,7 @@
                   <span
                     *ngIf="dataSelected?.probability; else defaultNull"
                     class="line-clamp-menu"
-                    [ngbTooltip]="gridViewSetup['Probability']?.headerText"
+                    [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                     #probability
                     [innerHTML]="
                       dataSelected?.probability
@@ -158,7 +158,7 @@
                       : 'text-gray-600 ms-3 line-clamp line-clamp-1'
                   "
                   #expectedClosed
-                  [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
+                  [ngbTooltip]="gridViewSetup?.ExpectedClosed?.headerText"
                   [innerHTML]="
                     dataSelected?.expectedClosed
                       | formatvalue
@@ -419,7 +419,7 @@
                       ></span>
                     </div>
                     <div class="d-flex justify-content-center">
-                      {{ gridViewSetup["ConsultantID"]?.headerText }}
+                      {{ gridViewSetup?.ConsultantID?.headerText }}
                     </div>
                   </ng-template>
                   <div
