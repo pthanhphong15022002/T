@@ -68,15 +68,15 @@ export class EmployeeContractComponent extends UIComponent {
   dateNow = moment().format('YYYY-MM-DD');
 
   //#region eContractFuncID
+  actionCancelSubmit = 'HRTPro01A00';
   actionAddNew = 'HRTPro01A01';
   actionSubmit = 'HRTPro01A03';
   actionUpdateCanceled = 'HRTPro01AU0';
   actionUpdateInProgress = 'HRTPro01AU3';
-  actionUpdateRejected = 'HRTPro01AU4';
+  // actionUpdateRejected = 'HRTPro01AU4';
   actionUpdateApproved = 'HRTPro01AU5';
   actionUpdateClosed = 'HRTPro01AU9';
   //#endregion
-  // moment(data.effectedDate).format("YYYY-MM-DD")
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
@@ -92,11 +92,13 @@ export class EmployeeContractComponent extends UIComponent {
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
-    // this.cache.functionList(funID).subscribe((fuc) => {
-    this.cache.gridViewSetup('EContracts', 'grvEContracts').subscribe((res) => {
-      this.grvSetup = res;
+    this.cache.functionList(funID).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((res) => {
+          this.grvSetup = res;
+        });
     });
-    // });
   }
 
   onInit(): void {
@@ -170,7 +172,10 @@ export class EmployeeContractComponent extends UIComponent {
           this.view.dataService.update(res.event[1]).subscribe();
         }
 
-        if (funcID === 'HRTPro01AU0' || funcID === 'HRTPro01AU9') {
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
           this.codxShareService
             .codxCancel(
               'HR',
@@ -256,22 +261,22 @@ export class EmployeeContractComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
+    console.log(event.functionID);
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEContractStatus(event.functionID, oUpdate);
         break;
-      case this.actionAddNew: // de xuat hop dong tiep theo
-        this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
-        break;
-
+      // case this.actionAddNew: // de xuat hop dong tiep theo
+      //   this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
+      //   break;
       case 'SYS03':
         this.currentEmpObj = data.emp;
         this.HandleEContractInfo(event.text, 'edit', data);
@@ -279,16 +284,6 @@ export class EmployeeContractComponent extends UIComponent {
         break;
       case 'SYS02': //delete
         this.view.dataService.delete([data]).subscribe();
-        // this.view.dataService
-        //   .delete([data], true, (option: RequestOption) =>
-        //     this.beforeDelete(option, data)
-        //   )
-        // .subscribe((res) => {
-        //   if (res[1]) {
-        //     res[1].emp = data?.emp;
-        //   }
-        //   this.view.dataService.update(res[1]).subscribe();
-        // });
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.emp;

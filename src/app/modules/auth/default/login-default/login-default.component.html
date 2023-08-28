@@ -154,7 +154,7 @@
                                   *ngIf="isNotADMode"
                                   class="text-start mt-3 mb-3"
                                 >
-                                  <div class="otp-btn">
+                                  <div class="otp-btn w-100">
                                     <button
                                       [disabled]="
                                         otpTimeout > 0 ||
@@ -164,7 +164,7 @@
                                       type="button"
                                       (click)="generateOTP()"
                                       tabindex="-1"
-                                      class="btn link-dark text-decoration-none border border-primary"
+                                      class="btn btn-full btn-outline-primary"
                                     >
                                       <codx-label
                                         formModel=""
@@ -261,8 +261,8 @@
                                     </div>
                                   </div>
                                   <ng-template #avatar></ng-template>
-                                  <div class="qr-codx-msg mt-5 text-center">
-                                    <codx-label
+                                  <div class="qr-codx-msg mt-3 text-center">
+                                    <codx-label class="fs-7 text-gray-600"
                                       default="Chỉ dùng đăng nhập CoDX trên máy tính"
                                     ></codx-label>
                                     <!-- <button
@@ -279,7 +279,7 @@
                                     </button> -->
                                   </div>
                                 </div>
-                                <div class="d-flex" *ngIf="qrTimeout > 0">
+                                <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
                                   <codx-label
                                     formModel=""
                                     default="Xác thực sẽ hết hạn sau "
@@ -291,9 +291,9 @@
                                   </span>
                                 </div>
                                 <div
-                                  class="qr-codx-guid font-weight-bold d-flex flex-column text-center"
+                                  class="qr-codx-guid d-flex flex-column text-center mt-3"
                                 >
-                                  <codx-label
+                                  <codx-label class="fw-bold text-dark fs-6"
                                     default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"
                                   ></codx-label>
                                   <!-- <button
@@ -303,7 +303,7 @@
                                   >
                                     
                                   </button> -->
-
+                                  <div class="mt-3">
                                   <button
                                     type="button"
                                     class="btn btn-primary"
@@ -314,6 +314,7 @@
                                       default="Hướng dẫn quét"
                                     ></codx-label>
                                   </button>
+                                </div>
                                 </div>
                               </div>
                             </ng-template>
@@ -1109,47 +1110,50 @@
   </div>
   <!-- End active Tenant -->
 </ng-container>
-<div class="container">
-  <div class="modal" id="scanQRGuid">
-    <div class="modal-dialog w-300px h-700px">
+<div class="container modal-scanqr">
+  <div class="modal align-items-center" id="scanQRGuid">
+    <div class="modal-dialog w-400px my-0">
       <div class="modal-content">
         <div class="modal-header d-flex flex-column">
-          <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+          <div class="pt-5">
+            <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+          </div>
           <codx-label
-            class="text-primary"
+            class="text-dark fw-bold fs-3 my-3"
             default="Hướng dẫn quét mã QR"
           ></codx-label>
-          <div class="rounded mt-3">
+          <div class="rounded mt-5">
             <img src="/assets/codx/bg/qrCodx.png" class="h-150px" alt="" />
           </div>
         </div>
         <div class="modal-body">
-          <ol>
-            <li>
-              <codx-label
-                class="text-primary"
-                default="Đăng nhập ứng dụng CoDX trên điện thoại của bạn"
-              ></codx-label>
-            </li>
-            <li>
-              <codx-label
-                class="text-primary"
-                default="Tại ứng dụng chọn biểu tượng"
-              ></codx-label>
-              <span [class]="'icon-20 me-2 icon-qr_code_scanner'"></span>
-            </li>
-            <li>
-              <codx-label
-                class="text-primary"
-                default="Quét mã QR trên màn hình máy tính"
-              ></codx-label>
-            </li>
-          </ol>
+          <div class="d-flex align-items-center mb-3">
+            <div class="ol-number fw-bold fs-6">1</div>
+            <codx-label
+              class="text-dark fw-bold"
+              default="Đăng nhập ứng dụng CoDX trên điện thoại của bạn"
+            ></codx-label>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="ol-number fw-bold fs-6">2</div>
+            <codx-label
+              class="text-dark fw-bold"
+              default="Tại ứng dụng chọn biểu tượng"
+            ></codx-label>
+            <span [class]="'icon-16 mx-2 icon-qr_code_scanner'"></span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="ol-number fw-bold fs-6">3</div>
+            <codx-label
+              class="text-dark fw-bold"
+              default="Quét mã QR trên màn hình máy tính"
+            ></codx-label>
+          </div>
         </div>
         <div class="modal-footer justify-content-center">
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn w-50 btn-light-primary"
             (click)="closeScanQRGuid()"
           >
             <codx-label class="text-primary" default="Đóng"></codx-label>

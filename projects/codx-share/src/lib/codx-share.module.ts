@@ -208,7 +208,6 @@ import { AttachmentWebComponent } from './components/attachment/attachment-web/a
 import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
 
 import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
-import { CodxAddESignFileComponent } from './components/codx-approval-procress/codx-add-esignfile/codx-add-esignfile.component';
 import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { CodxInstancesComponent } from './components/codx-instances/codx-instances.component';
@@ -216,6 +215,7 @@ import { NoteSliderComponent } from './layout/drawers/note/note-slider/note-slid
 import { CodxNotesComponent } from './layout/drawers/note/codx-note/codx-notes.component';
 import { CodxFilesAttachmentComponent } from './components/codx-files-attachment/codx-files-attachment.component';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
+import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -380,7 +380,7 @@ const T_Component: Type<any>[] = [
 
   //Approval Process
   CodxAddApproversComponent,
-  CodxAddESignFileComponent,
+  CodxViewReleaseSignFileComponent,
   CodxAddSignFileComponent,
   CodxGetTemplateSignFileComponent,
 ];

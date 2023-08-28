@@ -321,6 +321,8 @@
         </div>
       </div>
       <!-- [customToolbar]="pdfToolbar" -->
+      <!-- [handTool]="!(isEditable && !isPublic && !isInteractPDF)" -->
+
       <ngx-extended-pdf-viewer
         [showToolbar]="false"
         *ngIf="curFileUrl"
@@ -328,8 +330,8 @@
         [src]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
-        [handTool]="!(isEditable && !isPublic && !isInteractPDF)"
-        [showHandToolButton]="false"
+        [handTool]="showHand"
+        [showHandToolButton]="showHand"
         [useBrowserLocale]="true"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
@@ -415,7 +417,7 @@
                     <ng-template #signer let-approver>
                       <codx-temp-full
                         cardCss="card-select px-2 pt-3 pb-2"
-                        [(imageId)]="approver.authorID"
+                        [(imageId)]="approver.userID"
                         [imageObjType]="'AD_Users'"
                         [imageWidth]="35"
                         imgCss="me-2"
