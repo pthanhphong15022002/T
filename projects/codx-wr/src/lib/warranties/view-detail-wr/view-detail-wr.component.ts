@@ -90,8 +90,8 @@ export class ViewDetailWrComponent implements OnInit {
     this.changeMoreMF.emit({ e: e, data: data });
   }
 
-  loadOrderUpdate(){
-    this.viewUpdate.getListOrderUpdate();
+  listOrderUpdate(lstUpdate){
+    this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
     this.changeDetectorRef.detectChanges();
   }
 }

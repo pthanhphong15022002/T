@@ -79,7 +79,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         moment(this.data.scheduleStart).format('DD/MM/YYYY') +
         ' ' +
         this.startTime +
-        '-' +
+        ' - ' +
         this.endTime;
     }
 

@@ -1339,8 +1339,13 @@ export class PopupPolicyalComponent
           if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
             this.addApplyObj()
           }
-          this.df.detectChanges();
         }
+        else{
+          this.alpolicyObj.includeObjects = ''
+          this.lstSelectedObj = []
+          this.lstPolicyBeneficiariesApply = []
+        }
+        this.df.detectChanges();
       });
     }
   }
@@ -1364,10 +1369,17 @@ export class PopupPolicyalComponent
         opt
       );
       popup.closed.subscribe((res) => {
-        this.alpolicyObj.excludeObjects = res.event
-        this.lstSelectedExcludeObj = res.event.split(';')
-        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
-          this.addExcludeObj()
+        if(res.event){
+          this.alpolicyObj.excludeObjects = res.event
+          this.lstSelectedExcludeObj = res.event.split(';')
+          if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
+            this.addExcludeObj()
+          }
+        }
+        else{
+          this.alpolicyObj.excludeObjects = ''
+          this.lstSelectedExcludeObj = []
+          this.lstPolicyBeneficiariesExclude = []
         }
         this.df.detectChanges();
       });
@@ -1673,42 +1685,26 @@ export class PopupPolicyalComponent
             
             this.currentCbxName = 'HRDepts';
             this.currentCbxValue = obj.orgUnitID;
-            // this.policyBeneficiariesDetail.cbxVllName = 'HRDepts';
-            // this.policyBeneficiariesDetail.fieldName = 'OrgUnitID';
             break; 
           case '2':
             this.currentCbxName = 'JobLevels';
             this.currentCbxValue = obj.jobLevel;
-            // this.policyBeneficiariesDetail.cbxVllName = 'JobLevels';
-            // this.policyBeneficiariesDetail.fieldName = 'JobLevel';
             break; 
           case '3':
             this.currentCbxName = 'PositionsName';
             this.currentCbxValue = obj.positionID;
-
-            // this.policyBeneficiariesDetail.cbxVllName = 'PositionsName';
-            // this.policyBeneficiariesDetail.fieldName = 'PositionID';
             break; 
           case '4':
             this.currentCbxName = 'EmployeeTypes';
             this.currentCbxValue = obj.employeeTypeID;
-
-            // this.policyBeneficiariesDetail.cbxVllName = 'EmployeeTypes';
-            // this.policyBeneficiariesDetail.fieldName = 'EmployeeTypeID';
             break; 
           case '6':
             this.currentCbxName = 'ContractTypes';
             this.currentCbxValue = obj.contractTypeID;
-
-            // this.policyBeneficiariesDetail.cbxVllName = 'ContractTypes';
-            // this.policyBeneficiariesDetail.fieldName = 'ContractTypeID';
             break; 
           case '7':
             this.currentCbxName = 'Employees';
             this.currentCbxValue = obj.employeeID;
-
-            // this.policyBeneficiariesDetail.cbxVllName = 'Employees';
-            // this.policyBeneficiariesDetail.fieldName = 'EmployeeID';
             break; 
         }
         this.isHidden = false;
@@ -1863,7 +1859,6 @@ export class PopupPolicyalComponent
             
             this.lstPolicyBeneficiariesExclude[index].employeeID = event.id;
           }
-          // this.lstPolicyBeneficiariesApply[index].employeeID = event.id;
           this.lstEmployeeID = this.lstEmployeeID.filter((obj) => obj.rec != this.currentRec);
           for(let i = 0; i < lstId.length; i++){
               this.loadEmpFullInfo(lstId[i]).subscribe((res) => {
