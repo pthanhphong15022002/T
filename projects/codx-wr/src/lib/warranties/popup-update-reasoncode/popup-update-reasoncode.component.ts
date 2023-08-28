@@ -43,6 +43,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   endMinute = 0;
   startDate: any;
   endDate: any;
+  edit = false;
+  countFile = 0;
+  countFileDelete = 0;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -77,12 +80,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       this.startTime +
       ' : ' +
       this.endTime;
+    this.data.attachments = this.edit
+      ? this.data.attachments + this.countFile - this.countFileDelete
+      : this.countFile;
     if (this.attachment?.fileUploadList?.length > 0) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          var countAttach = 0;
-          countAttach = Array.isArray(res) ? res.length : 1;
-          this.data.attachments = countAttach;
           this.updateReason();
         }
       });
@@ -117,17 +120,23 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       if (this.commentControl) {
         this.data.comment = e?.component?.itemsSelected[0]?.Comment;
       }
-      let wordOrder = await firstValueFrom(
-        this.api.execSv<any>(
-          'WR',
-          'ERM.Business.WR',
-          'WorkOrderUpdatesBusiness',
-          'GetWorkOrderUpdateByStatusCodeAsync',
-          [this.data?.statusCode, this.data.transID]
-        )
-      );
-      if (wordOrder != null) {
-        this.data.recID = wordOrder?.recID;
+      if (e?.data) {
+        let wordOrder = await firstValueFrom(
+          this.api.execSv<any>(
+            'WR',
+            'ERM.Business.WR',
+            'WorkOrderUpdatesBusiness',
+            'GetWorkOrderUpdateByStatusCodeAsync',
+            [this.data?.statusCode, this.data.transID]
+          )
+        );
+        if (wordOrder != null) {
+          this.data.recID = wordOrder?.recID;
+          this.data.attachments = wordOrder?.attachments ?? 0;
+          this.edit = true;
+        } else {
+          this.edit = false;
+        }
       }
     }
     this.detectorRef.detectChanges();
@@ -222,11 +231,27 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.attachment.uploadFile();
   }
   getfileCount(e) {
-    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
-    else this.isHaveFile = false;
+    if (e > 0 || e?.data?.length > 0) {
+      if (e > 0) {
+        this.countFile = e;
+      }
+
+      this.isHaveFile = true;
+    } else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
 
-  fileAdded(e) {}
+  fileDelete(e) {
+    if(e){
+      this.countFileDelete = e.length;
+    }
+    console.log(e);
+  }
+
+  fileAdded(e) {
+    if (e?.data) {
+      this.countFile = e?.data.length;
+    }
+  }
   //#endregion
 }
