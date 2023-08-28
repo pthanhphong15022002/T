@@ -76,7 +76,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   stepViews = [];
   isZoomIn = false;
   isZoomOut = false;
-
+  isShow = true;
   // formModel: FormModel = {
   //   entityName: 'DP_Instances_Steps_Reasons',
   //   formName: 'DPInstancesStepsReasons',
@@ -152,6 +152,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.type = e.data;
   }
   changeValueDropdownSelect(e) {
+    this.isShow
     if (e.field == 'status') {
       if (e?.data?.length == 0) {
         this.listInstanceStepShow = this.listInstanceStep;
@@ -165,6 +166,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isShowElement = e.data[0] == '1' ? true : false;
     } else {
       this.isShowElement = true;
+    }
+  }
+
+  handelToggleStep(){
+    this.isShow = !this.isShow;
+    if (this.isShow) {
+      this.isShowElement = true;
+    } else {
+      this.isShowElement = false;
     }
   }
 
