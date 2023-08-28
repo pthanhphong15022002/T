@@ -1,5 +1,7 @@
 <div class="card-body p-0 codx-card-custom">
-  <div class="codx-stepper stepper stepper-pills d-flex flex-column justify-content-between">
+  <div
+    class="codx-stepper stepper stepper-pills d-flex flex-column justify-content-between"
+  >
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
@@ -91,6 +93,7 @@
         [recID]="sfRecID"
         [stepNo]="stepNo"
         [isEditable]="canOpenSubPopup"
+        [isSignMode]="true"
         (isActiveToSign)="changeActiveOpenPopup($event)"
         (changeSignerInfo)="changeSignerInfo($event)"
         (eventHighlightText)="eventHighlightText($event)"
@@ -140,11 +143,7 @@
     </div>
     <div class="card-footer px-2">
       <div class="d-flex justify-content-end mt-4">
-        <button
-          class="btn btn-primary "
-          type="submit"
-          (click)="confirmOTPPin()"
-        >
+        <button class="btn btn-primary" type="submit" (click)="confirmOTPPin()">
           <codx-label
             name="lblConfirm"
             [formModel]="formModel"
