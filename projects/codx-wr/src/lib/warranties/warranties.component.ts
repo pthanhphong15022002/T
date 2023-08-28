@@ -29,6 +29,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddWarrantyComponent } from './popup-add-warranty/popup-add-warranty.component';
 import { PopupUpdateReasonCodeComponent } from './popup-update-reasoncode/popup-update-reasoncode.component';
 import { PopupAssignEngineerComponent } from './popup-assign-engineer/popup-assign-engineer.component';
+import { CodxWrService } from '../codx-wr.service';
+import { ViewDetailWrComponent } from './view-detail-wr/view-detail-wr.component';
 
 @Component({
   selector: 'lib-warranties',
@@ -43,6 +45,7 @@ export class WarrantiesComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail!: TemplateRef<any>;
+  @ViewChild('viewDetail') viewDetail: ViewDetailWrComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -76,11 +79,12 @@ export class WarrantiesComponent
   className = 'WorkOrdersBusiness';
   method = 'GetListWorkOrdersAsync';
   idField = 'recID';
-
+  lstOrderUpdate = [];
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private callFc: CallFuncService,
+    private wrSv: CodxWrService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -100,6 +104,14 @@ export class WarrantiesComponent
     this.button = {
       id: this.btnAdd,
     };
+    this.wrSv.listOrderUpdateSubject.subscribe((res) => {
+      if (res) {
+        this.lstOrderUpdate = res;
+        // this.listContacts.push(Object.assign({}, res));
+        // this.lstContactEmit.emit(this.listContacts);
+        this.wrSv.listOrderUpdateSubject.next(null);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -555,7 +567,8 @@ export class WarrantiesComponent
           dialogModel.FormModel = formModel;
           let obj = {
             title: this.titleAction,
-            data: data,
+            transID: data?.recID,
+            engineerID: data?.engineerID,
             gridViewSetup: res,
           };
           this.callFc
@@ -571,6 +584,22 @@ export class WarrantiesComponent
             )
             .closed.subscribe((e) => {
               if (e?.event && e?.event != null) {
+                this.dataSelected.statusCode = e?.event?.statusCode;
+                this.dataSelected.scheduleStart = e?.event?.scheduleStart;
+                this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
+                let index = this.lstOrderUpdate.findIndex(
+                  (x) =>
+                    x.statusCode == e?.event?.statusCode &&
+                    x.transID == e?.event?.transID
+                );
+                if (index != -1) {
+                  this.lstOrderUpdate[index] = e?.event;
+                } else {
+                  this.lstOrderUpdate.push(e?.event);
+                }
+
+                this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+
                 this.detectorRef.detectChanges();
               }
             });
@@ -604,6 +633,17 @@ export class WarrantiesComponent
           this.dataSelected.engineerID = e?.event[0];
           this.dataSelected.comment = e?.event[1];
           this.view.dataService.update(this.dataSelected).subscribe();
+          let index = this.lstOrderUpdate.findIndex(
+            (x) =>
+              x.statusCode == this.dataSelected?.statusCode &&
+              x.transID == this.dataSelected?.recID
+          );
+          if (index != -1) {
+            this.lstOrderUpdate[index].engineerID = this.dataSelected.engineerID;
+          }
+
+          this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+
           this.detectorRef.detectChanges();
         }
       });

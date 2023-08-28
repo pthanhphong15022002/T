@@ -624,8 +624,9 @@ export class PdfComponent
           );
         } else {
           this.tr?.resizeEnabled(
-            this.isEditable == false ? false :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? false
+              : area.allowEditAreas == false
               ? false
               : area.isLock == true
               ? false
@@ -633,8 +634,9 @@ export class PdfComponent
           );
 
           this.tr?.enabledAnchors(
-            this.isEditable == false ? [] :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? []
+              : area.allowEditAreas == false
               ? []
               : area.isLock == true
               ? []
@@ -645,8 +647,9 @@ export class PdfComponent
               : this.textAnchor
           );
           this.tr?.draggable(
-            this.isEditable == false ? false :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? false
+              : area.allowEditAreas == false
               ? false
               : area.isLock == true
               ? false
@@ -755,7 +758,7 @@ export class PdfComponent
 
   //loaded pdf
   loadedPdf(e: any) {
-    if (this.pageMax > 0) {
+    if (e.pagesCount > 0) {
       this.pageMax = e.pagesCount;
 
       let ngxService: NgxExtendedPdfViewerService =

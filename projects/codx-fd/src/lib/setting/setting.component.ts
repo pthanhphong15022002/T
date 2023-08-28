@@ -81,46 +81,8 @@ export class SettingComponent extends UIComponent implements OnInit {
     this.pageTitle.setBreadcrumbs([]);
   }
 
-  changeLineType(row, isNext) {
-    if (isNext) {
-      this.curLineType++;
-      this.refQueue.push(row.recID);
-    } else {
-      this.curLineType--;
-      this.refQueue.pop();
-    }
-    this.curGroup = row;
-
-    this.detectorRef.detectChanges();
-  }
-
   changeTabs() {
     this.curLineType = 1;
     this.detectorRef.detectChanges();
-  }
-
-  changeFieldValue(formName, transType, category, evt) {
-    let isChange = false;
-    if (this.setingValues[transType][evt.field] != evt.data) {
-      isChange = true;
-    }
-    if (typeof evt.data === 'boolean') {
-      this.setingValues[transType][evt.field] = evt.data ? '1' : '0';
-    } else {
-      this.setingValues[transType][evt.field] = evt.data;
-    }
-    if (isChange) {
-      this.fdService
-        .updateSettingValue(
-          formName,
-          transType,
-          category,
-          evt.field,
-          this.setingValues[transType][evt.field]
-        )
-        .subscribe((res) => {
-          console.log('update res', res);
-        });
-    }
   }
 }
