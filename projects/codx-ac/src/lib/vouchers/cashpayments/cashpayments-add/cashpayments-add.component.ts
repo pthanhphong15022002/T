@@ -912,19 +912,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @param event
    */
   tabSelectedDetail(event) {
-    if (event.selectedIndex == 2) {
-      //? nếu click tab hóa đơn GTGT
-      if (
-        this.eleGridCashPayment.dataSource.length > 0 &&
-        this.eleGridCashPayment?.rowDataSelected
-      ) {
-        this._vatInvoices = [
-          ...this.vatInvoices.filter(
-            (x) => x.lineID == this.eleGridCashPayment?.rowDataSelected?.recID
-          ),
-        ]; //? filter data vatinvoice theo dòng được chọn
-      }
+    if (event.selectedIndex == 2) { //? nếu click tab hóa đơn GTGT
+      this.eleGridVatInvoices.predicates = 'TransID=@0&&LineID=@1';
+      this.eleGridVatInvoices.dataValues = this.cashpayment.recID + ';' + this.eleGridCashPayment?.rowDataSelected?.recID;
       this.detectorRef.detectChanges();
+      this.eleGridVatInvoices.refresh();
     }
   }
 
@@ -1195,6 +1187,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     let oOffsetAcct = null;
     let oAccount = null;
     this.oLine = {};
+    this.oLine.recID = Util.uid();
     this.oLine.transID = this.cashpayment.recID;
     this.oLine.objectID = this.cashpayment.objectID;
     this.oLine.reasonID = this.cashpayment.reasonID;
@@ -1487,7 +1480,12 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   addLineVatInvoices() {
     let data:any  = {};
+    data.recID = Util.uid();
+    data.invoiceDate = new Date();
     data.transID = this.cashpayment.recID;
+    data.lineID = this.eleGridCashPayment?.rowDataSelected?.recID;
+    data.vatAmt = 0;
+    data.vatBase = 0;
     this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
   }
 
@@ -1738,25 +1736,44 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       case 'add':
         if (!isCompleted) {
           this.saveMasterBeforeAddRow('4');
-        }else{
+        }else{      
           this.api
             .execAction(
               'AC_CashPaymentsLines',
               this.eleGridCashPayment.dataSource,
-              'SaveAsync',
+              !this.eleGridCashPayment.rowDataSelected ? 'SaveAsync' : 'UpdateAsync',
               true
             )
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
-              if (res) {
+              if (!res.error) {
                 this.eleGridCashPayment.refresh(); //? => refresh lại lưới
               }
             });
         }   
         break;
+      case 'update':
+        if (isCompleted) {
+          this.api
+            .execAction(
+              'AC_CashPaymentsLines',
+              this.eleGridCashPayment.dataSource,
+              'UpdateAsync',
+              true
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (!res.error) {
+                this.eleGridCashPayment.refresh(); //? => refresh lại lưới
+              }
+            });
+        } 
+        break;
       case 'endEdit':
         if (!this.eleGridCashPayment.rowDataSelected) {
           this.addLineBeforeSaveVatInvoices(event.rowData);
+        }else{
+          this.updateLineBeforeSaveVatInvoices(event.rowData);
         }   
         break;
     }
@@ -1774,7 +1791,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     if (this.journal.entryMode == '1') {
       this.setDefaultLine();
       this.oLine.dr = totalVatAtm;
-      this.eleGridCashPayment.rowDataSelected = this.oLine;
       if (this.vatAccount) {
         this.oLine.accountID = this.vatAccount;
       }
@@ -1788,7 +1804,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
           if (this.vatAccount) {
             this.oLine.accountID = this.vatAccount;
           }
-          this.eleGridCashPayment.rowDataSelected = this.oLine;
           this.eleGridCashPayment.dataSource.push(this.oLine);
           data.lineID = this.oLine.recID;
         } else {
@@ -1806,7 +1821,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   updateLineBeforeSaveVatInvoices(data) {
     let totalVatAtm = 0;
-    this._vatInvoices.forEach((item) => {
+    this.eleGridVatInvoices.dataSource.forEach((item) => {
       totalVatAtm += item.vatAmt;
     });
     if (this.journal.entryMode == '1') {
