@@ -7,6 +7,7 @@ import { RoundService } from '../../../round.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'lib-cashreceipts-add',
@@ -108,12 +109,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    this.getDataDetailBeforeInit();
+    this.beforeInit();
   }
 
   ngAfterViewInit() {
-    this.formCashreceipts.formGroup.patchValue(this.cashreceipts, {
-      //? gán dữ liệu của Cashpayment hiển thị lên form
+    this.formCashreceipts.formGroup.patchValue(this.cashreceipts, { //? gán dữ liệu của Cashpayment hiển thị lên form
       onlySelf: true,
       emitEvent: false,
     });
@@ -131,7 +131,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   /**
    * *Hàm get dữ liệu trước khi hiển thị trên form
    */
-  getDataDetailBeforeInit() {
+  beforeInit() {
     switch (this.action) {
       case 'add': //? nếu trạng thái form chứng từ là thêm mới hoặc sao chép
       case 'copy':
@@ -168,35 +168,24 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
             this.cashreceipts.refID,
           ]) //? get data detail theo loại chứng từ
           .subscribe((res: any) => {
-            if (res) {
-              this.cashreceiptsline = res?.lsCashReceiptsline? res?.lsCashReceiptsline : []; //? danh sách chi tiết (tab chi tiết)
-              this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : []; //? danh sách chi tiết (tab hóa đơn công nợ)
-              this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : []; //? danh sách chi tiết (tab hóa đơn GTGT)
-              this.voucherNoAdv = res?.voucherNoRef ? res?.voucherNoRef : ''; //? số chứng từ đề nghị hoàn ứng,thanh toán
-              this.dRAdv = res?.totalDrRef ? res?.totalDrRef : 0; //? số tiền chứng từ đề nghị hoàn ứng,thanh toán
-              this.subTypeAdv = res?.subtypeRef ? res?.subtypeRef : '1'; //? loại của chứng từ đề nghị hoàn ứng,thanh toán(mặc định là 1)
+            if (res) {                        
+              this.voucherNoAdv = res?.voucherNoRef ? res?.voucherNoRef : ''; //? số chứng từ đề nghị tạm ứng,thanh toán
+              this.dRAdv = res?.totalDrRef ? res?.totalDrRef : 0; //? số tiền chứng từ đề nghị tạm ứng,thanh toán
+              this.subTypeAdv = res?.subtypeRef ? res?.subtypeRef : '1'; //? loại của chứng từ đề nghị tạm ứng,thanh toán(mặc định là 1)
               this.detectorRef.detectChanges();
+              this.showHideTabDetail(this.cashreceipts.subType,this.elementTabDetail);
             }
           });
         break;
     }
   }
-
   /**
    * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
    * @param columnsGrid : danh sách cột của lưới
    */
-  beforeInitGridCashreceipts(eleGrid) {
+  beforeInitGridCashreceipts(eleGrid:CodxGridviewV2Component) {
     //* Thiết lập format number theo đồng tiền hạch toán
-    if (this.cashreceipts.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      eleGrid.setFormatField('dr','B');
-      eleGrid.setFormatField('cr','B');
-    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
-      eleGrid.setFormatField('dr','S');
-      eleGrid.setFormatField('cr','S');
-      eleGrid.setFormatField('dR2','B');
-      eleGrid.setFormatField('cR2','B');
-    }
+    this.settingFormatGridCashPayment(eleGrid);
 
     //* Thiết lập datasource combobox theo sổ nhật ký
     let preAccountID = '';
@@ -222,13 +211,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
     }
     eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
-    
+
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
       preDIM1 = '@0.Contains(DepartmentID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
-    
+
 
     if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
       preDIM2 = '@0.Contains(CostCenterID)';
@@ -243,11 +232,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
 
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
-    
+
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       this.hideFieldsCashreceipts = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    if (!this.hideFieldsCashreceipts.includes('Settlement') && this.cashreceipts.subType == '11') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
+    if (!this.hideFieldsCashreceipts.includes('Settlement') && this.cashreceipts.subType == '1') { //? nếu chứng từ loại chi thanh toán nhà cung cấp(ko theo hóa đơn)
       this.hideFieldsCashreceipts.push('Settlement'); //? => ẩn field phương pháp cấn trừ
     }
 
@@ -264,7 +253,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.hideFieldsCashreceipts.push('CR2'); //? => ẩn field tiền Nợ,HT
       }
     }
-    
+    //debugger
     eleGrid.showHideColumns(this.hideFieldsCashreceipts);
   }
 
@@ -677,20 +666,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   saveMasterBeforeAddRow(typeBtn) {
-    if (
-      !this.acService.validateFormData(
-        this.formCashreceipts.formGroup,
-        this.grvSetupCashreceipts
-      )
-    ) {
-      return;
-    }
-    if (this.cashreceipts.subType != '11' && !this.cashreceipts.objectID) {
-      this.notification.notifyCode(
-        'SYS009',
-        null,
-        this.grvSetupCashreceipts['ObjectID'].headerText
-      );
+    if (this.formCashreceipts.formGroup.invalid) {
       return;
     }
     switch (this.action) {
@@ -1782,6 +1758,56 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     bm.forEach(element => {
       element.disabled = true;
     });
+  }
+
+  /**
+   * *Hàm setting format tiền theo đồng tiền hạch toán
+   * @param eleGrid 
+   */
+  settingFormatGridCashPayment(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.cashreceipts.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('dr','n0');
+      eleGrid.setFormatField('cr','n0');
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('dr','n0');
+      eleGrid.setFormatField('cr','n0');
+      eleGrid.setFormatField('dR2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('cR2','n'+(setting.dSourceCurr || 0));
+    }
+  }
+
+  /**
+   * *Hàm set validate cho form
+   */
+  setValidateForm(){
+    // if (this.journal.assignRule == '1' || this.journal.assignRule == '2') { //? nếu số chứng từ tự động hoặc từ động tạo khi lưu
+    //   this.formCashreceipts.formGroup.controls['voucherNo'].removeValidators(Validators.required); //? không cần bắt buộc nhập
+    // }
+    // if (this.cashpayment.subType != '1') { //? nếu chứng từ khác nhà cung cấp ko theo hóa đơn 
+    //   this.formCashreceipts.formGroup.controls['objectID'].setValidators(Validators.required); //? set bắt buộc nhập đối tượng   
+    // }else{
+    //   this.formCashreceipts.formGroup.controls['objectID'].removeValidators(Validators.required); //? set ko bắt buộc nhập đối tượng
+    // }
+    // this.formCashreceipts.formGroup.controls['objectID'].updateValueAndValidity();
+    // this.formCashreceipts.formGroup.controls['voucherNo'].updateValueAndValidity();
+
+    // let ins = setInterval(() => {
+    //   if (this.eleCbxObjectID && this.elelblObjectID) {
+    //     clearInterval(ins);
+    //     if (this.formCashreceipts.formGroup.controls['objectID'].status == 'INVALID') {
+    //       this.eleCbxObjectID.require = true;
+    //       this.elelblObjectID?.changeDetectorRef?._cdRefInjectingView[0]?.children[0]?.classList?.add('required'); //? set label có hình bắt buộc
+    //     }else{
+    //       this.eleCbxObjectID.require = false;
+    //       this.elelblObjectID?.changeDetectorRef?._cdRefInjectingView[0]?.children[0]?.classList?.remove('required'); //? set label ko có hình bắt buộc
+    //     }
+    //   }
+    // }, 200);
+    // setTimeout(() => {
+    //   if (ins) clearInterval(ins);
+    // }, 5000);
+    
   }
 
   @HostListener('click', ['$event'])

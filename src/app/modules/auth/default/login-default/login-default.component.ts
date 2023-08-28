@@ -29,6 +29,7 @@ import {
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { AngularDeviceInformationService } from 'angular-device-information';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'codx-login',
@@ -71,7 +72,7 @@ export class LoginDefaultComponent extends UIComponent {
   enableCaptcha = 0;
   token = '';
   captChaValid = false;
-  enableMultiLogin = false;
+  enableMultiLogin = true;
   // private fields
 
   //#region OTP
@@ -84,8 +85,9 @@ export class LoginDefaultComponent extends UIComponent {
   connection: any;
   qrTimeout: number = 0;
   qrTimeoutMinutes: number = 0;
-  qrBase64: string = 'https://cdn.ttgtmedia.com/rms/misc/qr_code_barcode.jpg';
+  qrBase64: string = '/assets/codx/bg/qrCodx.png';
   isScaned = false;
+  modal;
   //#endregion
 
   constructor(
@@ -155,7 +157,10 @@ export class LoginDefaultComponent extends UIComponent {
   ngOnDestroy() {
     this.destroyEven.emit();
   }
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    const element = document.getElementById('scanQRGuid') as HTMLElement;
+    this.modal = new Modal(element);
+  }
   checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
@@ -321,5 +326,11 @@ export class LoginDefaultComponent extends UIComponent {
     }
   }
 
-  openScanQRGuid() {}
+  openScanQRGuid() {
+    this.modal.show();
+  }
+
+  closeScanQRGuid() {
+    this.modal.hide();
+  }
 }

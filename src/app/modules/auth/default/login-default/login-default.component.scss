@@ -72,9 +72,9 @@
 // }
 
 .login .login-form {
-	width: 100%;
-	max-width: 300px;
-	min-width: 300px;
+	width: 360px;
+	// max-width: 350px;
+	min-width: 360px;
 }
 
 @media (max-width: 575.98px) {
@@ -127,5 +127,42 @@ a:hover {
 
 	.login-image {
 		display: none !important;
+	}
+}
+.tabs-login {
+	height: 360px;
+	
+	.e-tab-header{
+		margin-bottom: 15px;
+	}
+	.e-tab-header::before {
+		border: 0;
+	}
+	.e-toolbar-item{
+		border: 1px var(--gray-150) solid!important;
+		border-radius: 5px;
+		height: 64px;
+		width: 110px;
+		display: flex;
+		align-self: center;
+		justify-content: center;
+		&.e-active{
+			border-color: var(--primary)!important;
+			*{
+				color: var(--primary)!important;
+			}
+		}
+		&:hover{
+			border-color: var(--primary)!important;
+			*{
+				color: var(--primary)!important;
+			}
+		}
+	}
+	.e-content{
+		height: auto!important;
+	}
+	.e-text-wrap, .e-tab-text{
+		width: 100%;
 	}
 }
