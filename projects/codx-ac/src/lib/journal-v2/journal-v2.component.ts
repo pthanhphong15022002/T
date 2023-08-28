@@ -40,13 +40,21 @@ export class JournalV2Component extends UIComponent implements OnInit {
   vll85 = [];
   func = [];
   vllJournalTypes064: any[] = [];
+
+  journalTypes134: string[];
+  journalTypes135: string[];
+  journalTypes136: string[];
+  journalTypes137: string[];
+  journalTypes138: string[];
+
   randomSubject = new BehaviorSubject<number>(Math.random());
   nameByIdPipe = new NameByIdPipe();
   creaters: { journalNo: string; value: string }[];
   posters: { journalNo: string; value: string }[];
+
+  mainFilterValue: string = '1';
+  subFilterValue: string = '0';
   ViewType = ViewType;
-  statusFilter: any = 1;
-  status: string;
   button: ButtonModel = {
     id: 'btnAdd',
   };
@@ -130,14 +138,22 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
+        this.subFilterValue = res.datas[0].value;
       }
     });
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
         this.vll86 = res.datas;
-        this.status = res.datas[0].value;
+        this.mainFilterValue = res.datas[0].value;
       }
     });
+
+    this.assignVllToProp2('AC134', 'journalTypes134');
+    this.assignVllToProp2('AC135', 'journalTypes135');
+    this.assignVllToProp2('AC136', 'journalTypes136');
+    this.assignVllToProp2('AC137', 'journalTypes137');
+    this.assignVllToProp2('AC138', 'journalTypes138');
+
     combineLatest({
       users: this.journalService.getUsers(),
       userGroups: this.journalService.getUserGroups(),
@@ -253,19 +269,41 @@ export class JournalV2Component extends UIComponent implements OnInit {
     }
   }
 
-  changePredicate(val, field: string) {
-    this.statusFilter = val;
-    let predicates = [field + '=@0'];
-    let dataValues = [val];
+  changePredicate(value: string, field: string): void {
+    this[field] = value;
+
+    let journalTypes: string = '';
+    switch (this.subFilterValue) {
+      case '1':
+        journalTypes = this.journalTypes134.join(';');
+        break;
+      case '2':
+        journalTypes = this.journalTypes135.join(';');
+        break;
+      case '3':
+        journalTypes = this.journalTypes136.join(';');
+        break;
+      case '4':
+        journalTypes = this.journalTypes137.join(';');
+        break;
+      case '5':
+        journalTypes = this.journalTypes138.join(';');
+        break;
+    }
+    const predicates: string[] =
+      this.subFilterValue !== '0'
+        ? ['Status=@0 and @1.Contains(JournalType)']
+        : ['Status=@0'];
+    const dataValues: string[] = [`${this.mainFilterValue};[${journalTypes}]`];
     this.view.dataService.setPredicates(predicates, dataValues);
   }
 
   search(e) {
-    if (e) this.view.dataService.search(e);
+    this.view.dataService.search(e);
   }
 
   dbClick(data) {
-    if (this.statusFilter == "3") {
+    if (this.mainFilterValue == '3') {
       return;
     }
 
@@ -303,7 +341,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
           'AC',
           'JournalsBusiness',
           'SetDefaultAsync',
-          this.statusFilter == '3'
+          this.mainFilterValue == '3'
         )
       )
       .subscribe(() => {
@@ -400,4 +438,19 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
   }
   //#region Method
+
+  //#region Function
+  /** vll with pipe(map((d) => d.datas.map((v) => v.value))) */
+  assignVllToProp2(vllCode: string, propName: string): void {
+    this.cache
+      .valueList(vllCode)
+      .pipe(
+        tap((t) => console.log(vllCode, t)),
+        map((d) => d.datas.map((v) => v.value))
+      )
+      .subscribe((res) => {
+        this[propName] = res;
+      });
+  }
+  //#endregion
 }

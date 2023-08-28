@@ -106,6 +106,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
   }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -358,8 +359,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
-      this.activitie.status = '1';
-
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [this.activitie])
         .subscribe((res) => {
