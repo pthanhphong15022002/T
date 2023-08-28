@@ -62,14 +62,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.data.recID = Util.uid();
-    this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
-    this.data.scheduleEnd = new Date(
-      this.data.scheduleStart.getTime() + 3600000
-    );
-    this.selectedDate = moment(new Date(this.data?.scheduleStart))
-      .set({ hour: 0, minute: 0, second: 0 })
-      .toDate();
-    this.setTimeEdit();
   }
 
   //#region save
@@ -120,9 +112,25 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
       this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+      if (this.dateControl) {
+        this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
+        this.data.scheduleEnd = new Date(
+          this.data.scheduleStart.getTime() + 3600000
+        );
+        this.selectedDate = moment(new Date(this.data?.scheduleStart))
+          .set({ hour: 0, minute: 0, second: 0 })
+          .toDate();
+        this.setTimeEdit();
+      }else{
+        this.data.scheduleStart = null;
+        this.data.scheduleEnd = null;
+        this.data.scheduleTime = '';
+      }
       this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
       if (this.commentControl) {
         this.data.comment = e?.component?.itemsSelected[0]?.Comment;
+      }else{
+        this.data.comment = '';
       }
       if (e?.data) {
         let wordOrder = await firstValueFrom(
