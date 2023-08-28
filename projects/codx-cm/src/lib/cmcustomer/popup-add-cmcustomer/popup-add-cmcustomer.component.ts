@@ -702,7 +702,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           } else {
             var tmp = new BS_AddressBook();
             tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '19' : this.funcID == 'CM0105' ? '0' : '1';
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
             tmp.adressName = this.data.address;
             tmp.isDefault = true;
             this.tmpAddress = tmp;
@@ -711,7 +711,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         } else {
           var tmp = new BS_AddressBook();
           tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '19' : this.funcID == 'CM0105' ? '0' : '1';
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
           tmp.adressName = this.data.address;
           tmp.isDefault = true;
           this.tmpAddress = tmp;
@@ -727,7 +727,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           } else {
             var tmp = new BS_AddressBook();
             tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '19' : this.funcID == 'CM0105' ? '0' : '1';
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
             tmp.adressName = this.data.address;
             tmp.isDefault = true;
             this.tmpAddress = tmp;
@@ -736,7 +736,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         } else {
           var tmp = new BS_AddressBook();
           tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '19' : this.funcID == 'CM0105' ? '0' : '1';
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
           tmp.adressName = this.data.address;
           tmp.isDefault = true;
           this.tmpAddress = tmp;

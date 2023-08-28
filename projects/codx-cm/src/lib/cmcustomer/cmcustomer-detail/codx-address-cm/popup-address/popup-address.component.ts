@@ -56,9 +56,9 @@ export class PopupAddressComponent implements OnInit {
       this.isDefault = this.data?.isDefault;
     } else {
       if (this.dialog.formModel?.funcID == 'CM0101') {
-        this.data.adressType = '1';
+        this.data.adressType = '6';
       } else {
-        this.data.adressType = '19';
+        this.data.adressType = '5';
       }
     }
     this.type = dt?.data?.type;

@@ -188,13 +188,13 @@ export class CodxAddressCmComponent implements OnInit {
     let opt = new DialogModel();
     let dataModel = new FormModel();
     var title = action == 'add' ? this.moreFuncAdd : this.moreFuncEdit;
-    dataModel.formName = 'AddressBook';
-    dataModel.gridViewName = 'grvAddressBook';
+    dataModel.formName = 'CMAddressBook';
+    dataModel.gridViewName = 'grvCMAddressBook';
     dataModel.entityName = 'BS_AddressBook';
     dataModel.funcID = this.funcID;
     opt.FormModel = dataModel;
     this.cache
-      .gridViewSetup('AddressBook', 'grvAddressBook')
+      .gridViewSetup('CMAddressBook', 'grvCMAddressBook')
       .subscribe((res) => {
         if (res) {
           var obj = {
