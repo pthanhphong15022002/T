@@ -229,7 +229,11 @@ export class PopupAddWarrantyComponent implements OnInit {
               key[index].toLowerCase() != 'ModifiedBy'
             )
               if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-                this.data[key[index]] = serviceTag[keySv[i]];
+                if (key[index].toLowerCase() == 'warrantyExpired') {
+                  this.data[key[index]] = new Date(serviceTag[keySv[i]]);
+                } else {
+                  this.data[key[index]] = serviceTag[keySv[i]];
+                }
               }
           }
         }
