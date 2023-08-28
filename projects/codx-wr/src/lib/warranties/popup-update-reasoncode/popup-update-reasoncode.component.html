@@ -33,7 +33,7 @@
           class="test-datetime"
           [crrValue]="data?.scheduleStart"
           (valueChange)="valueDateChange($event)"
-          field="startDate"
+          field="scheduleStart"
           format="d"
           placeholder="datetime"
         >
@@ -120,8 +120,10 @@
             [formModel]="dialog.formModel"
             (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)"
+            (fileDelete)="fileDelete($event)"
             displayThumb="full"
             showMessage="0"
+            [heightScroll]="250"
             [dataSelected]="data"
           >
           </codx-attachment>

@@ -72,7 +72,7 @@ export class LoginDefaultComponent extends UIComponent {
   enableCaptcha = 0;
   token = '';
   captChaValid = false;
-  enableMultiLogin = false; //checkin-false
+  enableMultiLogin = false;
   // private fields
 
   //#region OTP

@@ -62,6 +62,7 @@ import { DetailPolicyCoinsComponent } from './setting/detail-policy-coins/detail
 import { SettingCycleComponent } from './setting/setting-cycle/setting-cycle.component';
 import { SettingPolicyLinesComponent } from './setting/setting-policy-lines/setting-policy-lines.component';
 import { AddDedicationRankComponent } from './setting/dedication-rank/add-dedication-rank/add-dedication-rank.component';
+import { SettingContentComponent } from './setting/setting-content/setting-content.component';
 
 export const routes: Routes = [
   {
@@ -204,6 +205,7 @@ const Component: Type<any>[] = [
   SettingCycleComponent,
   SettingPolicyLinesComponent,
   AddDedicationRankComponent,
+  SettingContentComponent,
 ];
 
 @NgModule({
