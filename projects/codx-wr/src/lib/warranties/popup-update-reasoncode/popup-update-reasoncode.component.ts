@@ -25,6 +25,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
 
   dateControl = false;
   commentControl = false;
+  startTime: any = null;
+  endTime: any = null;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -53,8 +55,21 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     }
   }
 
-  valueChange(e) {}
+  valueChange(e) {
+    this.data[e?.field] = e?.data;
+    if(e?.field == 'statusCode'){
+      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+      this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
+      if(this.commentControl){
+        this.data.comment = e?.component?.itemsSelected[0]?.Comment;
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
 
+  valueDateChange(e){}
+  valueStartTimeChange(e){}
+  valueEndTimeChange(e){}
   //#region file
 
   addFile(e) {
