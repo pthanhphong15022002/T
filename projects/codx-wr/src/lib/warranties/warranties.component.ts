@@ -555,7 +555,8 @@ export class WarrantiesComponent
           dialogModel.FormModel = formModel;
           let obj = {
             title: this.titleAction,
-            data: data,
+            transID: data?.recID,
+            engineerID: data?.engineerID,
             gridViewSetup: res,
           };
           this.callFc
@@ -571,6 +572,9 @@ export class WarrantiesComponent
             )
             .closed.subscribe((e) => {
               if (e?.event && e?.event != null) {
+                this.dataSelected.statusCode = e?.event?.statusCode;
+                this.dataSelected.scheduleStart = e?.event?.scheduleStart;
+                this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
                 this.detectorRef.detectChanges();
               }
             });
