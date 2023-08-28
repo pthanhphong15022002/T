@@ -31,7 +31,7 @@ import {
   TenantStore,
 } from 'codx-core';
 import { type } from 'os';
-import { map } from 'rxjs';
+import { Observable, from, map, mergeMap, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
 import { environment } from 'src/environments/environment';
@@ -252,7 +252,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 });
                 //this.attachment2.saveFiles();
                 //Upload file
-                debugger
                 this.attachment2.saveFilesObservable().then((saveFile) => {
                   if (saveFile) {
                     saveFile.subscribe((saved: any) => {
@@ -334,8 +333,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.attachment1.fileUploadList.forEach(elm=>{
                 elm.objectType ='AD_WordTemplates';
               });
-              this.onSaveWord();
-              this.dialog.close([item[1][0], this.type,this.nameFile]);
+              this.onSaveWord().subscribe(saveW =>{
+                if(saveW) this.dialog.close([item[1][0], this.type,this.nameFile]);
+              });
+              
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
@@ -358,8 +359,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           .subscribe((item) => {
             if (!item) return;
             if (item[0] == true) {
-              this.notifySvr.notifyCode('RS002');
-              if (this.isContentChange) {
+              if (this.isContentChange) 
+              {
                 this.file
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe((res) => {
@@ -369,12 +370,19 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                       this.attachment1.fileUploadList.forEach(elm=>{
                         elm.objectType ='AD_WordTemplates';
                       });
-                      this.onSaveWord();
+                      this.onSaveWord().subscribe(saveW =>{
+                        if(saveW) this.dialog.close([item[1][0], this.type]);
+                      });
                     }
                   });
               }
-              this.dialog.close([item[1][0], this.type]);
-            } else this.notifySvr.notify('SYS021');
+              else this.dialog.close([item[1][0], this.type]);
+              this.notifySvr.notifyCode('RS002');
+            } 
+            else 
+            {
+              this.notifySvr.notify('SYS021');
+            }
           });
       }
     }
@@ -420,15 +428,18 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       this.loadContentWord(e[0].pathDisk);
     }
   }
-  onSaveWord() {
-    this.container.documentEditor.saveAsBlob('Docx').then((blob: Blob) => {
+  onSaveWord() : Observable<any[]| any>{
+    var saveAsBlob = this.container.documentEditor.saveAsBlob('Docx');
+    var fSaveAsBlob = from(saveAsBlob);
+    return fSaveAsBlob.pipe(mergeMap((blob: Blob)=>{
       var file = new File([blob], this.nameFile);
       this.attachment1.isSaveSelected = '1';
       this.attachment1.fileUploadList = [];
-      this.attachment1.handleFileInput([
+      return this.attachment1.handleFileInputObservable([
         { name: this.nameFile, rawFile: file, type: 'docx', size: file.size },
       ]);
-    });
+    }));
+    //return of(null);
   }
 
   deleteFile(uploadID: any) {
