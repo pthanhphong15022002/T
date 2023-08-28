@@ -95,8 +95,7 @@ export class AdvancePayment extends UIComponent implements OnInit {
           if (res) {
             this.onDestroy();
             this.dialog.close({
-              oCashAdv: this.grid.arrSelectedRows[0],
-              oLineAdv: res?.oLine ? res?.oLine : [],
+              oCashAdv: this.grid.arrSelectedRows[0]
             });
           }
         });
@@ -124,7 +123,8 @@ export class AdvancePayment extends UIComponent implements OnInit {
         this.cashpayment.voucherDate,
         this.dateSuggestion,
         this.cashpayment.subType,
-        this.voucherNo
+        this.voucherNo,
+        this.cashpayment.objectID
 
       ])
       .pipe(takeUntil(this.destroy$))

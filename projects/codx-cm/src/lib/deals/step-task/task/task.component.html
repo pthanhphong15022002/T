@@ -80,7 +80,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isPause && data?.task?.status == '1'"
+      *ngIf="!isPause && (data?.task?.status == '1')"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -90,7 +90,7 @@
     >
     </codx-mfunc>
     <codx-mfunc
-      *ngIf="!isPause && data?.task?.status != '1'"
+      *ngIf="!isPause && (data?.task?.status != '1')"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"

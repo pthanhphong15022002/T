@@ -106,6 +106,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         }
       });
   }
+
   async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = {};
@@ -161,14 +162,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           //tajo cuoc hop
-          case 'DP24':
-            if (task.taskType != 'M'){
+          case 'DP24': //Tạo cuộc họp
+            if (task.taskType != 'M' || task?.actionStatus == '2') {
               res.disabled = true;
-            }else{
-              task?.status == '1' && (res.isblur = true);
-            } 
+            } else if (task?.status == '1') {
+              res.isblur = true;
+            }
             break;
-
           case 'DP27': // đặt xe
             if (task?.taskType != 'B' ||(task?.taskType == 'B' && task?.actionStatus == '2')){
               res.disabled = true;
@@ -225,9 +225,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP20': // tien do
         this.openPopupUpdateProgress(task, 'T');
         break;
-      // case 'DP24': // tạo lịch họp
-      //   this.createMeeting(task);
-      //   break;
+      case 'DP24': // tạo lịch họp
+        this.createMeeting(task);
+        break;
       // case 'SYS004':
       //   this.sendMail();
       //   break;
@@ -359,8 +359,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
-      this.activitie.status = '1';
-
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [this.activitie])
         .subscribe((res) => {
@@ -637,4 +635,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
   //#endregion
+  createMeeting(task){
+    this.stepService.createMeeting(task,this.titleName);
+  }
 }

@@ -407,7 +407,7 @@
 <ng-template #TmpTabLine>
   <ng-container *ngIf="((cashreceipts?.subType == '11'))">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine"
+      <codx-gridview-v2 #eleGridCashreceipts class="tabLine"
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="cashreceipts.recID"

@@ -18,26 +18,62 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
-    <div class="form-group row" *ngIf="dateControl">
+    <div class="form-group row mt-3" *ngIf="dateControl">
       <div class="col-6">
-        <codx-label fiedName="StartDate" [formModel]="form.formModel">
-        </codx-label>
+        <div>
+          <codx-label
+            name="lblScheduleStart"
+            [formModel]="form.formModel"
+            default="Ngày"
+          >
+          </codx-label>
+        </div>
         <codx-input
+          type="datetime"
+          class="test-datetime"
+          [crrValue]="data?.scheduleStart"
+          (valueChange)="valueDateChange($event)"
           field="startDate"
-          [formModel]="form.formModel"
-          [crrValue]="data?.startDate"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
+          format="d"
+          placeholder="datetime"
+        >
+        </codx-input>
       </div>
-      <div class="col-6">
-        <codx-label fiedName="EndDate" [formModel]="form.formModel">
-        </codx-label>
+      <div class="col-3">
+        <div>
+          <codx-label
+            name="lblScheduleStartTime"
+            [formModel]="form.formModel"
+            default="Từ giờ"
+          >
+          </codx-label>
+        </div>
         <codx-input
-          field="endDate"
-          [formModel]="form.formModel"
-          [crrValue]="data?.endDate"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
+          type="datetime"
+          [crrValue]="startTime"
+          format="t"
+          placeholder="timefrom"
+          (valueChange)="valueStartTimeChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="col-3">
+        <div>
+          <codx-label
+            name="lblScheduleEndTime"
+            [formModel]="form.formModel"
+            default="Đến giờ"
+          >
+          </codx-label>
+        </div>
+        <codx-input
+          type="datetime"
+          [crrValue]="endTime"
+          format="t"
+          placeholder="timefrom"
+          (valueChange)="valueEndTimeChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
     <div class="form-group" *ngIf="commentControl">

@@ -30,8 +30,6 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
-  @ViewChild('multiselect') mulObj: MultiSelectComponent;
-  @ViewChild('multiselect2') mulObj2: MultiSelectComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
@@ -59,6 +57,7 @@ export class PopupJobComponent implements OnInit {
   listParentID = [];
   listTaskLink = [];
   listGroupTask = [];
+  listGroupTaskCombobox = [];
   listFileTask: string[] = [];
 
   stepID = '';
@@ -95,10 +94,11 @@ export class PopupJobComponent implements OnInit {
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
     if (dt?.data?.listGroup) { // remove group task recID null
-      this.listGroupTask = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
-      let index = this.listGroupTask?.findIndex((group) => !group.recID);
+      this.listGroupTask = dt?.data?.listGroup || [];
+      this.listGroupTaskCombobox = JSON.parse(JSON.stringify(this.listGroupTask));
+      let index = this.listGroupTaskCombobox?.findIndex((group) => !group.recID);
       if (index >= 0) {
-        this.listGroupTask?.splice(index, 1);
+        this.listGroupTaskCombobox?.splice(index, 1);
       }
     }
 
@@ -151,9 +151,6 @@ export class PopupJobComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-    // icon show ejs-multiselect
-    this.mulObj.showDropDownIcon = true;
-    this.mulObj2.showDropDownIcon = true;
   }
   getFormModel() {
     this.cache
@@ -288,20 +285,20 @@ export class PopupJobComponent implements OnInit {
     let task = this.stepsTasks;
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
-      let groupTask = this.listGroupTask.find(
-        (x) => x.recID == task['taskGroupID']
+      let groupTask = this.listGroupTask?.find(
+        (x) => x.recID == task?.taskGroupID
       );
       if (
-        task['dependRule'] != '1' ||
-        !task['parentID'].trim() ||
-        groupTask['task'].length === 0
+        task?.dependRule != '1' ||
+        !task?.parentID.trim() ||
+        groupTask?.task?.length === 0
       ) {
         //No parentID
         this.checkSave(groupTask);
       } else {
         // tính thời gian lớn nhất của group
         let timeMax = this.getTimeMaxGroupTask(
-          groupTask['task'],
+          groupTask?.task,
           this.stepsTasks
         );
         this.checkSave(groupTask, timeMax);

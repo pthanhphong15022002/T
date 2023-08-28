@@ -12,6 +12,7 @@ import {
   ButtonModel,
   DataRequest,
   FormModel,
+  PageLink,
   PageTitleService,
   SidebarModel,
   UIComponent,
@@ -20,7 +21,14 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  distinctUntilKeyChanged,
+  map
+} from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
@@ -99,6 +107,7 @@ export class PurchaseinvoicesComponent
     private journalService: JournalService,
     private routerActive: ActivatedRoute,
     private pageTitleService: PageTitleService,
+    private acService: CodxAcService
   ) {
     super(inject);
 
@@ -175,6 +184,44 @@ export class PurchaseinvoicesComponent
 
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.purchaseInvoiceService.journal = this.journal = journal;
+    });
+
+    const options1 = new DataRequest();
+    options1.entityName = 'SYS_FunctionList';
+    options1.pageLoading = false;
+    options1.predicates = 'ParentID=@0';
+    options1.dataValues = 'ACT';
+
+    const options2 = new DataRequest();
+    options2.entityName = 'AC_Journals';
+    options2.pageLoading = false;
+    options2.predicates = 'Status=@0';
+    options2.dataValues = '1';
+
+    combineLatest({
+      functionList: this.acService.loadDataAsync('SYS', options1),
+      journals: this.acService.loadDataAsync('AC', options2),
+      vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
+    }).subscribe(({ functionList, journals, vll077 }) => {
+      console.log(journals);
+      const links: PageLink[] = [];
+      for (const journal of journals as IJournal[]) {
+        if (journal.journalNo === this.journalNo) {
+          continue;
+        }
+
+        const functionId: string = vll077.find(
+          (v) => v.value === journal.journalType
+        )?.default;
+        links.push({
+          title: journal.journalDesc,
+          path:
+            functionList.find((f) => f.functionID === functionId)?.url +
+            `?journalNo=${journal.journalNo}`,
+        });
+      }
+
+      this.pageTitleService.setChildren(links);
     });
 
     // this.purchaseInvoiceService.initCache();

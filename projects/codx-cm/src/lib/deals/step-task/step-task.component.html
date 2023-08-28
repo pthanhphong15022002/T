@@ -12,7 +12,10 @@
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
-      <div class="ms-4">
+      <ng-container
+        [ngTemplateOutlet]="toggleStep"
+      ></ng-container>
+      <!-- <div class="ms-4">
         <codx-dropdown-select
           cssPopup="h-250px w-300px"
           [isMulti]="false"
@@ -22,7 +25,8 @@
           [refValue]="'DP046'"
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
-      </div>
+      </div> -->
+      
       <div
         class="ms-3 d-flex align-items-center"
         #popoverDetails="ngbPopover"
@@ -360,5 +364,34 @@
         [innerHTML]="item?.memo | formatvalue : formModel : 'Memo' | async"
       ></div>
     </ng-container>
+  </div>
+</ng-template>
+<ng-template #toggleStep>
+  <div class="ms-2" (click)="handelToggleStep()"  style="height: 28px;">
+    <div
+      role="button"
+      class="d-flex align-items-center border px-2 rounded-1 w-100px bg-gray-100 h-100"
+      *ngIf="isShow == true"
+      
+    >
+      <i class="icon-i-arrows-collapse me-2"></i>
+      <codx-label
+        default="Thu gọn"
+        [formModel]="formModel"
+        fiedName="lblCollapse"
+      ></codx-label>
+    </div>
+    <div
+      role="button"
+      class="d-flex align-items-center border px-2 rounded-1 w-100px h-100"
+      *ngIf="isShow == false"
+    >
+      <i class="icon-i-arrows-expand me-2"></i>
+      <codx-label
+        default="Mở rộng"
+        [formModel]="formModel"
+        fiedName="lblExpand"
+      ></codx-label>
+    </div>
   </div>
 </ng-template>

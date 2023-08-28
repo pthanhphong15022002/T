@@ -3606,6 +3606,13 @@ codx-view-list-tree{
   background-color: white;
   right: 0;
 }
+.e-dlg-content .toolbar-detail{
+  top: -5px;
+  background-color: var(--bg-body);
+  width: 350px;
+  padding-right: 25px;
+  z-index: 99;
+}
 codx-detail-toolbar codx-mfunc .dropdown {
   height: 26px;
 }

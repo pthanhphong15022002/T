@@ -34,7 +34,12 @@ export class ViewDetailWrComponent implements OnInit {
   treeTask = [];
 
   tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      template: null,
+    },
     {
       name: 'Comment',
       textDefault: 'Thảo luận',
@@ -47,10 +52,9 @@ export class ViewDetailWrComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
     {
-      name: 'Approve',
-      textDefault: 'Ký duyệt',
+      name: 'Task',
+      textDefault: 'Công việc',
       isActive: false,
       template: null,
     },
@@ -60,7 +64,6 @@ export class ViewDetailWrComponent implements OnInit {
       isActive: false,
       template: null,
     },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
   ];
 
   constructor(
@@ -75,40 +78,7 @@ export class ViewDetailWrComponent implements OnInit {
     this.user = this.authstore.get();
   }
 
-  ngOnInit(): void {
-    this.tabControl = [
-      {
-        name: 'History',
-        textDefault: 'Lịch sử',
-        isActive: true,
-        template: null,
-      },
-      {
-        name: 'Comment',
-        textDefault: 'Thảo luận',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'Attachment',
-        textDefault: 'Đính kèm',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'Task',
-        textDefault: 'Công việc',
-        isActive: false,
-        template: null,
-      },
-      {
-        name: 'References',
-        textDefault: 'Liên kết',
-        isActive: false,
-        template: null,
-      },
-    ];
-  }
+  ngOnInit(): void {}
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
