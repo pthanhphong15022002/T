@@ -44,6 +44,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   action = '';
   gridViewSetup: any;
   moreFuncAdd = '';
+  user: any;
   constructor(
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
@@ -58,7 +59,8 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
     this.title = dt?.data?.title;
-    this.userID = this.authstore?.get()?.userID;
+    this.user = this.authstore?.get();
+    this.userID = this.user?.userID;
     this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
   }
@@ -71,6 +73,19 @@ export class PopupAddWarrantyComponent implements OnInit {
       }
     } else {
       this.data.oow = true;
+      this.api
+        .execSv<any>(
+          'HR',
+          'ERM.Business.HR',
+          'OrganizationUnitsBusiness',
+          'GetUserManagerByUserIDAsync',
+          [this.data.owner]
+        )
+        .subscribe((res) => {
+          if(res){
+            this.data.teamLeader = res?.userID;
+          }
+        });
     }
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -269,7 +284,8 @@ export class PopupAddWarrantyComponent implements OnInit {
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
-      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
+      title:
+        this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
       data: this.data,
     };
     this.callFc
@@ -298,7 +314,8 @@ export class PopupAddWarrantyComponent implements OnInit {
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
-      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
+      title:
+        this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
       data: this.data,
     };
     this.callFc

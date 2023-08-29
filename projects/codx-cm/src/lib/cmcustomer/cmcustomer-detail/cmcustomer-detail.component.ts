@@ -50,41 +50,7 @@ export class CmCustomerDetailComponent implements OnInit {
   moreFuncEdit = '';
   vllContactType = '';
   listContacts = [];
-  tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-    {
-      name: 'Comment',
-      textDefault: 'Thảo luận',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'Attachment',
-      textDefault: 'Đính kèm',
-      isActive: false,
-      template: null,
-    },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
-    {
-      name: 'Approve',
-      textDefault: 'Ký duyệt',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
-    // {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
-    //   icon: 'icon-monetization_on',
-    //   isActive: false,
-    // },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-  ];
+  tabControl = [];
   treeTask = [];
   @Input() dataSelected: any;
   name = 'Information';
@@ -119,6 +85,53 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getVllByGridViewSetupContact();
     this.checkAdmin();
     this.getFormModelAddress();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.id = changes['dataSelected'].currentValue?.recID;
+        this.getOneCustomerDetail(this.dataSelected);
+        this.getTab();
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {}
+
+  getOneCustomerDetail(dataSelected) {
+    this.loaded = false;
+    this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
+    // this.getListContactByObjectID(this.dataSelected?.recID);
+    this.addressNameCM = this.dataSelected?.address;
+    this.loadTag(this.dataSelected);
+    // this.listTab(this.funcID);
+    this.loaded = true;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  loadTag(data) {
+    this.viewTag = '';
+    setTimeout(() => {
+      this.viewTag = data?.tags;
+    }, 100);
+  }
+
+  async checkAdmin() {
+    let data = await firstValueFrom(this.cmSv.getAdminRolesByModule());
+    let isAdmin = false;
+    if (data) {
+      let lstId = data.split(';');
+      isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
+    }
+    this.isAdmin = isAdmin || this.user.administrator;
+  }
+
+  getTab() {
     if (
       this.funcID == 'CM0101' ||
       this.funcID == 'CM0102' ||
@@ -178,49 +191,6 @@ export class CmCustomerDetailComponent implements OnInit {
         },
       ];
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelected']) {
-      if (
-        changes['dataSelected'].currentValue != null &&
-        changes['dataSelected'].currentValue?.recID
-      ) {
-        if (changes['dataSelected'].currentValue?.recID == this.id) return;
-        this.id = changes['dataSelected'].currentValue?.recID;
-        this.getOneCustomerDetail(this.dataSelected);
-      }
-    }
-  }
-
-  ngAfterViewInit(): void {}
-
-  getOneCustomerDetail(dataSelected) {
-    this.loaded = false;
-    this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
-    // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.addressNameCM = this.dataSelected?.address;
-    this.loadTag(this.dataSelected);
-    this.listTab(this.funcID);
-    this.loaded = true;
-    this.changeDetectorRef.detectChanges();
-  }
-
-  loadTag(data) {
-    this.viewTag = '';
-    setTimeout(() => {
-      this.viewTag = data?.tags;
-    }, 100);
-  }
-
-  async checkAdmin() {
-    let data = await firstValueFrom(this.cmSv.getAdminRolesByModule());
-    let isAdmin = false;
-    if (data) {
-      let lstId = data.split(';');
-      isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
-    }
-    this.isAdmin = isAdmin || this.user.administrator;
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
@@ -400,7 +370,7 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  clickShowTab(isShow){
+  clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
   }
