@@ -3748,15 +3748,21 @@ codx-view-tree-targets .menu-sub{
   background-color:var(--gray-150);
 }
 .badge-with-delete .badge{
-  padding-right: 24px!important;
+  padding-right: 22px!important;
 }
 .badge-with-delete .btn.btn-icon.btn-sm{
-  margin-left: -18px;
-  border-radius: 50%!important;
-  width: 20px!important;
-  height: 20px!important;
-  min-width: 20px!important;
-  min-height: 20px!important;
+  margin-left: -21px;
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    visibility: hidden;
+    margin-top: -2px;
+  
+}
+.badge-with-delete:hover .btn.btn-icon.btn-sm{
+  visibility: visible;
 }
 .tooltip-benefits{
  .tooltip-inner{

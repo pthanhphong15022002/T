@@ -45,8 +45,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   total: any = 0;
   hasSaved: any = false; //? trạng thái lưu của phiếu
   journal: any; //? data sổ nhật kí
-  editSettingsGrid: EditSettingsModel = {
-    //? thiết lập cho phép thêm, xóa, sửa và mode cho lưới
+  editSettingsGrid: EditSettingsModel = { //? thiết lập cho phép thêm, xóa, sửa và mode cho lưới
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
@@ -72,7 +71,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   dRAdv: any = 0; //? số tiền liên kết(xứ lí lấy số tiền của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)
-  //public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,

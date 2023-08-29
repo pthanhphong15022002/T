@@ -61,11 +61,12 @@ export class EmployeeAppointionsComponent extends UIComponent {
   viewActive: string;
 
   //#region more functions
+  actionCancelSubmit = 'HRTPro02A00';
   actionAddNew = 'HRTPro02A01';
   actionSubmit = 'HRTPro02A03';
   actionUpdateCanceled = 'HRTPro02AU0';
   actionUpdateInProgress = 'HRTPro02AU3';
-  actionUpdateRejected = 'HRTPro02AU4';
+  // actionUpdateRejected = 'HRTPro02AU4';
   actionUpdateApproved = 'HRTPro02AU5';
   actionUpdateClosed = 'HRTPro02AU9';
 
@@ -239,6 +240,23 @@ export class EmployeeAppointionsComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         //Render new data when update new status on view detail
         this.df.detectChanges();
       }
@@ -357,22 +375,22 @@ export class EmployeeAppointionsComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.PopupUpdateEAppointStatus(event.functionID, oUpdate);
         break;
-      //Propose increase salaries
-      case this.actionAddNew:
-        this.HandleEAppoint(
-          event.text + ' ' + this.view.function.description,
-          'add',
-          data
-        );
-        break;
+      // case this.actionAddNew:
+      //   this.HandleEAppoint(
+      //     event.text + ' ' + this.view.function.description,
+      //     'add',
+      //     data
+      //   );
+      //   break;
       //Delete
       case 'SYS02':
         if (data) {
