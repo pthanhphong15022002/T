@@ -335,7 +335,10 @@
     >
       Thêm template
     </button>
-    <button class="btn btn-primary" (click)="onSave()">Xuất file</button>
+    <div>
+      <button class="mx-1 btn btn-primary" (click)="onSave()"> <codx-label name="lblSave" default="Xuất file"></codx-label></button>
+      <button class="mx-1 btn btn-outline-primary" (click)="onClose()"><codx-label name="lblOK" default="OK"></codx-label></button>
+    </div>
   </div>
 </ng-template>
 <ng-template #nodata let-data>

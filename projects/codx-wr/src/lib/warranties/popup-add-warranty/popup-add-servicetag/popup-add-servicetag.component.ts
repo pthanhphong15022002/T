@@ -31,6 +31,8 @@ export class PopupAddServicetagComponent implements OnInit {
   data: WR_WorkOrders;
   dialog: DialogRef;
   title = '';
+  gridViewSetup: any;
+
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
@@ -41,6 +43,7 @@ export class PopupAddServicetagComponent implements OnInit {
     this.dialog = dialog;
     this.title = dt?.data?.title;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
     this.data.seriNo = '';
@@ -71,7 +74,11 @@ export class PopupAddServicetagComponent implements OnInit {
     );
 
     if (isExit) {
-      this.notiService.notifyCode('Trùng serviceTag');
+      this.notiService.notifyCode(
+        'WR001',
+        null,
+        "'" + this.gridViewSetup?.ServiceTag?.headerText + "'"
+      );
       return;
     }
 

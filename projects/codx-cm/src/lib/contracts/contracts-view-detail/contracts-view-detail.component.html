@@ -824,6 +824,7 @@
 <ng-template #steps let-data="value">
   <div *ngIf="listInsStep?.length > 0">
     <step-task
+      [entityName]="'CM_Contracts'"
       [dataSelected]="contract"
       [listInstanceStep]="listInsStep"
       (changeProgress)="autoStart($event)"

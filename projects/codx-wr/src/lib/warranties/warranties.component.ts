@@ -10,11 +10,13 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   AuthStore,
   ButtonModel,
   CacheService,
   CallFuncService,
   DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
   RequestOption,
@@ -31,6 +33,7 @@ import { PopupUpdateReasonCodeComponent } from './popup-update-reasoncode/popup-
 import { PopupAssignEngineerComponent } from './popup-assign-engineer/popup-assign-engineer.component';
 import { CodxWrService } from '../codx-wr.service';
 import { ViewDetailWrComponent } from './view-detail-wr/view-detail-wr.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-warranties',
@@ -46,6 +49,8 @@ export class WarrantiesComponent
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail!: TemplateRef<any>;
   @ViewChild('viewDetail') viewDetail: ViewDetailWrComponent;
+  @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
+  dialogStatus: DialogRef;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -59,6 +64,7 @@ export class WarrantiesComponent
   // region LocalVariable
   viewMode = 1;
   vllStatus = '';
+  vllPriority = 'TM005';
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
@@ -80,6 +86,8 @@ export class WarrantiesComponent
   method = 'GetListWorkOrdersAsync';
   idField = 'recID';
   lstOrderUpdate = [];
+  cancelledNote = '';
+  status = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -288,11 +296,20 @@ export class WarrantiesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'WR0101_1':
+      case 'WR0101_1': //Cập nhật trạng thái
         this.updateReasonCode(data);
         break;
-      case 'WR0101_2':
+      case 'WR0101_2': //Cập nhật kĩ thuật viên
         this.updateAssignEngineer(data);
+        break;
+      case 'WR0101_3': //Hủy case - status = 5
+        this.updateStatusWarranty('5', data);
+        break;
+      case 'WR0101_4': //Đóng case - status = 7
+        this.updateStatusWarranty('7', data);
+        break;
+      case 'WR0101_5': //Mở case - status = 3
+        this.updateStatusWarranty('3', data);
         break;
       default:
         var customData = {
@@ -315,16 +332,45 @@ export class WarrantiesComponent
   }
 
   changeDataMF($event, data, type = null) {
-    // if ($event != null && data != null) {
-    //   for (let eventItem of $event) {
-    //     if (type == 11) {
-    //       eventItem.isbookmark = false;
-    //     }
-    //     const functionID = eventItem.functionID;
-    //     // const mappingFunction = this.getRoleMoreFunction(functionID);
-    //     // mappingFunction && mappingFunction(eventItem, data);
-    //   }
-    // }
+    if ($event != null && data != null) {
+      $event.forEach((res) => {
+        if (data.status == '5') {
+          switch (res.functionID) {
+            case 'SYS03':
+            case 'SYS02':
+            case 'WR0101_1':
+            case 'WR0101_2':
+            case 'WR0101_3':
+            case 'WR0101_4':
+            case 'WR0101_5':
+              res.disabled = true;
+              break;
+            default:
+              break;
+          }
+        } else {
+          if (data.status == '7') {
+            switch (res.functionID) {
+              case 'SYS03':
+              case 'SYS02':
+              case 'WR0101_1':
+              case 'WR0101_2':
+              case 'WR0101_4':
+                res.disabled = true;
+                break;
+              default:
+                break;
+            }
+          } else {
+            switch (res.functionID) {
+              case 'WR0101_5':
+                res.disabled = true;
+                break;
+            }
+          }
+        }
+      });
+    }
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -587,6 +633,7 @@ export class WarrantiesComponent
                 this.dataSelected.statusCode = e?.event?.statusCode;
                 this.dataSelected.scheduleStart = e?.event?.scheduleStart;
                 this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
+                this.dataSelected.status = '3';
                 let index = this.lstOrderUpdate.findIndex(
                   (x) =>
                     x.statusCode == e?.event?.statusCode &&
@@ -597,7 +644,10 @@ export class WarrantiesComponent
                 } else {
                   this.lstOrderUpdate.push(e?.event);
                 }
-
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
+                this.view.dataService.update(this.dataSelected).subscribe();
                 this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
                 this.detectorRef.detectChanges();
@@ -632,18 +682,100 @@ export class WarrantiesComponent
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
           this.dataSelected.comment = e?.event[1];
-          this.view.dataService.update(this.dataSelected).subscribe();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
               x.statusCode == this.dataSelected?.statusCode &&
               x.transID == this.dataSelected?.recID
           );
           if (index != -1) {
-            this.lstOrderUpdate[index].engineerID = this.dataSelected.engineerID;
+            this.lstOrderUpdate[index].engineerID =
+              this.dataSelected.engineerID;
           }
 
           this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
 
+  //#region update status
+  updateStatusWarranty(status, data) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notificationsService
+      .alertCode(
+        'CM007',
+        null,
+        this.titleAction?.toLocaleLowerCase(),
+        "'" + data?.orderNo + "'"
+      )
+      .subscribe(async (x) => {
+        if (x?.event?.status == 'Y') {
+          if (status == '5') {
+            this.status = status;
+            this.dialogStatus = this.callfc.openForm(
+              this.updateStatus,
+              '',
+              500,
+              280
+            );
+            this.dialogStatus.closed.subscribe((ele) => {
+              if (ele && ele?.event) {
+                this.dataSelected.status = this.status;
+                this.dataSelected.cancelledNote = this.cancelledNote;
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
+                this.view.dataService.update(this.dataSelected).subscribe();
+                this.notificationsService.notifyCode('SYS007');
+                this.detectorRef.detectChanges();
+              }
+            });
+          } else {
+            this.api
+              .execSv<any>(
+                'WR',
+                'ERM.Business.WR',
+                'WorkOrdersBusiness',
+                'UpdateStatusWarrantyAsync',
+                [data?.recID, status, '']
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.dataSelected.status = res;
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.notificationsService.notifyCode('SYS007');
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+        }
+      });
+  }
+
+  changValueStatus(e) {
+    this.cancelledNote = e?.data;
+    this.detectorRef.detectChanges();
+  }
+
+  onSave(recID) {
+    this.api
+      .execSv<any>(
+        'WR',
+        'ERM.Business.WR',
+        'WorkOrdersBusiness',
+        'UpdateStatusWarrantyAsync',
+        [recID, this.status, this.cancelledNote]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialogStatus.close(res);
           this.detectorRef.detectChanges();
         }
       });

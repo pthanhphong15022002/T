@@ -21,12 +21,12 @@
         >: {{ dataSelected?.dealValue }}
       </div>
     </ng-template>
-    <ng-template #toolTipProbability>
+    <!-- <ng-template #toolTipProbability>
       <div class="text-end text-sm-start">
         <strong>{{ gridViewSetup["Probability"]?.headerText }}</strong
         >: {{ dataSelected?.probability }}
       </div>
-    </ng-template>
+    </ng-template> -->
     <ng-template #header let-data>
       <div class="d-flex align-items-center justify-content-between">
         <div
@@ -131,7 +131,7 @@
                 </div>
               </div>
               <div class="d-flex align-items-center justify-content-end mt-1">
-                <div
+                <!-- <div
                   class="d-flex align-items-center"
                   [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                 >
@@ -150,7 +150,7 @@
                     "
                   ></span
                   >%
-                </div>
+                </div> -->
                 <span
                   [ngClass]="
                     dataSelected?.expectedClosed
@@ -678,7 +678,7 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-6">
+                    <!-- <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
                           class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -708,7 +708,7 @@
                           >%
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
@@ -730,39 +730,6 @@
                                   : formModel
                                   : 'salespersonID'
                                   : salespersonID
-                                  : 'CMDeals'
-                                  : 'grvCMDeals'
-                                | async
-                            "
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="mb-1 d-flex align-items-top">
-                        <div
-                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                        >
-                          <codx-label
-                            class="me-2 label-colon"
-                            [setRequire]="false"
-                            [formModel]="formModel"
-                            fiedName="DealValue"
-                          ></codx-label>
-                        </div>
-                        <div class="text-dark fw-bold codx-textcontent">
-                          <span
-                            #dealValue
-                            *ngIf="dataSelected?.dealValue; else defaultNull"
-                            [innerHTML]="
-                              dataSelected?.dealValue
-                                | formatvalue
-                                  : formModel
-                                  : 'dealValue'
-                                  : dealValue
                                   : 'CMDeals'
                                   : 'grvCMDeals'
                                 | async
@@ -800,6 +767,69 @@
                         </div>
                       </div>
                     </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="mb-1 d-flex align-items-top">
+                        <div
+                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                        >
+                          <codx-label
+                            class="me-2 label-colon"
+                            [setRequire]="false"
+                            [formModel]="formModel"
+                            fiedName="DealValue"
+                          ></codx-label>
+                        </div>
+                        <div class="text-dark fw-bold codx-textcontent">
+                          <span
+                            #dealValue
+                            *ngIf="dataSelected?.dealValue; else defaultNull"
+                            [innerHTML]="
+                              dataSelected?.dealValue
+                                | formatvalue
+                                  : formModel
+                                  : 'dealValue'
+                                  : dealValue
+                                  : 'CMDeals'
+                                  : 'grvCMDeals'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-6">
+                      <div class="mb-1 d-flex align-items-top">
+                        <div
+                          class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                        >
+                          <codx-label
+                            class="me-2 label-colon"
+                            [setRequire]="false"
+                            [formModel]="formModel"
+                            fiedName="ExpectedTo"
+                          ></codx-label>
+                        </div>
+                        <div class="text-dark fw-bold codx-textcontent">
+                          <span
+                            #expectedTo
+                            [innerHTML]="
+                              dataSelected?.expectedTo
+                                | formatvalue
+                                  : formModel
+                                  : 'expectedTo'
+                                  : expectedTo
+                                  : 'CMDeals'
+                                  : 'grvCMDeals'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                      </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="mt-5">
@@ -939,6 +969,7 @@
             <ng-template #content let-data="value">
               <div *ngIf="listSteps.length > 0 && listSteps">
                 <step-task
+                  [entityName]="'CM_Deals'"
                   [isDataLoading]="isDataLoading"
                   [dataSelected]="dataSelected"
                   [listInstanceStep]="listSteps"
