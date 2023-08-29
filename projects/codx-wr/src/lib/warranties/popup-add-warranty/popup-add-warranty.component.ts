@@ -82,7 +82,7 @@ export class PopupAddWarrantyComponent implements OnInit {
           [this.data.owner]
         )
         .subscribe((res) => {
-          if(res){
+          if (res) {
             this.data.teamLeader = res?.userID;
           }
         });
@@ -265,6 +265,15 @@ export class PopupAddWarrantyComponent implements OnInit {
         } else {
           this.data.oow = false;
         }
+
+        if (this.data.customerID != null && this.data.customerID.trim() != '') {
+          var customer = await firstValueFrom(
+            this.wrSv.getOneCustomer(this.data.customerID)
+          );
+          if (customer != null) {
+            this.data.category = customer?.category;
+          }
+        }
       }
 
       // let customer = await firstValueFrom(
@@ -287,7 +296,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
       data: this.data,
-      gridViewSetup: this.gridViewSetup
+      gridViewSetup: this.gridViewSetup,
     };
     this.callFc
       .openForm(
@@ -318,7 +327,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
       data: this.data,
-      gridViewSetup: this.gridViewSetup
+      gridViewSetup: this.gridViewSetup,
     };
     this.callFc
       .openForm(
