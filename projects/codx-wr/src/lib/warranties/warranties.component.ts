@@ -643,6 +643,7 @@ export class WarrantiesComponent
                 } else {
                   this.lstOrderUpdate.push(e?.event);
                 }
+                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
                 this.view.dataService.update(this.dataSelected).subscribe();
                 this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
@@ -689,8 +690,8 @@ export class WarrantiesComponent
           }
 
           this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected).subscribe();
-
           this.detectorRef.detectChanges();
         }
       });
@@ -722,6 +723,7 @@ export class WarrantiesComponent
               if (ele && ele?.event) {
                 this.dataSelected.status = status;
                 this.dataSelected.cancelledNote = this.cancelledNote;
+                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
                 this.view.dataService.update(this.dataSelected).subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 this.detectorRef.detectChanges();
@@ -739,6 +741,7 @@ export class WarrantiesComponent
               .subscribe((res) => {
                 if (res) {
                   this.dataSelected.status = status;
+                  this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
@@ -751,6 +754,7 @@ export class WarrantiesComponent
 
   changValueStatus(e) {
     this.cancelledNote = e?.data;
+    this.detectorRef.detectChanges();
   }
 
   onSave(recID) {
