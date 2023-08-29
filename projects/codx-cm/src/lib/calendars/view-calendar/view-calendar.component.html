@@ -116,6 +116,8 @@
   <div class="container">
     <codx-temp-full
       [imageId]="data?.resourceData?.owner"
+      [imageObjType]="'AD_Users'"
+      [imageReferType]="'avt'"
       [title]="data?.resourceData?.userName"
       [subTitle]="data?.resourceData?.postionName"
     >
@@ -134,6 +136,15 @@
   </h5>
 </ng-template>
 
-<ng-template #headerTempContent>
-  <div class="mt-6"></div>
+<ng-template #headerTempContent let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>

@@ -44,11 +44,11 @@
         [ngbPopover]="'Hướng dẫn'"
         (mouseenter)="popoverDetails.open()"
         (mouseleave)="popoverDetails.close()"
-        (click)="showGuide(popoverDetails)"
+        (click)="showGuide()"
         *ngIf="currentStep?.memo"
       >
         <span
-          class="icon-event_notes icon-18 text-hover-primary cursor-pointer text-gray-500"
+          class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
         ></span>
       </div>
       <codx-mfunc
@@ -352,7 +352,14 @@
       {{ data?.value?.startDate | date : dateFomat }} -
       {{ data?.value?.endDate | date : dateFomat }}</span
     >
-    <span
+    <span 
+      #popoverTooltip="ngbPopover"
+      [ngbPopover]="tooltipDate"
+      [placement]="'top-left'"
+      (mouseenter)="openTooltip(popoverTooltip,data?.value)"
+      (mouseleave)="popoverTooltip.close()"
+    >
+      <span
       class="date text-nowrap text-gray-500"
       *ngIf="data?.value?.actualStart && data?.value?.status == '3'"
     >
@@ -364,7 +371,8 @@
       *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
         {{ data?.value?.actualEnd | date : dateFomat }}
     </span>
-
+    </span>
+    
     <span class="d-flex align-items-center">
       <codx-imgs
         class="me-2 d-flex align-items-center"
@@ -412,21 +420,30 @@
       ></codx-label>
     </span>
     <div>
-      <span class="me-2">
-        <button
-          type="button"
-          class="btn btn-icon btn-sm btn-light"
-          (click)="dialogGuide.close()"
-        >
-          <span class="icon-open_in_full icon-16"></span>
-        </button>
-      </span>
+      <button
+      *ngIf="isZoomOut"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="showGuide()"
+      >
+        <span class="icon-filter_none icon-16"></span>
+      </button>
+
+      <button
+      *ngIf="isZoomIn"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="zoomGuide()"
+      >
+        <span class="icon-crop_square icon-18"></span>
+      </button>
+
       <button
         type="button"
-        class="btn btn-icon btn-sm btn-light"
-        (click)="dialogGuide.close()"
+        class="btn btn-icon background-red"
+        (click)="closeGuide()"
       >
-        <span class="icon-close icon-16"></span>
+        <span class="icon-close icon-18"></span>
       </button>
     </div>
   </div>
@@ -439,6 +456,21 @@
       *ngIf="currentStep?.memo"
       [innerHTML]="currentStep?.memo | formatvalue : formModel : 'Memo' | async"
     ></div>
+  </div>
+</ng-template>
+
+<ng-template #tooltipDate let-data="value">
+  <div>
+    <div>
+      <span>Dự kiến:</span>
+      <span>{{ dataTooltipDay?.startDate | date : dateFomat }} -</span>
+      <span>{{ dataTooltipDay?.endDate | date : dateFomat }}</span>
+    </div>
+    <div> 
+      <span>Thực tế:</span>
+      <span>{{ dataTooltipDay?.actualStart | date : dateFomat }} -</span>
+      <span>{{ dataTooltipDay?.actualEnd | date : dateFomat }}</span>
+    </div>
   </div>
 </ng-template>
 <!-- <codx-vll

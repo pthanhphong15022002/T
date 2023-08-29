@@ -152,7 +152,7 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.editStatusObj = data;
-    this.currentEmpObj = data?.emp;
+    this.currentEmpObj = data?.inforEmployee;
     this.formGroup.patchValue(this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -172,6 +172,7 @@ export class EmployeeContractComponent extends UIComponent {
           this.view.dataService.update(res.event[1]).subscribe();
         }
 
+        //Gọi hàm hủy yêu cầu duyệt bên core
         if (
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
@@ -201,9 +202,9 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService.editEContract(this.editStatusObj).subscribe((res) => {
       if (res != null) {
         this.notify.notifyCode('SYS007');
-        res[0].emp = this.currentEmpObj;
+        res[0].inforEmployee = this.currentEmpObj;
         if (res[1]) {
-          res[1].emp = this.currentEmpObj;
+          res[1].inforEmployee = this.currentEmpObj;
         }
         this.view.formModel.entityName;
         this.hrService
@@ -261,7 +262,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
-    console.log(event.functionID);
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -278,7 +278,7 @@ export class EmployeeContractComponent extends UIComponent {
       //   this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
       //   break;
       case 'SYS03':
-        this.currentEmpObj = data.emp;
+        this.currentEmpObj = data.inforEmployee;
         this.HandleEContractInfo(event.text, 'edit', data);
         this.df.detectChanges();
         break;
@@ -286,7 +286,7 @@ export class EmployeeContractComponent extends UIComponent {
         this.view.dataService.delete([data]).subscribe();
         break;
       case 'SYS04': //copy
-        this.currentEmpObj = data.emp;
+        this.currentEmpObj = data.inforEmployee;
         this.copyValue(event.text, data, 'eContract');
         this.df.detectChanges();
         break;
@@ -345,7 +345,8 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    this.currentEmpObj = this.itemDetail?.emp;
+    // this.currentEmpObj = this.itemDetail?.inforEmployee;
+    //console.log(this.currentEmpObj);
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -366,7 +367,7 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.currentEmpObj = res.event.emp;
+          this.currentEmpObj = res.event.inforEmployee;
           this.view.dataService.add(res.event, 0).subscribe();
           // this.view.dataService.update(res.event[1]).subscribe();
         } else if (actionType == 'copy') {
@@ -406,6 +407,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   changeItemDetail(event) {
+    this.currentEmpObj = event?.data?.inforEmployee;
     if (this.viewActive !== '1') {
       this.itemDetail = event?.data;
     }
@@ -500,5 +502,10 @@ export class EmployeeContractComponent extends UIComponent {
           //   });
         }
       });
+  }
+
+  //Send multi
+  onMoreMulti(e) {
+    console.log(e);
   }
 }
