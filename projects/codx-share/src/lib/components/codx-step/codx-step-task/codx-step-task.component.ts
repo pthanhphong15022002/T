@@ -122,6 +122,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   vllDataTask;
   vllDataStep;
   isBoughtTM = false;
+  dataTooltipDay;
 
   moreDefaut = {
     share: true,
@@ -2240,5 +2241,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return a;
     }
     return null;
+  }
+
+  openTooltip(popup, data){
+    this.dataTooltipDay = data;
+    popup.open();
   }
 }
