@@ -1,7 +1,7 @@
-<div class="p-3 border-bottom" *ngIf="dataSelected; else noData">
+<div class="p-3 border-bottom" *ngIf="dataList; else noData">
   <ng-container
     [ngTemplateOutlet]="warranties"
-    [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+    [ngTemplateOutletContext]="{ $implicit: dataList }"
   ></ng-container>
 </div>
 <ng-template #noData>
@@ -197,6 +197,19 @@
           "
         ></span>
       </div>
+
+      <div class="mb-1">
+        <codx-vll
+          [name]="gridViewSetup?.PartStatus?.referedValue"
+          [field]="'PartStatus'"
+          [value]="data?.partStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
+
       <div class="mb-1">
         <codx-label
           style="white-space: nowrap"
@@ -215,6 +228,17 @@
     </div>
 
     <div class="w-150px min-w-150px pe-6 d-flex flex-column">
+      <div class="d-flex align-items-center mb-1">
+        <codx-vll
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
       <div class="mb-1">
         <span
           [innerHTML]="
@@ -224,42 +248,30 @@
           "
         ></span>
       </div>
-      <div class="d-flex flex-row-reverse">
-        <!-- <codx-temp-full
-          cardCss="card-template list-task"
-          [imageId]="data.recID"
-          [imageWidth]="35"
-          imgCss="me-4"
-          [imageObjType]="entityName"
-          [titleCss]="'fs-6 fw-bold'"
-          [formModel]="formModel"
-          [dataItem]="data"
-          [hideMF]="true"
-        >
-        </codx-temp-full> -->
+      <div class="mb-1">
         <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.owner"
+          [objectId]="data.owner"
+          [objectName]="data.owner"
           [referType]="'avt'"
-          [imgOn]="dataSelected?.owner"
+          [imgOn]="data?.owner"
           [objectType]="entityName"
           [width]="35"
         >
         </codx-img>
         <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.teamLeader"
+          [objectId]="data.teamLeader"
+          [objectName]="data.teamLeader"
           [referType]="'avt'"
-          [imgOn]="dataSelected?.teamLeader"
+          [imgOn]="data?.teamLeader"
           [objectType]="entityName"
           [width]="35"
         >
         </codx-img>
         <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.engineerID"
+          [objectId]="data.engineerID"
+          [objectName]="data.engineerID"
           [referType]="'avt'"
-          [imgOn]="dataSelected?.engineerID"
+          [imgOn]="data?.engineerID"
           [objectType]="entityName"
           [width]="35"
         >
@@ -270,8 +282,8 @@
     <div class="w-50px min-w-50px">
       <codx-mfunc
         [formModel]="formModel"
-        (clickMF)="clickMF($event, dataSelected)"
-        (changeDataMF)="changeDataMF($event, dataSelected)"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
         [isBookMark]="false"
         [dataItem]="data"
         type="hover"
@@ -289,8 +301,8 @@
   <!-- <codx-cmcustomer-detail
     #customerDetail
     [formModel]="formModel"
-    [recID]="dataSelected.recID"
-    [dataSelected]="dataSelected"
+    [recID]="dataList.recID"
+    [dataList]="dataList"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFuncDetail($event)"
     [entityName]="entityName"

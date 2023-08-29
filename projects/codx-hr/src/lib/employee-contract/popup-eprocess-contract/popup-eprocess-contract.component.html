@@ -25,11 +25,9 @@
           <codx-img
             [width]="35"
             class="me-4"
-            [objectId]="employeeObj?.employeeID ?? employeeObj?.emp?.employeeID"
+            [objectId]="employeeObj?.employeeID"
             [referType]="'avt'"
-            [objectName]="
-              employeeObj?.employeeName ?? employeeObj?.emp?.employeeName
-            "
+            [objectName]="employeeObj?.employeeName"
             [objectType]="'HR_Employees'"
           >
           </codx-img>
@@ -37,16 +35,13 @@
         <div class="d-flex flex-column">
           <div class="text-dark fw-bold">
             <span>
-              {{ employeeObj?.employeeName ?? employeeObj?.emp?.employeeName }}
+              {{ employeeObj?.employeeName }}
             </span>
           </div>
-          <div
-            class="text-gray-500 fs-7"
-            *ngIf="employeeObj?.positionID || employeeObj?.emp?.positionID"
-          >
+          <div class="text-gray-500 fs-7" *ngIf="employeeObj?.positionID">
             <span
               [innerHTML]="
-                employeeObj?.positionID ?? employeeObj?.emp?.positionID
+                employeeObj?.positionID
                   | formatvalue : formModel : 'positionID'
                   | async
               "
@@ -57,11 +52,11 @@
           }}</span>
           <!-- <div
             class="text-gray-700"
-            *ngIf="employeeObj?.orgUnitID || employeeObj?.emp?.orgUnitID"
+            *ngIf="employeeObj?.orgUnitID || employeeObj?.inforEmployee?.orgUnitID"
           >
             <span
               [innerHTML]="
-                employeeObj?.orgUnitID ?? employeeObj?.emp?.orgUnitID
+                employeeObj?.orgUnitID ?? employeeObj?.inforEmployee?.orgUnitID
                   | formatvalue : formModel : 'orgUnitID'
                   | async
               "

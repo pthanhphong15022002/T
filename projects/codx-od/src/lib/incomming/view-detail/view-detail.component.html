@@ -277,11 +277,7 @@
                 <ng-container
                   *ngIf="
                     formModel?.funcID != 'ODT41' ||
-                    (formModel?.funcID == 'ODT41' &&
-                      ((item.relationType != '1' &&
-                        data?.listInformationRel.length > 1) ||
-                        (item.relationType == '1' &&
-                          data?.listInformationRel.length == 1)))
+                    (formModel?.funcID == 'ODT41' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' &&  data?.listInformationRel.length == 1)))
                   "
                 >
                   <div class="list-item has-action-menu-od mb-6">
@@ -349,6 +345,7 @@
                                 relID: item.recID,
                               })
                             "
+                            ngbTooltip="Thu hồi"
                           >
                             <!--  -->
                             <i class="icon-redo text-primary icon-18"></i>

@@ -26,6 +26,8 @@ import { Validators } from '@angular/forms';
 })
 export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit {
 
+  //#region Constructor
+
   @ViewChild('grvVouchersLine')
   public grvVouchersLine: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -117,16 +119,20 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngAfterViewInit() {
+    this.form.formGroup.patchValue(this.vouchers);
+    this.dt.detectChanges();
+  }
+
+  onAfterInit(){
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if(this.journal.assignRule == '2')
     {
-      this.form.formGroup.controls['voucherNo'].removeValidators(
-        Validators.required
-      );
-      this.form.formGroup.updateValueAndValidity();
+      this.form.setRequire([{
+        field: 'voucherNo',
+        isDisable: false,
+        require: false
+      }]);
     }
-    this.form.formGroup.patchValue(this.vouchers);
-    this.dt.detectChanges();
   }
 
   ngOnDestroy() {
@@ -338,9 +344,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       // case 'autoAdd':
       //   this.addVoucherLine();
       //   break;
-      case 'add':
+      case 'autoAdd':
         if (this.grvVouchersLine.autoAddRow) {
-          this.saveMasterBeforeAddLine();
+          this.checkModeGridBeforeAddLine();
         }
         break;
       case 'endEdit':
@@ -391,7 +397,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
      * isClose = false => Lưu và thêm mới
      */
 
-    if(this.form.formGroup?.invalid)
+    if(this.form.validation())
       return;
     //this.checkTransLimit(true);
     if (this.validate > 0) {
@@ -400,10 +406,10 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     } else {
       if (this.modeGrid == 1) {
         if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
-          this.save(true);
+          this.save(isClose);
       }
       else {
-        this.save(true);
+        this.save(isClose);
       }
     }
   }
@@ -419,7 +425,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             this.vouchers['_uuid'],
             this.vouchers
           );
-          this.dialog.dataService
+          this.form
             .save(null, 0, '', 'SYS006', true)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
@@ -459,7 +465,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             this.form,
             this.formType === 'edit',
             () => {
-              this.dialog.dataService.save()
+              this.form.save()
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res) => {
                   if (res.save.error) {
@@ -506,7 +512,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
               this.vouchers['_uuid'],
               this.vouchers
             );
-            this.dialog.dataService.save(null, 0, '', '', true)
+            this.form.save(null, 0, '', '', true)
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
                 if (res && res.update.data != null) {
@@ -665,7 +671,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if(this.form.formGroup?.invalid)
+    if(this.form.validation())
       return;
     if (this.validate > 0) {
       this.validate = 0;
@@ -679,7 +685,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
               this.vouchers['_uuid'],
               this.vouchers
             );
-            this.dialog.dataService
+            this.form
               .save(null, 0, '', '', false)
               .pipe(takeUntil(this.destroy$))
               .subscribe((res) => {
@@ -696,12 +702,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
               this.form,
               this.formType === 'edit',
               () => {
-                this.dialog.dataService
+                this.form
                   .save(null, 0, '', '', false)
                   .pipe(takeUntil(this.destroy$))
                   .subscribe((res) => {
                     if (res && res.save.data != null) {
                       this.vouchers.voucherNo = res.save.data.voucherNo;
+                      this.form.formGroup?.patchValue({voucherNo: this.vouchers.voucherNo});
                       this.hasSaved = true;
                       this.checkModeGridBeforeAddLine();
                     }
@@ -715,7 +722,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             this.vouchers['_uuid'],
             this.vouchers
           );
-          this.dialog.dataService
+          this.form
             .save(null, 0, '', '', false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {

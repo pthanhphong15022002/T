@@ -1,5 +1,5 @@
 <codx-form #formCashPayment [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
-  [customToolbar]="TmpSubToolbar" [openMore]="false" class="ac-dialog ac-animation-slideRight">
+  [customToolbar]="TmpSubToolbar" [data]="cashpayment" [openMore]="false" (onAfterInit)="onAfterInitForm($event)" class="ac-dialog ac-animation-slideRight">
 </codx-form>
 <!-- Start: Sub toolbar -->
 <ng-template #TmpSubToolbar>
@@ -192,16 +192,6 @@
 <!-- End: Footer -->
 
 <!-- Start: TmpTabGeneral -->
-
-<ng-template #TmpTabGeneral1>
-  <ng-container *ngIf="formCashPayment.formGroup">
-    <codx-input #tVourcherNo [Group]="formCashPayment.formGroup" field="voucherNo"
-      [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)"
-      [disabled]="journal?.assignRule != '0'">
-    </codx-input>
-  </ng-container>
-</ng-template>
-
 <ng-template #TmpTabGeneral>
   <ng-container *ngIf="formCashPayment.formGroup">
     <div class="p-3 tab-basic ac-form-master">
