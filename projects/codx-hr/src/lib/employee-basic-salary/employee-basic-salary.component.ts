@@ -57,11 +57,12 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     super(injector);
   }
 
+  actionCancelSubmit = 'HRTPro03A00';
   actionAddNew = 'HRTPro03A01';
   actionSubmit = 'HRTPro03A03';
   actionUpdateCanceled = 'HRTPro03AU0';
   actionUpdateInProgress = 'HRTPro03AU3';
-  actionUpdateRejected = 'HRTPro03AU4';
+  // actionUpdateRejected = 'HRTPro03AU4';
   actionUpdateApproved = 'HRTPro03AU5';
   actionUpdateClosed = 'HRTPro03AU9';
 
@@ -161,9 +162,10 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
@@ -267,6 +269,23 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
         if (res.event[1]) {
           this.view.dataService.update(res.event[1]).subscribe();
         }
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
