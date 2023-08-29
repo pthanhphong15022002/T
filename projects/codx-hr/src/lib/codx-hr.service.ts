@@ -2269,7 +2269,13 @@ export class CodxHrService {
       if (IDCompare === this.actionAddNew) {
         evt[i].disabled = true;
       }
+
+      //Gửi mail
       if (IDCompare === this.actionUpdateRejected) {
+        evt[i].disabled = true;
+      }
+
+      if (IDCompare === '004') {
         evt[i].disabled = true;
       }
 

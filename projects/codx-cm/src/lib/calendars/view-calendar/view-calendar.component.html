@@ -7,6 +7,8 @@
   [autoLoad]="true"
   (onActions)="onAction($event)"
   (viewChanged)="viewChanged($event)"
+  [button]="button"
+  (buttonClick)="click($event)"
   [viewActiveType]="viewActiveType"
 >
 </codx-views>
@@ -114,6 +116,8 @@
   <div class="container">
     <codx-temp-full
       [imageId]="data?.resourceData?.owner"
+      [imageObjType]="'AD_Users'"
+      [imageReferType]="'avt'"
       [title]="data?.resourceData?.userName"
       [subTitle]="data?.resourceData?.postionName"
     >
@@ -123,15 +127,24 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <h5
-    class="fw-bold {{
-      data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'
-    }}"
-  >
+  <h5 class="fw-bold">
+    <i
+      style="color: black"
+      [ngClass]="data?.isActual ? 'icon-hourglass_bottom' : 'icon-golf_course'"
+    ></i>
     {{ data?.taskName }}
   </h5>
 </ng-template>
 
-<ng-template #headerTempContent>
-  <div class="mt-6"></div>
+<ng-template #headerTempContent let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>

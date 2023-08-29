@@ -23,7 +23,7 @@
           [fields]="fieldsResource"
           [value]="field.stepID"
           [allowFiltering]="true"
-          [placeholder]="grvSetup['StepID'].description"
+          [placeholder]="grvSetup['StepID']?.description"
           (valueChange)="cbxChange($event)"
         ></ejs-combobox>
       </div>
@@ -224,7 +224,7 @@
           <div class="pt-3">
             <ejs-slider
               id="slider"
-              style="width:375px !important;"
+              style="width: 375px !important"
               [value]="field?.rank"
               [min]="min"
               [max]="max"

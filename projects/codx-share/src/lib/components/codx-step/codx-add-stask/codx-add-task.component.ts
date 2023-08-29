@@ -161,8 +161,12 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.owner = this.owner?.[0].objectID;
       this.stepsTasks.status = "1";
       this.stepsTasks.createTask = this.isBoughtTM;
+      this.stepsTasks.taskName = this.typeTask?.text;
       if (!this.stepsTasks?.taskGroupID) {
         this.stepsTasks.startDate = this.startDateParent;
+        let startDays = new Date(this.startDateParent);
+        startDays.setDate(startDays?.getDate() + 1);
+        this.stepsTasks.endDate = startDays;
       }
     }
     if(this.step?.fields?.length > 0 && this.stepsTasks?.fieldID){
@@ -244,6 +248,10 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   changeValueDate(event) {
+    this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
+  }
+
+  changeValueDateExpected(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
     if (this.step) {
       if (this.isLoadDate) {
@@ -464,12 +472,14 @@ export class CodxAddTaskComponent implements OnInit {
     this.stepsTasks.status = event?.field ;
     this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
     if(event?.field == "3"){
+      this.stepsTasks.actualEnd = new Date();
       [this.startDayOld,this.endDayOld] =  [this.stepsTasks?.startDate,this.stepsTasks?.endDate];
       [this.stepsTasks.startDate,this.stepsTasks.endDate] = [null, null];
     }
     if(event?.field == "1"){
       this.stepsTasks.startDate = this.startDayOld ? this.startDayOld : this.stepsTasks?.startDate;
       this.stepsTasks.endDate = this.endDayOld ? this.endDayOld : this.stepsTasks?.endDate;
+      this.stepsTasks.actualEnd = null;
     }
     this.checkStatusShowForm();
   }
