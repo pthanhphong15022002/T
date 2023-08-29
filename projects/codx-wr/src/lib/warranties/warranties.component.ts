@@ -64,6 +64,7 @@ export class WarrantiesComponent
   // region LocalVariable
   viewMode = 1;
   vllStatus = '';
+  vllPriority = 'TM005';
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
@@ -643,7 +644,9 @@ export class WarrantiesComponent
                 } else {
                   this.lstOrderUpdate.push(e?.event);
                 }
-                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
                 this.view.dataService.update(this.dataSelected).subscribe();
                 this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
@@ -711,8 +714,8 @@ export class WarrantiesComponent
       )
       .subscribe(async (x) => {
         if (x?.event?.status == 'Y') {
-          this.status = status;
           if (status == '5') {
+            this.status = status;
             this.dialogStatus = this.callfc.openForm(
               this.updateStatus,
               '',
@@ -721,9 +724,11 @@ export class WarrantiesComponent
             );
             this.dialogStatus.closed.subscribe((ele) => {
               if (ele && ele?.event) {
-                this.dataSelected.status = status;
+                this.dataSelected.status = this.status;
                 this.dataSelected.cancelledNote = this.cancelledNote;
-                this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
                 this.view.dataService.update(this.dataSelected).subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 this.detectorRef.detectChanges();
@@ -740,8 +745,10 @@ export class WarrantiesComponent
               )
               .subscribe((res) => {
                 if (res) {
-                  this.dataSelected.status = status;
-                  this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                  this.dataSelected.status = res;
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
