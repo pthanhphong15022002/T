@@ -773,6 +773,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
             this.data.lstUserID = getListImg(x.event[0].relations);
+            this.data.relations = x.event[0].relations;
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
             );
@@ -1245,7 +1246,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       default: {
 
-        //Biến động tự custom
+        //Biến động , tự custom
         var customData = 
         {
           refID : "",
@@ -1253,6 +1254,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           dataSource: datas,
           addPermissions: this.listPermission
         }
+
         this.shareService.defaultMoreFunc(
           val,
           datas,

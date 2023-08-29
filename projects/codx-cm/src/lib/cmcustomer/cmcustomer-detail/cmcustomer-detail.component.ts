@@ -50,41 +50,7 @@ export class CmCustomerDetailComponent implements OnInit {
   moreFuncEdit = '';
   vllContactType = '';
   listContacts = [];
-  tabControl = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
-    {
-      name: 'Comment',
-      textDefault: 'Thảo luận',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'Attachment',
-      textDefault: 'Đính kèm',
-      isActive: false,
-      template: null,
-    },
-    { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
-    {
-      name: 'Approve',
-      textDefault: 'Ký duyệt',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'References',
-      textDefault: 'Liên kết',
-      isActive: false,
-      template: null,
-    },
-    // {
-    //   name: 'Quotations',
-    //   textDefault: 'Báo giá',
-    //   icon: 'icon-monetization_on',
-    //   isActive: false,
-    // },
-    { name: 'Order', textDefault: 'Đơn hàng', isActive: false, template: null },
-  ];
+  tabControl = [];
   treeTask = [];
   @Input() dataSelected: any;
   name = 'Information';
@@ -119,65 +85,6 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getVllByGridViewSetupContact();
     this.checkAdmin();
     this.getFormModelAddress();
-    if (
-      this.funcID == 'CM0101' ||
-      this.funcID == 'CM0102' ||
-      this.funcID == 'CM0105'
-    ) {
-      this.tabControl = [
-        {
-          name: 'History',
-          textDefault: 'Lịch sử',
-          isActive: true,
-          template: null,
-        },
-        {
-          name: 'Comment',
-          textDefault: 'Thảo luận',
-          isActive: false,
-          template: null,
-        },
-        {
-          name: 'Attachment',
-          textDefault: 'Đính kèm',
-          isActive: false,
-          template: null,
-        },
-        {
-          name: 'Task',
-          textDefault: 'Công việc',
-          isActive: false,
-          template: null,
-        },
-        {
-          name: 'References',
-          textDefault: 'Liên kết',
-          isActive: false,
-          template: null,
-        },
-      ];
-    } else {
-      this.tabControl = [
-        {
-          name: 'History',
-          textDefault: 'Lịch sử',
-          isActive: true,
-          template: null,
-        },
-        {
-          name: 'Comment',
-          textDefault: 'Thảo luận',
-          isActive: false,
-          template: null,
-        },
-        {
-          name: 'Attachment',
-          textDefault: 'Đính kèm',
-          isActive: false,
-          template: null,
-        },
-      ];
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -189,6 +96,7 @@ export class CmCustomerDetailComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.getOneCustomerDetail(this.dataSelected);
+        this.getTab();
       }
     }
   }
@@ -201,7 +109,7 @@ export class CmCustomerDetailComponent implements OnInit {
     // this.getListContactByObjectID(this.dataSelected?.recID);
     this.addressNameCM = this.dataSelected?.address;
     this.loadTag(this.dataSelected);
-    this.listTab(this.funcID);
+    // this.listTab(this.funcID);
     this.loaded = true;
     this.changeDetectorRef.detectChanges();
   }
@@ -221,6 +129,76 @@ export class CmCustomerDetailComponent implements OnInit {
       isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
     }
     this.isAdmin = isAdmin || this.user.administrator;
+  }
+
+  getTab() {
+    if (
+      this.funcID == 'CM0101' ||
+      this.funcID == 'CM0102' ||
+      this.funcID == 'CM0105'
+    ) {
+      this.tabControl = [
+        {
+          name: 'History',
+          textDefault: 'Lịch sử',
+          isActive: true,
+          template: null,
+          icon: 'icon-i-clock-history',
+        },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-chat-right',
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-paperclip',
+        },
+        {
+          name: 'Task',
+          textDefault: 'Công việc',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-clipboard-check',
+        },
+        {
+          name: 'References',
+          textDefault: 'Liên kết',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-link',
+        },
+      ];
+    } else {
+      this.tabControl = [
+        {
+          name: 'History',
+          textDefault: 'Lịch sử',
+          isActive: true,
+          template: null,
+          icon: 'icon-i-clock-history',
+        },
+        {
+          name: 'Comment',
+          textDefault: 'Thảo luận',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-chat-right',
+        },
+        {
+          name: 'Attachment',
+          textDefault: 'Đính kèm',
+          isActive: false,
+          template: null,
+          icon: 'icon-i-paperclip',
+        },
+      ];
+    }
   }
 
   getAdressNameByIsDefault(objectID, entityName) {
@@ -400,7 +378,7 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  clickShowTab(isShow){
+  clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
   }

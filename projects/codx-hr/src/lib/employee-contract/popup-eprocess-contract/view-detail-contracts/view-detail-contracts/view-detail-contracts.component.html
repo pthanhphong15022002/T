@@ -14,7 +14,7 @@
     <div class="d-flex flex-column ms-1 w-100">
       <div class="mb-1 d-flex">
         <span class="text-dark fs-5-sm fw-bold me-3">
-          {{ itemDetail?.emp?.employeeName }}
+          {{ itemDetail?.inforEmployee?.employeeName }}
         </span>
 
         <span
@@ -35,7 +35,10 @@
         ></span>
 
         <span
-          *ngIf="itemDetail?.isCurrent && itemDetail?.isExpire"
+          *ngIf="
+            itemDetail?.isCurrent &&
+            dateNow > moment(itemDetail.expiredDate).format('YYYY-MM-DD')
+          "
           #popOver="ngbPopover"
           [openDelay]="500"
           (mouseenter)="popOver.open()"
@@ -91,7 +94,7 @@
         <span
           class="me-4 fw-bold text-dark"
           [innerHTML]="
-            itemDetail?.emp?.positionID
+            itemDetail?.inforEmployee?.positionID
               | formatvalue : formModel : 'positionID'
               | async
           "
@@ -99,27 +102,29 @@
         >
         <span
           class="me-4 d-flex align-items-center"
-          *ngIf="itemDetail?.emp?.email"
+          *ngIf="itemDetail?.inforEmployee?.email"
         >
           <i class="icon-email icon-16 me-2"></i>
-          {{ itemDetail?.emp?.email }}
+          {{ itemDetail?.inforEmployee?.email }}
         </span>
         <span
           class="me-3 d-flex align-items-center"
-          *ngIf="itemDetail?.emp?.mobile"
+          *ngIf="itemDetail?.inforEmployee?.phone"
         >
           <i class="icon-phone_android icon-16 me-2"></i>
-          {{ itemDetail?.emp?.mobile }}
+          {{ itemDetail?.inforEmployee?.phone }}
         </span>
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span
           *ngIf="
-            itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
+            itemDetail?.orgUnitName || itemDetail?.inforEmployee?.orgUnitName;
             else noOrgUnitName
           "
-          >{{ itemDetail?.orgUnitName || itemDetail.emp.orgUnitName }}</span
+          >{{
+            itemDetail?.orgUnitName || itemDetail.inforEmployee.orgUnitName
+          }}</span
         >
         <ng-template #noOrgUnitName>
           <span class="place-holder">{{
@@ -128,7 +133,7 @@
         </ng-template>
         <!-- <span
           [innerHTML]="
-            itemDetail?.emp?.orgUnitID
+            itemDetail?.inforEmployee?.orgUnitID
               | formatvalue : formModel : 'orgUnitID'
               | async
           "
@@ -142,8 +147,8 @@
       <codx-temp-full
         class="user-center"
         [title]="itemDetail?.ownerName"
-        [imageId]="itemDetail?.emp?.employeeID"
-        [imageObjName]="itemDetail?.emp?.employeeName"
+        [imageId]="itemDetail?.inforEmployee?.employeeID"
+        [imageObjName]="itemDetail?.inforEmployee?.employeeName"
         [imageObjType]="'HR_Employees'"
         [referType]="'avt'"
         [imageWidth]="50"
@@ -249,10 +254,12 @@
           <span
             class="text-dark fw-bold"
             *ngIf="
-              itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
+              itemDetail?.orgUnitName || itemDetail?.inforEmployee?.orgUnitName;
               else noOrgUnitName
             "
-            >{{ itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName }}</span
+            >{{
+              itemDetail?.orgUnitName || itemDetail?.inforEmployee?.orgUnitName
+            }}</span
           >
           <ng-template #noOrgUnitName>
             <span class="place-holder">{{

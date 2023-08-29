@@ -46,7 +46,7 @@ export class DimensionGroupsComponent extends UIComponent {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache.moreFunction('DimGroups', 'grvDimGroups').subscribe((res) => {
+    this.cache.moreFunction('DimensionGroups', 'grvDimensionGroups').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20900');
         if (m) this.funcName = m.defaultName;
@@ -88,7 +88,7 @@ export class DimensionGroupsComponent extends UIComponent {
     }
   }
   add(e) {
-    this.headerText = e.text + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName.toLowerCase();
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -118,7 +118,7 @@ export class DimensionGroupsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: e.text + ' ' + this.funcName.toLowerCase(),
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -140,7 +140,7 @@ export class DimensionGroupsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
+          headerText: e.text + ' ' + this.funcName.toLowerCase(),
         };
         let option = new SidebarModel();
         option.DataService = this.view.dataService;

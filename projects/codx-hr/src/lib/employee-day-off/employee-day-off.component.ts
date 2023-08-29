@@ -68,11 +68,12 @@ export class EmployeeDayOffComponent extends UIComponent {
   edit = 'SYS03';
   delete = 'SYS02';
 
+  actionCancelSubmit = 'HRTPro09A00';
   actionAddNew = 'HRTPro09A01'; //tạo mới
   actionSubmit = 'HRTPro09A03'; //gửi duyệt
   actionUpdateCanceled = 'HRTPro09AU0'; //hủy
   actionUpdateInProgress = 'HRTPro09AU3'; //đang duyệt
-  actionUpdateRejected = 'HRTPro09AU4'; //từ chối
+  // actionUpdateRejected = 'HRTPro09AU4'; //từ chối
   actionUpdateApproved = 'HRTPro09AU5';
   actionUpdateClosed = 'HRTPro09AU9'; // đóng
 
@@ -165,26 +166,27 @@ export class EmployeeDayOffComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEDayOffStatus(event.functionID, oUpdate);
         break;
-      case this.actionAddNew:
-        let newData = {
-          //new data just with emp info (id??)
-          emp: data?.emp,
-          employeeID: data?.employeeID,
-        };
-        this.handlerEDayOffs(
-          event.text + ' ' + this.view.function.description,
-          'add',
-          newData
-        );
-        break;
+      // case this.actionAddNew:
+      //   let newData = {
+      //     //new data just with emp info (id??)
+      //     emp: data?.emp,
+      //     employeeID: data?.employeeID,
+      //   };
+      //   this.handlerEDayOffs(
+      //     event.text + ' ' + this.view.function.description,
+      //     'add',
+      //     newData
+      //   );
+      //   break;
       //Delete
       case this.delete:
         if (data) {
@@ -330,6 +332,23 @@ export class EmployeeDayOffComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe((res) => {});
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.shareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
