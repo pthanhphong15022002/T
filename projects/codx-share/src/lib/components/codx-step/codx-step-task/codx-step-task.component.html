@@ -44,11 +44,11 @@
         [ngbPopover]="'Hướng dẫn'"
         (mouseenter)="popoverDetails.open()"
         (mouseleave)="popoverDetails.close()"
-        (click)="showGuide(popoverDetails)"
+        (click)="showGuide()"
         *ngIf="currentStep?.memo"
       >
         <span
-          class="icon-event_notes icon-18 text-hover-primary cursor-pointer text-gray-500"
+          class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
         ></span>
       </div>
       <codx-mfunc
@@ -420,21 +420,30 @@
       ></codx-label>
     </span>
     <div>
-      <span class="me-2">
-        <button
-          type="button"
-          class="btn btn-icon btn-sm btn-light"
-          (click)="dialogGuide.close()"
-        >
-          <span class="icon-open_in_full icon-16"></span>
-        </button>
-      </span>
+      <button
+      *ngIf="isZoomOut"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="showGuide()"
+      >
+        <span class="icon-filter_none icon-16"></span>
+      </button>
+
+      <button
+      *ngIf="isZoomIn"
+        type="button"
+        class="btn btn-icon background-gray"
+        (click)="zoomGuide()"
+      >
+        <span class="icon-crop_square icon-18"></span>
+      </button>
+
       <button
         type="button"
-        class="btn btn-icon btn-sm btn-light"
-        (click)="dialogGuide.close()"
+        class="btn btn-icon background-red"
+        (click)="closeGuide()"
       >
-        <span class="icon-close icon-16"></span>
+        <span class="icon-close icon-18"></span>
       </button>
     </div>
   </div>
