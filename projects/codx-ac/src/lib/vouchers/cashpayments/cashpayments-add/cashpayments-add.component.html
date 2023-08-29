@@ -1,5 +1,5 @@
-<codx-form #formCashPayment [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
-  [customToolbar]="TmpSubToolbar" [data]="cashpayment" [openMore]="false" (onAfterInit)="onAfterInitForm($event)" class="ac-dialog ac-animation-slideRight">
+<codx-form  #formCashPayment [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
+  [customToolbar]="TmpSubToolbar" [data]="cashpayment" [openMore]="false" (afterValidate)="afterValidateForm($event)" (onAfterInit)="onAfterInitForm($event)" class="ac-dialog ac-animation-slideRight">
 </codx-form>
 <!-- Start: Sub toolbar -->
 <ng-template #TmpSubToolbar>
