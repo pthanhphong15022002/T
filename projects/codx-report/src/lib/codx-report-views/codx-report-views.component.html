@@ -20,6 +20,7 @@
 </div>
 <ng-template #templateListCard let-data>
   <codx-card-img
+    (click)="cardClick(data)"
     cardCss="border w-225px h-250px card-report"
     [formModel]="view.formModel"
     [imageObjType]="'RP_ReportList'"
