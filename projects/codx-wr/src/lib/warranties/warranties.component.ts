@@ -587,6 +587,7 @@ export class WarrantiesComponent
                 this.dataSelected.statusCode = e?.event?.statusCode;
                 this.dataSelected.scheduleStart = e?.event?.scheduleStart;
                 this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
+                this.dataSelected.status = '3';
                 let index = this.lstOrderUpdate.findIndex(
                   (x) =>
                     x.statusCode == e?.event?.statusCode &&
@@ -597,7 +598,7 @@ export class WarrantiesComponent
                 } else {
                   this.lstOrderUpdate.push(e?.event);
                 }
-
+                this.view.dataService.update(this.dataSelected).subscribe();
                 this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
                 this.detectorRef.detectChanges();
@@ -632,17 +633,18 @@ export class WarrantiesComponent
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
           this.dataSelected.comment = e?.event[1];
-          this.view.dataService.update(this.dataSelected).subscribe();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
               x.statusCode == this.dataSelected?.statusCode &&
               x.transID == this.dataSelected?.recID
           );
           if (index != -1) {
-            this.lstOrderUpdate[index].engineerID = this.dataSelected.engineerID;
+            this.lstOrderUpdate[index].engineerID =
+              this.dataSelected.engineerID;
           }
 
           this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          this.view.dataService.update(this.dataSelected).subscribe();
 
           this.detectorRef.detectChanges();
         }
