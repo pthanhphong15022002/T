@@ -939,6 +939,7 @@
             <ng-template #content let-data="value">
               <div *ngIf="listSteps.length > 0 && listSteps">
                 <step-task
+                  [entityName]="'CM_Deals'"
                   [isDataLoading]="isDataLoading"
                   [dataSelected]="dataSelected"
                   [listInstanceStep]="listSteps"
