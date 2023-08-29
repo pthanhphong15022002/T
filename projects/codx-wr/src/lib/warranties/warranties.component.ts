@@ -734,7 +734,7 @@ export class WarrantiesComponent
                 'ERM.Business.WR',
                 'WorkOrdersBusiness',
                 'UpdateStatusWarrantyAsync',
-                [data?.recID, status, this.cancelledNote]
+                [data?.recID, status, '']
               )
               .subscribe((res) => {
                 if (res) {
