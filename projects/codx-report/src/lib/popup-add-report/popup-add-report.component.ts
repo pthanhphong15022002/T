@@ -581,8 +581,19 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.openPopup().closed.subscribe((res:any) => {
         if(res?.event)
         {
-          debugger
-          ///
+          this.data.templateID = res.event.templateInfo.recID;
+          if(res.event.templateType == "AD_WordTemplates")
+          {
+            this.data.displayMode = "4";
+            this.data.icon = "../../../assets/codx/dms/docx.svg";
+          }
+          else
+          {
+            this.data.displayMode = "3";
+            this.data.icon = "../../../assets/codx/dms/xlsx.svg";
+          }
+          this.data.location = res.event.templateInfo.templateName;
+          this.data.isUpload = true;
         }
       });;
     }

@@ -90,29 +90,31 @@
           </div>
         </div>
         <div class="row mt-5" *ngIf="(data.reportContent || pathDisk)">
-          <div class="col-12 has-action-menu-1 d-flex position-relative cursor-pointer">
-            <div>
-              <img [src]="data.icon" width="30" height="30">
-            </div>
-            <div class="ms-2">
-              <p class="fw-bold m-0">
-                <span>
-                  {{data.location}}                
-                </span>
-                <span *ngIf="data.size">
-                  ({{data.size}})
-                </span>
-              </p>
-            </div>
-            <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-              <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="removeFile()">
-                <i class="icon-close text-danger icon-16"></i>
+          <div class="col-12">
+            <div class="has-action-menu-1 d-flex position-relative cursor-pointer">
+              <div>
+                <img [src]="data.icon" width="30" height="30">
               </div>
-              <!-- <div class="btn btn-sm btn-icon btn-white cursor-pointer">
-                <i class="icon-preview text-success icon-16"></i>
-              </div> -->
-              <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="downloadCustomFile()">
-                <i class="icon-cloud_download text-primary icon-16"></i>
+              <div class="ms-2">
+                <p class="fw-bold m-0">
+                  <span>
+                    {{data.location}}                
+                  </span>
+                  <span *ngIf="data.size">
+                    ({{data.size}})
+                  </span>
+                </p>
+              </div>
+              <div class="action-menu-1 d-flex align-items-center cursor-pointer">
+                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="removeFile()">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+                <!-- <div class="btn btn-sm btn-icon btn-white cursor-pointer">
+                  <i class="icon-preview text-success icon-16"></i>
+                </div> -->
+                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="downloadCustomFile()">
+                  <i class="icon-cloud_download text-primary icon-16"></i>
+                </div>
               </div>
             </div>
           </div>
