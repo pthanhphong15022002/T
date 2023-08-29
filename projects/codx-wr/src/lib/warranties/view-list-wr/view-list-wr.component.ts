@@ -14,10 +14,11 @@ import { ApiHttpService, CallFuncService } from 'codx-core';
   styleUrls: ['./view-list-wr.component.css'],
 })
 export class ViewListWrComponent {
-  @Input() dataSelected: any;
+  @Input() dataList: any;
   @Input() formModel: any;
   @Input() funcID = 'WR0101';
   @Input() entityName: any;
+  @Input() gridViewSetup: any;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
@@ -36,7 +37,7 @@ export class ViewListWrComponent {
     this.changeMoreMF.emit({ e: e, data: data });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelected']) {
+    if (changes['dataList']) {
       // if (changes['taskID'].currentValue === this.id) return;
       // this.id = changes['taskID'].currentValue;
       // this.loadedHisPro = false;

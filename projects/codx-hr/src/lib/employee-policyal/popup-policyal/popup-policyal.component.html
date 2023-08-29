@@ -727,8 +727,8 @@
       </button>
     </div>
 </div>
-<span *ngIf="alpolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
-    <span *ngFor="let obj of lstSelectedObj">
+<div class="d-flex flex-wrap" *ngIf="alpolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
+    <div class="me-2 mb-2" *ngFor="let obj of lstSelectedObj">
       <!-- <span
       class="badge badge-light-primary badge-md ms-2"
       [innerHTML]="obj
@@ -742,7 +742,7 @@
         [showBgColor]="true"
         name="HRObject"
         [value]="obj"
-        class="badge badge-light-primary badge-md ms-2"
+        class="badge badge-light-primary badge-md"
       >
       </codx-vll>
       <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedObj', lstPolicyBeneficiariesApply)" type="button" class="btn btn-sm btn-icon btn-light-danger">
@@ -757,8 +757,8 @@
       [ngClass]="alpolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
       ></i>
     </button> -->
-    </span>
-</span>
+    </div>
+</div>
 <div class="form-group row w-100 mt-8" *ngIf="lstPolicyBeneficiariesApply.length > 0">
 
   <div class="fs-5 fw-bold text-primary mt-6 mb-3" *ngIf="alpolicyObj.hasExcludeObjects">
@@ -846,21 +846,21 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.orgUnitID && detail == '1'">
-        <span *ngFor="let org of lstOrgUnitID">
-          <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
-          <span
-          class="badge badge-light-primary badge-md ms-2"
-          [innerHTML]="org.id
-              | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
-              | async"
-          >
-          </span>
-          <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
+        <div class="d-flex flex-wrap" *ngFor="let org of lstOrgUnitID">
+          <div class="badge-with-delete me-2 mb-2" *ngIf="org.rec == obj.recID">
+            <span
+            class="badge badge-light-primary badge-md ms-2"
+            [innerHTML]="org.id
+                | formatvalue : fmPolicyBeneficiaries : 'OrgUnitID'
+                | async"
+            >
+            </span>
+            <button (click)="deleteApplyExcludeObj(org, 'lstOrgUnitID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-16"></span>
+            </button>
+          </div>
 
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
         <span>
@@ -872,21 +872,21 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.jobLevel && detail == '2'">
-        <span *ngFor="let joblevel of lstJobLevel">
+        <div class="me-2 mb-2" *ngFor="let joblevel of lstJobLevel">
           <span class="badge-with-delete" *ngIf="joblevel.rec == obj.recID">
-          <span
-          class="badge badge-light-primary badge-md ms-2"
-          [innerHTML]="joblevel.id
-              | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
-              | async"
-          >
+            <span
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="joblevel.id
+                | formatvalue : fmPolicyBeneficiaries : 'JobLevel'
+                | async"
+            >
+            </span>
+            <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-14"></span>
+            </button>
           </span>
-          <button (click)="deleteApplyExcludeObj(joblevel, 'lstJobLevel', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
 
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
         <span>
@@ -898,7 +898,7 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.positionID && detail == '3'">
-        <span *ngFor="let position of lstPositionID">
+        <span class="me-2 mb-2" *ngFor="let position of lstPositionID">
           <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
           <span
           class="badge badge-light-primary badge-md ms-2"
@@ -923,7 +923,7 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.employeeTypeID && detail == '4'">
-        <span *ngFor="let empType of lstEmployeeTypeID">
+        <span class="me-2 mb-2" *ngFor="let empType of lstEmployeeTypeID">
           <span class="badge-with-delete"  *ngIf="empType.rec == obj.recID">
           <span
           class="badge badge-light-primary badge-md ms-2"
@@ -949,7 +949,7 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.labourType && detail == '5'">
-        <span *ngFor="let labourType of lstLabourType">
+        <span class="me-2 mb-2" *ngFor="let labourType of lstLabourType">
           <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
 
           <span>
@@ -979,7 +979,7 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.contractTypeID && detail == '6'">
-        <span *ngFor="let contractType of lstContractTypeID">
+        <span class="me-2 mb-2" *ngFor="let contractType of lstContractTypeID">
           <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
           <span
           class="badge badge-light-primary badge-md ms-2"
@@ -1018,7 +1018,7 @@
                     [objectName]="emp.info?.employeeName" [width]="30">
               </codx-img>
                 <div class="d-flex flex-column w-350px">
-          <span class="badge-with-delete">
+                  <span class="badge-with-delete">
 
                     <span #employeeName class="fs-6 line-clamp line-clamp-1">
                         {{emp.info?.employeeName}}
@@ -1051,7 +1051,7 @@
         </span>
       </div>
       <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
-        <span *ngFor="let empStatus of lstEmpStatus">
+        <span class="me-2 mb-2" *ngFor="let empStatus of lstEmpStatus">
           <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
           <span>
           <codx-vll
@@ -1148,7 +1148,7 @@
     </div>
 </div>
 <span *ngIf="alpolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
-    <span *ngFor="let obj of lstSelectedExcludeObj">
+    <span class="me-2 mb-2" *ngFor="let obj of lstSelectedExcludeObj">
       <!-- <span
       class="badge badge-light-primary badge-md ms-2"
       [innerHTML]="obj
@@ -1267,7 +1267,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.orgUnitID && detail == '1'">
-      <span *ngFor="let org of lstOrgUnitID">
+      <span class="me-2 mb-2" *ngFor="let org of lstOrgUnitID">
         <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
         <span
         class="badge badge-light-primary badge-md ms-2"
@@ -1292,7 +1292,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.jobLevel && detail == '2'">
-      <span *ngFor="let joblevel of lstJobLevel">
+      <span class="me-2 mb-2" *ngFor="let joblevel of lstJobLevel">
         <span class="badge-with-delete"  *ngIf="joblevel.rec == obj.recID">
         <span
         class="badge badge-light-primary badge-md ms-2"
@@ -1317,7 +1317,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.positionID && detail == '3'">
-      <span *ngFor="let position of lstPositionID">
+      <span class="me-2 mb-2" *ngFor="let position of lstPositionID">
         <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
         <span
         class="badge badge-light-primary badge-md ms-2"
@@ -1343,7 +1343,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.employeeTypeID && detail == '4'">
-      <span *ngFor="let empType of lstEmployeeTypeID">
+      <span class="me-2 mb-2" *ngFor="let empType of lstEmployeeTypeID">
         <span class="badge-with-delete" *ngIf="empType.rec == obj.recID">
         <span
         class="badge badge-light-primary badge-md ms-2"
@@ -1369,7 +1369,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.labourType && detail == '5'">
-      <span *ngFor="let labourType of lstLabourType">
+      <span class="me-2 mb-2" *ngFor="let labourType of lstLabourType">
         <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
         <span>
         <codx-vll
@@ -1398,7 +1398,7 @@
       </span>
     </div>
     <div class="mb-3"  *ngIf="obj.contractTypeID && detail == '6'">
-      <span *ngFor="let contractType of lstContractTypeID">
+      <span class="me-2 mb-2" *ngFor="let contractType of lstContractTypeID">
         <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
         <span
         class="badge badge-light-primary badge-md ms-2"
@@ -1469,8 +1469,8 @@
         </span>
       </span>
     </div>
-    <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">
-      <span *ngFor="let empStatus of lstEmpStatus">
+    <div class="mb-3 d-flex flex-wrap"  *ngIf="obj.employeeStatus && detail == '8'">
+      <div class="me-2 mb-2" *ngFor="let empStatus of lstEmpStatus">
         <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
         <span>
         <codx-vll
@@ -1486,7 +1486,7 @@
           <span class="icon-close icon-16"></span>
         </button>
       </span>
-      </span>
+      </div>
     </div>
   </div>
 </div>
