@@ -380,6 +380,30 @@ export class CodxExportComponent implements OnInit, OnChanges {
 
     /*    */
   }
+  onClose() {
+    this.submitted = true;
+    let temlateRecID = null;
+    let value = this.exportGroup.value;
+    let splitFormat = value?.format.split('_');
+    let templateType="";
+    let templateInfo =[];
+    if (splitFormat.length > 1 && splitFormat[1]) temlateRecID = splitFormat[1];
+    switch (splitFormat[0]) {
+      
+      case 'excelTemp':    
+        templateType='AD_ExcelTemplates';  
+        let templateEX = this.dataEx.filter(x=>x.recID==temlateRecID);
+        if(templateEX?.length>0) templateInfo=templateEX[0];
+        break;
+      case 'wordTemp':
+        templateType='AD_WordTemplates';  
+        let templateW = this.dataWord.filter(x=>x.recID==temlateRecID);
+        if(templateW?.length>0) templateInfo=templateW[0];
+        break;
+    }
+    
+    this.dialog && this.dialog.close({templateType:templateType,templateInfo:templateInfo});
+  }
   downloadFile(data: any) {
     // const blob = new Blob([data], {
     //   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
