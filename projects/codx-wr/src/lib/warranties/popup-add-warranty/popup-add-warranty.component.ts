@@ -310,46 +310,53 @@ export class PopupAddWarrantyComponent implements OnInit {
         dialogModel
       )
       .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.data = e?.event;
-          this.form.formGroup.patchValue(this.data);
-          this.detectorRef.detectChanges();
+        if (e && e?.event != null) {
+          if (e?.event?.seriNo) {
+            this.data = e?.event;
+            this.form.formGroup.patchValue(this.data);
+            this.detectorRef.detectChanges();
+          }
         }
       });
   }
 
   clickAddCustomer(type) {
-    this.radioChecked = true;
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.dialog?.formModel;
-    let obj = {
-      title:
-        this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
-      data: this.data,
-      gridViewSetup: this.gridViewSetup,
-    };
-    this.callFc
-      .openForm(
-        PopupAddCustomerWrComponent,
-        '',
-        600,
-        800,
-        '',
-        obj,
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          let customerID = this.data.customerID;
-          this.data = e?.event[0];
-          if (customerID != e?.event[0]?.customerID && type == 'add')
-            this.setServiceTagEmtry();
-          this.radioChecked = e?.event[1];
-          this.detectorRef.detectChanges();
-        }
-      });
+    this.cache.functionList('CM0101').subscribe((res) => {
+      this.radioChecked = true;
+      let dialogModel = new DialogModel();
+      dialogModel.zIndex = 1010;
+      dialogModel.FormModel = this.dialog?.formModel;
+      let obj = {
+        title:
+          this.moreFuncAdd + ' ' + res?.defaultName,
+        data: this.data,
+        gridViewSetup: this.gridViewSetup,
+      };
+      this.callFc
+        .openForm(
+          PopupAddCustomerWrComponent,
+          '',
+          600,
+          800,
+          '',
+          obj,
+          '',
+          dialogModel
+        )
+        .closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
+            if (e?.event[0]?.customerID) {
+              let customerID = this.data.customerID;
+              this.data = e?.event[0];
+              if (customerID != e?.event[0]?.customerID && type == 'add')
+                this.setServiceTagEmtry();
+              this.radioChecked = e?.event[1];
+              this.detectorRef.detectChanges();
+            }
+          }
+        });
+    });
+
   }
   //#endregion
 

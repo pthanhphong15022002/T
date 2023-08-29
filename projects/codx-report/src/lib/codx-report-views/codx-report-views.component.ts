@@ -130,7 +130,7 @@ export class CodxReportViewsComponent
   cardClick(e: any) {
     if(e?.recID)
     {
-      //this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","UpdateViewAsync",[e.recID]).subscribe();
+      this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","UpdateViewAsync",[e.recID]).subscribe();
       this.codxService.navigate('', this.module + '/report/detail/' + e.recID);
     }
 
