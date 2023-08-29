@@ -46,7 +46,6 @@ import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-co
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-step-task',
@@ -143,7 +142,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private callfc: CallFuncService,
-    private adService: CodxAdService,
     private codxService: CodxService,
     private stepService: StepService,
     private notiService: NotificationsService,
@@ -1043,7 +1041,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['dependRule'] = '0';
 
     let taskOutput = await this.openPopupTask('add', task, groupID);
-    if (taskOutput?.event.task) {
+    if (taskOutput?.event?.task) {
       let data = taskOutput?.event;
       let groupData = this.currentStep?.taskGroups.find(
         (group) => group.refID == data.task.taskGroupID
@@ -1070,6 +1068,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data?.progressStep;
       this.notiService.notifyCode('SYS006');
+      if(taskOutput?.event?.isCreateMeeting){
+        this.createMeeting(data.task);
+      }
     }
   }
 
@@ -2209,9 +2210,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type?.text;
   }
   getDefaultCM() {
-    this.adService
-      .getLstBoughtModule()
-      .subscribe((res: Array<TN_OrderModule>) => {
+    this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListBoughtModuleAsync',
+      ''
+    ).subscribe((res: Array<TN_OrderModule>) => {
         if (res) {
           let lstModule = res;
           this.isBoughtTM = lstModule?.some(
