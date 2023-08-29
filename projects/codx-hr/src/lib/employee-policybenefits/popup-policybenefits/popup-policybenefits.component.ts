@@ -455,6 +455,10 @@ implements OnInit{
           debugger
           this.df.detectChanges();
         }
+        else{
+          this.benefitPolicyObj.constraintBy = ""
+          this.lstSelectedConstraintBy = []
+        }
       });
     }
   }
@@ -572,7 +576,6 @@ implements OnInit{
 
   onClickOpenSelectIncludeObj(){
     if(this.benefitPolicyObj.hasIncludeObjects){
-      debugger
       let opt = new DialogModel();
       let popup = this.callfunc.openForm(
         PopupMultiselectvllComponent,
@@ -591,14 +594,18 @@ implements OnInit{
       );
       popup.closed.subscribe((res) => {
         if(res.event){
-          debugger
           this.benefitPolicyObj.includeObjects = res.event
           this.lstSelectedObj = res.event.split(';')
           if(this.lstSelectedObj.length > 0 && this.lstPolicyBeneficiariesApply.length < 1){
             this.addApplyObj()
           }
-          this.df.detectChanges();
         }
+        else{
+          this.benefitPolicyObj.includeObjects = ''
+          this.lstSelectedObj = []
+          this.lstPolicyBeneficiariesApply = []
+        }
+        this.df.detectChanges();
       });
     }
   }
@@ -622,10 +629,17 @@ implements OnInit{
         opt
       );
       popup.closed.subscribe((res) => {
-        this.benefitPolicyObj.excludeObjects = res.event
-        this.lstSelectedExcludeObj = res.event.split(';')
-        if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
-          this.addExcludeObj()
+        if(res.event){
+          this.benefitPolicyObj.excludeObjects = res.event
+          this.lstSelectedExcludeObj = res.event.split(';')
+          if(this.lstSelectedExcludeObj.length > 0 && this.lstPolicyBeneficiariesExclude.length < 1){
+            this.addExcludeObj()
+          }
+        }
+        else{
+          this.benefitPolicyObj.excludeObjects = ''
+          this.lstSelectedExcludeObj = []
+          this.lstPolicyBeneficiariesExclude = []
         }
         this.df.detectChanges();
       });
@@ -939,17 +953,13 @@ implements OnInit{
           this.dataSourceGridView1 = res;
         });
         if(this.benefitPolicyObj.hasIncludeBenefits == true){
-          // this.bene = false;
           this.lstSelectedBenefits = this.benefitPolicyObj.includeBenefits.split(';')
         }
         if(this.benefitPolicyObj.isAdjustKow == true){
-          // this.bene = false;
         }
         if(this.benefitPolicyObj.isConstraintKow == true){
-          // this.bene = false;
         }
         if(this.benefitPolicyObj.isConstraintOther == true){
-          // this.bene = false;
         }
 
         if (this.actionType == 'copy') {
@@ -1250,7 +1260,6 @@ implements OnInit{
   }
 
   onClickOpenComboboxConstraint(target){
-    debugger
     if(target == 'trainLevel'){
       // value list
 
@@ -1271,8 +1280,14 @@ implements OnInit{
         opt
       );
       popup.closed.subscribe((res) => {
-        this.constraintsObj.trainLevel = res.event
-        this.lstSelectedConstraintTrainLevel = res.event.split(';')
+        if(res.event){
+          this.constraintsObj.trainLevel = res.event
+          this.lstSelectedConstraintTrainLevel = res.event.split(';')
+        }
+        else{
+          this.constraintsObj.trainLevel = ''
+          this.lstSelectedConstraintTrainLevel = []
+        }
         this.df.detectChanges();
       });
     }
@@ -1503,7 +1518,6 @@ implements OnInit{
 }
 
   onClickMoveObjDown(obj){
-    
     let crrPriority = obj.priority;
     let objAfterIndex : any;
     if(this.currentTab == 'applyObj'){
@@ -1623,7 +1637,7 @@ implements OnInit{
             })
             if(this.benefitPolicyObj.constraintBy){
               this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
-                if(this.benefitPolicyObj.isConstraintOther){
+                if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
                   this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
                   this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
                   })
@@ -1697,7 +1711,6 @@ deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
       // lstBeneficiaries.contractTypeID = null
       break;
     case '7':
-      debugger
       lstBeneficiaries = lstBeneficiaries.map(item => ({ ...item, employeeID: null }));
       // lstBeneficiaries.employeeID = null
       break;

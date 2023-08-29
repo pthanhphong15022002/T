@@ -62,6 +62,7 @@ export class EmployeeAwardsComponent extends UIComponent {
   className = 'EAwardsBusiness';
   method = 'GetListAwardByDataRequestAsync';
 
+  actionCancelSubmit = 'HRTPro06A00';
   actionAddNew = 'HRTPro06A01'; //tạo mới
   actionSubmit = 'HRTPro06A03'; //gửi duyệt
   actionUpdateCanceled = 'HRTPro06AU0'; //hủy
@@ -172,9 +173,9 @@ export class EmployeeAwardsComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
@@ -326,6 +327,23 @@ export class EmployeeAwardsComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe((res) => {});
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });

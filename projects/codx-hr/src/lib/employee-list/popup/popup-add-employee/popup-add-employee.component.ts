@@ -58,6 +58,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   trainLevel: string = '';
   funcID: string = '';
   // orgNote: string = '';
+  oldEmployeeID: string = '';
 
   hasChangedData: boolean = false;
   constructor(
@@ -77,7 +78,10 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     this.funcID = this.routerActive.snapshot.params['funcID'];
 
-    if (this.action === 'edit') this.employeeIDDisable = true;
+    if (this.action === 'edit') {
+      this.employeeIDDisable = true;
+      this.oldEmployeeID = this.data.employeeID;
+    }
     else{
       this.employeeIDDisable = this.dialogRef.dataService.keyField ? true : false;
     }
@@ -356,6 +360,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             'ERM.Business.HR',
             'EmployeesBusiness',
             'UpdateWithOrgFieldAsync',
+            // [data, this.oldEmployeeID]
             [data]
           )
           .subscribe((res: any) => {
