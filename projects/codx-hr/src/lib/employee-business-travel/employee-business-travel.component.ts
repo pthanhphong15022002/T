@@ -62,6 +62,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   flagChangeMF: boolean = false;
 
   //#region eBusinessTravelFuncID
+  actionCancelSubmit = 'HRTPro10A00';
   actionAddNew = 'HRTPro10A01';
   actionSubmit = 'HRTPro10A03';
   actionUpdateCanceled = 'HRTPro10AU0';
@@ -242,6 +243,23 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
@@ -363,9 +381,10 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
