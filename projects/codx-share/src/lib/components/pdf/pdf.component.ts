@@ -2004,6 +2004,11 @@ export class PdfComponent
     }
 
     this.crrType = type;
+    if (this.signerInfo.allowEditAreas == false) {
+      //thong bao khong duoc dung
+      this.notificationsService.notifyCode('ES036');
+      return;
+    }
 
     if (this.isEditable) {
       this.holding = type?.value;

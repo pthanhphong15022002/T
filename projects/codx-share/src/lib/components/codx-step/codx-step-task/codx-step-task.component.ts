@@ -122,6 +122,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   vllDataTask;
   vllDataStep;
   isBoughtTM = false;
+  dataTooltipDay;
+
+  dialogGuideZoomIn: DialogRef;
+  dialogGuideZoomOut: DialogRef;
+  isZoomIn = false;
+  isZoomOut = false;
+  isShow = true;
 
   moreDefaut = {
     share: true,
@@ -2182,24 +2189,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     });
   }
 
-  showGuide(p) {
-    p.close();
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    if (this.popupGuide) {
-      this.dialogGuide = this.callfc.openForm(
-        this.popupGuide,
-        '',
-        600,
-        470,
-        '',
-        null,
-        '',
-        option
-      );
-    }
-  }
-
   setStatusGroup(group){
     if(!group){
       return '1';
@@ -2240,5 +2229,71 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return a;
     }
     return null;
+  }
+
+  showGuide() {
+    if(this.isZoomIn){
+      return;
+    }
+    if(this.isZoomOut){
+      this.dialogGuideZoomOut?.close();
+      this.isZoomOut = false;
+    }
+    this.isZoomIn = true;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    if (this.popupGuide) {
+      this.dialogGuideZoomIn = this.callfc.openForm(
+        this.popupGuide,
+        '',
+        600,
+        470,
+        '',
+        null,
+        '',
+        option
+      );
+    }
+  }
+
+  zoomGuide(){
+    if(this.isZoomOut){
+      return;
+    }
+    if(this.isZoomIn){
+      this.dialogGuideZoomIn?.close();
+    }
+    this.isZoomOut = true;
+    this.isZoomIn = false;
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    option.IsFull = true;
+    if (this.popupGuide) {
+      this.dialogGuideZoomOut = this.callfc.openForm(
+        this.popupGuide,
+        '',
+        600,
+        470,
+        '',
+        null,
+        '',
+        option
+      );
+    }
+  }
+  closeGuide(){
+    if(this.isZoomOut){
+      this.dialogGuideZoomOut?.close();
+    }
+    if(this.isZoomIn){
+      this.dialogGuideZoomIn?.close();
+    }
+    this.isZoomOut = false;
+    this.isZoomIn = false;
+  }
+
+  openTooltip(popup, data){
+    this.dataTooltipDay = data;
+    popup.open();
   }
 }
