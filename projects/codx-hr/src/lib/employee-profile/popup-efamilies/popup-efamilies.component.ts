@@ -35,6 +35,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   format: string = 'MM/yyyy';
   fromdateVal: any;
   todateVal: any;
+  deadMonthVal : any;
 
   formModel: FormModel;
   formGroup: FormGroup;
@@ -124,6 +125,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         this.formGroup.patchValue(this.familyMemberObj);
         this.fromdateVal = this.familyMemberObj.registerFrom;
         this.todateVal = this.familyMemberObj.registerTo;
+        this.deadMonthVal = this.familyMemberObj.deadMonth;
         this.isAfterRender = true;
         this.cr.detectChanges();
         this.isAfterRender = true;
@@ -171,6 +173,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
     this.familyMemberObj.registerFrom = this.fromdateVal;
     this.familyMemberObj.registerTo = this.todateVal;
+    this.familyMemberObj.deadMonth = this.deadMonthVal;
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
@@ -301,5 +304,9 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   }
   UpdateRegisterTo(e) {
     this.todateVal = e;
+  }
+
+  UpdateDeadMonth(e){
+    this.deadMonthVal = e;
   }
 }
