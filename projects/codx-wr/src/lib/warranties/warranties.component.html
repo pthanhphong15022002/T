@@ -24,10 +24,11 @@
 <ng-template #itemViewList let-dataList>
   <codx-view-list-wr
     [user]="user"
-    [dataSelected]="dataList"
+    [dataList]="dataList"
     [formModel]="view.formModel"
     [entityName]="entityName"
     [funcID]="funcID"
+    [gridViewSetup]="gridViewSetup"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeMoreMF)="changeMoreMF($event)"
   >
