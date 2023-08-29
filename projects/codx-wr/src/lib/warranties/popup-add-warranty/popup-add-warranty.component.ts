@@ -287,6 +287,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
       data: this.data,
+      gridViewSetup: this.gridViewSetup
     };
     this.callFc
       .openForm(
@@ -317,6 +318,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
       data: this.data,
+      gridViewSetup: this.gridViewSetup
     };
     this.callFc
       .openForm(
