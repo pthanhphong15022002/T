@@ -143,30 +143,35 @@ export class CmCustomerDetailComponent implements OnInit {
           textDefault: 'Lịch sử',
           isActive: true,
           template: null,
+          icon: 'icon-i-clock-history',
         },
         {
           name: 'Comment',
           textDefault: 'Thảo luận',
           isActive: false,
           template: null,
+          icon: 'icon-i-chat-right',
         },
         {
           name: 'Attachment',
           textDefault: 'Đính kèm',
           isActive: false,
           template: null,
+          icon: 'icon-i-paperclip',
         },
         {
           name: 'Task',
           textDefault: 'Công việc',
           isActive: false,
           template: null,
+          icon: 'icon-i-clipboard-check',
         },
         {
           name: 'References',
           textDefault: 'Liên kết',
           isActive: false,
           template: null,
+          icon: 'icon-i-link',
         },
       ];
     } else {
@@ -176,18 +181,21 @@ export class CmCustomerDetailComponent implements OnInit {
           textDefault: 'Lịch sử',
           isActive: true,
           template: null,
+          icon: 'icon-i-clock-history',
         },
         {
           name: 'Comment',
           textDefault: 'Thảo luận',
           isActive: false,
           template: null,
+          icon: 'icon-i-chat-right',
         },
         {
           name: 'Attachment',
           textDefault: 'Đính kèm',
           isActive: false,
           template: null,
+          icon: 'icon-i-paperclip',
         },
       ];
     }
