@@ -885,10 +885,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       this.formCashPayment.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) || this.cashpayment.status == '0')) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
+        if (((!res?.save?.error) || (!res?.update?.error) || ((res?._hasSaved) && this.cashpayment.status == '0'))) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
           this.api
             .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
               this.cashpayment,
+              this.journal
             ])
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
@@ -899,8 +900,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
                 this.notification.notifyCode('SYS006'); 
               }
             });
-        }
-        if (!res) {
+        }else{
           this.dialog.close();
         }
       });
@@ -1748,11 +1748,17 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm set validate cho form
    */
   setValidateForm(){
-    if (this.cashpayment.subType == '1' && this.formCashPayment) {
-      let lstDisable :any = [];
-      lstDisable.push({field : 'ObjectID',isDisable : false,require:true});
-      this.formCashPayment.setRequire(lstDisable);
+    let rObjectID = false;
+    let rVoucherNo = false;
+    let lstDisable :any = [];
+    if (this.cashpayment.subType != '1' && this.formCashPayment) {
+      rObjectID = true;
     }
+    lstDisable.push({field : 'ObjectID',isDisable : false,require:rObjectID});
+    if (this.journal.assignRule == '2') {
+      lstDisable.push({field : 'VoucherNo',isDisable : false,require:false});
+    }
+    this.formCashPayment.setRequire(lstDisable);
     // if (this.journal.assignRule == '1' || this.journal.assignRule == '2') { //? nếu số chứng từ tự động hoặc từ động tạo khi lưu
     //   this.formCashPayment.formGroup.controls['voucherNo'].removeValidators(Validators.required); //? không cần bắt buộc nhập
     // }
@@ -1782,6 +1788,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     
   }
 
+  afterValidateForm(event){
+    
+  }
+
+  
   @HostListener('click', ['$event'])
   onClick(e) {
     if (
