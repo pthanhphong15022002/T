@@ -333,9 +333,10 @@ export class PopupAddWarrantyComponent implements OnInit {
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          if (this.data.customerID != e?.event[0]?.customerID && type == 'add')
-            this.setServiceTagEmtry();
+          let customerID = this.data.customerID;
           this.data = e?.event[0];
+          if (customerID != e?.event[0]?.customerID && type == 'add')
+            this.setServiceTagEmtry();
           this.radioChecked = e?.event[1];
           this.detectorRef.detectChanges();
         }
