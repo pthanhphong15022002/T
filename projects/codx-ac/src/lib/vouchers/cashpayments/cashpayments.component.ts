@@ -271,12 +271,17 @@ export class CashPaymentsComponent extends UIComponent {
       legalName: this.legalName //? tên company
 
     };
-    this.callfc.openSide(
+    let dialog = this.callfc.openSide(
       CashPaymentAdd,
       data,
       this.optionSidebar,
       this.view.funcID
     );
+    dialog.closed.subscribe((res:any) => {
+      if (res && res?.event?.update) {
+        this.getDatadetail(this.itemSelected);
+      }
+    });
   }
 
   /**
@@ -297,7 +302,12 @@ export class CashPaymentsComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+        let dialog = this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+        dialog.closed.subscribe((res: any) => {
+          if (res && res?.event?.update) {
+            this.getDatadetail(this.itemSelected);
+          }
+        });
       });
   }
 
@@ -598,12 +608,12 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        this.itemSelected = event?.data;
-        this.getDatadetail(this.itemSelected);
         if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+          this.itemSelected = event?.data;
           return;
         } 
-        
+        this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);       
       }
     }
   }

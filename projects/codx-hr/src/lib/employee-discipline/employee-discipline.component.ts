@@ -55,6 +55,7 @@ export class EmployeeDisciplineComponent extends UIComponent {
   viewActive: string;
 
   //#region eDisciplineFuncID
+  actionCancelSubmit = 'HRTPro07A00';
   actionAddNew = 'HRTPro07A01';
   actionSubmit = 'HRTPro07A03';
   actionUpdateCanceled = 'HRTPro07AU0';
@@ -248,6 +249,23 @@ export class EmployeeDisciplineComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event).subscribe((res) => {});
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
@@ -259,9 +277,10 @@ export class EmployeeDisciplineComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));

@@ -172,6 +172,7 @@ export class EmployeeContractComponent extends UIComponent {
           this.view.dataService.update(res.event[1]).subscribe();
         }
 
+        //Gọi hàm hủy yêu cầu duyệt bên core
         if (
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
@@ -261,7 +262,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   clickMF(event, data) {
     this.itemDetail = data;
-    console.log(event.functionID);
     switch (event.functionID) {
       case this.actionSubmit:
         this.beforeRelease();
@@ -500,5 +500,10 @@ export class EmployeeContractComponent extends UIComponent {
           //   });
         }
       });
+  }
+
+  //Send multi
+  onMoreMulti(e) {
+    console.log(e);
   }
 }

@@ -67,11 +67,12 @@ export class EmployeeBenefitComponent extends UIComponent {
   dateNow = moment().format('YYYY-MM-DD');
 
   //#region Update modal Status
+  actionCancelSubmit = 'HRTPro05A00';
   actionSubmit = 'HRTPro05A03';
   actionAddNew = 'HRTPro05A01';
   actionUpdateCanceled = 'HRTPro05AU0';
   actionUpdateInProgress = 'HRTPro05AU3';
-  actionUpdateRejected = 'HRTPro05AU4';
+  // actionUpdateRejected = 'HRTPro05AU4';
   actionUpdateApproved = 'HRTPro05AU5';
   actionUpdateClosed = 'HRTPro05AU9';
   //#endregion
@@ -207,6 +208,23 @@ export class EmployeeBenefitComponent extends UIComponent {
         if (res.event[1]) {
           this.view.dataService.update(res.event[1]).subscribe();
         }
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
@@ -327,9 +345,10 @@ export class EmployeeBenefitComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));
