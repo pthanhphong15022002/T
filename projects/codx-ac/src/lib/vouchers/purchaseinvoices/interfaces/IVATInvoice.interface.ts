@@ -23,7 +23,7 @@ export interface IVATInvoice {
     umid: string;
     quantity: number;
     unitPrice: number;
-    vATBase: number;
+    vatBase: number;
     vatid: string;
     vatPct: number | null;
     vatAmt: number;

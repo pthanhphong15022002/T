@@ -56,12 +56,12 @@ export class PurchaseinvoicesAddComponent
   master: IPurchaseInvoice;
   prevMaster: IPurchaseInvoice;
   prevLine: IPurchaseInvoiceLine;
-
-  masterService: CRUDService;
+  prevVatInvoice: IVATInvoice;
 
   fmVATInvoices: FormModel;
   fmPurchaseInvoicesLines: FormModel;
 
+  masterService: CRUDService;
   isEdit: boolean = false;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -371,10 +371,6 @@ export class PurchaseinvoicesAddComponent
   onCellChange(e: any) {
     console.log('onCellChange', e);
 
-    if (!this.master) {
-      return;
-    }
-
     if (this.prevLine?.[e.field] == e.data[e.field]) {
       return;
     }
@@ -424,15 +420,35 @@ export class PurchaseinvoicesAddComponent
 
     if (e.type === 'beginEdit') {
       this.prevLine = { ...e.data };
-
-      this.api
-        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'BeginEditAsync', e.data)
-        .subscribe();
     }
   }
   //#endregion
 
   //#region Event VATInvoices
+  onCellChange2(e: any) {
+    console.log('onCellChange2', e);
+
+    if (this.prevVatInvoice?.[e.field] == e.data[e.field]) {
+      return;
+    }
+
+    const field: string = e.field.toLowerCase();
+    const postFields: string[] = ['quantity', 'unitprice', 'vatid'];
+    if (postFields.includes(field)) {
+      this.api
+        .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+          field,
+          this.master,
+          e.data,
+        ])
+        .subscribe((line: any) => {
+          this.prevVatInvoice = { ...line };
+          Object.assign(e.data, line);
+          this.detectorRef.markForCheck();
+        });
+    }
+  }
+
   onActionEvent2(e: any): void {
     console.log('onActionEvent2', e);
 
@@ -441,6 +457,10 @@ export class PurchaseinvoicesAddComponent
         this.createNewVatInvoice(),
         this.gridVatInvoices.dataSource.length
       );
+    }
+
+    if (e.type === 'beginEdit') {
+      this.prevVatInvoice = { ...e.data };
     }
   }
   //#endregion
@@ -510,20 +530,33 @@ export class PurchaseinvoicesAddComponent
   resetForm(): void {
     this.masterService
       .addNew(() =>
-        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
           this.master.journalNo,
         ])
       )
       .subscribe((res: IPurchaseInvoice) => {
-        Object.assign(this.master, res);
-        this.initialMaster = { ...this.master };
-        this.prevMaster = { ...this.master };
+        this.master = this.form.formModel.currentData = res;
         this.form.formGroup.patchValue(res);
 
+        this.initialMaster = { ...this.master };
+        this.prevMaster = { ...this.master };
         this.masterService.hasSaved = false;
+        this.gridPurchaseInvoiceLines.dataSource = [];
+        if (this.gridVatInvoices) {
+          this.gridVatInvoices.dataSource = [];
+        }
 
-        this.masterService.dataSelected = this.master;
-        this.masterService.addDatas.set(this.master.recID, this.master);
+        this.api
+          .exec(
+            'AC',
+            'PurchaseInvoicesLinesBusiness',
+            'GetDefault2Async',
+            this.master
+          )
+          .subscribe((res: any) => {
+            this.defaultLineData = res.purchaseInvoiceLine.data;
+            this.defaultVatInvoiceData = res.vatInvoice.data;
+          });
       });
   }
   //#endregion
@@ -537,6 +570,7 @@ export class PurchaseinvoicesAddComponent
       ...(copiedData || {}),
       recID: Util.uid(),
       note: this.master.memo,
+      idiM4: this.master.warehouseID,
       createdOn: new Date(),
     };
   }
@@ -546,6 +580,8 @@ export class PurchaseinvoicesAddComponent
       ...this.defaultVatInvoiceData,
       ...(copiedData || {}),
       recID: Util.uid(),
+      objectID: this.master.objectID,
+      objectName: this.master.objectName,
       createdOn: new Date(),
     };
   }
