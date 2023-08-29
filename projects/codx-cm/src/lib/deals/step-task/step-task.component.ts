@@ -55,7 +55,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   vllViewGannt = 'DP042';
   typeTime;
   listInstanceStepShow = [];
-  isShowElement = true;
+  isShowElement = false;
   indexAddTask: number;
   taskType;
   titleReason: string;
@@ -76,7 +76,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   stepViews = [];
   isZoomIn = false;
   isZoomOut = false;
-  isShow = true;
+  isShow = false;
   // formModel: FormModel = {
   //   entityName: 'DP_Instances_Steps_Reasons',
   //   formName: 'DPInstancesStepsReasons',
@@ -171,11 +171,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   handelToggleStep(){
     this.isShow = !this.isShow;
-    if (this.isShow) {
-      this.isShowElement = true;
-    } else {
-      this.isShowElement = false;
-    }
+    this.isShowElement = this.isShow;
   }
 
   handelContinueStep(event, step) {

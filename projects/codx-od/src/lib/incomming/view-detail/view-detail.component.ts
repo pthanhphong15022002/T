@@ -773,6 +773,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
             this.data.lstUserID = getListImg(x.event[0].relations);
+            this.data.relations = x.event[0].relations;
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
             );

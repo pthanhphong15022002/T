@@ -29,7 +29,7 @@
       </div>
     </ng-container>
     <ng-template #tmpElse>
-      <ng-container *ngIf="data.displayMode == '3'; else reportBolder">
+      <ng-container *ngIf="data.displayMode == '3' || data.displayMode == '4'; else reportBolder">
         <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true"></lib-pdf>
       </ng-container>
       <ng-template #reportBolder>

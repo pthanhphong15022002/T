@@ -202,7 +202,7 @@
       </div>
       <div class="text-primary fs-6 fw-bold mt-3 mb-3">Thiết lập</div>
       <div class="form-group">
-        <codx-label default="Trang chứa template"></codx-label>
+        <codx-label default="Trang chứa template"></codx-label><span class="text-danger ms-2">*</span>
         <codx-input
           type="text"
           [showSpinButton]="false"
@@ -213,7 +213,7 @@
       </div>
       <div class="row">
         <div class="col form-group">
-          <codx-label default="Dòng chi tiết"></codx-label>
+          <codx-label default="Dòng chi tiết"></codx-label><span class="text-danger ms-2">*</span>
           <codx-input
             type="text"
             ngClass="w-100"
@@ -225,13 +225,14 @@
           ></codx-input>
         </div>
         <div class="col form-group">
-          <codx-label default="Cột sau cùng"></codx-label>
+          <codx-label default="Cột sau cùng"></codx-label><span class="text-danger ms-2">*</span>
           <codx-input
             type="text"
             [class]="'me-3'"
             style="width: 100%"
             [Group]="exportAddForm"
             ControlName="headerColumn"
+            [ngClass]="{ 'is-invalid': submitted && f.headerRow.errors }"
           ></codx-input>
         </div>
       </div>

@@ -555,6 +555,7 @@ export class DP_Activities {
   recID: string;
   instanceID: string;
   objectID: string;
+  objectType: string;
   stepID: string;
   indexNo: number;
   taskType: string;

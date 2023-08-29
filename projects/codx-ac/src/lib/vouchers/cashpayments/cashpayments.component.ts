@@ -271,12 +271,17 @@ export class CashPaymentsComponent extends UIComponent {
       legalName: this.legalName //? tên company
 
     };
-    this.callfc.openSide(
+    let dialog = this.callfc.openSide(
       CashPaymentAdd,
       data,
       this.optionSidebar,
       this.view.funcID
     );
+    dialog.closed.subscribe((res:any) => {
+      if (res && res?.event?.update) {
+        this.getDatadetail(this.itemSelected);
+      }
+    });
   }
 
   /**
@@ -297,7 +302,12 @@ export class CashPaymentsComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+        let dialog = this.callfc.openSide(CashPaymentAdd, data, this.optionSidebar, this.view.funcID);
+        dialog.closed.subscribe((res: any) => {
+          if (res && res?.event?.update) {
+            this.getDatadetail(this.itemSelected);
+          }
+        });
       });
   }
 
@@ -598,12 +608,12 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        this.itemSelected = event?.data;
-        this.getDatadetail(this.itemSelected);
         if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+          this.itemSelected = event?.data;
           return;
         } 
-        
+        this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);       
       }
     }
   }
@@ -627,7 +637,6 @@ export class CashPaymentsComponent extends UIComponent {
           this.acctTrans = res?.lsAcctrants ? res?.lsAcctrants : [];
           this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : [];
           this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
-          //this.isLoadData = false; // tắt progressbar của tab
           this.detectorRef.detectChanges();
         }
       });     
@@ -656,10 +665,9 @@ export class CashPaymentsComponent extends UIComponent {
             ''
           )
           .pipe(takeUntil(this.destroy$))
-          .subscribe((result) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              this.notification.notifyCode('ES007');
-              data.status = '3';
+          .subscribe((result:any) => {
+            if (result?.msgCodeError == null && result?.rowCount) {        
+              data.status = result?.returnStatus;              ;
               this.view.dataService.updateDatas.set(
                 data['_uuid'],
                 data
@@ -669,14 +677,11 @@ export class CashPaymentsComponent extends UIComponent {
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res && !res.update.error) {
+                  this.notification.notifyCode('ES007');
                   this.itemSelected = res.update.data;
-                  this.getDatadetail(this.itemSelected);
                   this.detectorRef.detectChanges();
                 }
               });
-              // this.getDatadetail(this.itemSelected);
-              // this.view.dataService.update(data).subscribe((res) => {});
-              
             } else this.notification.notifyCode(result?.msgCodeError);
           });
       });
@@ -692,8 +697,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
-          this.notification.notifyCode('SYS034');
-          data.status = '1';
+          data.status = result?.returnStatus;
           this.view.dataService.updateDatas.set(
             data['_uuid'],
             data
@@ -703,8 +707,8 @@ export class CashPaymentsComponent extends UIComponent {
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res && !res.update.error) {
+                  this.notification.notifyCode('SYS034');
                   this.itemSelected = res.update.data;
-                  this.getDatadetail(this.itemSelected);
                   this.detectorRef.detectChanges();
                 }
               });

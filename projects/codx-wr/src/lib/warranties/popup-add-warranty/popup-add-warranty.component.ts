@@ -44,6 +44,7 @@ export class PopupAddWarrantyComponent implements OnInit {
   action = '';
   gridViewSetup: any;
   moreFuncAdd = '';
+  user: any;
   constructor(
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
@@ -58,7 +59,8 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
     this.title = dt?.data?.title;
-    this.userID = this.authstore?.get()?.userID;
+    this.user = this.authstore?.get();
+    this.userID = this.user?.userID;
     this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
   }
@@ -71,6 +73,19 @@ export class PopupAddWarrantyComponent implements OnInit {
       }
     } else {
       this.data.oow = true;
+      this.api
+        .execSv<any>(
+          'HR',
+          'ERM.Business.HR',
+          'OrganizationUnitsBusiness',
+          'GetUserManagerByUserIDAsync',
+          [this.data.owner]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.data.teamLeader = res?.userID;
+          }
+        });
     }
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -250,6 +265,15 @@ export class PopupAddWarrantyComponent implements OnInit {
         } else {
           this.data.oow = false;
         }
+
+        if (this.data.customerID != null && this.data.customerID.trim() != '') {
+          var customer = await firstValueFrom(
+            this.wrSv.getOneCustomer(this.data.customerID)
+          );
+          if (customer != null) {
+            this.data.category = customer?.category;
+          }
+        }
       }
 
       // let customer = await firstValueFrom(
@@ -269,8 +293,10 @@ export class PopupAddWarrantyComponent implements OnInit {
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.dialog?.formModel;
     let obj = {
-      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
+      title:
+        this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
       data: this.data,
+      gridViewSetup: this.gridViewSetup,
     };
     this.callFc
       .openForm(
@@ -284,43 +310,53 @@ export class PopupAddWarrantyComponent implements OnInit {
         dialogModel
       )
       .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.data = e?.event;
-          this.form.formGroup.patchValue(this.data);
-          this.detectorRef.detectChanges();
+        if (e && e?.event != null) {
+          if (e?.event?.seriNo) {
+            this.data = e?.event;
+            this.form.formGroup.patchValue(this.data);
+            this.detectorRef.detectChanges();
+          }
         }
       });
   }
 
   clickAddCustomer(type) {
-    this.radioChecked = true;
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.dialog?.formModel;
-    let obj = {
-      title: this.moreFuncAdd + ' ' + this.gridViewSetup?.CustomerID?.headerText,
-      data: this.data,
-    };
-    this.callFc
-      .openForm(
-        PopupAddCustomerWrComponent,
-        '',
-        600,
-        800,
-        '',
-        obj,
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          if (this.data.customerID != e?.event[0]?.customerID && type == 'add')
-            this.setServiceTagEmtry();
-          this.data = e?.event[0];
-          this.radioChecked = e?.event[1];
-          this.detectorRef.detectChanges();
-        }
-      });
+    this.cache.functionList('CM0101').subscribe((res) => {
+      this.radioChecked = true;
+      let dialogModel = new DialogModel();
+      dialogModel.zIndex = 1010;
+      dialogModel.FormModel = this.dialog?.formModel;
+      let obj = {
+        title:
+          this.moreFuncAdd + ' ' + res?.defaultName,
+        data: this.data,
+        gridViewSetup: this.gridViewSetup,
+      };
+      this.callFc
+        .openForm(
+          PopupAddCustomerWrComponent,
+          '',
+          600,
+          800,
+          '',
+          obj,
+          '',
+          dialogModel
+        )
+        .closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
+            if (e?.event[0]?.customerID) {
+              let customerID = this.data.customerID;
+              this.data = e?.event[0];
+              if (customerID != e?.event[0]?.customerID && type == 'add')
+                this.setServiceTagEmtry();
+              this.radioChecked = e?.event[1];
+              this.detectorRef.detectChanges();
+            }
+          }
+        });
+    });
+
   }
   //#endregion
 
