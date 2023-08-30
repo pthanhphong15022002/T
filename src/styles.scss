@@ -3757,7 +3757,7 @@ codx-view-tree-targets .menu-sub{
 .badge-with-delete{
  
   .badge{
-    padding-right: 24px!important;
+   // padding-right: 24px!important;
   }
   .btn.btn-icon.btn-sm{
     margin-left: -21px;
@@ -3766,7 +3766,7 @@ codx-view-tree-targets .menu-sub{
       height: 20px !important;
       min-width: 20px !important;
       min-height: 20px !important;
-      opacity: .32;
+      opacity: 0;
       margin-top: -2px;
     
   }
