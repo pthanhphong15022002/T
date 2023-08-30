@@ -5,10 +5,17 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CacheService } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+} from 'codx-core';
+import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -30,6 +37,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
+
   addSuccess = true;
   errorMessage = '';
   showErrMess = false;
@@ -48,10 +56,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
   listIdUser: string = '';
   arrIdUser = [];
   numberChange = 0;
+  listContacts = [];
+  dataContact: any;
+  formModelContact: FormModel;
+  popoverCrr: any;
 
   constructor(
     private cache: CacheService,
-    private changeDef: ChangeDetectorRef
+    private changeDef: ChangeDetectorRef,
+    private callfc: CallFuncService
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
@@ -82,6 +95,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
       case 'R':
         this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
+        break;
+      case 'C':
+        this.formModelContact = new FormModel();
+        this.formModelContact.formName = 'CMContacts';
+        this.formModelContact.gridViewName = 'grvCMContacts';
+        this.formModelContact.entityName = 'CM_Contacts';
+        this.formModelContact.funcID = 'CM0102';
+        let arrValue = JSON.parse(this.customField.dataValue);
+        this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         break;
     }
   }
@@ -204,5 +226,74 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
   controlBlur(e) {
     // if (e.crrValue) this.valueChange(e.crrValue);
+  }
+
+  //Type Contact
+  openContact() {
+    let action = 'add';
+    let data = null;
+    let type = 'formAdd';
+    let objectID = ''; //recID của co hoi
+    let objectType = '4';
+    let objectName = 'Cai quan que';
+    let customerID = null;
+    var title = 'Tinh sau';
+    let opt = new DialogModel();
+
+    opt.FormModel = this.formModelContact;
+    this.cache
+      .gridViewSetup(
+        this.formModelContact.formName,
+        this.formModelContact.gridViewName
+      )
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: title,
+          action: action,
+          dataContact: data,
+          type: type,
+          recIDCm: objectID,
+          objectType: objectType,
+          objectName: objectName,
+          gridViewSetup: res,
+          listContacts: this.listContacts,
+          customerID: customerID,
+        };
+        var dialog = this.callfc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          700,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e?.event && e.event?.recID) {
+            let contact = e.event;
+            let idx = this.listContacts.findIndex(
+              (x) => x.recID == contact?.recID
+            );
+            if (idx == -1) this.listContacts.push(contact);
+            else this.listContacts[idx] = contact;
+            this.customField.dataValue = JSON.stringify(contact);
+          }
+        });
+      });
+  }
+
+  openPopper(contact, p) {
+    if (this.popoverCrr && p != this.popoverCrr && this.popoverCrr.isOpen()) {
+      this.popoverCrr.close();
+      return;
+    }
+    this.dataContact = contact;
+    p.open();
+    this.popoverCrr = p;
+  }
+  closePopper(p) {
+    p.close();
+    this.popoverCrr = p;
   }
 }

@@ -496,6 +496,9 @@
       ></codx-label>
     </span>
   </button>
+  <button type="button" class="btn btn-primary" (click)="beforeSave(true)" *ngIf="typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')">
+    <codx-label name="Save" formName="Sprints" default="Lưu và tạo cuộc họp"></codx-label>
+  </button>
   <button type="button" class="btn btn-primary" (click)="beforeSave()">
     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
   </button>
