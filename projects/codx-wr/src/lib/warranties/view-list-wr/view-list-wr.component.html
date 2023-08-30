@@ -1,7 +1,7 @@
-<div class="p-3 border-bottom" *ngIf="dataSelected; else noData">
+<div class="p-3 border-bottom" *ngIf="dataList; else noData">
   <ng-container
     [ngTemplateOutlet]="warranties"
-    [ngTemplateOutletContext]="{ $implicit: dataSelected }"
+    [ngTemplateOutletContext]="{ $implicit: dataList }"
   ></ng-container>
 </div>
 <ng-template #noData>
@@ -197,6 +197,19 @@
           "
         ></span>
       </div>
+
+      <div class="mb-1">
+        <codx-vll
+          [name]="gridViewSetup?.PartStatus?.referedValue"
+          [field]="'PartStatus'"
+          [value]="data?.partStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
+
       <div class="mb-1">
         <codx-label
           style="white-space: nowrap"
@@ -215,6 +228,17 @@
     </div>
 
     <div class="w-150px min-w-150px pe-6 d-flex flex-column">
+      <div class="d-flex align-items-center mb-1">
+        <codx-vll
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
       <div class="mb-1">
         <span
           [innerHTML]="
@@ -224,54 +248,123 @@
           "
         ></span>
       </div>
-      <div class="d-flex flex-row-reverse">
-        <!-- <codx-temp-full
-          cardCss="card-template list-task"
-          [imageId]="data.recID"
-          [imageWidth]="35"
-          imgCss="me-4"
-          [imageObjType]="entityName"
-          [titleCss]="'fs-6 fw-bold'"
-          [formModel]="formModel"
-          [dataItem]="data"
-          [hideMF]="true"
+      <div class="d-flex justify-content-end mb-1">
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipOwner"
+          *ngIf="data?.owner"
         >
-        </codx-temp-full> -->
-        <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.owner"
-          [referType]="'avt'"
-          [imgOn]="dataSelected?.owner"
-          [objectType]="entityName"
-          [width]="35"
+          <codx-imgs
+            [width]="30"
+            [objectId]="data?.owner"
+            ojectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-imgs>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('1') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipTeamLeader"
+          *ngIf="data?.teamLeader"
         >
-        </codx-img>
-        <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.teamLeader"
-          [referType]="'avt'"
-          [imgOn]="dataSelected?.teamLeader"
-          [objectType]="entityName"
-          [width]="35"
+          <codx-img
+            [width]="30"
+            [objectId]="data.teamLeader"
+            objectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('3') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipEngineerID"
+          *ngIf="data?.engineerID"
         >
-        </codx-img>
-        <codx-img
-          [objectId]="dataSelected.recID"
-          [objectName]="dataSelected.engineerID"
-          [referType]="'avt'"
-          [imgOn]="dataSelected?.engineerID"
-          [objectType]="entityName"
-          [width]="35"
-        >
-        </codx-img>
+          <codx-imgs
+            [width]="30"
+            [objectId]="data?.engineerID"
+            ojectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-imgs>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('5') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <ng-template #tooltipOwner>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.owner | formatvalue : formModel : 'owner' | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.Owner?.headerText }}
+          </div>
+        </ng-template>
+
+        <ng-template #tooltipTeamLeader>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.teamLeader
+                  | formatvalue : formModel : 'teamLeader'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.TeamLeader?.headerText }}
+          </div>
+        </ng-template>
+
+        <ng-template #tooltipEngineerID>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.engineerID
+                  | formatvalue : formModel : 'engineerID'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.EngineerID?.headerText }}
+          </div>
+        </ng-template>
       </div>
     </div>
 
     <div class="w-50px min-w-50px">
       <codx-mfunc
         [formModel]="formModel"
-        (clickMF)="clickMF($event, dataSelected)"
-        (changeDataMF)="changeDataMF($event, dataSelected)"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
         [isBookMark]="false"
         [dataItem]="data"
         type="hover"
@@ -289,8 +382,8 @@
   <!-- <codx-cmcustomer-detail
     #customerDetail
     [formModel]="formModel"
-    [recID]="dataSelected.recID"
-    [dataSelected]="dataSelected"
+    [recID]="dataList.recID"
+    [dataList]="dataList"
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFuncDetail($event)"
     [entityName]="entityName"

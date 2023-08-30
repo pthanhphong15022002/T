@@ -28,8 +28,9 @@
     </div>
     <codx-input
       field="memo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [format]="'ed'"
+      type="textarea"
+      [crrValue]="reasonStep.memo"
       (valueChange)="valueChange($event)"
     >
     </codx-input>

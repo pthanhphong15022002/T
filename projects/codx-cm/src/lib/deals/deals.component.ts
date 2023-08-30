@@ -160,6 +160,7 @@ export class DealsComponent
   processIDKanban: string;
   processIDDefault: string;
   funcIDCrr: any;
+  user:any;
   crrProcessID = '';
   returnedCmt = '';
   dataColums: any = [];
@@ -177,9 +178,11 @@ export class DealsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private authStore: AuthStore,
   ) {
     super(inject);
+    this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
@@ -646,11 +649,12 @@ export class DealsComponent
 
   dropDeals(data) {
     data.stepID = this.crrStepID;
-    if (!data?.roles?.isOnwer) {
-      this.notificationsService.notifyCode('SYS032');
-      return;
-    }
-    if (data.closed) {
+    // if (!data.edit ? !data.edit: data.createdBy !== this.user.userID ) {
+    //   this.notificationsService.notifyCode('SYS032');
+    //   return;
+    // }
+
+    if (  data.closed ) {
       this.notificationsService.notifyCode('DP039');
       return;
     }

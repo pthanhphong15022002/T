@@ -153,15 +153,28 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.cr.detectChanges();
   }
 
+  handleControlType(evt){
+    if(evt == 'day'){
+      return 'd';
+    }
+    else if(evt == 'month'){
+      return 'm';
+    }
+    else if(evt == 'year'){
+      return 'y';
+    }
+    return 'd';
+  }
 
   onInit(): void {
     if (this.certificateObj) {
-      this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+      this.fromDateFormat = this.handleControlType(this.certificateObj.trainFrom);
+      this.toDateFormat = this.handleControlType(this.certificateObj.trainTo);
     } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
+      this.fromDateFormat = 'd';
+      this.toDateFormat = 'd';
     }
+
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     })
@@ -300,48 +313,63 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getFullYear();
-    let monthFromDate = event.fromDate.getMonth() + 1;
-    let dayFromDate = event.fromDate.getDate();
-    var strYear = `${yearFromDate}`;
-    var strMonth = `${yearFromDate}/${monthFromDate}`;
-    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
-
     if (changeType === 'FromDate') {
-      if (event.type === 'year') {
-        this.certificateObj.trainFrom = strYear;
-      } else if (event.type === 'month') {
-        this.certificateObj.trainFrom = strMonth;
-      } else {
-        this.certificateObj.trainFrom = strDay;
-      }
+      this.certificateObj.trainFrom = event.type;
       this.certificateObj.trainFromDate = event.fromDate;
+      this.fromDateFormat = this.handleControlType(event.type);
     } else if (changeType === 'ToDate') {
-      if (event.type === 'year') {
-        this.certificateObj.trainTo = strYear;
-      } else if (event.type === 'month') {
-        this.certificateObj.trainTo = strMonth;
-      } else {
-        this.certificateObj.trainTo = strDay;
-      }
+      this.certificateObj.trainTo = event.type;
       this.certificateObj.trainToDate = event.fromDate;
-      this.formGroup.patchValue(this.certificateObj);
-      if (this.certificateObj) {
-        this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
-        this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
-      } else {
-        this.fromDateFormat = this.getFormatDate(null);
-        this.toDateFormat = this.getFormatDate(null);
-      }
+      this.toDateFormat = this.handleControlType(event.type);
     }
+    this.formGroup.patchValue(this.certificateObj);
   }
-  getFormatDate(trainFrom: string) {
-    let resultDate = '';
-    if (trainFrom) {
-      let arrDate = trainFrom.split('/');
-      resultDate =
-        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate;
-    } else return 'y';
-  }
+
+  // changeCalendar(event, changeType: string) {
+  //   let yearFromDate = event.fromDate.getFullYear();
+  //   let monthFromDate = event.fromDate.getMonth() + 1;
+  //   let dayFromDate = event.fromDate.getDate();
+  //   var strYear = `${yearFromDate}`;
+  //   var strMonth = `${yearFromDate}/${monthFromDate}`;
+  //   var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+  //   if (changeType === 'FromDate') {
+  //     if (event.type === 'year') {
+  //       this.certificateObj.trainFrom = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.certificateObj.trainFrom = strMonth;
+  //     } else {
+  //       this.certificateObj.trainFrom = strDay;
+  //     }
+  //     this.certificateObj.trainFromDate = event.fromDate;
+  //   } else if (changeType === 'ToDate') {
+  //     if (event.type === 'year') {
+  //       this.certificateObj.trainTo = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.certificateObj.trainTo = strMonth;
+  //     } else {
+  //       this.certificateObj.trainTo = strDay;
+  //     }
+  //     this.certificateObj.trainToDate = event.fromDate;
+  //     this.formGroup.patchValue(this.certificateObj);
+  //     if (this.certificateObj) {
+  //       this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
+  //       this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+  //     } else {
+  //       this.fromDateFormat = this.getFormatDate(null);
+  //       this.toDateFormat = this.getFormatDate(null);
+  //     }
+  //   }
+  // }
+
+
+  // getFormatDate(trainFrom: string) {
+  //   let resultDate = '';
+  //   if (trainFrom) {
+  //     let arrDate = trainFrom.split('/');
+  //     resultDate =
+  //       arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+  //     return resultDate;
+  //   } else return 'y';
+  // }
 }

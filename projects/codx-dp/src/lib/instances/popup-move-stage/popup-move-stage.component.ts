@@ -146,6 +146,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.probability = dt?.data?.deal?.probability;
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
+      this.stepIdClick = this.dataCM?.nextStep;
       this.executeApiCalls();
       this.isLoad = true;
     }
@@ -212,7 +213,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.eventAutoClick();
         this.removeReasonInStepsAuto(res[3],res[4],res[1]);
         this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
-        this.autoClickedSteps(this.listStepsCbx);
+        !this.stepIdClick && this.autoClickedSteps(this.listStepsCbx);
         this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
         this.changeDetectorRef.detectChanges();
       }
