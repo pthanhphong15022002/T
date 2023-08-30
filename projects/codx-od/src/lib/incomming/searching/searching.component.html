@@ -6,24 +6,38 @@
     [funcID]="funcID" 
     [service]="service" 
     [entityName]="entityName" 
-    (selectedChange)="onSelected($event)">
+    [assemblyName]="'OD'"
+    [className]="'DispatchesBusiness'"
+    [method]="'FullTextSearchAsync'"
+    (selectedChange)="onSelected($event)"
+    >
 </codx-fulltextsearch>
 <!-- <ng-template #menu >
     <button (click)="testSearch()">test</button>
 </ng-template> -->
 <ng-template #centerTmp let-data>
-    <codx-temp-full [content]="extractContent(data.title)"
-    [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
-    [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
-    cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
-    [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-    [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" [footer]="footer">
-    </codx-temp-full>
+        <codx-temp-full [content]="extractContent(data.title)"
+            [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
+            [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+            cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
+            [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+            [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
+            [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
+            [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" [footer]="footer">
+        </codx-temp-full>
 </ng-template>
 <ng-template #footer let-data>
-    <div class="text-dark" [innerHtml]="data.highlight"></div>
+    <div class="d-flex flex-column">
+        <div class="text-dark" [innerHtml]="data.highlight"></div>
+        <codx-thumbnail
+            [files]="data?.unbounds?.files"
+            displayThumb="simple"
+            [hideDelete]="'1'"
+            [hideMoreF]="'0'"
+        >
+        </codx-thumbnail>
+    </div>
+   
 </ng-template>
 <ng-template #rightTmp>
     <span class="fs-5 fw-bolder">Tài liệu liên kết</span>

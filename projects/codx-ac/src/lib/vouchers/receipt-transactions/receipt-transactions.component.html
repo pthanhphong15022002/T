@@ -72,7 +72,7 @@
   <span
     #warehouseID
     [innerHTML]="
-    itemSelected?.warehouseID
+    data?.warehouseID
         | formatvalue : view.formModel : 'warehouseID' : warehouseID
         | async
     "

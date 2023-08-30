@@ -265,6 +265,59 @@ export class PurchaseinvoicesComponent
     this.detectorRef.detectChanges();
   }
 
+  onInitMF(mfs: any, data: IPurchaseInvoice): void {
+    let disabledFuncs: MF[] = [
+      MF.GuiDuyet,
+      MF.GhiSo,
+      MF.HuyYeuCauDuyet,
+      MF.In,
+      MF.KhoiPhuc,
+      MF.KiemTraTinhHopLe,
+    ];
+    switch (data.status) {
+      case '0': // phac thao
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
+        );
+        break;
+      case '1': // da hop le
+        if (['1', '2'].includes(this.journal.approvalControl)) {
+          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
+        } else {
+          disabledFuncs = disabledFuncs.filter(
+            (f) => f !== MF.GhiSo && f !== MF.In
+          );
+        }
+        break;
+      case '3': // cho duyet
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
+        );
+        break;
+      case '5': // da duyet
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.GhiSo && f !== MF.In
+        );
+        break;
+      case '6': // da ghi so
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.KhoiPhuc && f !== MF.In
+        );
+        break;
+      case '9': // khoi phuc
+        disabledFuncs = disabledFuncs.filter(
+          (f) => f !== MF.GhiSo && f !== MF.In
+        );
+        break;
+    }
+
+    for (const mf of mfs) {
+      if (disabledFuncs.includes(mf.functionID)) {
+        mf.disabled = true;
+      }
+    }
+  }
+
   onClickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -366,59 +419,6 @@ export class PurchaseinvoicesComponent
 
         this.acctLoading = false;
       });
-  }
-
-  onInitMF(mfs: any, data: IPurchaseInvoice): void {
-    let disabledFuncs: MF[] = [
-      MF.GuiDuyet,
-      MF.GhiSo,
-      MF.HuyYeuCauDuyet,
-      MF.In,
-      MF.KhoiPhuc,
-      MF.KiemTraTinhHopLe,
-    ];
-    switch (data.status) {
-      case '0': // phac thao
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
-        );
-        break;
-      case '1': // da hop le
-        if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
-        } else {
-          disabledFuncs = disabledFuncs.filter(
-            (f) => f !== MF.GhiSo && f !== MF.In
-          );
-        }
-        break;
-      case '3': // cho duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
-        );
-        break;
-      case '5': // da duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-      case '6': // da ghi so
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KhoiPhuc && f !== MF.In
-        );
-        break;
-      case '9': // khoi phuc
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-    }
-
-    for (const mf of mfs) {
-      if (disabledFuncs.includes(mf.functionID)) {
-        mf.disabled = true;
-      }
-    }
   }
   //#endregion
 

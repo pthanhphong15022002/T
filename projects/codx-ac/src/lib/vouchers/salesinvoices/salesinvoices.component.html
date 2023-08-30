@@ -17,7 +17,7 @@
     [dataItem]="data"
     [formModel]="view.formModel"
     (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onChangeMF($event, data)"
+    (changeDataMF)="onInitMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
@@ -38,7 +38,7 @@
     typeMF="hover"
     moreFuncCss="me-15"
     (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onChangeMF($event, data)"
+    (changeDataMF)="onInitMF($event, data)"
   >
   </codx-temp-full>
 </ng-template>
@@ -103,7 +103,7 @@
     [dataItem]="master"
     [footer]="contentFooter"
     (clickMF)="onClickMF($event, master)"
-    (changeDataMF)="onChangeMF($event, master)"
+    (changeDataMF)="onInitMF($event, master)"
   >
   </codx-detail-tmp>
 </ng-template>
