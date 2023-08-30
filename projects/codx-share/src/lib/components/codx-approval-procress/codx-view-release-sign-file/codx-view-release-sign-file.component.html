@@ -1,4 +1,4 @@
-<div class="card-body p-0 codx-card-custom">
+<div class="card-body p-0 codx-card-custom" >
     <div class="codx-stepper stepper stepper-pills d-flex flex-column justify-content-between">
       <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
         <div class="d-flex align-items-center">
@@ -14,7 +14,7 @@
       </div>
       <!-- [curSignerType]="oApprovalTrans?.approverType" -->
   
-      <div class="stepper-body pt-2 w-100">
+      <div class="stepper-body pt-2 w-100" *ngIf="isAfterRender">
          <lib-pdf [recID]="signFile?.recID" [isApprover]="false" [oApprovalTrans]="signFile" [isEditable]="false" [oSignFile]="signFile">
     </lib-pdf> 
         <!-- <lib-pdf

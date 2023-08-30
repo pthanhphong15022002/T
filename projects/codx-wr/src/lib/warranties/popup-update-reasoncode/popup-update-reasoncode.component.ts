@@ -63,7 +63,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
-    this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
   ngOnInit(): void {
     this.data.recID = Util.uid();
@@ -76,7 +76,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       return;
     }
     if (this.data.scheduleStart && this.data.scheduleEnd) {
-      if(new Date(this.data.scheduleStart) < new Date()){
+      if (new Date(this.data.scheduleStart) < new Date()) {
         this.notiService.notifyCode('WR003');
         return;
       }

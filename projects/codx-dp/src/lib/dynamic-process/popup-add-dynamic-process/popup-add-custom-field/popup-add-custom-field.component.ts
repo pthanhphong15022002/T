@@ -53,6 +53,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   itemView = '';
   vllDynamic = 'DP0271';
   fileNameArr = [];
+  refValueDataType = 'DP022';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -65,6 +66,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field = JSON.parse(JSON.stringify(dt?.data?.field));
     this.action = dt?.data?.action;
     this.enabled = dt?.data?.enabled;
+    this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     if (this.action == 'add' || this.action == 'copy')
       this.field.recID = Util.uid();
 
@@ -100,7 +102,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCbx(e) {}
 
   valueChange(e) {
-    if(e.field=='multiselect') {
+    if (e.field == 'multiselect') {
       this.field[e.field] = e.data;
       return;
     }
@@ -171,7 +173,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (check) {
         this.notiService.notifyCode(
           'DP026',
-          0, '"' + this.grvSetup['FieldName']?.headerText + '"'
+          0,
+          '"' + this.grvSetup['FieldName']?.headerText + '"'
         );
         return;
       }
@@ -187,7 +190,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (
       !this.field.dataFormat &&
       this.field.dataType != 'R' &&
-      this.field.dataType != 'A'
+      this.field.dataType != 'A' &&
+      this.field.dataType != 'C'
     ) {
       this.notiService.notifyCode(
         'SYS009',

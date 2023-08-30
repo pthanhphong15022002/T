@@ -93,6 +93,11 @@ export class PopupSubEContractComponent implements OnInit {
   }
 
   onSaveForm() {
+    if (this.fgSubContract.invalid) {
+      this.hrService.notifyInvalid(this.fgSubContract, this.fmSubContract);
+      return;
+    }
+
     if (this.oSubContract.effectedDate > this.oSubContract.expiredDate) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
