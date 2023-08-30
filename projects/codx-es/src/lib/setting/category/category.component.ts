@@ -251,7 +251,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
       let popupAdd = this.callfunc.openSide(
@@ -281,7 +281,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       if (!res) return;
       this.viewBase.dataService.dataSelected = res;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfunc.openSide(
@@ -316,7 +316,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
-          option.Width = '550px';
+          option.Width = '800px';
           option.DataService = this.viewBase?.dataService;
           option.FormModel = this.viewBase?.formModel;
           let popupEdit = this.callfunc.openSide(

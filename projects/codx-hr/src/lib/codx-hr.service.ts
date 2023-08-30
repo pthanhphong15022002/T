@@ -2680,6 +2680,15 @@ export class CodxHrService {
       ]
     );
   }
+  getEAnnualLeaveMonthsByEmployeeIDAndALYearAsync(employeeID: string, alYear: string){
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAnnualLeavesBusiness',
+      'GetListEmployeeAnnualLeaveMonthGrvV2Async',
+      [employeeID, alYear]
+    );
+  }
   //#endregion
 }
 
