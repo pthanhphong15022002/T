@@ -64,9 +64,10 @@ export class SalesinvoicesComponent
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-
   functionName: string;
   journalNo: string;
+  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
+
   journal: IJournal;
   master: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
@@ -88,8 +89,6 @@ export class SalesinvoicesComponent
   };
   gvsSalesInvoicesLines: any;
   gvsAcctTrans: any;
-
-  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
 
   constructor(
     inject: Injector,
@@ -311,7 +310,7 @@ export class SalesinvoicesComponent
     }
   }
 
-  onChangeMF(mfs: any, data: ISalesInvoice): void {
+  onInitMF(mfs: any, data: ISalesInvoice): void {
     // console.log(mfs.filter((f) => !f.disabled));
     let disabledFuncs: MF[] = [
       MF.GuiDuyet,
@@ -386,7 +385,6 @@ export class SalesinvoicesComponent
     console.log('edit', { data });
 
     const copiedData = { ...data };
-
     this.view.dataService.dataSelected = copiedData;
     this.view.dataService.edit(copiedData).subscribe((res) => {
       let options = new SidebarModel();

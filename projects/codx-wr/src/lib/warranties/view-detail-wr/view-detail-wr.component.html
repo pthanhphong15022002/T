@@ -62,11 +62,10 @@
         <div class="d-flex w-100 cm-scroll-top mb-2">
           <div class="me-3">
             <codx-img
-              [objectId]="dataSelected.recID"
+              [objectId]="dataSelected.customerID"
               [objectName]="dataSelected.customerName"
               [referType]="'avt'"
-              [imgOn]="dataSelected?.customerName"
-              [objectType]="entityName"
+              [objectType]="'CM_Customers'"
               [width]="35"
             >
             </codx-img>
@@ -213,12 +212,12 @@
             <div class="d-flex flex-row">
               <div class="me-3">
                 <codx-img
-                  [objectId]="dataSelected.recID"
-                  [objectName]="dataSelected.customerName"
+                  [objectId]="dataSelected.productID"
+                  [objectName]="dataSelected.productID"
                   [imageType]="'square'"
-                  [imgOn]="dataSelected?.customerName"
-                  [objectType]="entityName"
+                  [objectType]="'WR_Products'"
                   [width]="50"
+                  [referType]="'avt'"
                 >
                 </codx-img>
               </div>
@@ -865,12 +864,10 @@
                 </ng-template>
                 <ng-template #content>
                   <div class="mt-5">
-                    <!-- <cm-view-history-customer
-                        [customerID]="dataSelected.recID"
-                        [isRole]="
-                          !isAdmin ? user.userID == dataSelected.owner : true
-                        "
-                      ></cm-view-history-customer> -->
+                    <wr-view-tab-parts
+                      #viewParts
+                      [transID]="dataSelected?.recID"
+                    ></wr-view-tab-parts>
                   </div>
                 </ng-template>
               </e-tabitem>

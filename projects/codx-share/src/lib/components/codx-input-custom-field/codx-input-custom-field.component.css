@@ -7,3 +7,16 @@
     color: #FFA800 !important
         /* #1e90ff;*/
 }
+
+.no-border {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    margin-left: -10px;
+    margin-top: -5px;
+  }
+
+
+.line-data:hover {
+    background-color:var(--primary-lighter);
+  }

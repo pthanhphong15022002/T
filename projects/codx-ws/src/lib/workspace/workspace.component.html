@@ -1,10 +1,29 @@
 <div class="f-flex flex-column w-100 h-100">
-    <div #header class="my-3">
+    <!-- <div #header class="my-3">
         <lib-header [funcID]="funcID"></lib-header>
-    </div>
-    <div #body class="bg-white h-100 mx-5">
+    </div> -->
+    <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column py-4 px-6">
         <!-- begin content -->
-
+          <ng-container *ngFor="let md of modules">
+            <div class="d-flex flex-column my-2">
+              <div class="d-flex align-items-center">
+                <span class="icon-16" [ngClass]="md.largeIcon"></span>
+                <span class="fs-5-sm">{{md.customName}}</span>
+              </div>
+              <div class="mx-2"><span class="fs-7 text-gray-500">{{md.description}}</span></div>
+              <div class="d-flex flex-wrap">
+                <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" *ngFor="let c of md.childs">
+                  <div class="d-flex flex-column h-100">
+                    <span class="fs-6">{{c.customName}}</span>
+                    <span class="fs-8 opacity-75">{{c.description}}</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center h-50px">
+                    <img [src]="c.smallIcon"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
         <!-- end content -->
     </div>
 </div>

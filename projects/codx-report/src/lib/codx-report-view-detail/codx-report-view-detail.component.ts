@@ -234,9 +234,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         },
         '',
         option
-      ).closed.subscribe((res:any) =>{
-        debugger
-      });
+      )
     }
 
   }

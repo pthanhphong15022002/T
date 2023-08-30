@@ -540,6 +540,10 @@ export class CodxAddTaskComponent implements OnInit {
 
   save(task, isCreateMeeting = false) {
     if (this.action == 'add' || this.action == 'copy') {
+      if(isCreateMeeting){
+        task.actionStatus = '2';
+        task.status = '2';
+      }
       this.addTask(task,isCreateMeeting);
     }
     if (this.action == 'edit') {

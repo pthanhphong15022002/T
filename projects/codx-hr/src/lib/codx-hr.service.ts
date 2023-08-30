@@ -1001,15 +1001,15 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeAppointionsMoreFunc(data: any) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EAppointionsBusiness',
-      'EditEAppointionsMoreFuncAsync',
-      data
-    );
-  }
+  // EditEmployeeAppointionsMoreFunc(data: any) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.HR',
+  //     'EAppointionsBusiness',
+  //     'EditEAppointionsMoreFuncAsync',
+  //     data
+  //   );
+  // }
 
   validateBeforeReleaseAppointion(recID: string) {
     return this.api.execSv(
@@ -2318,7 +2318,11 @@ export class CodxHrService {
         if (IDCompare == this.actionSubmit && data.status == '6') {
           evt[i].disabled = false;
         }
-        if (IDCompare == this.actionUpdateClosed && data.status == '5') {
+        if (
+          IDCompare == this.actionUpdateClosed &&
+          data.status == '5' &&
+          data.isCurrent === true
+        ) {
           evt[i].disabled = false;
         }
 
@@ -2680,7 +2684,10 @@ export class CodxHrService {
       ]
     );
   }
-  getEAnnualLeaveMonthsByEmployeeIDAndALYearAsync(employeeID: string, alYear: string){
+  getEAnnualLeaveMonthsByEmployeeIDAndALYearAsync(
+    employeeID: string,
+    alYear: string
+  ) {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',

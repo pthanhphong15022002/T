@@ -3148,6 +3148,13 @@ codx-vll.vll-post{
   color: #1A73EC;
   color: var(--primary);
 }
+.ws-accordion {
+  .e-acrdn-item
+  {
+    padding-top: 10px !important;
+    border: none !important;
+  }
+}
 /*TBChung thêm á đừng xóa tội em*/
 .card-survey .e-checkbox-wrapper .e-checkbox{
   opacity: 1;
@@ -3748,7 +3755,7 @@ codx-view-tree-targets .menu-sub{
   background-color:var(--gray-150);
 }
 .badge-with-delete .badge{
-  padding-right: 23px!important;
+  padding-right: 24px!important;
 }
 .badge-with-delete .btn.btn-icon.btn-sm{
   margin-left: -21px;
