@@ -46,7 +46,7 @@ import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-co
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
+import { CO_Meetings, CO_Permissions } from '../../codx-tmmeetings/models/CO_Meetings.model';
 
 @Component({
   selector: 'codx-step-task',
@@ -143,7 +143,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private callfc: CallFuncService,
-    private adService: CodxAdService,
     private codxService: CodxService,
     private stepService: StepService,
     private notiService: NotificationsService,
@@ -1043,7 +1042,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['dependRule'] = '0';
 
     let taskOutput = await this.openPopupTask('add', task, groupID);
-    if (taskOutput?.event.task) {
+    if (taskOutput?.event?.task) {
       let data = taskOutput?.event;
       let groupData = this.currentStep?.taskGroups.find(
         (group) => group.refID == data.task.taskGroupID
@@ -1070,6 +1069,62 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep?.tasks?.push(data.task);
       this.currentStep['progress'] = data?.progressStep;
       this.notiService.notifyCode('SYS006');
+      if(taskOutput?.event?.isCreateMeeting){
+        let dataTask: DP_Instances_Steps_Tasks = data.task;
+        let functionID = "TMT0501";
+        let meeting = new CO_Meetings();
+        meeting.meetingName =dataTask?.taskName;
+        meeting.startDate = dataTask?.startDate;
+        meeting.endDate = dataTask?.endDate;
+        meeting.fromDate = dataTask?.startDate;
+        meeting.toDate = dataTask?.endDate;
+        let roles = JSON.parse(JSON.stringify(dataTask?.roles));
+        roles.forEach(role => {
+          var tmpResource = new CO_Permissions();
+          if(role.objectID == dataTask?.owner){
+            tmpResource.objectID = role?.objectID;
+            tmpResource.objectName = role?.objectName;
+            tmpResource.positionName = role?.positionName;
+            tmpResource.roleType = 'A';
+            tmpResource.taskControl = true;
+            tmpResource.objectType = role?.objectType;
+            tmpResource.full = true;
+            tmpResource.read = true;
+            tmpResource.create = true;
+            tmpResource.update = true;
+            tmpResource.assign = true;
+            tmpResource.delete = true;
+            tmpResource.share = true;
+            tmpResource.upload = true;
+            tmpResource.download = true;
+          }else{
+            tmpResource.objectID = role?.objectID;
+            tmpResource.objectName = role?.objectName;
+            tmpResource.positionName = role?.positionName;
+            tmpResource.roleType = 'P';
+            tmpResource.taskControl = true;
+            tmpResource.objectType = role?.objectType;
+            tmpResource.read = true;
+            tmpResource.download = true;
+          }
+          meeting.permissions.push(tmpResource);
+        })
+
+        this.api
+        .execSv<any>(
+          'CO',
+          'CO',
+          'MeetingsBusiness',
+          'AddMeetingsAsync',
+          [meeting, functionID],
+        )
+        .subscribe((res) => {
+          if (res) {
+            data.task.actionStatus = '2';
+          }
+        });
+        this.createMeeting(data.task);
+      }
     }
   }
 
@@ -2209,9 +2264,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     return type?.text;
   }
   getDefaultCM() {
-    this.adService
-      .getLstBoughtModule()
-      .subscribe((res: Array<TN_OrderModule>) => {
+    this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListBoughtModuleAsync',
+      ''
+    ).subscribe((res: Array<TN_OrderModule>) => {
         if (res) {
           let lstModule = res;
           this.isBoughtTM = lstModule?.some(

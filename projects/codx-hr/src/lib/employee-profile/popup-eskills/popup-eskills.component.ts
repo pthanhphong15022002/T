@@ -113,11 +113,11 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     if (this.skillObj) {
-      this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
+      this.fromDateFormat = this.handleControlType(this.skillObj.trainFrom);
+      this.toDateFormat = this.handleControlType(this.skillObj.trainTo);
     } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
+      this.fromDateFormat = 'd';
+      this.toDateFormat = 'd';
     }
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
@@ -198,51 +198,78 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     return new Date(date);
   }
 
+  // changeCalendar(event, changeType: string) {
+  //   debugger
+  //   let yearFromDate = event.fromDate.getFullYear();
+  //   let monthFromDate = event.fromDate.getMonth() + 1;
+  //   let dayFromDate = event.fromDate.getDate();
+  //   var strYear = `${yearFromDate}`;
+  //   var strMonth = `${yearFromDate}/${monthFromDate}`;
+  //   var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+  //   // console.log('asdsadasdasdasdsad', strYear, strMonth, strDay);
+
+  //   if (changeType === 'FromDate') {
+  //     if (event.type === 'year') {
+  //       this.skillObj.trainFrom = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.skillObj.trainFrom = strMonth;
+  //     } else {
+  //       this.skillObj.trainFrom = strDay;
+  //     }
+  //     this.skillObj.trainFromDate = event.fromDate;
+  //   } else if (changeType === 'ToDate') {
+  //     if (event.type === 'year') {
+  //       this.skillObj.trainTo = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.skillObj.trainTo = strMonth;
+  //     } else {
+  //       this.skillObj.trainTo = strDay;
+  //     }
+  //     this.skillObj.trainToDate = event.fromDate;
+  //   }
+  //   this.formGroup.patchValue(this.skillObj);
+  //   if (this.skillObj) {
+  //     this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
+  //     this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
+  //   } else {
+  //     this.fromDateFormat = this.getFormatDate(null);
+  //     this.toDateFormat = this.getFormatDate(null);
+  //   }
+  // }
+
+  handleControlType(evt){
+    if(evt == 'day'){
+      return 'd';
+    }
+    else if(evt == 'month'){
+      return 'm';
+    }
+    else if(evt == 'year'){
+      return 'y';
+    }
+    return 'd';
+  }
+
   changeCalendar(event, changeType: string) {
     debugger
-    let yearFromDate = event.fromDate.getFullYear();
-    let monthFromDate = event.fromDate.getMonth() + 1;
-    let dayFromDate = event.fromDate.getDate();
-    var strYear = `${yearFromDate}`;
-    var strMonth = `${yearFromDate}/${monthFromDate}`;
-    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
-    // console.log('asdsadasdasdasdsad', strYear, strMonth, strDay);
-
     if (changeType === 'FromDate') {
-      if (event.type === 'year') {
-        this.skillObj.trainFrom = strYear;
-      } else if (event.type === 'month') {
-        this.skillObj.trainFrom = strMonth;
-      } else {
-        this.skillObj.trainFrom = strDay;
-      }
+      this.skillObj.trainFrom = event.type;
       this.skillObj.trainFromDate = event.fromDate;
+      this.fromDateFormat = this.handleControlType(event.type);
     } else if (changeType === 'ToDate') {
-      if (event.type === 'year') {
-        this.skillObj.trainTo = strYear;
-      } else if (event.type === 'month') {
-        this.skillObj.trainTo = strMonth;
-      } else {
-        this.skillObj.trainTo = strDay;
-      }
+      this.skillObj.trainTo = event.type;
       this.skillObj.trainToDate = event.fromDate;
+      this.toDateFormat = this.handleControlType(event.type);
     }
     this.formGroup.patchValue(this.skillObj);
-    if (this.skillObj) {
-      this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
-    } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
-    }
   }
-  getFormatDate(trainFrom: string) {
-    let resultDate = '';
-    if (trainFrom) {
-      let arrDate = trainFrom.split('/');
-      resultDate =
-        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate;
-    } else return (resultDate = 'y');
-  }
+  // getFormatDate(trainFrom: string) {
+  //   let resultDate = '';
+  //   if (trainFrom) {
+  //     let arrDate = trainFrom.split('/');
+  //     resultDate =
+  //       arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+  //     return resultDate;
+  //   } else return (resultDate = 'y');
+  // }
 }

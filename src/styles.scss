@@ -3748,7 +3748,7 @@ codx-view-tree-targets .menu-sub{
   background-color:var(--gray-150);
 }
 .badge-with-delete .badge{
-  padding-right: 22px!important;
+  padding-right: 23px!important;
 }
 .badge-with-delete .btn.btn-icon.btn-sm{
   margin-left: -21px;
@@ -3757,16 +3757,19 @@ codx-view-tree-targets .menu-sub{
     height: 20px !important;
     min-width: 20px !important;
     min-height: 20px !important;
-    visibility: hidden;
+    opacity: .35;
     margin-top: -2px;
   
 }
 .badge-with-delete:hover .btn.btn-icon.btn-sm{
-  visibility: visible;
+  opacity: 1;
 }
 .tooltip-benefits{
  .tooltip-inner{
   min-width: 350px;
   text-align: left;
  }
+}
+lib-employee-policybenefits ejs-listview .e-content{
+  height: 100%;
 }
