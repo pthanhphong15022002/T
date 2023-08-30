@@ -51,12 +51,13 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       switch (field.dataType) {
         case 'D':
-          result = event.e?.data.fromDate;
+          result = event.e?.data?.fromDate;
           break;
         case 'P':
         case 'R':

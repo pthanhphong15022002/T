@@ -432,11 +432,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
   deleteContact(data) {
     let config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    //SYS003
-    this.notiService.alertCode('SYS003').subscribe((x) => {
+    //SYS030
+    this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
         let index = this.listContacts.findIndex((x) => x.recID == data.recID);
-        this.listContacts.splice(index, 1);
+        if (index != -1) this.listContacts.splice(index, 1);
+        debugger;
         if (this.listContacts?.length > 0)
           this.valueChangeCustom.emit({
             e: JSON.stringify(this.listContacts),

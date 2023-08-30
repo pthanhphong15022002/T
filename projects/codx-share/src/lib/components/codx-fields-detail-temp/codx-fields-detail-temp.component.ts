@@ -249,7 +249,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       this.dataValueOld = field.dataValue;
