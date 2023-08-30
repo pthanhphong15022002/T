@@ -110,6 +110,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.formModelContact.gridViewName = 'grvCMContacts';
         this.formModelContact.entityName = 'CM_Contacts';
         this.formModelContact.funcID = 'CM0102';
+        this.cache
+          .gridViewSetup(
+            this.formModelContact.formName,
+            this.formModelContact.gridViewName
+          )
+          .subscribe((res) => {
+            this.placeholderRole =
+              res?.Role?.headerText ?? this.placeholderRole;
+          });
+
         let arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         break;
@@ -261,8 +271,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.formModelContact.gridViewName
       )
       .subscribe((res) => {
-        debugger;
-        this.placeholderRole = res?.Role?.headerText ?? this.placeholderRole;
         var obj = {
           moreFuncName: title,
           action: action,
