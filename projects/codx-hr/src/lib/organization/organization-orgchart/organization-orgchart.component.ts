@@ -218,6 +218,7 @@ export class OrganizationOrgchartComponent {
   isPopUpManager: boolean = false;
   idHover: string;
   user: any;
+  firstOrgLoaded: string;
 
   stylesObjChart = {
     border: '3px solid #03a9f4',
@@ -771,6 +772,12 @@ export class OrganizationOrgchartComponent {
 
         if (this.dataTree.isOrgUnitID === true) {
           this.getEmployeeInfoById(this.user.userID);
+        } else {
+          this.getDataPositionByID(
+            this.firstOrgLoaded,
+            this.selectedTeam.includes('No') ? false : true,
+            this.level
+          );
         }
 
         this.hrService
@@ -980,6 +987,8 @@ export class OrganizationOrgchartComponent {
               this.selectedTeam.includes('No') ? false : true,
               this.level
             );
+          } else {
+            this.items = res;
           }
         });
     }
@@ -1051,6 +1060,7 @@ export class OrganizationOrgchartComponent {
 
         this.dataTree.isOrgUnitID = JSON.parse(this.dataTree.isOrgUnitID);
 
+        this.firstOrgLoaded = this.orgUnitID;
         //Load data depend orgunit check
         if (this.dataTree.isOrgUnitID === true) {
           this.getEmployeeInfoById(this.user.userID);
