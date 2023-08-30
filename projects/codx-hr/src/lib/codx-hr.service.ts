@@ -1001,15 +1001,15 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeAppointionsMoreFunc(data: any) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EAppointionsBusiness',
-      'EditEAppointionsMoreFuncAsync',
-      data
-    );
-  }
+  // EditEmployeeAppointionsMoreFunc(data: any) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.HR',
+  //     'EAppointionsBusiness',
+  //     'EditEAppointionsMoreFuncAsync',
+  //     data
+  //   );
+  // }
 
   validateBeforeReleaseAppointion(recID: string) {
     return this.api.execSv(
