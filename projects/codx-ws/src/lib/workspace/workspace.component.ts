@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { CodxWsService } from '../codx-ws.service';
 import { ActivatedRoute } from '@angular/router';
 import { WSUIComponent } from '../default/wsui.component';
