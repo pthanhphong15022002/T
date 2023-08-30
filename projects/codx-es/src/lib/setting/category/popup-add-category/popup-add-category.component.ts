@@ -663,7 +663,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           let isAdd = mfType=='add'? true :false;
           let title = mfType=='add'? "Thêm mới" :'Chỉnh sửa';
           let sfData = {...data};
-
+          let referType = 'ES_SignFiles';
+          if(this.data?.category!=null){
+            referType = this.data?.category;
+            this.cr.detectChanges();
+          }
+          if(mfType=='add') this.getNewSFModel();//Lấy model cho lần thêm mới tiếp theo          
           let dialogSF = this.callfunc.openForm(
             PopupAddSignFileComponent,
             title,
@@ -677,7 +682,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               //option: option,
               disableCateID: true,
               isTemplate: true,
-              refType:'ES_SignFiles'
+              refType:referType,
             },
             '',
             sfDialog
