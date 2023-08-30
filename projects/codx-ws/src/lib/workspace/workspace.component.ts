@@ -39,4 +39,9 @@ export class WorkspaceComponent extends WSUIComponent{
 
     this.modules = listChild.filter(x=>x.childs.length>0);
   }
+
+  selectedChange(data:any)
+  {
+    this.codxService.navigate("","/"+data.url)
+  }
 }
