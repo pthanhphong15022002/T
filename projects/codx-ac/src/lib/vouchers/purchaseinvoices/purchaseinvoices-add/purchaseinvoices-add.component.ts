@@ -155,7 +155,7 @@ export class PurchaseinvoicesAddComponent
     }
   }
 
-  onTabCreated(e, tab: TabComponent): void {
+  onTabCreated(tab: TabComponent): void {
     tab.hideTab(1, this.master.subType !== '2');
   }
 
