@@ -179,17 +179,17 @@ export class EmployeeAppointionsComponent extends UIComponent {
 
   onSaveUpdateForm() {
     this.hrService
-      .EditEmployeeAppointionsMoreFunc(this.editStatusObj)
+      .UpdateEmployeeAppointionsInfo(this.editStatusObj)
       .subscribe((res) => {
         if (res != null) {
           this.notify.notifyCode('SYS007');
           let data = {
-            ...res[0],
+            ...res,
             emp: this.currentEmpObj,
           };
           this.hrService
             .addBGTrackLog(
-              res[0].recID,
+              res.recID,
               this.cmtStatus,
               this.view.formModel.entityName,
               'C1',
@@ -282,7 +282,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
                 this.itemDetail.status = '3';
                 this.itemDetail.approveStatus = '3';
                 this.hrService
-                  .EditEmployeeAppointionsMoreFunc(this.itemDetail)
+                  .UpdateEmployeeAppointionsInfo(this.itemDetail)
                   .subscribe((res) => {
                     if (res) {
                       this.view?.dataService

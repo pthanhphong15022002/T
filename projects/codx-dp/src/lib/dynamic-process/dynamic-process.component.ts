@@ -1107,7 +1107,7 @@ export class DynamicProcessComponent
                     formES.gridViewName = f?.gridViewName;
                     formES.currentData = item;
                     let option = new SidebarModel();
-                    option.Width = '550px';
+                    option.Width = '800px';
                     option.FormModel = formES;
                     // var dataService = new DataService(this.inject);
                     // dataService.dataSelected = item;
