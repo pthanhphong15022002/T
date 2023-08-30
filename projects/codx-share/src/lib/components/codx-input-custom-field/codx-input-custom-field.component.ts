@@ -319,6 +319,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
     index = this.listContacts.findIndex((x) => x.recID == recID);
     if (index != -1) {
       this.listContacts[index]['role'] = event?.trim();
+      this.valueChangeCustom.emit({
+        e: JSON.stringify(this.listContacts),
+        data: this.customField,
+      });
     }
   }
 

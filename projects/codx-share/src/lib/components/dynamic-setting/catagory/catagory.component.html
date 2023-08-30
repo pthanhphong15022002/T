@@ -127,7 +127,8 @@
                     autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
                       : dataValue[data.transType]
-                      ? dataValue[data.transType][data.fieldName] == '1'
+                      ? dataValue[data.transType][data.fieldName] == '1' ||
+                        dataValue[data.transType][data.fieldName] == true
                       : false
                   "
                   [crrValue]="

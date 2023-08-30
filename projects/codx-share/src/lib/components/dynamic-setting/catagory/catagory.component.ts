@@ -780,7 +780,7 @@ export class CatagoryComponent implements OnInit {
           if (this.category != '4') this.dataValue[transType] = {};
           else this.dataValue[transType] = [];
         }
-        if (this.category != '4') {
+        if (data.displayMode == '3') {
           if (this.dataValue[transType][field] == value || !value) {
             this.collapseItem(null, data);
             return;
@@ -803,13 +803,12 @@ export class CatagoryComponent implements OnInit {
             if (data.displayMode !== '4' && data.displayMode !== '5') {
               this.dataValue[transType][field] = value;
             } else {
-              if (
-                evt.component?.ComponentCurrent?.typecheck == 'share' &&
-                !value
-              )
-                return;
-              if (!Array.isArray(value))
+              if (evt.component?.controlType == 'share' && !value) return;
+              if (!Array.isArray(value)) {
+                if (this.dataValue[transType][field] == value) return;
                 this.dataValue[transType][field] = value;
+              }
+
               let fID = '',
                 id = '',
                 fName = '',
@@ -824,15 +823,6 @@ export class CatagoryComponent implements OnInit {
                   return item;
                 }
               });
-              if (Array.isArray(value)) {
-                value.forEach((element, i) => {
-                  let space = '';
-                  if (i > 0) space = ';';
-                  id += space + (element.id || '');
-                  name += space + (element.text || element.objectName || '');
-                  type += space + (element.objectType || '');
-                });
-              }
               if (fID) this.dataValue[transType][fID] = id;
               if (fName) this.dataValue[transType][fName] = name;
               if (fType) this.dataValue[transType][fType] = type;
