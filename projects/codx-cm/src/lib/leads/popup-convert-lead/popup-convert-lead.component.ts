@@ -169,14 +169,12 @@ export class PopupConvertLeadComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  async setCurrentID(){
+  async setCurrentID() {
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
     if (param?.length > 0) {
-      let dataParam = param.filter(
-        (x) => x.category == '1' && !x.transType
-      )[0];
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
       if (dataParam) {
         let paramDefault = JSON.parse(dataParam.dataValue);
         this.deal.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
@@ -547,8 +545,7 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.deal?.businessLineID != e?.data) {
       this.deal.businessLineID = e?.data;
       let businessName = e?.component.itemsSelected[0].BusinessLineName;
-      this.deal.dealName =
-        this.lead.leadName + ' mua ' + businessName;
+      this.deal.dealName = this.lead.leadName + ' mua ' + businessName;
       if (this.deal.businessLineID) {
         var processId = e.component.itemsSelected[0].ProcessID;
         if (!this.deal?.processID || processId != this.deal?.processID) {
@@ -626,7 +623,8 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       switch (field.dataType) {
