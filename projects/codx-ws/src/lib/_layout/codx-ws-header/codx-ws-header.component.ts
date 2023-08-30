@@ -26,6 +26,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   ) {
     super(inject);
     this.module = 'WS';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarFixed = false;
   }
 
   override onInit(): void {
