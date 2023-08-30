@@ -1730,7 +1730,7 @@ export class PopupAddSignFileComponent implements OnInit {
         {
           action: action,
           type: type,
-          refType: 'ES_SignFiles',
+          refType: this.refType,
           refID: this.data?.recID,
         },
         '',
