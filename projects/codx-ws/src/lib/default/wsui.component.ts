@@ -10,7 +10,7 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxWsService } from '../codx-ws.service';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, CodxService } from 'codx-core';
 
 @Component({ template: '' })
 export abstract class WSUIComponent implements OnInit {
@@ -20,11 +20,13 @@ export abstract class WSUIComponent implements OnInit {
     protected route!: ActivatedRoute;
     protected codxWsService!: CodxWsService;
     protected api: ApiHttpService;
+    protected codxService: CodxService;
     constructor(inject: Injector) 
     {
         this.route = inject.get(ActivatedRoute);
         this.codxWsService = inject.get(CodxWsService);
         this.api = inject.get(ApiHttpService);
+        this.codxService = inject.get(CodxService);
     }
       
     ngOnInit(): void {

@@ -209,9 +209,9 @@
   <!-- Contact  (mouseleave)="closePopper(p)"
 -->
   <ng-container *ngIf="customField.dataType == 'C' && listContacts?.length > 0">
-    <div class="d-flex">
+    <div class="d-flex flex-column">
       <ng-container *ngFor="let item of listContacts">
-        <div class="">
+        <div class="mt-2">
           <!-- <codx-img
             [ngbPopover]="tempPopover"
             #p="ngbPopover"
@@ -234,6 +234,7 @@
     <ng-template #tempPopover let-data>
       <div class="d-flex">
         <codx-img
+          class="me-1"
           [objectId]="data?.recID"
           [objectName]="data?.contactName"
           [objectType]="'CM_Contacts'"
@@ -257,27 +258,10 @@
           <!-- <div class="mb-1" *ngIf="data?.jobTitle">
             <span class="text-gray-600">{{ data.jobTitle }}</span>
           </div> -->
-          <!-- <div *ngIf="objectType == '4'">
-            <span class="">
-              <input
-                type="text"
-                #lblRole
-                name="lblRole"
-                matInput
-                autofocus
-                [value]="data?.role"
-                [disabled]="type == 'formDetail' ? true : false"
-                (blur)="updateRole(lblRole.value, data.recID)"
-                (keydown.enter)="updateRole(lblRole.value, data.recID)"
-                class="form-control no-border text-gray-600"
-                placeholder="{{ placeholder }}"
-              />
-            </span>
-          </div> -->
-          <div class="d-flex flex-column">
+          <div class="d-flex">
             <div
               [style.disabled]="!data?.allowCall"
-              class="d-flex align-items-center"
+              class="d-flex align-items-center me-2"
               [ngbTooltip]="popupAllowCall"
             >
               <ng-template #popupAllowCall>
@@ -326,6 +310,23 @@
                 "
               ></span>
             </div>
+          </div>
+          <div>
+            <span class="">
+              <input
+                type="text"
+                #lblRole
+                name="lblRole"
+                matInput
+                autofocus
+                [value]="data?.role"
+                [disabled]="disable"
+                (blur)="updateRole(lblRole.value, data.recID)"
+                (keydown.enter)="updateRole(lblRole.value, data.recID)"
+                class="form-control no-border text-gray-600"
+                placeholder="{{ placeholderRole }}"
+              />
+            </span>
           </div>
         </div>
       </div>

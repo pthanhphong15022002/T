@@ -440,7 +440,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'AddUpdateAsync',
         [this.data])
         .subscribe((res:any) => {
-        if(this.data.isUpload)
+        if(this.data.isUpload && this.data.reportContent)
         {
           this.setDataset();
         }
@@ -477,7 +477,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   isUpload:boolean = false;
   fileSelected(e:any){
     if(e.filesData.length == 0) return;
-  
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -582,6 +581,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         if(res?.event)
         {
           this.data.templateID = res.event.templateInfo.recID;
+          this.data.location = res.event.templateInfo.templateName;
+          this.data.reportContent = "";
+          this.isUpload = true;
           if(res.event.templateType == "AD_WordTemplates")
           {
             this.data.displayMode = "4";
@@ -592,8 +594,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
             this.data.displayMode = "3";
             this.data.icon = "../../../assets/codx/dms/xlsx.svg";
           }
-          this.data.location = res.event.templateInfo.templateName;
-          this.data.isUpload = true;
         }
       });;
     }

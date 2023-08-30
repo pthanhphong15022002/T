@@ -35,7 +35,7 @@
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
           cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
-          [refValue]="grvSetupCashpayment['SubType'].referedValue" [value]="cashpayment.subType" emptyText="Loại phiếu"
+          [refValue]="'AC063'" [value]="cashpayment.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="action == 'edit' && cashpayment?.status != '0'">

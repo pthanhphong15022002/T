@@ -34,6 +34,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() formModel: any = null;
   @Input() disable = false;
   @Input() viewFieldName = false;
+  @Input() objectIdParent: any = '';
+  placeholderRole = 'Vai trò........';
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -60,6 +62,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   dataContact: any;
   formModelContact: FormModel;
   popoverCrr: any;
+  moreFunctionSYS: any;
 
   constructor(
     private cache: CacheService,
@@ -68,6 +71,11 @@ export class CodxInputCustomFieldComponent implements OnInit {
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((mFuc: any) => {
+      if (mFuc) {
+        this.moreFunctionSYS = mFuc;
+      }
     });
   }
 
@@ -102,6 +110,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.formModelContact.gridViewName = 'grvCMContacts';
         this.formModelContact.entityName = 'CM_Contacts';
         this.formModelContact.funcID = 'CM0102';
+        this.cache
+          .gridViewSetup(
+            this.formModelContact.formName,
+            this.formModelContact.gridViewName
+          )
+          .subscribe((res) => {
+            this.placeholderRole =
+              res?.Role?.headerText ?? this.placeholderRole;
+          });
+
         let arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         break;
@@ -233,14 +251,20 @@ export class CodxInputCustomFieldComponent implements OnInit {
     let action = 'add';
     let data = null;
     let type = 'formAdd';
-    let objectID = ''; //recID của co hoi
+    let objectID = this.objectIdParent; //recID của co hoi
     let objectType = '4';
-    let objectName = 'Cai quan que';
+    let objectName = '';
     let customerID = null;
-    var title = 'Tinh sau';
+    var title = '';
     let opt = new DialogModel();
 
+    let mfc = Array.from<any>(this.moreFunctionSYS).find(
+      (x: any) => x.functionID === 'SYS01'
+    );
+
+    title = mfc.defaultName;
     opt.FormModel = this.formModelContact;
+
     this.cache
       .gridViewSetup(
         this.formModelContact.formName,
@@ -277,10 +301,25 @@ export class CodxInputCustomFieldComponent implements OnInit {
             );
             if (idx == -1) this.listContacts.push(contact);
             else this.listContacts[idx] = contact;
-            this.customField.dataValue = JSON.stringify(contact);
+            this.valueChangeCustom.emit({
+              e: JSON.stringify(this.listContacts),
+              data: this.customField,
+            });
           }
         });
       });
+  }
+
+  updateRole(event: string, recID) {
+    var index = -1;
+    if (event == '' || event.trim() == '') {
+      index = -1;
+      return;
+    }
+    index = this.listContacts.findIndex((x) => x.recID == recID);
+    if (index != -1) {
+      this.listContacts[index]['role'] = event?.trim();
+    }
   }
 
   openPopper(contact, p) {
