@@ -864,12 +864,10 @@
                 </ng-template>
                 <ng-template #content>
                   <div class="mt-5">
-                    <!-- <cm-view-history-customer
-                        [customerID]="dataSelected.recID"
-                        [isRole]="
-                          !isAdmin ? user.userID == dataSelected.owner : true
-                        "
-                      ></cm-view-history-customer> -->
+                    <wr-view-tab-parts
+                      #viewParts
+                      [transID]="dataSelected?.recID"
+                    ></wr-view-tab-parts>
                   </div>
                 </ng-template>
               </e-tabitem>
