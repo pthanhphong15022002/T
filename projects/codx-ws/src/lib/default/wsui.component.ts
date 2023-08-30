@@ -15,6 +15,7 @@ import { ApiHttpService, CodxService } from 'codx-core';
 @Component({ template: '' })
 export abstract class WSUIComponent implements OnInit {
     funcID:any;
+    module:string = "WS";
 
     abstract onInit(): void;
     protected route!: ActivatedRoute;
