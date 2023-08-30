@@ -99,6 +99,15 @@ export class CmCustomerComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
+        this.funcID = param.funcID;
+        this.loadMethod();
+        this.isButton = true;
+        this.afterLoad();
+      }
+    });
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
   }
 
@@ -107,7 +116,7 @@ export class CmCustomerComponent
     //Add '${implements OnChanges}' to the class.
   }
 
-  loadMethod(){
+  loadMethod() {
     switch (this.funcID) {
       case 'CM0101':
       case 'CM0105':
@@ -144,16 +153,6 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
-        this.funcID = param.funcID;
-        this.loadMethod();
-        this.isButton = true;
-        this.afterLoad();
-      }
-    });
   }
   ngAfterViewInit(): void {
     this.views = [
