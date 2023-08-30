@@ -7,11 +7,12 @@ import { AuthStore, ButtonModel, DialogModel, ResourceModel, UIComponent, ViewMo
 import { CodxHrService } from '../codx-hr.service';
 import { PopupCalculateAnnualLeaveComponent } from './popup-calculate-annual-leave/popup-calculate-annual-leave.component';
 import { EmployeeAnnualLeaveByOrgComponent } from './employee-annual-leave-by-org/employee-annual-leave-by-org.component';
+import { PopupAnnualLeaveMonthComponent } from './popup-annual-leave-month/popup-annual-leave-month.component';
 
 @Component({
   selector: 'lib-employee-annual-leave',
   templateUrl: './employee-annual-leave.component.html',
-  styleUrls: ['./employee-annual-leave.component.scss']
+  styleUrls: ['./employee-annual-leave.component.scss'],
 })
 export class EmployeeAnnualLeaveComponent extends UIComponent {
 
@@ -21,6 +22,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   className = 'EAnnualLeavesBusiness';
   method = 'GetListEmployeeAnnualLeaveAsync';
   idField = 'recID';
+
+  predicates = '@0 = EmployeeID && @1 = ALYear && ALYear != ALYearMonth';
+  gridMethod = 'GetListEmployeeAnnualLeaveMonthGrvV2Async';
 
   views: Array<ViewModel> = []
   button: ButtonModel = null;
@@ -36,8 +40,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   @ViewChild('templateListHRTAL01') templateListHRTAL01?: TemplateRef<any>;
   @ViewChild('headerTemplateHRTAL01') headerTemplateHRTAL01?: TemplateRef<any>;
 
-  @ViewChild('templateListHRTAL02') templateListHRTAL02?: TemplateRef<any>;
-  @ViewChild('headerTemplateHRTAL02') headerTemplateHRTAL02?: TemplateRef<any>;
 
   @ViewChild('treeTemplate') treeTemplate: TemplateRef<any>;
   @ViewChild('rightTemplateHRTAL01') rightTemplateHRTAL01: TemplateRef<any>;
@@ -53,9 +55,10 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
   resetView: boolean = false;
   headerText: string = '';
+  monthHeaderText: string = '';
   btnCalculate: string = 'Tính';
   btnCancel: string = 'Hủy';
-  preFuncID: any;
+
   constructor(
     private injector: Injector,
     private hrService: CodxHrService,
@@ -63,14 +66,10 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   ) {
     super(injector);
     this.router.params.subscribe((params: Params) => {
-      this.resetView = true;
       this.funcID = params['funcID'];
-      this.initViewSetting();
-      this.getFunction(this.funcID);
     })
   }
   onInit(): void {
-    this.preFuncID = this.funcID;
   }
   ngAfterViewInit(): void {
     this.button = { id: 'btnAdd', text: 'Thêm' };
@@ -78,6 +77,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.initViewSetting();
     this.getEDaysOffGrvSetUp();
     this.getLanguage();
+    this.getFunction(this.funcID);
   }
   getFunction(funcID: string) {
     if (funcID) {
@@ -94,15 +94,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       });
     }
   }
-  changeFunction() {
-    this.hrService.childMenuClick.subscribe((res) => {
-      if (res && res.func) {
-        if (this.funcID != res.func.functionID)
-          this.funcID = res.func.functionID;
-        this.hrService.childMenuClick.next(null);
-      }
-    });
-  }
   initRequest(): void {
     this.request = new ResourceModel();
     this.request.service = 'HR';
@@ -115,66 +106,34 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
 
   }
   initViewSetting() {
-    switch (this.funcID) {
-      case 'HRTAL01':
-        this.showButton = false;
-        this.views = [
-          {
-            // id: ViewType.list.toString(),
-            type: ViewType.list,
-            sameData: true,
-            active: false,
-            model: {
-              template: this.templateListHRTAL01,
-              headerTemplate: this.headerTemplateHRTAL01,
-            },
-          },
-          {
-            // id: ViewType.tree_list.toString(),
-            type: ViewType.tree_list,
-            request: this.request,
-            sameData: false,
-            active: false,
-            model: {
-              resizable: false,
-              isCustomize: true,
-              template: this.treeTemplate,
-              panelRightRef: this.rightTemplateHRTAL01,
-              resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
-            },
-          },
-        ];
-        break;
-      case 'HRTAL02':
-        this.showButton = true;
-        this.views = [
-          {
-            // id: ViewType.list.toString(),
-            type: ViewType.list,
-            sameData: true,
-            active: false,
-            model: {
-              template: this.templateListHRTAL02,
-              headerTemplate: this.headerTemplateHRTAL02,
-            },
-          },
-          {
-            // id: ViewType.tree_list.toString(),
-            type: ViewType.tree_list,
-            request: this.request,
-            sameData: false,
-            active: false,
-            model: {
-              resizable: false,
-              isCustomize: true,
-              template: this.treeTemplate,
-              panelRightRef: this.rightTemplateHRTAL01,
-              resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
-            },
-          }
-        ];
-        break;
-    }
+    this.showButton = true;
+    this.views = [
+      {
+        // id: ViewType.list.toString(),
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateListHRTAL01,
+          headerTemplate: this.headerTemplateHRTAL01,
+        },
+      },
+      {
+        // id: ViewType.tree_list.toString(),
+        type: ViewType.tree_list,
+        request: this.request,
+        sameData: false,
+        active: false,
+        model: {
+          resizable: false,
+          isCustomize: true,
+          template: this.treeTemplate,
+          panelRightRef: this.rightTemplateHRTAL01,
+          resourceModel: { parentIDField: 'ParentID', idField: 'OrgUnitID' },
+        },
+      }
+    ];
+
   }
   selectedChange(val: any) {
     this.itemSelected = val.data;
@@ -190,33 +149,9 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
       this.view.dataService.idField = 'recID';
       this.view.idField = 'recID';
     }
-    
+
   }
   viewChanged(event: any) {
-    if (this.funcID !== this.preFuncID) {
-      this.preFuncID = this.funcID;
-      if (this.currentViewModel?.type === this.views[1].type) {
-        this.views[1].active = true;
-        this.view.viewChange(this.views[1])
-      }
-    } else {
-
-      // fix bug when chang funcID and from first view tree to  list
-      // the view reuse data because same data of list is true
-      // reset view data and recall get data
-      if (event?.view?.type === 1 || event?.type === 1) {
-        if (this.resetView) {
-          this.view.currentView.dataService.data = [];
-          this.view.currentView.dataService.oriData = [];
-          this.view.dataService.data = [];
-          this.view.dataService.oriData = [];
-          this.view.dataService.page = 0;
-          this.view.loadData();
-          this.resetView = false;
-        }
-      }
-    }
-    this.currentViewModel = event.view || event
   }
   clickButton(event) {
     let popupData = {
@@ -268,10 +203,12 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     let lang = this.autStore.get().language;
     if (lang.toLowerCase() === 'en') {
       this.headerText = 'Calculate Annual Leave';
+      this.monthHeaderText = 'Annual Leave Months Detail'
       this.btnCancel = 'Cancel';
       this.btnCalculate = 'Calculate';
     } else {
       this.headerText = 'Tính phép tiêu chuẩn';
+      this.monthHeaderText = 'Chi tiết tiêu chuẩn phép năm theo tháng';
       this.btnCancel = 'Hủy';
       this.btnCalculate = 'Tính';
     }
@@ -320,6 +257,28 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.pageSize = 5;
     this.listDaysOff = [];
     this.scrolling = true;
+  }
+  onShowEAnnualLeaveMonth(data: any) {
+    let popupData = {
+      funcID: this.funcID,
+      headerText: this.monthHeaderText,
+      data: data,
+      grvSetup: this.grvSetup ? this.grvSetup : null,
+    }
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popup = this.callfc.openForm(PopupAnnualLeaveMonthComponent,
+      this.monthHeaderText,
+      600,
+      1000,
+      this.funcID,
+      popupData,
+      null,
+      option);
+
+    popup.closed.subscribe(e => {
+    })
   }
 
 }

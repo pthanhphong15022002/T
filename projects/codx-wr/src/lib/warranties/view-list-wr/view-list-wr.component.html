@@ -248,34 +248,115 @@
           "
         ></span>
       </div>
-      <div class="mb-1">
-        <codx-img
-          [objectId]="data.owner"
-          [objectName]="data.owner"
-          [referType]="'avt'"
-          [imgOn]="data?.owner"
-          [objectType]="entityName"
-          [width]="35"
+      <div class="d-flex justify-content-end mb-1">
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipOwner"
+          *ngIf="data?.owner"
         >
-        </codx-img>
-        <codx-img
-          [objectId]="data.teamLeader"
-          [objectName]="data.teamLeader"
-          [referType]="'avt'"
-          [imgOn]="data?.teamLeader"
-          [objectType]="entityName"
-          [width]="35"
+          <codx-imgs
+            [width]="30"
+            [objectId]="data?.owner"
+            ojectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-imgs>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('1') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipTeamLeader"
+          *ngIf="data?.teamLeader"
         >
-        </codx-img>
-        <codx-img
-          [objectId]="data.engineerID"
-          [objectName]="data.engineerID"
-          [referType]="'avt'"
-          [imgOn]="data?.engineerID"
-          [objectType]="entityName"
-          [width]="35"
+          <codx-img
+            [width]="30"
+            [objectId]="data.teamLeader"
+            objectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('3') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <div
+          style="position: relative"
+          [ngbTooltip]="tooltipEngineerID"
+          *ngIf="data?.engineerID"
         >
-        </codx-img>
+          <codx-imgs
+            [width]="30"
+            [objectId]="data?.engineerID"
+            ojectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="false"
+          >
+          </codx-imgs>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <span
+              ><img
+                src="/assets/themes/cm/default/img/{{ getIcon('5') }}"
+                alt=""
+            /></span>
+          </div>
+        </div>
+
+        <ng-template #tooltipOwner>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.owner | formatvalue : formModel : 'owner' | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.Owner?.headerText }}
+          </div>
+        </ng-template>
+
+        <ng-template #tooltipTeamLeader>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.teamLeader
+                  | formatvalue : formModel : 'teamLeader'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.TeamLeader?.headerText }}
+          </div>
+        </ng-template>
+
+        <ng-template #tooltipEngineerID>
+          <div class="d-flex justify-content-center fw-bold fs-6">
+            <span
+              [innerHTML]="
+                data?.engineerID
+                  | formatvalue : formModel : 'engineerID'
+                  | async
+              "
+            ></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            {{ gridViewSetup?.EngineerID?.headerText }}
+          </div>
+        </ng-template>
       </div>
     </div>
 

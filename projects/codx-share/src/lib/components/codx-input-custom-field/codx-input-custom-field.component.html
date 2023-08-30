@@ -25,10 +25,13 @@
       class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
       (click)="!disable ? addFile() : ''"
     ></span>
-    <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
+    <span
+      *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
+      class="mx-2 me-5"
+    >
       <button
         class="btn btn-sm btn-icon"
-        (click)="openUserPopup()"
+        (click)="customField.dataType == 'P' ? openUserPopup() : openContact()"
         [disabled]="disable"
       >
         <span class="icon-group_add text-primary icon-18"></span>
@@ -201,6 +204,132 @@
       [referType]="'source'"
     >
     </codx-attachment>
+  </ng-container>
+
+  <!-- Contact  (mouseleave)="closePopper(p)"
+-->
+  <ng-container *ngIf="customField.dataType == 'C' && listContacts?.length > 0">
+    <div class="d-flex">
+      <ng-container *ngFor="let item of listContacts">
+        <div class="">
+          <!-- <codx-img
+            [ngbPopover]="tempPopover"
+            #p="ngbPopover"
+            (mouseenter)="openPopper(item, p)"
+            autoClose="outside"
+            placement="right bottom left top"
+            container="body"
+            [objectId]="item?.refID ?? item?.recID"
+            [objectName]="item?.contactName"
+            [objectType]="'CM_Contacts'"
+            [width]="30"
+          >
+          </codx-img> -->
+          <ng-container
+            *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
+          ></ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #tempPopover let-data>
+      <div class="d-flex">
+        <codx-img
+          [objectId]="data?.recID"
+          [objectName]="data?.contactName"
+          [objectType]="'CM_Contacts'"
+          [width]="40"
+        >
+        </codx-img>
+        <div class="d-flex flex-column">
+          <div clas="mb-1 d-flex align-items-top">
+            <span class="fw-bold text-dark me-1">
+              {{ data?.contactName }}
+            </span>
+            <!-- <span
+              class="icon-16 text-hover-primary cursor-pointer"
+              [class]="data?.contactType | vll : 'CRM025' : 'icon' | async"
+              [style.color]="
+                data?.contactType | vll : 'CRM025' : 'textColor' | async
+              "
+            ></span> -->
+          </div>
+
+          <!-- <div class="mb-1" *ngIf="data?.jobTitle">
+            <span class="text-gray-600">{{ data.jobTitle }}</span>
+          </div> -->
+          <!-- <div *ngIf="objectType == '4'">
+            <span class="">
+              <input
+                type="text"
+                #lblRole
+                name="lblRole"
+                matInput
+                autofocus
+                [value]="data?.role"
+                [disabled]="type == 'formDetail' ? true : false"
+                (blur)="updateRole(lblRole.value, data.recID)"
+                (keydown.enter)="updateRole(lblRole.value, data.recID)"
+                class="form-control no-border text-gray-600"
+                placeholder="{{ placeholder }}"
+              />
+            </span>
+          </div> -->
+          <div class="d-flex flex-column">
+            <div
+              [style.disabled]="!data?.allowCall"
+              class="d-flex align-items-center"
+              [ngbTooltip]="popupAllowCall"
+            >
+              <ng-template #popupAllowCall>
+                <codx-label
+                  name="lblAllowCall"
+                  [formModel]="formModel"
+                  [default]="
+                    data?.allowCall
+                      ? 'Cho phép điện thoại'
+                      : 'Không cho phép điện thoại'
+                  "
+                ></codx-label>
+              </ng-template>
+              <span
+                class="text-gray-900 text-primary text-hover-primary"
+                [innerHTML]="
+                  data?.mobile
+                    | formatvalue : formModelContact : 'mobile'
+                    | async
+                "
+              ></span>
+            </div>
+            <div
+              class="d-flex align-items-center"
+              [style.disabled]="!data?.allowEmail"
+              [ngbTooltip]="popupAllowEmail"
+            >
+              <ng-template #popupAllowEmail>
+                <codx-label
+                  name="lblAllowEmail"
+                  [formModel]="formModel"
+                  [default]="
+                    data?.allowEmail
+                      ? 'Cho phép gửi mail'
+                      : 'Không cho phép gửi mail'
+                  "
+                ></codx-label>
+              </ng-template>
+              <span
+                class=""
+                [style.disabled]="!data?.allowEmail"
+                [innerHTML]="
+                  data?.personalEmail
+                    | formatvalue : formModelContact : 'personalEmail'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </ng-container>
 
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
