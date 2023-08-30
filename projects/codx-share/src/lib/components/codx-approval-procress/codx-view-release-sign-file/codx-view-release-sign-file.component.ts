@@ -35,6 +35,7 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   user: import("codx-core").UserModel;
   approveProcess: any;
   files: any;
+  isAfterRender=false;
   constructor(
     private inject: Injector,
     private notify: NotificationsService,
@@ -52,7 +53,22 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   }
 
   onInit(): void {
-
+    if(this.files?.length>0){
+      let sfFiles= this.files?.filter(x=>x.autoCreate=='3');//Chỉ lấy file export tự động(autoCreate=='3') để ký số
+      if(sfFiles?.length>0 && this.signFile?.files?.length>0){
+        for(let i = 0; i < this.signFile?.files.length; i++){
+          if(i<sfFiles?.length){
+            this.signFile.files[i].comment = sfFiles[i]?.extension;
+            this.signFile.files[i].fileID = sfFiles[i]?.recID;
+            this.signFile.files[i].fileName = sfFiles[i]?.fileName;
+            this.signFile.files[i].comment = sfFiles[i]?.extension;
+          }
+        }
+        this.isAfterRender=true;
+        this.detectorRef.detectChanges();
+      }
+    }
+    
   }
 
   closePopup(){

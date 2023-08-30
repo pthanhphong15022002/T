@@ -81,24 +81,13 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   dialog!: DialogRef; //? dialog truyền vào
   dialogData?: any; //? dialog hứng data truyền vào
   cashpayment: any; //? data của cashpayment
-  oLine: any = {}; //? data 1 dòng của cashpayment
   action: any; //? trạng thái form (addnew,edit,copy)
-  grvSetupCashpayment: any; //? data gridviewsetup của Cashpayments
-  vatInvoices: Array<any> = []; //? danh sách các dòng data của VatInvoices
-  _vatInvoices: Array<any> = []; //? danh sách được filter của VatInvoices theo dòng hạch toán
-  hasSaved: any = false; //? trạng thái lưu của phiếu
   journal: any; //? data sổ nhật kí
   bankAcctIDPay: any = null;
   bankNamePay: any;
   bankAcctIDReceive: any = null;
   bankReceiveName: any;
   ownerReceive: any;
-  editSettingsGrid: EditSettingsModel = { //? thiết lập cho phép thêm, xóa, sửa và mode cho lưới
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   fmCashpaymentLine: FormModel = {
     funcID: 'ACT0410',
     formName: 'CashPaymentsLines',
@@ -113,48 +102,23 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   ];
   baseCurr: any; //? đồng tiền hạch toán
   legalName: any; //? tên company
-  typeSettledInvoices: any; //? loại để mở form Đề xuất thanh toán,Cấn trừ tự động
-  userID: any; //? tên user đăng nhập
   voucherNoAdv: any; //? số chứng từ liên kết(xử lí lấy số chứng từ cho loại chi tạm ứng & chi thanh toán)
   dRAdv: any = 0; //? số tiền liên kết(xứ lí lấy số tiền của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
-  vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)
+  vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   isShowInfoBank : any = true; //? biến lưu trữ khi thay đổi value của (tài khoản chi,tài khoản nhận,đối tượng)
-  totalDrLine:any = 0; //? tổng số tiền của tất cả dòng line
-  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar
+  totalDrLine:any = 0; //? tổng số tiền của tất cả dòng line (số tiền tab ủy nhiệm chi)
+  isSave:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-  customerData: Object[] = [ //? a trầm test child grid
-    {
-      CustomerID: 'ALFKI',
-      ContactName: 'Maria ',
-      CompanyName: 'Alfreds Futterkiste',
-      Address: 'Obere Str. 57',
-      Country: 'Germany',
-      rowNo: 1,
-    },
-    {
-      CustomerID: 'ANATR',
-      ContactName: 'Ana Trujillo',
-      CompanyName: 'Ana Trujillo Emparedados y helados',
-      Address: 'Avda. de la Constitución 2222',
-      Country: 'Mexico',
-      rowNo: 1,
-    },
-  ];
-  childGrid: any = {};
-
   constructor(
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private authStore: AuthStore,
     private roundService: RoundService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
-    this.authStore = inject.get(AuthStore);
-    this.userID = this.authStore.get().userID; //? get tên user đăng nhập
     this.dialog = dialog; //? dialog truyền vào
     this.dialogData = dialogData; //? data dialog truyền vào
     this.headerText = dialogData.data?.headerText; //? set tên tiêu đề
@@ -162,17 +126,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.cashpayment = { ...dialogData.data?.dataCashpayment }; //? set data của Cashpayments
     this.journal = { ...dialogData.data?.journal }; //? set data sổ nhật kí
     this.baseCurr = dialogData.data?.baseCurr; //? set đồng tiền hạch toán
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.grvSetupCashpayment = res; //? get data grvSetup của Cashpayments
-        }
-      });
   }
   //#endregion
 
@@ -182,12 +135,19 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.formCashPayment.formGroup.patchValue(this.cashpayment, { //? gán dữ liệu của Cashpayment hiển thị lên form
-      onlySelf: true,
-      emitEvent: false,
-    });
-    this.formCashPayment.preData = {...this.cashpayment};
-    //this.setValidateForm();
+    // this.formCashPayment.formGroup.patchValue(this.cashpayment, { //? gán dữ liệu của Cashpayment hiển thị lên form
+    //   onlySelf: true,
+    //   emitEvent: false,
+    // });
+    // this.formCashPayment.preData = {...this.cashpayment};
+  }
+
+  /**
+   * *Hàm init sau khi form được vẽ xong
+   * @param event 
+   */
+  onAfterInitForm(event){
+    this.setValidateForm();
   }
 
   /**
@@ -231,7 +191,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         }
         break;
       case 'edit': //? nếu trạng thái form chứng từ là chỉnh sửa
-        this.hasSaved = true;
         this.api
           .exec('AC', 'CashPaymentsLinesBusiness', 'LoadDataFromSubTypeAsync', [ //? get data detail theo loại chứng từ
             this.cashpayment.recID,
@@ -412,7 +371,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @param event
    */
   valueChangeMaster(event: any) {
-    if (event && event?.data && this.cashpayment[event?.field] != event.data) { //? nếu data có thay đổi
+    if (event && event?.data) { //? nếu data có thay đổi
       this.cashpayment[event?.field] = event?.data; //? gán data mới cho field thay đổi
       if(this.dialog.formModel.funcID == 'ACT0429'){
         if (event?.field.toLowerCase() == 'objectid' || event?.field.toLowerCase() == 'cashbookid' || event?.field.toLowerCase() == 'bankacctid') {
@@ -588,114 +547,82 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @param event
    */
   cellLineChange(event: any) {
-    this.oLine = event.data;
-    let oAccount = this.acService.getCacheValue(
-      'account',
-      this.oLine.accountID
-    );
-    let oOffsetAccount = this.acService.getCacheValue(
-      'account',
-      this.oLine.offsetAcctID
-    );
+    let oLine = event.data;
+    let oAccount = this.acService.getCacheValue('account',oLine.accountID);
+    let oOffsetAccount = this.acService.getCacheValue('account',oLine.offsetAcctID);
     switch (event.field.toLowerCase()) {
       case 'accountid':
-        this.lockAndRequireFields(this.oLine, oAccount, oOffsetAccount);
+        this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
         break;
       case 'offsetacctid':
         if (oOffsetAccount) {
-          this.oLine.isBrigdeAcct = false;
+          oLine.isBrigdeAcct = false;
         } else {
-          this.oLine.isBrigdeAcct =
+          oLine.isBrigdeAcct =
             (oOffsetAccount as any).accountType == '5' ? true : false;
         }
-        this.lockAndRequireFields(this.oLine, oAccount, oOffsetAccount);
+        this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
         break;
       case 'dr':
-        if (this.oLine.dr != 0 && this.oLine.cR2 != 0) {
-          this.oLine.cr = 0;
-          this.oLine.cR2 = 0;
+        if (oLine.dr != 0 && oLine.cR2 != 0) {
+          oLine.cr = 0;
+          oLine.cR2 = 0;
         }
         setTimeout(() => {
-          this.oLine = this.getValueByExchangeRate(
-            this.cashpayment,
-            this.oLine,
-            true
-          );
+          oLine = this.getValueByExchangeRate(this.cashpayment, oLine, true);
           this.detectorRef.detectChanges();
         }, 100);
         if (this.journal.entryMode == '2') {
-          this.lockAndRequireFields(this.oLine, oAccount, oOffsetAccount);
+          this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
         }
         break;
       case 'cr':
-        if ((this.oLine.cr! = 0 && this.oLine.dR2 != 0)) {
-          this.oLine.dr = 0;
-          this.oLine.dR2 = 0;
+        if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
+          oLine.dr = 0;
+          oLine.dR2 = 0;
         }
         setTimeout(() => {
-          this.oLine = this.getValueByExchangeRate(
-            this.cashpayment,
-            this.oLine,
-            false
-          );
+          oLine = this.getValueByExchangeRate(this.cashpayment, oLine, false);
           this.detectorRef.detectChanges();
         }, 100);
         if (this.journal.entryMode == '2') {
-          this.lockAndRequireFields(this.oLine, oAccount, oOffsetAccount);
+          this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
         }
         break;
       case 'dr2':
-        if (this.oLine.dR2 != 0 && this.oLine.cR2 != 0) {
-          this.oLine.cr = 0;
-          this.oLine.cR2 = 0;
+        if (oLine.dR2 != 0 && oLine.cR2 != 0) {
+          oLine.cr = 0;
+          oLine.cR2 = 0;
         }
-        if (this.oLine.dr == 0 && (oOffsetAccount as any)?.multiCurrency) {
+        if (oLine.dr == 0 && (oOffsetAccount as any)?.multiCurrency) {
           setTimeout(() => {
             if (this.cashpayment.multi) {
-              this.oLine.dr =
-                this.cashpayment.exchangeRate != 0
-                  ? this.roundService.amount(
-                      this.oLine.cR2 / this.cashpayment.exchangeRate,
-                      this.cashpayment.currencyID
-                    )
-                  : this.oLine.cR2;
+              oLine.dr = this.cashpayment.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.cashpayment.exchangeRate,this.cashpayment.currencyID) : oLine.cR2;
             } else {
-              this.oLine.dr = this.roundService.amount(
-                this.oLine.cR2 * this.cashpayment.exchangeRate,
-                this.cashpayment.currencyID
-              );
+              oLine.dr = this.roundService.amount(oLine.cR2 * this.cashpayment.exchangeRate,this.cashpayment.currencyID);
             }
           }, 100);
         }
         break;
       case 'cr2':
-        if (this.oLine.cR2 != 0 && this.oLine.dR2 != 0) {
-          this.oLine.dr = 0;
-          this.oLine.dR2 = 0;
+        if (oLine.cR2 != 0 && oLine.dR2 != 0) {
+          oLine.dr = 0;
+          oLine.dR2 = 0;
         }
-        if (this.oLine.cr == 0 && (oOffsetAccount as any)?.multiCurrency) {
+        if (oLine.cr == 0 && (oOffsetAccount as any)?.multiCurrency) {
           setTimeout(() => {
             if (this.cashpayment.multi) {
-              this.oLine.cr =
-                this.cashpayment.exchangeRate != 0
-                  ? this.roundService.amount(
-                      this.oLine.cR2 / this.cashpayment.exchangeRate,
-                      this.cashpayment.currencyID
-                    )
-                  : this.oLine.cR2;
+              oLine.cr = this.cashpayment.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.cashpayment.exchangeRate,this.cashpayment.currencyID) : oLine.cR2;
             } else {
-              this.oLine.cr = this.roundService.amount(
-                this.oLine.cR2 * this.cashpayment.exchangeRate,
-                this.cashpayment.currencyID
-              );
+              oLine.cr = this.roundService.amount(oLine.cR2 * this.cashpayment.exchangeRate,this.cashpayment.currencyID);
             }
           }, 100);
         }
         break;
       case 'note':
-        this.oLine.reasonID = event?.itemData?.ReasonID;
+        oLine.reasonID = event?.itemData?.ReasonID;
         setTimeout(() => {
-          this.oLine.accountID = event?.itemData?.OffsetAcctID;
+          oLine.accountID = event?.itemData?.OffsetAcctID;
           this.detectorRef.detectChanges();
         }, 100);
         break;
@@ -753,10 +680,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @returns
    */
   saveMasterBeforeAddRow(typeBtn) {
+    this.isSave = false;
     this.formCashPayment.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res && ((res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
+        if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
           this.addRowDetailByType(typeBtn);
         }
       });
@@ -777,19 +705,10 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   copyRow(data) {
     data.recID = Util.uid();
     data.index = this.eleGridCashPayment.dataSource.length;
-    let oAccount = this.acService.getCacheValue(
-      'account',
-      this.oLine.accountID
-    );
-    let oOffsetAccount = this.acService.getCacheValue(
-      'account',
-      this.oLine.offsetAcctID
-    );
+    let oAccount = this.acService.getCacheValue('account', data.accountID);
+    let oOffsetAccount = this.acService.getCacheValue('account',data.offsetAcctID);
     this.lockAndRequireFields(data, oAccount, oOffsetAccount);
-    this.eleGridCashPayment.addRow(
-      data,
-      this.eleGridCashPayment.dataSource.length
-    );
+    this.eleGridCashPayment.addRow(data,this.eleGridCashPayment.dataSource.length);
   }
 
   /**
@@ -863,79 +782,32 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @returns
    */
   onSaveVoucher() {
-    // if (this.formCashPayment.validation()) {
-    //   return;
-    // }
-
-    if ((this.cashpayment.subType != '2' && this.eleGridCashPayment && this.eleGridCashPayment?.dataSource?.length == 0) 
-      || (this.cashpayment.subType == '2' && this.eleGridSettledInvoices && this.eleGridSettledInvoices?.dataSource?.length == 0)) {
-      this.notification.notifyCode('AC0013');
-      return;
-    }
+    this.isSave = true;
     if ((this.eleGridCashPayment && !this.eleGridCashPayment.gridRef.isEdit) 
     || (this.eleGridSettledInvoices && !this.eleGridSettledInvoices.gridRef.isEdit)
-    || (this.eleGridVatInvoices && !this.eleGridVatInvoices.gridRef.isEdit)) {
-      this.formCashPayment.save(
-          (opt: RequestOption) => {
-            opt.methodName = 'UpdateVoucherAsync';
-            opt.className = 'CashPaymentsBusiness';
-            opt.assemblyName = 'AC';
-            opt.service = 'AC';
-            opt.data = this.cashpayment;
-            return true;
-          },
-          0,
-          '',
-          '',
-          false
-        )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          // if ((res && !res.save.error) || (res && !res.update.error) || (res == null)) {
-          //   this.addRowDetailByType(typeBtn);
-          // }
-        }); 
-      // switch (this.action) {
-      //   case 'add':
-      //   case 'copy':
-      //     if (this.hasSaved) {
-      //       this.api
-      //         .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
-      //           this.cashpayment,
-      //         ])
-      //         .pipe(takeUntil(this.destroy$))
-      //         .subscribe((res: any) => {
-      //           if (res.update) {
-      //             this.dialog.dataService.update(res.data).subscribe();
-      //             this.onDestroy();
-      //             this.dialog.close({update:true});
-      //             this.notification.notifyCode('SYS006');
-      //           }
-      //         });
-      //     }
-      //     break;
-      //   case 'edit':
-      //     if (this.cashpayment.updateColumn || this.cashpayment.status == '0') {
-      //       //this.dialog.dataService.update(this.cashpayment).subscribe();
-      //       this.api
-      //         .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
-      //           this.cashpayment
-      //         ])
-      //         .pipe(takeUntil(this.destroy$))
-      //         .subscribe((res: any) => {
-      //           if (res.update) {
-      //             this.dialog.dataService.update(res.data).subscribe();
-      //             this.onDestroy();
-      //             this.dialog.close({update:true});
-      //             this.notification.notifyCode('SYS007');
-      //           }
-      //         });
-      //     } else {
-      //       this.onDestroy();
-      //       this.dialog.close();
-      //     }
-      //     break;
-      // }
+    || (this.eleGridVatInvoices && !this.eleGridVatInvoices.gridRef.isEdit)) { //? nếu đang edit lưới
+      this.formCashPayment.save(null, 0, '', '', false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (((!res?.save?.error) || (!res?.update?.error) || ((res?._hasSaved) && this.cashpayment.status == '0'))) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
+          this.api
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
+              this.cashpayment,
+              this.journal
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res.update) {
+                this.dialog.dataService.update(res.data).subscribe();
+                this.onDestroy();
+                this.dialog.close({ update: true });
+                this.notification.notifyCode('SYS006'); 
+              }
+            });
+        }else{
+          this.dialog.close();
+        }
+      });
     }
   }
 
@@ -944,52 +816,48 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * @returns
    */
   onSaveAddVoucher() {
-    if (this.formCashPayment.validation()) {
-      return;
-    }
-    if ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length == 0) 
-      && (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length == 0)
-      && (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length == 0)) {
-      this.notification.notifyCode('AC0013');
-      return;
-    }
+    this.isSave = true;
     if (
       (this.eleGridCashPayment && !this.eleGridCashPayment.gridRef.isEdit) ||
-      (this.eleGridSettledInvoices && !this.eleGridSettledInvoices.gridRef.isEdit) ||
+      (this.eleGridSettledInvoices && !this.eleGridSettledInvoices.gridRef.isEdit) || //? nếu đang edit lưới
       (this.eleGridVatInvoices && !this.eleGridVatInvoices.gridRef.isEdit)
     ) {
-      if (this.hasSaved) {
-        //this.dialog.dataService.update(this.cashpayment).subscribe();
-        this.api.exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
-          this.cashpayment
-        ])
-        .pipe(takeUntil(this.destroy$))
-          .subscribe((res:any) => {
-            if (res.update) {
-              this.dialog.dataService.update(res.data).subscribe();
-              this.api
-                .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
-                  this.journal,
-                ])
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.hasSaved = false;
-                    this.cashpayment = res.data;
-                    this.formCashPayment.formGroup.patchValue(
-                      this.cashpayment,
-                      {
-                        onlySelf: true,
-                        emitEvent: false,
-                      }
-                    );
-                    this.detectorRef.detectChanges();
-                    this.refreshGrid();
-                    this.notification.notifyCode('SYS006');                    
-                  }
-                });
-            }
-          });
-      }
+      this.formCashPayment.save(null, 0, '', '', false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) || this.cashpayment.status == '0')) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
+          this.api
+            .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
+              this.cashpayment,
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res.update) {
+                this.dialog.dataService.update(res.data).subscribe();
+                this.api
+                  .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                    this.journal,
+                  ])
+                  .subscribe((res: any) => {
+                    if (res) {
+                      this.cashpayment = res.data;
+                      this.formCashPayment.formGroup.patchValue(
+                        this.cashpayment,
+                        {
+                          onlySelf: true,
+                          emitEvent: false,
+                        }
+                      );
+                      this.formCashPayment.preData = { ...this.cashpayment };
+                      this.detectorRef.detectChanges();
+                      this.refreshGrid();
+                      this.notification.notifyCode('SYS006');
+                    }
+                  });
+              }
+            });
+        }
+      });
     }
   }
 
@@ -997,7 +865,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
-    if (this.hasSaved) {
+    if (this.formCashPayment && this.formCashPayment?.preData?._hasSaved) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
@@ -1006,7 +874,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
-                this.detectorRef.detectChanges();
                 this.notification.notifyCode('E0860');
                 this.dialog.close();
                 this.onDestroy();
@@ -1014,6 +881,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
             });
         }
       });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
     }
   }
 
@@ -1053,12 +923,9 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm thêm mới dòng cashpayments
    */
   addLine() {
-    this.setDefaultLine();
+    let oLine = this.setDefaultLine();
     this.eleGridCashPayment.endEdit();
-    this.eleGridCashPayment.addRow(
-      this.oLine,
-      this.eleGridCashPayment.dataSource.length
-    );
+    this.eleGridCashPayment.addRow(oLine,this.eleGridCashPayment.dataSource.length);
   }
 
   /**
@@ -1069,11 +936,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     let rAcctID = null;
     let oOffsetAcct = null;
     let oAccount = null;
-    this.oLine = new CashPaymentLine();
-    this.oLine.recID = Util.uid();
-    this.oLine.transID = this.cashpayment.recID;
-    this.oLine.objectID = this.cashpayment.objectID;
-    this.oLine.reasonID = this.cashpayment.reasonID;
+    let oLine : any = new CashPaymentLine();
+    oLine.recID = Util.uid();
+    oLine.transID = this.cashpayment.recID;
+    oLine.objectID = this.cashpayment.objectID;
+    oLine.reasonID = this.cashpayment.reasonID;
 
     let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
     if (indexCashBook > -1) {
@@ -1083,7 +950,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
     if (indexReason > -1) {
       rAcctID = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].OffsetAcctID;
-      this.oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
+      oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
     }
 
     if (this.journal?.entryMode == '1') {
@@ -1091,31 +958,31 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         switch (this.journal?.crAcctControl) {
           case '1':
             if (cAcctID == this.journal?.crAcctID) {
-              this.oLine.offsetAcctID = cAcctID;
+              oLine.offsetAcctID = cAcctID;
             } else {
-              this.oLine.offsetAcctID = this.journal.crAcctID;
+              oLine.offsetAcctID = this.journal.crAcctID;
             }
             break;
           default:
-            this.oLine.offsetAcctID = cAcctID;
+            oLine.offsetAcctID = cAcctID;
             break;
         }
       }
     } else {
-      this.oLine.offsetAcctID = null;
+      oLine.offsetAcctID = null;
     }
 
     if (rAcctID) {
       switch (this.journal?.drAcctControl) {
         case '1':
           if (rAcctID == this.journal?.drAcctID) {
-            this.oLine.accountID = rAcctID;
+            oLine.accountID = rAcctID;
           } else {
-            this.oLine.accountID = this.journal.drAcctID;
+            oLine.accountID = this.journal.drAcctID;
           }
           break;
         default:
-          this.oLine.accountID = rAcctID;
+          oLine.accountID = rAcctID;
           break;
       }
     }
@@ -1127,54 +994,48 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         dicSetting?.diM1Control != '2' &&
         dicSetting?.diM1Control != '9'
       ) {
-        this.oLine.diM1 = this.journal.diM1;
+        oLine.diM1 = this.journal.diM1;
       }
       if (
         dicSetting?.diM2Control &&
         dicSetting?.diM2Control != '2' &&
         dicSetting?.diM2Control != '9'
       ) {
-        this.oLine.diM2 = this.journal.diM2;
+        oLine.diM2 = this.journal.diM2;
       }
       if (
         dicSetting?.diM3Control &&
         dicSetting?.diM3Control != '2' &&
         dicSetting?.diM3Control != '9'
       ) {
-        this.oLine.diM3 = this.journal.diM3;
+        oLine.diM3 = this.journal.diM3;
       }
     }
 
-    oAccount = this.acService.getCacheValue('account', this.oLine?.accountID);
-    oOffsetAcct = this.acService.getCacheValue(
-      'account',
-      this.oLine?.offsetAcctID
-    );
-    if (this.oLine?.offsetAcctID) {
+    oAccount = this.acService.getCacheValue('account', oLine?.accountID);
+    oOffsetAcct = this.acService.getCacheValue('account',oLine?.offsetAcctID);
+    if (oLine?.offsetAcctID) {
       if (oOffsetAcct && oOffsetAcct?.accountType == '5') {
-        this.oLine.isBrigdeAcct = true;
+        oLine.isBrigdeAcct = true;
       }
     }
-    if (this.oLine?.accountID) {
+    if (oLine?.accountID) {
       if (oAccount) {
-        this.oLine.singleEntry = oAccount?.accountType == '0' ? true : false;
+        oLine.singleEntry = oAccount?.accountType == '0' ? true : false;
         let bSubLGControl = oAccount?.subLGControl;
-        if (!bSubLGControl && !this.oLine?.offsetAcctID) {
+        if (!bSubLGControl && !oLine?.offsetAcctID) {
           bSubLGControl = oOffsetAcct?.subLGControl;
         }
       }
     }
-    this.oLine.createdBy = this.userID;
+    // this.oLine.createdBy = this.userID;
     let dRAmt = this.calcRemainAmt(this.cashpayment?.totalAmt);
     if (dRAmt > 0) {
-      this.oLine.dr = dRAmt;
-      this.oLine = this.getValueByExchangeRate(
-        this.cashpayment,
-        this.oLine,
-        true
-      );
+      oLine.dr = dRAmt;
+      oLine = this.getValueByExchangeRate(this.cashpayment,oLine,true);
     }
-    this.lockAndRequireFields(this.oLine, oAccount, oOffsetAcct);
+    this.lockAndRequireFields(oLine, oAccount, oOffsetAcct);
+    return oLine;
   }
 
   /**
@@ -1660,27 +1521,27 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       totalVatAtm += item.vatAmt;
     });
     if (this.journal.entryMode == '1') {
-      this.setDefaultLine();
-      this.oLine.dr = totalVatAtm;
+      let oLine = this.setDefaultLine();
+      oLine.dr = totalVatAtm;
       if (this.vatAccount) {
-        this.oLine.accountID = this.vatAccount;
+        oLine.accountID = this.vatAccount;
       }
-      data.lineID = this.oLine.recID;
-      this.eleGridCashPayment.dataSource.push(this.oLine);
+      data.lineID = oLine.recID;
+      this.eleGridCashPayment.dataSource.push(oLine);
     } else {
       for (let index = 1; index <= 2; index++) {
-        this.setDefaultLine();
+        let oLine = this.setDefaultLine();
         if (index == 1) {
-          this.oLine.dr = totalVatAtm;
+          oLine.dr = totalVatAtm;
           if (this.vatAccount) {
-            this.oLine.accountID = this.vatAccount;
+            oLine.accountID = this.vatAccount;
           }
-          this.eleGridCashPayment.dataSource.push(this.oLine);
-          data.lineID = this.oLine.recID;
+          this.eleGridCashPayment.dataSource.push(oLine);
+          data.lineID = oLine.recID;
         } else {
-          this.oLine.accountID = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID;
-          this.oLine.cr = totalVatAtm;
-          this.eleGridCashPayment.dataSource.push(this.oLine);
+          oLine.accountID = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID;
+          oLine.cr = totalVatAtm;
+          this.eleGridCashPayment.dataSource.push(oLine);
         }
       }
     }
@@ -1772,6 +1633,17 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm set validate cho form
    */
   setValidateForm(){
+    let rObjectID = false;
+    let rVoucherNo = false;
+    let lstDisable :any = [];
+    if (this.cashpayment.subType != '1' && this.formCashPayment) {
+      rObjectID = true;
+    }
+    lstDisable.push({field : 'ObjectID',isDisable : false,require:rObjectID});
+    if (this.journal.assignRule == '2') {
+      lstDisable.push({field : 'VoucherNo',isDisable : false,require:false});
+    }
+    this.formCashPayment.setRequire(lstDisable);
     // if (this.journal.assignRule == '1' || this.journal.assignRule == '2') { //? nếu số chứng từ tự động hoặc từ động tạo khi lưu
     //   this.formCashPayment.formGroup.controls['voucherNo'].removeValidators(Validators.required); //? không cần bắt buộc nhập
     // }
@@ -1801,6 +1673,23 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     
   }
 
+  afterValidateForm(event){
+    if (this.isSave) {
+      if (
+        (this.cashpayment.subType != '2' &&
+          this.eleGridCashPayment &&
+          this.eleGridCashPayment?.dataSource?.length == 0) ||
+        (this.cashpayment.subType == '2' &&
+          this.eleGridSettledInvoices &&
+          this.eleGridSettledInvoices?.dataSource?.length == 0)
+      ) {
+        this.notification.notifyCode('AC0013'); //? check chứng từ phải có dữ liệu chi tiết
+        return;
+      }
+    }
+  }
+
+  
   @HostListener('click', ['$event'])
   onClick(e) {
     if (

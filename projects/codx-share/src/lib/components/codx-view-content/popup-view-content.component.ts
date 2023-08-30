@@ -229,7 +229,7 @@ export class PopupViewContentComponent{
     //     if (item) {
           // this.viewBase.dataService.dataSelected = item;
           // let option = new SidebarModel();
-          // option.Width = '550px';
+          // option.Width = '800px';
           // option.DataService = this.viewBase?.dataService;
           // option.FormModel = new FormModel();
           // option.FormModel.entityName = 'ES_Categories';

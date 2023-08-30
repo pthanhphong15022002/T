@@ -139,12 +139,136 @@
 <ng-template #headerTempContent let-data>
   <div class="mt-2 me-2">
     <codx-mfunc
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeDataMF($event, data)"
-      type="hover"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    type="hover"
     >
-    </codx-mfunc>
-  </div>
+  </codx-mfunc>
+</div>
+</ng-template>
+
+<ng-template #popupChoiseTypeCM let-data>
+  <codx-form
+    #form
+    [headerText]="'Thêm công việc'"
+    [body]="addGroupJobBody"
+    [footer]="addGroupJobFooter"
+    [dialog]="popupTypeCM"
+  ></codx-form>
+  <ng-template #addGroupJobBody let-data>
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Loại "
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Khách hàng"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Tiềm năng"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Cơ hội"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Sự cố"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+
+    <div class="step-name w-100">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]="view.formModel"
+          default="Giai đoạn"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-combobox
+          [dataSource]="typeCM"
+          [fields]="fieldsGroup"
+          (change)="filterText($event)"
+          [allowCustom]="false"
+        ></ejs-combobox>
+      </div>
+    </div>
+
+  </ng-template>
+  <ng-template #addGroupJobFooter let-data></ng-template>
+  <ng-template #popupChoiseTypeCM let-data></ng-template>
 </ng-template>

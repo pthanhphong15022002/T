@@ -127,7 +127,7 @@ export class ViewDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.data &&
-      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
+      (changes.data?.previousValue?.recID != changes.data?.currentValue?.recID || changes.data?.currentValue?.recID== this.itemDetail?.recID)
     ) {
       this.data = changes.data?.currentValue;
     }
