@@ -453,7 +453,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lead.recID,
       this.customer,
       this.deal,
-      this.isCheckContact ? this.lstContactDeal : null,
+      this.lstContactDeal,
       this.recIDContact,
       this.lead.applyProcess && this.lead.status != '3'
         ? result[0]?.stepID
