@@ -332,11 +332,14 @@ export class CodxShareService {
         gridModel.entityName = formModel.entityName;
         gridModel.funcID = formModel.funcID;
         gridModel.gridViewName = formModel.gridViewName;
-        gridModel.page = dataService.request.page;
-        gridModel.pageSize = dataService.request.pageSize;
-        gridModel.predicate = dataService.request.predicates;
-        gridModel.dataValue = dataService.request.dataValues;
         gridModel.entityPermission = formModel.entityPer;
+        if(dataService)
+        {
+          gridModel.page = dataService.request.page;
+          gridModel.pageSize = dataService.request.pageSize;
+          gridModel.predicate = dataService.request.predicates;
+          gridModel.dataValue = dataService.request.dataValues;
+        }
         gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
           CodxExportComponent,

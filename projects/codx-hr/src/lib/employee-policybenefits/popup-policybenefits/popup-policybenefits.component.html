@@ -16,7 +16,7 @@
 </codx-layout-add>
 
 <ng-template #overallInfo>
-    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <div class="fs-5-sm fw-bold text-primary mb-3">
         <codx-label 
             [formModel]="formModel" 
             [name]="'lblOverallInfo'"
@@ -35,6 +35,7 @@
           ></codx-input>
         </div>
         <div class="col-4">
+          <codx-label></codx-label>
           <codx-vll
             *ngIf="benefitPolicyObj.status"
             [formModel]="formModel"
@@ -116,7 +117,7 @@
         ></codx-input>
       </div>
 
-      <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+      <div class="fs-5-sm fw-bold text-primary mt-6 mb-3">
         <codx-label 
             [formModel]="formModel" 
             [name]="'lblAmount'"
@@ -128,7 +129,7 @@
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="Interval" [formModel]="formModel"></codx-label>
-          <codx-label
+          <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteInterval'"
             [default]="grvSetup.Interval.headerNote"
             [formModel]="formModel"
@@ -146,7 +147,7 @@
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="FixedAmt" [formModel]="formModel"></codx-label>
-          <codx-label
+          <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteFixedAmt'"
             [default]="grvSetup.FixedAmt.headerNote"
             [formModel]="formModel"
@@ -164,7 +165,7 @@
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="Percentage" [formModel]="formModel"></codx-label>
-          <codx-label
+          <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNotePercentage'"
             [default]="grvSetup.Percentage.headerNote"
             [formModel]="formModel"
@@ -182,7 +183,7 @@
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
           <codx-label fiedName="PercentageOn" [formModel]="formModel"></codx-label>
-          <codx-label
+          <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNotePercentageOn'"
             [default]="grvSetup.PercentageOn.headerNote"
             [formModel]="formModel"
@@ -203,20 +204,22 @@
                 fiedName="HasIncludeBenefits"
                 [formModel]="formModel"
             ></codx-label>
-            <codx-label
+            <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteHasIncludeBenefits'"
             [default]="grvSetup.HasIncludeBenefits.headerNote"
             [formModel]="formModel"
     ></codx-label>
         </div>
-        <div class="col-6 d-flex flex-row">
+        <div class="col-6 d-flex align-items-center justify-content-end">
+          <span class="me-2 mt-2">
             <codx-input
-                class="mt-2"
+                class=""
                 field="hasIncludeBenefits"
                 [formModel]="formModel"
                 [Group]="formGroup"
                 (valueChange)="ValChangeHasIncludeBenefits($event)"
             ></codx-input>
+          </span>
             <!-- <codx-input
             class="mt-2"
             field="includeObjects"
@@ -224,19 +227,21 @@
             [Group]="formGroup"
             (valueChange)="ValChangeSelectObj($event)"
         ></codx-input> -->
-            <button
-            class="btn btn-icon ms-3"
+            <button type="button"
+            [ngClass]="benefitPolicyObj.hasIncludeBenefits? 'btn-light-primary':'btn-disabled'"
+            class="btn btn-icon btn-sm"
             (click)="onClickOpenSelectIncludeBenefits()"
           >
-            <i class="icon-edit-one icon-18" 
-            [ngClass]="benefitPolicyObj.hasIncludeBenefits? 'text-dark':'text-gray-400'"
-            ></i>
+           <i class="icon-edit-one icon-16"></i>
+            <!-- <i class="icon-edit-one icon-16" 
+            
+            ></i> -->
           </button>
         </div>
     </div>
 
-    <span *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits.length > 0">
-        <span *ngFor="let obj of lstSelectedBenefits">
+    <div class="d-flex flex-wrap" *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits.length > 0">
+        <div class="me-2 mb-2" *ngFor="let obj of lstSelectedBenefits">
             <!-- <codx-vll
             [showText]="true"
             [showBgColor]="true"
@@ -256,10 +261,10 @@
           <span class="icon-close icon-16"></span>
         </button>
       </span>
-        </span>
-    </span>
+        </div>
+    </div>
 
-    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <div class="fs-5-sm fw-bold text-primary mt-6 mb-3">
         <codx-label
           name="lblAttachFile"
           [formModel]="formModel"
@@ -308,7 +313,7 @@
 </ng-template>
 
 <ng-template #policyInfo>
-    <div class="form-group row mt-5">
+    <div class="policy-meno">
     <codx-input
         field="memo"
         [formModel]="formModel"
@@ -318,7 +323,7 @@
 </ng-template>
 
 <ng-template #setting>
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-5-sm fw-bold text-primary mb-3">
     <codx-label 
         [formModel]="formModel" 
         [name]="'lblHeadAdjustBy'"
@@ -328,15 +333,15 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
+    <div class="col-7 d-flex flex-column">
       <codx-label fiedName="AdjustBy" [formModel]="formModel"></codx-label>
-      <codx-label
+      <codx-label class="fw-normal fs-7 text-gray-600"
         [name]="'headerNoteAdjustBy'"
         [default]="grvSetup.AdjustBy.headerNote"
         [formModel]="formModel"
       ></codx-label>
     </div>
-    <div class="col-6">
+    <div class="col-5">
       <codx-input
         field="adjustBy"
         [formModel]="formModel"
@@ -346,74 +351,74 @@
     </div>
   </div>
 
-<div class="form-group row ms-6" *ngIf="loadGridview1 == true">
-  <codx-gridview-v2
-  #gridView1
-  [columnsGrid]="columnGrid1"
-  [formModel]="fmPolicyDetail"
-  [formName]="fmPolicyDetail.formName"
-  [gridViewName]="fmPolicyDetail.gridViewName"
-  [entityName]="fmPolicyDetail.entityName"
-  [hideMoreFunc]="true"
-  [editSettings]="editSettings"
-  [autoFitColumns]="false"
-  [dataSource]="dataSourceGridView1"
-  rowHeight="35"
-  (onAddNew)="onAddNewGrid1($event)"
-  [autoAddRow]="true"
-  (onEdit)="onEditGrid1($event)"
-  (onDelete)="onDeleteGrid1($event)"
-  >
-    </codx-gridview-v2>
-    <div class="d-flex justify-content-end mt-5">
-      <button
-      class="btn btn-sm btn-light-primary"
-      (click)="addRowGrid1()"
+  <div class="mb-5" *ngIf="loadGridview1 == true">
+    <codx-gridview-v2
+    #gridView1
+    [columnsGrid]="columnGrid1"
+    [formModel]="fmPolicyDetail"
+    [formName]="fmPolicyDetail.formName"
+    [gridViewName]="fmPolicyDetail.gridViewName"
+    [entityName]="fmPolicyDetail.entityName"
+    [hideMoreFunc]="true"
+    [editSettings]="editSettings"
+    [autoFitColumns]="false"
+    [dataSource]="dataSourceGridView1"
+    rowHeight="35"
+    (onAddNew)="onAddNewGrid1($event)"
+    [autoAddRow]="true"
+    (onEdit)="onEditGrid1($event)"
+    (onDelete)="onDeleteGrid1($event)"
     >
-<i class="icon-add icon-16 ms-n1"></i>
-    <codx-label
-    name="lblAddBtnGrid1"
-    default="Thêm"
-    [formModel]="formModel"
-  >
-</codx-label>
-    </button>
-    </div>
-</div>
+      </codx-gridview-v2>
+      <div class="d-flex justify-content-end border-bottom pb-2">
+        <button
+        class="btn btn-sm btn-light-primary"
+        (click)="addRowGrid1()"
+          >
+          <i class="icon-add icon-16 ms-n1"></i>
+          <codx-label
+            name="lblAddBtnGrid1"
+            default="Thêm"
+            [formModel]="formModel"
+          >
+          </codx-label>
+      </button>
+      </div>
+  </div>
 
   <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
+    <div class="col-8 d-flex flex-column">
         <codx-label
             fiedName="IsAdjustKow"
             [formModel]="formModel"
         ></codx-label>
-        <codx-label
+        <codx-label class="fs-7 fw-normal text-gray-600"
         [name]="'headerNoteIsAdjustKow'"
         [default]="grvSetup.IsAdjustKow.headerNote"
         
         [formModel]="formModel"
-></codx-label>
+      ></codx-label>
     </div>
-    <div class="col-6 d-flex flex-row">
+    <div class="col-4 d-flex flex-row justify-content-end align-items-center">
+      <span class="mt-2 me-2">
         <codx-input
-            class="mt-2"
+           
             field="isAdjustKow"
             [formModel]="formModel"
             [Group]="formGroup"
             (valueChange)="ValChangeIsAdjustKow($event)"
-        ></codx-input>
-        <button
-        class="btn btn-icon ms-3"
+        ></codx-input></span>
+        <button type="button"
+        class="btn btn-icon btn-sm"
+        [ngClass]="benefitPolicyObj.isAdjustKow? 'btn-light-primary':'btn-disabled'"
         (click)="onClickOpenCbxKow()"
-      >
-        <i class="icon-edit-one icon-18" 
-        [ngClass]="benefitPolicyObj.isAdjustKow? 'text-dark':'text-gray-400'"
-        ></i>
+         >
+        <i class="icon-edit-one icon-16"></i>
       </button>
     </div>
 </div>
-<span *ngIf="benefitPolicyObj.isAdjustKow && lstKow.length > 0">
-    <span *ngFor="let kow of lstKow">
+<div class="d-flex flex-wrap mb-5" *ngIf="benefitPolicyObj.isAdjustKow && lstKow.length > 0">
+    <div class="me-2 mb-2" *ngFor="let kow of lstKow">
       <span class="badge-with-delete">
       
       <span
@@ -426,8 +431,8 @@
       <span class="icon-close icon-16"></span>
     </button>
   </span>
-    </span>
-</span>
+    </div>
+</div>
 
     <codx-combobox-popup
     *ngIf="!isHidden3 && benefitPolicyObj.isAdjustKow"
@@ -441,15 +446,15 @@
     </codx-combobox-popup>
 
     <div class="form-group row">
-      <div class="col-6 d-flex flex-column">
+      <div class="col-7 d-flex flex-column">
         <codx-label fiedName="AdjustKowBy" [formModel]="formModel"></codx-label>
-        <codx-label
+        <codx-label class="text-gray-600 fs-7 fw-normal"
           [name]="'headerNoteAdjustKowBy'"
           [default]="grvSetup.AdjustKowBy.headerNote"
           [formModel]="formModel"
         ></codx-label>
       </div>
-      <div class="col-6">
+      <div class="col-5">
         <codx-input
           field="adjustKowBy"
           [formModel]="formModel"
@@ -458,7 +463,7 @@
       </div>
     </div>
 
-    <div class="fs-5 fw-bold text-primary mt-6 mb-3">
+    <div class="fs-5-sm fw-bold text-primary mt-6 mb-3">
       <codx-label 
           [formModel]="formModel" 
           [name]="'lblApplyConstraint'"
@@ -468,23 +473,25 @@
     </div>
 
     <div class="form-group row">
-      <div class="col-6 d-flex flex-column">
+      <div class="col-7 d-flex flex-column">
         <codx-label fiedName="IsConstraintKow" [formModel]="formModel"></codx-label>
-        <codx-label
+        <codx-label class="text-gray-600 fw-normal fs-7"
           [name]="'headerNoteIsConstraintKow'"
           [default]="grvSetup.IsConstraintKow.headerNote"
           [formModel]="formModel"
         ></codx-label>
       </div>
-      <div class="col-6">
-        <codx-input
-          field="isConstraintKow"
-          [formModel]="formModel"
-          [Group]="formGroup"
-          (valueChange)="ValChangeContraintKow($event)"
-        ></codx-input>
+      <div class="col-5 d-flex justify-content-end align-items-center">
+        <span class="mt-2 me-2">
+          <codx-input
+            field="isConstraintKow"
+            [formModel]="formModel"
+            [Group]="formGroup"
+            (valueChange)="ValChangeContraintKow($event)"
+          ></codx-input>
+        </span>
         <button
-        class="btn btn-icon ms-3"
+        class="btn btn-icon btn-sm btn-light-primary"
         (click)="onClickExpandConstaintKow()"
       >
         <i class="icon-18"
@@ -494,19 +501,19 @@
       </div>
     </div>
 
-    <div class="border" *ngIf="expandContraintKow">
+    <div class="border p-3" *ngIf="expandContraintKow">
       
       <div class="form-group row" *ngIf="expandContraintKow">
-        <div class="col-6 d-flex flex-column">
-          <codx-label class="ms-6" fiedName="MinValue" [formModel]="formModel"></codx-label>
+        <div class="col-8 d-flex flex-column">
+          <codx-label class="" fiedName="MinValue" [formModel]="formModel"></codx-label>
           <codx-label
-          class="ms-6"
+          class="fw-normal text-gray-600 fs-7"
             [name]="'headerNoteMinValue'"
             [default]="grvSetup.MinValue.headerNote"
             [formModel]="formModel"
           ></codx-label>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <codx-input
           [disabled]="constraintKowDisabled"
             field="minValue"
@@ -517,32 +524,31 @@
       </div>
   
       <div class="form-group row" *ngIf="expandContraintKow">
-        <div class="col-6 d-flex flex-column">
+        <div class="col-8 d-flex flex-column">
             <codx-label
                 fiedName="MinKows"
-          class="ms-6"
+          class=""
                 [formModel]="formModel"
             ></codx-label>
             <codx-label
             [name]="'headerNoteMinKows'"
             [default]="grvSetup.MinKows.headerNote"
-          class="ms-6"
+          class="fw-normal fs-7 text-gray-600"
             [formModel]="formModel"
-    ></codx-label>
+            ></codx-label>
         </div>
-        <div class="col-6 d-flex flex-row">
-            <button
-            class="btn btn-icon ms-3"
+        <div class="col-4 d-flex flex-row justify-content-end">
+            <button type="button"
+            [ngClass]="benefitPolicyObj.isConstraintKow? 'btn-light-primary':'btn-disabled'"
+            class="btn btn-icon btn-sm"
             (click)="onClickOpenCbxMinKows()"
-          >
-            <i class="icon-edit-one icon-18" 
-            [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'"
-            ></i>
+            >
+            <i class="icon-edit-one icon-16"></i>
           </button>
         </div>
     </div>
-    <span *ngIf="benefitPolicyObj.isConstraintKow && lstMinKows.length > 0">
-        <span *ngFor="let kow of lstMinKows">
+    <div class="d-flex flex-wrap" *ngIf="benefitPolicyObj.isConstraintKow && lstMinKows.length > 0">
+        <div class="me-2 mb-2" *ngFor="let kow of lstMinKows">
         <span class="badge-with-delete">
 
           <span
@@ -554,11 +560,11 @@
         <button (click)="deleteApplyExcludeObj(kow, 'lstMinKows')" type="button" class="btn btn-sm btn-icon btn-light-danger">
           <span class="icon-close icon-16"></span>
         </button>
-      </span>
-
         </span>
-    </span>
+
+        </div>
     </div>
+  </div>
 
 
   <codx-combobox-popup
@@ -572,7 +578,7 @@
   >
   </codx-combobox-popup>
 
-  <div *ngIf="expandContraintKow">
+  <div class="my-3" *ngIf="expandContraintKow">
     <codx-label
     [formModel]="formModel"
     [name]="'lblAnd'"
@@ -582,18 +588,18 @@
     </codx-label>
   </div>
 
-  <div class="border" *ngIf="expandContraintKow">
+  <div class="border p-3 mb-5" *ngIf="expandContraintKow">
     <div class="form-group row" *ngIf="expandContraintKow">
-      <div class="col-6 d-flex flex-column">
-        <codx-label class="ms-6" fiedName="MaxValue" [formModel]="formModel"></codx-label>
+      <div class="col-8 d-flex flex-column">
+        <codx-label class="" fiedName="MaxValue" [formModel]="formModel"></codx-label>
         <codx-label
-        class="ms-6"
+        class="fw-normal fs-7 text-gray-600"
           [name]="'headerNoteMaxValue'"
           [default]="grvSetup.MaxValue.headerNote"
           [formModel]="formModel"
         ></codx-label>
       </div>
-      <div class="col-6">
+      <div class="col-4">
         <codx-input
         [disabled]="constraintKowDisabled"
           field="maxValue"
@@ -604,32 +610,31 @@
     </div>
   
     <div class="form-group row" *ngIf="expandContraintKow">
-      <div class="col-6 d-flex flex-column">
+      <div class="col-8 d-flex flex-column">
           <codx-label
               fiedName="MaxKows"
-        class="ms-6"
+        class=""
               [formModel]="formModel"
           ></codx-label>
           <codx-label
-          [name]="'MaxKows'"
-          [default]="grvSetup.MaxKows.headerNote"
-        class="ms-6"
-          [formModel]="formModel"
-  ></codx-label>
+            [name]="'MaxKows'"
+            [default]="grvSetup.MaxKows.headerNote"
+          class="text-gray-600 fs-7 fw-normal"
+            [formModel]="formModel"
+          ></codx-label>
       </div>
-      <div class="col-6 d-flex flex-row">
-          <button
-          class="btn btn-icon ms-3"
+      <div class="col-4 d-flex justify-content-end align-items-center">
+          <button type="button"
+          class="btn btn-icon btn-sm"
+          [ngClass]="benefitPolicyObj.isConstraintKow? 'btn-light-primary':'btn-disabled'"
           (click)="onClickOpenCbxMaxKows()"
         >
-          <i class="icon-edit-one icon-18" 
-          [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'"
-          ></i>
+          <i class="icon-edit-one icon-16"></i>
         </button>
       </div>
   </div>
-  <span *ngIf="benefitPolicyObj.isConstraintKow && lstMaxKows.length > 0">
-      <span *ngFor="let kow of lstMaxKows">
+  <div class="d-flex flex-wrap" *ngIf="benefitPolicyObj.isConstraintKow && lstMaxKows.length > 0">
+      <div class="me-2 mb-2" *ngFor="let kow of lstMaxKows">
         <span class="badge-with-delete">
         <span
         class="badge badge-light-primary badge-md"
@@ -641,8 +646,8 @@
         <span class="icon-close icon-16"></span>
       </button>
     </span>
-      </span>
-  </span>
+      </div>
+  </div>
   
   <codx-combobox-popup
   *ngIf="!isHiddenCbxMaxKows && benefitPolicyObj.isConstraintKow"
@@ -658,116 +663,63 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
+    <div class="col-8 d-flex flex-column">
         <codx-label
             fiedName="IsConstraintOther"
             [formModel]="formModel"
         ></codx-label>
-        <codx-label
+        <codx-label class="text-gray-600 fw-normal fs-7"
         [name]="'headerNoteIsConstraintOther'"
         [default]="grvSetup.IsConstraintOther.headerNote"
         
         [formModel]="formModel"
-></codx-label>
+        ></codx-label>
     </div>
-    <div class="col-6 d-flex flex-row">
-        <codx-input
-            class="mt-2"
+    <div class="col-4 d-flex flex-row justify-content-end align-items-center">
+      <span class="mt-2 me-2">
+        <codx-input  
             field="isConstraintOther"
             [formModel]="formModel"
             [Group]="formGroup"
             (valueChange)="ValChangeIsConstraintOther($event)"
         ></codx-input>
-        <button
-        class="btn btn-icon ms-3"
+      </span>
+      <button type="button"
+        class="btn btn-icon btn-sm"
+        [ngClass]="benefitPolicyObj.isConstraintOther? 'btn-light-primary':'btn-disabled'"
         (click)="onClickOpenVllIsConstraintOther()"
-      >
-        <i class="icon-edit-one icon-18" 
-        [ngClass]="benefitPolicyObj.isConstraintOther? 'text-dark':'text-gray-400'"
-        ></i>
+        >
+        <i class="icon-edit-one icon-16"></i>
       </button>
     </div>
-    <div class="ps-6 mt-4" *ngFor="let constraint of lstSelectedConstraintBy">
-      <div *ngIf="constraint == '0'">
+    <div class="mt-3 col-12 pe-3">
+      <div class="p-3 border rounded-2 policy-content w-100">
+        <div *ngFor="let constraint of lstSelectedConstraintBy">
+          <div *ngIf="constraint == '0'">
 
-      </div>
-      <div class="d-flex align-items-center ps-6 row" *ngIf="constraint == '1' && benefitPolicyObj.isConstraintOther">
-        <div class="col-7">
-          <codx-label
-            fiedName="Gender"
-            [formModel]="fmPolicyConstraints"
-          ></codx-label>
-        </div>
-        <div class="col-5">
-          <codx-input class="w-100"
-              field="gender"
-              [formModel]="fmPolicyConstraints"
-              [Group]="formGroupPolicyConstraints"
-            ></codx-input>
-        </div>
-      </div>
-      <div class="form-group row d-flex align-items-center ps-6" *ngIf="constraint == '2' && benefitPolicyObj.isConstraintOther">
-        <div class="col-7">
-          <codx-label
-          class=""
-            fiedName="AgeFrom"
-            [name]="'lblRelationAge'"
-            [default]="'Độ tuổi'"
-            [formModel]="fmPolicyConstraints"
-          ></codx-label>
-        </div>
-        <div class="col-5">
-          <div class="d-flex align-items-center">
-            <div class="col-4">
-              <codx-input class="w-100"
-                field="ageFrom"
-                [formModel]="fmPolicyConstraints"
-                [Group]="formGroupPolicyConstraints"
-              ></codx-input>
-            </div>
-            <div class="col-4">
-              <div class="w-100 d-flex justify-content-center">
-                <codx-label
-                  class=""
-                    [name]="'lblAgeTo'"
-                    [default]="'Đến'"
-                    [formModel]="fmPolicyConstraints"
-                  ></codx-label>
-              </div>
-            </div>
-            <div class="col-4">
-              <codx-input class="w-100"
-                field="ageTo"
-                [formModel]="fmPolicyConstraints"
-                [Group]="formGroupPolicyConstraints"
-              ></codx-input>
-            </div>
           </div>
-        </div>
-      </div>
-      <div *ngIf="constraint == '3' && benefitPolicyObj.isConstraintOther">
-        <div class="d-flex align-items-center justify-content-between ms-6">
-          <div class="col-7">
-            <codx-label
-              fiedName="Relative"
-              [formModel]="fmPolicyConstraints"
-            ></codx-label>
-          </div>
-          <div class="col-5">
-            <codx-input class="w-100"
-              field="relative"
-              [formModel]="fmPolicyConstraints"
-              [Group]="formGroupPolicyConstraints"
-            ></codx-input>
-          </div>
-        </div>
-        <div class="form-group row ms-12 mt-3">
-          <div class="form-group row">
+          <div class="form-group row" *ngIf="constraint == '1' && benefitPolicyObj.isConstraintOther">
             <div class="col-7">
               <codx-label
-                fiedName="RelativeAgeFrom"
+                fiedName="Gender"
+                [formModel]="fmPolicyConstraints"
+              ></codx-label>
+            </div>
+            <div class="col-5">
+              <codx-input class="w-100"
+                  field="gender"
+                  [formModel]="fmPolicyConstraints"
+                  [Group]="formGroupPolicyConstraints"
+                ></codx-input>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="constraint == '2' && benefitPolicyObj.isConstraintOther">
+            <div class="col-7">
+              <codx-label
+              class=""
+                fiedName="AgeFrom"
                 [name]="'lblRelationAge'"
-                [default]="'Độ tuổi (thân nhân)'"
+                [default]="'Độ tuổi'"
                 [formModel]="fmPolicyConstraints"
               ></codx-label>
             </div>
@@ -775,24 +727,24 @@
               <div class="d-flex align-items-center">
                 <div class="col-4">
                   <codx-input class="w-100"
-                    field="relativeAgeFrom"
+                    field="ageFrom"
                     [formModel]="fmPolicyConstraints"
                     [Group]="formGroupPolicyConstraints"
                   ></codx-input>
                 </div>
                 <div class="col-4">
-                  <div class="d-flex justify-content-center">
-                  <codx-label
-                    class=""
-                      [name]="'lblRelativeAgeTo'"
-                      [default]="'Đến'"
-                      [formModel]="fmPolicyConstraints"
-                    ></codx-label>
+                  <div class="w-100 d-flex justify-content-center">
+                    <codx-label
+                      class=""
+                        [name]="'lblAgeTo'"
+                        [default]="'Đến'"
+                        [formModel]="fmPolicyConstraints"
+                      ></codx-label>
                   </div>
                 </div>
                 <div class="col-4">
                   <codx-input class="w-100"
-                    field="relativeAgeTo"
+                    field="ageTo"
                     [formModel]="fmPolicyConstraints"
                     [Group]="formGroupPolicyConstraints"
                   ></codx-input>
@@ -800,172 +752,214 @@
               </div>
             </div>
           </div>
-          
-        </div>
-
-      </div>
-      <!-- <div *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
-        <div class="form-group row">
-          <div class="col-7">
-            <codx-label
-            class=""
-              fiedName="AgeFrom"
-              [name]="'lblRelationAge'"
-              [default]="'Độ tuổi (thân nhân)'"
-              [formModel]="fmPolicyConstraints"
-            ></codx-label>
-          </div>
-          <div class="col-5">
-            <div class="d-flex align-items-center">
-              <div class="col-4">
-                <codx-input class="w-100"
-                  field="relativeAgeFrom"
-                  [formModel]="fmPolicyConstraints"
-                  [Group]="formGroupPolicyConstraints"
-                ></codx-input>
-              </div>
-              <div class="col-4">
-                <div class="d-flex justify-content-center">
+          <div *ngIf="constraint == '3' && benefitPolicyObj.isConstraintOther">
+            <div class="form-group row">
+              <div class="col-7">
                 <codx-label
-                  class=""
-                    [name]="'lblRelativeAgeTo'"
-                    [default]="'Đến'"
-                    [formModel]="fmPolicyConstraints"
-                  ></codx-label>
-                </div>
+                  fiedName="Relative"
+                  [formModel]="fmPolicyConstraints"
+                ></codx-label>
               </div>
-              <div class="col-4">
+              <div class="col-5">
                 <codx-input class="w-100"
-                  field="relativeAgeTo"
+                  field="relative"
                   [formModel]="fmPolicyConstraints"
                   [Group]="formGroupPolicyConstraints"
                 ></codx-input>
               </div>
             </div>
-          </div>
-        </div>
-      </div> -->
-      <div class="ms-6" *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="w-100">
-              <codx-label
-                  fiedName="TrainLevel"
+            <div class="form-group row">
+              <div class="col-7">
+                <codx-label
+                  fiedName="RelativeAgeFrom"
+                  [name]="'lblRelationAge'"
+                  [default]="'Độ tuổi (thân nhân)'"
                   [formModel]="fmPolicyConstraints"
-              ></codx-label>
+                ></codx-label>
+              </div>
+              <div class="col-5">
+                <div class="d-flex align-items-center">
+                  <div class="col-4">
+                    <codx-input class="w-100"
+                      field="relativeAgeFrom"
+                      [formModel]="fmPolicyConstraints"
+                      [Group]="formGroupPolicyConstraints"
+                    ></codx-input>
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-center">
+                    <codx-label
+                      class=""
+                        [name]="'lblRelativeAgeTo'"
+                        [default]="'Đến'"
+                        [formModel]="fmPolicyConstraints"
+                      ></codx-label>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <codx-input class="w-100"
+                      field="relativeAgeTo"
+                      [formModel]="fmPolicyConstraints"
+                      [Group]="formGroupPolicyConstraints"
+                    ></codx-input>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="w-25px h-25px">
-              <button type="button"
-                class="btn btn-icon btn-sm btn-light-primary"
-                (click)="onClickOpenComboboxConstraint('trainLevel')"
-                >
-                <i class="icon-edit-one icon-16" 
-                >
-              </i>
-            </button>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
-          <div class="mb-1 me-1" *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
-        <span class="badge-with-delete">
-            <span
-            class="badge badge-light-primary badge-md"
-            [innerHTML]="trainlevel
-                | formatvalue : fmPolicyConstraints : 'trainLevel'
-                | async"
-          ></span>
-          <button (click)="deleteApplyExcludeObj(trainlevel, 'lstSelectedConstraintTrainLevel')" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
-
-        </div>
-        </div>
-      </div>
-      <div class="ms-6" *ngIf="constraint == '5' && benefitPolicyObj.isConstraintOther">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="w-100">
-              <codx-label
-                  fiedName="TrainField"
+          <!-- <div *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
+            <div class="form-group row">
+              <div class="col-7">
+                <codx-label
+                class=""
+                  fiedName="AgeFrom"
+                  [name]="'lblRelationAge'"
+                  [default]="'Độ tuổi (thân nhân)'"
                   [formModel]="fmPolicyConstraints"
-              ></codx-label>
-          </div>
-          <div class="w-25px h-25px">
-              <button type="button"
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="onClickOpenComboboxConstraint('trainField')"
-            >
-              <i class="icon-edit-one icon-16" 
-              >
-              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
-            </i>
-            </button>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
-          <div class="mb-1 me-1" *ngFor="let trainField of lstSelectedConstraintTrainField">
-        <span class="badge-with-delete">
-            <span
-            class="badge badge-light-primary badge-md"
-            [innerHTML]="trainField
-                | formatvalue : fmPolicyConstraints : 'trainField'
-                | async"
-          ></span>
-          <button (click)="deleteApplyExcludeObj(trainField, 'lstSelectedConstraintTrainField')" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
-        
-        </div>
-        </div>
-      </div>
-      <div class="ms-6" *ngIf="constraint == '6' && benefitPolicyObj.isConstraintOther">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="w-100">
-              <codx-label
-                  fiedName="Certificate"
-                  [formModel]="fmPolicyConstraints"
-              ></codx-label>
-          </div>
-          <div class="w-25px h-25px">
-              <button
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="onClickOpenComboboxConstraint('certificate')"
-            >
-              <i class="icon-edit-one icon-16" 
-              >
-              <!-- [ngClass]="benefitPolicyObj.isConstraintKow? 'text-dark':'text-gray-400'" -->
-            </i>
-            </button>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
-          <div class="mb-1 me-1" *ngFor="let cert of lstSelectedConstraintCertificate">
-        <span class="badge-with-delete">
-            <span
-              class="badge badge-light-primary badge-md"
-              [innerHTML]="cert
-                  | formatvalue : fmPolicyConstraints : 'certificate'
-                  | async"
+                ></codx-label>
+              </div>
+              <div class="col-5">
+                <div class="d-flex align-items-center">
+                  <div class="col-4">
+                    <codx-input class="w-100"
+                      field="relativeAgeFrom"
+                      [formModel]="fmPolicyConstraints"
+                      [Group]="formGroupPolicyConstraints"
+                    ></codx-input>
+                  </div>
+                  <div class="col-4">
+                    <div class="d-flex justify-content-center">
+                    <codx-label
+                      class=""
+                        [name]="'lblRelativeAgeTo'"
+                        [default]="'Đến'"
+                        [formModel]="fmPolicyConstraints"
+                      ></codx-label>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <codx-input class="w-100"
+                      field="relativeAgeTo"
+                      [formModel]="fmPolicyConstraints"
+                      [Group]="formGroupPolicyConstraints"
+                    ></codx-input>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="mb-3" *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                  <codx-label
+                      fiedName="TrainLevel"
+                      [formModel]="fmPolicyConstraints"
+                  ></codx-label>
+              </div>
+              <span
+                  class="text-dark"
+                    (click)="onClickOpenComboboxConstraint('trainLevel')"
+                    [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-600'"
+                    >
+                    <span class="icon-edit-one icon-16"></span>
+              </span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+              <div class="mb-2 me-2" *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
+            <span class="badge-with-delete">
+                <span
+                class="badge badge-light-primary badge-md"
+                [innerHTML]="trainlevel
+                    | formatvalue : fmPolicyConstraints : 'trainLevel'
+                    | async"
               ></span>
-              <button (click)="deleteApplyExcludeObj(cert, 'lstSelectedConstraintCertificate')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <button (click)="deleteApplyExcludeObj(trainlevel, 'lstSelectedConstraintTrainLevel')" type="button" class="btn btn-sm btn-icon btn-light-danger">
                 <span class="icon-close icon-16"></span>
               </button>
-        </span>
+            </span>
 
+            </div>
+            </div>
           </div>
+          <div class="mb-3" *ngIf="constraint == '5' && benefitPolicyObj.isConstraintOther">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                  <codx-label
+                      fiedName="TrainField"
+                      [formModel]="fmPolicyConstraints"
+                  ></codx-label>
+              </div>
+              <span
+                  class="text-dark"
+                  (click)="onClickOpenComboboxConstraint('trainField')"
+                  [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-600'"
+                >
+                  <span class="icon-edit-one icon-16"></span>
+                </span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+              <div class="mb-2 me-2" *ngFor="let trainField of lstSelectedConstraintTrainField">
+            <span class="badge-with-delete">
+                <span
+                class="badge badge-light-primary badge-md"
+                [innerHTML]="trainField
+                    | formatvalue : fmPolicyConstraints : 'trainField'
+                    | async"
+              ></span>
+              <button (click)="deleteApplyExcludeObj(trainField, 'lstSelectedConstraintTrainField')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+                <span class="icon-close icon-16"></span>
+              </button>
+            </span>
+            
+            </div>
+            </div>
+          </div>
+          <div class="mb-3" *ngIf="constraint == '6' && benefitPolicyObj.isConstraintOther">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                  <codx-label
+                      fiedName="Certificate"
+                      [formModel]="fmPolicyConstraints"
+                  ></codx-label>
+              </div>
+              <span
+                  class="text-dark"
+                  (click)="onClickOpenComboboxConstraint('certificate')"
+                  [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-600'"
+                  >
+                  <span class="icon-edit-one icon-16"></span>
+                </span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center ps-6 mt-2">
+              <div class="mb-2 me-2" *ngFor="let cert of lstSelectedConstraintCertificate">
+            <span class="badge-with-delete">
+                <span
+                  class="badge badge-light-primary badge-md"
+                  [innerHTML]="cert
+                      | formatvalue : fmPolicyConstraints : 'certificate'
+                      | async"
+                  ></span>
+                  <button (click)="deleteApplyExcludeObj(cert, 'lstSelectedConstraintCertificate')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+                    <span class="icon-close icon-16"></span>
+                  </button>
+            </span>
+
+              </div>
+            </div>
+          </div>
+
+          <codx-combobox-popup
+          *ngIf="!isHiddenCbxConstraint"
+          [comboboxName]="cbxConstraintCbxName"
+          [multiple]="true"
+          [width]="600"
+          [height]="500"
+          [value]="cbxConstraintCbxValue"
+          (clickSave)="onClickHideComboboxConstraint($event)"
+          >
+          </codx-combobox-popup>
         </div>
       </div>
-
-      <codx-combobox-popup
-      *ngIf="!isHiddenCbxConstraint"
-      [comboboxName]="cbxConstraintCbxName"
-      [multiple]="true"
-      [width]="600"
-      [height]="500"
-      [value]="cbxConstraintCbxValue"
-      (clickSave)="onClickHideComboboxConstraint($event)"
-      >
-      </codx-combobox-popup>
     </div>
 </div>
 
@@ -1009,8 +1003,8 @@
       </button>
     </div>
 </div>
-<span *ngIf="benefitPolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
-    <span class="me-1 mb-1" *ngFor="let obj of lstSelectedObj">
+<div class="d-flex flex-wrap" *ngIf="benefitPolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
+    <div class="me-2 mb-2" *ngFor="let obj of lstSelectedObj">
       <!-- <span
       class="badge badge-light-primary badge-md"
       [innerHTML]="obj
@@ -1039,8 +1033,8 @@
       [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
       ></i>
     </button> -->
-    </span>
-</span>
+    </div>
+</div>
 <div class="form-group row w-100 mt-6" *ngIf="lstPolicyBeneficiariesApply.length > 0">
 
   <div class="fs-6 fw-bold text-primary" *ngIf="benefitPolicyObj.hasIncludeObjects">
@@ -1128,8 +1122,8 @@
           >
           </span>
       </div>
-      <div class="mb-1" *ngIf="obj.orgUnitID && detail == '1'">
-        <div class="mb-1 me-1" *ngFor="let org of lstOrgUnitID">
+      <div class="mb-1 d-flex flex-wrap" *ngIf="obj.orgUnitID && detail == '1'">
+        <div class="mb-2 me-2" *ngFor="let org of lstOrgUnitID">
           <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
           <span 
           class="badge badge-light-primary badge-md"
@@ -1154,7 +1148,7 @@
         </div>
       </div>
       <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.jobLevel && detail == '2'">
-        <div class="mb-1 me-1" *ngFor="let joblevel of lstJobLevel">
+        <div class="mb-2 me-2" *ngFor="let joblevel of lstJobLevel">
           <span class="badge-with-delete" *ngIf="joblevel.rec == obj.recID">
             <span 
             class="badge badge-light-primary badge-md"
@@ -1177,7 +1171,7 @@
           </span>
       </div>
       <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.positionID && detail == '3'">
-        <div class="mb-1 me-1" *ngFor="let position of lstPositionID">
+        <div class="mb-2 me-2" *ngFor="let position of lstPositionID">
           <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
             <span 
             class="badge badge-light-primary badge-md"
@@ -1202,7 +1196,7 @@
         </div>
       </div>
       <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.employeeTypeID && detail == '4'">
-        <div class="mb-1 me-1" *ngFor="let empType of lstEmployeeTypeID">
+        <div class="mb-2 me-2" *ngFor="let empType of lstEmployeeTypeID">
           <span class="badge-with-delete"  *ngIf="empType.rec == obj.recID">
           <span
           class="badge badge-light-primary badge-md"
@@ -1227,7 +1221,7 @@
         </div>
       </div>
       <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.labourType && detail == '5'">
-        <div class="mb-1 me-1" *ngFor="let labourType of lstLabourType">
+        <div class="mb-2 me-2" *ngFor="let labourType of lstLabourType">
           <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
           <span >
           <codx-vll
@@ -1255,7 +1249,7 @@
         </div>
       </div>
       <div class="mb-2 d-flex flex-wrap align-items-center" *ngIf="obj.contractTypeID && detail == '6'">
-        <div class="mb-1 me-1" *ngFor="let contractType of lstContractTypeID">
+        <div class="mb-2 me-2" *ngFor="let contractType of lstContractTypeID">
           <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
           <span 
           class="badge badge-light-primary badge-md"
@@ -1315,24 +1309,24 @@
           </span>
         </span>
       </div>
-      <div class="mb-3" *ngIf="obj.employeeStatus && detail == '8'">
-        <span *ngFor="let empStatus of lstEmpStatus">
+      <div class="mb-3 d-flex flex-wrap" *ngIf="obj.employeeStatus && detail == '8'">
+        <div class="me-2 mb-2" *ngFor="let empStatus of lstEmpStatus">
           <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
-          <span >
-          <codx-vll
-          [showText]="true"
-          [showBgColor]="false"
-          name="HR003"
-          [value]="empStatus.id"
-          ngClass="badge badge-light-primary border-0 ms-2"
-        >
-        </codx-vll>
+            <span >
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="false"
+                name="HR003"
+                [value]="empStatus.id"
+                ngClass="badge badge-light-primary border-0 ms-2"
+              >
+              </codx-vll>
+            </span>
+            <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-16"></span>
+            </button>
           </span>
-          <button (click)="deleteApplyExcludeObj(empStatus, 'lstEmpStatus', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
-        </span>
+        </div>
       </div>
     </div>
   </div>
@@ -1422,8 +1416,8 @@
       </button>
     </div>
 </div>
-<span *ngIf="benefitPolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
-    <span *ngFor="let obj of lstSelectedExcludeObj">
+<span class="d-flex flex-wrap" *ngIf="benefitPolicyObj.hasExcludeObjects && lstSelectedExcludeObj.length > 0">
+    <div class="me-2 mb-2" *ngFor="let obj of lstSelectedExcludeObj">
       <!-- <span
       class="badge badge-light-primary badge-md"
       [innerHTML]="obj
@@ -1452,11 +1446,11 @@
       [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-dark':'text-gray-400'"
       ></i>
     </button> -->
-    </span>
+    </div>
 </span>
 <div class="form-group row w-100" *ngIf="lstPolicyBeneficiariesExclude.length > 0">
 
-  <div class="fs-5 fw-bold text-primary mt-6 mb-3" *ngIf="benefitPolicyObj.hasExcludeObjects">
+  <div class="fs-5-sm fw-bold text-primary mt-6 mb-3" *ngIf="benefitPolicyObj.hasExcludeObjects">
     <codx-label
     [formModel]="formModel"
     [name]="'lblDetailApplyObj'"
@@ -1543,8 +1537,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.orgUnitID && detail == '1'">
-        <span *ngFor="let org of lstOrgUnitID">
+      <div class="mb-3 d-flex flex-wrap"  *ngIf="obj.orgUnitID && detail == '1'">
+        <div class="me-2 mb-2" *ngFor="let org of lstOrgUnitID">
           <span class="badge-with-delete" *ngIf="org.rec == obj.recID">
           <span 
           class="badge badge-light-primary badge-md"
@@ -1557,7 +1551,7 @@
             <span class="icon-close icon-16"></span>
           </button>
         </span>
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '2' && !obj.jobLevel">
         <span>
@@ -1568,8 +1562,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.jobLevel && detail == '2'">
-        <span *ngFor="let joblevel of lstJobLevel">
+      <div class="mb-3 d-flex flex-wrap" *ngIf="obj.jobLevel && detail == '2'">
+        <div class="me-2 mb-2" *ngFor="let joblevel of lstJobLevel">
           <span class="badge-with-delete"  *ngIf="joblevel.rec == obj.recID">
           <span
           class="badge badge-light-primary badge-md"
@@ -1582,7 +1576,7 @@
             <span class="icon-close icon-16"></span>
           </button>
         </span>
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '3' && !obj.positionID">
         <span>
@@ -1593,8 +1587,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.positionID && detail == '3'">
-        <span *ngFor="let position of lstPositionID">
+      <div class="mb-3 d-flex flex-wrap" *ngIf="obj.positionID && detail == '3'">
+        <span class="me-2 mb-2" *ngFor="let position of lstPositionID">
           <span class="badge-with-delete" *ngIf="position.rec == obj.recID">
           <span 
           class="badge badge-light-primary badge-md"
@@ -1619,8 +1613,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.employeeTypeID && detail == '4'">
-        <span *ngFor="let empType of lstEmployeeTypeID">
+      <div class="mb-3 d-flex flex-wrap"  *ngIf="obj.employeeTypeID && detail == '4'">
+        <div class="me-2 mb-2" *ngFor="let empType of lstEmployeeTypeID">
           <span class="badge-with-delete" *ngIf="empType.rec == obj.recID">
           <span 
           class="badge badge-light-primary badge-md"
@@ -1633,7 +1627,7 @@
             <span class="icon-close icon-16"></span>
           </button>
         </span>
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '5' && !obj.labourType">
         <span>
@@ -1644,8 +1638,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.labourType && detail == '5'">
-        <span *ngFor="let labourType of lstLabourType">
+      <div class="mb-3 d-flex flex-wrap"  *ngIf="obj.labourType && detail == '5'">
+        <div class="me-2 mb-2" *ngFor="let labourType of lstLabourType">
           <span class="badge-with-delete" *ngIf="labourType.rec == obj.recID">
           <span >
           <codx-vll
@@ -1661,7 +1655,7 @@
             <span class="icon-close icon-16"></span>
           </button>
         </span>
-        </span>
+        </div>
       </div>
       <div class="mb-3" *ngIf="detail == '6' && !obj.contractTypeID">
         <span>
@@ -1673,19 +1667,19 @@
         </span>
       </div>
       <div class="mb-3"  *ngIf="obj.contractTypeID && detail == '6'">
-        <span *ngFor="let contractType of lstContractTypeID">
-          <span class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
-          <span 
-          class="badge badge-light-primary badge-md"
-          [innerHTML]="contractType.id
-              | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
-              | async"
-          >
-          </span>
-          <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
-            <span class="icon-close icon-16"></span>
-          </button>
-        </span>
+        <span class="d-flex flex-wrap" *ngFor="let contractType of lstContractTypeID">
+          <div class="me-2 mb-2" class="badge-with-delete" *ngIf="contractType.rec == obj.recID">
+            <span 
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="contractType.id
+                | formatvalue : fmPolicyBeneficiaries : 'ContractTypeID'
+                | async"
+            >
+            </span>
+            <button (click)="deleteApplyExcludeObj(contractType, 'lstContractTypeID', obj)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+              <span class="icon-close icon-16"></span>
+            </button>
+          </div>
         </span>
       </div>
       <div class="mb-3" *ngIf="detail == '7' && !obj.employeeID">
@@ -1741,8 +1735,8 @@
           </span>
         </span>
       </div>
-      <div class="mb-3"  *ngIf="obj.employeeStatus && detail == '8'">
-        <span *ngFor="let empStatus of lstEmpStatus">
+      <div class="mb-3 d-flex flex-wrap"  *ngIf="obj.employeeStatus && detail == '8'">
+        <div class="me-2 mb-2" *ngFor="let empStatus of lstEmpStatus">
           <span class="badge-with-delete" *ngIf="empStatus.rec == obj.recID">
           <span >
           <codx-vll
@@ -1758,7 +1752,7 @@
             <span class="icon-close icon-16"></span>
           </button>
         </span>
-      </span>
+      </div>
       </div>
     </div>
   </div>

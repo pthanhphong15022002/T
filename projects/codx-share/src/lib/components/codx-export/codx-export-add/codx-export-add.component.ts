@@ -118,7 +118,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           Validators.required,
         ],
         headerRow: [this.data?.headerRow, Validators.required],
-        headerColumn: this.data?.headerColumn,
+        headerColumn: [this.data?.headerColumn, Validators.required],
         splitPagesOn: this.data?.splitPagesOn,
         splitPagesMode: this.data?.splitPagesMode,
         rowNoIndex: this.data?.rowNoIndex,

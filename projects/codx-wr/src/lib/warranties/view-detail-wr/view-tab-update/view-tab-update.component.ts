@@ -13,6 +13,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
+import { CodxWrService } from '../../../codx-wr.service';
 
 @Component({
   selector: 'wr-view-tab-update',
@@ -38,7 +39,11 @@ export class ViewTabUpdateComponent implements OnInit {
   className = 'WorkOrderUpdatesBusiness';
   method = 'LoadDataAsync';
   id: any;
-  constructor(private api: ApiHttpService, private cache: CacheService) {}
+  constructor(
+    private api: ApiHttpService,
+    private cache: CacheService,
+    private wrSv: CodxWrService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['transID']) {
@@ -65,6 +70,7 @@ export class ViewTabUpdateComponent implements OnInit {
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
       this.lstUpdate = item;
+      this.wrSv.listOrderUpdateSubject.next(this.lstUpdate);
       this.loaded = true;
     });
   }

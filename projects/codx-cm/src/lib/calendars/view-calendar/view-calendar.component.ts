@@ -10,6 +10,10 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
+  DialogRef,
   FormModel,
   ResourceModel,
   UIComponent,
@@ -17,6 +21,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -33,11 +38,29 @@ export class ViewCalendarComponent
   @ViewChild('eventTemplate') eventTemplate!: TemplateRef<any>; //event schedule
   @ViewChild('headerTempContent') headerTempContent!: TemplateRef<any>; //temp Content
 
+  @ViewChild('popupChoiseTypeCM') popupChoiseTypeCM: TemplateRef<any>;
+
   @Input() funcID: any;
   @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
+
+  popupTypeCM: DialogRef
+  fieldsGroup = { text: 'text', value: 'type' };
+  typeCM = [
+    { text: 'Khách hàng', type: 'customer' },
+    { text: 'Tiềm năng', type: 'lead' },
+    { text: 'Cơ hội', type: 'deal' },
+    { text: 'Sự cố', type: 'case'},
+  ];
+
+  service = 'CM';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
+  methodLoadData = 'GetListContractsAsync';
+  requestData = new DataRequest();
 
   fields = {
     id: 'recID',
@@ -68,6 +91,11 @@ export class ViewCalendarComponent
     formName: 'DPActivities',
   };
   viewCrr: any;
+
+  titleAction: string;
+  button: ButtonModel = {
+    id: 'btnAdd',
+  };
 
   constructor(
     private inject: Injector,
@@ -243,5 +271,81 @@ export class ViewCalendarComponent
     // }
   }
 
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  add() {
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.popupTypeCM = this.callfc.openForm(
+      this.popupChoiseTypeCM,
+      '',
+      600,
+      470,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
   settingViews() {}
+
+  //------------------More Func-----------------//
+  //chua goi tho phan quyền -- đang full true
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {}
+
+  //------------------More Func-----------------//
+
+  filterText(event) {
+    let data = event?.value;
+    if(data == 'customer') {
+      this.cmService.getListCustomer().subscribe(res => {
+        console.log(res);
+      })
+    }
+    if(data == 'lead') {
+      this.cmService.getListLead().subscribe(res => {
+        console.log(res);
+      })
+    }
+  }
+
+  getDatas(entityName,funcID,predicates,dataValues) {
+    this.requestData.entityName = entityName;
+    this.requestData.funcID = funcID;
+    this.requestData.predicates = predicates;
+    this.requestData.dataValues = dataValues;
+    this.requestData.pageLoading = false;
+
+    this.fetch().subscribe((res) => {
+    });
+  }
+
+
+  fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.service,
+        this.assemblyName,
+        this.className,
+        this.methodLoadData,
+        this.requestData
+      )
+      .pipe(
+        finalize(() => {}),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+    }
+
 }
