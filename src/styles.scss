@@ -3754,19 +3754,22 @@ codx-view-tree-targets .menu-sub{
   color:var(--gray-400);
   background-color:var(--gray-150);
 }
-.badge-with-delete .badge{
-  padding-right: 24px!important;
-}
-.badge-with-delete .btn.btn-icon.btn-sm{
-  margin-left: -21px;
-    border-radius: 50% !important;
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
-    opacity: .35;
-    margin-top: -2px;
-  
+.badge-with-delete{
+ 
+  .badge{
+    padding-right: 24px!important;
+  }
+  .btn.btn-icon.btn-sm{
+    margin-left: -21px;
+      border-radius: 50% !important;
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      opacity: .32;
+      margin-top: -2px;
+    
+  }
 }
 .badge-with-delete:hover .btn.btn-icon.btn-sm{
   opacity: 1;
