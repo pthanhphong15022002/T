@@ -349,6 +349,7 @@ export class WarrantiesComponent
             case 'WR0101_3':
             case 'WR0101_4':
             case 'WR0101_5':
+            case 'WR0101_6':
               res.disabled = true;
               break;
             default:
@@ -362,6 +363,7 @@ export class WarrantiesComponent
               case 'WR0101_1':
               case 'WR0101_2':
               case 'WR0101_4':
+              case 'WR0101_6':
                 res.disabled = true;
                 break;
               default:
