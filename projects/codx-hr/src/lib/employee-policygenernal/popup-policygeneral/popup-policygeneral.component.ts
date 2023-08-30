@@ -45,7 +45,6 @@ export class PopupPolicygeneralComponent
     super(injector);
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    console.log('header text nhan vao', this.headerText);
     
     this.funcID = data?.data?.funcID;
     this.policyGeneralObj =  JSON.parse(JSON.stringify(data?.data?.dataObj));
@@ -57,8 +56,6 @@ export class PopupPolicygeneralComponent
     if(!this.benefitFormModel){
       this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
         if(formModel){
-          console.log('benefit form model', formModel);
-          
           this.benefitFormModel = formModel;
         }
       })
@@ -160,8 +157,8 @@ export class PopupPolicygeneralComponent
     if(this.policyGeneralObj.expiredOn && this.policyGeneralObj.activeOn){
       if (this.policyGeneralObj.expiredOn < this.policyGeneralObj.activeOn) {
         this.hrSevice.notifyInvalidFromTo(
-          'expiredOn',
-          'activeOn',
+          'ExpiredOn',
+          'ActiveOn',
           this.formModel
           )
           return;
@@ -191,10 +188,13 @@ export class PopupPolicygeneralComponent
 
   ValChangeHasBenefit(event){
     let hasBenefit = event.data;
-
     if(hasBenefit == false){
       this.policyGeneralObj.hasIncludeBenefits = false;
       this.isHidden = true;
+    }
+    else{
+      this.policyGeneralObj.hasIncludeBenefits = true;
+      this.isHidden = false;
     }
   }
 

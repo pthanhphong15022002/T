@@ -24,7 +24,6 @@ import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 
 @Component({
   selector: 'codx-add-stask',
@@ -101,7 +100,6 @@ export class CodxAddTaskComponent implements OnInit {
     private api: ApiHttpService,
     private authStore: AuthStore,
     private stepService: StepService,
-    private adService: CodxAdService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -176,20 +174,24 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.checkStatusShowForm();
     if(this.isBoughtTM == undefined){
-      this.adService
-        .getLstBoughtModule()
-        .subscribe((res: Array<TN_OrderModule>) => {
-          if (res) {
-            let lstModule = res;
-            this.isBoughtTM = lstModule?.some(
-              (md) =>
-                !md?.boughtModule?.refID &&
-                md.bought &&
-                md.boughtModule?.moduleID == 'TM1'
-            );
-            this.stepsTasks.createTask = this.isBoughtTM;
-          }
-        });
+      this.api.execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GetListBoughtModuleAsync',
+        ''
+      ).subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+          this.stepsTasks.createTask = this.isBoughtTM;
+        }
+      });
     }
   }
 
@@ -484,7 +486,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.checkStatusShowForm();
   }
   //#region save
-  async beforeSave() {
+  async beforeSave(isCreateMeeting = false) {
     this.stepsTasks['roles'] = [...this.participant, ...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
@@ -529,23 +531,27 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        this.save(this.stepsTasks);
+        this.save(this.stepsTasks, isCreateMeeting);
       });
     } else {
-      this.save(this.stepsTasks);
+      this.save(this.stepsTasks, isCreateMeeting);
     }
   }
 
-  save(task) {
+  save(task, isCreateMeeting = false) {
     if (this.action == 'add' || this.action == 'copy') {
-      this.addTask(task);
+      if(isCreateMeeting){
+        task.actionStatus = '2';
+        task.status = '2';
+      }
+      this.addTask(task,isCreateMeeting);
     }
     if (this.action == 'edit') {
       this.editTask(task);
     }
   }
 
-  addTask(task) {
+  addTask(task,isCreateMeeting = false) {
     if (this.isSave) {
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
@@ -555,6 +561,7 @@ export class CodxAddTaskComponent implements OnInit {
               task: res[0],
               progressGroup: res[1],
               progressStep: res[2],
+              isCreateMeeting,
             });
           }
         });

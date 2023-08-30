@@ -108,9 +108,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
         .closed.subscribe((res:any)=>{
           if(res?.event)
           {
-            let report = res.event;
-            this.dataSelected.reportName = report.reportName;
-            this.dataSelected.templateID = report.templateID;
+            this.dataSelected = res.event;
           }
         });
       break;

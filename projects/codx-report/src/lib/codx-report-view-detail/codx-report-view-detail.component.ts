@@ -6,6 +6,7 @@ import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.co
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { setTime } from '@syncfusion/ej2-angular-schedule';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -16,7 +17,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @ViewChild('report') report:TemplateRef<any>;
   @ViewChild('view') viewBase:ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!:ElementRef<any>;
-  
+
 
   views: ViewModel[];
   viewType = ViewType;
@@ -67,9 +68,11 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.getMessageDefault();
   }
 
-  
+
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.remove('p-0','px-1')
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
@@ -101,6 +104,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   viewChanged(e:any){
     this.viewBase.moreFuncs = this.moreFc;
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.add('p-0','px-1')
   }
   //get report by ID
   getReport(recID:string){
@@ -124,7 +129,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
     });
   }
-  
+
   getRootFunction(module:string, type:string){
     this.api
     .execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type])
@@ -209,6 +214,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         break;
     }
   }
+  reload:boolean = false;
 
   editReport() {
     if(this.data)
@@ -228,9 +234,9 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         },
         '',
         option
-      );
+      )
     }
-    
+
   }
   isRunMode = false;
   filterReportChange(e:any){
@@ -252,7 +258,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
       this._labelString = JSON.stringify(objLabel);
     }
-    if(this.data.displayMode == "2" || this.data.displayMode == "3" || this.data.displayMode == "4"){
+    if(this.data.displayMode == "3" || this.data.displayMode == "4"){
       this.getReportPDF(this.data.recID);
     }
   }
@@ -277,6 +283,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     let sk = "sk=" + btoa(this.authSV.userValue.userID+"|"+this.authSV.userValue.securityKey);
     this.url = `${environment.apiUrl}/api/${this.data.service}/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(this._paramString)}&${sk}`;
   }
+
+
 }
 
 

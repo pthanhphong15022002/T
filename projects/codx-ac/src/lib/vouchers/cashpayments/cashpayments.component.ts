@@ -57,6 +57,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
   @ViewChild('progressbarTable') progressbarTable: ProgressBar; //? progressBar của table
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  runmode:any;
   journalNo: string; //? số của sổ nhật kí
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
   userID: any; //?  tên user đăng nhập
@@ -148,7 +149,11 @@ export class CashPaymentsComponent extends UIComponent {
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res) this.headerText = res.defaultName; //? lấy tên chứng từ (Phiếu chi)
+        if (res){
+          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.runmode = res?.runMode //? lấy runmode
+          this.detectorRef.detectChanges();
+        } 
       });
 
     this.views = [
@@ -260,9 +265,10 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
+    this.view.dataService.addNew((o)=>this.setDefault(o)).subscribe();
     this.dataDefaultCashpayment.recID = Util.uid(); //? tạo recID mới
     let data = {
-      action: 'add', //? trạng thái của form (thêm mới)
+      // action: 'add', //? trạng thái của form (thêm mới)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
       dataCashpayment: {...this.dataDefaultCashpayment}, //?  data của cashpayment
@@ -284,6 +290,10 @@ export class CashPaymentsComponent extends UIComponent {
     });
   }
 
+
+  setDefault(o){
+  return this.api.exec('AC','CashPaymentsBusiness','SetDefaultAsync',[this.dataDefaultCashpayment,this.journal]);
+  }
   /**
    * *Hàm chỉnh sửa chứng từ
    * @param dataEdit : data chứng từ chỉnh sửa
@@ -637,7 +647,6 @@ export class CashPaymentsComponent extends UIComponent {
           this.acctTrans = res?.lsAcctrants ? res?.lsAcctrants : [];
           this.settledInvoices = res?.lsSettledInvoices ? res?.lsSettledInvoices : [];
           this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
-          //this.isLoadData = false; // tắt progressbar của tab
           this.detectorRef.detectChanges();
         }
       });     
@@ -666,10 +675,9 @@ export class CashPaymentsComponent extends UIComponent {
             ''
           )
           .pipe(takeUntil(this.destroy$))
-          .subscribe((result) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              this.notification.notifyCode('ES007');
-              data.status = '3';
+          .subscribe((result:any) => {
+            if (result?.msgCodeError == null && result?.rowCount) {        
+              data.status = result?.returnStatus;              ;
               this.view.dataService.updateDatas.set(
                 data['_uuid'],
                 data
@@ -679,14 +687,11 @@ export class CashPaymentsComponent extends UIComponent {
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res && !res.update.error) {
+                  this.notification.notifyCode('ES007');
                   this.itemSelected = res.update.data;
-                  this.getDatadetail(this.itemSelected);
                   this.detectorRef.detectChanges();
                 }
               });
-              // this.getDatadetail(this.itemSelected);
-              // this.view.dataService.update(data).subscribe((res) => {});
-              
             } else this.notification.notifyCode(result?.msgCodeError);
           });
       });
@@ -702,8 +707,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
-          this.notification.notifyCode('SYS034');
-          data.status = '1';
+          data.status = result?.returnStatus;
           this.view.dataService.updateDatas.set(
             data['_uuid'],
             data
@@ -713,8 +717,8 @@ export class CashPaymentsComponent extends UIComponent {
               .pipe(takeUntil(this.destroy$))
               .subscribe((res: any) => {
                 if (res && !res.update.error) {
+                  this.notification.notifyCode('SYS034');
                   this.itemSelected = res.update.data;
-                  this.getDatadetail(this.itemSelected);
                   this.detectorRef.detectChanges();
                 }
               });

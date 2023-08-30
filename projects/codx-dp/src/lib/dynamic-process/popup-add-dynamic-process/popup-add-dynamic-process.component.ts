@@ -2106,7 +2106,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             stepList: this.stepList,
             grvSetup: res,
             enabled: enabled,
+            refValueDataType:
+              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
           };
+
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
             object,
@@ -2160,6 +2163,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             stepList: this.stepList,
             grvSetup: res,
             enabled: enabled,
+            refValueDataType:
+              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
           };
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2211,6 +2216,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             stepList: this.stepList,
             grvSetup: res,
             enabled: enabled,
+            refValueDataType:
+              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
           };
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2875,7 +2882,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             option
           );
           dialog.closed.subscribe((e) => {
-            this.taskGroupList
+            this.taskGroupList;
             if (e?.event) {
               let taskData = e?.event?.data;
               if (e.event?.status === 'add' || e.event?.status === 'copy') {
@@ -4317,7 +4324,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               formES.gridViewName = f?.gridViewName;
               formES.currentData = item;
               let option = new SidebarModel();
-              option.Width = '550px';
+              option.Width = '800px';
               option.FormModel = formES;
               let popupEditES = this.callfc.openSide(
                 PopupAddCategoryComponent,
