@@ -211,7 +211,9 @@
   <ng-container *ngIf="customField.dataType == 'C' && listContacts?.length > 0">
     <div class="d-flex flex-column">
       <ng-container *ngFor="let item of listContacts">
-        <div class="mt-2">
+        <div
+          class="mt-2 has-action-menu border-bottom border-gray-100 line-data cursor-pointer d-flex align-items-start justify-content-between py-2"
+        >
           <!-- <codx-img
             [ngbPopover]="tempPopover"
             #p="ngbPopover"
@@ -228,6 +230,46 @@
           <ng-container
             *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
           ></ng-container>
+          <!-- <codx-mfunc
+            [formModel]="formModelContact"
+            (clickMF)="clickMFContact($event, item)"
+            (changeDataMF)="changeDataMFContact($event, item)"
+            [isBookMark]="true"
+            [dataItem]="moreDefaults"
+            type="hover"
+          >
+          </codx-mfunc> -->
+          <div class="d-flex align-items-start ms-6">
+            <button
+              type="button"
+              class="btn btn-icon btn-sm"
+              triggers="click"
+              [autoClose]="true"
+              [ngbTooltip]="tool"
+              ngClass="border-0"
+            >
+              <span class="icon-more_vert icon-16"></span>
+            </button>
+            <ng-template #tool>
+              <ng-container *ngFor="let x of moreFunctionDefault">
+                <div
+                  class="d-flex p-2 cursor-pointer dropdown-item"
+                  (click)="openMoreFC(x, item)"
+                >
+                  <span
+                    class="icon-16 me-2"
+                    [ngClass]="x?.icon"
+                    [style.color]="x?.textColor"
+                  ></span>
+                  <codx-label
+                    [name]="x?.id"
+                    [formModel]="formModelContact"
+                    [default]="x?.text"
+                  ></codx-label>
+                </div>
+              </ng-container>
+            </ng-template>
+          </div>
         </div>
       </ng-container>
     </div>
