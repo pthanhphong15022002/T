@@ -16,7 +16,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   @ViewChild('report') report:TemplateRef<any>;
   @ViewChild('view') viewBase:ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!:ElementRef<any>;
-  
+
 
   views: ViewModel[];
   viewType = ViewType;
@@ -67,9 +67,11 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
     this.getMessageDefault();
   }
 
-  
+
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle("");
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.remove('p-0','px-1')
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
@@ -101,6 +103,8 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
   }
   viewChanged(e:any){
     this.viewBase.moreFuncs = this.moreFc;
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.add('p-0','px-1')
   }
   //get report by ID
   getReport(recID:string){
@@ -124,7 +128,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
       }
     });
   }
-  
+
   getRootFunction(module:string, type:string){
     this.api
     .execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type])
@@ -230,7 +234,7 @@ export class CodxReportViewDetailComponent   extends UIComponent implements OnIn
         option
       );
     }
-    
+
   }
   isRunMode = false;
   filterReportChange(e:any){
