@@ -318,7 +318,7 @@ export class CatagoryComponent implements OnInit {
                   var dataService = new DataService(this.inject);
                   dataService.dataSelected = category;
                   let option = new SidebarModel();
-                  option.Width = '550px';
+                  option.Width = '800px';
                   option.DataService = dataService;
                   option.FormModel = formModel;
                   let popupAdd = this.callfc.openSide(

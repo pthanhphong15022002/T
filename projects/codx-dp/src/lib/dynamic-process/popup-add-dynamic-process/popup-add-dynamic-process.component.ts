@@ -4317,7 +4317,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               formES.gridViewName = f?.gridViewName;
               formES.currentData = item;
               let option = new SidebarModel();
-              option.Width = '550px';
+              option.Width = '800px';
               option.FormModel = formES;
               let popupEditES = this.callfc.openSide(
                 PopupAddCategoryComponent,

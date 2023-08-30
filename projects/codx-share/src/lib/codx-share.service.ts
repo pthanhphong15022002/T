@@ -1441,7 +1441,7 @@ export class CodxShareService {
               exportUpload,
             );
           } else {
-            exportUpload.dataJson = template?.templateType == 'AD_ExcelTemplates' ? JSON.stringify([approveProcess?.data]) : JSON.stringify(approveProcess?.data);
+            exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
             this.exportFileRelease(
               approveProcess,
               releaseCallback,

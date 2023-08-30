@@ -20,6 +20,7 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -38,6 +39,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
 import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -657,7 +659,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.color = category?.Color;
                   this.data.processID = category?.RecID;
                   this.data.categoryName = category?.CategoryName;
-                  this.data.catagory =category?.category;
+                  this.data.category =category?.category;
                   this.eSign = category?.ESign;
                   this.signatureType = category?.SignatureType;
                   
@@ -748,7 +750,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.color = category?.Color;
               this.data.processID = category?.RecID;
               this.data.categoryName = category?.CategoryName;
-              this.data.catagory =category?.category;
+              this.data.category =category?.category;
               this.eSign = category?.ESign;
               this.signatureType = category?.SignatureType;
 
@@ -876,12 +878,14 @@ export class PopupAddSignFileComponent implements OnInit {
           this.data.recID = res?.recID;
           this.data.refNo = res?.refNo;
           this.data.id = res?.id;
+          this.data.category = res?.category;
           this.dialogSignFile.patchValue({
             files: res?.files,
             permissions: res?.permissions,
             id: res?.id,
             recID: res?.recID,
             refNo: res?.refNo,
+            category: res?.category,
           });
           this.isSaved = true;
           if (
@@ -924,9 +928,11 @@ export class PopupAddSignFileComponent implements OnInit {
           this.data.modifiedBy = res?.modifiedBy;
           this.data.modifiedOn = res?.modifiedOn;
           this.data.refNo = res?.refNo;
+          this.data.category = res?.category;
           this.dialogSignFile.patchValue({
             modifiedBy: res?.modifiedBy,
             modifiedOn: res?.modifiedOn,
+            category: res?.category,
             refNo: res?.refNo,
           });
 
@@ -1871,5 +1877,73 @@ export class PopupAddSignFileComponent implements OnInit {
           }
         });
     }
+  }
+
+  openTemplate(){
+    var gridModel = new DataRequest();
+    gridModel.entityName=this.refType;
+    let exportForm=this.callfuncService.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [
+        gridModel,
+      ],
+      null
+    );
+    exportForm.closed.subscribe(res=>{
+      if(res?.event){
+        this.esService
+          .deleteFileByObjectID(this.data.recID, 'ES_SignFiles', true)
+          .subscribe((deleted) => {
+            this.data.templateID = res?.event?.templateInfo?.recID;
+            this.data.templateType = res?.event?.templateType;
+            let newCopyFile = new tmpCopyFileInfo();
+            newCopyFile.objectID = this.data?.recID;
+            newCopyFile.objectType = 'ES_SignFiles';
+            newCopyFile.referType = 'source';
+            this.esService
+              .copyFileByObjectID(
+                this.data?.templateID,
+                this.data?.recID,
+                this.data?.templateType,
+                '',
+                newCopyFile
+              )
+              .subscribe((copyF) => {
+                if (copyF) {
+                  this.showAttachment = false;
+                  this.cr.detectChanges();
+                  let lstFile = [];
+                  for (let i = 0; i < copyF?.length; i++) {
+                    let file = new File();
+                    file.fileID = copyF[i]?.recID;
+                    file.fileName = copyF[i]?.fileName;
+                    file.createdOn = copyF[i]?.createdOn;
+                    file.createdBy = copyF[i]?.createdBy;
+                    file.comment = copyF[i]?.extension;
+                    file.eSign = this.eSign;
+                    lstFile.push(file);
+                  }
+                  //
+                  this.data.files = lstFile;
+                  this.showAttachment = true;
+                  this.cr.detectChanges();
+                } else {
+                  this.notify.notify(
+                    'Xuất file từ mẫu thiết lập thất bại',
+                    '2'
+                  );
+                  this.data.templateID = null;
+                  this.data.templateType = null;
+                  this.data.files = [];
+                  this.cr.detectChanges();
+                }
+              });
+          });
+      }
+    });
   }
 }

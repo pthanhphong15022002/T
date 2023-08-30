@@ -872,6 +872,15 @@ export class CodxEsService {
       [oldTransID, newTransID]
     );
   }
+  getSFTemplate(cateID: string, category: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetTemplateSFAsync',
+      [cateID, category]
+    );
+  }
 
   updateFieldApprovalStepAsync(
     tranID: string,
