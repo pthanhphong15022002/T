@@ -66,10 +66,7 @@
     [ngClass]="'show-main'"
     *ngIf="dataStep?.fields != null && dataStep?.fields?.length > 0"
   >
-    <div
-      class="d-flex row class-field my-3"
-     
-    >
+    <div class="d-flex row class-field my-3">
       <ng-container *ngFor="let field of dataStep.fields">
         <div
           class="col-{{
@@ -86,14 +83,8 @@
     </div>
   </div>
   <!-- nvthuan viết để hiển thị field trong task -->
-  <div
-    class="main"
-    [ngClass]="'show-main'"
-    *ngIf="listFields?.length > 0"
-  >
-    <div
-      class="d-flex row class-field my-3"
-    >
+  <div class="main" [ngClass]="'show-main'" *ngIf="listFields?.length > 0">
+    <div class="d-flex row class-field my-3">
       <ng-container *ngFor="let field of listFields">
         <div
           class="col-{{
@@ -109,7 +100,7 @@
       </ng-container>
     </div>
   </div>
-   <!-- end -->
+  <!-- end -->
 </div>
 
 <ng-template #viewCustomFields let-data>
@@ -272,7 +263,10 @@
 
 <ng-template #viewDetailFieldCurrent let-data>
   <div class="d-flex mb-1 {{ typeView == '1' ? '' : 'ms-3' }}">
-    <span class="text-nowrap" [ngClass]="showColumnControl == 1 ? 'min-w-150px' : 'me-1'">
+    <span
+      class="text-nowrap"
+      [ngClass]="showColumnControl == 1 ? 'min-w-150px' : 'me-1'"
+    >
       <span class="text-gray-600">{{ data.title }}</span>
       <span *ngIf="data.isRequired">
         <codx-label
@@ -394,6 +388,127 @@
             [referType]="'source'"
           >
           </codx-attachment>
+        </ng-container>
+
+        <ng-container
+          *ngIf="data.dataType == 'C' && parseValue(data.dataValue)?.length > 0"
+        >
+          <div class="d-flex flex-column">
+            <ng-container *ngFor="let item of parseValue(data.dataValue)">
+              <div class="mt-2">
+                <!-- <codx-img
+                  [ngbPopover]="tempPopover"
+                  #p="ngbPopover"
+                  (mouseenter)="openPopper(item, p)"
+                  autoClose="outside"
+                  placement="right bottom left top"
+                  container="body"
+                  [objectId]="item?.refID ?? item?.recID"
+                  [objectName]="item?.contactName"
+                  [objectType]="'CM_Contacts'"
+                  [width]="30"
+                >
+                </codx-img> -->
+                <ng-container
+                  *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
+                ></ng-container>
+              </div>
+            </ng-container>
+          </div>
+          <ng-template #tempPopover let-data>
+            <div class="d-flex">
+              <codx-img
+                class="me-1"
+                [objectId]="data?.recID"
+                [objectName]="data?.contactName"
+                [objectType]="'CM_Contacts'"
+                [width]="40"
+              >
+              </codx-img>
+              <div class="d-flex flex-column">
+                <div clas="mb-1 d-flex align-items-top">
+                  <span class="fw-bold text-dark me-1">
+                    {{ data?.contactName }}
+                  </span>
+                  <!-- <span
+                    class="icon-16 text-hover-primary cursor-pointer"
+                    [class]="data?.contactType | vll : 'CRM025' : 'icon' | async"
+                    [style.color]="
+                      data?.contactType | vll : 'CRM025' : 'textColor' | async
+                    "
+                  ></span> -->
+                </div>
+
+                <!-- <div class="mb-1" *ngIf="data?.jobTitle">
+                  <span class="text-gray-600">{{ data.jobTitle }}</span>
+                </div> -->
+                <div class="d-flex">
+                  <div
+                    [style.disabled]="!data?.allowCall"
+                    class="d-flex align-items-center me-2"
+                    [ngbTooltip]="popupAllowCall"
+                  >
+                    <ng-template #popupAllowCall>
+                      <codx-label
+                        name="lblAllowCall"
+                        [formModel]="formModel"
+                        [default]="
+                          data?.allowCall
+                            ? 'Cho phép điện thoại'
+                            : 'Không cho phép điện thoại'
+                        "
+                      ></codx-label>
+                    </ng-template>
+                    <span
+                      class="text-gray-900 text-primary text-hover-primary"
+                      [innerHTML]="
+                        data?.mobile
+                          | formatvalue : formModelContact : 'mobile'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="d-flex align-items-center"
+                    [style.disabled]="!data?.allowEmail"
+                    [ngbTooltip]="popupAllowEmail"
+                  >
+                    <ng-template #popupAllowEmail>
+                      <codx-label
+                        name="lblAllowEmail"
+                        [formModel]="formModel"
+                        [default]="
+                          data?.allowEmail
+                            ? 'Cho phép gửi mail'
+                            : 'Không cho phép gửi mail'
+                        "
+                      ></codx-label>
+                    </ng-template>
+                    <span
+                      class=""
+                      [style.disabled]="!data?.allowEmail"
+                      [innerHTML]="
+                        data?.personalEmail
+                          | formatvalue : formModelContact : 'personalEmail'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </div>
+                <div>
+                  <span
+                    class=""
+                    [innerHTML]="
+                      data?.role
+                        | formatvalue : formModelContact : 'personalEmail'
+                        | async
+                    "
+                  >
+                  </span>
+                </div>
+              </div>
+            </div>
+          </ng-template>
         </ng-container>
       </ng-container>
     </span>
