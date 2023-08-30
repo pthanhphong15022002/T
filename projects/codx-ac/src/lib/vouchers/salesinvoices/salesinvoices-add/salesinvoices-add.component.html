@@ -422,28 +422,25 @@
                 [entityName]="fmSalesInvoicesLines.entityName"
                 [templateMore]="more"
                 [editSettings]="editSettings"
-                [allowFiltering]="true"
-                [allowSorting]="true"
-                [autoLoad]="false"
-                [dataSource]="lines"
-                [rowHeight]="35"
+                service="AC"
+                predicates="TransID=@0"
+                [dataValues]="master.recID"
                 [showRowNumber]="true"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
-                (onAddNew)="onEndAddNew($event)"
-                (onEdit)="onEndEdit($event)"
                 (eventAction)="onActionEvent($event)"
               ></codx-gridview-v2>
               <ng-template #dialogMode>
-                <lib-table-line-detail
+                <!-- <lib-table-line-detail
                   #tableLineDetail
                   [gvs]="gvsSalesInvoicesLines"
                   [transID]="master.recID"
                   [hiddenFields]="hiddenFields"
                   [hasMF]="true"
                   [dataService]="detailService"
-                ></lib-table-line-detail>
+                ></lib-table-line-detail> -->
               </ng-template>
 
               <button
@@ -454,7 +451,6 @@
                   border: 1px solid var(--primary-dark) !important;
                 "
                 (click)="onClickAddRow()"
-                (keyup.enter)="onClickAddRow()"
               >
                 <i class="icon-add icon-16 ms-n1"></i>
                 <codx-label
@@ -563,7 +559,7 @@
       <div
         class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1"
       >
-        {{ formTitle }}
+        {{ dialogData.data.formTitle }}
       </div>
       <div class="ms-3 input-circle input-sm" *ngIf="form?.formGroup">
         <codx-vll
@@ -593,8 +589,8 @@
       [isMulti]="false"
       type="valuelist"
       field="subType"
-      [refValue]="gvsSalesInvoices['SubType'].referedValue"
-      [emptyText]="gvsSalesInvoices.SubType?.headerText"
+      [refValue]="form?.gridviewSetup.SubType.referedValue"
+      [emptyText]="form?.gridviewSetup.SubType.headerText"
       [value]="master.subType"
       (valueChange)="onSubTypeChange($event)"
     ></codx-dropdown-select>
@@ -606,7 +602,7 @@
     [dataItem]="data"
     [formModel]="form.formModel"
     (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onChangeMF($event)"
+    (changeDataMF)="onInitMF($event)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
