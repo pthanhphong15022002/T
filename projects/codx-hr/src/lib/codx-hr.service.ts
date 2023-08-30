@@ -2685,7 +2685,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EAnnualLeavesBusiness',
-      'GetListEmployeeAnnualLeaveMonthGrvV2Async',
+      'GetListEmployeeAnnualLeaveMonthAsync',
       [employeeID, alYear]
     );
   }
