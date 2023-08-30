@@ -437,6 +437,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
       if (x.event.status == 'Y') {
         let index = this.listContacts.findIndex((x) => x.recID == data.recID);
         this.listContacts.splice(index, 1);
+        if (this.listContacts?.length > 0)
+          this.valueChangeCustom.emit({
+            e: JSON.stringify(this.listContacts),
+            data: this.customField,
+          });
+        else
+          this.valueChangeCustom.emit({
+            e: '',
+            data: this.customField,
+          });
       }
     });
   }
