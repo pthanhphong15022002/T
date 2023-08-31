@@ -106,6 +106,11 @@ export class WarrantiesComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    // let data = {};
+    // data['customerID'] = '9674cb7c-3fd9-11ee-8404-d493900707c4';
+    // data['customerName'] = 'Công ty Lạc Việt';
+    // data['category'] = '1';
+    // this.api.execSv<any>('WR','ERM.Business.WR','WorkOrdersBusiness','AddWorkOrderAsync',[data]).subscribe(res => {});
     this.executeApiCalls();
     // this.loadParam();
   }

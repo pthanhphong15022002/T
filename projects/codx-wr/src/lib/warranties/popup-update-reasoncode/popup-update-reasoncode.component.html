@@ -18,7 +18,7 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
-    <div class="form-group row mt-3">
+    <div class="form-group row mt-3" *ngIf="dateControl != '0'">
       <div class="col-6">
         <div class="d-flex">
           <codx-label
@@ -94,7 +94,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="commentControl != '0'">
       <div class="d-flex">
         <codx-label
           fiedName="Comment"
