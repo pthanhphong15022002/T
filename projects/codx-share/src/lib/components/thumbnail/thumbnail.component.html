@@ -106,6 +106,9 @@
               <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item)">
                 <i class="icon-cloud_download text-primary icon-16"></i>
               </div>
+              <ng-container *ngIf="tmpCustomMFc">
+                <ng-container *ngTemplateOutlet="tmpCustomMFc ; context: { $implicit: item}"></ng-container>
+              </ng-container>
               <div *ngIf="hideMoreF=='1'" ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
                 (mouseout)="hideMore()">
                 <i class="icon-more_vert icon-16" [id]="item.recID" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
