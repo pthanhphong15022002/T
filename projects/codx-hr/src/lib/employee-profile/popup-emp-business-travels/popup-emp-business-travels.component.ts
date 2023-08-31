@@ -11,6 +11,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -38,19 +39,26 @@ export class PopupEmpBusinessTravelsComponent
   funcID;
   employId;
   data;
-  isNotOverseaFlag = true;
+  isNotOverseaFlag: boolean;
   disabledInput = false;
 
   idField = 'RecID';
 
-  dataValues;
+  // dataValues;
   predicates = 'EmployeeID=@0';
 
   isAfterRender = false;
-  
+
   actionType: string;
   ops = ['y'];
   date = new Date('01-04-2040');
+  useForQTNS = false;
+  employeeObj;
+  employeeSign;
+  //Employee object
+  employeeId: string;
+  loaded: boolean = false;
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -62,9 +70,15 @@ export class PopupEmpBusinessTravelsComponent
   ) {
     super(injector);
     this.dialog = dialog;
+    this.formModel = dialog.formModel;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    this.employeeId = data?.data?.employeeId;
+    this.useForQTNS = data?.data?.useForQTNS;
+    if (data?.data?.empObj) {
+      this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
+    }
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.funcID = data?.data?.funcID;
@@ -88,31 +102,17 @@ export class PopupEmpBusinessTravelsComponent
     //   }
     // });
 
-    this.formModel = dialog.formModel;
-    this.employId = data?.data?.employeeId;
+    // this.employId = data?.data?.employeeId;
 
-    this.dataValues = this.employId;
+    // this.dataValues = this.employId;
   }
 
   changOverSeaFlag(event) {
-    this.isNotOverseaFlag = !event.checked;
-    if (this.isNotOverseaFlag == true) {
+    this.isNotOverseaFlag = event.data;
+    if (event.data === true) {
       this.data.country = null;
       this.formGroup.patchValue(this.data.country);
     }
-  }
-
-  ngAfterViewInit() {
-    this.dialog &&
-      this.dialog.closed.subscribe((res) => {
-        if (!res.event) {
-          if (this.successFlag == true) {
-            this.dialog.close(this.data);
-          } else {
-            this.dialog.close(null);
-          }
-        }
-      });
   }
 
   onInit(): void {
@@ -141,6 +141,16 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   initForm() {
+    this.hrService
+      .getOrgUnitID(
+        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+      )
+      .subscribe((res) => {
+        if (res.orgUnitName) {
+          this.employeeObj.orgUnitName = res?.orgUnitName;
+        }
+      });
+
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -152,39 +162,171 @@ export class PopupEmpBusinessTravelsComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
-            this.data.isOversea = false;
+            //this.data.isOversea = false;
             this.data.country = null;
             this.data.endDate = null;
-            this.data.employeeID = this.employId;
+            this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
+            this.data.periodType = '1';
             this.formGroup.patchValue(this.data);
-            this.cr.detectChanges();
             this.isAfterRender = true;
+            this.cr.detectChanges();
           }
         });
     } else {
+      if (this.data.signerID) {
+        this.getEmployeeInfoById(this.data.signerID, true);
+      }
+
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
-      this.cr.detectChanges();
       this.isAfterRender = true;
+      this.cr.detectChanges();
     }
   }
 
-  onSaveForm(isCloseForm: boolean) {
+  getEmployeeInfoById(empId: string, isCheck: boolean) {
+    let empRequest = new DataRequest();
+    empRequest.entityName = 'HR_Employees';
+    empRequest.dataValues = empId;
+    empRequest.predicates = 'EmployeeID=@0';
+    empRequest.pageLoading = false;
+    if (isCheck === false) {
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.employeeObj = emp[0][0];
+
+          this.hrService
+            .getOrgUnitID(
+              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
+            )
+            .subscribe((res) => {
+              this.employeeObj.orgUnitName = res.orgUnitName;
+            });
+        }
+      });
+    } else {
+      this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+        this.employeeSign = emp[0][0];
+        if (emp[1] > 0) {
+          let positionID = emp[0][0].positionID;
+
+          if (positionID) {
+            this.hrService.getPositionByID(positionID).subscribe((res) => {
+              if (res) {
+                this.employeeSign.positionName = res.positionName;
+                this.data.signerPosition = res.positionName;
+                this.formGroup.patchValue({
+                  signerPositionID: this.data.signerPosition,
+                });
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.data.signerPosition = null;
+            this.formGroup.patchValue({
+              signerPositionID: this.data.signerPosition,
+            });
+          }
+          this.loaded = true;
+          this.cr.detectChanges();
+        }
+      });
+    }
+  }
+
+  //Employee
+  handleSelectEmp(evt) {
+    if (!!evt.data) {
+      this.employeeId = evt.data;
+      this.getEmployeeInfoById(this.employeeId, false);
+      // this.employeeId = null;
+    } else {
+      delete this.employeeObj;
+    }
+  }
+
+  HandleTotalDaysVal(periodType: string) {
+    let beginDate = new Date(this.data.beginDate);
+    let endDate = new Date(this.data.endDate);
+    let dif = endDate.getTime() - beginDate.getTime();
+    if (periodType == '1') {
+      this.data.days = dif / (1000 * 60 * 60 * 24) + 1;
+    }
+    if (
+      (periodType == '2' || periodType == '3') &&
+      this.data.beginDate == this.data.endDate
+    ) {
+      this.data.days = 0.5;
+    }
+
+    if (
+      this.data.endDate > this.data.beginDate &&
+      (periodType == '2' || periodType == '3')
+    ) {
+      this.data.endDate = this.data.beginDate;
+      this.formGroup.patchValue({ endDate: this.data.beginDate });
+      this.data.days = 0.5;
+    }
+
+    this.formGroup.patchValue({
+      days: this.data.endDate < this.data.beginDate ? '' : this.data.days,
+    });
+  }
+
+  //Change date and render days
+  valueChangedDate(evt: any) {
+    if (evt.field === 'beginDate') {
+      this.data.beginDate = evt.data;
+      this.data.endDate = evt.data;
+      this.formGroup.patchValue({ endDate: evt.data });
+    }
+    if (evt.field === 'endDate') {
+      this.data.endDate = evt.data;
+    }
+
+    if (this.data.endDate && this.data.beginDate) {
+      this.HandleTotalDaysVal(this.data.periodType);
+    }
+  }
+
+  valueChange(event) {
+    if (!event.data) {
+      this.data.signerPositionID = '';
+      this.formGroup.patchValue({
+        signerPositionID: '',
+      });
+    }
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'signerID': {
+          let employee = event.data;
+
+          if (employee) {
+            this.getEmployeeInfoById(employee, true);
+          }
+          break;
+        }
+      }
+      this.cr.detectChanges();
+    }
+  }
+
+  onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
 
-    if(this.data.endDate && this.data.beginDate){
+    if (this.data.endDate && this.data.beginDate) {
       if (this.data.endDate < this.data.beginDate) {
         this.hrService.notifyInvalidFromTo(
           'EndDate',
           'BeginDate',
           this.formModel
-          )
-          return;
-        }
+        );
+        return;
+      }
     }
 
     if (this.data.isOversea == true && this.data.country == null) {

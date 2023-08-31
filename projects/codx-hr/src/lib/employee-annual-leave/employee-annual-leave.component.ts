@@ -259,6 +259,23 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     this.scrolling = true;
   }
   onShowEAnnualLeaveMonth(data: any) {
+    this.openAnnualLeaveMonthPopup(data);
+    // if(data?.listAnnualLeaveMonth?.length > 0) {
+    //   this.openAnnualLeaveMonthPopup(data.listAnnualLeaveMonth);
+    // }else{
+    //   this.hrService.getEAnnualLeaveMonthsByEmployeeIDAndALYearAsync(data?.employeeID, data?.alYear)
+    //   .subscribe((res: any) => {
+    //     if(res?.length > 0){
+    //       let idx = this.view.dataService.data.findIndex(x => x.recID == data?.rexID);
+    //       if(idx > -1){
+    //         this.view.dataService.data[idx].listAnnualLeaveMonth = res;
+    //       }
+    //     }
+    //     this.openAnnualLeaveMonthPopup(res);
+    //   })
+    // } 
+  }
+  openAnnualLeaveMonthPopup(data: any) {
     let popupData = {
       funcID: this.funcID,
       headerText: this.monthHeaderText,
@@ -270,8 +287,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     let popup = this.callfc.openForm(PopupAnnualLeaveMonthComponent,
       this.monthHeaderText,
+      800,
       600,
-      1000,
       this.funcID,
       popupData,
       null,

@@ -51,6 +51,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   dataValueOld: any;
   moreFuncNameEdit = '';
 
+  formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
+
   constructor(
     private callfc: CallFuncService,
     private cache: CacheService,
@@ -81,7 +87,6 @@ export class CodxFieldsDetailTempComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.listFields);
-    
   }
   ngOnChanges() {
     this.changeDetectorRef.detectChanges();
@@ -244,7 +249,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       this.dataValueOld = field.dataValue;
@@ -256,6 +261,8 @@ export class CodxFieldsDetailTempComponent implements OnInit {
         case 'R':
         case 'A':
           result = event.e;
+          break;
+        case 'C':
           break;
       }
       field.dataValue = result;
@@ -330,5 +337,9 @@ export class CodxFieldsDetailTempComponent implements OnInit {
             this.dataStep.fields[idx].dataValue = this.dataValueOld;
         }
       });
+  }
+
+  parseValue(dataValue) {
+    return JSON.parse(dataValue);
   }
 }

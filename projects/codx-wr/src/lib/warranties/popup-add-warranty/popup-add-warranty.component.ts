@@ -45,6 +45,8 @@ export class PopupAddWarrantyComponent implements OnInit {
   gridViewSetup: any;
   moreFuncAdd = '';
   user: any;
+  isCheckCbx = false;
+
   constructor(
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
@@ -273,6 +275,8 @@ export class PopupAddWarrantyComponent implements OnInit {
           if (customer != null) {
             this.data.category = customer?.category;
           }
+          this.isCheckCbx = true;
+
         }
       }
 
@@ -313,6 +317,7 @@ export class PopupAddWarrantyComponent implements OnInit {
         if (e && e?.event != null) {
           if (e?.event?.seriNo) {
             this.data = e?.event;
+            this.isCheckCbx = false;
             this.form.formGroup.patchValue(this.data);
             this.detectorRef.detectChanges();
           }
@@ -348,8 +353,10 @@ export class PopupAddWarrantyComponent implements OnInit {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
               this.data = e?.event[0];
-              // if (customerID != e?.event[0]?.customerID && type == 'add')
-              //   this.setServiceTagEmtry();
+              if (this.isCheckCbx){
+                this.setServiceTagEmtry();
+                this.isCheckCbx = false;
+              }
               this.radioChecked = e?.event[1];
               this.detectorRef.detectChanges();
             }

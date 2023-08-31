@@ -33,8 +33,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   showLabelAttachment = false;
   isHaveFile = false;
 
-  dateControl = false;
-  commentControl = false;
+  dateControl = '';
+  commentControl = '';
   startTime: any = null;
   endTime: any = null;
   selectedDate: Date;
@@ -63,7 +63,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
-    this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
   ngOnInit(): void {
     this.data.recID = Util.uid();
@@ -76,7 +76,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       return;
     }
     if (this.data.scheduleStart && this.data.scheduleEnd) {
-      if(new Date(this.data.scheduleStart) < new Date()){
+      if (new Date(this.data.scheduleStart) < new Date()) {
         this.notiService.notifyCode('WR003');
         return;
       }
@@ -130,9 +130,11 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
       this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-      if (this.dateControl) {
-        this.gridViewSetup.ScheduleStart.isRequire = true;
-        this.gridViewSetup.ScheduleEnd.isRequire = true;
+      if (this.dateControl != '0') {
+        this.gridViewSetup.ScheduleStart.isRequire =
+          this.dateControl == '2' ? true : false;
+        this.gridViewSetup.ScheduleEnd.isRequire =
+          this.dateControl == '2' ? true : false;
         this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
         this.data.scheduleEnd = new Date(
           this.data.scheduleStart.getTime() + 3600000
@@ -149,8 +151,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         this.gridViewSetup.ScheduleEnd.isRequire = false;
       }
       this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
-      if (this.commentControl) {
-        this.gridViewSetup.Comment.isRequire = true;
+      if (this.commentControl != '0') {
+        this.gridViewSetup.Comment.isRequire =
+          this.dateControl == '2' ? true : false;
         this.data.comment = e?.component?.itemsSelected[0]?.Comment;
       } else {
         this.gridViewSetup.Comment.isRequire = false;

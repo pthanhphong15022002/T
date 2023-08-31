@@ -28,19 +28,19 @@
   </div>
   <div class="d-flex align-items-center mb-2 min-h-25px">
     <div class="me-3">
-      <codx-input class="check-circle" [checked]="form.data != null ? form.data.physicalOnhand : false"
-        field="physicalOnhand" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+      <codx-input class="check-circle" [checked]="form.data != null ? form.data.physicalControl : false"
+        field="physicalControl" [formModel]="form.formModel" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <codx-label class="text-dark" [formModel]="form.formModel" fiedName="PhysicalOnhand"></codx-label>
+    <codx-label class="text-dark" [formModel]="form.formModel" fiedName="PhysicalControl"></codx-label>
   </div>
   <div class="d-flex align-items-center mb-2 min-h-25px">
     <div class="me-3">
-      <codx-input class="check-circle" [checked]="form.data != null ? form.data.financialOnhand : false"
-        field="financialOnhand" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+      <codx-input class="check-circle" [checked]="form.data != null ? form.data.financialControl : false"
+        field="financialControl" [formModel]="form.formModel" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <codx-label class="text-dark" [formModel]="form.formModel" fiedName="FinancialOnhand"></codx-label>
+    <codx-label class="text-dark" [formModel]="form.formModel" fiedName="FinancialControl"></codx-label>
   </div>
   <div class="d-flex align-items-center mb-2 min-h-25px">
     <div class="me-3">

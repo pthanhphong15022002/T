@@ -14,15 +14,11 @@
     }
     .e-toggle-icon
     {
-        height: 21px;
+        height: 42px;
         min-height: 0;
         color: black !important;
     }
-    .e-icons.e-tgl-collapse-icon
-    {
-        color: black !important;
-    }
-    .e-acrdn-header-content
+    .e-icons.e-tgl-collapse-icon ,  .e-acrdn-header-content
     {
         color: black !important;
     }
@@ -30,4 +26,9 @@
     {
         padding: 0 0 0 21px;
     }
+    .e-acrdn-item
+    {
+        border: none !important;
+    }
+   
 }

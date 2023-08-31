@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { Observable, finalize, map } from 'rxjs';
+import { CM_Customers } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -47,14 +48,30 @@ export class ViewCalendarComponent
   modelResource: ResourceModel;
 
   popupTypeCM: DialogRef
-  fieldsGroup = { text: 'text', value: 'type' };
-  typeCM = [
-    { text: 'Khách hàng', type: 'customer' },
-    { text: 'Tiềm năng', type: 'lead' },
-    { text: 'Cơ hội', type: 'deal' },
-    { text: 'Sự cố', type: 'case'},
+  fieldsGroup = { text: 'text', value: 'entityName' };
+
+  fieldsCustomer = { text: 'customerName', value: 'entityName' };
+  fieldsLead = { text: 'leadName', value: 'entityName' };
+  fieldsDeal = { text: 'dealName', value: 'recID' };
+  fieldsCase = { text: 'caseName', value: 'entityName' };
+  fieldsContract = { text: 'contractName', value: 'entityName' };
+
+  typeCMs = [
+    { text: 'Khách hàng', entityName: 'CM_Customers',funcID:'CM0101' },
+    { text: 'Tiềm năng', entityName: 'CM_Leads',funcID:'CM0205' },
+    { text: 'Cơ hội', entityName: 'CM_Deals',funcID:'CM0201' },
+    { text: 'Chăm sóc khách hàng', entityName: 'CM_Cases',funcID:'CM0401'},
+    { text: 'Hợp đồng', entityName: 'CM_Contracts',funcID:'CM0204'},
   ];
 
+  listStep: any[];
+  listLead: CM_Customers[];
+  listDeal: CM_Customers[];
+  listCase: CM_Customers[];
+  listCustomer: CM_Customers[];
+  listContract: CM_Customers[];
+
+  fieldTypeCm = '';
   service = 'CM';
   entityName = 'CM_Contracts';
   className = 'ContractsBusiness';
@@ -305,17 +322,23 @@ export class ViewCalendarComponent
 
   //------------------More Func-----------------//
 
-  filterText(event) {
-    let data = event?.value;
-    if(data == 'customer') {
-      this.cmService.getListCustomer().subscribe(res => {
-        console.log(res);
-      })
-    }
-    if(data == 'lead') {
-      this.cmService.getListLead().subscribe(res => {
-        console.log(res);
-      })
+  filterText(event, type) {
+    switch (type) {
+      case 'type':
+        this.fieldTypeCm = event?.value;
+        let typeCM = this.typeCMs?.find(type => type.entityName == this.fieldTypeCm);
+        this.getDatas(typeCM?.entityName,typeCM?.funcID,null,null);
+        break;
+      case 'CM_Customers':
+        break;
+      case 'CM_Leads':
+        break;
+      case 'CM_Deals':
+        break;
+      case 'CM_Contracts':
+        break;
+      case 'CM_Cases':
+        break;
     }
   }
 
@@ -327,17 +350,35 @@ export class ViewCalendarComponent
     this.requestData.pageLoading = false;
 
     this.fetch().subscribe((res) => {
+      switch(entityName) {
+        case 'CM_Cases':
+          this.listCase = res
+          break;
+        case 'CM_Deals':
+          this.listDeal = res
+          break;
+        case 'CM_Leads':
+          this.listLead = res
+          break;
+        case 'CM_Contracts':
+          this.listContract = res
+          break;
+        case 'CM_Customers':
+          this.listCustomer = res
+          break;
+      }
+      console.log(res)
     });
   }
 
 
   fetch(): Observable<any[]> {
-    return this.api
+    return  this.api
       .execSv<Array<any>>(
         this.service,
-        this.assemblyName,
-        this.className,
-        this.methodLoadData,
+        'Core',
+        'DataBusiness',
+        'LoadDataAsync',
         this.requestData
       )
       .pipe(

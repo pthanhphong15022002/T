@@ -1078,6 +1078,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         meeting.endDate = dataTask?.endDate;
         meeting.fromDate = dataTask?.startDate;
         meeting.toDate = dataTask?.endDate;
+        meeting.reminder = 15;
+        meeting.isOnline = dataTask?.isOnline;
+        meeting.meetingType = '1';
+        meeting.refID = dataTask?.recID;
+        meeting.refType = 'DP_Instances_Steps_Tasks';
+        meeting.permissions = meeting.permissions ? meeting.permissions : [];
         let roles = JSON.parse(JSON.stringify(dataTask?.roles));
         roles.forEach(role => {
           var tmpResource = new CO_Permissions();
@@ -1120,10 +1126,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         )
         .subscribe((res) => {
           if (res) {
-            data.task.actionStatus = '2';
+           
           }
         });
-        this.createMeeting(data.task);
+        // this.createMeeting(data.task);
       }
     }
   }
@@ -1882,9 +1888,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           let participants;
           let listPermissions = '';
           if (data?.roles?.length > 0) {
-            preside = data?.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+            preside = data?.roles.filter((x) => x.objectID == data.owner)[0]?.objectID;
             if (preside) listPermissions += preside;
-            participants = data?.roles.filter((x) => x.roleType == 'P');
+            participants = data?.roles.filter((x) => x.objectID != data.owner);
             if (participants?.length) {
               let userIDPar = await this.getListUserIDByOther(participants);
               if (userIDPar?.length > 0) {

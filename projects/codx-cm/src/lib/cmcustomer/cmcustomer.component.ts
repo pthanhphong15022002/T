@@ -77,7 +77,8 @@ export class CmCustomerComponent
   method = '';
   idField = 'recID';
   //endregion
-
+  predicate = '';
+  dataValue = '';
   titleAction = '';
   vllPriority = 'TM005';
   crrFuncID = '';
@@ -98,8 +99,16 @@ export class CmCustomerComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.router.params.subscribe((param: any) => {
+      if (param.funcID) {
+        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
+        this.funcID = param.funcID;
+        this.loadMethod();
+        this.isButton = true;
+        this.afterLoad();
+      }
+    });
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
-    this.loadMethod();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -107,13 +116,15 @@ export class CmCustomerComponent
     //Add '${implements OnChanges}' to the class.
   }
 
-  loadMethod(){
+  loadMethod() {
     switch (this.funcID) {
       case 'CM0101':
       case 'CM0105':
         this.method = 'GetListCustomersAsync';
         this.className = 'CustomersBusiness';
         this.entityName = 'CM_Customers';
+        this.predicate = '';
+        this.dataValue = '';
         break;
       case 'CM0102':
         this.method = 'GetListContactAsync';
@@ -124,11 +135,15 @@ export class CmCustomerComponent
         this.method = 'GetListPartnersAsync';
         this.className = 'PartnersBusiness';
         this.entityName = 'CM_Partners';
+        this.predicate = '';
+        this.dataValue = '';
         break;
       case 'CM0104':
         this.method = 'GetListCompetitorsAsync';
         this.className = 'CompetitorsBusiness';
         this.entityName = 'CM_Competitors';
+        this.predicate = '';
+        this.dataValue = '';
         break;
     }
   }
@@ -138,16 +153,6 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-
-    this.router.params.subscribe((param: any) => {
-      if (param.funcID) {
-        // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
-        this.funcID = param.funcID;
-
-        this.isButton = true;
-        this.afterLoad();
-      }
-    });
   }
   ngAfterViewInit(): void {
     this.views = [

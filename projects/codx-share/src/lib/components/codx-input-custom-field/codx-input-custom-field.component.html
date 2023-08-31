@@ -209,9 +209,11 @@
   <!-- Contact  (mouseleave)="closePopper(p)"
 -->
   <ng-container *ngIf="customField.dataType == 'C' && listContacts?.length > 0">
-    <div class="d-flex">
+    <div class="d-flex flex-column">
       <ng-container *ngFor="let item of listContacts">
-        <div class="">
+        <div
+          class="mt-2 has-action-menu border-bottom border-gray-100 line-data cursor-pointer d-flex align-items-start justify-content-between py-2"
+        >
           <!-- <codx-img
             [ngbPopover]="tempPopover"
             #p="ngbPopover"
@@ -228,13 +230,54 @@
           <ng-container
             *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
           ></ng-container>
+          <!-- <codx-mfunc
+            [formModel]="formModelContact"
+            (clickMF)="clickMFContact($event, item)"
+            (changeDataMF)="changeDataMFContact($event, item)"
+            [isBookMark]="true"
+            [dataItem]="moreDefaults"
+            type="hover"
+          >
+          </codx-mfunc> -->
+          <div class="d-flex align-items-start ms-6">
+            <button
+              type="button"
+              class="btn btn-icon btn-sm"
+              triggers="click"
+              [autoClose]="true"
+              [ngbTooltip]="tool"
+              ngClass="border-0"
+            >
+              <span class="icon-more_vert icon-16"></span>
+            </button>
+            <ng-template #tool>
+              <ng-container *ngFor="let x of moreFunctionDefault">
+                <div
+                  class="d-flex p-2 cursor-pointer dropdown-item"
+                  (click)="openMoreFC(x, item)"
+                >
+                  <span
+                    class="icon-16 me-2"
+                    [ngClass]="x?.icon"
+                    [style.color]="x?.textColor"
+                  ></span>
+                  <codx-label
+                    [name]="x?.id"
+                    [formModel]="formModelContact"
+                    [default]="x?.text"
+                  ></codx-label>
+                </div>
+              </ng-container>
+            </ng-template>
+          </div>
         </div>
       </ng-container>
     </div>
     <ng-template #tempPopover let-data>
       <div class="d-flex">
         <codx-img
-          [objectId]="data?.recID"
+          class="me-1"
+          [objectId]="data?.refID"
           [objectName]="data?.contactName"
           [objectType]="'CM_Contacts'"
           [width]="40"
@@ -257,33 +300,16 @@
           <!-- <div class="mb-1" *ngIf="data?.jobTitle">
             <span class="text-gray-600">{{ data.jobTitle }}</span>
           </div> -->
-          <!-- <div *ngIf="objectType == '4'">
-            <span class="">
-              <input
-                type="text"
-                #lblRole
-                name="lblRole"
-                matInput
-                autofocus
-                [value]="data?.role"
-                [disabled]="type == 'formDetail' ? true : false"
-                (blur)="updateRole(lblRole.value, data.recID)"
-                (keydown.enter)="updateRole(lblRole.value, data.recID)"
-                class="form-control no-border text-gray-600"
-                placeholder="{{ placeholder }}"
-              />
-            </span>
-          </div> -->
-          <div class="d-flex flex-column">
+          <div class="d-flex">
             <div
               [style.disabled]="!data?.allowCall"
-              class="d-flex align-items-center"
+              class="d-flex align-items-center me-2"
               [ngbTooltip]="popupAllowCall"
             >
               <ng-template #popupAllowCall>
                 <codx-label
                   name="lblAllowCall"
-                  [formModel]="formModel"
+                  [formModel]="formModelContact"
                   [default]="
                     data?.allowCall
                       ? 'Cho phép điện thoại'
@@ -292,7 +318,7 @@
                 ></codx-label>
               </ng-template>
               <span
-                class="text-gray-900 text-primary text-hover-primary"
+                class=""
                 [innerHTML]="
                   data?.mobile
                     | formatvalue : formModelContact : 'mobile'
@@ -308,7 +334,7 @@
               <ng-template #popupAllowEmail>
                 <codx-label
                   name="lblAllowEmail"
-                  [formModel]="formModel"
+                  [formModel]="formModelContact"
                   [default]="
                     data?.allowEmail
                       ? 'Cho phép gửi mail'
@@ -326,6 +352,23 @@
                 "
               ></span>
             </div>
+          </div>
+          <div>
+            <span class="">
+              <input
+                type="text"
+                #lblRole
+                name="lblRole"
+                matInput
+                autofocus
+                [value]="data?.role"
+                [disabled]="disable"
+                (blur)="updateRole(lblRole.value, data.recID)"
+                (keydown.enter)="updateRole(lblRole.value, data.recID)"
+                class="form-control no-border text-gray-600"
+                placeholder="{{ placeholderRole }}"
+              />
+            </span>
           </div>
         </div>
       </div>

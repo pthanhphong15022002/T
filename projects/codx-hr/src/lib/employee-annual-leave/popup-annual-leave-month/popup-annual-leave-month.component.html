@@ -1,14 +1,19 @@
-<codx-form #form [headerText]="headerText" [body]="body" [data]="data" [dialog]="dialogRef">
+<codx-form #form [dialog]="dialogRef" [headerText]="title" [body]="body">
     <ng-template #body>
-        <div *ngIf="columnsGrid" class="main-gridview">
-            <codx-gridview-v2 #grid [formModel]="dialogRef.formModel" [funcId]="funcID" [columnsGrid]="columnsGrid" [service]="service"
+        <div class="main-gridview" >
+            <codx-gridview-v2 *ngIf="columnsGrid.length > 0"
+                [formName]="dialogRef.formModel?.formName"
+                [gridViewName]="dialogRef.formModel?.gridViewName"
+                [dataValues]="dataValues"
+                [predicates]="predicates"
+                [service]="service" [idField]="idField"
                 [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
-                [dataValues]="data?.employeeID" [autoLoad]="false" [showRowNumber]="false" [idField]="idField"
-                [predicates]="predicates" [autoFitColumns]="false" [allowResizing]="false"
-                [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
+                [columnsGrid]="columnsGrid" [hideMoreFunc]="true" [showRowNumber]="false" [allowSorting]="false"
+                [allowFiltering]="false" [allowReordering]="false" [allowResizing]="false">
+            </codx-gridview-v2>
         </div>
     </ng-template>
-    
+
     <ng-template #colALYearMonthHeader>
         <div class="text-dark fw-bold p-3 fw-500">
             <codx-label fiedName="lblAlYearMonth" [setRequire]="false" [formModel]="dialogRef.formModel"
@@ -27,7 +32,7 @@
                 [default]="'Còn lại'"></codx-label>
         </div>
     </ng-template>
-    
+
     <ng-template #colALYearMonth let-data>
         <div class="d-flex flex-column p-3">
             <div #alYearMonth class="mb-1 line-clamp line-clamp-1"
@@ -125,5 +130,3 @@
         </div>
     </ng-template>
 </codx-form>
-
-

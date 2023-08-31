@@ -94,7 +94,6 @@ export class CodxAddTaskComponent implements OnInit {
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
-
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -109,7 +108,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.user = this.authStore.get();
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
-    this.isStart = dt?.data?.isStart
+    this.isStart = dt?.data?.isStart;
     this.typeTask = dt?.data?.taskType;
     this.ownerParenr = dt?.data?.owner;
     this.listTask = dt?.data?.listTask;
@@ -121,7 +120,8 @@ export class CodxAddTaskComponent implements OnInit {
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
 
-    if (dt?.data?.listGroup) { // remove group task recID null
+    if (dt?.data?.listGroup) {
+      // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
       let index = this.listGroup?.findIndex((group) => !group.recID);
       if (index >= 0) {
@@ -150,14 +150,18 @@ export class CodxAddTaskComponent implements OnInit {
       this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
 
-    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner);
-    this.participant = this.roles?.filter((role) => role.objectID !== this.stepsTasks?.owner);
+    this.owner = this.roles?.filter(
+      (role) => role.objectID == this.stepsTasks?.owner
+    );
+    this.participant = this.roles?.filter(
+      (role) => role.objectID !== this.stepsTasks?.owner
+    );
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
-      this.stepsTasks.status = "1";
+      this.stepsTasks.status = '1';
       this.stepsTasks.createTask = this.isBoughtTM;
       this.stepsTasks.taskName = this.typeTask?.text;
       if (!this.stepsTasks?.taskGroupID) {
@@ -167,31 +171,35 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.endDate = startDays;
       }
     }
-    if(this.step?.fields?.length > 0 && this.stepsTasks?.fieldID){
+    if (this.step?.fields?.length > 0 && this.stepsTasks?.fieldID) {
       let fieldID = this.stepsTasks?.fieldID;
-      this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields)); 
-      this.listField = this.listFieldCopy?.filter((field) => fieldID?.includes(field?.recID));
+      this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields));
+      this.listField = this.listFieldCopy?.filter((field) =>
+        fieldID?.includes(field?.recID)
+      );
     }
     this.checkStatusShowForm();
-    if(this.isBoughtTM == undefined){
-      this.api.execSv(
-        'SYS',
-        'ERM.Business.AD',
-        'UsersBusiness',
-        'GetListBoughtModuleAsync',
-        ''
-      ).subscribe((res: Array<TN_OrderModule>) => {
-        if (res) {
-          let lstModule = res;
-          this.isBoughtTM = lstModule?.some(
-            (md) =>
-              !md?.boughtModule?.refID &&
-              md.bought &&
-              md.boughtModule?.moduleID == 'TM1'
-          );
-          this.stepsTasks.createTask = this.isBoughtTM;
-        }
-      });
+    if (this.isBoughtTM == undefined) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.AD',
+          'UsersBusiness',
+          'GetListBoughtModuleAsync',
+          ''
+        )
+        .subscribe((res: Array<TN_OrderModule>) => {
+          if (res) {
+            let lstModule = res;
+            this.isBoughtTM = lstModule?.some(
+              (md) =>
+                !md?.boughtModule?.refID &&
+                md.bought &&
+                md.boughtModule?.moduleID == 'TM1'
+            );
+            this.stepsTasks.createTask = this.isBoughtTM;
+          }
+        });
     }
   }
 
@@ -342,11 +350,11 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   changeRoler(e) {
-    if (!e || e?.length == 0){
+    if (!e || e?.length == 0) {
       this.participant = [];
       return;
     }
-      
+
     let listUser = e || [];
     let listRole = [];
     listUser.forEach((element) => {
@@ -362,48 +370,54 @@ export class CodxAddTaskComponent implements OnInit {
     this.removeRoleDuplicate();
   }
 
-  changeRolerOwner(event){
+  changeRolerOwner(event) {
     let role = event[0];
-    if(role){
-      if(role?.roleType == "Users" || role?.roleType == "Owner"){
+    if (role) {
+      if (role?.roleType == 'Users' || role?.roleType == 'Owner') {
         role['taskID'] = this.stepsTasks?.recID;
         this.owner = [role];
         this.stepsTasks.owner = role?.objectID;
         this.removeRoleDuplicate();
-      }else{
+      } else {
         let data = [];
-        switch (role?.roleType)
-        {
-          case "Departments":
-          case "OrgHierarchy":
-            data = [role?.objectID,this.step?.instanceID,this.ownerParenr]
+        switch (role?.roleType) {
+          case 'Departments':
+          case 'OrgHierarchy':
+            data = [role?.objectID, this.step?.instanceID, this.ownerParenr];
             break;
-          case "Roles":
-          case "Positions":
-            data = [role?.objectID,this.step?.instanceID, this.ownerParenr, role?.objectType]
+          case 'Roles':
+          case 'Positions':
+            data = [
+              role?.objectID,
+              this.step?.instanceID,
+              this.ownerParenr,
+              role?.objectType,
+            ];
             break;
         }
-        if(data?.length > 0){
-          this.api.exec<any>(
-            'DP',
-            'InstancesBusiness',
-            'GetUserByOrgUnitIDAsync',
-            data
-          ).subscribe(res => {
-            if(res){     
-              let role = new DP_Instances_Steps_Tasks_Roles();   
-              role['objectID'] = res?.userID;
-              role['objectName'] =  res?.userName;
-              role['objectType'] = "U";
-              role['roleType'] = "Users";
-              role['taskID'] = this.stepsTasks?.recID;
-              this.owner = [role];
-              this.stepsTasks.owner = role?.objectID;
-            }
-          });
+        if (data?.length > 0) {
+          this.api
+            .exec<any>(
+              'DP',
+              'InstancesBusiness',
+              'GetUserByOrgUnitIDAsync',
+              data
+            )
+            .subscribe((res) => {
+              if (res) {
+                let role = new DP_Instances_Steps_Tasks_Roles();
+                role['objectID'] = res?.userID;
+                role['objectName'] = res?.userName;
+                role['objectType'] = 'U';
+                role['roleType'] = 'Users';
+                role['taskID'] = this.stepsTasks?.recID;
+                this.owner = [role];
+                this.stepsTasks.owner = role?.objectID;
+              }
+            });
         }
       }
-    }else{
+    } else {
       this.owner = [];
     }
   }
@@ -470,17 +484,24 @@ export class CodxAddTaskComponent implements OnInit {
     event.data.length;
   }
 
-  valueChangeRadio(event){
-    this.stepsTasks.status = event?.field ;
-    this.stepsTasks.progress = event?.field == "3" ? 100 : 0; 
-    if(event?.field == "3"){
+  valueChangeRadio(event) {
+    this.stepsTasks.status = event?.field;
+    this.stepsTasks.progress = event?.field == '3' ? 100 : 0;
+    if (event?.field == '3') {
       this.stepsTasks.actualEnd = new Date();
-      [this.startDayOld,this.endDayOld] =  [this.stepsTasks?.startDate,this.stepsTasks?.endDate];
-      [this.stepsTasks.startDate,this.stepsTasks.endDate] = [null, null];
+      [this.startDayOld, this.endDayOld] = [
+        this.stepsTasks?.startDate,
+        this.stepsTasks?.endDate,
+      ];
+      [this.stepsTasks.startDate, this.stepsTasks.endDate] = [null, null];
     }
-    if(event?.field == "1"){
-      this.stepsTasks.startDate = this.startDayOld ? this.startDayOld : this.stepsTasks?.startDate;
-      this.stepsTasks.endDate = this.endDayOld ? this.endDayOld : this.stepsTasks?.endDate;
+    if (event?.field == '1') {
+      this.stepsTasks.startDate = this.startDayOld
+        ? this.startDayOld
+        : this.stepsTasks?.startDate;
+      this.stepsTasks.endDate = this.endDayOld
+        ? this.endDayOld
+        : this.stepsTasks?.endDate;
       this.stepsTasks.actualEnd = null;
     }
     this.checkStatusShowForm();
@@ -506,8 +527,8 @@ export class CodxAddTaskComponent implements OnInit {
       message.push(this.view['roles']);
     }
 
-    if(this.isStart){
-      if(this.stepsTasks?.status != '3'){
+    if (this.isStart) {
+      if (this.stepsTasks?.status != '3') {
         if (!this.stepsTasks?.startDate) {
           message.push(this.view['startDate']);
         }
@@ -515,12 +536,12 @@ export class CodxAddTaskComponent implements OnInit {
           message.push(this.view['endDate']);
         }
       }
-    }else{
+    } else {
       if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
         message.push(this.view['durationDay']);
       }
     }
-    
+
     // if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
     //   message.push(this.view['durationDay']);
     // }
@@ -540,14 +561,18 @@ export class CodxAddTaskComponent implements OnInit {
 
   save(task, isCreateMeeting = false) {
     if (this.action == 'add' || this.action == 'copy') {
-      this.addTask(task,isCreateMeeting);
+      if (isCreateMeeting) {
+        task.actionStatus = '2';
+        task.status = '2';
+      }
+      this.addTask(task, isCreateMeeting);
     }
     if (this.action == 'edit') {
       this.editTask(task);
     }
   }
 
-  addTask(task,isCreateMeeting = false) {
+  addTask(task, isCreateMeeting = false) {
     if (this.isSave) {
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
@@ -568,10 +593,13 @@ export class CodxAddTaskComponent implements OnInit {
   editTask(task) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [task, this.listField])
+        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
+          task,
+          this.listField,
+        ])
         .subscribe((res) => {
           if (res) {
-          this.step.fields = this.listFieldCopy;
+            this.step.fields = this.listFieldCopy;
             this.dialog.close({
               task: res,
               progressGroup: null,
@@ -588,7 +616,8 @@ export class CodxAddTaskComponent implements OnInit {
     // this.isAddComplete = e;
   }
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       switch (field.dataType) {
@@ -642,35 +671,36 @@ export class CodxAddTaskComponent implements OnInit {
     return true;
   }
 
-  checkStatusShowForm(){
-    if(this.action == 'add' || this.action == 'copy'){
-      if(this.isStart){
-        if(this.stepsTasks.status == '3'){
+  checkStatusShowForm() {
+    if (this.action == 'add' || this.action == 'copy') {
+      if (this.isStart) {
+        if (this.stepsTasks.status == '3') {
           this.isShowDate = false;
           this.isShowTime = false;
           this.isAddTM = false;
-        }else{
+        } else {
           this.isShowDate = true;
           this.isShowTime = true;
           this.isAddTM = true;
         }
-      }else{
+      } else {
         this.isShowDate = false;
         this.isShowTime = true;
         this.isAddTM = true;
       }
-    }else{//edit
-      if(this.isStart){
-        if(!this.stepsTasks?.endDate || !this.stepsTasks?.startDate){
+    } else {
+      //edit
+      if (this.isStart) {
+        if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
           this.isShowDate = false;
           this.isShowTime = false;
           this.isAddTM = false;
-        }else{
+        } else {
           this.isShowDate = true;
           this.isShowTime = true;
           this.isAddTM = true;
         }
-      }else{
+      } else {
         this.isShowDate = false;
         this.isShowTime = true;
         this.isAddTM = true;
