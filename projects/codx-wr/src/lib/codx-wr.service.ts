@@ -6,10 +6,13 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class CodxWrService {
+  listOrderPartsSubject = new BehaviorSubject<any>(null);
   listOrderUpdateSubject = new BehaviorSubject<any>(null);
 
-
-  constructor(private api: ApiHttpService, private notification: NotificationsService) {}
+  constructor(
+    private api: ApiHttpService,
+    private notification: NotificationsService
+  ) {}
 
   getOneCustomer(recID) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [

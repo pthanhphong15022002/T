@@ -362,10 +362,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
         : JSON.parse(JSON.stringify(dt?.data?.data));
 
-    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-      if (mf) {
-        let mfAdd = mf.find((f) => f.functionID == 'SYS01');
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mfSYS) => {
+      if (mfSYS) {
+        let funcMF = 'SYS01';
+        let mfAdd = mfSYS.find((f) => f.functionID == funcMF);
         if (mfAdd) this.titleAdd = mfAdd?.customName;
+
+        this.moreFunction.forEach((mf) => {
+          if (mf.id == 'edit') funcMF = 'SYS03';
+          if (mf.id == 'delete') funcMF = 'SYS02';
+          let mfc = Array.from<any>(mfSYS).find(
+            (x: any) => x.functionID == funcMF
+          );
+          if (mfc) {
+            mf.text = mfc.customName;
+          }
+        });
       }
     });
     this.cache.functionList('DPT03').subscribe((fun) => {

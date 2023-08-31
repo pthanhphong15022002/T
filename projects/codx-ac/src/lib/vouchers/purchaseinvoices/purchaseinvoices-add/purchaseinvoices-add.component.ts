@@ -155,7 +155,7 @@ export class PurchaseinvoicesAddComponent
     }
   }
 
-  onTabCreated(e, tab: TabComponent): void {
+  onTabCreated(tab: TabComponent): void {
     tab.hideTab(1, this.master.subType !== '2');
   }
 
@@ -226,7 +226,7 @@ export class PurchaseinvoicesAddComponent
       'AC',
       'AC_PurchaseInvoices',
       this.form,
-      this.form.data._hasSaved,
+      this.form.data._isEdit,
       () => {
         this.form.save(null, null, null, null, false).subscribe((res) => {
           if (res === false || res.save?.error || res.update?.error) {
@@ -264,7 +264,7 @@ export class PurchaseinvoicesAddComponent
       'AC',
       'AC_PurchaseInvoices',
       this.form,
-      this.form.data._hasSaved,
+      this.form.data._isEdit,
       () => {
         this.master.status = '1';
         this.form.save().subscribe((res: any) => {

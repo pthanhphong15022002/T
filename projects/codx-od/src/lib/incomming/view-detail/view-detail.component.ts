@@ -152,7 +152,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         isActive: false,
       });
 
-    if (this.view?.funcID != 'ODT41') {
+    if (this.view?.funcID != 'ODT41' && this.view?.funcID != 'ODT51') {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
@@ -1104,6 +1104,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .closed.subscribe((x) => {
             if (x?.event == 0) {
               datas.status = '7';
+              this.data.status = "7";
               this.view.dataService.update(datas).subscribe();
             }
           });
@@ -1439,10 +1440,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     shareBy: any,
     agencies = null
   ) {
-    if (
-      relationType == '1' ||
-      (this.formModel.funcID == 'ODT41' && relationType == '2')
-    ) {
+    if (relationType == '1' || (this.formModel.funcID == 'ODT41' && relationType == '2')) 
+    {
       if (this.formModel.funcID == 'ODT31') {
         var text = this.ms020?.customName;
         if (!text) text = '';

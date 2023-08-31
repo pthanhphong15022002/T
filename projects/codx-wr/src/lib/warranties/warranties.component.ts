@@ -50,8 +50,10 @@ export class WarrantiesComponent
   @ViewChild('templateDetail') templateDetail!: TemplateRef<any>;
   @ViewChild('viewDetail') viewDetail: ViewDetailWrComponent;
   @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
-  dialogStatus: DialogRef;
+  @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
 
+  dialogStatus: DialogRef;
+  dialogPriority: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -88,6 +90,7 @@ export class WarrantiesComponent
   lstOrderUpdate = [];
   cancelledNote = '';
   status = '';
+  priority = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -103,6 +106,11 @@ export class WarrantiesComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    // let data = {};
+    // data['customerID'] = '9674cb7c-3fd9-11ee-8404-d493900707c4';
+    // data['customerName'] = 'Công ty Lạc Việt';
+    // data['category'] = '1';
+    // this.api.execSv<any>('WR','ERM.Business.WR','WorkOrdersBusiness','AddWorkOrderAsync',[data]).subscribe(res => {});
     this.executeApiCalls();
     // this.loadParam();
   }
@@ -311,6 +319,9 @@ export class WarrantiesComponent
       case 'WR0101_5': //Mở case - status = 3
         this.updateStatusWarranty('3', data);
         break;
+      case 'WR0101_6': //Cập nhật độ ưu tiên
+        this.updatePriority(data);
+        break;
       default:
         var customData = {
           refID: data.processID,
@@ -343,6 +354,7 @@ export class WarrantiesComponent
             case 'WR0101_3':
             case 'WR0101_4':
             case 'WR0101_5':
+            case 'WR0101_6':
               res.disabled = true;
               break;
             default:
@@ -356,6 +368,7 @@ export class WarrantiesComponent
               case 'WR0101_1':
               case 'WR0101_2':
               case 'WR0101_4':
+              case 'WR0101_6':
                 res.disabled = true;
                 break;
               default:
@@ -720,7 +733,7 @@ export class WarrantiesComponent
               this.updateStatus,
               '',
               500,
-              280
+              200
             );
             this.dialogStatus.closed.subscribe((ele) => {
               if (ele && ele?.event) {
@@ -760,25 +773,52 @@ export class WarrantiesComponent
   }
 
   changValueStatus(e) {
-    this.cancelledNote = e?.data;
+    this[e.field] = e?.data;
     this.detectorRef.detectChanges();
   }
 
-  onSave(recID) {
+  onSave(type) {
+    let methodName = '';
+    let data = [];
+    if (type == 'status') {
+      data = [this.dataSelected?.recID, this.status, this.cancelledNote];
+      methodName = 'UpdateStatusWarrantyAsync';
+    } else {
+      data = [this.dataSelected?.recID, this.priority];
+      methodName = 'UpdatePriorityWarrantyAsync';
+    }
     this.api
       .execSv<any>(
         'WR',
         'ERM.Business.WR',
         'WorkOrdersBusiness',
-        'UpdateStatusWarrantyAsync',
-        [recID, this.status, this.cancelledNote]
+        methodName,
+        data
       )
       .subscribe((res) => {
         if (res) {
-          this.dialogStatus.close(res);
+          if (type == 'status') {
+            this.dialogStatus.close(res);
+          } else {
+            this.dialogPriority.close(res);
+          }
           this.detectorRef.detectChanges();
         }
       });
   }
   //#endregion
+
+  updatePriority(data) {
+    this.priority = data?.priority;
+    this.dialogPriority = this.callfc.openForm(this.itemPriority, '', 400, 200);
+    this.dialogPriority.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.priority = ele?.event;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
 }
