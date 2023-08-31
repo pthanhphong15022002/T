@@ -1,6 +1,6 @@
 <codx-layout-add #form [title]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader"
   [tabContent]="[ tabGeneralInfo, tabApprovalStep, tabTemplate]" [footer]="footer" [data]="data"
-  [formModel]="dialog.formModel" [dialog]="dialog" [tabInfo]="tabInfo">
+  [formModel]="dialog?.formModel" [dialog]="dialog" [tabInfo]="tabInfo" >
   <ng-template #subHeader>
 
   </ng-template>
@@ -24,7 +24,7 @@
           <div class="form-group">
             <codx-label fiedName="CategoryName" [formModel]="formModel">
             </codx-label>
-            <codx-input field="categoryName" [formModel]="formModel" [Group]="form.formGroup">
+            <codx-input field="categoryName" [formModel]="formModel" [Group]="form?.formGroup">
             </codx-input>
           </div>
         </div>
@@ -32,8 +32,8 @@
           <div class="form-group">
             <codx-label fiedName="CategoryID" [formModel]="formModel">
             </codx-label>
-            <codx-input type="text" field="categoryID" [formModel]="formModel" [Group]="form.formGroup"
-              [disabled]="disableCategoryID == '1' || dialog.dataService!.keyField === 'CategoryID'">
+            <codx-input type="text" field="categoryID" [formModel]="formModel" [Group]="form?.formGroup"
+              [disabled]="disableCategoryID == '1' || dialog?.dataService!.keyField === 'CategoryID'">
             </codx-input>
           </div>
         </div>
@@ -89,7 +89,7 @@
       <div class="form-group">
         <codx-label fiedName="Memo" [formModel]="formModel"> </codx-label>
         <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" [formModel]="formModel"
-          [Group]="form.formGroup">
+          [Group]="form?.formGroup">
         </codx-input>
       </div>
       <div class="row mh-50px">

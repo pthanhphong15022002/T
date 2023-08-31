@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { CodxWsService } from '../../codx-ws.service';
 import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-menu-list-approval',
   templateUrl: './menu-list-approval.component.html',
-  styleUrls: ['./menu-list-approval.component.scss']
+  styleUrls: ['./menu-list-approval.component.scss'],
 })
 export class MenuListApprovalComponent implements OnInit{
   @Input() funcID: any;

@@ -251,7 +251,8 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       let result = event.e?.data;
       let field = event.data;
       switch (field.dataType) {

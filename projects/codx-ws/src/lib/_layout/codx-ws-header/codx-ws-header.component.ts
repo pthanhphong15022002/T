@@ -26,6 +26,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   ) {
     super(inject);
     this.module = 'WS';
+    this.layoutModel.asideDisplay = false;
+    this.layoutModel.toolbarFixed = false;
   }
 
   override onInit(): void {
@@ -49,7 +51,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
 
   getFuncList(funcID:any)
   {
-    var fucList = this.codxWsService.loadFuncList("WS") as any;
+    var fucList = this.codxWsService.loadFuncList(this.module) as any;
 
     if(isObservable(fucList))
     {

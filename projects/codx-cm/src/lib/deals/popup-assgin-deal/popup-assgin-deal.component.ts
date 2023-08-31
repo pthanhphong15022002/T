@@ -3,6 +3,7 @@ import { AuthStore, CacheService, DialogData, DialogRef, FormModel, Notification
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { tmpInstancesStepsRoles } from '../../models/tmpModel';
+import { CM_Permissions } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-popup-assgin-deal',
@@ -33,6 +34,7 @@ ownerOld: any;
 ownerStep: any;
 step: any;
 buid: any;
+user:any;
 startControl: string = '';
 applyFor: string = '';
 orgUnitName: string = '';
@@ -56,6 +58,7 @@ constructor(
 ) {
   super(injector);
   this.dialogRef = dialogRef;
+  this.user = this.authStore.get();
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
   if (this.applyProcess) {
@@ -155,15 +158,52 @@ changeOwner(evt: any, view: any) {
       this.buid = '';
     } else if (view === this.viewBUID) {
       this.buid = evt.data;
-      var datas = [this.buid];
-      this.codxCmService.getListUserByBUID(datas).subscribe((res) => {
-        if (res) {
-          this.listUser = res;
-        }
-      });
+    //  var datas = [this.buid];
+      // this.codxCmService.getListUserByBUID(datas).subscribe((res) => {
+      //   if (res) {
+      //     this.listUser = res;
+      //   }
+      // });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
   }
+}
+searchOwner(objectType:any,roleType:any, memberType: any,owner:any, ownerName:any, dataPermission: any ){
+  let index  = -1;
+  if(dataPermission?.length > 0 && dataPermission) {
+    index = dataPermission.findIndex(
+      (x) => x.objectType == objectType && x.roleType === roleType&& x.memberType == memberType
+    );
+    if (index != -1 ) {
+      dataPermission[index].objectID = owner;
+      dataPermission[index].objectName = ownerName;
+      dataPermission[index].modifiedBy = this.user.userID;
+      dataPermission[index].modifiedOn = new Date();
+    }
+  }
+  if(index == -1) {
+    this.addOwner(owner,ownerName,roleType,objectType,dataPermission);
+  }
+}
+addOwner(owner,ownerName,roleType,objectType,dataPermission) {
+  var permission = new CM_Permissions();
+  permission.objectID = owner;
+  permission.objectName = ownerName;
+  permission.objectType = objectType;
+  permission.roleType = roleType;
+  permission.memberType = '0';
+  permission.full = true;
+  permission.read = true;
+  permission.update = true;
+  permission.upload = true;
+  permission.download = true;
+  permission.allowUpdateStatus = '1';
+  permission.full =  roleType === 'O';
+  permission.assign =  roleType === 'O';
+  permission.delete = roleType === 'O';
+  permission.allowPermit = roleType === 'O';
+
+  dataPermission.push(permission);
 }
 
 cbxEmpChange(evt: any) {

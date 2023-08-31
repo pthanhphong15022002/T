@@ -17,6 +17,7 @@ import { MasterDetailComponent } from './personal/master-detail/master-detail.co
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-list-approval.component';
 import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
+import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,21 @@ const routes: Routes = [
       {
         path: 'approvals/:funcID',
         component: ApprovalsComponent,
+      },
+      {
+        path: 'bookingrooms/:funcID',
+        data: { noReuse: true },
+        component: EPBookingComponent,
+      },
+      {
+        path: 'bookingcars/:funcID',
+        data: { noReuse: true },
+        component: EPBookingComponent,
+      },
+      {
+        path: 'bookingstationery/:funcID',
+        data: { noReuse: true },
+        component: EPBookingComponent,
       },
       {
         path: '',

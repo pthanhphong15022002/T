@@ -87,6 +87,7 @@ export class PdfComponent
   @Input() inputUrl = null;
   @Input() transRecID = null;
   @Input() oSignFile = {};
+  @Input() oURL = [];
 
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
@@ -316,6 +317,10 @@ export class PdfComponent
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
+          if (this.oURL?.length>0)
+          {
+            res.urls=this.oURL;
+          }
           let sf = res?.signFile;
           if (sf) {
             sf.files.forEach((file: any, index) => {
