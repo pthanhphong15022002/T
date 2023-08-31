@@ -169,6 +169,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isReferType: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Input() tmpRightThumb?: TemplateRef<any>;
+  @Input() tmpCustomMFc?: TemplateRef<any>;
   @Input() isScroll = true;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
