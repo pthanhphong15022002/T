@@ -113,7 +113,8 @@
       <div
         *ngIf="
           itemDetail?.isCurrent &&
-          dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD')
+          dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
+          itemDetail?.status === '5'
         "
         #popOver="ngbPopover"
         [openDelay]="500"

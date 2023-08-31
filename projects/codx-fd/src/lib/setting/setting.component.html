@@ -30,10 +30,13 @@
         </ng-template>
         <ng-template #content>
           <lib-setting-content
+            *ngIf="formModel"
             [groupSettings]="groupSettings"
             [setingValues]="setingValues"
+            [lstPolicies]="lstPolicies"
             [curLineType]="curLineType"
             [formName]="formName"
+            [formModel]="formModel"
             [cate]="cate"
           >
           </lib-setting-content>

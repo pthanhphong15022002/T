@@ -97,7 +97,7 @@ import { EmployeeJobSalaryComponent } from './employee-job-salary/employee-job-s
 import { PopupEmployeeJobsalaryComponent } from './employee-job-salary/popup-employee-jobsalary/popup-employee-jobsalary.component';
 import { ViewBasicSalaryDetailComponent } from './employee-basic-salary/view-basic-salary-detail/view-basic-salary-detail.component';
 import { EmployeeBenefitComponent } from './employee-benefit/employee-benefit.component';
-import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee-benefit/popup-employee-benefit.component';
+//import { PopupEmployeeBenefitComponent } from './employee-benefit/popup-employee-benefit/popup-employee-benefit.component';
 import { ViewDetailContractsComponent } from './employee-contract/popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { ViewDetailEjobsalaryComponent } from './employee-job-salary/view-detail-ejobsalary/view-detail-ejobsalary.component';
 import { EmployeeAwardsComponent } from './employee-awards/employee-awards.component';
@@ -108,7 +108,7 @@ import { TestComponent } from './test/test.component';
 import { ApprovalHRContractComponent } from './approval-hr/approval-hrcontract/approval-hrcontract.component';
 import { ViewDetailDisciplinesComponent } from './employee-discipline/view-detail-disciplines/view-detail-disciplines.component';
 import { EmployeeBusinessTravelComponent } from './employee-business-travel/employee-business-travel.component';
-import { PopupEmployeeBusinessComponent } from './employee-business-travel/popup-employee-business/popup-employee-business.component';
+//import { PopupEmployeeBusinessComponent } from './employee-business-travel/popup-employee-business/popup-employee-business.component';
 import { ViewDetailEmployeeBusinessComponent } from './employee-business-travel/view-detail-employee-business/view-detail-employee-business.component';
 import { EmployeeDayOffComponent } from './employee-day-off/employee-day-off.component';
 import { ViewDayOffDetailComponent } from './employee-day-off/view-day-off-detail/view-day-off-detail.component';
@@ -399,7 +399,7 @@ const T_Component: Type<any>[] = [
   ViewBasicSalaryDetailComponent,
   EmployeeJobSalaryComponent,
   EmployeeBenefitComponent,
-  PopupEmployeeBenefitComponent,
+  // PopupEmployeeBenefitComponent,
   ViewDetailContractsComponent,
   ViewDetailEjobsalaryComponent,
   EmployeeAwardsComponent,
@@ -412,7 +412,7 @@ const T_Component: Type<any>[] = [
   EmployeeBusinessTravelComponent,
   EmployeeDayOffComponent,
   ViewDayOffDetailComponent,
-  PopupEmployeeBusinessComponent,
+  //PopupEmployeeBusinessComponent,
   ViewDetailEmployeeBusinessComponent,
   EmployeeInfoDetailComponent,
   PopupForeignWorkerComponent,

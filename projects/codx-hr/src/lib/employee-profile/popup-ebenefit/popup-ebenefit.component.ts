@@ -221,8 +221,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
               p[1].emp = this.employeeObj;
             }
             this.dialog && this.dialog.close(p);
-          } else {
-            this.notify.notifyCode('SYS023');
           }
         } else {
           if (p != null) {

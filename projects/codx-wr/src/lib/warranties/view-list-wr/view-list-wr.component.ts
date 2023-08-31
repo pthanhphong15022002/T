@@ -19,6 +19,7 @@ export class ViewListWrComponent {
   @Input() funcID = 'WR0101';
   @Input() entityName: any;
   @Input() gridViewSetup: any;
+  @Input() listRoles = [];
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
@@ -50,13 +51,13 @@ export class ViewListWrComponent {
   }
 
   getIcon($event) {
-    // if ($event == '1') {
-    //   return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
-    // } else if ($event == '5') {
-    //   return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
-    // } else if ($event == '3') {
-    //   return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
-    // }
-    // return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    if ($event == '1') {
+      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    } else if ($event == '5') {
+      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
+    } else if ($event == '3') {
+      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
   }
 }

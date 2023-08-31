@@ -94,6 +94,8 @@ export class DealDetailComponent implements OnInit {
   vllStatusLead: any;
   viewSettings: any;
   contactPerson: any;
+  oCountFooter: any = {};
+
   isShow = false;
 
   constructor(
@@ -115,12 +117,12 @@ export class DealDetailComponent implements OnInit {
         isActive: true,
         template: null,
       },
-      {
-        name: 'Comment',
-        textDefault: 'Thảo luận',
-        isActive: false,
-        template: null,
-      },
+      // {
+      //   name: 'Comment',
+      //   textDefault: 'Thảo luận',
+      //   isActive: false,
+      //   template: null,
+      // },
       {
         name: 'Attachment',
         textDefault: 'Đính kèm',
@@ -570,6 +572,12 @@ export class DealDetailComponent implements OnInit {
   }
   clickShowTab(isShow){
     this.isShow = isShow;
+    this.changeDetectorRef.detectChanges();
+  }
+  changeCountFooter(value: number, key: string) {
+    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+    oCountFooter[key] = value;
+    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
 }
