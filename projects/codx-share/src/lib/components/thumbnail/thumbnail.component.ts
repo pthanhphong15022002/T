@@ -53,6 +53,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() isReferType: boolean = false;
   @Input() isOpenFile: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
+  @Input() tmpCustomMFc?: TemplateRef<any>;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
