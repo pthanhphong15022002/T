@@ -79,6 +79,7 @@ export class WarrantiesComponent
   moreFuncInstance: any;
   columnGrids = [];
   arrFieldIsVisible: any[];
+  listRoles = [];
 
   // config api get data
   service = 'WR';
@@ -252,7 +253,16 @@ export class WarrantiesComponent
       // this.getColorReason();
       // this.getCurrentSetting();
       this.getValuelistStatus();
+      this.getValueListRole();
     } catch (error) {}
+  }
+
+  async getValueListRole() {
+    this.cache.valueList('CRM040').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   async getValuelistStatus() {
