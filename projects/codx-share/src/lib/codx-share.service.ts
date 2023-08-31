@@ -69,6 +69,7 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
+  listContactBehavior = new BehaviorSubject<any>(null);
   callBackComponent: any;
   //
   //
@@ -1324,7 +1325,7 @@ export class CodxShareService {
           break;
         //Export và view trc khi gửi duyệt
         case '3':
-          
+
           break;
         //Tự động Export và gửi duyệt ngầm
         case '4':

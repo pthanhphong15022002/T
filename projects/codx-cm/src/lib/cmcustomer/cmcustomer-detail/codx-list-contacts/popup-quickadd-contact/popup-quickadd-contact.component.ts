@@ -401,9 +401,9 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.cmSv.contactSubject.next(this.listContacts);
 
       // this.contactTemp.lstContactEmit.emit(this.listContacts);
-      this.listContacts = this.cmSv.bringDefaultContactToFront(
-        this.listContacts
-      );
+      // this.listContacts = this.cmSv.bringDefaultContactToFront(
+      //   this.listContacts
+      // );
       this.data = new CM_Contacts();
       this.default();
       this.changeDef.detectChanges();
