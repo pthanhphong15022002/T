@@ -20,7 +20,7 @@ import {
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
-import { ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ApproveProcess, ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-view-release-sign-file',
@@ -33,9 +33,10 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   dialogRef: DialogRef;
   signFile: any;
   user: import("codx-core").UserModel;
-  approveProcess: any;
+  approveProcess: ApproveProcess;
   files: any;
   isAfterRender=false;
+  listURL=[];
   constructor(
     private inject: Injector,
     private notify: NotificationsService,
@@ -55,13 +56,14 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   onInit(): void {
     if(this.files?.length>0){
       let sfFiles= this.files?.filter(x=>x.autoCreate=='3');//Chỉ lấy file export tự động(autoCreate=='3') để ký số
-      if(sfFiles?.length>0 && this.signFile?.files?.length>0){
+      if(sfFiles?.length>0 && this.signFile?.files?.length>0){        
         for(let i = 0; i < this.signFile?.files.length; i++){
           if(i<sfFiles?.length){
             this.signFile.files[i].comment = sfFiles[i]?.extension;
             this.signFile.files[i].fileID = sfFiles[i]?.recID;
             this.signFile.files[i].fileName = sfFiles[i]?.fileName;
             this.signFile.files[i].comment = sfFiles[i]?.extension;
+            this.listURL.push(sfFiles[i]?.url);            
           }
         }
         this.isAfterRender=true;
@@ -76,4 +78,26 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
     this.dialogRef && this.dialogRef.close();
   }
   ngAfterViewInit() {}
+  release(){
+    this.codxShareService
+    .codxRelease(
+      this.approveProcess?.module,
+      this.approveProcess?.recID,
+      this.approveProcess?.category?.recID,
+      this.approveProcess?.entityName,
+      this.approveProcess?.funcID,
+      null,
+      this.approveProcess?.htmlView,
+      null
+    )
+    .subscribe((res) => {
+      if (res?.msgCodeError == null && res?.rowCount > 0) {
+        this.dialogRef && this.dialogRef.close(res);
+        
+      } else {
+        this.notify.notifyCode(res?.msgCodeError);
+        return;
+      }
+    });
+  }
 }
