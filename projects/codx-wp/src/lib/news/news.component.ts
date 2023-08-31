@@ -108,6 +108,7 @@ export class NewsComponent extends UIComponent {
         },
       },
     ];
+    this.carousel.pause();
   }
 
   // get user permission
@@ -193,14 +194,7 @@ export class NewsComponent extends UIComponent {
               this.slides[slide] = this.videos.slice(index, index + 3);
               slide++;
             }
-            let ins = setInterval(() => {
-              if (this.carousel) {
-                this.showNavigation = this.page >= 1 ? true : false;
-                this.carousel.pause();
-                this.detectorRef.detectChanges();
-                clearInterval(ins);
-              }
-            }, 100);
+            this.showNavigation = total > 3 ? true : false;
           }
           this.pageIndex += 1;
         } else {
