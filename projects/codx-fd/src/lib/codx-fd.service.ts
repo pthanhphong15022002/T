@@ -165,4 +165,34 @@ export class CodxFdService {
       [formName, transType, category, fieldName, fieldValue]
     );
   }
+
+  getDataCbbx(gridModel, service) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      gridModel
+    );
+  }
+
+  getListPolicies(lstFieldNames: string[]) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'PoliciesBusiness',
+      'GetPoliciesByFieldsAsync',
+      [lstFieldNames]
+    );
+  }
+
+  updateActivePolicy(policyrecID) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'PoliciesBusiness',
+      'AddUpdateActiveAsync',
+      [policyrecID]
+    );
+  }
 }
