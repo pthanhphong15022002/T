@@ -1,26 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Injector,
-  Optional,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
-  CallFuncService,
   DataRequest,
   DialogModel,
-  DialogRef,
   FormModel,
   NotificationsService,
   PageLink,
   PageTitleService,
-  RequestOption,
   SidebarModel,
   TenantStore,
   UIComponent,
@@ -31,7 +25,6 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -40,7 +33,7 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-import { Subject, interval, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -114,6 +107,7 @@ export class CashPaymentsComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+  bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar table
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -147,9 +141,6 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  call() {
-    jsBh.login('accNet');
-  }
   onInit(): void {
     this.getDataDefaultVoucher(); //? lấy data mặc định truyền vào form thêm
   }
@@ -194,13 +185,17 @@ export class CashPaymentsComponent extends UIComponent {
     let pageLink: Array<PageLink> = [
       {
         title: 'Test tè lè nhòe',
+        desc: 'Hiển cái này giúp',
         path: 'ac/cashpayments/ACT0410?journalNo=ACJN230712003&parent=ACT',
       },
       {
         title: 'Test bét tờ lơ to',
+        desc: 'Cái này nè',
         path: 'ac/cashpayments/ACT0410?journalNo=ACJN230727001&parent=ACT',
       },
     ];
+
+    this.pageTitle.setChildren(pageLink);
 
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
@@ -925,6 +920,28 @@ export class CashPaymentsComponent extends UIComponent {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  //#endregion
+
+  //#region Bankhub
+  call() {
+    jsBh.login('accNet', (o) => this.callback(o));
+  }
+
+  callback(o: any) {
+    if (o) {
+      this.bhLogin = true;
+      localStorage.setItem('bh_tk', o);
+      this.getbank();
+    }
+  }
+
+  getbank() {
+    this.acService
+      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
   //#endregion
 }
