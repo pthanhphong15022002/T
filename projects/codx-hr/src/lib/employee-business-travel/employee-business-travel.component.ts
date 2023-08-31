@@ -18,10 +18,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
+//import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
+import { PopupEmpBusinessTravelsComponent } from '../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -130,14 +131,15 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     option.FormModel = this.view.formModel;
 
     let dialogAdd = this.callfc.openSide(
-      PopupEmployeeBusinessComponent,
+      PopupEmpBusinessTravelsComponent,
       {
         funcID: this.view.funcID,
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         headerText: actionHeaderText,
         empObj: this.currentEmpObj,
         actionType: actionType,
-        dataObj: data,
+        businessTravelObj: data,
+        useForQTNS: true,
       },
       option
     );

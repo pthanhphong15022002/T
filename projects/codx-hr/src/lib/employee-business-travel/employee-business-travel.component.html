@@ -46,6 +46,14 @@
             ></span>
           </div>
           <span
+            [innerHTML]="
+              data?.emp?.orgUnitID || data?.orgUnitID
+                | formatvalue : view.formModel : 'orgUnitID'
+                | async
+            "
+          ></span>
+
+          <!-- <span
             *ngIf="
               data.orgUnitName || data?.emp?.orgUnitName;
               else noOrgUnitName
@@ -56,16 +64,7 @@
             <span class="place-holder">{{
               grvSetup["OrgUnitID"].headerText
             }}</span>
-          </ng-template>
-          <!-- <div class="text-gray-700">
-            <span
-              [innerHTML]="
-                data?.emp?.orgUnitID
-                  | formatvalue : view.formModel : 'orgUnitID'
-                  | async
-              "
-            ></span>
-          </div> -->
+          </ng-template>  -->
         </div>
       </div>
     </div>
