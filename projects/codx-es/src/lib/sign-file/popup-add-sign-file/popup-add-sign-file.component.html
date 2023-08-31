@@ -265,7 +265,7 @@
                   </div>
                   <div class="text-center sign-attachment" *ngIf="(oSignFile==null)&& showAttachment">
                     <codx-attachment #attachment
-                      [objectType]="data?.refType!=null && data?.refType!='ES_Categories' ? data?.refType : 'ES_SignFiles'"
+                      [objectType]="data?.refType!=null && !isTemplate ? data?.refType : 'ES_SignFiles'"
                       hideImageUpload="0" [objectId]="data?.recID" hideBtnSave="1" hideFolder="1"
                       [hideUploadBtn]="isTemplate? '1':'0'" [functionID]="formModelCustom?.funcID" type="inline"
                       (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source"

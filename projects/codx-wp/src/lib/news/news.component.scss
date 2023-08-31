@@ -78,11 +78,11 @@
     .carousel-control-next {
         height: 50px !important;
         width: 5%;
-        &:hover{
-            background-color: var(--primary);
-        }
+        
+        background-color: var(--primary);
         position: absolute;
         top: 50%;
+        display: block;
     }
 
     .carousel-inner .video .image-200 {

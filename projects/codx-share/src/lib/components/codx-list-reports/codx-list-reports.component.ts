@@ -109,6 +109,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
           if(res?.event)
           {
             this.dataSelected = res.event;
+            this.detectorRef.detectChanges();
           }
         });
       break;

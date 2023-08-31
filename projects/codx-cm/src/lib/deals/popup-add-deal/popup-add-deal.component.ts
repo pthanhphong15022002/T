@@ -336,7 +336,31 @@ export class PopupAddDealComponent
     }
   }
   lstContactEmit(e) {
-    this.lstContactDeal = e;
+    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
+      if(e != null){
+        for (var i = 0; i < e.length; i++) {
+          var recID = e[i].recID;
+          var existsInList1 = false;
+
+          for (var j = 0; j < e.length; j++) {
+            if (e[j].recID === recID) {
+              existsInList1 = true;
+              break;
+            }
+          }
+
+          if (!existsInList1) {
+            this.lstContactDeal.push(e[i]);
+          }
+        }
+      }
+    }else{
+      this.lstContactDeal = e;
+    }
+    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
+      this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
+    }
+    this.changeDetectorRef.detectChanges();
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
 
@@ -587,7 +611,8 @@ export class PopupAddDealComponent
     }
   }
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       switch (field.dataType) {
@@ -598,7 +623,12 @@ export class PopupAddDealComponent
         case 'R':
         case 'A':
         case 'C':
-          result = event.e;
+          var contact = event?.e;
+          var type = event?.type ?? '';
+          result = event?.result ?? '';
+          this.convertToFieldDp(contact, type)
+          console.log('contactsJS: ', result);
+          console.log('contacts: ', JSON.parse(result));
           break;
       }
       var index = this.listInstanceSteps.findIndex(
@@ -627,6 +657,37 @@ export class PopupAddDealComponent
       }
     }
   }
+
+  //#region Convert contact to field DP
+  convertToFieldDp(contact, type) {
+    if (contact != null) {
+      if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
+        var index = this.lstContactDeal.findIndex(
+          (x) => x.recID == contact.recID
+        );
+        if (index != -1) {
+          if (type != 'delete') {
+            this.lstContactDeal[index] = contact;
+          } else {
+            this.lstContactDeal.splice(index, 1);
+          }
+        } else {
+          if (type != 'delete') {
+            this.lstContactDeal.push(Object.assign({}, contact));
+          }
+        }
+      } else {
+        if (type != 'delete') {
+          let lst = [];
+          lst.push(Object.assign({}, contact));
+          this.lstContactDeal = lst;
+        }
+      }
+      this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  //#endregion
 
   // Add permission form DP
   copyPermission(permissionDP: any) {

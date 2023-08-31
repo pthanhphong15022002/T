@@ -138,7 +138,7 @@
                             <div class="images-300"  (click)="clickUpload('image')">
                                 <ng-container *ngIf="fileImage">
                                     <div class="images-300_close">
-                                        <button class="btn" (click)="removeImage($event);$event.stopPropagation()">
+                                        <button class="btn" (click)="removeImage();$event.stopPropagation()">
                                             <i class="icon-close text-danger"></i>
                                         </button>
                                     </div>

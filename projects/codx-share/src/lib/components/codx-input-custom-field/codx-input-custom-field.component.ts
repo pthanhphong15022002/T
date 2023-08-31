@@ -18,6 +18,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -37,6 +38,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() disable = false;
   @Input() viewFieldName = false;
   @Input() objectIdParent: any = '';
+  @Input() customerID: string = ''; //Khách hàng cơ hội
   placeholderRole = 'Vai trò........';
 
   moreDefaults = {
@@ -92,7 +94,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
     private notiService: NotificationsService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private codxShareSv: CodxShareService,
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
@@ -159,6 +162,29 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
         let arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
+        this.codxShareSv.listContactBehavior.subscribe((element) => {
+          if(element != null){
+            var contact = element?.data;
+            var type = element?.type;
+            if(this.listContacts != null && this.listContacts.length > 0){
+              var index = this.listContacts.findIndex(x => x.recID == contact?.recID);
+              if(index != -1){
+                if(type == 'edit'){
+                  this.listContacts[index] = contact;
+                }else{
+                  this.listContacts.splice(index, 1);
+                }
+              }
+              this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
+              this.valueChangeCustom.emit({
+                e: null,
+                data: this.customField,
+                result: JSON.stringify(this.listContacts),
+              });
+            }
+            this.codxShareSv.listContactBehavior.next(null);
+          }
+        })
         break;
     }
   }
@@ -291,7 +317,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     let objectID = this.objectIdParent; //recID của co hoi
     let objectType = '4';
     let objectName = '';
-    let customerID = null;
+    let customerID = this.customerID;
     var title = '';
     let opt = new DialogModel();
 
@@ -339,7 +365,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             if (idx == -1) this.listContacts.push(contact);
             else this.listContacts[idx] = contact;
             this.valueChangeCustom.emit({
-              e: JSON.stringify(this.listContacts),
+              e: contact,
+              result: JSON.stringify(this.listContacts),
               data: this.customField,
             });
           }
@@ -357,7 +384,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
     if (index != -1) {
       this.listContacts[index]['role'] = event?.trim();
       this.valueChangeCustom.emit({
-        e: JSON.stringify(this.listContacts),
+        e: this.listContacts[index],
+        result: JSON.stringify(this.listContacts),
         data: this.customField,
       });
     }
@@ -421,7 +449,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             if (idx == -1) this.listContacts.push(contact);
             else this.listContacts[idx] = contact;
             this.valueChangeCustom.emit({
-              e: JSON.stringify(this.listContacts),
+              e: contact,
+              result: JSON.stringify(this.listContacts),
               data: this.customField,
             });
           }
@@ -432,21 +461,27 @@ export class CodxInputCustomFieldComponent implements OnInit {
   deleteContact(data) {
     let config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    //SYS003
-    this.notiService.alertCode('SYS003').subscribe((x) => {
+    //SYS030
+    this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
         let index = this.listContacts.findIndex((x) => x.recID == data.recID);
-        this.listContacts.splice(index, 1);
-        if (this.listContacts?.length > 0)
+        if (index != -1) {
+          this.listContacts.splice(index, 1);
+          this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
           this.valueChangeCustom.emit({
-            e: JSON.stringify(this.listContacts),
+            e: data,
             data: this.customField,
+            result: JSON.stringify(this.listContacts),
+            type: 'delete'
           });
-        else
+        }else{
           this.valueChangeCustom.emit({
-            e: '',
+            e: null,
             data: this.customField,
+            result: JSON.stringify(this.listContacts),
           });
+        }
+
       }
     });
   }

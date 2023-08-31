@@ -1,15 +1,13 @@
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActionArgs } from '@syncfusion/ej2-angular-grids';
 import {
-  ApiHttpService,
+  DataRequest,
+  FormModel,
   NotificationsService,
   TenantStore,
   UIComponent,
 } from 'codx-core';
 import { CodxFdService } from '../../../codx-fd.service';
-import { SettingService } from '../../setting.service';
 
 @Component({
   selector: 'lib-detail-policy',
@@ -17,91 +15,90 @@ import { SettingService } from '../../setting.service';
   styleUrls: ['./detail-policy.component.scss'],
 })
 export class DetailPolicyComponent extends UIComponent implements OnInit {
-  cardtype: string;
-  policy: any = null;
-  lstPolicyLine: any = null;
-  datachange = [];
-  id = '';
-  value = '';
-  tenant: string;
-  tabActive = 1;
-  isGroup: any;
-  private recID;
+  @Input() setting;
+  @Input() settingValue;
+  @Input() policyRecID: string;
+  @Input() formModel: FormModel;
+  getFrom: string = '';
+  value;
+  id;
+  lstLines = [];
 
   constructor(
-    private changedr: ChangeDetectorRef,
-    private at: ActivatedRoute,
     private modalService: NgbModal,
     private tenantStore: TenantStore,
     private notification: NotificationsService,
-    private settingSV: SettingService,
+    private fdService: CodxFdService,
+
     injector: Injector
   ) {
     super(injector);
-    this.tenant = this.tenantStore.get()?.tenant;
-  }
-  redirectPage(page) {
-    // this.router.navigate(['/' + this.tenant + '/fed/setting'], {
-    //   queryParams: { funcID: 'FED204', page: page },
-    // });
   }
 
   onInit(): void {
-    this.at.queryParams.subscribe((params) => {
-      this.cardtype = params.cardtype;
-      if (params.recID) {
-        this.recID = params.recID;
-      }
-      if (params.isGroup) this.isGroup = params.isGroup;
-      if (params && params.type) {
-        let category = '2';
-        let applyFor = '2';
-        if (params.type == 'coin') {
-          category = '1';
-        }
-        if (params.type == 'wallet') {
-          this.cardtype = null;
-          category = params.category;
-          applyFor = '1';
-          this.tabActive = 3;
-        }
-        if (this.isGroup == 0) {
-          this.lstPolicyLine = [];
-          this.api
-            .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
-              category,
-              this.cardtype,
-              applyFor,
-              this.recID,
-              this.isGroup,
-            ])
-            .subscribe((res) => {
-              if (res && res.msgBodyData[0]) {
-                var data = res.msgBodyData[0] as [];
-                this.policy = data['Policie'];
-                this.changedr.detectChanges();
-              }
+    if (this.setting) {
+      switch (this.setting.referedType) {
+        case '2': {
+          this.getFrom = this.setting.referdValue;
+          this.cache.valueList(this.getFrom).subscribe((data) => {
+            data?.datas?.forEach((e) => {
+              this.lstLines.push({ field: e.value, text: e.text });
             });
-        } else {
-          this.api
-            .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
-              category,
-              this.cardtype,
-              applyFor,
-              this.recID,
-              this.isGroup,
-            ])
-            .subscribe((res) => {
-              if (res && res.msgBodyData[0]) {
-                var data = res.msgBodyData[0] as [];
-                this.policy = data['Policie'];
-                this.lstPolicyLine = data['policyLine'];
-                this.changedr.detectChanges();
+            console.log('vll', this.lstLines);
+            this;
+          });
+          break;
+        }
+
+        case '3': {
+          switch (this.setting.referdValue) {
+            case 'Behaviors': {
+              switch (this.settingValue.RuleSelected) {
+                case '1': {
+                  this.getFrom = 'Behaviors_Grp';
+                  break;
+                }
+                case '2': {
+                  this.getFrom = 'Behaviors';
+
+                  break;
+                }
               }
-            });
+              this.cache.combobox(this.getFrom).subscribe((data) => {
+                let gridModel = new DataRequest();
+                gridModel.entityName = data.entityName;
+                gridModel.entityPermission = data.entityName;
+                gridModel.pageLoading = false;
+                gridModel.comboboxName = data.comboboxName;
+                this.fdService
+                  .getDataCbbx(gridModel, data.service)
+                  .subscribe((cbbData) => {
+                    let map = JSON.parse(cbbData[0]);
+                    map?.forEach((e) => {
+                      this.lstLines.push({
+                        field: e.CompetenceID,
+                        text: e.CompetenceName,
+                      });
+                    });
+                  });
+              });
+              break;
+            }
+            case 'Positions': {
+              this.getFrom = 'Positions';
+              this.lstLines.push({
+                field: null,
+                text: 'Tất cả',
+              });
+              console.log('sett', this.setting);
+              break;
+            }
+          }
+          break;
         }
       }
-    });
+    }
+    console.log('policyRecID', this.policyRecID);
   }
 
   valueChange(e, ele) {
@@ -110,8 +107,10 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
 
   open(content, id, value) {
     this.id = id;
-    this.value = value;
-    this.changedr.detectChanges();
+    this.detectorRef.detectChanges();
+
+    console.log('click open ', id);
+
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
@@ -120,41 +119,44 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
   }
 
   save(modal) {
-    this.api
-      .call('ERM.Business.FD', 'PoliciesLinesBusiness', 'SaveAsync', [
-        this.id,
-        this.value,
-        this.policy.itemType,
-        this.policy.recID,
-      ])
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          for (let i = 0; i < this.lstPolicyLine.length; i++) {
-            if (this.lstPolicyLine[i].id == data.itemSelect)
-              this.lstPolicyLine[i].value = data.value;
-          }
-          this.changedr.detectChanges();
-          modal.dismiss('Cross click');
-          this.notification.notifyCode('SYS007');
-        } else this.notification.notifyCode('SYS021');
-      });
+    console.log('save');
+
+    // this.api
+    //   .call('ERM.Business.FD', 'PoliciesLinesBusiness', 'SaveAsync', [
+    //     this.id,
+    //     this.value,
+    //     this.policy.itemType,
+    //     this.policy.recID,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res && res.msgBodyData[0]) {
+    //       var data = res.msgBodyData[0];
+    //       for (let i = 0; i < this.lstPolicyLine.length; i++) {
+    //         if (this.lstPolicyLine[i].id == data.itemSelect)
+    //           this.lstPolicyLine[i].value = data.value;
+    //       }
+    //       this.changedr.detectChanges();
+    //       modal.dismiss('Cross click');
+    //       this.notification.notifyCode('SYS007');
+    //     } else this.notification.notifyCode('SYS021');
+    //   });
   }
 
   delete(recID, id) {
-    this.api
-      .call('ERM.Business.FED', 'PoliciesLinesBusiness', 'DeleteAsync', [recID])
-      .subscribe((res) => {
-        var t = this;
-        if (res && res.msgBodyData[0]) {
-          // _.filter(this.lstPolicyLine, function (o) {
-          //   if (o.id == id) {
-          //     o.value = 0;
-          //     t.changedr.detectChanges();
-          //   }
-          // });
-        }
-      });
+    console.log('delete');
+
+    // this.api
+    //   .call('ERM.Business.FED', 'PoliciesLinesBusiness', 'DeleteAsync', [recID])
+    //   .subscribe((res) => {
+    //     var t = this;
+    //     if (res && res.msgBodyData[0]) {
+    //       // _.filter(this.lstPolicyLine, function (o) {
+    //       //   if (o.id == id) {
+    //       //     o.value = 0;
+    //       //     t.changedr.detectChanges();
+    //       //   }
+    //       // });
+    //     }
+    //   });
   }
-  action(para: ActionArgs): void {}
 }

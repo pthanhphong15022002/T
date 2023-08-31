@@ -257,7 +257,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     );
 
     if (!this.isAdd) {
-      this.form?.formGroup.patchValue(this.data);
+      if(!this.form?.formGroup){
+        this.esService.getFormGroup(this.formModel.formName,this.formModel.gridViewName).then(fg=>{
+          if(fg){
+            this.form.formGroup=fg;
+            this.form?.formGroup.patchValue(this.data);
+            this.cr.detectChanges;
+          }
+        })
+      }
+      else{
+        this.form?.formGroup.patchValue(this.data);
+        this.cr.detectChanges;
+      }
       this.esService.getFormModel('EST04').then((res) => {
         if (res && this.data.countStep > 0) {
           //let fmApprovalStep = res;
@@ -281,7 +293,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           }
         }
       });
-      this.isAfterRender = true;
+      this.cr.detectChanges;
     }
   }
 
@@ -658,17 +670,31 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           break;
         case 'edit':
         case 'add':
+          let option = new SidebarModel();    
+          option.FormModel = this.signFileFM;
           let sfDialog = new DialogModel();
           sfDialog.IsFull = true;
           let isAdd = mfType=='add'? true :false;
           let title = mfType=='add'? "Thêm mới" :'Chỉnh sửa';
           let sfData = {...data};
-          let referType = 'ES_SignFiles';
-          if(this.data?.category!=null){
-            referType = this.data?.category;
-            this.cr.detectChanges();
-          }
-          if(mfType=='add') this.getNewSFModel();//Lấy model cho lần thêm mới tiếp theo          
+          
+          if(mfType=='add'){
+            this.getNewSFModel();//Lấy model cho lần thêm mới tiếp theo 
+            sfData.category=this.data.category;
+            sfData.categoryID=this.data.categoryID; 
+            sfData.title = this.data?.categoryName;
+            sfData.categoryID = this.data?.categoryID;
+            sfData.refType = this.data?.category ?? 'ES_SignFiles';
+            sfData.owner = this.authService?.userValue?.userID;
+            sfData.isTemplate = true;
+            sfData.processID = this.data?.recID;
+            sfData.approveControl = '3';
+            sfData.buid = this.curUser?.buid;
+            sfData.createdBy = this.authService?.userValue?.userID;
+            sfData.createdOn = new Date();
+          }      
+          
+          this.cr.detectChanges();  
           let dialogSF = this.callfunc.openForm(
             PopupAddSignFileComponent,
             title,
@@ -679,10 +705,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               data: sfData,
               isAddNew: isAdd,
               formModel: this.signFileFM,
-              //option: option,
+              option: option,
               disableCateID: true,
               isTemplate: true,
-              refType:referType,
+              refType:sfData?.refType,
             },
             '',
             sfDialog

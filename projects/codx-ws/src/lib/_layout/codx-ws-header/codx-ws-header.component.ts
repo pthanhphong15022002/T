@@ -51,7 +51,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
 
   getFuncList(funcID:any)
   {
-    var fucList = this.codxWsService.loadFuncList("WS") as any;
+    var fucList = this.codxWsService.loadFuncList(this.module) as any;
 
     if(isObservable(fucList))
     {
