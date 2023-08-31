@@ -445,6 +445,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
+  templateType:string = "";
   uploadTemplate(){
     var gridModel = new DataRequest();
     gridModel.funcID = this.data.reportID;
@@ -465,12 +466,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     ).closed.subscribe((res:any) => {
       if(res?.event)
       {
-        debugger
         this.data.templateID = res.event.templateInfo.recID;
         this.data.location = res.event.templateInfo.templateName;
         this.data.description = res.event.templateInfo.description;
         this.data.reportContent = "";
         this.blockBtn = true;
+        this.templateType = res.event.templateType;
         if(res.event.templateType == "AD_WordTemplates")
         {
           this.data.displayMode = "4";
@@ -481,6 +482,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           this.data.displayMode = "3";
           this.data.icon = "../../../assets/codx/dms/xlsx.svg";
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -541,7 +543,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   removeReportFile(){
-    debugger
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiService
@@ -557,7 +558,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     });
   }
   removeTemplate(e:any){
-    debugger
     this.data.displayMode = null;
     this.data.templateID = "";
     this.data.location = "";

@@ -117,11 +117,12 @@
               <ng-container *ngIf="data.templateID">
                 <codx-attachment #codxATM
                   [objectId]="data.templateID" 
-                  [objectType]="data.displayMode == '3'? 'AD_ExcelTemplates' :'AD_WordTemplates'" 
+                  [objectType]="data.displayMode == '3' ? 'AD_ExcelTemplates' :'AD_WordTemplates'" 
                   [hideUploadBtn]="'1'" 
                   [hideBtnSave]="'1'"
                   [hideFolder]="'1'"
                   [hideImageUpload]="'1'"
+                  [isReferType]="true"
                   (fileDelete)="removeTemplate($event)">
                 </codx-attachment>
                 
