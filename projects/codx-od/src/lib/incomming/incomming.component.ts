@@ -232,7 +232,7 @@ export class IncommingComponent
           type: 'add',
           formModel: this.view.formModel,
           service: this.view.service,
-          dispatchType: this.funcList?.dataValue,
+          dispatchType: this.funcList?.defaultValue,
           data: res
         },
         option
@@ -290,7 +290,7 @@ export class IncommingComponent
         if(bm[0]) bm[0].disabled = false;
       }
 
-      if(this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51')
+      if(fc?.defaultValue == '2' || fc?.defaultValue == '3')
       {
         if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
         {

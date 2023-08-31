@@ -7,6 +7,10 @@
           </h2>
         </div>
         <div class="d-flex justify-content-end"> 
+          <button class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                 (click)="release()" >
+                <codx-label Name="lblAprrove" default="Gửi duyệt"></codx-label>
+              </button>
           <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
             <i class="icon-close icon-18" (click)="closePopup()"></i>
           </div>
@@ -15,7 +19,7 @@
       <!-- [curSignerType]="oApprovalTrans?.approverType" -->
   
       <div class="stepper-body pt-2 w-100" *ngIf="isAfterRender">
-         <lib-pdf [recID]="signFile?.recID" [isApprover]="false" [oApprovalTrans]="signFile" [isEditable]="false" [oSignFile]="signFile">
+         <lib-pdf [recID]="signFile?.recID" [isApprover]="false" [oApprovalTrans]="signFile" [isEditable]="false" [oSignFile]="signFile" [oURL]="listURL">
     </lib-pdf> 
         <!-- <lib-pdf
           #pdfView

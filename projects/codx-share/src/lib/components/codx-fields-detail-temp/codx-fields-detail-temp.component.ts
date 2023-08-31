@@ -262,6 +262,8 @@ export class CodxFieldsDetailTempComponent implements OnInit {
         case 'A':
           result = event.e;
           break;
+        case 'C':
+          break;
       }
       field.dataValue = result;
       this.saveField(field);

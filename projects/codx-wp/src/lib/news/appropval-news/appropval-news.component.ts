@@ -2,6 +2,7 @@ import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/co
 import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel, AuthStore, CacheService } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
+import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -28,6 +29,7 @@ export class AppropvalNewsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ViewChild('tmpDetail') tmpDetail: AppropvalNewsDetailComponent;
   tabAsside = [
     {
       name: 'await',
@@ -119,7 +121,6 @@ export class AppropvalNewsComponent extends UIComponent {
           'GetDataTabApproAsync',
           [funcID])
         .subscribe((res: any[]) => {
-          debugger;
           if(res) 
           {
             this.tabAsside.map((tab: any) => {
@@ -161,7 +162,6 @@ export class AppropvalNewsComponent extends UIComponent {
   }
   // click moreFunc
   clickMF(event: any, data: any) {
-    debugger
     this.itemSelected = data;
     switch (event.functionID) {
       case 'SYS02': //delete
@@ -230,6 +230,7 @@ export class AppropvalNewsComponent extends UIComponent {
                 popup.closed.subscribe((res: any) => {
                   if (res?.event) {
                     this.view.dataService.update(res.event).subscribe();
+                    debugger;
                   }
                 });
               }
@@ -245,7 +246,7 @@ export class AppropvalNewsComponent extends UIComponent {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
     option.className = this.funcID == "WPT0213" ? "CommentsBusiness" : "NewsBusiness";
-    option.methodName =  this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteNewsAsync";
+    option.methodName =  this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteAsync";
     option.data = recID;
     return true;
   }
@@ -270,7 +271,6 @@ export class AppropvalNewsComponent extends UIComponent {
   //set des
   setDescription(data:any):string
   {
-    debugger
     if(data.category == "1" || data.category == "3" || data.category == "4")
       return data.content;
     else if(data.category == "companyinfo")

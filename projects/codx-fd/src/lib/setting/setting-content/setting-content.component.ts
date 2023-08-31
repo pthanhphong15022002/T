@@ -5,6 +5,7 @@ import {
   PageTitleService,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { CodxFdService } from '../../codx-fd.service';
 
@@ -38,8 +39,11 @@ export class SettingContentComponent extends UIComponent {
 
   @Input() groupSettings: Map<string, any[]>;
   @Input() setingValues: Map<string, Map<string, string>>;
+  @Input() lstPolicies = [];
   @Input() curLineType;
   @Input() formName = 'FDParameters';
+  @Input() formModel: FormModel;
+
   @Input() cate;
   curGroup = null;
   refQueue = [];
@@ -93,6 +97,16 @@ export class SettingContentComponent extends UIComponent {
         .subscribe((res) => {
           console.log('update res', res);
         });
+    }
+  }
+  changeActivePolicy(row, evt) {
+    if (evt.data != row.actived) {
+      this.fdService.updateActivePolicy(row.policyRecID).subscribe((res) => {
+        if (res) {
+          row.actived = evt.data;
+          // this.detectorRef.detectChanges();
+        }
+      });
     }
   }
 

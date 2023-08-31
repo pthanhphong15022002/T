@@ -64,7 +64,6 @@ export class AppropvalNewsDetailComponent implements OnInit {
       "GetPostByApprovalAsync",
       [this.objectID,this.funcID])
       .subscribe((res:any) => {
-        debugger
         this.data = JSON.parse(JSON.stringify(res));
         if(this.data)
           this.hideMFC = this.data.approveStatus == "5";            
@@ -75,7 +74,6 @@ export class AppropvalNewsDetailComponent implements OnInit {
   clickMF(event:any){
     if(event?.functionID)
     {
-      debugger
       let headerText = event.text + " " + this.functionName;
       switch(event.functionID){
         case "SYS02": //delete
