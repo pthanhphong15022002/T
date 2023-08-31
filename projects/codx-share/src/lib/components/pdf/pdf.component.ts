@@ -87,6 +87,7 @@ export class PdfComponent
   @Input() inputUrl = null;
   @Input() transRecID = null;
   @Input() oSignFile = {};
+  @Input() oURL = [];
 
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
@@ -316,6 +317,10 @@ export class PdfComponent
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
+          if (this.oURL?.length>0)
+          {
+            res.urls=this.oURL;
+          }
           let sf = res?.signFile;
           if (sf) {
             sf.files.forEach((file: any, index) => {
@@ -624,8 +629,9 @@ export class PdfComponent
           );
         } else {
           this.tr?.resizeEnabled(
-            this.isEditable == false ? false :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? false
+              : area.allowEditAreas == false
               ? false
               : area.isLock == true
               ? false
@@ -633,8 +639,9 @@ export class PdfComponent
           );
 
           this.tr?.enabledAnchors(
-            this.isEditable == false ? [] :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? []
+              : area.allowEditAreas == false
               ? []
               : area.isLock == true
               ? []
@@ -645,8 +652,9 @@ export class PdfComponent
               : this.textAnchor
           );
           this.tr?.draggable(
-            this.isEditable == false ? false :
-            area.allowEditAreas == false
+            this.isEditable == false
+              ? false
+              : area.allowEditAreas == false
               ? false
               : area.isLock == true
               ? false
@@ -755,7 +763,7 @@ export class PdfComponent
 
   //loaded pdf
   loadedPdf(e: any) {
-    if (this.pageMax > 0) {
+    if (e.pagesCount > 0) {
       this.pageMax = e.pagesCount;
 
       let ngxService: NgxExtendedPdfViewerService =
@@ -2001,6 +2009,11 @@ export class PdfComponent
     }
 
     this.crrType = type;
+    if (this.signerInfo.allowEditAreas == false) {
+      //thong bao khong duoc dung
+      this.notificationsService.notifyCode('ES036');
+      return;
+    }
 
     if (this.isEditable) {
       this.holding = type?.value;

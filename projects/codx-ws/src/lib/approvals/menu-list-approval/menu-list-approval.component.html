@@ -3,7 +3,7 @@
         <i [ngClass]="item?.largeIcon"></i>
         <span class="fw-bold ms-2">{{item?.customName}}</span>
     </div>
-    <ejs-accordion class="ws-accordion">
+    <ejs-accordion class="ws-accordion h-100">
         <e-accordionitems>
             <ng-container *ngFor="let item of listParentGroup">
                 <e-accordionitem expanded='true'>
@@ -13,7 +13,8 @@
                       <ng-template #content>
                         {{""}}
                         <div class="d-flex align-items-center" *ngFor="let itemChild of item?.child">
-                            {{itemChild?.customName}}
+                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                            <span class="ms-2">{{itemChild?.customName}}</span>
                         </div>
                     </ng-template>
                 </e-accordionitem>

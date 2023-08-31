@@ -86,7 +86,7 @@
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div  class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
+              <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModelCustom"></codx-label>
               </div>
             </div>
@@ -113,7 +113,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-end col-3" >
+      <div class="d-flex justify-content-end col-3">
         <ng-container *ngIf="
             (data?.approveStatus == 1 || data?.approveStatus == 2) &&
             modeView != '1' &&
@@ -128,7 +128,8 @@
               <span (click)="saveAndClose()">
                 <codx-label class="me-3" name="lblSave" [formModel]="formModelCustom" default="Lưu"></codx-label>
               </span>
-              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1" *ngIf="!isTemplate"></span>
+              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"
+                *ngIf="!isTemplate"></span>
             </button>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" *ngIf="!isTemplate">
               <li>
@@ -152,13 +153,15 @@
               </li>
             </ul>
             <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
-                (click)="openTemplateName(addTemplateName)">
-                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Lưu thành quy trình mẫu"></codx-label>
-              </a>
+              (click)="openTemplateName(addTemplateName)">
+              <codx-label Name="lblAprrove" [formModel]="dialog.formModel"
+                default="Lưu thành quy trình mẫu"></codx-label>
+            </a>
           </div>
-          
-          <button class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()" [disabled]="isReleasing" *ngIf="!isTemplate"
-            [ngClass]="user.userID == data.owner ? '' : 'disabled'" [style.visibility]="
+
+          <button class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()"
+            [disabled]="isReleasing" *ngIf="!isTemplate" [ngClass]="user.userID == data.owner ? '' : 'disabled'"
+            [style.visibility]="
               currentTab == 2 &&
               data.files?.length > 0 &&
               (data.approveStatus == '1' || data.approveStatus == '2')
@@ -190,24 +193,45 @@
           </h2>
         </div>
 
-        <div class="card-body scroll-y" data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
-        data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
-        <div class="tab-content">
-          <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-            <div class="w-100 form-content mw-550px mx-auto">
-              <div class="w-100 d-flex flex-column" *ngIf="isTemplate">
-                <div class="w-100 d-flex flex-row ">
-                  <button class="col-4 px-1 es-button" role="button" (click)="chooseTemplateType(null)">
-                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1 " [ngClass]="data?.templateType == null?'es-bg-primary-light':''">
-                      <span class="d-flex flex-row justify-content-between align-items-center ">
-                        <i class="fa-solid fa-file-lines fs-2  pe-3"></i>
-                        <codx-label name="lblSignFile" default="Mẫu trình ký" class="fw-bold" [ngClass]="data?.templateType == null?'':'text-secondary'"></codx-label>
+        <div class="card-body scroll-y" data-kt-scroll-height="auto"
+          data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer" data-kt-scroll-wrappers=".stepper-body"
+          data-kt-scroll-offset="0px">
+          <div class="tab-content">
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
+              <div class="w-100 form-content mw-550px mx-auto">
+                <div class="w-100 d-flex flex-column justify-content-center" *ngIf="isTemplate">
+                  <div class="px-5 d-flex flex-row justify-content-between align-items-center">
+                    <button class="col-5 px-1 es-button" role="button" (click)="chooseTemplateType(null)">
+                      <span
+                        class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1 "
+                        [ngClass]="data?.templateType == null?'es-bg-primary-light':''">
+                        <span class="d-flex flex-row justify-content-between align-items-center ">
+                          <i class="fa-solid fa-file-lines fs-2  pe-3"></i>
+                          <codx-label name="lblSignFile" default="Mẫu vùng ký" class="fw-bold"
+                            [ngClass]="data?.templateType == null?'':'text-secondary'"></codx-label>
+                        </span>
+                        <button type="button"
+                          [ngClass]="data?.templateType == null?'es-upload-button text-primary':'text-secondary'"
+                          class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == null)"
+                          (click)="addEditTemplateFile('file')">
+                        </button>
                       </span>
-                      <button type="button" [ngClass]="data?.templateType == null?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == null)" (click)="addEditTemplateFile('file')">                    
-                      </button>
-                    </span>  
-                  </button>                        
-                  <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('excel')">
+                    </button>
+                    <button class="col-5 px-1 es-button" role="button" (click)="openTemplate()">
+                      <span
+                        class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-3"
+                        [ngClass]="data?.templateType != null?'es-bg-primary-light':''">
+                        <span class="d-flex flex-row justify-content-between align-items-center ">
+                          <i class="fa-solid fa-file-word fs-2  pe-3" style="color: #005dc7;"></i>
+                          <codx-label name="lblESTemplate" default="Mẫu xuất dữ liệu và vùng ký" class="fw-bold"
+                            [ngClass]="data?.templateType != null?'':'text-secondary'"></codx-label>
+                        </span>
+                        <!-- <button type="button" [ngClass]="data?.templateType == 'AD_WordTemplates'?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == 'AD_WordTemplates')"
+                          (click)="addEditTemplateFile('word')">                    
+                        </button> -->
+                      </span>
+                    </button>
+                    <!-- <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('excel')">
                     <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1"  [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'es-bg-primary-light':''">
                       <span class="d-flex flex-row justify-content-between align-items-center ">
                         <i class="fa-solid fa-file-excel fs-2 pe-3" style="color: #347442;"></i>
@@ -228,124 +252,133 @@
                        (click)="addEditTemplateFile('word')">                    
                       </button>
                     </span>
-                  </button> 
-                </div>
-              </div>
+                  </button>  -->
 
-              <div class="text-center sign-attachment">
-                <div>
-                  <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>              
-                </div>
-                <div class="text-center sign-attachment" *ngIf="(oSignFile==null)&& showAttachment">
-                  <codx-attachment #attachment [objectType]="data?.refType!=null && data?.refType!='ES_Categories' ? data?.refType : 'ES_SignFiles'" hideImageUpload="0" [objectId]="data?.recID"
-                    hideBtnSave="1" hideFolder="1" [hideUploadBtn]="isTemplate? '1':'0'" [functionID]="formModelCustom?.funcID" type="inline"
-                    (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source" [tmpRightThumb]="tmpRightAttach">
-                  </codx-attachment>                
+                  </div>
+
                 </div>
 
-                <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
+                <div class="text-center sign-attachment">
+                  <div>
+                    <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'"
+                      [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>
+                  </div>
+                  <div class="text-center sign-attachment" *ngIf="(oSignFile==null)&& showAttachment">
+                    <codx-attachment #attachment
+                      [objectType]="data?.refType!=null && !isTemplate ? data?.refType : 'ES_SignFiles'"
+                      hideImageUpload="0" [objectId]="data?.recID" hideBtnSave="1" hideFolder="1"
+                      [hideUploadBtn]="isTemplate? '1':'0'" [functionID]="formModelCustom?.funcID" type="inline"
+                      (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source"
+                      [tmpRightThumb]="tmpRightAttach">
+                    </codx-attachment>
+                  </div>
+
+                  <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
                   hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
                   (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign" [tmpRight]="tmpRightAttach">
                 </codx-attachment> -->
-                <ng-template #tmpRightAttach let-file>                  
-                    <div *ngIf="eSign"> 
-                      <codx-input type="checkbox" [checked]="checkFileESign(file?.recID)" (valueChange)="fileCheckChange($event,file)"></codx-input>
+                  <ng-template #tmpRightAttach let-file>
+                    <div *ngIf="eSign">
+                      <codx-input type="checkbox" [checked]="checkFileESign(file?.recID)"
+                        (valueChange)="fileCheckChange($event,file)"></codx-input>
                     </div>
-                </ng-template>
-              </div>
-              <div class="form-group">
-                <codx-label fiedName="Title" [formModel]="formModelCustom">
-                </codx-label>
-                <codx-input field="title" [formModel]="formModelCustom" [Group]="dialogSignFile"
-                  [disabled]="modeView == '2' ? true : false">
-                </codx-input>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
-                    </codx-label>
-                    <!-- <codx-input
+                  </ng-template>
+                </div>
+                <div class="form-group">
+                  <codx-label fiedName="Title" [formModel]="formModelCustom">
+                  </codx-label>
+                  <codx-input field="title" [formModel]="formModelCustom" [Group]="dialogSignFile"
+                    [disabled]="modeView == '2' ? true : false">
+                  </codx-input>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
+                      </codx-label>
+                      <!-- <codx-input
                       field="categoryID"
                       [formModel]="formModelCustom"
                       [Group]="dialogSignFile"
                       [disabled]="disableCateID"
                     >
                     </codx-input> -->
-                    <codx-input field="categoryID" [crrValue]="data?.categoryID"
-                      [placeholder]="gvSetup['CategoryID']['description']" [refValue]="
+                      <codx-input field="categoryID" [crrValue]="data?.categoryID"
+                        [placeholder]="gvSetup['CategoryID']['description']" [refValue]="
                         this.cbxCategory ??
                         gvSetup['CategoryID']['referedValue']
                       " type="combobox" (valueChange)="valueChange($event)" [disabled]="disableCateID">
-                    </codx-input>
+                      </codx-input>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="Priority" [formModel]="formModelCustom">
+                      </codx-label>
+                      <codx-input field="priority" [formModel]="formModelCustom" [Group]="dialogSignFile"
+                        [disabled]="modeView == '2'">
+                      </codx-input>
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <codx-label fiedName="Priority" [formModel]="formModelCustom">
-                    </codx-label>
-                    <codx-input field="priority" [formModel]="formModelCustom" [Group]="dialogSignFile"
-                      [disabled]="modeView == '2'">
-                    </codx-input>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="RefNo" [formModel]="formModelCustom">
+                      </codx-label>
+                      <codx-input field="refNo" [disabled]="true" [formModel]="formModelCustom"
+                        [Group]="dialogSignFile">
+                      </codx-input>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <codx-label fiedName="RefDate" [formModel]="formModelCustom">
+                      </codx-label>
+                      <codx-input type="datetime" format="d" field="refDate" [formModel]="formModelCustom"
+                        [disabled]="modeView == '2'" [Group]="dialogSignFile">
+                      </codx-input>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <codx-label fiedName="RefNo" [formModel]="formModelCustom">
-                    </codx-label>
-                    <codx-input field="refNo" [disabled]="true" [formModel]="formModelCustom"
-                      [Group]="dialogSignFile">
-                    </codx-input>
-                  </div>
+                <div class="form-group">
+                  <codx-label fiedName="Owner" [formModel]="formModelCustom">
+                  </codx-label>
+                  <codx-input field="owner" (valueChange)="valueChange($event)" [formModel]="formModelCustom"
+                    [Group]="dialogSignFile" [disabled]="modeView == '2'">
+                  </codx-input>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <codx-label fiedName="RefDate" [formModel]="formModelCustom">
-                    </codx-label>
-                    <codx-input type="datetime" format="d" field="refDate" [formModel]="formModelCustom"
-                      [disabled]="modeView == '2'" [Group]="dialogSignFile">
-                    </codx-input>
-                  </div>
+                <div class="form-group">
+                  <codx-label fiedName="OrgUnitID" [formModel]="formModelCustom">
+                  </codx-label>
+                  <codx-input field="orgUnitID" [formModel]="formModelCustom" [Group]="dialogSignFile"
+                    [disabled]="modeView == '2'">
+                  </codx-input>
                 </div>
-              </div>
-              <div class="form-group">
-                <codx-label fiedName="Owner" [formModel]="formModelCustom">
-                </codx-label>
-                <codx-input field="owner" (valueChange)="valueChange($event)" [formModel]="formModelCustom"
-                  [Group]="dialogSignFile" [disabled]="modeView == '2'">
-                </codx-input>
-              </div>
-              <div class="form-group">
-                <codx-label fiedName="OrgUnitID" [formModel]="formModelCustom">
-                </codx-label>
-                <codx-input field="orgUnitID" [formModel]="formModelCustom" [Group]="dialogSignFile"
-                  [disabled]="modeView == '2'">
-                </codx-input>
-              </div>
-             
-              <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
-                <div class="text-center"></div>
-                <button type="button" class="btn btn-primary me-3" (click)="popup($event, 0)">
-                  <i class="icon-cloud_upload fs-5"></i>
-                  <codx-label name="" [formModel]="formModelCustom" class="" default="Thêm mới"></codx-label>
-                </button>
+
+                <div class="d-flex align-items-center" *ngIf="lstDataFile.length > 0">
+                  <div class="text-center"></div>
+                  <button type="button" class="btn btn-primary me-3" (click)="popup($event, 0)">
+                    <i class="icon-cloud_upload fs-5"></i>
+                    <codx-label name="" [formModel]="formModelCustom" class="" default="Thêm mới"></codx-label>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
 
-          <div *ngIf="!editApprovers" class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-            <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
-                data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl" [isTemplate]="data?.isTemplate"
-               [recID]="data.recID" [type]="'1'" [eSign]="eSign" [signatureType]="signatureType" [refType]="data?.refType !=null ? data?.refType :refType"
-              [mssgDelete]="mssgDelete" (addEditItem)="dataStepChange($event)">
-            </codx-approval-steps>
+            <div *ngIf="!editApprovers" class="tab-pane fade" id="pane_2"
+              [ngClass]="currentTab == 1 ? 'active show' : ''">
+              <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
+                data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
+                [isTemplate]="data?.isTemplate" [recID]="data.recID" [type]="'1'" [eSign]="eSign"
+                [signatureType]="signatureType" [refType]="data?.refType !=null ? data?.refType :refType"
+                [mssgDelete]="mssgDelete" (addEditItem)="dataStepChange($event)">
+              </codx-approval-steps>
+            </div>
+            <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''"></div>
           </div>
-          <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''"></div>
         </div>
-      </div>
 
         <div class="d-flex flex-stack justify-content-between card-footer border-0">
           <div class="left">
@@ -363,7 +396,8 @@
               <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
               </codx-label>
             </button>
-            <span *ngIf="sampleProcessName && data?.approveControl=='2'" class="fw-bold sample-process" >{{sampleProcessName}}</span>
+            <span *ngIf="sampleProcessName && data?.approveControl=='2'"
+              class="fw-bold sample-process">{{sampleProcessName}}</span>
           </div>
 
           <div *ngIf="currentTab == 0"></div>
@@ -388,7 +422,8 @@
                   <span (click)="saveAndClose()">
                     <codx-label class="me-3" name="lblSave" [formModel]="formModelCustom" default="Lưu"></codx-label>
                   </span>
-                  <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1" *ngIf="!isTemplate"></span>
+                  <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"
+                    *ngIf="!isTemplate"></span>
                 </button>
                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" *ngIf="!isTemplate">
                   <li>
@@ -412,12 +447,13 @@
                   </li>
                 </ul>
               </div>
-              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
-                (click)="openTemplateName(addTemplateName)">
-                <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Lưu thành quy trình mẫu"></codx-label>
+              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                *ngIf="isTemplate " (click)="openTemplateName(addTemplateName)">
+                <codx-label Name="lblAprrove" [formModel]="dialog.formModel"
+                  default="Lưu thành quy trình mẫu"></codx-label>
               </a>
-              <button class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="!isTemplate "
-                (click)="release()"  [disabled]="isReleasing">
+              <button class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                *ngIf="!isTemplate " (click)="release()" [disabled]="isReleasing">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
               </button>
             </ng-container>

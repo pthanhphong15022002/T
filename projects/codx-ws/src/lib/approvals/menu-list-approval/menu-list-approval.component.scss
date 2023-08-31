@@ -6,14 +6,29 @@
         border-width: 0 !important;
         padding: 0;
         min-height: 0;
+        background-color: white !important;
+        margin-left: 20px;
+    }
+    .e-acrdn-header:focus{
+        box-shadow: none !important;
     }
     .e-toggle-icon
     {
-        height: 0;
+        height: 42px;
         min-height: 0;
+        color: black !important;
     }
-    .e-acrdn-header-content
+    .e-icons.e-tgl-collapse-icon ,  .e-acrdn-header-content
     {
-        color: black;
+        color: black !important;
     }
+    .e-acrdn-content
+    {
+        padding: 0 0 0 21px;
+    }
+    .e-acrdn-item
+    {
+        border: none !important;
+    }
+   
 }

@@ -13,6 +13,7 @@
   (buttonClick)="addContract($event)"
   (selectedChange)="changeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -24,15 +25,17 @@
           <codx-img
             [width]="35"
             class="me-3"
-            [objectId]="data?.emp?.employeeID || data?.employeeID"
+            [objectId]="data?.inforEmployee?.employeeID"
             [referType]="'avt'"
-            [objectName]="data?.emp?.employeeName || data?.employeeName"
+            [objectName]="data?.inforEmployee?.employeeName"
             [objectType]="'HR_Employees'"
           >
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <span class="fs-6 fw-bold mb-1">{{ data?.emp?.employeeName }}</span>
+          <span class="fs-6 fw-bold mb-1">{{
+            data?.inforEmployee?.employeeName
+          }}</span>
           <span
             class="text-gray-600 fs-7"
             [innerHTML]="
@@ -49,13 +52,9 @@
                 | async
             "
           ></span> -->
-          <span
-            *ngIf="
-              data.orgUnitName || data?.emp?.orgUnitName;
-              else noOrgUnitName
-            "
-            >{{ data.orgUnitName || data.emp.orgUnitName }}</span
-          >
+          <span *ngIf="data?.inforEmployee?.orgUnitName; else noOrgUnitName">{{
+            data.inforEmployee.orgUnitName
+          }}</span>
           <ng-template #noOrgUnitName>
             <span class="place-holder">{{
               grvSetup["OrgUnitID"].headerText
@@ -155,7 +154,10 @@
         ></div>
 
         <div
-          *ngIf="data?.isCurrent && data?.isExpire"
+          *ngIf="
+            data?.isCurrent &&
+            dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
+          "
           #popOver="ngbPopover"
           [openDelay]="500"
           (mouseenter)="popOver.open()"
@@ -169,7 +171,8 @@
         <div
           *ngIf="
             data?.isCurrent &&
-            dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+            dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+            data?.status === '5'
           "
           #popOver="ngbPopover"
           [openDelay]="500"
@@ -285,19 +288,19 @@
     cardCss="card-template border-bottom p-3"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
-    [imageId]="data.emp?.employeeID || data?.employeeID"
+    [imageId]="data.inforEmployee?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageObjName]="data?.emp?.employeeName"
+    [imageObjName]="data?.inforEmployee?.employeeName"
     [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
+    [title]="data.inforEmployee?.employeeName"
     [titleCss]="'fs-6 mb-1'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
-      data?.emp?.positionID || data?.positionID
+      data?.inforEmployee?.positionID || data?.positionID
         | formatvalue : view.formModel : 'PositionID'
         | async
     "
@@ -326,7 +329,10 @@
     ></div>
 
     <div
-      *ngIf="data?.isCurrent && data?.isExpire"
+      *ngIf="
+        data?.isCurrent &&
+        dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
+      "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
@@ -340,7 +346,8 @@
     <div
       *ngIf="
         data?.isCurrent &&
-        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"
@@ -416,21 +423,18 @@
           </ng-template>
         </ng-container>
         <span
+          *ngIf="data?.signedDate"
           class="me-4"
           [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-          [innerHTML]="
-            data?.signedDate
-              | formatvalue : view.formModel : 'signedDate'
-              | async
-          "
         >
+          {{ data?.signedDate | fmDT : "dmy" }}
         </span>
       </div>
     </div>
   </ng-template>
 </ng-template>
 
-<ng-template #baseHeaderRightTmp let-data>
+<!-- <ng-template #baseHeaderRightTmp let-data>
   <div>
     <ng-container
       *ngIf="
@@ -470,6 +474,8 @@
       *ngIf="
         data?.isCurrent &&
         dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        &&
+            data?.status === '5'
       "
     >
       <span
@@ -484,7 +490,7 @@
       ></span>
     </ng-container>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #panelRightListDetail let-data>
   <lib-view-detail-contracts

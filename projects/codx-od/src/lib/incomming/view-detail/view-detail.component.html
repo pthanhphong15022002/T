@@ -256,8 +256,8 @@
               ><span
                 ><codx-label
                   [default]="
-                    formModel?.funcID == 'ODT31' ||
-                    (formModel?.funcID == 'ODT52' && data?.dispatchType == '4')
+                  funcList?.defaultValue == '1' ||
+                    (funcList?.defaultValue == '4' && data?.dispatchType == '4')
                       ? 'Nơi nhận'
                       : 'Nơi gửi'
                   "
@@ -276,12 +276,8 @@
               <ng-container *ngFor="let item of data?.listInformationRel">
                 <ng-container
                   *ngIf="
-                    formModel?.funcID != 'ODT41' ||
-                    (formModel?.funcID == 'ODT41' &&
-                      ((item.relationType != '1' &&
-                        data?.listInformationRel.length > 1) ||
-                        (item.relationType == '1' &&
-                          data?.listInformationRel.length == 1)))
+                    funcList?.defaultValue != '2' ||
+                    (funcList?.defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' &&  data?.listInformationRel.length == 1)))
                   "
                 >
                   <div class="list-item has-action-menu-od mb-6">
@@ -349,6 +345,7 @@
                                 relID: item.recID,
                               })
                             "
+                            ngbTooltip="Thu hồi"
                           >
                             <!--  -->
                             <i class="icon-redo text-primary icon-18"></i>
@@ -410,7 +407,6 @@
       [addPermissions]="listPermission"
     ></codx-tabs>
   </ng-template>
-
   <ng-template #templateorg let-item>
     <div class="container-fluid justify-content-between d-flex">
       <div class="d-flex align-items-top mt-5">
@@ -580,7 +576,7 @@
       </codx-vll>
 
       <codx-vll
-        *ngIf="view?.formModel?.funcID == 'ODT41'"
+        *ngIf="funcList?.defaultValue == '2'"
         [value]="data.oDis.approveStatus"
         [name]="gridViewSetup['ApproveStatus']['referedValue']"
         [showIcon]="true"

@@ -142,8 +142,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       },
     ];
     if (
-      this.view?.funcID == 'ODT41' ||
-      (this.view?.funcID == 'ODT51' && this.dataItem?.dispatchType == '3') ||
+      this.funcList?.defaultValue == '2' ||
+      (this.funcList?.defaultValue == '3' && this.dataItem?.dispatchType == '3') ||
       this.xd
     )
       this.tabControl.push({
@@ -152,7 +152,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         isActive: false,
       });
 
-    if (this.view?.funcID != 'ODT41') {
+    if (this.funcList?.defaultValue != '2' && this.funcList?.defaultValue != '3') {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
@@ -773,6 +773,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
             this.data.lstUserID = getListImg(x.event[0].relations);
+            this.data.relations = x.event[0].relations;
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
             );
@@ -1103,6 +1104,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .closed.subscribe((x) => {
             if (x?.event == 0) {
               datas.status = '7';
+              this.data.status = "7";
               this.view.dataService.update(datas).subscribe();
             }
           });
@@ -1245,7 +1247,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       default: {
 
-        //Biến động tự custom
+        //Biến động , tự custom
         var customData = 
         {
           refID : "",
@@ -1253,6 +1255,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           dataSource: datas,
           addPermissions: this.listPermission
         }
+
         this.shareService.defaultMoreFunc(
           val,
           datas,
@@ -1437,11 +1440,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     shareBy: any,
     agencies = null
   ) {
-    if (
-      relationType == '1' ||
-      (this.formModel.funcID == 'ODT41' && relationType == '2')
-    ) {
-      if (this.formModel.funcID == 'ODT31') {
+    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2')) 
+    {
+      if (this.funcList?.defaultValue == '1') {
         var text = this.ms020?.customName;
         if (!text) text = '';
 
@@ -1512,8 +1513,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         if (bm[0]) bm[0].disabled = false;
       }
       if (
-        (this.formModel.funcID == 'ODT41' ||
-          this.formModel.funcID == 'ODT51') &&
+        (this.funcList?.defaultValue == '2' ||
+        this.funcList?.defaultValue == '3') &&
         data?.status != '1' &&
         data?.status != '2' &&
         data?.approveStatus != '2' &&
@@ -1523,8 +1524,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
 
       if (
-        this.formModel.funcID == 'ODT41' ||
-        this.formModel.funcID == 'ODT51'
+        this.funcList?.defaultValue == '2' ||
+        this.funcList?.defaultValue == '3'
       ) {
         if (
           data?.status != '1' &&

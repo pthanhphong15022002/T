@@ -44,11 +44,14 @@ export class CodxHrService {
   actionDelete = 'S02';
   actionAddNew = 'A01';
   actionSubmit = 'A03';
+  actionReturn = 'A02';
+  actionCancelSubmit = 'A00';
   actionUpdateCanceled = 'AU0';
   actionUpdateInProgress = 'AU3';
   actionUpdateRejected = 'AU4';
   actionUpdateApproved = 'AU5';
   actionUpdateClosed = 'AU9';
+  actionExport = 'A20';
   //#endregion
   childMenuClick = new BehaviorSubject<any>(null);
 
@@ -998,15 +1001,15 @@ export class CodxHrService {
     );
   }
 
-  EditEmployeeAppointionsMoreFunc(data: any) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EAppointionsBusiness',
-      'EditEAppointionsMoreFuncAsync',
-      data
-    );
-  }
+  // EditEmployeeAppointionsMoreFunc(data: any) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.HR',
+  //     'EAppointionsBusiness',
+  //     'EditEAppointionsMoreFuncAsync',
+  //     data
+  //   );
+  // }
 
   validateBeforeReleaseAppointion(recID: string) {
     return this.api.execSv(
@@ -2205,14 +2208,6 @@ export class CodxHrService {
     return this.expression.test(email);
   }
 
-  // actionAddNew = 'A01'
-  // actionSubmit = 'A03'
-  // actionUpdateCanceled = 'AU0'
-  // actionUpdateInProgress = 'AU3'
-  // actionUpdateRejected = 'AU4'
-  // actionUpdateApproved = 'AU5'
-  // actionUpdateClosed = 'AU9'
-
   handleShowHideMF(evt, data, formModel) {
     // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
     let category = '4';
@@ -2225,60 +2220,88 @@ export class CodxHrService {
         );
         if (index > -1) {
           let typeDocObj = parsedJSON[index];
-          if (typeDocObj['ApprovalRule'] != '1') {
-            let found = evt.find(
+
+          if (typeDocObj['ApprovalRule'] === '1') {
+            let cancel = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionUpdateCanceled
+            );
+            cancel.disabled = true;
+
+            let inprogress = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionUpdateInProgress
+            );
+            inprogress.disabled = true;
+
+            let approve = evt.find(
+              (val) =>
+                val.functionID.substr(val.functionID.length - 3) ==
+                this.actionUpdateApproved
+            );
+            approve.disabled = true;
+          }
+
+          if (typeDocObj['ApprovalRule'] === '0') {
+            let foundSubmit = evt.find(
               (val) =>
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionSubmit
             );
-            found.disabled = true;
+            foundSubmit.disabled = true;
 
-            let found2 = evt.find(
+            let foundCancel = evt.find(
               (val) =>
                 val.functionID.substr(val.functionID.length - 3) ==
-                this.actionUpdateRejected
+                this.actionCancelSubmit
             );
-            found2.disabled = true;
+            foundCancel.disabled = true;
           }
-        } else {
-          let found = evt.find(
-            (val) =>
-              val.functionID.substr(val.functionID.length - 3) ==
-              this.actionSubmit
-          );
-          found.disabled = true;
-
-          let found2 = evt.find(
-            (val) =>
-              val.functionID.substr(val.functionID.length - 3) ==
-              this.actionUpdateRejected
-          );
-          found2.disabled = true;
         }
       }
     });
 
-    if (formModel.entityName == 'HR_EContracts') {
-      //Xu li rieng cho HDLD
-    }
+    for (let i = 0; i < evt.length; i++) {
+      let funcIDStr = evt[i].functionID;
+      let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+      if (IDCompare === this.actionAddNew) {
+        evt[i].disabled = true;
+      }
 
-    //#region code cũ
-    if (
-      data.status == '0' ||
-      data.status == '2' ||
-      data.status == '4' ||
-      data.status == '5' ||
-      data.status == '6' ||
-      data.status == '9'
-    ) {
-      for (let i = 0; i < evt.length; i++) {
-        let funcIDStr = evt[i].functionID;
-        let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+      //Gửi mail
+      if (IDCompare === this.actionUpdateRejected) {
+        evt[i].disabled = true;
+      }
+
+      if (IDCompare === '004') {
+        evt[i].disabled = true;
+      }
+
+      if (data.status !== '5' && IDCompare === this.actionUpdateClosed) {
+        evt[i].disabled = true;
+      }
+      if (
+        (data.status === '9' || data.status === '0') &&
+        IDCompare === this.actionExport
+      ) {
+        evt[i].disabled = true;
+      }
+
+      if (
+        data.status == '0' ||
+        data.status == '2' ||
+        data.status == '4' ||
+        data.status == '5' ||
+        data.status == '6' ||
+        data.status == '9'
+      ) {
         switch (IDCompare) {
           case this.actionSubmit:
           case this.actionUpdateCanceled:
+          case this.actionCancelSubmit:
           case this.actionUpdateInProgress:
-          case this.actionUpdateRejected:
           case this.actionUpdateApproved:
           case this.actionUpdateClosed:
           case this.actionEdit:
@@ -2291,14 +2314,32 @@ export class CodxHrService {
           (data.status == '0' || data.status == '4')
         ) {
           evt[i].disabled = false;
-        } else if (IDCompare == this.actionSubmit && data.status == '6') {
+        }
+        if (IDCompare == this.actionSubmit && data.status == '6') {
           evt[i].disabled = false;
         }
+        if (
+          IDCompare == this.actionUpdateClosed &&
+          data.status == '5' &&
+          data.isCurrent === true
+        ) {
+          evt[i].disabled = false;
+        }
+
+        if (data.status == '2') {
+          if (IDCompare === this.actionSubmit) {
+            evt[i].disabled = false;
+          }
+          if (IDCompare === this.actionCancelSubmit) {
+            evt[i].disabled = false;
+          }
+          if (IDCompare === this.actionEdit) {
+            evt[i].disabled = false;
+          }
+        }
       }
-    } else if (data.status == '3') {
-      for (let i = 0; i < evt.length; i++) {
-        let funcIDStr = evt[i].functionID;
-        let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+
+      if (data.status == '3') {
         switch (IDCompare) {
           case this.actionSubmit:
           case this.actionUpdateInProgress:
@@ -2307,26 +2348,92 @@ export class CodxHrService {
             evt[i].disabled = true;
             break;
         }
-        // let found = evt.find(
-        //   (val) =>
-        //     val.functionID.substr(val.functionID.length - 3) == this.actionSubmit
-        // );
-        // found.disabled = true;
-
-        // let found2 = evt.find(
-        //   (val) =>
-        //     val.functionID.substr(val.functionID.length - 3) ==
-        //     this.actionUpdateInProgress
-        // );
-        // found2.disabled = true;
       }
     }
+
+    // if (formModel.entityName == 'HR_EContracts') {
+    // }
+
+    //#region code cũ
+    // if (
+    //   data.status == '0' ||
+    //   data.status == '2' ||
+    //   data.status == '4' ||
+    //   data.status == '5' ||
+    //   data.status == '6' ||
+    //   data.status == '9'
+    // ) {
+    //   for (let i = 0; i < evt.length; i++) {
+    //     let funcIDStr = evt[i].functionID;
+    //     let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+    //     switch (IDCompare) {
+    //       case this.actionSubmit:
+    //       case this.actionUpdateCanceled:
+    //       case this.actionCancelSubmit:
+    //       case this.actionUpdateInProgress:
+    //       case this.actionUpdateApproved:
+    //       case this.actionUpdateClosed:
+    //       case this.actionEdit:
+    //       case this.actionDelete:
+    //         evt[i].disabled = true;
+    //         break;
+    //     }
+    //     if (
+    //       IDCompare == this.actionDelete &&
+    //       (data.status == '0' || data.status == '4')
+    //     ) {
+    //       evt[i].disabled = false;
+    //     }
+    //     if (IDCompare == this.actionSubmit && data.status == '6') {
+    //       evt[i].disabled = false;
+    //     }
+    //     if (IDCompare == this.actionUpdateClosed && data.status == '5') {
+    //       evt[i].disabled = false;
+    //     }
+    //     if (IDCompare === this.actionExport && data.status !== '9') {
+    //       evt[i].disabled = false;
+    //     }
+    //     if (data.status == '2') {
+    //       if (IDCompare === this.actionSubmit) {
+    //         evt[i].disabled = false;
+    //       }
+    //       if (IDCompare === this.actionCancelSubmit) {
+    //         evt[i].disabled = false;
+    //       }
+    //     }
+    //     // if (data.status == '3') {
+    //     //   switch (IDCompare) {
+    //     //     case this.actionSubmit:
+    //     //     case this.actionUpdateInProgress:
+    //     //     case this.actionEdit:
+    //     //     case this.actionDelete:
+    //     //       evt[i].disabled = true;
+    //     //       break;
+    //     //   }
+    //     // }
+    //   }
+    // }
+    // else if (data.status == '3') {
+    //   for (let i = 0; i < evt.length; i++) {
+    //     let funcIDStr = evt[i].functionID;
+    //     let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+    //     switch (IDCompare) {
+    //       case this.actionSubmit:
+    //       case this.actionUpdateInProgress:
+    //       case this.actionEdit:
+    //       case this.actionDelete:
+    //         evt[i].disabled = true;
+    //         break;
+    //     }
+    //   }
+    // }
   }
 
   handleUpdateRecordStatus(functionID, data) {
     let funcIDRecognize = functionID.substr(functionID.length - 3);
     switch (funcIDRecognize) {
       case this.actionUpdateCanceled:
+      case this.actionCancelSubmit:
         data.status = '0';
         break;
 
@@ -2334,9 +2441,9 @@ export class CodxHrService {
         data.status = '3';
         break;
 
-      case this.actionUpdateRejected:
-        data.status = '4';
-        break;
+      // case this.actionUpdateRejected:
+      //   data.status = '4';
+      //   break;
 
       case this.actionUpdateApproved:
         data.status = '5';
@@ -2578,6 +2685,18 @@ export class CodxHrService {
         alMonth,
         isExcept,
       ]
+    );
+  }
+  getEAnnualLeaveMonthsByEmployeeIDAndALYearAsync(
+    employeeID: string,
+    alYear: string
+  ) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EAnnualLeavesBusiness',
+      'GetListEmployeeAnnualLeaveMonthAsync',
+      [employeeID, alYear]
     );
   }
   //#endregion

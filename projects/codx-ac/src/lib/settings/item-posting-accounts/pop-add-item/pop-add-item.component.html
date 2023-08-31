@@ -23,7 +23,9 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="ItemValue"></codx-label>
-                    <codx-input *ngIf="itemposting.itemLevel == ''" type="valuelist" field="itemValue">
+                    <!-- <codx-input *ngIf="itemposting.itemLevel == ''" type="valuelist" field="itemValue">
+                    </codx-input> -->
+                    <codx-input *ngIf="itemposting.itemLevel == null" type="text" [disabled]="true">
                     </codx-input>
                     <codx-input *ngIf="itemposting.itemLevel == '1'" type="combobox" refValue="Items"
                         (valueChange)="valueChange($event)" [crrValue]="form.data.itemValue" field="itemValue">
@@ -66,14 +68,16 @@
             <div class="col-4">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="ObjectValue"></codx-label>
-                    <codx-input *ngIf="itemposting.objectType == null && itemposting.objectLevel == '3'" type="valuelist"
-                        field="onAddNew">
+                    <codx-input *ngIf="itemposting.objectType == null || itemposting.objectLevel == null" type="text" [disabled]="true" >
                     </codx-input>
+                    <!-- <codx-input *ngIf="itemposting.objectType == null && itemposting.objectLevel == '3'" type="valuelist"
+                        field="onAddNew" >
+                    </codx-input> -->
                     <codx-input *ngIf="itemposting.objectType == '1' && itemposting.objectLevel == '1'"
                         (valueChange)="valueChange($event)" type="combobox" refValue="Customers"
                         [crrValue]="itemposting.objectValue" field="objectValue">
                     </codx-input>
-                    <codx-input *ngIf="itemposting.objectType == '1' && itemposting.onDiscard == '2'"
+                    <codx-input *ngIf="itemposting.objectType == '1' && itemposting.objectLevel == '2'"
                         (valueChange)="valueChange($event)" type="combobox" refValue="CustomerGroups"
                         [crrValue]="itemposting.objectValue" field="objectValue">
                     </codx-input>
@@ -81,7 +85,7 @@
                         (valueChange)="valueChange($event)" type="combobox" refValue="VendorsAC"
                         [crrValue]="itemposting.objectValue" field="objectValue">
                     </codx-input>
-                    <codx-input *ngIf="itemposting.objectType == '2' && itemposting.onDiscard == '2'"
+                    <codx-input *ngIf="itemposting.objectType == '2' && itemposting.objectLevel == '2'"
                         (valueChange)="valueChange($event)" type="combobox" refValue="VendorGroups"
                         [crrValue]="itemposting.objectValue" field="objectValue">
                     </codx-input>

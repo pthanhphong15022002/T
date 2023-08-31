@@ -752,6 +752,14 @@
                   "
                 >
                 </span>
+                <!-- <span
+                class="text-dark fw-bold ms-7"
+                [innerHTML]="
+                  infoPersonal?.birthday
+                    | dateformat : 'day'
+                "
+              >
+              </span> -->
               </div>
               <!-- Nơi sinh -->
               <div class="col">
@@ -6409,7 +6417,7 @@
 <ng-template #templateESkillGridCol3 let-data>
   <div class="has-action-menu">
     <div class="mb-1">
-      <span
+      <!-- <span
     placement="top" [title]="eSkillHeaderText.TrainFrom"
 
         [innerHTML]="
@@ -6417,9 +6425,36 @@
             | formatvalue : eSkillFormmodel : 'trainFrom'
             | async
         "
-      ></span>
-      <span class="me-2"> - </span>
-      <span
+      ></span> -->
+
+      <span *ngIf="data?.trainFrom == 'day'"
+    placement="top" [title]="eSkillHeaderText.TrainFrom"
+                [innerHTML]="
+                data?.trainFromDate
+                    | dateformat : 'day'
+                "
+              >
+              </span>
+
+              <span *ngIf="data?.trainFrom == 'month'"
+              placement="top" [title]="eSkillHeaderText.TrainFrom"
+                  [innerHTML]="
+                  data?.trainFromDate
+                      | dateformat : 'month'
+                  "
+                >
+                </span>
+
+                <span *ngIf="data?.trainFrom == 'year'"
+                placement="top" [title]="eSkillHeaderText.TrainFrom"
+                    [innerHTML]="
+                    data?.trainFromDate
+                        | dateformat : 'year'
+                    "
+                  >
+                  </span>
+      <span *ngIf="data?.trainTo"> - </span>
+      <!-- <span
     placement="top" [title]="eSkillHeaderText.TrainTo"
 
         [innerHTML]="
@@ -6427,7 +6462,32 @@
             | formatvalue : eSkillFormmodel : 'trainTo'
             | async
         "
-      ></span>
+      ></span> -->
+
+      <span *ngIf="data?.trainTo == 'day'"
+      placement="top" [title]="eSkillHeaderText.TrainTo"
+      [innerHTML]="
+      data?.trainToDate
+          | dateformat : 'day'
+      "
+        ></span>
+
+        <span *ngIf="data?.trainTo == 'month'"
+        placement="top" [title]="eSkillHeaderText.TrainTo"
+        [innerHTML]="
+        data?.trainToDate
+            | dateformat : 'month'
+        "
+          ></span>
+
+          <span *ngIf="data?.trainTo == 'year'"
+          placement="top" [title]="eSkillHeaderText.TrainTo"
+          [innerHTML]="
+          data?.trainToDate
+              | dateformat : 'year'
+          "
+            ></span>
+
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-menu_book icon-16 text-primary me-2"></i>

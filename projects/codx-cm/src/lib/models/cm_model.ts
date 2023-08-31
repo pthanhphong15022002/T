@@ -728,6 +728,7 @@ export class CM_Leads {
   customerID: string;
   salespersonID: string;
   consultantID: string;
+  shortName: string;
   // datas: Json;
   customerResource: string;
   owner: string;

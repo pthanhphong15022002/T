@@ -144,6 +144,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
               this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
               this.EAppointionObj.jobLevel = this.employeeObj.jobLevel;
               this.EAppointionObj.locationID = this.employeeObj.locationID;
+              this.EAppointionObj.positionID = this.employeeObj.positionID;
             }
             this.formModel.currentData = this.EAppointionObj;
             this.formGroup.patchValue(this.EAppointionObj);

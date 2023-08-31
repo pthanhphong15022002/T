@@ -36,7 +36,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() vllRefType: any = 'TM018';
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
-  @Input() isEdit = true; //mac dinh bằn true - Thao them sua ngay 23/2/2023
+  @Input() isEdit = true; //mac dinh bằng true - Thao them sua ngay 23/2/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -51,7 +51,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() transID: string;
   @Input() approveStatus: string;
 
-  @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  @Input() referType: string = ''; //de mac định the nay moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
 
   private all: TabModel[] = [
     {

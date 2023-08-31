@@ -18,10 +18,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
-import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
+//import { PopupEmployeeBusinessComponent } from './popup-employee-business/popup-employee-business.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
+import { PopupEmpBusinessTravelsComponent } from '../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -62,6 +63,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   flagChangeMF: boolean = false;
 
   //#region eBusinessTravelFuncID
+  actionCancelSubmit = 'HRTPro10A00';
   actionAddNew = 'HRTPro10A01';
   actionSubmit = 'HRTPro10A03';
   actionUpdateCanceled = 'HRTPro10AU0';
@@ -129,14 +131,15 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     option.FormModel = this.view.formModel;
 
     let dialogAdd = this.callfc.openSide(
-      PopupEmployeeBusinessComponent,
+      PopupEmpBusinessTravelsComponent,
       {
         funcID: this.view.funcID,
         employeeId: data?.employeeID || this.currentEmpObj?.employeeID,
         headerText: actionHeaderText,
         empObj: this.currentEmpObj,
         actionType: actionType,
-        dataObj: data,
+        businessTravelObj: data,
+        useForQTNS: true,
       },
       option
     );
@@ -242,6 +245,23 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
         this.view.dataService.update(res.event[0]).subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
         this.df.detectChanges();
       }
     });
@@ -363,9 +383,10 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       case this.actionSubmit:
         this.beforeRelease();
         break;
+      case this.actionCancelSubmit:
       case this.actionUpdateCanceled:
       case this.actionUpdateInProgress:
-      case this.actionUpdateRejected:
+      // case this.actionUpdateRejected:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
         let oUpdate = JSON.parse(JSON.stringify(data));

@@ -67,7 +67,7 @@ export class PopupConvertLeadComponent implements OnInit {
     },
     {
       icon: 'icon-read_more',
-      text: 'Thông tin nhập liệu',
+      text: 'Thông tin khác',
       name: 'InputInformation',
     },
   ];
@@ -165,8 +165,30 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.radioChecked) {
       this.countAddSys++;
     }
-
+    this.setCurrentID();
     this.changeDetectorRef.detectChanges();
+  }
+
+  async setCurrentID() {
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.deal.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        let exchangeRateCurrent = await firstValueFrom(
+          this.cmSv.getExchangeRate(this.deal.currencyID, new Date())
+        );
+        if (exchangeRateCurrent?.exchRate > 0) {
+          this.deal.exchangeRate = exchangeRateCurrent?.exchRate;
+        } else {
+          this.deal.exchangeRate = 1;
+          this.deal.currencyID = 'VND';
+        }
+      }
+    }
   }
 
   onSelect(e): void {
@@ -188,16 +210,26 @@ export class PopupConvertLeadComponent implements OnInit {
   promiseAll() {}
 
   async getProcessIDBybusinessLineID(businessLineID) {
-    var options = new DataRequest();
-    options.entityName = 'CM_BusinessLines';
-    options.predicates = 'BusinessLineID=@0';
-    options.dataValues = businessLineID;
-    options.pageLoading = false;
-    this.businessLine = await firstValueFrom(
-      this.cmSv.loadDataAsync('CM', options)
+    let businessLine = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'BusinessLinesBusiness',
+        'GetOneAsync',
+        [businessLineID]
+      )
     );
 
-    this.getListInstanceSteps(this.businessLine[0].processID);
+    if (businessLine) {
+      var nameDefault =
+        this.lead.shortName != null && this.lead.shortName.trim() != ''
+          ? this.lead.shortName
+          : this.lead.leadName;
+      this.deal.dealName =
+        nameDefault + ' mua ' + this.businessLine?.businessLineName;
+    }
+
+    this.getListInstanceSteps(businessLine?.processID);
   }
 
   async getProcessByProcessID(e) {
@@ -404,10 +436,9 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async onConvert() {
-
     let result = [];
 
-    if(this.lead.applyProcess && this.lead.status != '3') {
+    if (this.lead.applyProcess && this.lead.status != '3') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
@@ -425,9 +456,11 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lead.recID,
       this.customer,
       this.deal,
-      this.isCheckContact ? this.lstContactDeal : null,
+      this.lstContactDeal,
       this.recIDContact,
-      this.lead.applyProcess && this.lead.status != '3' ? result[0]?.stepID: '',
+      this.lead.applyProcess && this.lead.status != '3'
+        ? result[0]?.stepID
+        : '',
     ];
 
     await this.api
@@ -470,7 +503,7 @@ export class PopupConvertLeadComponent implements OnInit {
             lead: res,
             listStep: result[1],
             salespersonID: this.deal.salespersonID,
-            consultantID: this.deal.consultantID
+            consultantID: this.deal.consultantID,
           };
           this.dialog.close(obj);
         }
@@ -516,6 +549,13 @@ export class PopupConvertLeadComponent implements OnInit {
   valueBusinessLine(e) {
     if (this.deal?.businessLineID != e?.data) {
       this.deal.businessLineID = e?.data;
+      let businessName = e?.component.itemsSelected[0].BusinessLineName;
+      var nameDefault =
+        this.lead.shortName != null && this.lead.shortName.trim() != ''
+          ? this.lead.shortName
+          : this.lead.leadName;
+      this.deal.dealName =
+        nameDefault + ' mua ' + businessName;
       if (this.deal.businessLineID) {
         var processId = e.component.itemsSelected[0].ProcessID;
         if (!this.deal?.processID || processId != this.deal?.processID) {
@@ -593,7 +633,8 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChangeCustom(event) {
-    if (event && event.e && event.data) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
       var result = event.e?.data;
       var field = event.data;
       switch (field.dataType) {

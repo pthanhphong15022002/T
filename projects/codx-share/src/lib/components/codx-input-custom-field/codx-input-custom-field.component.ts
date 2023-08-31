@@ -5,10 +5,20 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CacheService } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
+import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -27,9 +37,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() formModel: any = null;
   @Input() disable = false;
   @Input() viewFieldName = false;
+  @Input() objectIdParent: any = '';
+  @Input() customerID: string = ''; //Khách hàng cơ hội
+  placeholderRole = 'Vai trò........';
+
+  moreDefaults = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
+
   addSuccess = true;
   errorMessage = '';
   showErrMess = false;
@@ -48,13 +70,52 @@ export class CodxInputCustomFieldComponent implements OnInit {
   listIdUser: string = '';
   arrIdUser = [];
   numberChange = 0;
+  listContacts = [];
+  dataContact: any;
+  formModelContact: FormModel;
+  popoverCrr: any;
+  moreFunctionSYS: any;
+  moreFunctionDefault = [
+    {
+      id: 'edit',
+      icon: 'icon-edit',
+      text: 'Chỉnh sửa',
+      textColor: '#307CD2',
+    },
+    {
+      id: 'delete',
+      icon: 'icon-delete',
+      text: 'Xóa',
+      textColor: '#F54E60',
+    },
+  ];
 
   constructor(
     private cache: CacheService,
-    private changeDef: ChangeDetectorRef
+    private changeDef: ChangeDetectorRef,
+    private notiService: NotificationsService,
+    private callfc: CallFuncService,
+    private codxShareSv: CodxShareService,
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((mFuc: any) => {
+      if (mFuc) {
+        this.moreFunctionSYS = mFuc;
+        let funcMF = 'SYS01';
+
+        this.moreFunctionDefault.forEach((mf) => {
+          if (mf.id == 'edit') funcMF = 'SYS03';
+          if (mf.id == 'delete') funcMF = 'SYS02';
+          let mfc = Array.from<any>(this.moreFunctionSYS).find(
+            (x: any) => x.functionID === funcMF
+          );
+          if (mfc) {
+            mf.text = mfc.customName;
+          }
+        });
+      }
     });
   }
 
@@ -82,6 +143,48 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
       case 'R':
         this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
+        break;
+      case 'C':
+        this.formModelContact = new FormModel();
+        this.formModelContact.formName = 'CMContacts';
+        this.formModelContact.gridViewName = 'grvCMContacts';
+        this.formModelContact.entityName = 'CM_Contacts';
+        this.formModelContact.funcID = 'CM0102';
+        this.cache
+          .gridViewSetup(
+            this.formModelContact.formName,
+            this.formModelContact.gridViewName
+          )
+          .subscribe((res) => {
+            this.placeholderRole =
+              res?.Role?.headerText ?? this.placeholderRole;
+          });
+
+        let arrValue = JSON.parse(this.customField.dataValue);
+        this.listContacts = Array.isArray(arrValue) ? arrValue : [];
+        this.codxShareSv.listContactBehavior.subscribe((element) => {
+          if(element != null){
+            var contact = element?.data;
+            var type = element?.type;
+            if(this.listContacts != null && this.listContacts.length > 0){
+              var index = this.listContacts.findIndex(x => x.recID == contact?.recID);
+              if(index != -1){
+                if(type == 'edit'){
+                  this.listContacts[index] = contact;
+                }else{
+                  this.listContacts.splice(index, 1);
+                }
+              }
+              this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
+              this.valueChangeCustom.emit({
+                e: null,
+                data: this.customField,
+                result: JSON.stringify(this.listContacts),
+              });
+            }
+            this.codxShareSv.listContactBehavior.next(null);
+          }
+        })
         break;
     }
   }
@@ -204,5 +307,196 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
   controlBlur(e) {
     // if (e.crrValue) this.valueChange(e.crrValue);
+  }
+
+  //Type Contact
+  openContact() {
+    let action = 'add';
+    let data = null;
+    let type = 'formAdd';
+    let objectID = this.objectIdParent; //recID của co hoi
+    let objectType = '4';
+    let objectName = '';
+    let customerID = this.customerID;
+    var title = '';
+    let opt = new DialogModel();
+
+    let mfc = Array.from<any>(this.moreFunctionSYS).find(
+      (x: any) => x.functionID === 'SYS01'
+    );
+
+    title = mfc?.customName ?? '';
+    opt.FormModel = this.formModelContact;
+
+    this.cache
+      .gridViewSetup(
+        this.formModelContact.formName,
+        this.formModelContact.gridViewName
+      )
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: title,
+          action: action,
+          dataContact: data,
+          type: type,
+          recIDCm: objectID,
+          objectType: objectType,
+          objectName: objectName,
+          gridViewSetup: res,
+          listContacts: this.listContacts,
+          customerID: customerID,
+        };
+        var dialog = this.callfc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          700,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e?.event && e.event?.recID) {
+            let contact = e.event;
+            let idx = this.listContacts.findIndex(
+              (x) => x.recID == contact?.recID
+            );
+            if (idx == -1) this.listContacts.push(contact);
+            else this.listContacts[idx] = contact;
+            this.valueChangeCustom.emit({
+              e: contact,
+              result: JSON.stringify(this.listContacts),
+              data: this.customField,
+            });
+          }
+        });
+      });
+  }
+
+  updateRole(event: string, recID) {
+    var index = -1;
+    if (event == '' || event.trim() == '') {
+      index = -1;
+      return;
+    }
+    index = this.listContacts.findIndex((x) => x.recID == recID);
+    if (index != -1) {
+      this.listContacts[index]['role'] = event?.trim();
+      this.valueChangeCustom.emit({
+        e: this.listContacts[index],
+        result: JSON.stringify(this.listContacts),
+        data: this.customField,
+      });
+    }
+  }
+
+  openMoreFC(val: any, data: any) {
+    switch (val.id) {
+      case 'edit':
+        this.editContact(val.text, data);
+        break;
+      case 'delete':
+        this.deleteContact(data);
+        break;
+    }
+  }
+
+  editContact(title, data) {
+    let action = 'edit';
+    let type = 'formAdd';
+    let objectID = data.objectID; //recID của co hoi
+    let objectType = data?.objectType ?? '4';
+    let objectName = data?.objectName ?? '';
+    let customerID = data?.refID;
+
+    let opt = new DialogModel();
+    opt.FormModel = this.formModelContact;
+    this.cache
+      .gridViewSetup(
+        this.formModelContact.formName,
+        this.formModelContact.gridViewName
+      )
+      .subscribe((res) => {
+        var obj = {
+          moreFuncName: title,
+          action: action,
+          dataContact: data,
+          type: type,
+          recIDCm: objectID,
+          objectType: objectType,
+          objectName: objectName,
+          gridViewSetup: res,
+          listContacts: this.listContacts,
+          customerID: customerID,
+        };
+        var dialog = this.callfc.openForm(
+          PopupQuickaddContactComponent,
+          '',
+          500,
+          700,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialog.closed.subscribe((e) => {
+          if (e?.event && e.event?.recID) {
+            let contact = e.event;
+            let idx = this.listContacts.findIndex(
+              (x) => x.recID == contact?.recID
+            );
+            if (idx == -1) this.listContacts.push(contact);
+            else this.listContacts[idx] = contact;
+            this.valueChangeCustom.emit({
+              e: contact,
+              result: JSON.stringify(this.listContacts),
+              data: this.customField,
+            });
+          }
+        });
+      });
+  }
+
+  deleteContact(data) {
+    let config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    //SYS030
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        let index = this.listContacts.findIndex((x) => x.recID == data.recID);
+        if (index != -1) {
+          this.listContacts.splice(index, 1);
+          this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
+          this.valueChangeCustom.emit({
+            e: data,
+            data: this.customField,
+            result: JSON.stringify(this.listContacts),
+            type: 'delete'
+          });
+        }else{
+          this.valueChangeCustom.emit({
+            e: null,
+            data: this.customField,
+            result: JSON.stringify(this.listContacts),
+          });
+        }
+
+      }
+    });
+  }
+
+  openPopper(contact, p) {
+    if (this.popoverCrr && p != this.popoverCrr && this.popoverCrr.isOpen()) {
+      this.popoverCrr.close();
+      return;
+    }
+    this.dataContact = contact;
+    p.open();
+    this.popoverCrr = p;
+  }
+  closePopper(p) {
+    p.close();
+    this.popoverCrr = p;
   }
 }

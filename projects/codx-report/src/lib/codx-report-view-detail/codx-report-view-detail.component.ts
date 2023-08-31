@@ -21,6 +21,7 @@ import {
   PageLink,
   PageTitleService,
   UIComponent,
+  Util,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -29,6 +30,7 @@ import { PopupAddReportComponent } from '../popup-add-report/popup-add-report.co
 import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-dataset.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { setTime } from '@syncfusion/ej2-angular-schedule';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -92,6 +94,8 @@ export class CodxReportViewDetailComponent
 
   ngOnDestroy(): void {
     this.pageTitle.setSubTitle('');
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.remove('p-0', 'px-1');
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -122,6 +126,8 @@ export class CodxReportViewDetailComponent
   }
   viewChanged(e: any) {
     this.viewBase.moreFuncs = this.moreFc;
+    let wrapper = document.querySelector('codx-wrapper');
+    wrapper && wrapper.classList.add('p-0', 'px-1');
   }
   //get report by ID
   getReport(recID: string) {
@@ -138,8 +144,8 @@ export class CodxReportViewDetailComponent
           this.data = res;
           this.reportID = res.reportID;
           this.isRunMode = res.runMode == '1';
-          this.pageTitle.setRootNode(this.data.customName);
-          this.getRootFunction(this.data.moduleID, this.data.reportType);
+          this.pageTitle.setRootNode(res.customName);
+          this.getRootFunction(res.moduleID, res.reportType);
           if (
             res.displayMode == '2' ||
             res.displayMode == '3' ||
@@ -168,7 +174,6 @@ export class CodxReportViewDetailComponent
           this.viewBase.formModel.gridViewName =
             this.rootFunction?.gridViewName;
           this.pageTitle.setRootNode(this.rootFunction.customName);
-
           let parent: PageLink = {
             title: this.rootFunction.customName,
             path:
@@ -260,6 +265,7 @@ export class CodxReportViewDetailComponent
         break;
     }
   }
+  reload: boolean = false;
 
   editReport() {
     if (this.data) {
@@ -300,11 +306,7 @@ export class CodxReportViewDetailComponent
       }
       this._labelString = JSON.stringify(objLabel);
     }
-    if (
-      this.data.displayMode == '2' ||
-      this.data.displayMode == '3' ||
-      this.data.displayMode == '4'
-    ) {
+    if (this.data.displayMode == '3' || this.data.displayMode == '4') {
       this.getReportPDF(this.data.recID);
     }
   }

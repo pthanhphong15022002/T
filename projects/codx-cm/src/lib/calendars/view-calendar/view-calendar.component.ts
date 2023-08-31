@@ -10,6 +10,10 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
+  DialogRef,
   FormModel,
   ResourceModel,
   UIComponent,
@@ -17,6 +21,8 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { Observable, finalize, map } from 'rxjs';
+import { CM_Customers } from '../../models/cm_model';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -33,11 +39,45 @@ export class ViewCalendarComponent
   @ViewChild('eventTemplate') eventTemplate!: TemplateRef<any>; //event schedule
   @ViewChild('headerTempContent') headerTempContent!: TemplateRef<any>; //temp Content
 
+  @ViewChild('popupChoiseTypeCM') popupChoiseTypeCM: TemplateRef<any>;
+
   @Input() funcID: any;
   @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
+
+  popupTypeCM: DialogRef
+  fieldsGroup = { text: 'text', value: 'entityName' };
+
+  fieldsCustomer = { text: 'customerName', value: 'entityName' };
+  fieldsLead = { text: 'leadName', value: 'entityName' };
+  fieldsDeal = { text: 'dealName', value: 'recID' };
+  fieldsCase = { text: 'caseName', value: 'entityName' };
+  fieldsContract = { text: 'contractName', value: 'entityName' };
+
+  typeCMs = [
+    { text: 'Khách hàng', entityName: 'CM_Customers',funcID:'CM0101' },
+    { text: 'Tiềm năng', entityName: 'CM_Leads',funcID:'CM0205' },
+    { text: 'Cơ hội', entityName: 'CM_Deals',funcID:'CM0201' },
+    { text: 'Chăm sóc khách hàng', entityName: 'CM_Cases',funcID:'CM0401'},
+    { text: 'Hợp đồng', entityName: 'CM_Contracts',funcID:'CM0204'},
+  ];
+
+  listStep: any[];
+  listLead: CM_Customers[];
+  listDeal: CM_Customers[];
+  listCase: CM_Customers[];
+  listCustomer: CM_Customers[];
+  listContract: CM_Customers[];
+
+  fieldTypeCm = '';
+  service = 'CM';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
+  methodLoadData = 'GetListContractsAsync';
+  requestData = new DataRequest();
 
   fields = {
     id: 'recID',
@@ -68,6 +108,11 @@ export class ViewCalendarComponent
     formName: 'DPActivities',
   };
   viewCrr: any;
+
+  titleAction: string;
+  button: ButtonModel = {
+    id: 'btnAdd',
+  };
 
   constructor(
     private inject: Injector,
@@ -243,5 +288,105 @@ export class ViewCalendarComponent
     // }
   }
 
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  add() {
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.popupTypeCM = this.callfc.openForm(
+      this.popupChoiseTypeCM,
+      '',
+      600,
+      470,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
   settingViews() {}
+
+  //------------------More Func-----------------//
+  //chua goi tho phan quyền -- đang full true
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {}
+
+  //------------------More Func-----------------//
+
+  filterText(event, type) {
+    switch (type) {
+      case 'type':
+        this.fieldTypeCm = event?.value;
+        let typeCM = this.typeCMs?.find(type => type.entityName == this.fieldTypeCm);
+        this.getDatas(typeCM?.entityName,typeCM?.funcID,null,null);
+        break;
+      case 'CM_Customers':
+        break;
+      case 'CM_Leads':
+        break;
+      case 'CM_Deals':
+        break;
+      case 'CM_Contracts':
+        break;
+      case 'CM_Cases':
+        break;
+    }
+  }
+
+  getDatas(entityName,funcID,predicates,dataValues) {
+    this.requestData.entityName = entityName;
+    this.requestData.funcID = funcID;
+    this.requestData.predicates = predicates;
+    this.requestData.dataValues = dataValues;
+    this.requestData.pageLoading = false;
+
+    this.fetch().subscribe((res) => {
+      switch(entityName) {
+        case 'CM_Cases':
+          this.listCase = res
+          break;
+        case 'CM_Deals':
+          this.listDeal = res
+          break;
+        case 'CM_Leads':
+          this.listLead = res
+          break;
+        case 'CM_Contracts':
+          this.listContract = res
+          break;
+        case 'CM_Customers':
+          this.listCustomer = res
+          break;
+      }
+      console.log(res)
+    });
+  }
+
+
+  fetch(): Observable<any[]> {
+    return  this.api
+      .execSv<Array<any>>(
+        this.service,
+        'Core',
+        'DataBusiness',
+        'LoadDataAsync',
+        this.requestData
+      )
+      .pipe(
+        finalize(() => {}),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+    }
+
 }

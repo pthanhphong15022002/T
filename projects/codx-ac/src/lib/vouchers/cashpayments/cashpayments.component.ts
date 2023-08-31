@@ -52,6 +52,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
   @ViewChild('progressbarTable') progressbarTable: ProgressBar; //? progressBar của table
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  runmode: any;
   journalNo: string; //? số của sổ nhật kí
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
   userID: any; //?  tên user đăng nhập
@@ -68,7 +69,7 @@ export class CashPaymentsComponent extends UIComponent {
   acctTrans: any; //? data của tab hạch toán
   baseCurr: any; //? đồng tiền hạch toán
   legalName: any; //? tên công ty
-  dataDefaultCashpayment: any; //? data default của phiếu
+  dataDefault: any; //? data default của phiếu
   isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   fmCashPaymentsLines: FormModel = {
@@ -142,7 +143,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.getDataDefaultVoucher(); //? lấy data mặc định truyền vào form thêm
+    this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
   ngAfterViewInit() {
@@ -150,7 +151,11 @@ export class CashPaymentsComponent extends UIComponent {
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res) this.headerText = res.defaultName; //? lấy tên chứng từ (Phiếu chi)
+        if (res) {
+          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.runmode = res?.runMode; //? lấy runmode
+          this.detectorRef.detectChanges();
+        }
       });
 
     this.views = [
@@ -218,15 +223,7 @@ export class CashPaymentsComponent extends UIComponent {
   btnAddClick(event) {
     switch (event.id) {
       case 'btnAdd':
-        let ins = setInterval(() => {
-          if (this.dataDefaultCashpayment) {
-            clearInterval(ins);
-            this.addNewVoucher(); //? thêm mới chứng từ
-          }
-        }, 200);
-        setTimeout(() => {
-          if (ins) clearInterval(ins);
-        }, 10000);
+        this.addNewVoucher(); //? thêm mới chứng từ
         break;
     }
   }
@@ -276,22 +273,32 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    this.dataDefaultCashpayment.recID = Util.uid(); //? tạo recID mới
-    let data = {
-      action: 'add', //? trạng thái của form (thêm mới)
-      headerText: this.headerText, //? tiêu đề voucher
-      journal: { ...this.journal }, //?  data journal
-      dataCashpayment: { ...this.dataDefaultCashpayment }, //?  data của cashpayment
-      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-      legalName: this.legalName, //? tên company
-    };
-    this.callfc.openSide(
-      CashPaymentAdd,
-      data,
-      this.optionSidebar,
-      this.view.funcID
-    );
+    this.view.dataService
+      .addNew((o) => this.setDefault())
+      .subscribe((res) => {
+        if (res != null) {
+          this.dataDefault = res?.data;
+          let data = {
+            headerText: this.headerText, //? tiêu đề voucher
+            journal: { ...this.journal }, //?  data journal
+            dataDefault: { ...this.dataDefault }, //?  data của cashpayment
+            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+            legalName: this.legalName, //? tên company
+          };
+          let dialog = this.callfc.openSide(
+            CashPaymentAdd,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res: any) => {
+            if (res && res?.event?.update) {
+              this.getDatadetail(this.itemSelected);
+            }
+          });
+        }
+      });
   }
 
   /**
@@ -300,7 +307,6 @@ export class CashPaymentsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     let data = {
-      action: 'edit', //? trạng thái của form (chỉnh sửa)
       headerText: this.headerText, //? tiêu đề voucher
       journal: { ...this.journal }, //?  data journal
       dataCashpayment: { ...dataEdit }, //?  data của cashpayment
@@ -309,15 +315,21 @@ export class CashPaymentsComponent extends UIComponent {
       legalName: this.legalName, //? tên company
     };
     this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+      .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.callfc.openSide(
-          CashPaymentAdd,
-          data,
-          this.optionSidebar,
-          this.view.funcID
-        );
+        console.log(res);
+        // let dialog = this.callfc.openSide(
+        //   CashPaymentAdd,
+        //   data,
+        //   this.optionSidebar,
+        //   this.view.funcID
+        // );
+        // dialog.closed.subscribe((res: any) => {
+        //   if (res && res?.event?.update) {
+        //     this.getDatadetail(this.itemSelected);
+        //   }
+        // });
       });
   }
 
@@ -627,11 +639,12 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        this.itemSelected = event?.data;
-        this.getDatadetail(this.itemSelected);
         if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+          this.itemSelected = event?.data;
           return;
         }
+        this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);
       }
     }
   }
@@ -658,7 +671,6 @@ export class CashPaymentsComponent extends UIComponent {
             ? res?.lsSettledInvoices
             : [];
           this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
-          //this.isLoadData = false; // tắt progressbar của tab
           this.detectorRef.detectChanges();
         }
       });
@@ -687,23 +699,20 @@ export class CashPaymentsComponent extends UIComponent {
             ''
           )
           .pipe(takeUntil(this.destroy$))
-          .subscribe((result) => {
+          .subscribe((result: any) => {
             if (result?.msgCodeError == null && result?.rowCount) {
-              this.notification.notifyCode('ES007');
-              data.status = '3';
+              data.status = result?.returnStatus;
               this.view.dataService.updateDatas.set(data['_uuid'], data);
               this.view.dataService
                 .save(null, 0, '', '', false)
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res: any) => {
                   if (res && !res.update.error) {
+                    this.notification.notifyCode('ES007');
                     this.itemSelected = res.update.data;
-                    this.getDatadetail(this.itemSelected);
                     this.detectorRef.detectChanges();
                   }
                 });
-              // this.getDatadetail(this.itemSelected);
-              // this.view.dataService.update(data).subscribe((res) => {});
             } else this.notification.notifyCode(result?.msgCodeError);
           });
       });
@@ -719,16 +728,15 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
-          this.notification.notifyCode('SYS034');
-          data.status = '1';
+          data.status = result?.returnStatus;
           this.view.dataService.updateDatas.set(data['_uuid'], data);
           this.view.dataService
             .save(null, 0, '', '', false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
               if (res && !res.update.error) {
+                this.notification.notifyCode('SYS034');
                 this.itemSelected = res.update.data;
-                this.getDatadetail(this.itemSelected);
                 this.detectorRef.detectChanges();
               }
             });
@@ -764,21 +772,27 @@ export class CashPaymentsComponent extends UIComponent {
   /**
    * *Hàm get data mặc định của chứng từ
    */
-  getDataDefaultVoucher() {
+  getJournal() {
     this.api
-      .exec('AC', 'CommonBusiness', 'GetDataDefaultVoucherAsync', [
-        this.journalNo,
-      ])
+      .exec('AC', 'CommonBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.journal = res.journal; // data journal
-          this.dataDefaultCashpayment = res.dataDefault.data; // data cashpayment mặc định
-          this.hideFields = res.hideFields; // array field ẩn từ sổ nhật kí
-          this.setTotalRecord();
-          this.detectorRef.detectChanges();
+          this.journal = res?.journal; // data journal
+          this.hideFields = res?.hideFields; // array field ẩn từ sổ nhật kí
         }
       });
+  }
+
+  /**
+   * *Hàm call set default data khi thêm mới chứng từ
+   * @returns
+   */
+  setDefault() {
+    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+      this.dataDefault,
+      this.journalNo,
+    ]);
   }
 
   /**

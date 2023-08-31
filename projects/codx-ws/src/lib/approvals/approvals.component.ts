@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
-import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-approvals',

@@ -169,6 +169,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isReferType: boolean = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Input() tmpRightThumb?: TemplateRef<any>;
+  @Input() tmpCustomMFc?: TemplateRef<any>;
   @Input() isScroll = true;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
@@ -3406,6 +3407,128 @@ export class AttachmentComponent implements OnInit, OnChanges {
     return false;
   }
 
+  public handleFileInputObservable(files: any[], drag = false) : Observable<any[]>
+  {
+    return from(this.beforeHandleFileInputObservable(files,drag)).pipe(
+      mergeMap((res) => {
+        return res;
+      })
+    );
+  }
+  //async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
+  public async beforeHandleFileInputObservable(files: any[], drag = false) : Promise<Observable<any[]>>{
+    var count = this.fileUploadList.length;
+    //this.getFolderPath();
+    var addedList = [];
+    for (var i = 0; i < files.length; i++) {
+      if (
+        files[i].size >= this.maxFileSizeUpload &&
+        this.maxFileSizeUpload != 0
+      ) {
+        this.notificationsService.notifyCode(
+          'DM057',
+          0,
+          files[i].name,
+          this.maxFileSizeUploadMB
+        );
+        break;
+      }
+
+      let index = this.fileUploadList.findIndex(
+        (d) => d.fileName.toString() === files[i].name.toString()
+      ); //find index in your array
+      if (index == -1) {
+        var data: any;
+        if (drag) {
+          data = await files[i].arrayBuffer();
+          data = this.arrayBufferToBase64(data);
+        } else {
+          data = await this.convertBlobToBase64(files[i].rawFile);
+        }
+
+        var fileUpload = new FileUpload();
+        var type = files[i].type.toLowerCase();
+        fileUpload.fileName = files[i].name;
+
+        //Lấy avatar mặc định theo định dạng file
+        //Image
+        if (type_image.includes(type)) fileUpload.avatar = data;
+        //Video
+        else if (type_video.includes(type)) {
+          var url = this.sanitizer.bypassSecurityTrustUrl(
+            URL.createObjectURL(files[i].rawFile)
+          );
+          fileUpload.data = url;
+          fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+        }
+
+        //Các file định dạng khác
+        else fileUpload.avatar = this.urlAvartarIcon(fileUpload.fileName);
+
+        fileUpload.extension =
+          files[i].name.substring(
+            files[i].name.lastIndexOf('.'),
+            files[i].name.length
+          ) || files[i].name;
+        fileUpload.createdBy = this.user.userName;
+        // var arrName = files[i].name.split(".");
+        // arrName.splice((arrName.length - 1), 1);
+        // var name = arrName.join('.');
+        fileUpload.entityName = this.formModel?.entityName;
+        fileUpload.mimeType = this.GetMimeType(files[i].type);
+        fileUpload.type = files[i].type;
+        fileUpload.objectType = this.objectType;
+        fileUpload.objectID = this.objectId;
+        fileUpload.fileSize = files[i].size;
+        fileUpload.order = count;
+        fileUpload.description = files[i].description; //
+        fileUpload.funcID = this.functionID;
+        fileUpload.folderType = this.folderType;
+        fileUpload.referType = this.referType;
+        fileUpload.category = this.category;
+        this.lstRawFile.push(files[i].rawFile);
+        fileUpload.reWrite = this.isReWrite;
+        //fileUpload.data = '';
+        fileUpload.item = files[i];
+        //fileUpload.folderId = this.folderId;
+        fileUpload.folderID = this.dmSV.folderId.getValue();
+
+        fileUpload.permissions = this.addPermissionForRoot(
+          fileUpload.permissions
+        );
+
+        addedList.push(Object.assign({}, fileUpload));
+        this.fileUploadList.push(Object.assign({}, fileUpload));
+      } else {
+        this.fileUploadList.push(this.fileUploadList[index]);
+        this.fileUploadList.splice(index, 1);
+      }
+    }
+
+    this.fileAdded.emit({ data: this.fileUploadList });
+    this.filePrimitive.emit(files);
+    this.fileCount.emit({ data: addedList });
+    files = null;
+
+    for (var i = 0; i < document.getElementsByName('UploadFiles').length; i++) {
+      const input = document.getElementsByName('UploadFiles')[
+        i
+      ] as HTMLInputElement | null;
+      if (input != null) {
+        input.value = '';
+      }
+    }
+    this.isCopyRight = this.fileUploadList.length;
+    this.changeDetectorRef.detectChanges();
+    if (this.isSaveSelected == '1' || this.isSaveSelected == '2') {
+      return from(this.onMultiFileSaveObservable()).pipe(
+        mergeMap((res) => {
+          return res;
+        })
+      );
+    }
+    return of(null);
+  }
   //Icon avatar mặc định
   urlAvartarIcon(fileName: any) {
     return `../../../assets/codx/dms/${this.getAvatar(fileName)}`;

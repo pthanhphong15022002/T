@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -14,6 +15,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxWrService } from '../../codx-wr.service';
+import { ViewTabUpdateComponent } from './view-tab-update/view-tab-update.component';
 
 @Component({
   selector: 'codx-view-detail-wr',
@@ -26,7 +28,9 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() funcID = 'WR0101';
   @Input() gridViewSetup: any;
   @Input() entityName = '';
+  @Input() listRoles = [];
 
+  @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
 
@@ -86,5 +90,21 @@ export class ViewDetailWrComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
+  }
+
+  listOrderUpdate(lstUpdate) {
+    this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
+    this.changeDetectorRef.detectChanges();
+  }
+
+  getIcon($event) {
+    if ($event == '1') {
+      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    } else if ($event == '5') {
+      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
+    } else if ($event == '3') {
+      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
   }
 }

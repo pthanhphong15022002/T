@@ -7,8 +7,6 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   CRUDService,
@@ -22,7 +20,6 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import {
   IJournal,
@@ -52,25 +49,18 @@ export class PurchaseinvoicesAddComponent
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
 
-  initialMaster: IPurchaseInvoice;
   master: IPurchaseInvoice;
   prevMaster: IPurchaseInvoice;
   prevLine: IPurchaseInvoiceLine;
-
-  masterService: CRUDService;
+  prevVatInvoice: IVATInvoice;
 
   fmVATInvoices: FormModel;
   fmPurchaseInvoicesLines: FormModel;
 
+  masterService: CRUDService;
   isEdit: boolean = false;
   journal: IJournal;
   hiddenFields: string[] = [];
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -100,10 +90,8 @@ export class PurchaseinvoicesAddComponent
 
     this.masterService = dialog.dataService;
     this.master = this.masterService?.dataSelected;
-    this.initialMaster = { ...this.master };
     this.prevMaster = { ...this.master };
     this.isEdit = dialogData.data.formType === 'edit';
-    this.masterService.hasSaved = this.isEdit;
   }
   //#endregion
 
@@ -115,30 +103,24 @@ export class PurchaseinvoicesAddComponent
       this.acParams = res;
     });
 
-    this.api
-      .exec(
-        'AC',
-        'PurchaseInvoicesLinesBusiness',
-        'GetDefault2Async',
-        this.master
-      )
-      .subscribe((res: any) => {
-        this.defaultLineData = res.purchaseInvoiceLine.data;
-        this.defaultVatInvoiceData = res.vatInvoice.data;
-      });
+    this.setDefaultData();
   }
 
-  ngAfterViewInit(): void {
-    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
-      this.form.formGroup.controls['voucherNo'].removeValidators(
-        Validators.required
-      );
-      this.form.formGroup.updateValueAndValidity();
-    }
-  }
+  ngAfterViewInit(): void {}
   //#endregion
 
   //#region Event
+  onAfterFormInit(form: CodxFormComponent) {
+    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+      form.setRequire([
+        {
+          field: 'voucherNo',
+          require: false,
+        },
+      ]);
+    }
+  }
+
   onClickMF(e, data) {
     const grid: CodxGridviewV2Component =
       this.tab.selectedItem === 0
@@ -173,22 +155,17 @@ export class PurchaseinvoicesAddComponent
     }
   }
 
-  onTabCreated(e, tab: TabComponent): void {
+  onTabCreated(tab: TabComponent): void {
     tab.hideTab(1, this.master.subType !== '2');
   }
 
-  /**
-   * @param columns grid.columnsGrid
-   */
   onGridInit(grid: CodxGridviewV2Component): void {
     if (this.journal.addNewMode === '2') {
       return;
     }
 
-    console.log(this.hiddenFields);
-    grid.hideColumns(this.hiddenFields);
-
     const requiredFields: string[] = [];
+    grid.hideColumns(this.hiddenFields);
 
     if (
       [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
@@ -232,56 +209,73 @@ export class PurchaseinvoicesAddComponent
     grid.setRequiredFields(requiredFields, true);
   }
 
-  onClickAddRow(): void {
-    if (this.form.formGroup.invalid) {
-      return;
-    }
-
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.master,
-      'AC',
-      'AC_PurchaseInvoices',
-      this.form,
-      this.masterService.hasSaved,
-      async () => await this.addRow()
-    );
-  }
-
-  onClickSave(closeAfterSave: boolean): void {
-    if (this.form.formGroup.invalid) {
-      return;
-    }
-
+  onAfterValidation(o): void {
     if (
       this.journal.transLimit &&
       this.master.totalAmt > this.journal.transLimit
     ) {
       this.notiService.notifyCode('AC0016');
-      return;
+      o.cancle = true;
     }
+  }
 
+  onClickAddRow(): void {
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
       'AC',
       'AC_PurchaseInvoices',
       this.form,
-      this.masterService.hasSaved,
+      this.form.data._isEdit,
+      () => {
+        this.form.save(null, null, null, null, false).subscribe((res) => {
+          if (res === false || res.save?.error || res.update?.error) {
+            return;
+          }
+
+          if (this.tab.selectedItem === 0) {
+            if (this.journal.addNewMode === '1') {
+              this.gridPurchaseInvoiceLines.addRow(
+                this.createNewPurchaseInvoiceLine(),
+                this.gridPurchaseInvoiceLines.dataSource.length
+              );
+            } else {
+              // later
+            }
+          } else {
+            if (this.journal.addNewMode === '1') {
+              this.gridVatInvoices.addRow(
+                this.createNewVatInvoice(),
+                this.gridVatInvoices.dataSource.length
+              );
+            } else {
+              // later
+            }
+          }
+        });
+      }
+    );
+  }
+
+  onClickSave(closeAfterSave: boolean): void {
+    this.journalService.checkVoucherNoBeforeSave(
+      this.journal,
+      this.master,
+      'AC',
+      'AC_PurchaseInvoices',
+      this.form,
+      this.form.data._isEdit,
       () => {
         this.master.status = '1';
+        this.form.save().subscribe((res: any) => {
+          if (res === false || res.save?.error || res.update?.error) {
+            return;
+          }
 
-        if (this.masterService.hasSaved) {
-          this.masterService.updateDatas.set(this.master.recID, this.master);
-        }
-
-        this.masterService.save().subscribe((res: any) => {
-          if (res.save.data || res.update.data) {
-            if (closeAfterSave) {
-              this.dialog.close();
-            } else {
-              this.resetForm();
-            }
+          if (closeAfterSave) {
+            this.dialog.close();
+          } else {
+            this.resetForm();
           }
         });
       }
@@ -371,10 +365,6 @@ export class PurchaseinvoicesAddComponent
   onCellChange(e: any) {
     console.log('onCellChange', e);
 
-    if (!this.master) {
-      return;
-    }
-
     if (this.prevLine?.[e.field] == e.data[e.field]) {
       return;
     }
@@ -415,7 +405,7 @@ export class PurchaseinvoicesAddComponent
   onActionEvent(e: any): void {
     console.log('onActionEvent', e);
 
-    if (e.type === 'add' && this.gridPurchaseInvoiceLines.autoAddRow) {
+    if (e.type === 'autoAdd' && this.gridPurchaseInvoiceLines.autoAddRow) {
       this.gridPurchaseInvoiceLines.addRow(
         this.createNewPurchaseInvoiceLine(),
         this.gridPurchaseInvoiceLines.dataSource.length
@@ -424,15 +414,35 @@ export class PurchaseinvoicesAddComponent
 
     if (e.type === 'beginEdit') {
       this.prevLine = { ...e.data };
-
-      this.api
-        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'BeginEditAsync', e.data)
-        .subscribe();
     }
   }
   //#endregion
 
   //#region Event VATInvoices
+  onCellChange2(e: any) {
+    console.log('onCellChange2', e);
+
+    if (this.prevVatInvoice?.[e.field] == e.data[e.field]) {
+      return;
+    }
+
+    const field: string = e.field.toLowerCase();
+    const postFields: string[] = ['quantity', 'unitprice', 'vatid'];
+    if (postFields.includes(field)) {
+      this.api
+        .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+          field,
+          this.master,
+          e.data,
+        ])
+        .subscribe((line: any) => {
+          this.prevVatInvoice = { ...line };
+          Object.assign(e.data, line);
+          this.detectorRef.markForCheck();
+        });
+    }
+  }
+
   onActionEvent2(e: any): void {
     console.log('onActionEvent2', e);
 
@@ -441,6 +451,10 @@ export class PurchaseinvoicesAddComponent
         this.createNewVatInvoice(),
         this.gridVatInvoices.dataSource.length
       );
+    }
+
+    if (e.type === 'beginEdit') {
+      this.prevVatInvoice = { ...e.data };
     }
   }
   //#endregion
@@ -461,69 +475,38 @@ export class PurchaseinvoicesAddComponent
       });
   }
 
-  async addRow(): Promise<void> {
-    // check if master data is changed
-    const { updateColumns: a, updateColumn: b, ...rest1 } = this.master as any;
-    const {
-      updateColumns: c,
-      updateColumn: d,
-      ...rest2
-    } = this.initialMaster as any;
-    if (JSON.stringify(rest1) !== JSON.stringify(rest2)) {
-      if (this.masterService.hasSaved) {
-        this.masterService.updateDatas.set(this.master.recID, this.master);
-      }
-
-      const res: any = await lastValueFrom(
-        this.masterService.save(null, null, null, null, false)
-      );
-
-      if (!res.save.data && !res.update.data) {
-        return;
-      }
-
-      this.masterService.hasSaved = true;
-      this.initialMaster = { ...this.master };
-    }
-
-    if (this.tab.selectedItem === 0) {
-      if (this.journal.addNewMode === '1') {
-        this.gridPurchaseInvoiceLines.addRow(
-          this.createNewPurchaseInvoiceLine(),
-          this.gridPurchaseInvoiceLines.dataSource.length
-        );
-      } else {
-        // later
-      }
-    } else {
-      if (this.journal.addNewMode === '1') {
-        this.gridVatInvoices.addRow(
-          this.createNewVatInvoice(),
-          this.gridVatInvoices.dataSource.length
-        );
-      } else {
-        // later
-      }
-    }
-  }
-
   resetForm(): void {
     this.masterService
       .addNew(() =>
-        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
           this.master.journalNo,
         ])
       )
       .subscribe((res: IPurchaseInvoice) => {
-        Object.assign(this.master, res);
-        this.initialMaster = { ...this.master };
-        this.prevMaster = { ...this.master };
+        this.form.data = this.master = this.form.formModel.currentData = res;
         this.form.formGroup.patchValue(res);
 
-        this.masterService.hasSaved = false;
+        this.prevMaster = { ...this.master };
+        this.gridPurchaseInvoiceLines.dataSource = [];
+        if (this.gridVatInvoices) {
+          this.gridVatInvoices.dataSource = [];
+        }
 
-        this.masterService.dataSelected = this.master;
-        this.masterService.addDatas.set(this.master.recID, this.master);
+        this.setDefaultData();
+      });
+  }
+
+  setDefaultData(): void {
+    this.api
+      .exec(
+        'AC',
+        'PurchaseInvoicesLinesBusiness',
+        'GetDefault2Async',
+        this.master
+      )
+      .subscribe((res: any) => {
+        this.defaultLineData = res.purchaseInvoiceLine.data;
+        this.defaultVatInvoiceData = res.vatInvoice.data;
       });
   }
   //#endregion
@@ -537,6 +520,7 @@ export class PurchaseinvoicesAddComponent
       ...(copiedData || {}),
       recID: Util.uid(),
       note: this.master.memo,
+      idiM4: this.master.warehouseID,
       createdOn: new Date(),
     };
   }
@@ -546,6 +530,8 @@ export class PurchaseinvoicesAddComponent
       ...this.defaultVatInvoiceData,
       ...(copiedData || {}),
       recID: Util.uid(),
+      objectID: this.master.objectID,
+      objectName: this.master.objectName,
       createdOn: new Date(),
     };
   }

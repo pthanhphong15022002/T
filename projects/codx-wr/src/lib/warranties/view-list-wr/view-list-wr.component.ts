@@ -14,10 +14,12 @@ import { ApiHttpService, CallFuncService } from 'codx-core';
   styleUrls: ['./view-list-wr.component.css'],
 })
 export class ViewListWrComponent {
-  @Input() dataSelected: any;
+  @Input() dataList: any;
   @Input() formModel: any;
   @Input() funcID = 'WR0101';
   @Input() entityName: any;
+  @Input() gridViewSetup: any;
+  @Input() listRoles = [];
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
@@ -36,7 +38,7 @@ export class ViewListWrComponent {
     this.changeMoreMF.emit({ e: e, data: data });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelected']) {
+    if (changes['dataList']) {
       // if (changes['taskID'].currentValue === this.id) return;
       // this.id = changes['taskID'].currentValue;
       // this.loadedHisPro = false;
@@ -46,5 +48,16 @@ export class ViewListWrComponent {
 
   dbClick(data) {
     console.log('Not implemented');
+  }
+
+  getIcon($event) {
+    if ($event == '1') {
+      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
+    } else if ($event == '5') {
+      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
+    } else if ($event == '3') {
+      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
   }
 }

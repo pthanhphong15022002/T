@@ -1,5 +1,5 @@
 <codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="btnAddClick($event)" predicates="JournalNo=@0" [dataValues]="journalNo" [autoLoad]="true"
+  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo" [autoLoad]="true"
   (selectedChange)="changeItemSelected($event)" [isSubView]="true">
 </codx-views>
 <!-- templateGrid -->
