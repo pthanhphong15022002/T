@@ -982,6 +982,34 @@
               </div>
             </ng-template>
           </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top">
+                <span class="icon-i-chat-right icon-16 me-2"></span>
+                <codx-label
+                  class="fw-bold"
+                  default="Ghi chú"
+                  [formModel]="formModel"
+                  name="lblComment"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content let-data>
+              <div class="tab-comt mt-4">
+                <div class="tab_container">
+                  <codx-tree-comment
+                    [objectID]="dataSelected.recID"
+                    [objectType]="formModel.entityName"
+                    [actionType]="'C'"
+                    [addNew]="true"
+                    [funcID]="formModel.funcID"
+                    (totalCommentChange)="changeCountFooter($event, 'comment')"
+                  >
+                  </codx-tree-comment>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
         </e-tabitems>
       </ejs-tab>
     </div>
