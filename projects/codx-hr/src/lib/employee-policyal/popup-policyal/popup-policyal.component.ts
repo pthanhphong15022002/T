@@ -474,6 +474,7 @@ export class PopupPolicyalComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            debugger
             if(res.key){
               this.autoNumField = res.key;
             }

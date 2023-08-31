@@ -935,7 +935,10 @@ implements OnInit{
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
-        debugger
+        if(this.benefitPolicyObj.adjustKows){
+          this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
+        }
+
         if(this.benefitPolicyObj.isConstraintOther){
           this.lstSelectedConstraintBy = this.benefitPolicyObj.constraintBy.split(';')
           this.lstSelectedConstraintBy.sort((a, b) => {
@@ -949,6 +952,9 @@ implements OnInit{
             this.SplitConstraint();
           })
         }
+
+        
+        
         this.GetPolicyDetailByAjustBy(this.benefitPolicyObj.adjustBy).subscribe((res) => {
           this.dataSourceGridView1 = res;
         });
