@@ -222,7 +222,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
     if (businessLine)
       this.deal.dealName =
-        this.lead.leadName + ' mua ' + this.businessLine?.businessLineName;
+        this.lead.shortName + ' mua ' + this.businessLine?.businessLineName;
 
     this.getListInstanceSteps(businessLine?.processID);
   }
@@ -545,7 +545,7 @@ export class PopupConvertLeadComponent implements OnInit {
     if (this.deal?.businessLineID != e?.data) {
       this.deal.businessLineID = e?.data;
       let businessName = e?.component.itemsSelected[0].BusinessLineName;
-      this.deal.dealName = this.lead.leadName + ' mua ' + businessName;
+      this.deal.dealName = this.lead.shortName + ' mua ' + businessName;
       if (this.deal.businessLineID) {
         var processId = e.component.itemsSelected[0].ProcessID;
         if (!this.deal?.processID || processId != this.deal?.processID) {
