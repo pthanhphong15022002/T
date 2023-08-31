@@ -309,7 +309,7 @@
               <ng-template #popupAllowCall>
                 <codx-label
                   name="lblAllowCall"
-                  [formModel]="formModel"
+                  [formModel]="formModelContact"
                   [default]="
                     data?.allowCall
                       ? 'Cho phép điện thoại'
@@ -318,7 +318,7 @@
                 ></codx-label>
               </ng-template>
               <span
-                class="text-gray-900 text-primary text-hover-primary"
+                class=""
                 [innerHTML]="
                   data?.mobile
                     | formatvalue : formModelContact : 'mobile'
@@ -334,7 +334,7 @@
               <ng-template #popupAllowEmail>
                 <codx-label
                   name="lblAllowEmail"
-                  [formModel]="formModel"
+                  [formModel]="formModelContact"
                   [default]="
                     data?.allowEmail
                       ? 'Cho phép gửi mail'
