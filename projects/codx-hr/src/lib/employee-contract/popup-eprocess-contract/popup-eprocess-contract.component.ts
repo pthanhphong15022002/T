@@ -326,13 +326,9 @@ export class PopupEProcessContractComponent
   }
 
   initForm() {
-    this.hrSevice
-      .getOrgUnitID(
-        this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
-      )
-      .subscribe((res) => {
-        this.employeeObj.orgUnitName = res.orgUnitName;
-      });
+    this.hrSevice.getOrgUnitID(this.employeeObj?.orgUnitID).subscribe((res) => {
+      this.employeeObj.orgUnitName = res.orgUnitName;
+    });
 
     if (this.actionType == 'add') {
       this.hrSevice
@@ -480,7 +476,7 @@ export class PopupEProcessContractComponent
             if (res[0]) {
               //code test
               this.notify.notifyCode('SYS006');
-              res[0].emp = this.employeeObj;
+              res[0].inforEmployee = this.employeeObj;
               this.dialog && this.dialog.close(res[0]);
               this.data = res;
             } else if (res[1]) {
@@ -492,7 +488,7 @@ export class PopupEProcessContractComponent
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
-                          result[0].emp = this.employeeObj;
+                          result[0].inforEmployee = this.employeeObj;
 
                           this.dialog && this.dialog.close(result[0]);
                         }
@@ -506,7 +502,7 @@ export class PopupEProcessContractComponent
                       .subscribe((result) => {
                         if (result && result[0]) {
                           this.notify.notifyCode('SYS006');
-                          result[0].emp = this.employeeObj;
+                          result[0].inforEmployee = this.employeeObj;
                           this.dialog && this.dialog.close(result[0]);
                         }
                       });
@@ -520,7 +516,7 @@ export class PopupEProcessContractComponent
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
           this.notify.notifyCode('SYS007');
-          res[0].emp = this.employeeObj;
+          res[0].inforEmployee = this.employeeObj;
           this.dialog && this.dialog.close(res[0]);
         }
       });
@@ -558,9 +554,6 @@ export class PopupEProcessContractComponent
         case 'contractTypeID': {
           this.itemContractGroup =
             event.component.comboBoxObject.itemData.ContractGroup;
-          // console.log(
-          //   event.component.comboBoxObject.itemData.ContractGroup !== '1'
-          // );
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
@@ -606,15 +599,13 @@ export class PopupEProcessContractComponent
     empRequest.dataValues = empId;
     empRequest.predicates = 'EmployeeID=@0';
     empRequest.pageLoading = false;
-    this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-      if (emp[1] > 0) {
+    this.hrSevice.loadData('HR', empRequest).subscribe((inforEmployee) => {
+      if (inforEmployee[1] > 0) {
         if (fieldName === 'employeeID') {
-          this.employeeObj = emp[0][0];
+          this.employeeObj = inforEmployee[0][0];
 
           this.hrSevice
-            .getOrgUnitID(
-              this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
-            )
+            .getOrgUnitID(this.employeeObj?.orgUnitID)
             .subscribe((res) => {
               this.employeeObj.orgUnitName = res.orgUnitName;
             });
@@ -628,30 +619,32 @@ export class PopupEProcessContractComponent
           });
         }
         if (fieldName === 'signerID') {
-          this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
-            this.employeeSign = emp[0][0];
-            if (emp[1] > 0) {
-              let positionID = emp[0][0].positionID;
+          this.hrSevice
+            .loadData('HR', empRequest)
+            .subscribe((inforEmployee) => {
+              this.employeeSign = inforEmployee[0][0];
+              if (inforEmployee[1] > 0) {
+                let positionID = inforEmployee[0][0].positionID;
 
-              if (positionID) {
-                this.hrSevice.getPositionByID(positionID).subscribe((res) => {
-                  if (res) {
-                    this.employeeSign.positionName = res.positionName;
-                    this.data.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
-                      signerPosition: this.data.signerPosition,
-                    });
-                  }
-                });
-              } else {
-                this.data.signerPosition = null;
-                this.formGroup.patchValue({
-                  signerPosition: this.data.signerPosition,
-                });
+                if (positionID) {
+                  this.hrSevice.getPositionByID(positionID).subscribe((res) => {
+                    if (res) {
+                      this.employeeSign.positionName = res.positionName;
+                      this.data.signerPosition = res.positionName;
+                      this.formGroup.patchValue({
+                        signerPosition: this.data.signerPosition,
+                      });
+                    }
+                  });
+                } else {
+                  this.data.signerPosition = null;
+                  this.formGroup.patchValue({
+                    signerPosition: this.data.signerPosition,
+                  });
+                }
+                this.loaded = true;
               }
-              this.loaded = true;
-            }
-          });
+            });
         }
       }
       this.df.detectChanges();

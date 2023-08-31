@@ -378,7 +378,14 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <div class="d-flex flex-row">
+        <codx-input
+        field="currencyID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        <!-- <div class="d-flex flex-row">
           <div class="col-8 pe-2">
             <codx-input
               [formModel]="form.formModel"
@@ -397,7 +404,7 @@
             >
             </codx-input>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

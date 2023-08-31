@@ -21,6 +21,7 @@ import {
   CallFuncService,
   DialogModel,
   AlertConfirmInputConfig,
+  DataRequest,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
@@ -32,6 +33,8 @@ import { FileInfo } from '@shared/models/file.model';
 
 import { EmitType } from '@syncfusion/ej2-base';
 import { environment } from 'src/environments/environment';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { Html } from '@syncfusion/ej2-angular-diagrams';
 
 L10n.load({
   vi: {
@@ -70,9 +73,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabParam') tabParam: TemplateRef<any>;
   @ViewChild('tabSignature') tabSignature: TemplateRef<any>;
   @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('uploader') uploader!: UploaderComponent;
-
+  @ViewChild("codxATM") codxATM : AttachmentComponent;
   files:any=[];
   title: string = 'Thêm mới báo cáo';
   tabContent: any[] = [];
@@ -137,7 +139,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   fields: any = {};
   module:any;
   rootFunction:any = null;
-  displayMode:string = "";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -183,48 +184,26 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       'Codx.RptBusiness.RP',
       'ReportListBusiness',
       'GetAsync',
-      this.reportID)
+      [this.reportID])
     .subscribe((res: any) => {
       if (res) {
         this.data = res;
         this.recID = this.data.recID;
-        this.displayMode = this.data.displayMode;
         this.parameters = this.data.parameters;
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.displayMode == "3" || this.data.displayMode == "4")
         {
+          let fileIcon = this.data.displayMode == "3" ? "xls.svg":"doc.svg";
+          this.data.icon = `../../../assets/codx/dms/${fileIcon}`;
           this.getFileTemplate(this.data.templateID);
         }
-        if(this.data.reportContent){
-          if(this.data.reportContent.split(',').length ==1){
-            this.data.reportContent = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${this.data.reportContent}`
-          }
-
-          let file = this.dataBase64toFile(this.data.reportContent,this.data.location ? this.data.location : this.data.reportName);
-          let fileInfo:any = {};
-          fileInfo.id=file.name;
-          fileInfo.name = file.name;
-          fileInfo.rawFile = file;
-          fileInfo.type=file.type;
-          fileInfo.statusCode='1';
-          fileInfo.status='Sẵn sàng';
-          fileInfo.size =file.size;
-          let filePop:any={};
-          filePop.name=this.data.location ? this.data.location : this.data.reportName;
-          filePop.size = file.size;
-          filePop.type = file.type.split('/')[1];
-          this.files.push(filePop);
-          let ins = setInterval(()=>{
-            if(this.uploader){
-              clearInterval(ins);
-              this.uploader.filesData=[];
-              this.uploader.filesData.push(fileInfo);
-              this.uploader.refresh();
-            }
-          },50)
-
+        else
+        {
+          this.data.icon = "../../../assets/codx/dms/file.svg";
         }
-      } else {
+      } 
+      else
+      {
         this.setDefaut();
       }
     });
@@ -263,7 +242,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
-    this.displayMode = "";
+    this.data.displayMode = "1";
     this.cache.functionList(this.module)
     .subscribe((res) => {
       if (res) {
@@ -367,6 +346,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       }
     })
   }
+
   editTemplate(action:string,data:any){
     if(action == 'edit'){
       let op = new DialogModel();
@@ -400,15 +380,46 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         });
     }
   }
-  popup() {
-    if (this.attachment && this.attachment.fileUploadList.length == 0) {
-      this.attachment.uploadFile();
-      this.checkFile = true;
-    }
-  }
 
   valueChange(evt: any) {
     this.data[evt.field] = evt.data;
+  }
+
+  getRootFunction(module:string, type:string){
+    this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
+      this.rootFunction = res;
+    })
+  }
+
+  isLoaded = false;
+  saveForm() {
+    this.isLoaded = true;
+    this.api
+      .execSv(
+        'rptrp',
+        'Codx.RptBusiness.RP',
+        'ReportListBusiness',
+        'AddUpdateAsync',
+        [this.data])
+        .subscribe((res:any) => {
+        if(this.data.isUpload && this.data.reportContent)
+        {
+          this.setDataset();
+        }
+        else
+        {
+          this.dialog.close(this.data);
+        }
+        this.isLoaded = false;
+      });
+
+  }
+
+  setDataset(){
+    this.api.execSv(this.data.service,'Codx.RptBusiness','ReportBusiness','SetDatasetAsync',this.reportID)
+    .subscribe((res:boolean) => {
+      this.dialog.close(this.data);
+    });
   }
 
   valueRadio(evt: any) {
@@ -419,207 +430,63 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getRootFunction(module:string, type:string){
-    this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
-      this.rootFunction = res;
-    })
-  }
-
-  saveForm() {
-    if (!this.data.recID)
-    {
-      this.data.recID = this.recID;
-    }
-    if(!this.data.customName) {
-      this.data.customName = this.data.defaultName;
-    }  
-    if(!this.data.service)
-    {
-      this.data.service = 'rpt' + this.data.moduleID.toLowerCase();
-    }
-    if (!this.data.reportType) {
-      this.data.reportType = 'R';
-    }
-    if(this.data.reportContent && this.data.reportContent.split(',').length >1)
-    {
-      this.data.reportContent = this.data.reportContent.split(',')[1];
-    }
-    this.data.displayMode = this.displayMode;
-    debugger;
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'AddUpdateAsync',
-        [this.data])
-        .subscribe((res:any) => {
-        if(this.data.reportContent){
-          this.setDataset();
-        }
-        this.dialog.close(this.data);
-      });
-
-  }
-  setDataset(){
-    let serviceName = this.data.service;
-    if (!serviceName) {
-      serviceName = 'rpt' + this.moduleName.toLowerCase();
-    }
-    this.api.execSv(serviceName,'Codx.RptBusiness','ReportBusiness','SetDatasetAsync',this.reportID).subscribe();
-  }
 
 
-  uploading(e:BeforeUploadEventArgs){
-  }
-  beforeUpload(e:BeforeUploadEventArgs){
-  }
-  isBlockBtn:boolean = false;
-  fileSelected(e:any){
-    debugger;
-    if(e.filesData.length == 0) {
-      this.notiService.notify("Bạn chưa chọn file","2");
-      return;
-    }
-    let file = e.filesData[0].rawFile;
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    let t=this;
-
-    this.isBlockBtn = false;
-    reader.onload = function () {
-      let strBase64 = reader.result;
-      if((strBase64 as string).split(',').length > 1){
-        strBase64 = (strBase64 as string).split(',')[1];
-      }
-      t.data.reportContent = strBase64;
-      t.data.location = file.name;
-    };
-
-}
- onFileRemove(args: RemovingEventArgs): void {
-  args.postRawFile = false;
-  this.data.reportContent='';
-  this.data.location='';
-  }
-
-  download(){
-    if(this.data?.service && this.data?.reportName)
-    {
-      let fileName = this.data.reportName;
-      this.api.execSv(this.data.service,
-      'Codx.RptBusiness',
-      'ReportBusiness',
-      'GetReportFileAsync',
-      [this.data.recID])
-      .subscribe((res:any)=>{
-        let linkSource = res;
-        if(linkSource.split(',').length ==1){
-          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
-        }
-        const downloadLink = document.createElement("a");
-        downloadLink.href = linkSource;
-        downloadLink.download = fileName;
-        downloadLink.click();
-      });
-    }
-  }
-
-  fileRendering(e:any){
-    let iconEle = document.createElement('i');
-    iconEle.classList.add('icon-i-cloud-arrow-down','icon-20','text-hover-primary','icon-download-report')
-    iconEle.title = 'download';
-    let t= this;
-    iconEle.addEventListener('click',function(){
-      t.downloadCustomFile();
-    });
-    e.element.insertBefore(iconEle,e.element.lastChild)
-  }
-
-  private downloadCustomFile(){
-    let linkSource = this.data.reportContent;
-    if(linkSource != "" && linkSource?.split(',').length == 1)
-    {
-        linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
-        }
-      const downloadLink = document.createElement("a");
-      downloadLink.href = linkSource;
-      downloadLink.download = this.data.reportName;
-      downloadLink.click();
-  }
-
-  private dataBase64toFile(dataStr:string, filename:string) {
-    let arr = dataStr.split(','),
-        mime =this.data.reportName.split('.')[1],
-        bstr = atob(arr[arr.length - 1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-    if(arr.length>1){
-      mime = arr[0]?.match(/:(.*?);/)[1]
-    }
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
-  }
-
-  clickUpload(mode:string)
+  clickUpload(type:string)
   {
-    this.displayMode = mode;
-    if(mode == "0")
+    if(type == "word/excel")
     {
-      let ctrl = this.uploader.element as HTMLElement;
-      ctrl?.click();
+      this.uploadTemplate()
     }
-    else     
-    {
-      let option = new DialogModel();
-      option.FormModel = this.dialog.formModel;
-      option.DataService = null;
-      this.callFuncService
-        .openForm(
-          CodxExportAddComponent,
-          null,
-          1100,
-          800,
-          null,
-          {
-            action: 'add',
-            type: mode == "3" ? "excel" : "word",
-            refType: "RP_ReportList",
-            refID: this.data.recID,
-            formModel: this.dialog.formModel
-          },
-          '',
-          option
-        ).closed.subscribe((res:any) => {
-          debugger
-          if(res?.event?.length > 0)
-          {
-            this.data.templateID = res.event[0].recID;
-            this.data.reportName = res.event[2];
-          }
-        })
-    }
-  }
-  clickDowload(mode:string){  
-    if(mode =="0")
-      this.downloadCustomFile();
     else
     {
-      if(this.pathDisk){
-        const downloadLink = document.createElement("a");
-        downloadLink.href = this.pathDisk;
-        downloadLink.download = this.data.reportName;
-        downloadLink.click();
-      }
-      else{
-        this.notiService.notify("Template không tồn tại","2");
-      }
+      this.data.displayMode = "1";
+      (this.uploader.element as HTMLElement)?.click();  
     }
+  }
+
+  uploadTemplate(){
+    var gridModel = new DataRequest();
+    gridModel.funcID = this.data.reportID;
+    gridModel.formName = this.data.formName;
+    gridModel.entityName = this.data.entityName;
+    gridModel.gridViewName = this.data.gridViewName;
+    this.callFuncService.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [
+        gridModel,
+        this.data.recID
+      ],
+      null
+    ).closed.subscribe((res:any) => {
+      if(res?.event)
+      {
+        debugger
+        this.data.templateID = res.event.templateInfo.recID;
+        this.data.location = res.event.templateInfo.templateName;
+        this.data.description = res.event.templateInfo.description;
+        this.data.reportContent = "";
+        this.blockBtn = true;
+        if(res.event.templateType == "AD_WordTemplates")
+        {
+          this.data.displayMode = "4";
+          this.data.icon = "../../../assets/codx/dms/docx.svg";
+        }
+        else
+        {
+          this.data.displayMode = "3";
+          this.data.icon = "../../../assets/codx/dms/xlsx.svg";
+        }
+      }
+    });
   }
 
   pathDisk:string = "";
+  fileTemplate:any = null;
   getFileTemplate(templateID:string)
   {
     if(templateID)
@@ -635,8 +502,95 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         {
           this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
         }
-        
+        this.fileTemplate = res;
       });
     }
+  }
+
+  dowloadReportFile(){
+    let linkSource = this.data.reportContent;
+    let fileName = this.data.location ? this.data.location : this.data.reportName;
+    if(linkSource != "" && linkSource?.split(',').length == 1)
+    {
+        linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
+    }
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  }
+
+  downloadReportFile(){
+    let fileName = this.data.location ? this.data.location : this.data.reportName;
+    this.api.execSv(
+      this.data.service,
+      'Codx.RptBusiness',
+      'ReportBusiness',
+      'GetReportFileAsync',
+      [this.data.recID])
+      .subscribe((res:any)=>{
+        let linkSource = res;
+        if(linkSource.split(',').length ==1){
+          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
+        }
+        const downloadLink = document.createElement("a");
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      });
+  }
+
+  removeReportFile(){
+    debugger
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiService
+    .alert("Thông báo", 'Bạn có chắc chắn muốn xóa ?', config)
+    .closed.subscribe((x) => {
+      if (x.event.status == 'Y')
+      {
+        this.data.reportContent = "";
+        this.blockBtn = true;
+        this.data.location = "";
+        this.data.displayMode = null;
+      }
+    });
+  }
+  removeTemplate(e:any){
+    debugger
+    this.data.displayMode = null;
+    this.data.templateID = "";
+    this.data.location = "";
+    this.data.description = "";
+  }
+
+  blockBtn:boolean = false;
+  selectedReportFile(e:any){
+    if(e.filesData.length == 0) return;
+    let file = e.filesData[0].rawFile;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    let t = this;
+    this.blockBtn = false;
+    reader.onload = function () {
+      let strBase64 = reader.result;
+      if((strBase64 as string)?.split(',')?.length > 1){
+        strBase64 = (strBase64 as string).split(',')[1];
+      }
+      t.data.reportContent = strBase64;
+      t.data.location = file.name;
+      t.data.icon = "../../../assets/codx/dms/file.svg";
+      t.data.size = t.formatBytes(file.size);
+    };
+
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes'
+    let k = 1024
+    let dm = decimals < 0 ? 0 : decimals;
+    let sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    let i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 }

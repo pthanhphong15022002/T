@@ -3,7 +3,7 @@
         <i [ngClass]="item?.largeIcon"></i>
         <span class="fw-bold ms-2">{{item?.customName}}</span>
     </div>
-    <ejs-accordion class="ws-accordion h-100 pt-5">
+    <ejs-accordion class="ws-accordion h-100">
         <e-accordionitems>
             <ng-container *ngFor="let item of listParentGroup">
                 <e-accordionitem expanded='true'>

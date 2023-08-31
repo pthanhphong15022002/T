@@ -8,6 +8,8 @@
   [customToolbar]="customToolbar"
   [openMore]="false"
   class="ac-dialog"
+  (onAfterInit)="onAfterFormInit($event)"
+  (afterValidate)="onAfterValidation($event)"
 >
 </codx-form>
 
@@ -38,7 +40,7 @@
       heightAdjustMode="Fill"
       class="overflow-auto mb-4"
       id="styledTab"
-      (created)="onTabCreated($event, tab)"
+      (created)="onTabCreated(tab)"
       #tab
     >
       <e-tabitems>
@@ -63,13 +65,10 @@
                 [gridViewName]="fmPurchaseInvoicesLines.gridViewName"
                 [entityName]="fmPurchaseInvoicesLines.entityName"
                 [templateMore]="morefunction"
-                [editSettings]="editSettings"
                 service="AC"
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
-                [showRowNumber]="true"
                 [showEmptyRecord]="false"
-                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -117,14 +116,12 @@
                 [gridViewName]="fmVATInvoices.gridViewName"
                 [entityName]="fmVATInvoices.entityName"
                 [templateMore]="morefunction"
-                [editSettings]="editSettings"
                 service="AC"
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
-                [showRowNumber]="true"
                 [showEmptyRecord]="false"
-                [editOnClick]="true"
                 (gridInit)="onGridInit($event)"
+                (cellChanged)="onCellChange2($event)"
                 (eventAction)="onActionEvent2($event)"
               ></codx-gridview-v2>
 
@@ -204,13 +201,14 @@
 
   <div class="mb-1" style="margin-left: 30px">
     <codx-dropdown-select
+      [showFooter]="false"
       cssClass="border-0 fw-bold w-350px"
       cssPopup="h-350px w-550px"
       [isMulti]="false"
       type="valuelist"
       field="subType"
-      refValue="AC129"
-      emptyText="Loại phiếu"
+      [refValue]="form?.gridviewSetup.SubType.referedValue"
+      [emptyText]="form?.gridviewSetup.SubType.headerText"
       [value]="master.subType"
       (valueChange)="onSubTypeChange($event)"
     ></codx-dropdown-select>
@@ -356,7 +354,7 @@
             journal.multiCurrency && master.currencyID !== acParams.BaseCurr
           "
           class="form-group"
-          [ngClass]="master.subType === '2' ? 'col-2' : 'col-4'"
+          [ngClass]="master.subType !== '2' ? 'col-2' : 'col-4'"
         >
           <codx-label
             fiedName="taxExchRate"

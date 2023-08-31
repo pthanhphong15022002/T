@@ -521,6 +521,13 @@ export class CodxCmService {
       'GetListCustomersAsync'
     );
   }
+  getListLead() {
+    return this.api.exec<any>(
+      'CM',
+      'LeadsBusiness',
+      'GetListLeadsAsync'
+    );
+  }
 
   openOrClosedDeal(data: any) {
     return this.api.exec<any>(

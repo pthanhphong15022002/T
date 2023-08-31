@@ -18,15 +18,21 @@
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
-    <div class="form-group row mt-3" *ngIf="dateControl">
+    <div class="form-group row mt-3" *ngIf="dateControl != '0'">
       <div class="col-6">
-        <div>
+        <div class="d-flex">
           <codx-label
             name="lblScheduleStart"
+            [setRequire]="gridViewSetup?.ScheduleStart?.isRequire"
             [formModel]="form.formModel"
             default="Ngày"
           >
           </codx-label>
+          <span
+            *ngIf="gridViewSetup?.ScheduleStart?.isRequire"
+            class="text-danger ms-1"
+            >*</span
+          >
         </div>
         <codx-input
           type="datetime"
@@ -40,13 +46,19 @@
         </codx-input>
       </div>
       <div class="col-3">
-        <div>
+        <div class="d-flex">
           <codx-label
             name="lblScheduleStartTime"
+            [setRequire]="gridViewSetup?.ScheduleStart?.isRequire"
             [formModel]="form.formModel"
             default="Từ giờ"
           >
           </codx-label>
+          <span
+            *ngIf="gridViewSetup?.ScheduleStart?.isRequire"
+            class="text-danger ms-1"
+            >*</span
+          >
         </div>
         <codx-input
           type="datetime"
@@ -58,13 +70,19 @@
         </codx-input>
       </div>
       <div class="col-3">
-        <div>
+        <div class="d-flex">
           <codx-label
             name="lblScheduleEndTime"
+            [setRequire]="gridViewSetup?.ScheduleEnd?.isRequire"
             [formModel]="form.formModel"
             default="Đến giờ"
           >
           </codx-label>
+          <span
+            *ngIf="gridViewSetup?.ScheduleEnd?.isRequire"
+            class="text-danger ms-1"
+            >*</span
+          >
         </div>
         <codx-input
           type="datetime"
@@ -76,8 +94,20 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group" *ngIf="commentControl">
-      <codx-label fiedName="Comment" [formModel]="form.formModel"> </codx-label>
+    <div class="form-group" *ngIf="commentControl != '0'">
+      <div class="d-flex">
+        <codx-label
+          fiedName="Comment"
+          [setRequire]="gridViewSetup?.Comment?.isRequire"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <span
+          *ngIf="gridViewSetup?.Comment?.isRequire"
+          class="text-danger ms-1"
+          >*</span
+        >
+      </div>
       <codx-input
         field="comment"
         [formModel]="form.formModel"

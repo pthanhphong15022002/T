@@ -477,7 +477,7 @@ export class LeadsComponent
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
         ? (!['3', '5'].includes(data.status) && data.applyProcess) ||
-          !data.applyProcess
+           (!data.applyProcess && data.status != '5' )
         : true;
     };
     let isChangeStatus = (eventItem, data) => {
@@ -1134,37 +1134,54 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.codxCmService
-            .moveBackStartInstance([
-              data.refID,
-              data.status,
-              data.processID,
-              this.applyForLead,
-            ])
-            .subscribe((resDP) => {
-              if (resDP) {
-                var datas = [data.recID, resDP[0]];
-                this.codxCmService
-                  .moveStartFirstLead(datas)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.dataSelected = res[0];
-                      this.dataSelected = JSON.parse(
-                        JSON.stringify(this.dataSelected)
-                      );
-                      this.detailViewLead.reloadListStep(resDP[1]);
-                      this.notificationsService.notifyCode('SYS007');
-                      this.view.dataService
-                        .update(this.dataSelected)
-                        .subscribe();
-                    }
-                    this.detectorRef.detectChanges();
-                  });
-              }
-            });
+          this.executeStartLead(data);
         }
       });
   }
+  executeStartLead(data:any) {
+    if(data.applyProcess) {
+      this.codxCmService
+      .moveBackStartInstance([
+        data.refID,
+        data.status,
+        data.processID,
+        this.applyForLead,
+      ])
+      .subscribe((resDP) => {
+        if (resDP) {
+          let datas = [data.recID, resDP[0]];
+          this.startFirstLead(datas,resDP[1]);
+        }
+      });
+    }
+    else {
+      let datas = [data.recID, ''];
+      this.startFirstLead(datas,null);
+    }
+
+  }
+  startFirstLead(datas:any, listStep:any) {
+    this.codxCmService
+    .moveStartFirstLead(datas)
+    .subscribe((res) => {
+      if (res) {
+        this.dataSelected = res[0];
+        this.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+        this.view.dataService
+        .update(this.dataSelected)
+        .subscribe();
+        (listStep.length > 0 && listStep ) && this.detailViewLead.reloadListStep(listStep);
+        this.notificationsService.notifyCode('SYS007');
+
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+
+
+
   updateProcess(data, isCheck) {
     this.notificationsService
       .alertCode('DP033', null, [

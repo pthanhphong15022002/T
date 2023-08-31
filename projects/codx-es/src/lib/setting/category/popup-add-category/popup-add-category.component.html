@@ -1,28 +1,30 @@
-<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader" [body]="body"
-  [footer]="footer" [data]="data" [formModel]="dialog.formModel" [dialog]="dialog">
+<codx-layout-add #form [title]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader"
+  [tabContent]="[ tabGeneralInfo, tabApprovalStep, tabTemplate]" [footer]="footer" [data]="data"
+  [formModel]="dialog?.formModel" [dialog]="dialog" [tabInfo]="tabInfo" >
   <ng-template #subHeader>
-    <div class="w-100 d-flex align-items-center">
-      <div class="symbol symbol-circle symbol-30px symbol-vllicon">
-        <codx-input class="" type="vllicon" refValue="L1470" field="icon" [crrValue]="data?.icon"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
 
-      <div class="ms-2">
-        <codx-input type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="data?.color"
-          field="color" (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
   </ng-template>
-  <ng-template #body>
+  <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form?.formGroup">
+      <div class="w-100 d-flex align-items-center">
+        <div class="symbol symbol-circle symbol-30px symbol-vllicon">
+          <codx-input class="" type="vllicon" refValue="L1470" field="icon" [crrValue]="data?.icon"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+
+        <div class="ms-2">
+          <codx-input type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="data?.color"
+            field="color" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
       <div class="row mt-5">
         <div class="col-md-8">
           <div class="form-group">
             <codx-label fiedName="CategoryName" [formModel]="formModel">
             </codx-label>
-            <codx-input field="categoryName" [formModel]="formModel" [Group]="form.formGroup">
+            <codx-input field="categoryName" [formModel]="formModel" [Group]="form?.formGroup">
             </codx-input>
           </div>
         </div>
@@ -30,8 +32,8 @@
           <div class="form-group">
             <codx-label fiedName="CategoryID" [formModel]="formModel">
             </codx-label>
-            <codx-input type="text" field="categoryID" [formModel]="formModel" [Group]="form.formGroup"
-              [disabled]="disableCategoryID == '1' || dialog.dataService!.keyField === 'CategoryID'">
+            <codx-input type="text" field="categoryID" [formModel]="formModel" [Group]="form?.formGroup"
+              [disabled]="disableCategoryID == '1' || dialog?.dataService!.keyField === 'CategoryID'">
             </codx-input>
           </div>
         </div>
@@ -87,7 +89,7 @@
       <div class="form-group">
         <codx-label fiedName="Memo" [formModel]="formModel"> </codx-label>
         <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" [formModel]="formModel"
-          [Group]="form.formGroup">
+          [Group]="form?.formGroup">
         </codx-input>
       </div>
       <div class="row mh-50px">
@@ -97,16 +99,17 @@
             </codx-label>
             <div class="d-flex flex-row">
               <div class="pt-2 pe-5">
-                <codx-input #checkbox type="switch" id="switch" [checked]="data?.autoNumberControl == '1' ? true : false"
-                  labelPosition="After" field="autoNumberControl" class="test-switch" (valueChange)="valueChange($event)">
+                <codx-input #checkbox type="switch" id="switch"
+                  [checked]="data?.autoNumberControl == '1' ? true : false" labelPosition="After"
+                  field="autoNumberControl" class="test-switch" (valueChange)="valueChange($event)">
                 </codx-input>
               </div>
-              <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal" [disabled]="data?.autoNumberControl != '1'"
-                (click)="openAutoNumPopup()">
+              <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal"
+                [disabled]="data?.autoNumberControl != '1'" (click)="openAutoNumPopup()">
                 <i class="icon-edit-one icon-18"></i>
               </button>
-            </div>            
-            
+            </div>
+
           </div>
           <div class="w-100 d-flex flex-row">
             <span *ngIf="data?.autoNumberControl == '1'" class="text-gray-600 text-italic">
@@ -115,93 +118,80 @@
           </div>
 
         </div>
-        <!-- <div class="col-md-6">
-          <div class="form-group">
-            <codx-label fiedName="AutoNumber" [formModel]="formModel">
-            </codx-label>
-            <codx-input type="text" name="text" [crrValue]="viewAutoNumber" [formModel]="formModel" disabled="true">
-            </codx-input>
-          </div>
-        </div> -->
       </div>
-      <div class="d-flex flex-stack mb-4">
-        <codx-label class="text-primary fw-bold fs-5-sm" fiedName="ProcessID" [formModel]="formModel">
-        </codx-label>
-        <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal" (click)="openPopupApproval()">
-          <i class="icon-settings icon-18"></i>
-        </button>
-      </div>
+
     </ng-container>
-
-
-    <!-- <div class="codx-approval" *ngIf="lstStep?.length > 0">
-      <ng-container *ngFor="let item of lstStep; let index = index">
-        <div class="codx-approval-step">
-          <div class="codx-approval-header d-flex align-items-center mb-2">
-            <div class="step-number">{{ item.stepNo }}</div>
-            <div class="step-title text-dark fw-bold fs-5">
-              {{ item.stepName }}
-            </div>
-          </div>
-          <div class="codx-approval-content ms-17">
-            <ng-container *ngFor="let approver of item.approvers">
-              <div class="d-flex align-items-top justify-content-between">
-                <codx-temp-full
-                  cardCss="mb-2"
-                  *ngIf="approver.roleType?.length == 1"
-                  [imageId]="approver.approver"
-                  [imageObjType]="'AD_Users'"
-                  [imageWidth]="35"
-                  imgCss="me-3"
-                  [title]="
-                    approver.approverName ??
-                    (approver.approver | vll: 'ES014':'text' | async)
-                  "
-                  [desc]="approver.positionName ?? ''"
-                >
-                </codx-temp-full>
-                <codx-temp-full
-                  cardCss="mb-2"
-                  *ngIf="approver.roleType?.length > 1"
-                  [imageSrc]="
-                    './assets/themes/sys/default/img/' +
-                    (item.icon ? item.icon : 'share_default.svg')
-                  "
-                  imgCss="w-35px  w-35px p-3 me-3 user-mini-icon"
-                  [imageWidth]="20"
-                  [title]="approver.approver | vll: 'ES014':'text' | async"
-                  [desc]="approver.approver | vll: 'ES014':'text' | async"
-                >
-                </codx-temp-full>
-
-                <div class="d-flex align-items-center text-center">
-                  <div class="ms-6 d-flex">
-                    <span class="text-primary">{{ item.leadtime }} giờ</span>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <div
-          class="codx-approval-step step-signature-temp"
-          *ngIf="index == lstStep.length - 1"
-        ></div>
-      </ng-container>
-    </div> -->
+  </ng-template>
+  <ng-template #tabApprovalStep>
+    <div class="d-flex flex-stack mb-4">
+      <codx-label class="text-primary fw-bold fs-5-sm" fiedName="ProcessID" [formModel]="formModel">
+      </codx-label>
+      <button type="button" class="btn btn-light-primary btn-icon" data-dismiss="modal" (click)="openPopupApproval()">
+        <i class="icon-settings icon-18"></i>
+      </button>
+    </div>
     <codx-view-approval-step #approvalStep [transID]="data?.recID" [approveStatus]="'1'" [eSign]="data?.eSign">
     </codx-view-approval-step>
   </ng-template>
+  <ng-template #tabTemplate>
+    <div >
+      <button type="button" class="btn btn-light-primary me-3" (click)="templateMF('add', this.sfModel)">
+        <codx-label name="lblAddTemplate" [formModel]="formModel" default="Thêm mới mẫu">
+        </codx-label>
+      </button>
+    </div>
+    <div class="d-flex align-items-start justify-content-between py-2 border-bottom" *ngFor="let item of sfTemplates">
+      <div class="d-flex align-items-top w-100">        
+        <div class="d-flex flex-column w-100">
+          <div class="fw-bold text-dark">{{ item?.title }}</div>
+          <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row"> 
+              <codx-label name="lblCreatedBy" default="Người tạo:" class="text-gray-500">
+              </codx-label>
+              <span class="ps-2 fs-7 text-gray-500 text-italic" [innerHTML]=" item?.createdBy | formatvalue : formModel : 'owner' | async "></span>
+            </div> 
+            <div class="d-flex flex-row"> 
+              <codx-label name="lblCreatedOn" default="Ngày tạo:" class="text-gray-500">
+              </codx-label>
+              <span class="ps-2 fs-7 text-gray-500 text-italic" [innerHTML]=" item?.createdOn | formatvalue : formModel : 'createdOn' | async "></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-start ms-6">
+        <div ngbDropdown class="dropdown ms-6">
+          <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-haspopup="true"
+            aria-expanded="false">
+            <span class="icon-more_vert icon-18"></span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+            <a ngbDropdownItem class="dropdown-item">
+              <div class="d-flex align-items-center cursor-pointer" (click)="templateMF('edit', item)">
+                <span class="icon-edit text-primary icon-16"></span>
+                <span class="ms-2"><codx-label name="lblEdit" default="Chỉnh sửa"></codx-label> </span>
+              </div>
+            </a>
+            <a ngbDropdownItem class="dropdown-item">
+              <div class="d-flex align-items-center cursor-pointer" (click)="templateMF('delete', item)">
+                <span class="icon-delete text-danger icon-16"></span>
+                <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
-       <button type="button" class="btn btn-light-primary me-3" (click)="openPopupSignFile()">
+    <div class="d-flex justify-content-end">
+      <!-- <button type="button" class="btn btn-light-primary me-3" (click)="openPopupSignFile()">
         <codx-label name="lblTemplate" [formModel]="formModel" default="Thiết lập mẫu">
         </codx-label>
-      </button> 
+      </button> -->
       <button class="btn btn-primary justify-content-end" (click)="onSaveForm(true)">
         <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
       </button>
     </div>
 
   </ng-template>
-</codx-form>
+</codx-layout-add>

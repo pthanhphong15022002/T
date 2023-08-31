@@ -118,7 +118,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           Validators.required,
         ],
         headerRow: [this.data?.headerRow, Validators.required],
-        headerColumn: this.data?.headerColumn,
+        headerColumn: [this.data?.headerColumn, Validators.required],
         splitPagesOn: this.data?.splitPagesOn,
         splitPagesMode: this.data?.splitPagesMode,
         rowNoIndex: this.data?.rowNoIndex,
@@ -249,6 +249,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 this.attachment2.objectId = item[1].recID;
                 this.attachment2.fileUploadList.forEach(elm=>{
                   elm.objectType ='AD_ExcelTemplates';
+                  elm.funcID = "AD001";
                 });
                 //this.attachment2.saveFiles();
                 //Upload file
@@ -286,6 +287,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.attachment2.objectId = item[1][0].recID;
               this.attachment2.fileUploadList.forEach(elm=>{
                 elm.objectType ='AD_ExcelTemplates';
+                elm.funcID = "AD001";
               });
               if (this.fileCount > 0) {
                 /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
@@ -332,6 +334,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.attachment1.objectType = 'AD_WordTemplates';
               this.attachment1.fileUploadList.forEach(elm=>{
                 elm.objectType ='AD_WordTemplates';
+                elm.funcID = "AD002";
               });
               this.onSaveWord().subscribe(saveW =>{
                 if(saveW) this.dialog.close([item[1][0], this.type,this.nameFile]);
@@ -369,6 +372,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                       this.attachment1.objectType = 'AD_WordTemplates';
                       this.attachment1.fileUploadList.forEach(elm=>{
                         elm.objectType ='AD_WordTemplates';
+                        elm.funcID = "AD002";
                       });
                       this.onSaveWord().subscribe(saveW =>{
                         if(saveW) this.dialog.close([item[1][0], this.type]);

@@ -17,6 +17,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { WR_WorkOrderUpdates } from '../../_models-wr/wr-model.model';
 import moment from 'moment';
 import { firstValueFrom } from 'rxjs';
+import { CodxWrService } from '../../codx-wr.service';
 
 @Component({
   selector: 'lib-popup-update-reasoncode',
@@ -32,8 +33,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   showLabelAttachment = false;
   isHaveFile = false;
 
-  dateControl = false;
-  commentControl = false;
+  dateControl = '';
+  commentControl = '';
   startTime: any = null;
   endTime: any = null;
   selectedDate: Date;
@@ -46,11 +47,14 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   edit = false;
   countFile = 0;
   countFileDelete = 0;
+  gridViewSetup: any;
+  countValidate = 0;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private wrSv: CodxWrService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -59,6 +63,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
+    this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
   ngOnInit(): void {
     this.data.recID = Util.uid();
@@ -66,7 +71,20 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
 
   //#region save
   async onSave() {
-    if (this.dateControl) {
+    this.countValidate = this.wrSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.countValidate > 0) {
+      return;
+    }
+    if (this.data.scheduleStart && this.data.scheduleEnd) {
+      if (new Date(this.data.scheduleStart) < new Date()) {
+        this.notiService.notifyCode('WR003');
+        return;
+      }
+
+      if (new Date(this.data.scheduleStart) > new Date(this.data.scheduleEnd)) {
+        this.notiService.notifyCode('WR002');
+        return;
+      }
       this.data.scheduleTime =
         moment(this.data.scheduleStart).format('DD/MM/YYYY') +
         ' ' +
@@ -112,7 +130,11 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
       this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-      if (this.dateControl) {
+      if (this.dateControl != '0') {
+        this.gridViewSetup.ScheduleStart.isRequire =
+          this.dateControl == '2' ? true : false;
+        this.gridViewSetup.ScheduleEnd.isRequire =
+          this.dateControl == '2' ? true : false;
         this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
         this.data.scheduleEnd = new Date(
           this.data.scheduleStart.getTime() + 3600000
@@ -121,15 +143,20 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
           .set({ hour: 0, minute: 0, second: 0 })
           .toDate();
         this.setTimeEdit();
-      }else{
+      } else {
         this.data.scheduleStart = null;
         this.data.scheduleEnd = null;
         this.data.scheduleTime = '';
+        this.gridViewSetup.ScheduleStart.isRequire = false;
+        this.gridViewSetup.ScheduleEnd.isRequire = false;
       }
       this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
-      if (this.commentControl) {
+      if (this.commentControl != '0') {
+        this.gridViewSetup.Comment.isRequire =
+          this.dateControl == '2' ? true : false;
         this.data.comment = e?.component?.itemsSelected[0]?.Comment;
-      }else{
+      } else {
+        this.gridViewSetup.Comment.isRequire = false;
         this.data.comment = '';
       }
       if (e?.data) {

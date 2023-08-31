@@ -53,6 +53,7 @@ export class OrgorganizationComponent extends UIComponent {
   formModelEmployee;
   activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
+  funcIDCheck;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -79,6 +80,10 @@ export class OrgorganizationComponent extends UIComponent {
     // xử lý ẩn hiện button thêm + moreFC trong trang SDTC ngoài portal
     this.router.params.subscribe((param: any) => {
       let funcID = param['funcID'];
+
+      console.log(funcID);
+      //Set funcID to check view list mode in afterviewinit
+      this.funcIDCheck = funcID;
       if (funcID.includes('WP')) {
         this.buttonAdd = null;
         this.activeMFC = false;
@@ -101,51 +106,40 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
 
-    this.views = [
-      {
-        id: '2',
-        type: ViewType.listtree,
-        sameData: false,
-        request: this.request,
-        model: {
-          template: this.templateTree,
-          // resourceModel: { parentIDField: 'ParentID' },
+    if (this.funcIDCheck.includes('WP')) {
+      this.views = [
+        {
+          id: '1',
+          type: ViewType.list,
+          sameData: true,
+          model: {
+            template: this.templateList,
+          },
         },
-      },
-      {
-        id: '3',
-        type: ViewType.tree_orgchart,
-        sameData: false,
-        request: this.request,
-        model: {
-          template: this.tempTree,
-          panelRightRef: this.tmpOrgChart,
-          // panelRightRef: this.panelRightLef,
-          // template2: this.tmpOrgChart,
-          // resourceModel: { parentIDField: 'ParentID' },
+      ];
+    } else {
+      this.views = [
+        {
+          id: '2',
+          type: ViewType.listtree,
+          sameData: false,
+          request: this.request,
+          model: {
+            template: this.templateTree,
+          },
         },
-      },
-      {
-        id: '1',
-        type: ViewType.list,
-        sameData: true,
-        model: {
-          template: this.templateList,
+        {
+          id: '3',
+          type: ViewType.tree_orgchart,
+          sameData: false,
+          request: this.request,
+          model: {
+            template: this.tempTree,
+            panelRightRef: this.tmpOrgChart,
+          },
         },
-      },
-      // {
-      //   id: '4',
-      //   type: ViewType.tree_masterdetail,
-      //   // active: false,
-      //   sameData: false,
-      //   request: this.request,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.tmpMasterDetail,
-      //   },
-      // },
-    ];
+      ];
+    }
   }
 
   //loadEmployList

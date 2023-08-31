@@ -86,7 +86,25 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
   signFileFM: FormModel;
   curUser: any;
-
+  sfTemplates=[];
+  tabInfo = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabGeneralInfo',
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Quy trình xét duyệt',
+      name: 'tabApprovalStep',
+    },
+    {
+      icon: 'icon-layers',
+      text: 'Mẫu thiết lập',
+      name: 'tabTemplate',
+    },
+  ];
+  sfModel: any;
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
@@ -105,7 +123,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (this.dataType != 'auto') {
       this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     } else this.data = JSON.parse(JSON.stringify(data?.data?.data));
-
     this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
@@ -121,7 +138,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //update gridView dont use btb Save when close form
         this.dialog.dataService.update(this.oUpdate).subscribe();
       }
-
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
@@ -186,6 +202,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     //     this.cr.detectChanges();
     //   }
     // });
+    this.getSFTemplate();
+    this.getNewSFModel();
     if (this.isAdd) {
       this.data.countStep = 0;
 
@@ -239,7 +257,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     );
 
     if (!this.isAdd) {
-      this.form?.formGroup.patchValue(this.data);
+      if(!this.form?.formGroup){
+        this.esService.getFormGroup(this.formModel.formName,this.formModel.gridViewName).then(fg=>{
+          if(fg){
+            this.form.formGroup=fg;
+            this.form?.formGroup.patchValue(this.data);
+            this.cr.detectChanges;
+          }
+        })
+      }
+      else{
+        this.form?.formGroup.patchValue(this.data);
+        this.cr.detectChanges;
+      }
       this.esService.getFormModel('EST04').then((res) => {
         if (res && this.data.countStep > 0) {
           //let fmApprovalStep = res;
@@ -263,7 +293,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           }
         }
       });
-      this.isAfterRender = true;
+      this.cr.detectChanges;
     }
   }
 
@@ -423,7 +453,22 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
+  getSFTemplate(){
+    this.esService.getSFTemplate(this.data.categoryID,this.data.category).subscribe(res=>{
+      if(res){
+        this.sfTemplates= res;
+        this.cr.detectChanges();
+      }
+    });
+  }
+  getNewSFModel(){
+    this.esService.getTemplateOfCategory(null).subscribe(res=>{
+      if(res){
+        this.sfModel = res;
+        this.cr.detectChanges();
+      }
+    });
+  }
   openAutoNumPopup() {
     if (
       this.dialog.dataService.keyField != 'CategoryID' &&
@@ -607,10 +652,83 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   closePopup() {
     this.dialog && this.dialog.close();
   }
+  templateMF(mfType:string, data:any){    
+    if(mfType!=null && data!=null){
+      switch(mfType){
+        case 'delete':
+          this.esService.deleteSignFile(data?.recID).subscribe(res=>{
+            if(res){
+              this.sfTemplates = this.sfTemplates.filter(x=>x.recID!=data?.recID);
+              this.notify.notifyCode('SYS008');
+              this.cr.detectChanges();
+            }
+            else{
+              this.notify.notifyCode('SYS022');
+              return;
+            }
+          })
+          break;
+        case 'edit':
+        case 'add':
+          let option = new SidebarModel();    
+          option.FormModel = this.signFileFM;
+          let sfDialog = new DialogModel();
+          sfDialog.IsFull = true;
+          let isAdd = mfType=='add'? true :false;
+          let title = mfType=='add'? "Thêm mới" :'Chỉnh sửa';
+          let sfData = {...data};
+          
+          if(mfType=='add'){
+            this.getNewSFModel();//Lấy model cho lần thêm mới tiếp theo 
+            sfData.category=this.data.category;
+            sfData.categoryID=this.data.categoryID; 
+            sfData.title = this.data?.categoryName;
+            sfData.categoryID = this.data?.categoryID;
+            sfData.refType = this.data?.category ?? 'ES_SignFiles';
+            sfData.owner = this.authService?.userValue?.userID;
+            sfData.isTemplate = true;
+            sfData.processID = this.data?.recID;
+            sfData.approveControl = '3';
+            sfData.buid = this.curUser?.buid;
+            sfData.createdBy = this.authService?.userValue?.userID;
+            sfData.createdOn = new Date();
+          }      
+          
+          this.cr.detectChanges();  
+          let dialogSF = this.callfunc.openForm(
+            PopupAddSignFileComponent,
+            title,
+            700,
+            650,
+            this.signFileFM.funcID,
+            {
+              data: sfData,
+              isAddNew: isAdd,
+              formModel: this.signFileFM,
+              option: option,
+              disableCateID: true,
+              isTemplate: true,
+              refType:sfData?.refType,
+            },
+            '',
+            sfDialog
+          );
+          dialogSF.closed.subscribe(res=>{
+            if(res?.event){
+              this.getSFTemplate();
+            }
+          })
+          break; 
+      }
+    }
+    else{
+      this.notify.notifyCode('SYS001');
+      return;
+    }
+  }
 
   openPopupSignFile() {
-    let option = new SidebarModel();
-    option.Width = '800px';
+    let option = new SidebarModel();    
     option.FormModel = this.signFileFM;
     let isAddNew = false;
     this.esService

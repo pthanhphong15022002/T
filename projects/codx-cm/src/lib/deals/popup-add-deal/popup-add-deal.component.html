@@ -128,7 +128,22 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <div class="d-flex flex-row">
+            <codx-input
+              type="number"
+              field="dealValue"
+              [min]="0"
+              [crrValue]="deal?.dealValue"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            <!-- <codx-input
+            field="currencyID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input> -->
+        <!-- <div class="d-flex flex-row">
           <div class="col-8 pe-2">
             <codx-input
               type="number"
@@ -148,7 +163,7 @@
             >
             </codx-input>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -172,7 +187,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
+    <!-- <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
@@ -191,7 +206,7 @@
         >
         </codx-input>
       </div>
-    </div>
+    </div> -->
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -210,6 +225,25 @@
         ></ejs-combobox>
       </div>
     </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="ConsultantID"
+        >
+        </codx-label>
+        <codx-input
+          field="consultantID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [crrValue]="deal?.salespersonID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+
   </div>
   <div class="row">
     <div class="col-6">
@@ -230,24 +264,7 @@
       </div>
     </div>
 
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="ConsultantID"
-        >
-        </codx-label>
-        <codx-input
-          field="consultantID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [crrValue]="deal?.salespersonID"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
+
   </div>
 
   <div class="row">
@@ -317,6 +334,7 @@
               [checkValid]="false"
               [objectId]="item.recID"
               [objectType]="'DP_Instances_Steps_Fields'"
+              [objectIdParent]="deal?.recID"
               [formModel]="dialog.formModel"
               (valueChangeCustom)="valueChangeCustom($event)"
               (addFileCompleted)="addFileCompleted($event)"

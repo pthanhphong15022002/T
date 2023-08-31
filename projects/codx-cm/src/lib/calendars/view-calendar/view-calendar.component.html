@@ -139,12 +139,171 @@
 <ng-template #headerTempContent let-data>
   <div class="mt-2 me-2">
     <codx-mfunc
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeDataMF($event, data)"
-      type="hover"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    type="hover"
     >
-    </codx-mfunc>
+  </codx-mfunc>
+</div>
+</ng-template>
+
+<ng-template #popupChoiseTypeCM let-data>
+  <codx-form
+    #form
+    [headerText]="'Thêm công việc'"
+    [body]="addGroupJobBody"
+    [footer]="addGroupJobFooter"
+    [dialog]="popupTypeCM"
+  ></codx-form>
+</ng-template>
+<ng-template #addGroupJobBody let-data>
+  <div class="form-group w-100">
+    <div>
+      <codx-label
+        fiedName="type"
+        [formModel]="view.formModel"
+        default="Loại "
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="typeCMs"
+        [fields]="fieldsGroup"
+        (change)="filterText($event, 'type')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- khách hàng -->
+  <div class="form-group w-100" *ngIf="fieldTypeCm == 'CM_Customers' && listCustomer">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Khách hàng"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listCustomer"
+        [fields]="fieldsCustomer"
+        (change)="filterText($event,'CM_Customers')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- Tiềm năng -->
+  <div class="form-group w-100" *ngIf="fieldTypeCm == 'CM_Leads' && listLead ">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Tiềm năng"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listLead"
+        [fields]="fieldsLead"
+        (change)="filterText($event, 'CM_Leads')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- Cơ hội -->
+  <div class="form-group w-100" *ngIf="fieldTypeCm == 'CM_Deals' && listDeal ">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Cơ hội"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listDeal"
+        [fields]="fieldsDeal"
+        (change)="filterText($event, 'CM_Deals')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- Hợp đồng -->
+  <div class="form-group w-100" *ngIf="fieldTypeCm == 'CM_Contracts' && listContract ">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Hợp đồng"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listContract"
+        [fields]="fieldsContract"
+        (change)="filterText($event,'CM_Contracts')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- Sự cố -->
+  <div class="form-group w-100" *ngIf="fieldTypeCm == 'CM_Cases' && listCase ">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Sự cố"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listCase"
+        [fields]="fieldsCase"
+        (change)="filterText($event,'CM_Cases')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+  <!-- Giai đoạn -->
+  <div class="form-group w-100" *ngIf="listStep">
+    <div>
+      <codx-label
+        fiedName="StepName"
+        [formModel]="view.formModel"
+        default="Giai đoạn"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <ejs-combobox
+        [dataSource]="listStep"
+        [fields]="fieldsGroup"
+        (change)="filterText($event, 'step')"
+        [allowCustom]="false"
+      ></ejs-combobox>
+    </div>
+  </div>
+
+</ng-template>
+<ng-template #addGroupJobFooter let-data>
+  <div class="d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-primary"
+    >
+      <codx-label
+        name="lblSave"
+        formName="Tasks"
+        default="Tiếp tục"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
