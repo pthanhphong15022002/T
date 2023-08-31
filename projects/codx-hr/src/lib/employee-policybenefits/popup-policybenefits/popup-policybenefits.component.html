@@ -548,7 +548,7 @@
     </div>
     <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.isConstraintKow && lstMinKows.length > 0">
         <div *ngFor="let kow of lstMinKows">
-        <span class="badge-with-delete mb-2 me-2">
+        <div class="badge-with-delete mb-2 me-2">
           <span
           class="badge badge-light-primary badge-md"
           [innerHTML]="kow
@@ -558,7 +558,7 @@
           <button (click)="deleteApplyExcludeObj(kow, 'lstMinKows')" type="button" class="btn btn-sm btn-icon btn-light-danger">
             <span class="icon-close icon-16"></span>
           </button>
-        </span>
+        </div>
         </div>
     </div>
   </div>
@@ -632,7 +632,7 @@
   </div>
   <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.isConstraintKow && lstMaxKows.length > 0">
       <div *ngFor="let kow of lstMaxKows">
-        <span class="badge-with-delete mb-2 me-2">
+        <div class="badge-with-delete mb-2 me-2">
         <span
           class="badge badge-light-primary badge-md"
           [innerHTML]="kow
@@ -642,7 +642,7 @@
         <button (click)="deleteApplyExcludeObj(kow, 'lstMaxKows')" type="button" class="btn btn-sm btn-icon btn-light-danger">
           <span class="icon-close icon-16"></span>
         </button>
-      </span>
+      </div>
       </div>
   </div>
   
@@ -1061,26 +1061,26 @@
 <div *ngIf="benefitPolicyObj.hasIncludeObjects">
   <div *ngFor="let obj of lstPolicyBeneficiariesApply; let last = last">
     <div class="w-auto btn-hover mb-2">
-    <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesApply.length > 1">
-      <button type="button"
-        (click)="onClickMoveObjDown(obj)"
-        *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesApply.length"
-        class="btn btn-icon btn-outline btn-outline-primary ms-3"
-        >
-        <i class="icon-i-arrow-bar-down" 
-        [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
-        ></i>
-      </button>
-      <button type="button"
-        (click)="onClickMoveObjUp(obj)"
-        class="btn btn-icon btn-outline btn-outline-primary ms-3"
-        *ngIf="obj.priority < lstPolicyBeneficiariesApply.length + 1 && obj.priority > 1"
-        >
-        <i class="icon-i-arrow-bar-up" 
-        [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
-        ></i>
-      </button>
-    </div>
+      <div class="d-flex justify-content-end" *ngIf="lstPolicyBeneficiariesApply.length > 1">
+        <button type="button"
+          (click)="onClickMoveObjDown(obj)"
+          *ngIf="obj.priority > 0 && obj.priority < lstPolicyBeneficiariesApply.length"
+          class="btn btn-icon btn-sm btn-outline btn-outline-primary ms-3"
+          >
+          <i class="icon-i-arrow-bar-down" 
+          [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
+          ></i>
+        </button>
+        <button type="button"
+          (click)="onClickMoveObjUp(obj)"
+          class="btn btn-icon btn-sm btn-outline btn-outline-primary ms-3"
+          *ngIf="obj.priority < lstPolicyBeneficiariesApply.length + 1 && obj.priority > 1"
+          >
+          <i class="icon-i-arrow-bar-up" 
+          [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-primary':'text-gray-400'"
+          ></i>
+        </button>
+      </div>
     </div>
     <div class="border content-hover rounded-1">
     <div class="d-flex py-1 pe-1 px-4 align-items-center justify-content-between border-bottom">
@@ -1090,8 +1090,8 @@
       </button>
     </div>
     <div class="m-4" *ngFor="let detail of lstSelectedObj">
-      <div class="d-flex align-items-top mb-2">
-        <span class="fw-bold text-dark">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="fw-bold text-dark me-2">
           <codx-vll
             [showText]="true"
             [showBgColor]="false"
@@ -1100,13 +1100,13 @@
           >
           </codx-vll>
         </span>
-        <span
-          class="text-dark"
+        <button type="button"
+          class="btn btn-icon btn-sm"
           (click)="onClickOpenSelectApplyObjDetail(detail, obj)"
-          [ngClass]="benefitPolicyObj.hasIncludeObjects? 'text-hover-primary':'text-gray-400'"
+          [ngClass]="benefitPolicyObj.hasIncludeObjects? 'btn-light-primary':'btn-disabled'"
           >
-          <span class="icon-edit-one icon-16"></span>
-        </span>
+          <span class="icon-i-pencil-square icon-16"></span>
+        </button>
       </div>
       <div class="ps-5" *ngIf="detail == '1' && !obj.orgUnitID">
         <span
@@ -1321,7 +1321,7 @@
     </div>
   </div>
   
-    <div class="fs-6 fw-bold text-primary mt-5 mb-3" *ngIf="!last">
+    <div class="fs-6 fw-bold text-uppercase text-primary mt-5 mb-3" *ngIf="!last">
       <codx-label
       default="Hoặc"
       name="lblOr"
@@ -1492,32 +1492,31 @@
         </button>
     </div>
     </div>
-  <div class="border content-hover">
+  <div class="border content-hover rounded-1">
     <div class="d-flex p-1 align-items-center justify-content-between border-bottom">
-      <div class="text-primary ms-3">{{obj.priority}}</div>
+      <div class="fw-bold text-primary ms-3">{{obj.priority}}</div>
       <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="onClickDeleteObject(obj)">
         <i class="icon-close icon-16"></i>
       </button>
     </div>
   
     <div class="m-4 mb-2" *ngFor="let detail of lstSelectedExcludeObj">
-      <div class="d-flex mb-2">
-        <span class="fw-bold text-dark">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="fw-bold text-dark me-2">
           <codx-vll
             [showText]="true"
             [showBgColor]="false"
             name="HRObject"
             [value]="detail"
-            class="me-2"
           >
           </codx-vll>
         </span>
-        <span class="text-dark"
+        <button type="button" class="btn btn-sm btn-icon"
             (click)="onClickOpenSelectExcludeObjDetail(detail, obj)"
-            [ngClass]="benefitPolicyObj.hasExcludeObjects? 'text-hover-primary':'text-dark'"
+            [ngClass]="benefitPolicyObj.hasExcludeObjects? 'btn-light-primary':'btn-disabled'"
           >
-            <i class="icon-edit-one icon-16"></i>
-        </span>
+            <i class="icon-i-pencil-square icon-16"></i>
+        </button>
       </div>
       <div class="mb-2 ps-5" *ngIf="detail == '1' && !obj.orgUnitID">
         <span>
