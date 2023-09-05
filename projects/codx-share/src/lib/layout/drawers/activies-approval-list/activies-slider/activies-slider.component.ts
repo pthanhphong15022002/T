@@ -160,6 +160,7 @@ export class ActiviesSliderComponent implements OnInit {
         });
     }
   }
+
   setStyles(value){
     let vll = this.datas.find(x => x.value == value);
     if(!vll) vll = this.datas.find(x => x.value == "");
@@ -205,6 +206,11 @@ export class ActiviesSliderComponent implements OnInit {
         this.loaded = false;
       }
     });
+  }
+
+  // xem trình ký
+  viewSignature(data:any){
+    // gọi hàm xử lý xem trình ký
   }
 }
 
