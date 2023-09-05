@@ -174,6 +174,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 }else{
                   this.listContacts.splice(index, 1);
                 }
+              }else{
+                if(type == 'edit'){
+                  this.listContacts.push(contact);
+                }
               }
               this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
               this.valueChangeCustom.emit({

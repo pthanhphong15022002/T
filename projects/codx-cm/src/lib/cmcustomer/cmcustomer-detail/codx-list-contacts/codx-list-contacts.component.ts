@@ -114,6 +114,7 @@ export class CodxListContactsComponent implements OnInit {
     this.cmSv.contactSubject.subscribe((res) => {
       if (res != null) {
         this.lstContactEmit.emit(res);
+
         if (res != null && res.length > 0) {
           var index = res.findIndex((x) => x.isDefault);
           if (index != -1) {

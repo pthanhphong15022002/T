@@ -336,30 +336,8 @@ export class PopupAddDealComponent
     }
   }
   lstContactEmit(e) {
-    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
-      if(e != null){
-        for (var i = 0; i < e.length; i++) {
-          var recID = e[i].recID;
-          var existsInList1 = false;
+    this.lstContactDeal = e;
 
-          for (var j = 0; j < e.length; j++) {
-            if (e[j].recID === recID) {
-              existsInList1 = true;
-              break;
-            }
-          }
-
-          if (!existsInList1) {
-            this.lstContactDeal.push(e[i]);
-          }
-        }
-      }
-    }else{
-      this.lstContactDeal = e;
-    }
-    if(this.lstContactDeal != null && this.lstContactDeal.length > 0){
-      this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
-    }
     this.changeDetectorRef.detectChanges();
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
@@ -368,100 +346,6 @@ export class PopupAddDealComponent
     this.lstContactDelete = e;
   }
 
-  objectConvertDeal(e) {
-    if (e.e == true) {
-      if (e.data) {
-        var tmp = new CM_Contacts();
-        tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.recID = Util.uid();
-        tmp.refID = e.data.recID;
-        tmp.objectType = '4';
-        tmp.isDefault = false;
-        var indexCus = this.lstContactCustomer.findIndex(
-          (x) => x.recID == e.data.recID
-        );
-
-        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
-          this.lstContactDeal.push(tmp);
-          this.loadContactDeal.loadListContact(this.lstContactDeal);
-        }
-        if (indexCus != -1) {
-          this.lstContactCustomer[indexCus].checked = true;
-        }
-        if (tmp.objectType) this.popupEditRoleDeal(tmp, e.data);
-      }
-    } else {
-      var index = this.lstContactDeal.findIndex(
-        (x) => x.refID == e?.data?.recID
-      );
-      if (index != -1) {
-        this.lstContactDeal.splice(index, 1);
-        this.loadContactDeal.loadListContact(this.lstContactDeal);
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-
-  popupEditRoleDeal(tmp, data) {
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'CMContacts';
-    dataModel.gridViewName = 'grvCMContacts';
-    dataModel.entityName = 'CM_Contacts';
-    dataModel.funcID = 'CM0102';
-    var title = '';
-    opt.FormModel = dataModel;
-    this.cache
-      .moreFunction(dataModel.formName, dataModel.gridViewName)
-      .subscribe((fun) => {
-        if (fun && fun.length) {
-          let m = fun.find((x) => x.functionID == 'CM0102_4');
-          if (m) title = m.defaultName;
-        }
-        this.cache
-          .gridViewSetup(dataModel.formName, dataModel.gridViewName)
-          .subscribe((res) => {
-            var obj = {
-              moreFuncName: title ?? 'Cập nhật vai trò',
-              action: 'editRole',
-              dataContact: data,
-              type: 'formAdd',
-              recIDCm: this.deal?.recID,
-              objectType: '4',
-              objectName: this.deal?.dealName,
-              gridViewSetup: res,
-              listContacts: this.lstContactDeal,
-              customerID: null,
-            };
-            var dialog = this.callfc.openForm(
-              PopupQuickaddContactComponent,
-              '',
-              500,
-              250,
-              '',
-              obj,
-              '',
-              opt
-            );
-            dialog.closed.subscribe((e) => {
-              if (e && e?.event) {
-                if (e.event?.recID) {
-                  var index = this.lstContactDeal.findIndex(
-                    (x) => x.recID != e.event?.recID && x.isDefault
-                  );
-                  if (index != -1) {
-                    if (e?.event?.isDefault) {
-                      this.lstContactDeal[index].isDefault = false;
-                    }
-                  }
-                  tmp.isDefault = e?.event?.isDefault;
-                  tmp.role = e?.event?.role;
-                }
-              }
-            });
-          });
-      });
-  }
 
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
