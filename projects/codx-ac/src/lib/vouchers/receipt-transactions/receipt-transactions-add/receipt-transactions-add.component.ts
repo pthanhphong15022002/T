@@ -812,5 +812,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     return true;
   }
 
+  /** Ẩn các function không sử dụng */
+  hideMF(event) {
+    var mf = event.filter(
+      (x) => x.functionID != 'SYS02' && x.functionID != 'SYS03' && x.functionID != 'SYS04'
+    );
+    mf.forEach((element) => {
+      element.disabled = true;
+    });
+  }
   //#endregion Function Line
 }
