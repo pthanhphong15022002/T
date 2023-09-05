@@ -434,9 +434,11 @@ export class DealDetailComponent implements OnInit {
           let lst = [];
           lst.push(Object.assign({}, $event.data));
           var json = JSON.stringify(lst);
+          var lstID = [];
+          lstID.push(this.dataSelected?.refID);
           this.codxCmService
             .updateFieldContacts(
-              this.dataSelected?.refID,
+              lstID,
               $event?.action == 'edit' ? json : '',
               $event?.action == 'delete' ? json : ''
             )
