@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ApiHttpService, CacheService, CodxGridviewV2Component, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewV2Component, DialogModel, ViewsComponent } from 'codx-core';
+import { PopupAnnualLeaveMonthComponent } from '../popup-annual-leave-month/popup-annual-leave-month.component';
 
 @Component({
   selector: 'lib-employee-annual-leave-by-org',
@@ -17,29 +18,21 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @Input() formModel: any;
   @Input() rowHeight: number;
   @Input() view: any;
+  @Input()   monthHeaderText: string = '';
+
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
   @ViewChild('colEmployeeHeaderHRTAL01') colEmployeeHeaderHRTAL01: TemplateRef<any>;
-  @ViewChild('colALPreYearHeaderHRTAL01') colALPreYearHeaderHRTAL01: TemplateRef<any>;
-  @ViewChild('colALThisYearHeaderHRTAL01') colALThisYearHeaderHRTAL01: TemplateRef<any>;
-  @ViewChild('colSeniorityHeaderHRTAL01') colSeniorityHeaderHRTAL01: TemplateRef<any>;
+  @ViewChild('colALYearHeaderHRTAL01') colALYearHeaderHRTAL01: TemplateRef<any>;
+  @ViewChild('colALStandardHeaderHRTAL01') colALStandardHeaderHRTAL01: TemplateRef<any>;
+  @ViewChild('colALRemainHeaderHRTAL01') colALRemainHeaderHRTAL01: TemplateRef<any>;
+  @ViewChild('colUsedHeaderHRTAL01') colUsedHeaderHRTAL01: TemplateRef<any>;
 
   @ViewChild('colEmployeeHRTAL01') colEmployeeHRTAL01: TemplateRef<any>;
-  @ViewChild('colALPreYearHRTAL01') colALPreYearHRTAL01: TemplateRef<any>;
-  @ViewChild('colALThisYearHRTAL01') colALThisYearHRTAL01: TemplateRef<any>;
-  @ViewChild('colSeniorityHRTAL01') colSeniorityHRTAL01: TemplateRef<any>;
-
-  @ViewChild('colEmployeeHeaderHRTAL02') colEmployeeHeaderHRTAL02: TemplateRef<any>;
-  @ViewChild('colALYearMonthHeaderHRTAL02') colALYearMonthHeaderHRTAL02: TemplateRef<any>;
-  @ViewChild('colALPreYearHeaderHRTAL02') colALPreYearHeaderHRTAL02: TemplateRef<any>;
-  @ViewChild('colRealALPreYearHeaderHRTAL02') colRealALPreYearHeaderHRTAL02: TemplateRef<any>;
-  @ViewChild('colDaysOffHeaderHRTAL02') colDaysOffHeaderHRTAL02: TemplateRef<any>;
-
-  @ViewChild('colEmployeeHRTAL02') colEmployeeHRTAL02: TemplateRef<any>;
-  @ViewChild('colALYearMonthHRTAL02') colALYearMonthHRTAL02: TemplateRef<any>;
-  @ViewChild('colALPreYearHRTAL02') colALPreYearHRTAL02: TemplateRef<any>;
-  @ViewChild('colRealALPreYearHRTAL02') colRealALPreYearHRTAL02: TemplateRef<any>;
-  @ViewChild('colDaysOffHRTAL02') colDaysOffHRTAL02: TemplateRef<any>;
+  @ViewChild('colALYearHRTAL01') colALYearHRTAL01: TemplateRef<any>;
+  @ViewChild('colALStandardHRTAL01') colALStandardHRTAL01: TemplateRef<any>;
+  @ViewChild('colALRemainHRTAL01') colALRemainHRTAL01: TemplateRef<any>;
+  @ViewChild('colUsedHRTAL01') colUsedHRTAL01 :TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_EAnnualLeave';
@@ -63,11 +56,11 @@ export class EmployeeAnnualLeaveByOrgComponent {
     private cache: CacheService,
     private api: ApiHttpService,
     private routerActive: ActivatedRoute,
-    private detectorRef: ChangeDetectorRef
+    private detectorRef: ChangeDetectorRef,
+    private callfc: CallFuncService
   ) {
     this.routerActive.params.subscribe((params: Params) => {
       this.funcID = params['funcID'];
-      this.initGridColumn();
     })
   }
 
@@ -93,62 +86,33 @@ export class EmployeeAnnualLeaveByOrgComponent {
     this.detectorRef.detectChanges();
   }
   initGridColumn() {
-    switch (this.funcID) {
-      case 'HRTAL01':
-        this.columnsGrid = [
-          {
-            headerTemplate: this.colEmployeeHeaderHRTAL01,
-            template: this.colEmployeeHRTAL01,
-            width: '200',
-          },
-          {
-            headerTemplate: this.colALPreYearHeaderHRTAL01,
-            template: this.colALPreYearHRTAL01,
-            width: '100',
-          },
-          {
-            headerTemplate: this.colALThisYearHeaderHRTAL01,
-            template: this.colALThisYearHRTAL01,
-            width: '100',
-          },
-          {
-            headerTemplate: this.colSeniorityHeaderHRTAL01,
-            template: this.colSeniorityHRTAL01,
-            width: '150',
-          },
-        ]
-        break;
-      case 'HRTAL02':
-        this.columnsGrid = [
-          {
-            headerTemplate: this.colEmployeeHeaderHRTAL02,
-            template: this.colEmployeeHRTAL02,
-            width: '150',
-          },
-          {
-            headerTemplate: this.colALYearMonthHeaderHRTAL02,
-            template: this.colALYearMonthHRTAL02,
-            width: '50',
-          },
-          {
-            headerTemplate: this.colALPreYearHeaderHRTAL02,
-            template: this.colALPreYearHRTAL02,
-            width: '100',
-          },
-          {
-            headerTemplate: this.colRealALPreYearHeaderHRTAL02,
-            template: this.colRealALPreYearHRTAL02,
-            width: '100',
-          },
-          {
-            headerTemplate: this.colDaysOffHeaderHRTAL02,
-            template: this.colDaysOffHRTAL02,
-            width: '150',
-          },
-        ]
-        break
-    }
-
+    this.columnsGrid = [
+      {
+        headerTemplate: this.colEmployeeHeaderHRTAL01,
+        template: this.colEmployeeHRTAL01,
+        width: '200',
+      },
+      {
+        headerTemplate: this.colALYearHeaderHRTAL01,
+        template: this.colALYearHRTAL01,
+        width: '50',
+      },
+      {
+        headerTemplate: this.colALStandardHeaderHRTAL01,
+        template: this.colALStandardHRTAL01,
+        width: '150',
+      },
+      {
+        headerTemplate: this.colALRemainHeaderHRTAL01,
+        template: this.colALRemainHRTAL01,
+        width: '150',
+      },
+      {
+        headerTemplate: this.colUsedHeaderHRTAL01,
+        template: this.colUsedHRTAL01,
+        width: '100',
+      },
+    ]
   }
   getFunction(funcID: string) {
     if (funcID) {
@@ -200,5 +164,26 @@ export class EmployeeAnnualLeaveByOrgComponent {
     this.listDaysOff = [];
     this.scrolling = true;
   }
+  openAnnualLeaveMonthPopup(data: any) {
+    let popupData = {
+      funcID: this.funcID,
+      headerText: this.monthHeaderText,
+      data: data,
+      grvSetup: this.grvSetup ? this.grvSetup : null,
+    }
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popup = this.callfc.openForm(PopupAnnualLeaveMonthComponent,
+      this.monthHeaderText,
+      800,
+      600,
+      this.funcID,
+      popupData,
+      null,
+      option);
 
+    popup.closed.subscribe(e => {
+    })
+  }
 }

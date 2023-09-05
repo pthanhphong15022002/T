@@ -91,7 +91,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.action = dt.data?.action;
     this.type = dt.data?.type;
     this.refID = dt.data?.refID; // Thảo thêm để thêm biến lưu cho temEx
-    this.refType = dt.data?.refType; // Thảo thêm để thêm biến lưu cho temEx
+    this.refType = dt.data?.refType || dt.data?.formModel?.entityName; // Thảo thêm để thêm biến lưu cho temEx
     this.formModel = dt.data.formModel;
     if (this.action == 'add') {
       this.headerText = 'Thêm ' + this.type + ' Template';
@@ -321,6 +321,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       }
     } else {
       if (this.action == 'add') {
+        this.exportAddForm.value.refID = this.refID;
+        this.exportAddForm.value.refType = this.refType; 
         this.api
           .execActionData(
             'AD_WordTemplates',
@@ -343,6 +345,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
+        this.exportAddForm.value.refID = this.refID; 
+        this.exportAddForm.value.refType = this.refType; 
         this.exportAddForm.value.docFile = null;
         this.exportAddForm.value.xmlFile = null;
         this.exportAddForm.value.xmlSchemaFile = null;
