@@ -19,6 +19,7 @@ import {
 import { CM_Contacts } from '../../../../models/cm_model';
 import { tmpCrm } from '../../../../models/tmpCrm.model';
 import { CodxListContactsComponent } from '../codx-list-contacts.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-popup-quickadd-contact',
@@ -52,6 +53,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     private cache: CacheService,
     private cmSv: CodxCmService,
     private changeDef: ChangeDetectorRef,
+    private codxShareSv: CodxShareService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -398,6 +400,10 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.isDefault = true;
       }
+      this.codxShareSv.listContactBehavior.next({
+        data: data,
+        type: 'edit',
+      });
       this.cmSv.contactSubject.next(this.listContacts);
 
       // this.contactTemp.lstContactEmit.emit(this.listContacts);
