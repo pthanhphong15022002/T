@@ -22,6 +22,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 import { PopupQuickaddContactComponent } from './popup-quickadd-contact/popup-quickadd-contact.component';
 import { PopupListContactsComponent } from './popup-list-contacts/popup-list-contacts.component';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'codx-list-contacts',
@@ -74,7 +75,8 @@ export class CodxListContactsComponent implements OnInit {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private codxShareSv: CodxShareService
   ) {
     this.user = this.authstore.get();
     this.userID = this.user?.userID;
@@ -110,8 +112,9 @@ export class CodxListContactsComponent implements OnInit {
       }
     });
     this.cmSv.contactSubject.subscribe((res) => {
-      if (res) {
+      if (res != null) {
         this.lstContactEmit.emit(res);
+
         if (res != null && res.length > 0) {
           var index = res.findIndex((x) => x.isDefault);
           if (index != -1) {
@@ -336,7 +339,12 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.contactEvent.emit({ data: e.event, action: 'edit' });
-
+              if (action == 'edit') {
+                this.codxShareSv.listContactBehavior.next({
+                  data: e.event,
+                  type: 'edit',
+                });
+              }
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );
@@ -421,6 +429,10 @@ export class CodxListContactsComponent implements OnInit {
     index = this.listContacts.findIndex((x) => x.recID == recID);
     if (index != -1) {
       this.listContacts[index].role = event?.trim();
+      this.codxShareSv.listContactBehavior.next({
+        data: this.listContacts[index],
+        type: 'edit',
+      });
       this.lstContactEmit.emit(this.listContacts);
     }
 
@@ -469,6 +481,11 @@ export class CodxListContactsComponent implements OnInit {
             );
             if (index != -1) {
               this.contactEvent.emit({ data: data, action: 'delete' });
+              this.codxShareSv.listContactBehavior.next({
+                data: this.listContacts[index],
+                type: 'delete',
+              });
+
               this.listContacts.splice(index, 1);
               lstDelete.push(data);
               if (this.listContacts != null && this.listContacts.length > 0)

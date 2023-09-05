@@ -69,6 +69,7 @@ export class CodxShareService {
   settingValue = new BehaviorSubject<any>(null);
   public caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
+  listContactBehavior = new BehaviorSubject<any>(null);
   callBackComponent: any;
   //
   //
@@ -1184,7 +1185,7 @@ export class CodxShareService {
       cateID
     );
   }
-  
+
   exportTemplateData(module: string, exportUpload: ExportUpload) {
     return this.api.execSv(
       module,
@@ -1209,7 +1210,7 @@ export class CodxShareService {
       'CopyFileByObjectIDAsync',
       [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
-  }  
+  }
 
   getRpListByTemplateID(recID: any) {
     return this.api.execSv(
@@ -1636,7 +1637,7 @@ export class CodxShareService {
                   exportedFile?.extension
                 ).subscribe((res) => {
                   if(res){
-                    
+
                   }
                   else{
                     this.notificationsService.notify(
@@ -1644,7 +1645,7 @@ export class CodxShareService {
                       '2'
                     );
                   }
-                  
+
                 });
               }
               else{
@@ -1664,7 +1665,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel, component: any) => void,
   ){
     switch (approveProcess?.category?.releaseControl) {
-      
+
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
       this.getFileByObjectID(approveProcess.recID).subscribe(
         (lstFile: any) => {
@@ -1672,7 +1673,7 @@ export class CodxShareService {
             approveProcess,
             lstFile
           );
-          if (lstFile?.length > 0) {           
+          if (lstFile?.length > 0) {
             this.apOpenViewSignFile(
               approveProcess,
               releaseCallback,
@@ -1693,7 +1694,7 @@ export class CodxShareService {
         this.apBaseRelease(approveProcess, releaseCallback);
       break;
     }
-    
+
   }
 
   apOpenViewSignFile(

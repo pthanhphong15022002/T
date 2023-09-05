@@ -208,7 +208,8 @@
           <span
             *ngIf="
               data?.isCurrent &&
-              dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+              dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+              data?.status === '5'
             "
             #popOver="ngbPopover"
             [openDelay]="500"
@@ -316,7 +317,8 @@
     <span
       *ngIf="
         data?.isCurrent &&
-        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"
@@ -415,153 +417,6 @@
     </div> -->
 </ng-template>
 <!-- info view -->
-
-<ng-template #titleTmp let-data>
-  <div class="w-100">
-    <!-- emp info -->
-    <div class="d-flex align-items-center justify-content-between mb-1">
-      <span class="fw-bold fs-6 text-dark me-2">{{
-        data?.emp?.employeeName
-      }}</span>
-      <span
-        *ngIf="
-          data?.status === '5' &&
-          dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
-          (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
-            data.expiredDate === null)
-        "
-        [style.color]="'#0078FF'"
-        class="icon-bookmark icon-18"
-        [ngbPopover]="popIsNewest"
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="left"
-      >
-      </span>
-
-      <span
-        *ngIf="
-          data?.isCurrent &&
-          dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
-        "
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="left"
-        [ngbPopover]="popOverDue"
-        [style.color]="'#F64E60'"
-        class="icon-notifications icon-18"
-      ></span>
-
-      <span
-        *ngIf="
-          data?.isCurrent &&
-          dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
-        "
-        #popOver="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="popOver.open()"
-        (mouseleave)="popOver.close()"
-        placement="left"
-        [ngbPopover]="popIsNotNewsest"
-        [style.color]="'#FFA800'"
-        class="icon-queue_play_next icon-18"
-      ></span>
-      <!-- <ng-container *ngIf="data?.isCurrent">
-        <span
-          [style.color]="'#0078FF'"
-          class="icon-bookmark icon-18"
-          [ngbPopover]="popIsNewest"
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-        >
-        </span>
-      </ng-container> -->
-    </div>
-    <div class="text-gray-600">
-      <span
-        [innerHTML]="
-          data?.emp?.positionID
-            | formatvalue : view.formModel : 'PositionID'
-            | async
-        "
-      ></span>
-    </div>
-    <!-- end emp info -->
-
-    <!-- decisionNo, effectedDate, expiredDate -->
-    <div class="d-flex align-items-center mb-2">
-      <div
-        class="d-flex align-items-center me-4"
-        [ngbTooltip]="grvSetup?.DecisionNo?.headerText"
-      >
-        <span class="icon-book icon-14 me-1"></span>
-        <span
-          [innerHTML]="
-            data?.decisionNo
-              | formatvalue : view.formModel : 'decisionNo'
-              | async
-          "
-        >
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-calendar_today icon-14 me-1"></span>
-        <span
-          class="align-self-center"
-          [ngbTooltip]="grvSetup?.EffectedDate?.headerText"
-          [innerHTML]="
-            data?.effectedDate
-              | formatvalue : view.formModel : 'effectedDate'
-              | async
-          "
-        >
-        </span>
-      </div>
-      <ng-container *ngIf="data?.expiredDate">
-        <span class="px-1"> - </span>
-        <span
-          class="align-self-center"
-          [ngbTooltip]="grvSetup?.ExpiredDate?.headerText"
-          [innerHTML]="
-            data?.expiredDate
-              | formatvalue : view.formModel : 'expiredDate'
-              | async
-          "
-        >
-        </span>
-      </ng-container>
-    </div>
-    <!-- end day -->
-    <!-- status & owner -->
-    <div class="d-flex align-items-center text-dark">
-      <codx-vll
-        class="badge fw-bold me-4"
-        [name]="'HRS102'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-      >
-      </codx-vll>
-      <span
-        *ngIf="data?.signedDate"
-        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-        [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-        [innerHTML]="
-          data?.signedDate | formatvalue : view.formModel : 'signedDate' | async
-        "
-      >
-      </span>
-    </div>
-    <!-- end status & owner -->
-  </div>
-</ng-template>
 
 <!-- end -->
 

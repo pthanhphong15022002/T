@@ -1,18 +1,8 @@
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CRUDService,
   CodxTreeviewComponent,
-  DataRequest,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -20,9 +10,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 import { CodxHrService } from '../codx-hr.service';
-import { OrganizationOrgchartComponent } from './organization-orgchart/organization-orgchart.component';
+import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -81,7 +70,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.router.params.subscribe((param: any) => {
       let funcID = param['funcID'];
 
-      console.log(funcID);
       //Set funcID to check view list mode in afterviewinit
       this.funcIDCheck = funcID;
       if (funcID.includes('WP')) {

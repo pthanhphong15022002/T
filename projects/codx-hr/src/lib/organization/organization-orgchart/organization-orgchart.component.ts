@@ -782,11 +782,7 @@ export class OrganizationOrgchartComponent {
 
         this.hrService
           .SaveSettingValue('HRParameters', '1', this.dataTree)
-          .subscribe((res: any) => {
-            if (res) {
-              this.notify.notifyCode('SYS007');
-            }
-          });
+          .subscribe();
         break;
       default:
         break;
@@ -1608,7 +1604,7 @@ export class OrganizationOrgchartComponent {
     }
   }
 
-  beforeDelete(opt: RequestOption, id) {
+  beforeDelete(opt: RequestOption, id, data) {
     opt.methodName = 'DeleteEOrgChartAsync';
     opt.className = 'OrganizationUnitsBusiness';
     opt.assemblyName = 'HR';
@@ -1619,21 +1615,29 @@ export class OrganizationOrgchartComponent {
 
   // delete data
   deleteData(data) {
+    // let dataFilter =
+    //   this.view.dataService.currentView.currentComponent.treeView.dicDatas;
+
+    // console.log(this.view.dataService.currentComponent);
+    // console.log(this.view.dataService.currentView.dataService.dataSelected);
+    // console.log(this.view.dataService.currentView.dataService.data);
+
     this.view.dataService
-      .delete([data], true, (option: RequestOption) =>
-        this.beforeDelete(option, data.orgUnitID)
+      .delete(
+        [data],
+        true,
+        (option: RequestOption) =>
+          this.beforeDelete(option, data.orgUnitID, data),
+        '',
+        '',
+        '',
+        '',
+        false
       )
       .subscribe((res) => {
         if (res === true) {
+          this.notify.notifyCode('SYS008');
           this.items = this.items.filter((item) => item.id != data.orgUnitID);
-
-          // const ids = this.items.map(({ id }) => id);
-          // const filtered = this.items.filter(
-          //   ({ id }, index) => !ids.includes(id, index + 1)
-          // );
-
-          // this.items = filtered;
-
           const checkSameLevel = this.items.filter(
             (item) => data.parentID === item.parent
           );
@@ -1648,6 +1652,8 @@ export class OrganizationOrgchartComponent {
           }
 
           this.dt.detectChanges();
+        } else {
+          this.notify.notifyCode('SYS022');
         }
       });
   }
