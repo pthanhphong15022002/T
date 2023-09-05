@@ -376,36 +376,36 @@
     <div
       class="d-flex align-items-center justify-content-between has-action-menu-od user-nav-item py-2 border-bottom"
     >
-    <div class="d-flex align-items-top">
-      <div
-        class="me-4"
-        style="position: relative"
-        popoverClass="userPopoverClass"
-        [ngbPopover]="popoverSelectRoles"
-        placement="right"
-        #p="ngbPopover"
-        (mouseenter)="showPopover(p, item.objectID)"
-        autoClose="outside"
-      >
-        <codx-img class="" [objectId]="item.objectID" objectType="AD_Users">
-        </codx-img>
-        <div style="position: absolute; right: 0px; bottom: 0px">
-          <ng-container *ngFor="let role of listRoles">
-            <ng-container *ngIf="role.value == item.roleType">
-              <span
-                inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"
-              ></span>
+      <div class="d-flex align-items-top">
+        <div
+          class="me-4"
+          style="position: relative"
+          popoverClass="userPopoverClass"
+          [ngbPopover]="popoverSelectRoles"
+          placement="right"
+          #p="ngbPopover"
+          (mouseenter)="showPopover(p, item.objectID)"
+          autoClose="outside"
+        >
+          <codx-img class="" [objectId]="item.objectID" objectType="AD_Users">
+          </codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container *ngIf="role.value == item.roleType">
+                <span
+                  inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"
+                ></span>
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
+        </div>
+        <div class="d-flex flex-column me-2">
+          <div class="text-dark">
+            {{ item.objectName }}
+          </div>
+          <div class="text-gray-500 fs-7">{{ item.positionName }}</div>
         </div>
       </div>
-      <div class="d-flex flex-column me-2">
-        <div class="text-dark">
-          {{ item.objectName }}
-        </div>
-        <div class="text-gray-500 fs-7">{{ item.positionName }}</div>
-      </div>
-    </div>
 
       <ng-container>
         <div class="d-flex align-items-start">
@@ -560,7 +560,21 @@
 </ng-template>
 
 <ng-template #addLink let-dialog="dialogPopupLink">
-  <div class="container-body p-5">
+  <codx-meeting-online
+    #suremeet
+    [dialog]="dialog"
+    [meetingTitle]="meeting?.meetingName"
+    [meetingDescription]="meeting?.memo"
+    [meetingStartDate]="meeting?.startDate"
+    [meetingStartTime]="startTime"
+    [meetingDuration]="60"
+    [meetingPassword]="null"
+    [meetingUrl]="meeting?.link ?? ''"
+    [userName]="user.userName"
+    [mail]="user.email"
+    [isManager]="true"
+  ></codx-meeting-online>
+  <!-- <div class="container-body p-5">
     <div class="d-flex justify-content-between mb-4">
       <div class="h3">
         <codx-label
@@ -605,7 +619,7 @@
         ></codx-label>
       </button>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #popoverSelectRoles>
