@@ -48,6 +48,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   contactID: any;
   actionOld = '';
   customerID: any;
+  isStep: boolean = false;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -69,6 +70,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.listContacts = dt?.data?.listContacts;
     this.contactType = dt?.data?.contactType;
     this.customerID = dt?.data?.customerID;
+    this.isStep = dt?.data?.isStep ?? false;
     if (this.action != 'add') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
       this.isDefault = this.data.isDefault;
@@ -400,12 +402,14 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.isDefault = true;
       }
-      this.codxShareSv.listContactBehavior.next({
-        data: data,
-        type: 'edit',
-      });
-      this.cmSv.contactSubject.next(this.listContacts);
-
+      if(this.isStep){
+        this.codxShareSv.listContactBehavior.next({
+          data: data,
+          type: 'addAndSave',
+        });
+      }else{
+        this.cmSv.contactSubject.next(this.listContacts);
+      }
       // this.contactTemp.lstContactEmit.emit(this.listContacts);
       // this.listContacts = this.cmSv.bringDefaultContactToFront(
       //   this.listContacts
