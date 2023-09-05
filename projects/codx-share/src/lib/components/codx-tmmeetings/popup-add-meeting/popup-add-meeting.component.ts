@@ -100,6 +100,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   preside: any;
   isOtherModule = false; //neu tu modele khac truyen vao
   defaultRoleA = '';
+  viewOnly = false;
+
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -728,13 +730,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       addLink,
       '',
       500,
-      10,
-      '',
-      null,
-      '',
-      option
+      300,
+      ''
     );
+    this.dialogPopupLink.closed.subscribe((res: any) => {
+      if (res?.event?.attendee != null || res?.event?.owner != null) {
+        this.meeting.link = res?.event?.attendee;
+        this.meeting.link2 = res?.event?.owner;
+        this.changDetec.detectChanges();
+      }
+    });
   }
+
+  openPopupLinkOnline() {}
 
   openPopupTemplate(item: any) {
     let option = new DialogModel();

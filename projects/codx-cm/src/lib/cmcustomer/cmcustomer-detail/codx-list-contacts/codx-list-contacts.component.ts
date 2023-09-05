@@ -117,9 +117,9 @@ export class CodxListContactsComponent implements OnInit {
         if (res != null && res.length > 0) {
           var index = res.findIndex((x) => x.isDefault);
           if (index != -1) {
-            this.contactEvent.emit(res[index]);
+            this.contactEvent.emit({ data: res[index], action: 'add' });
           } else {
-            this.contactEvent.emit(null);
+            this.contactEvent.emit({ data: null, action: 'add' });
           }
         }
         // this.listContacts.push(Object.assign({}, res));
@@ -337,7 +337,7 @@ export class CodxListContactsComponent implements OnInit {
               this.listContacts = this.cmSv.bringDefaultContactToFront(
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
-              this.contactEvent.emit({ data: e.event, action: 'edit' });
+              this.contactEvent.emit({ data: e.event, action: action });
               if (action == 'edit') {
                 this.codxShareSv.listContactBehavior.next({
                   data: e.event,
@@ -468,7 +468,7 @@ export class CodxListContactsComponent implements OnInit {
                 );
                 if (this.listContacts != null && this.listContacts.length > 0)
                   this.changeContacts(this.listContacts[0]);
-                this.contactEvent.emit(data);
+                this.contactEvent.emit({ data: data, action: 'delete' });
                 this.lstContactEmit.emit(this.listContacts);
                 this.notiService.notifyCode('SYS008');
                 this.changeDetectorRef.detectChanges();

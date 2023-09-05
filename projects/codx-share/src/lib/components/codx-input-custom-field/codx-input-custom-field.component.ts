@@ -95,7 +95,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     private changeDef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private codxShareSv: CodxShareService,
+    private codxShareSv: CodxShareService
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
@@ -163,28 +163,38 @@ export class CodxInputCustomFieldComponent implements OnInit {
         let arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         this.codxShareSv.listContactBehavior.subscribe((element) => {
-          if(element != null){
+          if (element != null) {
             var contact = element?.data;
             var type = element?.type;
-            if(this.listContacts != null && this.listContacts.length > 0){
-              var index = this.listContacts.findIndex(x => x.recID == contact?.recID);
-              if(index != -1){
-                if(type == 'edit'){
+            contact.isDefault = false;
+            if (this.listContacts != null && this.listContacts.length > 0) {
+              var index = this.listContacts.findIndex(
+                (x) => x.recID == contact?.recID
+              );
+              if (index != -1) {
+                if (type != 'delete') {
                   this.listContacts[index] = contact;
-                }else{
+                } else {
                   this.listContacts.splice(index, 1);
                 }
+              } else {
+                if (type == 'addAndSave') {
+                  this.listContacts.push(contact);
+                }
               }
-              this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
-              this.valueChangeCustom.emit({
-                e: null,
-                data: this.customField,
-                result: JSON.stringify(this.listContacts),
-              });
+            } else {
+              this.listContacts.push(contact);
             }
+            this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
+            this.valueChangeCustom.emit({
+              e: contact,
+              data: this.customField,
+              result: JSON.stringify(this.listContacts),
+              type: 'addAndSave',
+            });
             this.codxShareSv.listContactBehavior.next(null);
           }
-        })
+        });
         break;
     }
   }
@@ -345,6 +355,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           gridViewSetup: res,
           listContacts: this.listContacts,
           customerID: customerID,
+          isStep: true,
         };
         var dialog = this.callfc.openForm(
           PopupQuickaddContactComponent,
@@ -472,16 +483,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
             e: data,
             data: this.customField,
             result: JSON.stringify(this.listContacts),
-            type: 'delete'
+            type: 'delete',
           });
-        }else{
+        } else {
           this.valueChangeCustom.emit({
             e: null,
             data: this.customField,
             result: JSON.stringify(this.listContacts),
           });
         }
-
       }
     });
   }
