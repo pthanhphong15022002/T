@@ -10,6 +10,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
+  override onAfterViewInit(): void {
+    
+  }
 
   title$:any;
   asideTheme:any;
@@ -38,9 +41,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     this.getFuncChange();
   }
  
-  override onAfterViewInit(): void {
-    throw new Error('Method not implemented.');
-  }
+  
   
   getFuncChange()
   {
