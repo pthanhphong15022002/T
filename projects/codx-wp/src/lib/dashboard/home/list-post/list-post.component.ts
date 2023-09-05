@@ -73,7 +73,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   @Input() isShowCreate = true;
   @Input() moreFuncTmp: TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
-
+  @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
 
   user: any;
   dataService: CRUDService = null;
@@ -218,7 +218,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   // xóa bài viết
   deletePost(data: any) {
     if (data?.recID) {
@@ -310,6 +309,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
   // lưu trữ bài viết
   savePost(post: any) {
     if (post) {
@@ -371,6 +371,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       );
     }
   }
+
   //click xem thêm 
   clickReadMore(item){
     item.isShortContent = false;
@@ -389,7 +390,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   dataSelected:any = null;
-  @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
+  
   // open cbb share
   openCBBShare(data){
     if(data.write){
@@ -399,6 +400,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
   //change mode share
   changePermission(event:any){
     if(event)
@@ -474,6 +476,28 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+  //
+  onAction(e:any){
+    debugger
+    // if(this.listview?.dataService?.predicates)
+    // {
+    //   let post = this.listview.dataService.data[0];
+    //   if(post?.category == "9")
+    //   {
+    //     this.api
+    //       .execSv(
+    //       'DM',
+    //       'ERM.Business.DM',
+    //       'FileBussiness',
+    //       'GetFilesByIbjectIDAsync',
+    //       [this.objectID])
+    //       .subscribe((res:any[]) => {
+    //         this.clickViewDetail(res);
+    //       });
+    //   }
+    // }
+  }
 }
 
 

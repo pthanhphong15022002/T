@@ -19,6 +19,7 @@ import {
 import { CM_Contacts } from '../../../../models/cm_model';
 import { tmpCrm } from '../../../../models/tmpCrm.model';
 import { CodxListContactsComponent } from '../codx-list-contacts.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-popup-quickadd-contact',
@@ -47,11 +48,13 @@ export class PopupQuickaddContactComponent implements OnInit {
   contactID: any;
   actionOld = '';
   customerID: any;
+  isStep: boolean = false;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private cmSv: CodxCmService,
     private changeDef: ChangeDetectorRef,
+    private codxShareSv: CodxShareService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -67,6 +70,7 @@ export class PopupQuickaddContactComponent implements OnInit {
     this.listContacts = dt?.data?.listContacts;
     this.contactType = dt?.data?.contactType;
     this.customerID = dt?.data?.customerID;
+    this.isStep = dt?.data?.isStep ?? false;
     if (this.action != 'add') {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
       this.isDefault = this.data.isDefault;
@@ -398,8 +402,14 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.isDefault = true;
       }
-      this.cmSv.contactSubject.next(this.listContacts);
-
+      if(this.isStep){
+        this.codxShareSv.listContactBehavior.next({
+          data: data,
+          type: 'addAndSave',
+        });
+      }else{
+        this.cmSv.contactSubject.next(this.listContacts);
+      }
       // this.contactTemp.lstContactEmit.emit(this.listContacts);
       // this.listContacts = this.cmSv.bringDefaultContactToFront(
       //   this.listContacts

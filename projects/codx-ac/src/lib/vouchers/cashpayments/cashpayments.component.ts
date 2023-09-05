@@ -1,24 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Injector,
-  Optional,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
-  CallFuncService,
   DataRequest,
   DialogModel,
-  DialogRef,
   FormModel,
   NotificationsService,
-  RequestOption,
+  PageLink,
+  PageTitleService,
   SidebarModel,
   TenantStore,
   UIComponent,
@@ -29,7 +25,6 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -38,8 +33,8 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-import { Subject, interval, map, takeUntil, tap } from 'rxjs';
-import { RoundService } from '../../round.service';
+import { Subject, takeUntil } from 'rxjs';
+declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
   templateUrl: './cashpayments.component.html',
@@ -113,6 +108,7 @@ export class CashPaymentsComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+  bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
   public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar table
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -122,7 +118,8 @@ export class CashPaymentsComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -145,7 +142,6 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-
   onInit(): void {
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
@@ -191,6 +187,20 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
+    let pageLink: Array<PageLink> = [
+      {
+        title: 'Test tè lè nhòe',
+        desc: 'Hiển cái này giúp',
+        path: 'ac/cashpayments/ACT0410?journalNo=ACJN230712003&parent=ACT',
+      },
+      {
+        title: 'Test bét tờ lơ to',
+        desc: 'Cái này nè',
+        path: 'ac/cashpayments/ACT0410?journalNo=ACJN230727001&parent=ACT',
+      },
+    ];
+
+    this.pageTitle.setChildren(pageLink);
 
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
@@ -274,8 +284,7 @@ export class CashPaymentsComponent extends UIComponent {
             oData: {...this.dataDefault}, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName //? tên company
-      
+            legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
             CashPaymentAdd,
@@ -283,7 +292,7 @@ export class CashPaymentsComponent extends UIComponent {
             this.optionSidebar,
             this.view.funcID
           );
-          dialog.closed.subscribe((res:any) => {
+          dialog.closed.subscribe((res: any) => {
             if (res && res?.event?.update) {
               this.getDatadetail(this.itemSelected);
             }
@@ -772,9 +781,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   getJournal() {
     this.api
-      .exec('AC', 'CommonBusiness', 'GetJournalAsync', [
-        this.journalNo,
-      ])
+      .exec('AC', 'CommonBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
@@ -786,12 +793,12 @@ export class CashPaymentsComponent extends UIComponent {
 
   /**
    * *Hàm call set default data khi thêm mới chứng từ
-   * @returns 
+   * @returns
    */
   setDefault() {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.dataDefault,
-      this.journalNo
+      this.journalNo,
     ]);
   }
 
@@ -934,6 +941,28 @@ export class CashPaymentsComponent extends UIComponent {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  //#endregion
+
+  //#region Bankhub
+  call() {
+    jsBh.login('accNet', (o) => this.callback(o));
+  }
+
+  callback(o: any) {
+    if (o) {
+      this.bhLogin = true;
+      localStorage.setItem('bh_tk', o);
+      this.getbank();
+    }
+  }
+
+  getbank() {
+    this.acService
+      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
   //#endregion
 }

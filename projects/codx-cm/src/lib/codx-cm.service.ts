@@ -492,6 +492,15 @@ export class CodxCmService {
     );
   }
 
+  updateFieldContacts(instanceID: string, dataValueEdit: string, dataValueDeleted: string = '') {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateFielsContactByInstanceIDAsync',
+      [instanceID, dataValueEdit, dataValueDeleted]
+    );
+  }
+
   addDeal(data: any) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealAsync', data);
   }

@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html>
+
+<body>
+    <script>
+        window.onload = () => {
+
+            let token = new URLSearchParams(location.search).get('tk');
+            if (token)
+                localStorage.setItem("bh_tk", token);
+            window.close();
+        }
+    </script>
+
+</body>
+
+</html>

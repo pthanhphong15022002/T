@@ -425,8 +425,33 @@ export class DealDetailComponent implements OnInit {
   }
   contactChange($event) {
     if ($event) {
-      this.getContactPerson($event.data);
+      if ($event?.data) {
+        let data = $event?.data;
+        if ($event?.action == 'delete') {
+          data.isDefault = false;
+        }
+        if ($event?.action != 'add') {
+          let lst = [];
+          lst.push(Object.assign({}, $event.data));
+          var json = JSON.stringify(lst);
+          this.codxCmService
+            .updateFieldContacts(
+              this.dataSelected?.refID,
+              $event?.action == 'edit' ? json : '',
+              $event?.action == 'delete' ? json : ''
+            )
+            .subscribe((res) => {});
+        }
+        this.getContactPerson(data);
+      }
     }
+  }
+
+  lstContactEmit(e) {
+    // if(e != null && e?.length > 0){
+    //   var json = JSON.stringify(e);
+    //   this.codxCmService.updateFieldContacts(this.dataSelected?.refID, json, '').subscribe(res=>{});
+    // }
   }
 
   async promiseAll(listInstanceStep) {
@@ -570,7 +595,7 @@ export class DealDetailComponent implements OnInit {
   autoStart(event) {
     this.changeProgress.emit(event);
   }
-  clickShowTab(isShow){
+  clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
   }
