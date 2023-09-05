@@ -1,5 +1,5 @@
 <codx-form  #formCashPayment [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
-  [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" (onAfterInit)="onAfterInitForm($event)" class="ac-dialog ac-animation-slideRight">
+  [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" (afterValidate)="afterValidateForm($event)" (onAfterInit)="onAfterInitForm($event)" class="ac-dialog ac-animation-slideRight">
 </codx-form>
 <!-- Start: Sub toolbar -->
 <ng-template #TmpSubToolbar>
@@ -565,22 +565,22 @@
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID"
         [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
-        (cellChanged)="cellLineChange($event)"></codx-gridview-v2>
+        (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
             <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
-                saveMasterBeforeAddRow('1'); $event.preventDefault()
-              " (click)="saveMasterBeforeAddRow('1')">
+              onAddLine('1'); $event.preventDefault()
+              " (click)="onAddLine('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault()"
-              (click)="saveMasterBeforeAddRow('2')">
+              (keydown.enter)="onAddLine('2'); $event.preventDefault()"
+              (click)="onAddLine('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
                 default="Thêm đề nghị tạm ứng"></codx-label>
@@ -607,7 +607,7 @@
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
         [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID"
-        (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="cellLineChangeSettledInvoices($event)">
+        (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
         <div class="d-flex align-items-center">
@@ -618,8 +618,8 @@
             ">
             <button style="border: 1px solid !important" tab-index="12" id="btnset"
               class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('3');$event.preventDefault()"
-              (click)="saveMasterBeforeAddRow('3')">
+              (keydown.enter)="onAddLine('3');$event.preventDefault()"
+              (click)="onAddLine('3')">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
                 default="Thêm hóa đơn công nợ"></codx-label>
@@ -627,8 +627,8 @@
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="saveMasterBeforeAddRow('2'); $event.preventDefault()"
-              (click)="saveMasterBeforeAddRow('2')">
+              (keydown.enter)="onAddLine('2'); $event.preventDefault()"
+              (click)="onAddLine('2')">
               <i class="icon-library_add_check icon-16"></i>
               <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel" fiedName="lblAddVat"
                 default="Thêm đề nghị tạm ứng"></codx-label>
@@ -648,7 +648,7 @@
   <ng-container *ngIf="formCashPayment.data?.subType == '9'">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices" entityName="AC_VATInvoices"
-        rowNoField="rowNo" (cellChanged)="cellLineChangeVATInvoices($event)" (eventAction)="onActionGridVatInvoice($event)"
+        rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)" (eventAction)="onActionGridVatInvoice($event)"
         [showEmptyRecord]="false" (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0"
         [dataValues]="formCashPayment.data.recID" [hideMoreFunc]="true" service="AC">
       </codx-gridview-v2>
@@ -657,8 +657,8 @@
           <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="
-                saveMasterBeforeAddRow('4'); $event.preventDefault()
-              " (click)="saveMasterBeforeAddRow('4')">
+              onAddLine('4'); $event.preventDefault()
+              " (click)="onAddLine('4')">
               <i class="icon-i-graph-up icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
             </button>
