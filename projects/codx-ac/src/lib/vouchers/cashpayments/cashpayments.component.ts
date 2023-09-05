@@ -281,7 +281,7 @@ export class CashPaymentsComponent extends UIComponent {
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
-            dataDefault: { ...this.dataDefault }, //?  data của cashpayment
+            oData: {...this.dataDefault}, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
@@ -306,30 +306,29 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    let data = {
-      headerText: this.headerText, //? tiêu đề voucher
-      journal: { ...this.journal }, //?  data journal
-      dataCashpayment: { ...dataEdit }, //?  data của cashpayment
-      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-      legalName: this.legalName, //? tên company
-    };
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        console.log(res);
-        // let dialog = this.callfc.openSide(
-        //   CashPaymentAdd,
-        //   data,
-        //   this.optionSidebar,
-        //   this.view.funcID
-        // );
-        // dialog.closed.subscribe((res: any) => {
-        //   if (res && res?.event?.update) {
-        //     this.getDatadetail(this.itemSelected);
-        //   }
-        // });
+        let data = {
+          headerText: this.headerText, //? tiêu đề voucher
+          journal: { ...this.journal }, //?  data journal
+          oData: { ...res }, //?  data của cashpayment
+          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+          legalName: this.legalName, //? tên company
+        };
+        let dialog = this.callfc.openSide(
+          CashPaymentAdd,
+          data,
+          this.optionSidebar,
+          this.view.funcID
+        );
+        dialog.closed.subscribe((res: any) => {
+          if (res && res?.event?.update) {
+            this.getDatadetail(this.itemSelected);
+          }
+        });
       });
   }
 
@@ -339,22 +338,30 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    let data = {
-      action: 'copy', //? trạng thái của form (chỉnh sửa)
-      headerText: this.headerText, //? tiêu đề voucher
-      journal: { ...this.journal }, //?  data journal
-      dataCashpayment: { ...dataCopy }, //?  data của cashpayment
-      hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-      baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-      legalName: this.legalName, //? tên company
-    };
-    this.view.dataService.copy().subscribe((res: any) => {
-      this.callfc.openSide(
-        CashPaymentAdd,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
+    this.view.dataService.copy((o) => this.setDefault()).subscribe((res: any) => {
+      if (res != null) {
+        dataCopy.voucherNo = res?.data.voucherNo;
+        let data = {
+          action: 'copy', //? trạng thái của form (chỉnh sửa)
+          headerText: this.headerText, //? tiêu đề voucher
+          journal: { ...this.journal }, //?  data journal
+          oData: { ...dataCopy }, //?  data của cashpayment
+          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+          legalName: this.legalName, //? tên company
+        };
+        let dialog = this.callfc.openSide(
+          CashPaymentAdd,
+          data,
+          this.optionSidebar,
+          this.view.funcID
+        );
+        // dialog.closed.subscribe((res:any) => {
+        //   if (res && res?.event?.update) {
+        //     this.getDatadetail(this.itemSelected);
+        //   }
+        // });
+      }
     });
   }
 
