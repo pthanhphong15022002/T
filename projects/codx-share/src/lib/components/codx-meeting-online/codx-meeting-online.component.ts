@@ -122,7 +122,8 @@ export class CodxMeetingOnlineComponent extends UIComponent {
   }
   closeDialog(isSave: boolean) {
     if (isSave) {
-      this.data[0].onlineUrl = this.meetingUrl;
+      //meeting CO ko có 'this.data[0]' nên cần check điều kiện cho khỏi lỗi => VTHAO-05/09/2023-gắn codx-meeting-online cho CO Meeting
+      if (this.data[0]) this.data[0]['onlineUrl'] = this.meetingUrl;
 
       let links = {
         owner: this.ownerLink,
