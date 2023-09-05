@@ -346,7 +346,6 @@ export class PopupAddDealComponent
     this.lstContactDelete = e;
   }
 
-
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
       if (res && res.length > 0) {
@@ -510,7 +509,7 @@ export class PopupAddDealComponent
           var contact = event?.e;
           var type = event?.type ?? '';
           result = event?.result ?? '';
-          this.convertToFieldDp(contact, type)
+          this.convertToFieldDp(contact, type);
           console.log('contactsJS: ', result);
           console.log('contacts: ', JSON.parse(result));
           break;
@@ -546,9 +545,23 @@ export class PopupAddDealComponent
   convertToFieldDp(contact, type) {
     if (contact != null) {
       if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
-        var index = this.lstContactDeal.findIndex(
-          (x) => x.recID == contact.recID
-        );
+        let index = -1;
+        if (type == 'addAndSave') {
+          index = this.lstContactDeal.findIndex(
+            (x) => x.refID == contact.refID
+          );
+        } else {
+          if (contact.refID != null && contact.refID?.trim() != '') {
+            index = this.lstContactDeal.findIndex(
+              (x) => x.refID == contact.refID
+            );
+          } else {
+            index = this.lstContactDeal.findIndex(
+              (x) => x.recID == contact.recID
+            );
+          }
+        }
+
         if (index != -1) {
           if (type != 'delete') {
             this.lstContactDeal[index] = contact;
