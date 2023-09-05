@@ -444,7 +444,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     gridModel.formName = this.data.formName;
     gridModel.entityName = this.data.entityName;
     gridModel.gridViewName = this.data.gridViewName;
-    debugger
     this.callFuncService.openForm(
       CodxExportComponent,
       null,
