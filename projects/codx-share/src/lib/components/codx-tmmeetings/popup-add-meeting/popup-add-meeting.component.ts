@@ -731,11 +731,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       '',
       500,
       300,
-      '',
-      null,
-      '',
-      option
+      ''
     );
+    this.dialogPopupLink.closed.subscribe((res: any) => {
+      if (res?.event?.attendee != null || res?.event?.owner != null) {
+        this.meeting.link = res?.event?.attendee;
+        this.meeting.link2 = res?.event?.owner;
+        this.changDetec.detectChanges();
+      }
+    });
   }
 
   openPopupLinkOnline() {}

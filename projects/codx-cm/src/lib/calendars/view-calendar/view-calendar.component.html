@@ -285,7 +285,7 @@
     <div>
       <ejs-combobox
         [dataSource]="listStep"
-        [fields]="fieldsGroup"
+        [fields]="fieldsStep"
         (change)="filterText($event, 'step')"
         [allowCustom]="false"
       ></ejs-combobox>
@@ -298,6 +298,7 @@
     <button
       type="button"
       class="btn btn-primary"
+      (click)="continue()"
     >
       <codx-label
         name="lblSave"

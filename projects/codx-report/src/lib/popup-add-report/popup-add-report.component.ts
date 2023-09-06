@@ -452,7 +452,10 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       '',
       [
         gridModel,
-        this.data.recID
+        this.data.recID,
+        null,
+        null,
+        this.dialog.formModel?.entityName
       ],
       null
     ).closed.subscribe((res:any) => {

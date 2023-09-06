@@ -1251,7 +1251,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         var customData = 
         {
           refID : "",
-          refType : "",
+          refType : this.formModel?.entityName,
           dataSource: datas,
           addPermissions: this.listPermission
         }
