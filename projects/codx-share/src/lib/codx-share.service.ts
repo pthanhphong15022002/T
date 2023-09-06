@@ -352,7 +352,7 @@ export class CodxShareService {
             data.recID,
             customData?.dataSource,
             customData?.refID,
-            customData?.refType,
+            customData?.refType || formModel?.entityName,
           ],
           null
         );

@@ -106,7 +106,7 @@
                         <span class="data-text-color">{{ data.alPreYear }}</span>
                     </ng-template>
                 </div>
-                <div #alThisYear class="d-flex align-items-center line-clamp line-clamp-1 hover-active" [ngbTooltip]="(alThisYear.scrollHeight > alThisYear.clientHeight
+                <div #alThisYear class="d-flex align-items-center line-clamp line-clamp-2 hover-active" [ngbTooltip]="(alThisYear.scrollHeight > alThisYear.clientHeight
                         && data.alThisYear) ? alThisYearToolTip: null">
                     <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'ALThisYear'"
                         [formModel]="view.formModel" default="Tiêu chuẩn năm nay: "></codx-label>
@@ -133,7 +133,7 @@
                                 <span class="data-text-color">{{data?.seniorityAdd}}</span>
                             </div>
                         </div>
-                    </ng-template>  
+                    </ng-template>
                     <ng-template #noALThisYear>
                         <span class="data-text-color">{{grvSetup['AlThisYear']?.headerText}}</span>
                     </ng-template>
@@ -148,7 +148,7 @@
         <!-- Phép còn -->
         <div class="w-25 p-3">
             <div class="d-flex flex-column">
-                <div class="align-items-center1 mb-1">
+                <div class="mb-1">
                     <div #realALPreYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALPreYear.scrollHeight > realALPreYear.clientHeight
                         && data.realALPreYear) ? realALPreYearToolTip: null">
                         <codx-label class="label-colon label-text-color" [setRequire]="false"
@@ -168,7 +168,7 @@
                         <span class="data-text-color">{{ data.realALPreYear }}</span>
                     </ng-template>
                 </div>
-                <div class="align-items-center mb-1">
+                <div class="mb-1">
                     <div #realALThisYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALThisYear.scrollHeight > realALThisYear.clientHeight
                         && data.realALThisYear) ? realALThisYearToolTip: null">
                         <codx-label class="label-colon label-text-color" [setRequire]="false"
@@ -191,32 +191,33 @@
             </div>
         </div>
         <!-- Đã nghỉ -->
-        <div class="w-25 p-3">
-            <div class="d-flex flex-column">
-                <div class="align-items-center mb-1">
-                    <div #daysOff class="line-clamp line-clamp-1" [ngbTooltip]="(daysOff.scrollHeight > daysOff.clientHeight
+        <div class="w-25">
+            <div class="d-flex flex-column p-3">
+                <div class="mb-1">
+                    <div #daysOff class="line-clamp line-clamp-1" [ngClass]="data.daysOff?'d-flex' : null" [ngbTooltip]="(daysOff.scrollHeight > daysOff.clientHeight
                         && data.daysOff) ? daysOffTooltip: null">
-                        <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
-                            [formModel]="view.formModel" default="Đã nghỉ: ">
-                        </codx-label>
-                        <ng-container *ngIf="data.daysOff; else noDaysOff">
-                            <div ngbDropdown [container]="'body'">
-                                <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" (click)="onShowDaysOff(data)">
-                                    {{data.daysOff}}
+                            <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
+                                [formModel]="view.formModel" default="Đã nghỉ: ">
+                            </codx-label>
+                            <ng-container *ngIf="data.daysOff; else noDaysOff">
+                                <div ngbDropdown [container]="'body'">
+                                    <div ngbDropdownToggle class="text-primary fw-bold cursor-pointer" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" (click)="onShowDaysOff(data)">
+                                        {{data.daysOff}}
+                                    </div>
+                                    <div ngbDropdownMenu class="dropdown-menu w-350px p-3"
+                                        aria-labelledby="dropdownMenuButton">
+                                        <ng-container
+                                            *ngTemplateOutlet=" daysOffPopup; context: { $implicit: data.listDaysOff}">
+                                        </ng-container>
+                                    </div>
                                 </div>
-                                <div ngbDropdownMenu class="dropdown-menu w-350px p-3"
-                                    aria-labelledby="dropdownMenuButton">
-                                    <ng-container
-                                        *ngTemplateOutlet=" daysOffPopup; context: { $implicit: data.listDaysOff}">
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <ng-template #noDaysOff>
-                            <span class="place-holder me-1">{{grvSetup['DaysOff'].headerText}}</span>
-                        </ng-template>
+                            </ng-container>
+                            <ng-template #noDaysOff>
+                                <span class="place-holder me-1">{{grvSetup['DaysOff'].headerText}}</span>
+                            </ng-template>
+                        </div>
                     </div>
                     <ng-template #daysOffTooltip>
                         <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
@@ -224,7 +225,6 @@
                         </codx-label>
                         <span class="data-text-color">{{data.daysOff}}</span>
                     </ng-template>
-                </div>
                 <div class="align-items-center">
                     <span class="icon-month text-primary" (click)="onShowEAnnualLeaveMonth(data)"></span>
                 </div>
