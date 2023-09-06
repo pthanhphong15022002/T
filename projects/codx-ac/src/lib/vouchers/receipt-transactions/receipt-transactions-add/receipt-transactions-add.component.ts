@@ -419,129 +419,88 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   /** Hàm lưu master */
   save(isclose: boolean) {
-    switch (this.formType) {
+    if (this.vouchers.status == '7') {
+      this.vouchers.status = '1';
+      this.form.formGroup.patchValue({status: this.vouchers.status});
+    }
+    this.dialog.dataService.updateDatas.set(
+      this.vouchers['_uuid'],
+      this.vouchers
+    );
+
+    switch(this.formType)
+    {
       case 'add':
       case 'copy':
-        this.vouchers.status = '1';
-        this.form.formGroup.patchValue({status: this.vouchers.status});
-        if (this.hasSaved) {
-          this.dialog.dataService.updateDatas.set(
-            this.vouchers['_uuid'],
-            this.vouchers
-          );
-          this.form
-            .save(null, 0, '', 'SYS006', true)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res?.update?.error) {
-                this.vouchers.status = '0';
-                this.form.formGroup.patchValue({status: this.vouchers.status});
-              }
-              if (res && res?.update?.data != null && res?.update?.error != true) {
-                if (isclose) {
-                  this.dialog.close({
-                    update: true,
-                    data: res.update,
-                  });
-                }
-                else {
-                  this.clearVouchers();
-                  this.dialog.dataService.clear();
-                  this.dialog.dataService
-                    .addNew((o) => this.setDefault(o))
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe((res) => {
-                      this.vouchers = res;
-                      this.form.formGroup.patchValue(this.vouchers);
-                      this.hasSaved = false;
-                    });
-                }
-                this.dt.detectChanges();
-              }
-            });
-        } else {
-          // nếu voucherNo đã tồn tại,
-          // hệ thống sẽ đề xuất một mã mới theo thiệt lập đánh số tự động
-          this.journalService.checkVoucherNoBeforeSave(
-            this.journal,
-            this.vouchers,
-            'IV',
-            this.fmVouchers.entityName,
-            this.form,
-            this.formType === 'edit',
-            () => {
-              this.form.save()
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res) => {
-                  if (res?.save?.error) {
-                    this.vouchers.status = '0';
-                    this.form.formGroup.patchValue({status: this.vouchers.status});
-                  }
-                  if (res && res?.save?.data != null && res?.save?.error != true) {
-                    if (isclose) {
-                      this.dialog.close();
-                    }
-                    else {
-                      this.clearVouchers();
-                      this.dialog.dataService.clear();
-                      this.dialog.dataService
-                        .addNew((o) => this.setDefault(o))
-                        .pipe(takeUntil(this.destroy$))
-                        .subscribe((res) => {
-                          this.vouchers = res;
-                          this.form.formGroup.patchValue(this.vouchers);
-                        });
-                    }
-                    this.dt.detectChanges();
-                  }
-                  else {
-                    this.vouchers.unbounds.isAddNew = true;
-                  }
-                });
+        this.form.save(null, 0, '', 'SYS006', true)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res?.update?.error || res?.save?.error) {
+            this.vouchers.status = '7';
+            this.form.formGroup.patchValue({status: this.vouchers.status});
+            this.vouchers.unbounds.isAddNew = true;
+          }
+          if (isclose) {
+            if(res?.save?.data)
+            {
+              this.dialog.close({
+                update: true,
+                data: res.save,
+              });
             }
-          );
-        }
+            if(res?.update?.data)
+            {
+              this.dialog.close({
+                update: true,
+                data: res.update,
+              });
+            }
+          }
+          else {
+            this.clearVouchers();
+            this.dialog.dataService.clear();
+            this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+              this.journalNo,
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+                if(res)
+                {
+                  this.vouchers = res.data;
+                  this.form.formGroup.patchValue(this.vouchers);
+                  this.form.preData = { ...this.vouchers };
+                  this.detectorRef.detectChanges();
+                  this.hasSaved = false;
+                }
+            });
+          }
+          this.dt.detectChanges();
+        });
         break;
       case 'edit':
-        this.journalService.checkVoucherNoBeforeSave(
-          this.journal,
-          this.vouchers,
-          'IV',
-          this.fmVouchers.entityName,
-          this.form,
-          this.formType === 'edit',
-          () => {
-            if (this.vouchers.status == '0') {
-              this.vouchers.status = '1';
-              this.form.formGroup.patchValue({status: this.vouchers.status});
+        {
+          this.form.save(null, 0, '', '', true)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
+              if (res && res?.update?.data) {
+                this.dialog.close({
+                  update: true,
+                  data: res.update.data,
+                });
+                this.dt.detectChanges();
+              }
+              else
+              {
+                this.dialog.close({
+                  update: true,
+                  data: res,
+                });
+                this.dt.detectChanges();
+              }
             }
-            this.dialog.dataService.updateDatas.set(
-              this.vouchers['_uuid'],
-              this.vouchers
-            );
-            this.form.save(null, 0, '', '', true)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res) => {
-                if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
-                  if (res && res?.update?.data) {
-                    this.dialog.close({
-                      update: true,
-                      data: res.update.data,
-                    });
-                    this.dt.detectChanges();
-                  }
-                  else
-                  {
-                    this.dialog.close({
-                      update: true,
-                      data: res,
-                    });
-                    this.dt.detectChanges();
-                  }
-                }
-              });
-          }
-        );
+          });
+        }
         break;
     }
   }
@@ -853,5 +812,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     return true;
   }
 
+  /** Ẩn các function không sử dụng */
+  hideMF(event) {
+    var mf = event.filter(
+      (x) => x.functionID != 'SYS02' && x.functionID != 'SYS03' && x.functionID != 'SYS04'
+    );
+    mf.forEach((element) => {
+      element.disabled = true;
+    });
+  }
   //#endregion Function Line
 }

@@ -94,6 +94,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
         let data = {
           module:report.moduleID,
           reportID:report.recID,
+          reportType: this.dialog.formModel?.entityName
         }
         this.callfc.openForm(
           PopupAddReportComponent,

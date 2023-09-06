@@ -234,6 +234,28 @@ export class CmCustomerDetailComponent implements OnInit {
     });
   }
 
+  contactChange($event) {
+    if ($event) {
+      if ($event?.data && $event?.action != 'add') {
+        this.cmSv.getContactDeal($event?.data?.recID).subscribe((res) => {
+          if (res && res.length > 0) {
+            let lstContact = res;
+            let lstInsID = [];
+            lstInsID = lstContact.map(x => x.objectID);
+            var json = JSON.stringify(lstContact);
+            this.cmSv
+              .updateFieldContacts(
+                lstInsID,
+                $event?.action == 'edit' ? json : '',
+                $event?.action == 'delete' ? json : ''
+              )
+              .subscribe((res) => {});
+          }
+        });
+      }
+    }
+  }
+
   listTab(funcID) {
     if (funcID == 'CM0101' || funcID == 'CM0105') {
       if (this.dataSelected?.category == '1') {
