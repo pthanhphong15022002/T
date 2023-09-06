@@ -96,6 +96,9 @@ export class CashPaymentsComponent extends UIComponent {
     gridViewName: 'grvVATInvoices',
     entityName: 'AC_VATInvoices',
   };
+
+  //tabInfo: string[] = ['History', 'Comment', 'Attachment', 'References'];
+
   tabInfo: TabModel[] = [
     //? danh sách các tab footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -281,7 +284,7 @@ export class CashPaymentsComponent extends UIComponent {
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
-            oData: {...this.dataDefault}, //?  data của cashpayment
+            oData: { ...this.dataDefault }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
@@ -338,31 +341,33 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    this.view.dataService.copy((o) => this.setDefault()).subscribe((res: any) => {
-      if (res != null) {
-        dataCopy.voucherNo = res?.data.voucherNo;
-        let data = {
-          action: 'copy', //? trạng thái của form (chỉnh sửa)
-          headerText: this.headerText, //? tiêu đề voucher
-          journal: { ...this.journal }, //?  data journal
-          oData: { ...dataCopy }, //?  data của cashpayment
-          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-          legalName: this.legalName, //? tên company
-        };
-        let dialog = this.callfc.openSide(
-          CashPaymentAdd,
-          data,
-          this.optionSidebar,
-          this.view.funcID
-        );
-        // dialog.closed.subscribe((res:any) => {
-        //   if (res && res?.event?.update) {
-        //     this.getDatadetail(this.itemSelected);
-        //   }
-        // });
-      }
-    });
+    this.view.dataService
+      .copy((o) => this.setDefault())
+      .subscribe((res: any) => {
+        if (res != null) {
+          dataCopy.voucherNo = res?.data.voucherNo;
+          let data = {
+            action: 'copy', //? trạng thái của form (chỉnh sửa)
+            headerText: this.headerText, //? tiêu đề voucher
+            journal: { ...this.journal }, //?  data journal
+            oData: { ...dataCopy }, //?  data của cashpayment
+            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+            legalName: this.legalName, //? tên company
+          };
+          let dialog = this.callfc.openSide(
+            CashPaymentAdd,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+          // dialog.closed.subscribe((res:any) => {
+          //   if (res && res?.event?.update) {
+          //     this.getDatadetail(this.itemSelected);
+          //   }
+          // });
+        }
+      });
   }
 
   /**
