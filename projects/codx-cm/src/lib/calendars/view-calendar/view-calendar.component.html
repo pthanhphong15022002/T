@@ -152,11 +152,30 @@
 <ng-template #popupChoiseTypeCM let-data>
   <codx-form
     #form
-    [headerText]="'Thêm công việc'"
+    [customToolbar]="subHeader"
     [body]="addGroupJobBody"
     [footer]="addGroupJobFooter"
     [dialog]="popupTypeCM"
   ></codx-form>
+</ng-template>
+
+<ng-template #subHeader>
+  <div class="pt-2 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <codx-label
+        name="titleTypeTasks"
+        class="fw-bold fs-4"
+        [default]="'Thêm công việc'"
+      ></codx-label>
+      <button
+        class="button-close d-flex p-3"
+        style="border: none; outline: none; background: none"
+        (click)="closeBeforeAddTask()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </div>
 </ng-template>
 <ng-template #addGroupJobBody let-data>
   <div class="form-group w-100">
@@ -203,6 +222,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Tiềm năng"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -222,6 +242,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Cơ hội"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -241,6 +262,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Hợp đồng"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -260,6 +282,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Sự cố"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -273,12 +296,13 @@
     </div>
   </div>
   <!-- Giai đoạn -->
-  <div class="form-group w-100" *ngIf="listStep">
+  <div class="form-group w-100" *ngIf="listStep && isStepTask">
     <div>
       <codx-label
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Giai đoạn"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -299,6 +323,7 @@
       type="button"
       class="btn btn-primary"
       (click)="continue()"
+      [disabled]="disableButton"
     >
       <codx-label
         name="lblSave"
