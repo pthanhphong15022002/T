@@ -677,26 +677,37 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     if ((this.eleGridCashPayment && !this.eleGridCashPayment.gridRef.isEdit) 
     || (this.eleGridSettledInvoices && !this.eleGridSettledInvoices.gridRef.isEdit)
     || (this.eleGridVatInvoices && !this.eleGridVatInvoices.gridRef.isEdit)) { //? nếu đang edit lưới
-      this.formCashPayment.save(null, 0, '', '', false)
+      if (!this.formCashPayment.formGroup.invalid) {
+        if (
+          (this.formCashPayment.data.subType != '2' &&
+            this.eleGridCashPayment &&
+            this.eleGridCashPayment?.dataSource?.length == 0) ||
+          (this.formCashPayment.data.subType == '2' &&
+            this.eleGridSettledInvoices &&
+            this.eleGridSettledInvoices?.dataSource?.length == 0)
+        ) {
+          this.notification.notifyCode('AC0013'); //? check chứng từ phải có dữ liệu chi tiết
+          return;
+        }
+      }
+      this.formCashPayment.save()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (((!res?.save?.error) || (!res?.update?.error) || ((res?._hasSaved) && this.formCashPayment.data.status == '0'))) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
-          this.api
+        if (res._isEdit || !(res?.update?.error)) {
+            this.api
             .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
               this.formCashPayment.data,
               this.journal
             ])
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
-              if (res.update) {
+              if (res?.update) {
                 this.dialog.dataService.update(res.data).subscribe();
                 this.onDestroy();
-                this.dialog.close({ update: true });
+                this.dialog.close();
                 this.notification.notifyCode('SYS006'); 
               }
             });
-        }else{
-          this.dialog.close();
         }
       });
     }
@@ -712,20 +723,34 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       (this.eleGridSettledInvoices && !this.eleGridSettledInvoices.gridRef.isEdit) || //? nếu đang edit lưới
       (this.eleGridVatInvoices && !this.eleGridVatInvoices.gridRef.isEdit)
     ) {
+      if (!this.formCashPayment.formGroup.invalid) {
+        if (
+          (this.formCashPayment.data.subType != '2' &&
+            this.eleGridCashPayment &&
+            this.eleGridCashPayment?.dataSource?.length == 0) ||
+          (this.formCashPayment.data.subType == '2' &&
+            this.eleGridSettledInvoices &&
+            this.eleGridSettledInvoices?.dataSource?.length == 0)
+        ) {
+          this.notification.notifyCode('AC0013'); //? check chứng từ phải có dữ liệu chi tiết
+          return;
+        }
+      }
       this.formCashPayment.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) || this.formCashPayment.data.status == '0')) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
+        if (res._isEdit || !(res?.update?.error)) { //? nếu chứng từ có thay đổi || có update hoặc trạng thái là phác thảo
           this.api
             .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
               this.formCashPayment.data,
             ])
             .pipe(takeUntil(this.destroy$))
             .subscribe((res: any) => {
-              if (res.update) {
+              if (res?.update) {
                 this.dialog.dataService.update(res.data).subscribe();
                 this.api
                   .exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+                    null,
                     this.journal,
                   ])
                   .subscribe((res: any) => {
@@ -1502,19 +1527,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   }
 
   afterValidateForm(event){
-    // if (this.isSave) {
-    //   if (
-    //     (this.cashpayment.subType != '2' &&
-    //       this.eleGridCashPayment &&
-    //       this.eleGridCashPayment?.dataSource?.length == 0) ||
-    //     (this.cashpayment.subType == '2' &&
-    //       this.eleGridSettledInvoices &&
-    //       this.eleGridSettledInvoices?.dataSource?.length == 0)
-    //   ) {
-    //     this.notification.notifyCode('AC0013'); //? check chứng từ phải có dữ liệu chi tiết
-    //     return;
-    //   }
-    // }
+    
   }
 
   
