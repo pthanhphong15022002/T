@@ -1,15 +1,14 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
+  EventEmitter,
   Input,
-  OnInit,
+  Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  EventEmitter,
-  Output,
-  TemplateRef,
-  ElementRef,
 } from '@angular/core';
 // import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
@@ -22,32 +21,11 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import {
-  OrgItemConfig,
-  Enabled,
-  PageFitMode,
-  ChildrenPlacementType,
-  GroupByType,
-  LevelAnnotationConfig,
-  ConnectorType,
-  NavigationMode,
-  OrientationType,
-  VerticalAlignmentType,
-  HorizontalAlignmentType,
-  Visibility,
-  SelectionPathMode,
-  ShapeType,
-  LineType,
-  ElbowType,
-  TextOrientationType,
-  PlacementType,
-} from 'ngx-basic-primitives';
-import {
   ApiHttpService,
   AuthStore,
+  CRUDService,
   CacheService,
   CallFuncService,
-  CRUDService,
-  DataRequest,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -55,9 +33,29 @@ import {
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
-import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
+import {
+  ChildrenPlacementType,
+  ConnectorType,
+  ElbowType,
+  Enabled,
+  GroupByType,
+  HorizontalAlignmentType,
+  LevelAnnotationConfig,
+  LineType,
+  NavigationMode,
+  OrgItemConfig,
+  OrientationType,
+  PageFitMode,
+  PlacementType,
+  SelectionPathMode,
+  ShapeType,
+  TextOrientationType,
+  VerticalAlignmentType,
+  Visibility,
+} from 'ngx-basic-primitives';
 import { CodxHrService } from '../../codx-hr.service';
 import { DataVll } from '../../model/HR_OrgChart.model';
+import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -1636,7 +1634,6 @@ export class OrganizationOrgchartComponent {
       )
       .subscribe((res) => {
         if (res === true) {
-          this.notify.notifyCode('SYS008');
           this.items = this.items.filter((item) => item.id != data.orgUnitID);
           const checkSameLevel = this.items.filter(
             (item) => data.parentID === item.parent
@@ -1651,6 +1648,7 @@ export class OrganizationOrgchartComponent {
             tmpParent.context.loadChildrent = false;
           }
 
+          this.notify.notifyCode('SYS008');
           this.dt.detectChanges();
         } else {
           this.notify.notifyCode('SYS022');
@@ -1662,9 +1660,14 @@ export class OrganizationOrgchartComponent {
     var children = this.items.filter((x) => x.parent === id);
     if (children.length > 0) {
       children.forEach((e) => {
-        this.items = this.items.filter((x) => x.id !== e.id);
+        let index = this.items.findIndex((p) => p.id == e.id);
+        this.items.splice(index, 1);
+
+        //delete this.items[index];
         if (e.id) {
           this.removeNode(String(e.id));
+        } else {
+          return;
         }
       });
     }
@@ -1673,12 +1676,12 @@ export class OrganizationOrgchartComponent {
   //Load more icon add
   loadDataChild(node: any, element: HTMLElement) {
     let result = [];
-    var items = [];
+    //var items = [];
     if (node.context.loadChildrent) {
       result = this.items.filter((e) => e.parent != node.id);
       if (result.length > 0) {
-        result.forEach((element) => {
-          if (element.id == node.id) {
+        this.items.forEach((element) => {
+          if (element.id == node.id && element.parent != node.id) {
             element.context.loadChildrent = false;
           }
         });
@@ -1686,11 +1689,11 @@ export class OrganizationOrgchartComponent {
       }
     } else {
       if (node.id) {
-        let listPos = [];
-        this.items.forEach(function (object) {
-          var posID = object.id;
-          listPos.push(posID);
-        });
+        // let listPos = [];
+        // this.items.forEach(function (object) {
+        //   var posID = object.id;
+        //   listPos.push(posID);
+        // });
 
         this.api
           .execSv(
@@ -1706,10 +1709,10 @@ export class OrganizationOrgchartComponent {
                 if (e.id == node.id) {
                   e.context.loadChildrent = true;
                 }
-                items.push(e);
+                // items.push(e);
               });
               res.map((item) => {
-                items.push(
+                this.items.push(
                   new OrgItemConfig({
                     id: item.orgUnitID,
                     parent: item.parentID,
@@ -1730,10 +1733,11 @@ export class OrganizationOrgchartComponent {
                   })
                 );
               });
-            } else {
-              result = this.items;
             }
-            this.items = items;
+            //  else {
+            //   result = this.items;
+            // }
+            // this.items = items;
           });
       }
     }
