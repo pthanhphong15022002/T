@@ -27,13 +27,13 @@ export class CodxAcService {
 
   getCache() {
     this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .exec('AC', 'ACBusiness', 'GetCacheAccountAsync', '')
       .subscribe((res) => {
         if (res) this.stores.set('account', res);
       });
 
     this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
+      .exec('AC', 'ACBusiness', 'GetCacheSubObjectAsync', '')
       .subscribe((res) => {
         if (res) this.stores.set('subobject', res);
       });
