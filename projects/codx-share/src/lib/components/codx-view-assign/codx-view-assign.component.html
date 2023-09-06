@@ -27,7 +27,7 @@
 <!-- temptree -->
 <ng-template #templateTreeView let-data>
   <ng-container>
-    <div class="tab-tch mt-3">
+    <div class="tab-tch mt-3 has-action-menu">
       <div class="d-flex align-items-start justify-content-between mb-3">
         <div class="d-flex align-items-start">
           <span *ngIf="data?.items && data?.items.length > 0">
@@ -148,6 +148,15 @@
           </div>
         </div>
       </div>
+      <codx-mfunc
+        [formModel]="formModelTask"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
+        [isBookMark]="false"
+        [dataItem]="data"
+        type="hover"
+      >
+      </codx-mfunc>
     </div>
   </ng-container>
 

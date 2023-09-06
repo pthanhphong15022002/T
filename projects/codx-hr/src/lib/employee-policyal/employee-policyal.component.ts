@@ -227,7 +227,15 @@ export class EmployeePolicyalComponent extends UIComponent{
         } else if (actionType == this.ActionCopy) {
           this.view.dataService.add(res.event, 0).subscribe();
         } else if (actionType == this.ActionEdit) {
-          this.view.dataService.update(res.event).subscribe();
+          if(res.event && res.event?.editPrimaryKey && res.event.editPrimaryKey == true){
+            debugger
+            this.view.dataService.delete([res.event.oldData], false,null,null,null,null, null, false).subscribe(() => {
+              this.view.dataService.add(res.event, 0).subscribe();
+            });
+          }
+          else{
+            this.view.dataService.update(res.event).subscribe();
+          }
         }
         this.df.detectChanges();
       }

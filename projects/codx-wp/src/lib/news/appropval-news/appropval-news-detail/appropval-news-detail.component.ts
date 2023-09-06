@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption } from 'codx-core';
+import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption, ImageViewerComponent } from 'codx-core';
 import { Observable } from 'rxjs';
 import { PopupAddPostComponent } from '../../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
@@ -18,6 +18,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
   @Input() formModel : any;
   @Input() dataService:CRUDService;
   @Output() evtUpdateApproval = new EventEmitter();
+
+  @ViewChild("codx_img") codx_img:ImageViewerComponent;
   ENTITYNAME = {
     WP_News : 'WP_News',
     WP_Comments: 'WP_Comments'

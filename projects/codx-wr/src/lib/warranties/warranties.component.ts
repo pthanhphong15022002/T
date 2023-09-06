@@ -154,35 +154,7 @@ export class WarrantiesComponent
         let field = Util.camelize(key);
         let template: any;
         let colums: any;
-        switch (key) {
-          // case 'CustomerID':
-          //   template = this.templateCustomer;
-          //   break;
-          // case 'BusinessLineID':
-          //   template = this.templateBusinessLines;
-          //   break;
-          // case 'DealValue':
-          //   template = this.templateDealValue;
-          //   break;
-          // case 'Status':
-          //   template = this.templateStatus;
-          //   break;
-          // case 'Owner':
-          //   template = this.templateOwner;
-          //   break;
-          // case 'StepID':
-          //   template = this.templateSteps;
-          //   break;
-          // case 'ConsultantID':
-          //   template = this.templateConsultant;
-          //   break;
-          // case 'ExpectedClosed':
-          //   template = this.templateExpectedClosed;
-          //   break;
 
-          default:
-            break;
-        }
         if (template) {
           colums = {
             field: field,
@@ -201,8 +173,6 @@ export class WarrantiesComponent
         this.columnGrids.push(colums);
       });
     }
-
-    // this.loadViewModel();
   }
 
   loadViewModel() {
@@ -257,7 +227,6 @@ export class WarrantiesComponent
       this.getFuncID(this.funcID);
       // this.getColorReason();
       // this.getCurrentSetting();
-      this.getValuelistStatus();
       this.getValueListRole();
     } catch (error) {}
   }
@@ -268,20 +237,6 @@ export class WarrantiesComponent
         this.listRoles = res.datas;
       }
     });
-  }
-
-  async getValuelistStatus() {
-    console.log('Not implemented');
-    // this.cache.valueList('CRM041').subscribe((func) => {
-    //   if (func) {
-    //     this.valueListStatus = func.datas
-    //       .filter((x) => ['2', '3', '5', '7'].includes(x.value))
-    //       .map((item) => ({
-    //         text: item.text,
-    //         value: item.value,
-    //       }));
-    //   }
-    // });
   }
 
   click(evt: ButtonModel) {
@@ -402,9 +357,6 @@ export class WarrantiesComponent
         this.gridViewSetup = res;
         this.vllStatus =
           this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
-        // this.vllApprove =
-        //   this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
-        //lay grid view
         let arrField = Object.values(this.gridViewSetup).filter(
           (x: any) => x.isVisible
         );
@@ -448,42 +400,10 @@ export class WarrantiesComponent
   }
 
   changeView(e) {
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // if (this.crrFuncID != this.funcID) {
-    //   this.crrFuncID = this.funcID;
-    // }
     this.viewCrr = e?.view?.type;
-    // if (this.viewCrr == 6) {
-    //   this.kanban = (this.view?.currentView as any)?.kanban;
-    // }
   }
 
-  onActions(e) {
-    console.log('Not implemented');
-    // switch (e.type) {
-    //   case 'drop':
-    //     this.dataDrop = e.data;
-    //     this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
-    //     // xử lý data chuyển công đoạn
-    //     if (this.crrStepID != this.dataDrop.stepID)
-    //       this.dropDeals(this.dataDrop);
-    //     break;
-    //   case 'drag':
-    //     ///bắt data khi kéo
-    //     this.crrStepID = e?.data?.stepID;
-    //     break;
-    //   case 'dbClick':
-    //     //xư lý dbClick
-    //     if (this.viewCrr != 11) this.viewDetail(e.data);
-    //     else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
-    //     break;
-    //   //chang fiter
-    //   case 'pined-filter':
-    //     this.seclectFilter(e.data);
-    // }
-  }
-
-  //#region  CRUD
+  //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       this.cache.functionList(this.funcID).subscribe((fun) => {

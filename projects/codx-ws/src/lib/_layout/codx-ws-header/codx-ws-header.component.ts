@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
   override onAfterViewInit(): void {
-    
   }
 
   title$:any;
@@ -21,6 +20,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedIndex = 0;
   funcID:any;
   userInfo:any;
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -41,10 +41,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     this.logo$ = this.layout.logo.asObservable();
 
     this.getFuncChange();
-    this.getModuleByUserID();
+    //this.getModuleByUserID();
   }
- 
-  
   
   getFuncChange()
   {
@@ -72,31 +70,9 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     }
   }
 
-  getModuleByUserID()
-  {
-    var module = this.codxWsService.loadModuleByUserID(this.userInfo?.userID) as any;
-    if(isObservable(module))
-    {
-      module.subscribe((item:any)=>{
-        debugger
-        if(item) var listModule = item.map(function(x){return x.module;});
-      })
-    }
-    else
-    {
-      debugger
-      var listModule = module.map(function(x){return x.module;});
-    }
-  }
-  getDashboardOrReport()
-  {
-
-  }
-
   selectedChange(i:any , item:any)
   {
     this.selectedIndex = i;
-    if(item.functionType == "D" || item.functionType == "R") return;
     this.codxService.navigate("","/"+item.url);
   }
 }

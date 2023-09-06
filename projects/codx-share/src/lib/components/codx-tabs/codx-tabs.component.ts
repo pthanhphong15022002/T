@@ -28,6 +28,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() id!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
+  @Input() listTab: string[] = [];
   //tree task
   @Input() dataTree: any[] = [];
   @Input() vllStatus: any;
@@ -110,15 +111,8 @@ export class CodxTabsComponent implements OnInit {
     //   .subscribe((res) => {
     //     this.oCountFooter = res;
     //   });
-    if (this.TabControl.length == 0) {
+    if (this.TabControl.length == 0 && this.listTab.length == 0) {
       this.TabControl = this.all;
-      // this.all.forEach((res, index) => {
-      //   var tabModel = new TabModel();
-      //   tabModel.name = tabModel.textDefault = res;
-      //   if (index == 0) tabModel.isActive = true;
-      //   else tabModel.isActive = false;
-      //   this.TabControl.push(tabModel);
-      // });
     } else {
       this.activeTabControl();
     }
@@ -168,6 +162,15 @@ export class CodxTabsComponent implements OnInit {
     this.activeTabControl();
   }
   activeTabControl() {
+    if (this.listTab.length > 0) {
+      this.TabControl = [];
+      this.listTab.forEach((element) => {
+        let tab = this.all.find(
+          (x) => x.name.toLowerCase() == element.toLowerCase()
+        );
+        if (tab) this.TabControl.push(tab);
+      });
+    }
     this.TabControl.map(
       (x) =>
         (x.icon =

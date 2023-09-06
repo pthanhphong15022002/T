@@ -17,18 +17,15 @@ import {
   CacheService,
   ApiHttpService,
   CallFuncService,
-  NotificationsService,
   DialogModel,
   CRUDService,
   RequestOption,
   CodxService,
   Util,
   FormModel,
-  AuthService,
   SortModel,
   AuthStore,
 } from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
@@ -476,28 +473,25 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   //
   onAction(e:any){
-    debugger
-    // if(this.listview?.dataService?.predicates)
-    // {
-    //   let post = this.listview.dataService.data[0];
-    //   if(post?.category == "9")
-    //   {
-    //     this.api
-    //       .execSv(
-    //       'DM',
-    //       'ERM.Business.DM',
-    //       'FileBussiness',
-    //       'GetFilesByIbjectIDAsync',
-    //       [this.objectID])
-    //       .subscribe((res:any[]) => {
-    //         this.clickViewDetail(res);
-    //       });
-    //   }
-    // }
+    if(this.listview?.dataService?.predicates){
+      let post = this.listview.dataService.data[0];
+      if(post?.category == "9" || post?.category == "10"){
+        this.api
+          .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          [this.listview.dataService.dataValues])
+          .subscribe((res:any[]) => {
+            this.clickViewDetail(res);
+          });
+      }
+    }
   }
+
 }
 
 
