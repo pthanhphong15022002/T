@@ -37,7 +37,7 @@ export class WR_WorkOrders {
   currentState: string;
   solution: string;
   sla: string;
-  sla24x7: boolean;
+  slA24x7: boolean;
   deadline?: Date;
   siteID: string;
   teamLeader: string;

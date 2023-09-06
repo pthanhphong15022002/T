@@ -704,7 +704,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               if (res?.update) {
                 this.dialog.dataService.update(res.data).subscribe();
                 this.onDestroy();
-                this.dialog.close({ update: true });
+                this.dialog.close();
                 this.notification.notifyCode('SYS006'); 
               }
             });
