@@ -1,16 +1,30 @@
-<div class="bg-white h-100 mx-3 mt-4 d-flex flex-column py-4 px-6">
-    <div class="d-flex flex-wrap">
-        <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
-          *ngFor="let item of listReport"
-          [style.backgroundColor]="item?.color"
-        >
-          <div class="d-flex flex-column h-100">
-            <span class="fs-5-sm">{{item.customName}}</span>
-            <span class="fs-7 opacity-75">{{item.countsNote}}</span>
+
+<div class="f-flex flex-column w-100 h-100">
+  <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column py-4 px-6 scroll-y">
+      <!-- begin content -->
+        <ng-container *ngFor="let md of listReport">
+          <div class="d-flex flex-column my-2">
+            <div class="d-flex align-items-center">
+              <span class="icon-16" [ngClass]="md.largeIcon"></span>
+              <span class="fs-4 ms-2 fw-bold">{{md.customName}}</span>
+            </div>
+            <div class="mx-7"><span class="fs-6 text-gray-800">{{md.countsNote}}</span></div>
+            <div class="d-flex flex-wrap mx-4">
+              <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
+                *ngFor="let c of md.childs"
+                [style.backgroundColor]="c?.color"
+              >
+                <div class="d-flex flex-column h-100">
+                  <span class="fs-5-sm">{{c.customName}}</span>
+                  <span class="fs-7 opacity-75">{{c.countsNote}}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center h-50px">
+                  <span class="icon-30px" [ngClass]="md.largeIcon"></span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center h-50px">
-            <span class="icon-16" [ngClass]="item.largeIcon"></span>
-          </div>
-        </div>
-      </div>
+        </ng-container>
+      <!-- end content -->
+  </div>
 </div>
