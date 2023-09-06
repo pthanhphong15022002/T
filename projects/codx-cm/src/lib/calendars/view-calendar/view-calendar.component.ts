@@ -23,9 +23,10 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
-import { CM_Customers } from '../../models/cm_model';
+import { CM_Cases, CM_Contracts, CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { CM_Contacts } from '../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -53,6 +54,7 @@ export class ViewCalendarComponent
   taskType;
   popupTypeCM: DialogRef
   fieldsGroup = { text: 'text', value: 'entityName' };
+  fieldsStep= { text: 'stepName', value: 'recID' };
 
   fieldsCustomer = { text: 'customerName', value: 'recID' };
   fieldsLead = { text: 'leadName', value: 'recID' };
@@ -68,12 +70,13 @@ export class ViewCalendarComponent
     { text: 'Hợp đồng', entityName: 'CM_Contracts',funcID:'CM0204'},
   ];
 
+  insStep;
   listStep: any[];
-  listLead: CM_Customers[];
-  listDeal: CM_Customers[];
-  listCase: CM_Customers[];
+  listLead: CM_Leads[];
+  listDeal: CM_Deals[];
+  listCase: CM_Cases[];
   listCustomer: CM_Customers[];
-  listContract: CM_Customers[];
+  listContract: CM_Contracts[];
 
   objectID = '';
   isActivitie = false;
@@ -343,11 +346,34 @@ export class ViewCalendarComponent
       case 'CM_Leads':
         break;
       case 'CM_Deals':
+        this.checkDeal(event?.value);
         break;
       case 'CM_Contracts':
         break;
       case 'CM_Cases':
         break;
+      case 'step':
+        this.insStep = event?.itemData;
+        break;
+    }
+  }
+
+
+
+  checkDeal(dealID){
+    let deal = this.listDeal.find(dealFind => dealFind.recID == dealID);
+    if(deal){
+      var data = [
+       deal?.refID,
+       deal?.processID,
+       deal?.status,
+        '1',
+      ];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+        }
+      });
     }
   }
 
@@ -426,7 +452,7 @@ export class ViewCalendarComponent
     }
   
     async addTask(dataType){
-      let taskOutput = await this.stepService.addTask(dataType,null,null);
+      let taskOutput = await this.stepService.addTask(dataType,this.insStep,null);
       let task = taskOutput;
       if(task){
         task['progress'] = 0;
