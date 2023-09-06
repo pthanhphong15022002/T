@@ -184,7 +184,7 @@ export class CodxWsService {
       'SYS',
       'ERM.Business.AD',
       'UserRolesBusiness',
-      'GetListByUserIDAsync',
+      'GetModuleByUserIDAsync',
     )
     .pipe(
       map((res) => {
@@ -201,4 +201,46 @@ export class CodxWsService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+
+  loadDashboardOrReport(type:any , listModule:any): Observable<any>
+  {
+    let paras = [type,listModule];
+    let keyRoot = "WSDR" + type + listModule;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv<any>(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetReportsByModuleAsync',
+      paras
+    )
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
 }
