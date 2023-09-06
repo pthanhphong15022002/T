@@ -90,12 +90,7 @@
 <ng-template #funcLists>
   <div class="d-flex align-items-center ws-fc-list">
     <div *ngFor="let item of funcList , let i = index" class="py-3 px-5 cursor-pointer fw-bold" [class.active]="selectedIndex == i">
-      <ng-container *ngIf="item?.functionType == 'T'">
-        <ng-container *ngTemplateOutlet="menu ; context: { $implicit: item , index: i}"></ng-container>
-      </ng-container>
-      <ng-container *ngIf="item?.functionType == 'D' || item?.functionType == 'R'" >
-        <ng-container *ngTemplateOutlet="dr ;  context: { $implicit: item , index: i}"></ng-container>
-      </ng-container>
+      <span class="fs-6" (click)="selectedChange(i , item)">{{item.customName}}</span>
     </div>
   </div>
 </ng-template>
@@ -106,11 +101,14 @@
 </ng-template>
 
 <ng-template #dr let-data let-index>
-  <div ngbDropdown class="d-inline-block" (click)="selectedChange(index , data)">
+  <div ngbDropdown class="d-inline-block">
     <span class="fs-6" id="sortMenu" ngbDropdownToggle>{{data.customName}}</span>
-    <div class="dropdown-menu" aria-labelledby="sortMenu">
-      aaaaaaaaaaa
-      <!-- <button class="dropdown-item" *ngFor="let sortOrder of sortOrders" (click)="ChangeSortOrder(sortOrder)" >{{sortOrder}}</button> -->
+    <div class="dropdown-menu" aria-labelledby="sortMenu" ngbDropdownMenu>
+      <div class="w-100">
+        <div *ngFor="let item of (data?.functionType == 'D' ? listDashboard : listReport)">
+          {{item?.customName}}
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

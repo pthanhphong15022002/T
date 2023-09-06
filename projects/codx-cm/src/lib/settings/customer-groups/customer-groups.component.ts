@@ -215,11 +215,12 @@ export class CustomerGroupsComponent extends UIComponent {
         option
       );
 
-      popupAdd.closed.subscribe((res) => {
-        if (!res?.event) this.view.dataService.clear();
-        // else {
-        //   this.view.dataService.update(res.event).subscribe();
-        // }
+      popupAdd.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e && e.event != null) {
+          this.view.dataService.update(e?.event[0]).subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -251,12 +252,12 @@ export class CustomerGroupsComponent extends UIComponent {
             },
             option
           );
-          popupEdit.closed.subscribe((res) => {
-            if (res?.event == null) {
-              this.view.dataService.dataSelected = evt.data;
-              this.view.dataService.clear();
-            } else {
-              this.view.dataService.update(res.event).subscribe();
+
+          popupEdit.closed.subscribe((e) => {
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              this.view.dataService.update(e?.event).subscribe();
+              this.detectorRef.detectChanges();
             }
           });
         });
@@ -289,11 +290,11 @@ export class CustomerGroupsComponent extends UIComponent {
         },
         option
       );
+
       popupCopy.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
-          this.view.dataService.update(e.event).subscribe();
-
+          this.view.dataService.update(e?.event[0]).subscribe();
           this.detectorRef.detectChanges();
         }
       });

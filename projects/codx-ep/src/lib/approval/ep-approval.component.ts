@@ -78,7 +78,6 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   popupTitle = '';
   itemDetail: any;
-  funcIDName;
   optionalData;
   navigated = false;
   isAdmin = false;
@@ -92,7 +91,7 @@ export class EPApprovalComponent extends UIComponent {
   approvalRule = '0';
   cbbDriver = [];
   listDriverAssign = [];
-
+  crrEntityName=EPCONST.ENTITY.R_Approval;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -106,6 +105,11 @@ export class EPApprovalComponent extends UIComponent {
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe(funcList=>{
+      if(funcList){
+        this.crrEntityName= funcList?.entityName;
       }
     });
   }
@@ -128,6 +132,12 @@ export class EPApprovalComponent extends UIComponent {
   getBaseVariable() {
     if (this.funcID == null) {
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
+      this.cache.functionList(this.funcID).subscribe(funcList=>{
+        if(funcList){
+          this.crrEntityName= funcList?.entityName;
+          this.detectorRef.detectChanges();
+        }
+      });
     }
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
@@ -139,14 +149,14 @@ export class EPApprovalComponent extends UIComponent {
       }
     });
 
-    switch (this.funcID) {
-      case EPCONST.FUNCID.R_Approval:
+    switch (this.crrEntityName) {
+      case EPCONST.ENTITY.R_Approval:
         this.resourceType = EPCONST.VLL.ResourceType.Room;
         break;
-      case EPCONST.FUNCID.C_Approval:
+      case EPCONST.ENTITY.C_Approval:
         this.resourceType = EPCONST.VLL.ResourceType.Car;
         break;
-      case EPCONST.FUNCID.S_Approval:
+      case EPCONST.ENTITY.S_Approval:
         this.resourceType = EPCONST.VLL.ResourceType.Stationery;
         break;
     }
@@ -162,8 +172,8 @@ export class EPApprovalComponent extends UIComponent {
   }
   getView() {
     if (
-      this.funcID == EPCONST.FUNCID.R_Approval ||
-      this.funcID == EPCONST.FUNCID.C_Approval
+      this.crrEntityName == EPCONST.ENTITY.R_Approval ||
+      this.crrEntityName == EPCONST.ENTITY.C_Approval
     ) {
       this.getSchedule();
       this.views = [
@@ -199,7 +209,7 @@ export class EPApprovalComponent extends UIComponent {
         },
       ];      
       this.navigateSchedule();
-    } else if (this.funcID == EPCONST.FUNCID.S_Approval) {
+    } else if (this.crrEntityName == EPCONST.ENTITY.S_Approval) {
       this.views = [
         {
           type: ViewType.listdetail,
@@ -258,6 +268,12 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   viewChanged(evt: any) {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(funcList=>{
+      if(funcList){
+        this.crrEntityName= funcList?.entityName;
+        this.detectorRef.detectChanges();
+      }
+    });
     this.getBaseVariable();
     this.getView();
   }

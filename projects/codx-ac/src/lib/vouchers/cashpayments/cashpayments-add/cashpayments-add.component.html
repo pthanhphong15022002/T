@@ -159,7 +159,7 @@
   <div style="display: grid !important" ngClass="collape"
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formCashPayment.data">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button tab-index="14" *ngIf="formCashPayment.data?.status == '0'" style="border: 1px solid" id="discard" type="button"
+      <button tab-index="14" *ngIf="formCashPayment.data?.status == '7'" style="border: 1px solid" id="discard" type="button"
         class="btn btn-md btn-light-danger me-2 rounded-15"
         (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
@@ -167,7 +167,7 @@
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button tab-index="15" *ngIf="!formCashPayment.data?._isEdit" style="border: 1px solid var(--primary-dark) !important"
+      <button tab-index="15" style="border: 1px solid var(--primary-dark) !important"
         type="button" class="btn btn-md btn-light-primary me-2 rounded-15"
         (keydown.enter)="onSaveAddVoucher(); $event.preventDefault()" (click)="onSaveAddVoucher()">
         <div class="d-flex align-items-center">

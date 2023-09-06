@@ -86,6 +86,7 @@ export class CmCustomerComponent
   isButton = true;
   gridViewSetup: any;
   lstCustGroups = [];
+  loaded: boolean;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -101,11 +102,13 @@ export class CmCustomerComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
+        this.loaded = false;
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
         this.loadMethod();
         this.isButton = true;
         this.afterLoad();
+        this.loaded = true;
       }
     });
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
@@ -149,6 +152,7 @@ export class CmCustomerComponent
   }
 
   onInit(): void {
+
     this.button = {
       id: this.btnAdd,
     };
