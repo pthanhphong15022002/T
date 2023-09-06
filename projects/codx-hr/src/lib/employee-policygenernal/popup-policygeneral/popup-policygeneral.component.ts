@@ -25,6 +25,7 @@ export class PopupPolicygeneralComponent
   isHidden = true;
   policyGeneralObj: any;
   formGroup: any;
+  originPolicyId = '';
   funcID
   benefitFuncID = 'HRTEM0403'
   isAfterRender = false;
@@ -50,6 +51,9 @@ export class PopupPolicygeneralComponent
     this.policyGeneralObj =  JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('data input', this.policyGeneralObj);
     this.actionType = data?.data?.actionType;
+    if(this.policyGeneralObj && this.actionType == 'edit'){
+      this.originPolicyId = this.policyGeneralObj.policyID;
+    }
   }
 
   onInit(): void {
@@ -174,16 +178,67 @@ export class PopupPolicygeneralComponent
         //  else this.notify.notifyCode('SYS023');
       });
     } else {
-      this.UpdatePolicyGeneral()
-        .subscribe((p) => {
-          debugger
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-          } 
-          // else this.notify.notifyCode('SYS021');
-        });
+      debugger
+      if(this.originPolicyId != '' && this.policyGeneralObj.policyID != this.originPolicyId){
+        this.DeletePolicyGeneral(this.originPolicyId).subscribe((res) => {
+        debugger
+          this.AddPolicyGeneral().subscribe((p) => {
+            debugger
+            if (p != null) {
+              p.editPrimaryKey = true;
+              p.oldData = this.policyGeneralObj;
+              p.oldData.policyID = this.originPolicyId;
+              this.notify.notifyCode('SYS007');
+              this.dialog && this.dialog.close(p);
+            }
+          });
+      });
+
+      
+
+
+        
+        // this.UpdatePolicyGeneralIDChanged().subscribe((res) => {
+        //   if (res != null) {
+        //     debugger
+        //     this.notify.notifyCode('SYS007');
+        //     this.dialog && this.dialog.close(res);
+        //   } 
+        // })
+
+      }
+      else{
+        this.UpdatePolicyGeneral()
+          .subscribe((p) => {
+            debugger
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              this.dialog && this.dialog.close(p);
+            } 
+            // else this.notify.notifyCode('SYS021');
+          });
+      }
     }
+  }
+
+  UpdatePolicyGeneralIDChanged(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyGeneralBusiness',
+      'UpdatePolicyGeneralIDChangedAsync',
+      [this.policyGeneralObj, this.originPolicyId]
+    );
+  }
+
+  DeletePolicyGeneral(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PolicyGeneralBusiness',
+      'DeletePolicyGeneralAsync',
+      [data]
+    );
   }
 
   ValChangeHasBenefit(event){
