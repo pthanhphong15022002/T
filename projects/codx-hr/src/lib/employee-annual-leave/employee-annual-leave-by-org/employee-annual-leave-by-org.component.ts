@@ -75,7 +75,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.inputTimes < 2) this, this.inputTimes++;
+    if (this.inputTimes < 2) this.inputTimes++;
     this.orgUnitID = changes.orgUnitID.currentValue;
     let ins = setInterval(() => {
       if (this.grid) {
