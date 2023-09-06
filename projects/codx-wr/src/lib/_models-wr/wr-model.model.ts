@@ -36,9 +36,8 @@ export class WR_WorkOrders {
   comment: string;
   currentState: string;
   solution: string;
-  sLA;
-  string;
-  sal24x7: boolean;
+  sla: string;
+  sla24x7: boolean;
   deadline?: Date;
   siteID: string;
   teamLeader: string;
@@ -63,8 +62,8 @@ export class WR_WorkOrders {
   scheduleStart?: Date;
   scheduleEnd?: Date;
   fixedSchedule: boolean;
-  eTA?: Date;
-  aTA?: Date;
+  eta?: Date;
+  ata?: Date;
   callDTS?: Date;
   deferral: boolean;
   deferedOn?: Date;
