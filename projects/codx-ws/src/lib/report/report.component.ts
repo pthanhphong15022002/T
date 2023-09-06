@@ -40,9 +40,41 @@ export class ReportComponent extends WSUIComponent{
     if(isObservable(result))
     {
       result.subscribe((item:any)=>{
-        if(item) this.listReport = item;
+        if(item) this.formatData(item);
       })
     }
-    else this.listReport = result;
+    else this.formatData(result);
+  }
+
+  getFuncListByModules(data:any)
+  {
+    var result = this.codxWsService.loadListFucByListModule(data) as any;
+    if(isObservable(result))
+    {
+      result.subscribe((item:any)=>{
+        if(item) this.groupData(item);
+      })
+    }
+    else this.groupData(result);
+  }
+
+  groupData(data)
+  {
+    data.forEach(element => {
+      element.childs = this.listReport.filter(x=>x.moduleID == element?.functionID);
+    });
+    this.listReport = data;
+  }
+
+  formatData(data:any)
+  {
+    this.listReport = data;
+    var listModule = data.map(function(item){return item.moduleID});
+    listModule = this.removeDuplicates(listModule);
+    this.getFuncListByModules(JSON.stringify(listModule))
+  }
+
+  removeDuplicates(arr:any) {
+    return [...new Set(arr)];
   }
 }
