@@ -75,22 +75,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     if (this.countValidate > 0) {
       return;
     }
-    if (this.data.scheduleStart && this.data.scheduleEnd) {
+    if (this.data.scheduleStart) {
       if (new Date(this.data.scheduleStart) < new Date()) {
         this.notiService.notifyCode('WR003');
         return;
       }
 
-      if (new Date(this.data.scheduleStart) > new Date(this.data.scheduleEnd)) {
-        this.notiService.notifyCode('WR002');
-        return;
-      }
-      this.data.scheduleTime =
-        moment(this.data.scheduleStart).format('DD/MM/YYYY') +
-        ' ' +
-        this.startTime +
-        ' - ' +
-        this.endTime;
+
     }
 
     this.data.attachments = this.edit
@@ -133,22 +124,14 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       if (this.dateControl != '0') {
         this.gridViewSetup.ScheduleStart.isRequire =
           this.dateControl == '2' ? true : false;
-        this.gridViewSetup.ScheduleEnd.isRequire =
-          this.dateControl == '2' ? true : false;
+        this.gridViewSetup.ScheduleTime.isRequire =
+        this.dateControl == '2' ? true : false;
         this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
-        this.data.scheduleEnd = new Date(
-          this.data.scheduleStart.getTime() + 3600000
-        );
-        this.selectedDate = moment(new Date(this.data?.scheduleStart))
-          .set({ hour: 0, minute: 0, second: 0 })
-          .toDate();
-        this.setTimeEdit();
       } else {
         this.data.scheduleStart = null;
-        this.data.scheduleEnd = null;
         this.data.scheduleTime = '';
         this.gridViewSetup.ScheduleStart.isRequire = false;
-        this.gridViewSetup.ScheduleEnd.isRequire = false;
+        this.gridViewSetup.ScheduleTime.isRequire = false;
       }
       this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
       if (this.commentControl != '0') {
@@ -209,18 +192,11 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   valueDateChange(event: any) {
     if (this.data.scheduleStart != event?.data?.fromDate) {
       this.data.scheduleStart = event?.data?.fromDate;
-      this.selectedDate = moment(new Date(this.data.scheduleStart))
-        .set({ hour: 0, minute: 0, second: 0 })
-        .toDate();
-      this.setDate();
     }
   }
 
-  valueStartTimeChange(event: any) {
-    this.startTime = event.data.fromDate;
-    // this.fullDayChangeWithTime();
-    // this.isFullDay = false;
-    this.setDate();
+  valueTimeChange(event: any) {
+    this.data.scheduleTime = event?.data;
     this.detectorRef.detectChanges();
   }
 

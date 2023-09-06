@@ -727,20 +727,7 @@ export class CodxTasksComponent
           taskCopy: null,
           disabledProject: this.disabledProject,
         };
-        this.dialog = this.callfc.openSide(
-          PopupAddComponent,
-          obj,
-          // [
-          //   this.view.dataService.dataSelected,
-          //   'edit',
-          //   this.isAssignTask,
-          //   this.titleAction,
-          //   this.funcID,
-          //   null,
-          //   this.disabledProject,
-          // ],
-          option
-        );
+        this.dialog = this.callfc.openSide(PopupAddComponent, obj, option);
         this.dialog.closed.subscribe((e) => {
           if (!e.event) this.view.dataService.clear();
           // if (e?.event == null)
