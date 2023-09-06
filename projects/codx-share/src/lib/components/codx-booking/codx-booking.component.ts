@@ -117,6 +117,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   autoComfirm= EPCONST.APPROVALRULE.NotHaved;
   stationeryAR = EPCONST.APPROVALRULE.Haved;
   autoApproveItem = EPCONST.APPROVALRULE.Haved;
+  crrEntityName=EPCONST.ENTITY.R_Bookings;
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
@@ -128,6 +129,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);       
     this.funcID = this.activatedRoute.snapshot.params['funcID']; 
+    this.cache.functionList(this.funcID).subscribe(funcList=>{
+      if(funcList){
+        this.crrEntityName= funcList?.entityName;
+      }
+    });
     this.curUser =this.authStore.get();
     if(this.curUser==null){
       this.curUser= this.authService?.userValue;
@@ -149,8 +155,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   onLoading(evt: any) {
     if (this.formModel) {
       if (
-        this.funcID == EPCONST.FUNCID.S_Allocate ||
-        this.funcID == EPCONST.FUNCID.S_Bookings
+        this.crrEntityName == EPCONST.ENTITY.S_Bookings ||
+        this.crrEntityName == EPCONST.ENTITY.S_Distribution
       ) {
         this.crrViewMode = this.viewType.listdetail;
         this.views = [
@@ -174,8 +180,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               this.getSchedule();
               this.crrViewMode = this.viewType.schedule;
               if (
-                this.funcID == EPCONST.FUNCID.R_Bookings ||
-                this.funcID == EPCONST.FUNCID.C_Bookings
+                this.crrEntityName == EPCONST.ENTITY.R_Bookings ||
+                this.crrEntityName == EPCONST.ENTITY.C_Bookings
               ) {
                 this.columnGrids = [
                   {
@@ -303,7 +309,13 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
   getBaseVariable() {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    
+    this.cache.functionList(this.funcID).subscribe(funcList=>{
+      if(funcList){
+        this.crrEntityName= funcList?.entityName;
+        this.funcIDName = funcList.customName.toString().toLowerCase();
+        this.detectorRef.detectChanges();
+      }
+    });
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -312,30 +324,25 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.formModel = res;
       }
     });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) {
-        this.funcIDName = res.customName.toString().toLowerCase();
-      }
-    });
-    switch (this.funcID) {
-      case EPCONST.FUNCID.R_Bookings:
+    switch (this.crrEntityName) {
+      case EPCONST.ENTITY.R_Bookings:
         this.resourceType = EPCONST.VLL.ResourceType.Room;
         this.categoryIDProcess = 'ES_EP001';
         break;
-      case EPCONST.FUNCID.C_Bookings:
+      case EPCONST.ENTITY.C_Bookings:
         this.resourceType = EPCONST.VLL.ResourceType.Car;
         this.categoryIDProcess = 'ES_EP002';
         break;
 
-      case EPCONST.FUNCID.S_Bookings:
+      case EPCONST.ENTITY.S_Bookings:
         this.resourceType = EPCONST.VLL.ResourceType.Stationery;
         this.categoryIDProcess = 'ES_EP003';
         break;
-    }
-    
-    if (this.funcID == EPCONST.FUNCID.S_Allocate) {
-      this.isAllocateStationery = true;
+      case EPCONST.ENTITY.S_Distribution:
       this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+      this.categoryIDProcess = 'ES_EP003';
+      this.isAllocateStationery = true;
+      break;
     }
     this.cache.viewSettingValues('EPParameters').subscribe(res=>{
       if(res){
@@ -430,7 +437,13 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   viewChanged(evt: any) {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    
+    this.cache.functionList(this.funcID).subscribe(funcList=>{
+      if(funcList){
+        this.crrEntityName= funcList?.entityName;
+        this.funcIDName = funcList.customName.toString().toLowerCase();
+        this.detectorRef.detectChanges();
+      }
+    });
     this.getBaseVariable();
     //this.onLoading(evt);
   }
@@ -517,7 +530,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     if (
       event != null &&
       data != null &&
-      this.funcID != EPCONST.FUNCID.S_Allocate
+      this.crrEntityName != EPCONST.ENTITY.S_Distribution
     ) {
       if (data.approveStatus == EPCONST.A_STATUS.New) {
         //Mới tạo
@@ -648,7 +661,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     } else if (
       event != null &&
       data != null &&
-      this.funcID == EPCONST.FUNCID.S_Allocate
+      this.crrEntityName == EPCONST.ENTITY.S_Distribution
     ) {
       event.forEach((func) => {
         if (

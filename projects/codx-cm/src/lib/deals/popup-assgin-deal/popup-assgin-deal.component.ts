@@ -35,6 +35,7 @@ ownerStep: any;
 step: any;
 buid: any;
 user:any;
+groupUserID:any;
 startControl: string = '';
 applyFor: string = '';
 orgUnitName: string = '';
@@ -166,6 +167,8 @@ changeOwner(evt: any, view: any) {
       // });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
+
+   //this.searchOwner('1', 'O', '0', this.owner, ownerName);
   }
 }
 searchOwner(objectType:any,roleType:any, memberType: any,owner:any, ownerName:any, dataPermission: any ){

@@ -132,6 +132,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
       switch (field) {
         case 'joinedOn':
+          if(!this.hasChangedData) break;
           if (this.data[field] && this.data[field] > new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
           }
@@ -157,6 +158,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           // this.getOrgNote();
           break;
         case 'issuedOn':
+          if(!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR012');
             return;
@@ -166,6 +168,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'idExpiredOn':
+          if(!this.hasChangedData) break;
           if (value && this.data.issuedOn) {
             if (this.data.idExpiredOn < this.data.issuedOn) {
               this.notifySV.notifyCode('HR002');
@@ -173,6 +176,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'birthday':
+          if(!this.hasChangedData) break;
           if (value) {
             if (!this.validateBirthday(value)) {
               this.notifySV.notifyCode('HR001');
@@ -180,20 +184,24 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'provinceID':
+          if(!this.hasChangedData) break;
           this.data['districtID'] = null;
           this.data['wardID'] = null;
           this.form.formGroup.patchValue({ districtID: null, wardID: null });
           break;
         case 'districtID':
+          if(!this.hasChangedData) break;
           this.data['wardID'] = null;
           this.form.formGroup.patchValue({ wardID: null });
           break;
         case 'tProvinceID':
+          if(!this.hasChangedData) break;
           this.data['tDistrictID'] = null;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tDistrictID: null, tWardID: null });
           break;
         case 'tDistrictID':
+          if(!this.hasChangedData) break;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tWardID: null });
           break;;
@@ -226,11 +234,13 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'siRegisterOn':
+          if(!this.hasChangedData) break;
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
           }
           break;
         case 'pitIssuedOn':
+          if(!this.hasChangedData) break;
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
           }
