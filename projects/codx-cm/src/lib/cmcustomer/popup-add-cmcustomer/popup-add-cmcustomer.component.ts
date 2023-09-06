@@ -567,25 +567,28 @@ export class PopupAddCmCustomerComponent implements OnInit {
       return;
     }
     let check = false;
-    check = await firstValueFrom(
-      this.api.execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'CustomersBusiness',
-        'IsExitCoincideIDAsync',
-        [
-          this.data?.recID,
-          this.funcID == 'CM0102'
-            ? this.data?.contactID
-            : this.funcID == 'CM0103'
-            ? this.data?.partnerID
-            : this.funcID == 'CM0104'
-            ? this.data?.competitorID
-            : this.data?.customerID,
-          this.dialog?.formModel?.entityName,
-        ]
-      )
-    );
+    if(this.action != 'edit'){
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'IsExitCoincideIDAsync',
+          [
+            this.data?.recID,
+            this.funcID == 'CM0102'
+              ? this.data?.contactID
+              : this.funcID == 'CM0103'
+              ? this.data?.partnerID
+              : this.funcID == 'CM0104'
+              ? this.data?.competitorID
+              : this.data?.customerID,
+            this.dialog?.formModel?.entityName,
+          ]
+        )
+      );
+    }
+
     if (check) {
       this.notiService.notifyCode('Trùng mã khách hàng');
       return;

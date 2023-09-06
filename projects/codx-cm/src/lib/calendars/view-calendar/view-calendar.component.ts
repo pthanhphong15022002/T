@@ -149,6 +149,7 @@ export class ViewCalendarComponent
   }
   ngAfterViewInit(): void {
     this.afterLoad();
+    console.log(this.view.dataService);
   }
 
   getDayOff(id = null) {
@@ -467,7 +468,11 @@ export class ViewCalendarComponent
         ])
         .subscribe((res) => {
           if (res) {
-
+            res.StartDate = res.ActualStart ?? res.StartDate;
+            res.EndDate = res.ActualEnd ?? res.EndDate;
+            res.isActual = res.ActualStart != null ? true : false;
+            res.EntityName = "DP_Activities";
+            this.view.dataService.add(res).subscribe();
             this.detectorRef.detectChanges();
           }
         });
