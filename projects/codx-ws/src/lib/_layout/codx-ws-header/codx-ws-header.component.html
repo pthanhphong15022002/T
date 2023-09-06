@@ -106,11 +106,12 @@
 </ng-template>
 
 <ng-template #dr let-data let-index>
-  <div ngbDropdown class="d-inline-block" (click)="selectedChange(index , data)">
+  <div ngbDropdown class="d-inline-block">
     <span class="fs-6" id="sortMenu" ngbDropdownToggle>{{data.customName}}</span>
-    <div class="dropdown-menu" aria-labelledby="sortMenu">
-      aaaaaaaaaaa
-      <!-- <button class="dropdown-item" *ngFor="let sortOrder of sortOrders" (click)="ChangeSortOrder(sortOrder)" >{{sortOrder}}</button> -->
+    <div class="dropdown-menu" aria-labelledby="sortMenu" ngbDropdownMenu>
+      <div class="w-100">
+        
+      </div>
     </div>
   </div>
 </ng-template>
