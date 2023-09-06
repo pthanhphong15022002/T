@@ -419,7 +419,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   /** Hàm lưu master */
   save(isclose: boolean) {
-    if (this.vouchers.status == '0') {
+    if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
       this.form.formGroup.patchValue({status: this.vouchers.status});
     }
@@ -436,7 +436,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res?.update?.error || res?.save?.error) {
-            this.vouchers.status = '0';
+            this.vouchers.status = '7';
             this.form.formGroup.patchValue({status: this.vouchers.status});
             this.vouchers.unbounds.isAddNew = true;
           }
