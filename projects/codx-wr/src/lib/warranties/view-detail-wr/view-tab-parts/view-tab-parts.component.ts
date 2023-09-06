@@ -92,7 +92,6 @@ export class ViewTabPartsComponent implements OnInit {
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
       this.lstParts = item;
-      console.log(this.lstParts);
       this.wrSv.listOrderPartsSubject.next(this.lstParts);
       this.loaded = true;
     });

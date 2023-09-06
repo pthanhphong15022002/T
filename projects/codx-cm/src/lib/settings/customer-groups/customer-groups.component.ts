@@ -252,6 +252,7 @@ export class CustomerGroupsComponent extends UIComponent {
             },
             option
           );
+
           popupEdit.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
@@ -289,11 +290,11 @@ export class CustomerGroupsComponent extends UIComponent {
         },
         option
       );
+
       popupCopy.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
-          this.view.dataService.update(e.event).subscribe();
-
+          this.view.dataService.update(e?.event[0]).subscribe();
           this.detectorRef.detectChanges();
         }
       });
