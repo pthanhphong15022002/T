@@ -44,6 +44,7 @@ export class CodxBookingViewDetailComponent
   @Input() data: any;
   @Input() hideMF = false;
   @Input() hideFooter = false;
+  @Input() crrEntityName = EPCONST.ENTITY.R_Bookings;
 
   //Output
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
@@ -232,8 +233,8 @@ export class CodxBookingViewDetailComponent
           break;
       }
     } else if (this.viewMode == '2') {
-      let funcID = event?.functionID;
-      switch (funcID) {
+      let mfuncID = event?.functionID;
+      switch (mfuncID) {
         case EPCONST.MFUNCID.R_Approval:
         case EPCONST.MFUNCID.C_Approval:
         case EPCONST.MFUNCID.S_Approval:
@@ -273,7 +274,7 @@ export class CodxBookingViewDetailComponent
       if (
         event != null &&
         data != null &&
-        this.funcID != EPCONST.FUNCID.S_Allocate
+        this.crrEntityName != EPCONST.ENTITY.S_Distribution
       ) {
         if (data.approveStatus == EPCONST.A_STATUS.New) {
           //Mới tạo
@@ -404,7 +405,7 @@ export class CodxBookingViewDetailComponent
       } else if (
         event != null &&
         data != null &&
-        this.funcID == EPCONST.FUNCID.S_Allocate
+        this.crrEntityName == EPCONST.ENTITY.S_Distribution
       ) {
         event.forEach((func) => {
           if (
