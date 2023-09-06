@@ -22,6 +22,8 @@ import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personal
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ReportComponent } from './report/report.component';
 
 
 const routes: Routes = [
@@ -67,6 +69,14 @@ const routes: Routes = [
         component: IncommingComponent,
       },
       {
+        path: 'dashboard/:funcID',
+        component: DashboardComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: ReportComponent,
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
@@ -92,7 +102,9 @@ const routes: Routes = [
     MenuListComponent,
     MasterDetailComponent,
     ApprovalsComponent,
-    MenuListApprovalComponent
+    MenuListApprovalComponent,
+    DashboardComponent,
+    ReportComponent
   ],
   imports: [
     RouterModule.forChild(routes),

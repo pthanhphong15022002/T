@@ -473,14 +473,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   //
   onAction(e:any){
-    if(this.listview?.dataService?.predicates)
-    {
+    if(this.listview?.dataService?.predicates){
       let post = this.listview.dataService.data[0];
-      if(post?.category == "9")
-      {
+      if(post?.category == "9" || post?.category == "10"){
         this.api
           .execSv(
           'DM',
