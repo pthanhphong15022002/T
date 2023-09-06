@@ -18,6 +18,9 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-list-approval.component';
 import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
+import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
+import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
+import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
 
 
 const routes: Routes = [
@@ -31,11 +34,13 @@ const routes: Routes = [
       },
       {
         path: 'calendar/:funcID',
-        component: CalendarComponent,
+        //component: CalendarComponent,
+        component: CodxCalendarComponent,
       },
       {
         path: 'personal/:funcID',
-        component: PersonalComponent,
+        component: PersonalsComponent,
+        //component: PersonalComponent,
       },
       {
         path: 'approvals/:funcID',
@@ -55,6 +60,10 @@ const routes: Routes = [
         path: 'bookingstationery/:funcID',
         data: { noReuse: true },
         component: EPBookingComponent,
+      },
+      {
+        path: 'dispatches/:funcID',
+        component: IncommingComponent,
       },
       {
         path: '',

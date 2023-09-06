@@ -46,12 +46,8 @@
                   [multiple]="false"
                   locale="vi"
                   [allowedExtensions]="'.rdl,.rdlc'"
-                  (selected)="fileSelected($event)"
-                  (removing)="onFileRemove($event)"
-                  (beforeUpload)="beforeUpload($event)"
-                  (uploading)="uploading($event)"
+                  (selected)="selectedReportFile($event)"
                   [files]="files"
-                  (fileListRendering)="fileRendering($event)"
                 >
                 </ejs-uploader>
               </div>
@@ -89,36 +85,48 @@
             </ng-template>
           </div>
         </div>
-        <div class="row mt-5" *ngIf="(data.reportContent || pathDisk)">
+        <div class="row mt-5" >
           <div class="col-12">
             <div class="has-action-menu-1 d-flex position-relative cursor-pointer">
-              <div>
-                <img [src]="data.icon" width="30" height="30">
-              </div>
-              <div class="ms-2">
-                <p class="fw-bold m-0">
-                  <span>
-                    {{data.location}}                
-                  </span>
-                  <span *ngIf="data.size">
-                    ({{data.size}})
-                  </span>
-                </p>
-              </div>
-              <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="removeFile()">
-                  <i class="icon-close text-danger icon-16"></i>
+              <ng-container *ngIf="data.reportContent">
+                <div>
+                  <img [src]="data.icon" width="30" height="30">
                 </div>
-                <!-- <div class="btn btn-sm btn-icon btn-white cursor-pointer">
-                  <i class="icon-preview text-success icon-16"></i>
-                </div> -->
-                <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="downloadCustomFile()">
-                  <i class="icon-cloud_download text-primary icon-16"></i>
+                <div class="ms-2">
+                  <p class="fw-bold m-0">
+                    <span>
+                      {{data.location}}                
+                    </span>
+                    <span *ngIf="data.size">
+                      ({{data.size}})
+                    </span>
+                  </p>
                 </div>
-              </div>
+                <div class="action-menu-1 d-flex align-items-center cursor-pointer">
+                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="remove()">
+                    <i class="icon-close text-danger icon-16"></i>
+                  </div>
+                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download()">
+                    <i class="icon-cloud_download text-primary icon-16"></i>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="data.templateID">
+                <codx-thumbnail 
+                  #codxThumbnail
+                  [formModel]="dialog.formModel" 
+                  [files]="fileTemplate"
+                  hideHover="0"
+                  displayThumb="simple" 
+                  [isScroll]="'1'"
+                  [hideMoreF]="1" 
+                  [objectID]="data.templateID" [tmpRight]="tmpMoreFC">
+                </codx-thumbnail>
+              </ng-container>
             </div>
           </div>
         </div>
+        
         <!-- report infor -->
         <div class="row mt-5">
           <div class="col-12">
@@ -615,18 +623,29 @@
 <ng-template #footer>
   <div class="w-100 d-flex">
     <div class="d-flex justify-content-start w-50">
-      <button type="button" class="btn btn-light-info me-3" (click)="download()" *ngIf="data?.reportID">
+      <button type="button" class="btn btn-light-info me-3" (click)="downloadReportFile()" *ngIf="data?.reportID">
         <i class="icon-i-cloud-download fs-5"></i><span>
           <codx-label name="lblDownloadRoot" formName="sys" default="Tải mẫu báo cáo gốc"></codx-label>
         </span>
       </button>
     </div>
     <div class="d-flex justify-content-end w-50">
-      <button [disabled]="!isUpload" type="button" class="btn btn-primary ms-1" (click)="saveForm()">
+      <button [disabled]="blockBtn"  type="button" class="btn btn-primary ms-1" (click)="saveForm()">
         <codx-label name="lblSave" formName="sys" default="Lưu"></codx-label>
       </button>
     </div>
   </div>
-
-
+</ng-template>
+<ng-template #tmpMoreFC >
+  <div class="action-menu-1 d-flex align-items-center cursor-pointer">
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="remove()">
+      <i class="icon-close text-danger icon-16"></i>
+    </div>
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="view()">
+      <i class="icon-preview text-success icon-16"></i>
+    </div>
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download()">
+      <i class="icon-cloud_download text-primary icon-16"></i>
+    </div>
+  </div>
 </ng-template>

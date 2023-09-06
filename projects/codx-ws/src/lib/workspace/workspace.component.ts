@@ -29,6 +29,7 @@ export class WorkspaceComponent extends WSUIComponent{
 
   formatModule(data:any)
   {
+    debugger
     var listChild = data.filter(x=>x.parentID == this.funcID);
 
     for(var i = 0 ; i < listChild.length ; i++)

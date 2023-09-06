@@ -23,18 +23,14 @@ import {
   AlertConfirmInputConfig,
   DataRequest,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
-import { utils } from 'xlsx';
 import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
 import {L10n } from '@syncfusion/ej2-base';
-import { FileInfo } from '@shared/models/file.model';
 
-import { EmitType } from '@syncfusion/ej2-base';
 import { environment } from 'src/environments/environment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { Html } from '@syncfusion/ej2-angular-diagrams';
+import { ThumbnailComponent } from 'projects/codx-share/src/lib/components/thumbnail/thumbnail.component';
 
 L10n.load({
   vi: {
@@ -73,9 +69,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabParam') tabParam: TemplateRef<any>;
   @ViewChild('tabSignature') tabSignature: TemplateRef<any>;
   @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('uploader') uploader!: UploaderComponent;
-
+  @ViewChild("codxThumbnail") codxThumbnail : ThumbnailComponent;
   files:any=[];
   title: string = 'Thêm mới báo cáo';
   tabContent: any[] = [];
@@ -194,44 +189,16 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.displayMode == "3" || this.data.displayMode == "4")
         {
-          let fileIcon = this.data.displayMode == "3" ? "xls.svg":"doc.svg";
-          this.data.icon = `../../../assets/codx/dms/${fileIcon}`;
+          this.data.icon = `../../../assets/codx/dms/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
           this.getFileTemplate(this.data.templateID);
         }
         else
         {
           this.data.icon = "../../../assets/codx/dms/file.svg";
         }
-        if(this.data.reportContent){
-          if(this.data.reportContent.split(',').length ==1){
-            this.data.reportContent = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${this.data.reportContent}`
-          }
-
-          let file = this.dataBase64toFile(this.data.reportContent,this.data.location ? this.data.location : this.data.reportName);
-          let fileInfo:any = {};
-          fileInfo.id=file.name;
-          fileInfo.name = file.name;
-          fileInfo.rawFile = file;
-          fileInfo.type=file.type;
-          fileInfo.statusCode='1';
-          fileInfo.status='Sẵn sàng';
-          fileInfo.size =file.size;
-          let filePop:any={};
-          filePop.name=this.data.location ? this.data.location : this.data.reportName;
-          filePop.size = file.size;
-          filePop.type = file.type.split('/')[1];
-          this.files.push(filePop);
-          let ins = setInterval(()=>{
-            if(this.uploader){
-              clearInterval(ins);
-              this.uploader.filesData=[];
-              this.uploader.filesData.push(fileInfo);
-              this.uploader.refresh();
-            }
-          },50)
-
-        }
-      } else {
+      } 
+      else
+      {
         this.setDefaut();
       }
     });
@@ -409,13 +376,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  popup() {
-    if (this.attachment && this.attachment.fileUploadList.length == 0) {
-      this.attachment.uploadFile();
-      this.checkFile = true;
-    }
-  }
-
   valueChange(evt: any) {
     this.data[evt.field] = evt.data;
   }
@@ -426,12 +386,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     })
   }
 
+  isLoaded = false;
   saveForm() {
-    debugger;
-    if(!this.data.displayMode || this.data.displayMode == "0")
-    { 
-      this.data.displayMode = "1";
-    }  
+    this.isLoaded = true;
     this.api
       .execSv(
         'rptrp',
@@ -448,21 +405,16 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         {
           this.dialog.close(this.data);
         }
+        this.isLoaded = false;
       });
 
   }
 
   setDataset(){
     this.api.execSv(this.data.service,'Codx.RptBusiness','ReportBusiness','SetDatasetAsync',this.reportID)
-    .subscribe((res:boolean) =>{
+    .subscribe((res:boolean) => {
       this.dialog.close(this.data);
     });
-  }
-
-  uploading(e:BeforeUploadEventArgs){
-  }
-
-  beforeUpload(e:BeforeUploadEventArgs){
   }
 
   valueRadio(evt: any) {
@@ -473,49 +425,89 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isBlockBtn:boolean = false;
-  isUpload:boolean = false;
-  fileSelected(e:any){
-    if(e.filesData.length == 0) return;
-    let file = e.filesData[0].rawFile;
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    let t = this;
-    this.isBlockBtn = false;
-    this.isUpload = true;
-    reader.onload = function () {
-      let strBase64 = reader.result;
-      if((strBase64 as string)?.split(',')?.length > 1){
-        strBase64 = (strBase64 as string).split(',')[1];
-      }
-      t.data.reportContent = strBase64;
-      t.data.location = file.name;
-      t.data.icon = "../../../assets/codx/dms/file.svg";
-      t.data.size = t.formatBytes(file.size);
-    };
-
-  }
-
-  formatBytes(bytes, decimals = 2) {
-    if (!+bytes) return '0 Bytes'
-    let k = 1024
-    let dm = decimals < 0 ? 0 : decimals;
-    let sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    let i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
-
-  onFileRemove(args: RemovingEventArgs): void {
-  args.postRawFile = false;
-  this.data.reportContent='';
-  this.data.location='';
-  }
-
-  download(){
-    if(this.data?.service && this.data?.reportName)
+  clickUpload(type:string)
+  {
+    if(type == "word/excel")
     {
-      let fileName = this.data.reportName;
-      this.api.execSv(this.data.service,
+      this.uploadTemplate()
+    }
+    else
+    {
+      (this.uploader.element as HTMLElement)?.click();  
+    }
+  }
+
+  templateType:string = "";
+  uploadTemplate(){
+    var gridModel = new DataRequest();
+    gridModel.funcID = this.data.reportID;
+    gridModel.formName = this.data.formName;
+    gridModel.entityName = this.data.entityName;
+    gridModel.gridViewName = this.data.gridViewName;
+    this.callFuncService.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [
+        gridModel,
+        this.data.recID,
+        null,
+        null,
+        this.dialog.formModel?.entityName
+      ],
+      null
+    ).closed.subscribe((res:any) => {
+      if(res?.event)
+      {
+        this.data.templateID = res.event.templateInfo.recID;
+        this.data.location = res.event.templateInfo.templateName;
+        this.data.description = res.event.templateInfo.description;
+        this.data.reportContent = "";
+        this.blockBtn = false;
+        this.templateType = res.event.templateType;
+        if(res.event.templateType == "AD_WordTemplates")
+        {
+          this.data.displayMode = "4";
+          this.data.icon = "../../../assets/codx/dms/docx.svg";
+        }
+        else
+        {
+          this.data.displayMode = "3";
+          this.data.icon = "../../../assets/codx/dms/xlsx.svg";
+        }
+        this.getFileTemplate(this.data.templateID);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  pathDisk:string = "";
+  fileTemplate:any = null;
+  getFileTemplate(templateID:string)
+  {
+    this.api
+      .execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      [templateID]).subscribe((res:any) =>{
+        debugger
+        if(res?.length > 0)
+        {
+          this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
+        }
+        this.fileTemplate = res;
+      });
+  }
+
+
+  downloadReportFile(){
+    let fileName = this.data.location ? this.data.location : this.data.reportName;
+    this.api.execSv(
+      this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
       'GetReportFileAsync',
@@ -530,123 +522,82 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         downloadLink.download = fileName;
         downloadLink.click();
       });
-    }
   }
 
-  fileRendering(e:any){
-    let iconEle = document.createElement('i');
-    iconEle.classList.add('icon-i-cloud-arrow-down','icon-20','text-hover-primary','icon-download-report')
-    iconEle.title = 'download';
-    let t= this;
-    iconEle.addEventListener('click',function(){
-      t.downloadCustomFile();
-    });
-    e.element.insertBefore(iconEle,e.element.lastChild)
-  }
-
-  downloadCustomFile(){
-    let linkSource = this.data.reportContent;
-    if(linkSource != "" && linkSource?.split(',').length == 1)
+  remove(){
+    if(this.data.displayMode == '3' || this.data.displayMode == '4')
     {
-        linkSource = `data:application/${this.data.reportName ?this.data.reportName.split('.')[1]: 'rdl'};base64,${linkSource}`
-        }
-      const downloadLink = document.createElement("a");
-      downloadLink.href = linkSource;
-      downloadLink.download = this.data.reportName;
-      downloadLink.click();
-  }
-
-  dataBase64toFile(dataStr:string, filename:string) {
-    let arr = dataStr.split(','),
-        mime =this.data.reportName.split('.')[1],
-        bstr = atob(arr[arr.length - 1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-    if(arr.length>1){
-      mime = arr[0]?.match(/:(.*?);/)[1]
-    }
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
-  }
-
-
-  templateType:string;
-  clickUpload(type:string)
-  {
-    if(type == "word/excel")
-    {
-      this.openPopup().closed.subscribe((res:any) => {
-        if(res?.event)
-        {
-          this.data.templateID = res.event.templateInfo.recID;
-          this.data.location = res.event.templateInfo.templateName;
-          this.data.reportContent = "";
-          this.isUpload = true;
-          if(res.event.templateType == "AD_WordTemplates")
-          {
-            this.data.displayMode = "4";
-            this.data.icon = "../../../assets/codx/dms/docx.svg";
-          }
-          else
-          {
-            this.data.displayMode = "3";
-            this.data.icon = "../../../assets/codx/dms/xlsx.svg";
-          }
-        }
-      });;
+      this.data.templateID = "";
     }
     else
     {
-      this.data.displayMode = "1";
-      (this.uploader.element as HTMLElement)?.click();  
+      this.data.reportContent = "";
     }
+    this.data.displayMode = "";
+    this.data.location = "";
+    this.blockBtn = false;
   }
 
-  openPopup(){
-    var gridModel = new DataRequest();
-    gridModel.funcID = this.data.reportID;
-    gridModel.formName = this.data.formName;
-    gridModel.entityName = this.data.entityName;
-    gridModel.gridViewName = this.data.gridViewName;
-    return this.callFuncService.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [
-        gridModel,
-        this.data.recID
-      ],
-      null
-    );
-  }
-
-  pathDisk:string = "";
-  getFileTemplate(templateID:string)
-  {
-    if(templateID)
+  download(){
+    if(this.data.displayMode == '3' || this.data.displayMode == '4')
     {
-      this.api
-      .execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetFilesByIbjectIDAsync',
-      [templateID]).subscribe((res:any) =>{
-        if(res?.length > 0)
-        {
-          this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
-        }
-        
-      });
+      this.codxThumbnail.download(this.fileTemplate);
+
+    }
+    else if(this.data.displayMode == '1' && this.data.reportContent)
+    {
+      let fileName = this.data.location ? this.data.location : this.data.reportName;
+      let linkSource = "";
+      let downloadLink = document.createElement("a");
+      linkSource = this.data.reportContent;
+      if(linkSource != "" && linkSource?.split(',').length == 1)
+      {
+          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
+      }
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    }
+    
+  }
+
+  view()
+  {
+    if(this.fileTemplate)
+    {
+      this.codxThumbnail.openFile(this.fileTemplate);
     }
   }
 
-  removeFile()
-  {
-    this.data.reportContent = "";
+
+  blockBtn:boolean = true;
+  selectedReportFile(e:any){
+    if(e.filesData.length == 0) return;
+    let file = e.filesData[0].rawFile;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    let t = this;
+    this.blockBtn = false;
+    reader.onload = function () {
+      let strBase64 = reader.result;
+      if((strBase64 as string)?.split(',')?.length > 1){
+        strBase64 = (strBase64 as string).split(',')[1];
+      }
+      t.data.reportContent = strBase64;
+      t.data.location = file.name;
+      t.data.displayMode = "1";
+      t.data.icon = "../../../assets/codx/dms/file.svg";
+      t.data.size = t.formatBytes(file.size);
+    };
+
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes'
+    let k = 1024
+    let dm = decimals < 0 ? 0 : decimals;
+    let sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    let i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 }

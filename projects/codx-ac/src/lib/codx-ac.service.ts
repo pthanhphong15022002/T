@@ -348,4 +348,17 @@ export class CodxAcService {
     dialog.dialog.properties.height = height;
     dialog.dialog.properties.width = width;
   }
+
+  //Call bankhub
+  call_bank(methodName: string, data: any) {
+    let token = localStorage.getItem('bh_tk');
+    if (token) data.token = token;
+    return this.api.execSv(
+      'AC',
+      'Core',
+      'CMBusiness',
+      'SendRequestBankHubAsync',
+      [methodName, JSON.stringify(data), token]
+    );
+  }
 }

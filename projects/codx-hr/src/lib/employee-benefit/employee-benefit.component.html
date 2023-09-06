@@ -231,7 +231,8 @@
         <div
           *ngIf="
             data?.isCurrent &&
-            dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+            dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+            data?.status === '5'
           "
           #popOver="ngbPopover"
           [openDelay]="500"
@@ -418,7 +419,8 @@
     <span
       *ngIf="
         data?.isCurrent &&
-        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"

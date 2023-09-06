@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { FileService } from '@shared/services/file.service';
 
 @Component({
   selector: 'lib-popup-add',
@@ -80,6 +81,7 @@ export class PopupAddComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private codxShareSV: CodxShareService,
+    private fileService:FileService,
     private cache: CacheService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -160,13 +162,13 @@ export class PopupAddComponent implements OnInit {
 
   // insert post
   clickInsert(){
+    debugger
     if(this.checkValidate()) return;
     this.loading = true;
-    this.data.image = this.fileUpload.length;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
     this.codxATMImage.saveFilesMulObservable()
     .subscribe((res1: any) => {
-      if(res1 && ((typeof res1 == 'object' && res1?.status != 0) || (Array.isArray(res1) && res1[0]?.status != 0)))
+      if(res1 && ((typeof res1 == 'object' && res1.status == 0) || (Array.isArray(res1) && res1[0].status == 0)))
       {
         this.api.execSv(
           'WP',
@@ -181,28 +183,36 @@ export class PopupAddComponent implements OnInit {
       }
       else
       {
-        let fileNames = this.fileUpload.map(x => x.fileName).join(";");
+        let arrFields = this.fileUpload.map(x => x.fileName);
+        let fileNames = arrFields.length > 1 ? arrFields.join(";") : arrFields.pop();
         this.notifSV.notifyCode("DM006",0,fileNames);
+        this.dialogRef.close();
         this.dialogRef.close();
         return;
       }
     });
   }
+  
   // release post
   clickRelease() {
+    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileUpload.length > 0)
     {
-      this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
+      this.codxATMImage.fileUploadList = [...this.fileUpload];
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
-        if(res && ((typeof res == 'object' && res?.status == 0) || (Array.isArray(res) && res[0]?.status == 0)))
-          this.releasePost(this.data).subscribe();
+        if(res && ((typeof res == 'object' && res.status == 0) || (Array.isArray(res) && res[0].status == 0)))
+        {
+          this.releasePost(this.data);
+        }
         else
         {
-          let fileNames = this.fileUpload.map(x => x.fileName).join(";");
-          this.notifSV.notifyCode("DM006",0,fileNames);
+          let arrFields = this.fileUpload.map(x => x.fileName);
+          let fileNames = arrFields.length > 1 ? arrFields.join(";") : arrFields.pop();
+            this.notifSV.notifyCode("DM006",0,fileNames);
+          this.dialogRef.close();
           this.dialogRef.close();
           return;
         }
@@ -210,23 +220,24 @@ export class PopupAddComponent implements OnInit {
     }
     else
     {
-      this.releasePost(this.data).subscribe();
+      this.releasePost(this.data);
     }
   }
 
   releasePost(post:any){
-    return this.api.execSv(
-      'WP',
-      'ERM.Business.WP',
-      'NewsBusiness',
-      'ReleaseNewsAsync',
-      [post])
-      .pipe(map((res:any) => {
-        this.loading = false;
-        this.notifSV.notifyCode(res ? "WP024" : "WP013");
-        this.dialogRef.close(res);
-      }));
+    this.api.execSv(
+    'WP',
+    'ERM.Business.WP',
+    'NewsBusiness',
+    'ReleaseNewsAsync',
+    [post])
+    .subscribe((res:any) => {
+      this.loading = false;
+      this.notifSV.notifyCode(res ? "WP024" : "WP013");
+      this.dialogRef.close(res);
+    });
   }
+
   // check validate
   checkValidate(){
     if(this.arrFieldRequire.length > 0)
@@ -244,6 +255,7 @@ export class PopupAddComponent implements OnInit {
     }
     return false;
   }
+
   // value change
   valueChange(event: any) {
     if(event){
@@ -263,6 +275,7 @@ export class PopupAddComponent implements OnInit {
       this.data[field] = value;
     }
   }
+
   eventApply(event: any) {
     if (Array.isArray(event)) {
       let dataSeleted = Array.from<any>(event);
@@ -340,51 +353,77 @@ export class PopupAddComponent implements OnInit {
  
   // attachment return files
   addFiles(files: any) {
-    if (Array.isArray(files.data)){
+    if (files?.data?.length >  0)
+    {
       let file = files.data[0]; 
-      if(file.mimeType.indexOf("image") >= 0){
+      file["id"] = Util.uid();
+      if(file.mimeType.includes("image"))
+      {
         file['referType'] = this.FILE_REFERTYPE.IMAGE;
+        file["source"] = file.avatar;
+        if(this.fileImage)
+          this.removeImage();
         this.fileImage = JSON.parse(JSON.stringify(file));
-        this.fileImage["source"] = file.avatar;
       }
-      else if(file.mimeType.indexOf("video") >= 0){
+      else if(file.mimeType.includes("video")){
         file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        file['source'] = file.data.changingThisBreaksApplicationSecurity;
         this.fileVideo = JSON.parse(JSON.stringify(file));
-        this.fileVideo['source'] = file.data.changingThisBreaksApplicationSecurity;
       }
-      let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
-      if(index != -1)
-          this.fileUpload[index] =  JSON.parse(JSON.stringify(file));
-      else
-        this.fileUpload.push(file);
+      if(this.fileUpload.length > 0)
+      {
+        this.fileUpload = this.fileUpload.filter(x => x['referType'] != file['referType']);
+      }
+      this.fileUpload.push(file);
       this.data.image = this.fileUpload.length;
       this.changedt.detectChanges();
     }
   }
+
   //click upload file
   clickUpload(type:string)
   {
-    debugger
-    type == 'image' ? this.codxATMImage.uploadFile() : this.codxATMVideo.uploadFile();;
+    if(type == "image")
+    {
+      this.codxATMImage.uploadFile();
+    }
+    else
+    {
+      this.codxATMVideo.uploadFile();
+    }
   }
+    
 
   //update
   clickUpdate() {
+    debugger
     if(this.checkValidate()) return;
     this.loading = true;
+    if(this.fileDelete.length > 0)
+    {
+      let _fileIDs = this.fileDelete.map(x => x.id);
+      this.api.execSv<any>(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "DeleteFilesAsync",
+        [_fileIDs])
+        .subscribe();
+    }
     if(this.fileUpload.length > 0) // upload file
     {
-      this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
+      this.data.image = this.fileUpload.length;
+      this.codxATMImage.fileUploadList = [...this.fileUpload];
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res:any) => {
         if(res && ((typeof res == 'object' && res?.status == 0) || (Array.isArray(res) && res[0]?.status == 0)))
         {
-          this.updatePost(this.data)
-          .subscribe();
+          this.updatePost(this.data);
         }
         else
         {
-          let fileNames = this.fileUpload.map(x => x.fileName).join(";");
+          let arrFields = this.fileUpload.map(x => x.fileName);
+          let fileNames = arrFields.length > 1 ? arrFields.join(";") : arrFields.pop();
           this.notifSV.notifyCode("DM006",0,fileNames);
           this.dialogRef.close();
           return;
@@ -394,19 +433,18 @@ export class PopupAddComponent implements OnInit {
     }
     else
     {
-      this.updatePost(this.data)
-      .subscribe();
+      this.updatePost(this.data);
     }
   }
 
+  // update post
   updatePost(post:any){
-    return this.api
-    .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post])
-    .pipe(map((res:any) => {
+    this.api
+    .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'UpdateAsync', [post]).subscribe((res:any) => {
         this.loading = false;
         this.notifSV.notifyCode(res ? "SYS007" : "SYS021");
         this.dialogRef.close(res);
-    }));
+    })
   }
   // get file by objectID
   getFileByObjectID(objectID: string) {
@@ -420,13 +458,17 @@ export class PopupAddComponent implements OnInit {
         .subscribe((res: any[]) => {
         if (res?.length > 0) {
           res.forEach((f: any) => {
-            if (f.referType == this.FILE_REFERTYPE.IMAGE) {
-              f["source"] = this.codxShareSV.getThumbByUrl(f.url,300);
+            if (f.referType == this.FILE_REFERTYPE.IMAGE) 
+            {
               this.fileImage = f;
+              this.fileImage["source"] = this.codxShareSV.getThumbByUrl(f.url,300);
+              this.fileImage["id"] = f.recID;
             }
-            if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-              f['source'] = `${environment.urlUpload}` + '/' + f.url;
+            else if (f.referType == this.FILE_REFERTYPE.VIDEO)
+            {
               this.fileVideo = f;
+              this.fileVideo['source'] = `${environment.urlUpload}` + '/' + f.url;
+              this.fileVideo["id"] = f.recID;
             }
           });
           this.changedt.detectChanges();
@@ -435,8 +477,15 @@ export class PopupAddComponent implements OnInit {
   }
 
   // removeImage
-  removeImage(e:any){
-    this.fileUpload = this.fileUpload.filter(x => x.fileName == this.fileImage.fileImage);
+  fileDelete:any[] = [];
+  removeImage(){
+    if(!this.fileDelete)
+    {
+      this.fileDelete = [];
+    }
+    this.fileDelete.push(this.fileImage);
+    this.fileUpload = this.fileUpload.filter(x => x.id != this.fileImage.id);
     this.fileImage = null;
+    this.data.image = this.data.image > 0 ? this.data.image - 1 : 0;
   }
 }

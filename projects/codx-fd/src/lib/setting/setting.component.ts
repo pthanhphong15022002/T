@@ -3,6 +3,7 @@ import { CodxFdService } from './../codx-fd.service';
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  FormModel,
   LayoutService,
   PageTitleService,
   UIComponent,
@@ -21,7 +22,8 @@ export class SettingComponent extends UIComponent implements OnInit {
     private injector: Injector,
     private fdService: CodxFdService,
     private layout: LayoutService,
-    private pageTitle: PageTitleService
+    private pageTitle: PageTitleService,
+    private activatedRoute: ActivatedRoute
   ) {
     super(injector);
     this.cache.valueList(this.vllFD013).subscribe((res) => {
@@ -37,19 +39,54 @@ export class SettingComponent extends UIComponent implements OnInit {
 
   //default value
   formName = 'FDParameters';
+  formModel: FormModel;
+
   vllFD013 = 'FD013';
   views: Array<ViewModel> = [];
   curLineType = 1;
   curGroup = null;
   refQueue = [];
+  lstPolicies = [];
+  funcID;
   //ViewChild
   @ViewChild('tabsTmpl') tabsTmpl: TemplateRef<any>;
 
   onInit(): void {
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      this.formModel = res;
+    });
     this.fdService
       .getSettings(this.formName)
       .subscribe((res: Map<string, any[]>) => {
         this.groupSettings = res;
+        let lstFDPolicies = [];
+        Object.values(this.groupSettings).forEach((settings) => {
+          settings.forEach((setting) => {
+            if (setting.reference == 'FDPolicies') {
+              lstFDPolicies.push(setting.fieldName);
+            }
+          });
+        });
+        if (lstFDPolicies.length > 0) {
+          this.fdService.getListPolicies(lstFDPolicies).subscribe((res: []) => {
+            this.lstPolicies = res;
+            console.log('policies', this.lstPolicies);
+            this.lstPolicies.forEach((policy) => {
+              Object.values(this.groupSettings).forEach((settings) => {
+                let setting = settings.find(
+                  (x) => x.fieldName == policy.policyID
+                );
+                if (setting) {
+                  setting.actived = policy.actived;
+                  setting.activedOn = policy.activedOn;
+                  setting.policyRecID = policy.recID;
+                }
+              });
+            });
+          });
+        }
         console.log('getSettings', res);
       });
 

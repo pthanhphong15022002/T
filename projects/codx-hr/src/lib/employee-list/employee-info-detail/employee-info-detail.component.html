@@ -6825,14 +6825,67 @@
   <div class="has-action-menu min-h-40px">
     <div class="d-flex align-items-center mb-1">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
-      <span placement="top" [title]="eTrainCourseHeaderText.TrainFrom">
-        {{ data?.trainFrom | fmDT }} 
-      </span>
+
+      <span *ngIf="data?.trainFrom == 'day'"
+      placement="top" [title]="eTrainCourseHeaderText.TrainFrom"
+                  [innerHTML]="
+                  data?.trainFromDate
+                      | dateformat : 'day'
+                  "
+                >
+                </span>
   
-      <span placement="top" [title]="eTrainCourseHeaderText.TrainTo" *ngIf="data?.trainTo"> 
+                <span *ngIf="data?.trainFrom == 'month'"
+                placement="top" [title]="eTrainCourseHeaderText.TrainFrom"
+                    [innerHTML]="
+                    data?.trainFromDate
+                        | dateformat : 'month'
+                    "
+                  >
+                  </span>
+  
+                  <span *ngIf="data?.trainFrom == 'year'"
+                  placement="top" [title]="eTrainCourseHeaderText.TrainFrom"
+                      [innerHTML]="
+                      data?.trainFromDate
+                          | dateformat : 'year'
+                      "
+                    >
+                    </span>
+        <span *ngIf="data?.trainTo">  - </span>
+
+      <!-- <span placement="top" [title]="eTrainCourseHeaderText.TrainFrom">
+        {{ data?.trainFrom | fmDT }} 
+      </span> -->
+  
+      <span *ngIf="data?.trainTo == 'day'"
+      placement="top" [title]="eTrainCourseHeaderText.TrainTo"
+      [innerHTML]="
+      data?.trainToDate
+          | dateformat : 'day'
+      "
+        ></span>
+
+        <span *ngIf="data?.trainTo == 'month'"
+        placement="top" [title]="eTrainCourseHeaderText.TrainTo"
+        [innerHTML]="
+        data?.trainToDate
+            | dateformat : 'month'
+        "
+          ></span>
+
+          <span *ngIf="data?.trainTo == 'year'"
+          placement="top" [title]="eTrainCourseHeaderText.TrainTo"
+          [innerHTML]="
+          data?.trainToDate
+              | dateformat : 'year'
+          "
+            ></span>
+
+      <!-- <span placement="top" [title]="eTrainCourseHeaderText.TrainTo" *ngIf="data?.trainTo"> 
         - 
         {{ data?.trainTo | fmDT }}
-      </span>
+      </span> -->
     </div>
     <div class="d-flex align-items-center">
       <i class="icon-year icon-14 text-gray-600 me-2"></i>

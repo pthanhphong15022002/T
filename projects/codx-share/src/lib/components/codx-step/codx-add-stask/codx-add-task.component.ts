@@ -60,7 +60,7 @@ export class CodxAddTaskComponent implements OnInit {
   dataCombobox = [];
   litsParentID = [];
   user;
-  ownerParenr;
+  ownerParent; //
   groupTask;
   isSave = true;
   groupTaskID = null;
@@ -110,7 +110,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.action = dt?.data?.action;
     this.isStart = dt?.data?.isStart;
     this.typeTask = dt?.data?.taskType;
-    this.ownerParenr = dt?.data?.owner;
+    this.ownerParent = dt?.data?.owner; // owner of Parent
     this.listTask = dt?.data?.listTask;
     this.stepsTasks = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
@@ -383,14 +383,14 @@ export class CodxAddTaskComponent implements OnInit {
         switch (role?.roleType) {
           case 'Departments':
           case 'OrgHierarchy':
-            data = [role?.objectID, this.step?.instanceID, this.ownerParenr];
+            data = [role?.objectID, this.step?.instanceID, this.ownerParent];
             break;
           case 'Roles':
           case 'Positions':
             data = [
               role?.objectID,
               this.step?.instanceID,
-              this.ownerParenr,
+              this.ownerParent,
               role?.objectType,
             ];
             break;

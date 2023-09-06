@@ -337,106 +337,13 @@ export class PopupAddDealComponent
   }
   lstContactEmit(e) {
     this.lstContactDeal = e;
+
+    this.changeDetectorRef.detectChanges();
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
 
   lstContactDeleteEmit(e) {
     this.lstContactDelete = e;
-  }
-
-  objectConvertDeal(e) {
-    if (e.e == true) {
-      if (e.data) {
-        var tmp = new CM_Contacts();
-        tmp = JSON.parse(JSON.stringify(e.data));
-        tmp.recID = Util.uid();
-        tmp.refID = e.data.recID;
-        tmp.objectType = '4';
-        tmp.isDefault = false;
-        var indexCus = this.lstContactCustomer.findIndex(
-          (x) => x.recID == e.data.recID
-        );
-
-        if (!this.lstContactDeal.some((x) => x.refID == e?.data?.recID)) {
-          this.lstContactDeal.push(tmp);
-          this.loadContactDeal.loadListContact(this.lstContactDeal);
-        }
-        if (indexCus != -1) {
-          this.lstContactCustomer[indexCus].checked = true;
-        }
-        if (tmp.objectType) this.popupEditRoleDeal(tmp, e.data);
-      }
-    } else {
-      var index = this.lstContactDeal.findIndex(
-        (x) => x.refID == e?.data?.recID
-      );
-      if (index != -1) {
-        this.lstContactDeal.splice(index, 1);
-        this.loadContactDeal.loadListContact(this.lstContactDeal);
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-
-  popupEditRoleDeal(tmp, data) {
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'CMContacts';
-    dataModel.gridViewName = 'grvCMContacts';
-    dataModel.entityName = 'CM_Contacts';
-    dataModel.funcID = 'CM0102';
-    var title = '';
-    opt.FormModel = dataModel;
-    this.cache
-      .moreFunction(dataModel.formName, dataModel.gridViewName)
-      .subscribe((fun) => {
-        if (fun && fun.length) {
-          let m = fun.find((x) => x.functionID == 'CM0102_4');
-          if (m) title = m.defaultName;
-        }
-        this.cache
-          .gridViewSetup(dataModel.formName, dataModel.gridViewName)
-          .subscribe((res) => {
-            var obj = {
-              moreFuncName: title ?? 'Cập nhật vai trò',
-              action: 'editRole',
-              dataContact: data,
-              type: 'formAdd',
-              recIDCm: this.deal?.recID,
-              objectType: '4',
-              objectName: this.deal?.dealName,
-              gridViewSetup: res,
-              listContacts: this.lstContactDeal,
-              customerID: null,
-            };
-            var dialog = this.callfc.openForm(
-              PopupQuickaddContactComponent,
-              '',
-              500,
-              250,
-              '',
-              obj,
-              '',
-              opt
-            );
-            dialog.closed.subscribe((e) => {
-              if (e && e?.event) {
-                if (e.event?.recID) {
-                  var index = this.lstContactDeal.findIndex(
-                    (x) => x.recID != e.event?.recID && x.isDefault
-                  );
-                  if (index != -1) {
-                    if (e?.event?.isDefault) {
-                      this.lstContactDeal[index].isDefault = false;
-                    }
-                  }
-                  tmp.isDefault = e?.event?.isDefault;
-                  tmp.role = e?.event?.role;
-                }
-              }
-            });
-          });
-      });
   }
 
   getListContactByObjectID(objectID) {
@@ -599,7 +506,12 @@ export class PopupAddDealComponent
         case 'R':
         case 'A':
         case 'C':
-          result = event.e;
+          var contact = event?.e;
+          var type = event?.type ?? '';
+          result = event?.result ?? '';
+          this.convertToFieldDp(contact, type);
+          console.log('contactsJS: ', result);
+          console.log('contacts: ', JSON.parse(result));
           break;
       }
       var index = this.listInstanceSteps.findIndex(
@@ -628,6 +540,51 @@ export class PopupAddDealComponent
       }
     }
   }
+
+  //#region Convert contact to field DP
+  convertToFieldDp(contact, type) {
+    if (contact != null) {
+      if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
+        let index = -1;
+        if (type == 'addAndSave') {
+          index = this.lstContactDeal.findIndex(
+            (x) => x.refID == contact.refID
+          );
+        } else {
+          if (contact.refID != null && contact.refID?.trim() != '') {
+            index = this.lstContactDeal.findIndex(
+              (x) => x.refID == contact.refID
+            );
+          } else {
+            index = this.lstContactDeal.findIndex(
+              (x) => x.recID == contact.recID
+            );
+          }
+        }
+
+        if (index != -1) {
+          if (type != 'delete') {
+            this.lstContactDeal[index] = contact;
+          } else {
+            this.lstContactDeal.splice(index, 1);
+          }
+        } else {
+          if (type != 'delete') {
+            this.lstContactDeal.push(Object.assign({}, contact));
+          }
+        }
+      } else {
+        if (type != 'delete') {
+          let lst = [];
+          lst.push(Object.assign({}, contact));
+          this.lstContactDeal = lst;
+        }
+      }
+      this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  //#endregion
 
   // Add permission form DP
   copyPermission(permissionDP: any) {

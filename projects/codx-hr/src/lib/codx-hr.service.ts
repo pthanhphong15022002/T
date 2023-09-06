@@ -2333,6 +2333,9 @@ export class CodxHrService {
           if (IDCompare === this.actionCancelSubmit) {
             evt[i].disabled = false;
           }
+          if (IDCompare === this.actionEdit) {
+            evt[i].disabled = false;
+          }
         }
       }
 
