@@ -150,7 +150,7 @@
 </ng-template>
 <ng-template #colALRemainHRTAL01 let-data>
     <div class="d-flex flex-column p-3">
-        <div class="align-items-center1 mb-1">
+        <div class="mb-1">
             <div #realALPreYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALPreYear.scrollHeight > realALPreYear.clientHeight
                     && data.realALPreYear) ? realALPreYearToolTip: null">
                 <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALPreYear'"
@@ -168,7 +168,7 @@
                 <span class="data-text-color">{{ data.realALPreYear }}</span>
             </ng-template>
         </div>
-        <div class="align-items-center mb-1">
+        <div class="mb-1">
             <div #realALThisYear class="line-clamp line-clamp-1" [ngbTooltip]="(realALThisYear.scrollHeight > realALThisYear.clientHeight
                     && data.realALThisYear) ? realALThisYearToolTip: null">
                 <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALThisYear'"
@@ -190,8 +190,8 @@
 </ng-template>
 <ng-template #colUsedHRTAL01 let-data>
     <div class="d-flex flex-column p-3">
-        <div class="align-items-center mb-1">
-            <div #daysOff class="line-clamp line-clamp-1" [ngbTooltip]="(daysOff.scrollHeight > daysOff.clientHeight
+        <div class="mb-1">
+            <div #daysOff class="line-clamp line-clamp-1" [ngClass]="data.daysOff ?'d-flex' : null" [ngbTooltip]="(daysOff.scrollHeight > daysOff.clientHeight
             && data.daysOff) ? daysOffTooltip: null">
                 <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'DaysOff'"
                     [formModel]="view.formModel" default="Đã nghỉ: ">

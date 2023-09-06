@@ -17,12 +17,16 @@ import {
   FormModel,
   ResourceModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
-import { Observable, finalize, map } from 'rxjs';
-import { CM_Customers } from '../../models/cm_model';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { CM_Cases, CM_Contracts, CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { CM_Contacts } from '../../models/tmpCrm.model';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -47,14 +51,16 @@ export class ViewCalendarComponent
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
 
+  taskType;
   popupTypeCM: DialogRef
   fieldsGroup = { text: 'text', value: 'entityName' };
+  fieldsStep= { text: 'stepName', value: 'recID' };
 
-  fieldsCustomer = { text: 'customerName', value: 'entityName' };
-  fieldsLead = { text: 'leadName', value: 'entityName' };
+  fieldsCustomer = { text: 'customerName', value: 'recID' };
+  fieldsLead = { text: 'leadName', value: 'recID' };
   fieldsDeal = { text: 'dealName', value: 'recID' };
-  fieldsCase = { text: 'caseName', value: 'entityName' };
-  fieldsContract = { text: 'contractName', value: 'entityName' };
+  fieldsCase = { text: 'caseName', value: 'recID' };
+  fieldsContract = { text: 'contractName', value: 'recID' };
 
   typeCMs = [
     { text: 'Khách hàng', entityName: 'CM_Customers',funcID:'CM0101' },
@@ -64,13 +70,17 @@ export class ViewCalendarComponent
     { text: 'Hợp đồng', entityName: 'CM_Contracts',funcID:'CM0204'},
   ];
 
+  insStep;
   listStep: any[];
-  listLead: CM_Customers[];
-  listDeal: CM_Customers[];
-  listCase: CM_Customers[];
+  listLead: CM_Leads[];
+  listDeal: CM_Deals[];
+  listCase: CM_Cases[];
   listCustomer: CM_Customers[];
-  listContract: CM_Customers[];
+  listContract: CM_Contracts[];
 
+  objectID = '';
+  isActivitie = false;
+  isStepTask = false;
   fieldTypeCm = '';
   service = 'CM';
   entityName = 'CM_Contracts';
@@ -117,7 +127,8 @@ export class ViewCalendarComponent
   constructor(
     private inject: Injector,
     private authstore: AuthStore,
-    private cmService: CodxCmService
+    private cmService: CodxCmService,
+    private stepService: StepService,
   ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
@@ -138,6 +149,7 @@ export class ViewCalendarComponent
   }
   ngAfterViewInit(): void {
     this.afterLoad();
+    console.log(this.view.dataService);
   }
 
   getDayOff(id = null) {
@@ -330,15 +342,39 @@ export class ViewCalendarComponent
         this.getDatas(typeCM?.entityName,typeCM?.funcID,null,null);
         break;
       case 'CM_Customers':
+        this.objectID = event?.value;
         break;
       case 'CM_Leads':
         break;
       case 'CM_Deals':
+        this.checkDeal(event?.value);
         break;
       case 'CM_Contracts':
         break;
       case 'CM_Cases':
         break;
+      case 'step':
+        this.insStep = event?.itemData;
+        break;
+    }
+  }
+
+
+
+  checkDeal(dealID){
+    let deal = this.listDeal.find(dealFind => dealFind.recID == dealID);
+    if(deal){
+      var data = [
+       deal?.refID,
+       deal?.processID,
+       deal?.status,
+        '1',
+      ];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+        }
+      });
     }
   }
 
@@ -365,6 +401,8 @@ export class ViewCalendarComponent
           break;
         case 'CM_Customers':
           this.listCustomer = res
+          this.isStepTask = false;
+          this.isActivitie = true;
           break;
       }
       console.log(res)
@@ -389,4 +427,55 @@ export class ViewCalendarComponent
       );
     }
 
+    continue(){
+      this.popupTypeCM.close();
+      this.chooseTypeTask();
+    }
+
+    async chooseTypeTask(){
+     this.taskType = await this.stepService.chooseTypeTask(true);
+      if(this.taskType){
+        if (this.taskType?.value == 'G') {          
+          await this.addGroup();
+        } else {
+          await this.addTask(this.taskType);
+        }
+      }
+    }
+  
+    async addGroup(){
+      let groupOutput = await this.stepService.addGroupTask(null);
+      // if(groupOutput?.groupTask){
+      //   this.groupTaskAdd = groupOutput?.groupTask;
+      //   this.instanceStep?.taskGroups?.push(groupOutput?.groupTask);
+      //   this.changeDetectorRef.detectChanges();
+      // }
+    }
+  
+    async addTask(dataType){
+      let taskOutput = await this.stepService.addTask(dataType,this.insStep,null);
+      let task = taskOutput;
+      if(task){
+        task['progress'] = 0;
+        task['refID'] = Util.uid();
+        task['isTaskDefault'] = false;
+        task['taskType'] = this.taskType?.value;
+        task['objectID'] = this.objectID;
+        task['objectType'] = this.entityName;
+      this.api
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+          task,this.entityName
+        ])
+        .subscribe((res) => {
+          if (res) {
+            res.StartDate = res.ActualStart ?? res.StartDate;
+            res.EndDate = res.ActualEnd ?? res.EndDate;
+            res.isActual = res.ActualStart != null ? true : false;
+            res.EntityName = "DP_Activities";
+            this.view.dataService.add(res).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    }
 }

@@ -36,7 +36,7 @@ export class StepService {
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
-    private callfc: CallFuncService,
+    private callFunc: CallFuncService,
     private cache: CacheService,
     private calendarService: CodxCalendarService,
     private codxService: CodxService,
@@ -265,7 +265,7 @@ export class StepService {
       gridViewName: 'grvDPInstancesStepsTasks',
     };
 
-    var dialogAssign = this.callfc.openForm(
+    var dialogAssign = this.callFunc.openForm(
       AssignInfoComponent,
       '',
       600,
@@ -295,7 +295,7 @@ export class StepService {
   }
 
   async chooseTypeTask(isAddGroup = true) {
-    let popupTypeTask = this.callfc.openForm(
+    let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
       '',
       450,
@@ -338,7 +338,7 @@ export class StepService {
       dataGroup: group || {},
       isEditTimeDefault: instanceStep?.leadtimeControl,
     };
-    let popupTask = this.callfc.openForm(
+    let popupTask = this.callFunc.openForm(
       CodxAddGroupTaskComponent,
       '',
       500,
@@ -363,6 +363,7 @@ export class StepService {
 
     let taskOutput = await this.openPopupTask(
       'add',
+      '',
       taskType,
       instanceStep,
       task,
@@ -371,45 +372,91 @@ export class StepService {
     return taskOutput;
   }
 
-  async openPopupTask(
-    action,
-    taskType,
-    instanceStep,
-    dataTask,
-    groupTaskID = null
-  ) {
+  async openPopupTask(action,titleName, taskType, dataTask, ownerParent,location = 'right', groupTaskID = null) {
     let dataInput = {
       action,
+      titleName: titleName,
       taskType: taskType,
-      step: instanceStep,
-      listGroup: instanceStep?.taskGroups,
+      step: null,
+      listGroup: null,
       dataTask: dataTask || {},
-      listTask: instanceStep?.tasks,
-      isEditTimeDefault: instanceStep?.leadtimeControl,
+      listTask: null,
+      isEditTimeDefault: null,
       groupTaskID, // trường hợp chọn thêm từ nhóm
+      isSave: false,
+      isStart: true,
+      owner: ownerParent,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
       gridViewName: 'grvDPInstancesStepsTasks',
     };
-
-    let opt = new DialogModel();
-    opt.FormModel = frmModel;
-    let popupTask = this.callfc.openForm(
-      CodxAddTaskComponent,
-      '',
-      600,
-      800,
-      '',
-      dataInput,
-      '',
-      opt
-    );
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    let dataPopupOutput;
+    let popupAddTask;
+    if(location == 'right'){
+      let opt = new DialogModel();
+      opt.FormModel = frmModel;
+      popupAddTask = this.callFunc.openForm(
+        CodxAddTaskComponent,
+        '',
+        600,
+        800,
+        '',
+        dataInput,
+        '',
+        opt
+      ); 
+    }else{
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      popupAddTask = this.callFunc.openSide(
+        CodxAddTaskComponent,
+        dataInput,
+        option
+      );
+    }
+    dataPopupOutput = await firstValueFrom(popupAddTask.closed);
     let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
     return taskOutput;
   }
+
+  // async openPopupTask(action,taskType,instanceStep,dataTask,groupTaskID = null
+  // ) {
+  //   let dataInput = {
+  //     action,
+  //     taskType: taskType,
+  //     step: instanceStep,
+  //     listGroup: instanceStep?.taskGroups,
+  //     dataTask: dataTask || {},
+  //     listTask: instanceStep?.tasks,
+  //     isEditTimeDefault: instanceStep?.leadtimeControl,
+  //     groupTaskID, // trường hợp chọn thêm từ nhóm
+  //   };
+  //   let frmModel: FormModel = {
+  //     entityName: 'DP_Instances_Steps_Tasks',
+  //     formName: 'DPInstancesStepsTasks',
+  //     gridViewName: 'grvDPInstancesStepsTasks',
+  //   };
+
+  //   let opt = new DialogModel();
+  //   opt.FormModel = frmModel;
+  //   let popupTask = this.callfc.openForm(
+  //     CodxAddTaskComponent,
+  //     '',
+  //     600,
+  //     800,
+  //     '',
+  //     dataInput,
+  //     '',
+  //     opt
+  //   );
+  //   let dataPopupOutput = await firstValueFrom(popupTask.closed);
+  //   let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
+  //   return taskOutput;
+  // }
 
   async addBookingCar(isOpenSide = false) {
     let addCarTitle = await firstValueFrom(this.cache.functionList('EPT21'));
@@ -427,7 +474,7 @@ export class StepService {
         let option = new SidebarModel();
         option.FormModel = carFM;
         option.Width = '800px';
-        popupBookingCar = this.callfc.openSide(
+        popupBookingCar = this.callFunc.openSide(
           CodxAddBookingCarComponent,
           [carFG?.value, 'SYS01', title, null, null, false],
           option
@@ -435,7 +482,7 @@ export class StepService {
       } else {
         let opt = new DialogModel();
         opt.FormModel = carFM;
-        popupBookingCar = this.callfc.openForm(
+        popupBookingCar = this.callFunc.openForm(
           CodxAddBookingCarComponent,
           '',
           800,
@@ -503,7 +550,7 @@ export class StepService {
     let option = new DialogModel();
     option.IsFull = true;
     option.FormModel = formModel;
-    let dialog = this.callfc.openForm(
+    let dialog = this.callFunc.openForm(
       PopupAddQuotationsComponent,
       '',
       null,
@@ -533,7 +580,7 @@ export class StepService {
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = formModel;
-    let popupContract = this.callfc.openForm(
+    let popupContract = this.callFunc.openForm(
       AddContractsComponent,
       '',
       null,
@@ -606,7 +653,7 @@ export class StepService {
                         listPermissions: listPermissions,
                         isOtherModule: true,
                       };
-                      let dialog = this.callfc.openSide(
+                      let dialog = this.callFunc.openSide(
                         PopupAddMeetingComponent,
                         obj,
                         option

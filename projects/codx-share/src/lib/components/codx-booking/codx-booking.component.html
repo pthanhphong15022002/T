@@ -99,7 +99,7 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID"
+  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [crrEntityName]="crrEntityName"
     [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
     (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (reloadData)="reloadData($event)"
     (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)" (setAllocateStatus)="setAllocateStatus($event)"

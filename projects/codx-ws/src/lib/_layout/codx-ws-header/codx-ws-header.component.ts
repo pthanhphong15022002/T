@@ -58,13 +58,13 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     {
       fucList.subscribe((item : any)=>{
         if(item) {
-          this.funcList = item.filter(x=>!x.parentID && x.functionType == "T");
+          this.funcList = item.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
           this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
         }
       })
     }
     else {
-      this.funcList = fucList.filter(x=>!x.parentID && x.functionType == "T");
+      this.funcList = fucList.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
       this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
     }
   }
@@ -72,6 +72,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedChange(i:any , item:any)
   {
     this.selectedIndex = i;
-    this.codxService.navigate("","/"+item.url)
+    if(item.functionType == "D" || item.functionType == "R") return;
+    this.codxService.navigate("","/"+item.url);
   }
 }

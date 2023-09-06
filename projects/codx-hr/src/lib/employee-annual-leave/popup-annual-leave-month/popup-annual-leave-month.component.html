@@ -97,7 +97,7 @@
                     <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALPreYear'"
                         [formModel]="dialogRef.formModel" default="Còn năm trước: "></codx-label>
                     <ng-container *ngIf="data.realALPreYear; else noRealALPreYear">
-                        <span class="data-text-color fw-bold">{{ data.realALPreYear }}</span>
+                        <span class="data-text-color">{{ data.realALPreYear }}</span>
                     </ng-container>
                     <ng-template #noRealALPreYear>
                         <span class="place-holder">{{grvSetup['RealALPreYear'].headerText}}</span>
@@ -106,7 +106,7 @@
                 <ng-template #realALPreYearToolTip>
                     <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALPreYear'"
                         [formModel]="dialogRef.formModel" default="Còn năm trước: "></codx-label>
-                    <span class="data-text-color fw-bold">{{ data.realALPreYear }}</span>
+                    <span class="data-text-color">{{ data.realALPreYear }}</span>
                 </ng-template>
             </div>
             <div class="align-items-center mb-1">
@@ -115,7 +115,7 @@
                     <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALThisYear'"
                         [formModel]="dialogRef.formModel" default="Còn năm nay: "></codx-label>
                     <ng-container *ngIf="data.realALThisYear; else noRealALThisYear">
-                        <span class="data-text-color fw-bold">{{data?.realALThisYear}}</span>
+                        <span class="data-text-color">{{data?.realALThisYear}}</span>
                     </ng-container>
                     <ng-template #noRealALThisYear>
                         <span class="place-holder">{{grvSetup['RealAlThisYear']?.headerText}}</span>
@@ -124,7 +124,7 @@
                 <ng-template #realALThisYearToolTip>
                     <codx-label class="label-colon label-text-color" [setRequire]="false" [fiedName]="'RealALThisYear'"
                         [formModel]="dialogRef.formModel" default="Còn năm nay: "></codx-label>
-                    <span class="data-text-color fw-bold">{{data?.realALThisYear}}</span>
+                    <span class="data-text-color">{{data?.realALThisYear}}</span>
                 </ng-template>
             </div>
         </div>
