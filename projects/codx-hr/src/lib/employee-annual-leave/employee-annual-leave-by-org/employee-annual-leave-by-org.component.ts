@@ -18,7 +18,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @Input() formModel: any;
   @Input() rowHeight: number;
   @Input() view: any;
-  @Input()   monthHeaderText: string = '';
+  @Input() monthHeaderText: string = '';
 
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -32,7 +32,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @ViewChild('colALYearHRTAL01') colALYearHRTAL01: TemplateRef<any>;
   @ViewChild('colALStandardHRTAL01') colALStandardHRTAL01: TemplateRef<any>;
   @ViewChild('colALRemainHRTAL01') colALRemainHRTAL01: TemplateRef<any>;
-  @ViewChild('colUsedHRTAL01') colUsedHRTAL01 :TemplateRef<any>;
+  @ViewChild('colUsedHRTAL01') colUsedHRTAL01: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_EAnnualLeave';
@@ -51,6 +51,8 @@ export class EmployeeAnnualLeaveByOrgComponent {
   columnsGrid: any;
 
   popupLoading: boolean = false;
+
+  inputTimes = 0;
 
   constructor(
     private cache: CacheService,
@@ -73,6 +75,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.inputTimes < 2) this, this.inputTimes++;
     this.orgUnitID = changes.orgUnitID.currentValue;
     let ins = setInterval(() => {
       if (this.grid) {
@@ -100,7 +103,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
       {
         headerTemplate: this.colALStandardHeaderHRTAL01,
         template: this.colALStandardHRTAL01,
-        width: '150',
+        width: '200',
       },
       {
         headerTemplate: this.colALRemainHeaderHRTAL01,
