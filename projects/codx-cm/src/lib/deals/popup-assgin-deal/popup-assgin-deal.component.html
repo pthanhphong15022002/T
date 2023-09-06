@@ -100,11 +100,10 @@
                       field="buid"
                       [formModel]="formModel"
                       [crrValue]="buid"
-                      [disabled]="true"
                       (valueChange)="changeOwner($event,viewBUID)"
                     >
                     </codx-input>
-                    <div
+                    <!-- <div
                       class="d-flex justify-content-between align-items-center w-100 pt-5" *ngFor="let item of listUser"
                     >
                       <div class="d-flex flex-row w-75" >
@@ -128,7 +127,7 @@
                       >
                         <i class="icon-close"></i>
                       </button>
-                    </div>
+                    </div> -->
 
                   </div>
                 </div>
@@ -144,7 +143,7 @@
                     class="fw-bold"
                     default="Nhóm người dùng dữ liệu"
                     [formModel]="formModel"
-                    name="lblInformation"
+                    name="lblGroupUser"
                   ></codx-label>
                 </span>
               </div>
@@ -155,10 +154,8 @@
                 <div class="mt-5 w-100 d-flex justify-content-center">
                   <div class="w-75">
                     <codx-input
-                      field="buid"
-                      [disabled]="true"
+                      field="groupUserID"
                       [formModel]="formModel"
-                      [crrValue]="buid"
                       (valueChange)="changeOwner($event,viewGroupUser)"
                     >
                     </codx-input>
