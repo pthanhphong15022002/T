@@ -21,6 +21,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedIndex = 0;
   funcID:any;
   userInfo:any;
+  listDashboard:any;
+  listReport:any;
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -78,19 +80,37 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     if(isObservable(module))
     {
       module.subscribe((item:any)=>{
-        debugger
-        if(item) var listModule = item.map(function(x){return x.module;});
+        if(item) {
+          var listModule = item.join(";");
+          this.getDashboardOrReport("D",listModule);
+          this.getDashboardOrReport("R",listModule);
+        }
       })
     }
     else
     {
-      debugger
-      var listModule = module.map(function(x){return x.module;});
+      var listModule = module.join(";");
+      this.getDashboardOrReport("D",listModule);
+      this.getDashboardOrReport("R",listModule);
     }
   }
-  getDashboardOrReport()
+  getDashboardOrReport(type:any,listModule:any)
   {
-
+    var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
+    if(isObservable(result))
+    {
+      result.subscribe((item:any)=>{
+        if(item) 
+        {
+          if(type == "D") this.listDashboard = item;
+          else this.listReport = item;
+        }
+      })
+    }
+    else  {
+      if(type == "D") this.listDashboard = result;
+      else this.listReport = result;
+    }
   }
 
   selectedChange(i:any , item:any)
