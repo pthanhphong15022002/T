@@ -96,7 +96,7 @@
   <ng-template #footerTmp let-data> </ng-template>
 
   <ng-template #panelRightRef>
-    <codx-booking-view-detail #viewdetail [viewMode]="'2'" [itemDetail]="itemDetail" [funcID]="funcID"
+    <codx-booking-view-detail #viewdetail [viewMode]="'2'" [itemDetail]="itemDetail" [funcID]="funcID" [crrEntityName]="crrEntityName"
       [resourceType]="resourceType" [formModel]="formModel" (reject)="reject($event)" (approve)="approve($event)" 
       (cardTrans)="cardTrans($event)" (assignDriver)="assignDriver($event)"  (setPopupTitleOption)="setPopupTitleOption($event)"
       (undo)="undo($event)"></codx-booking-view-detail>

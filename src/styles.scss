@@ -1054,9 +1054,9 @@ codx-header
 //   color: var(--white);
 // }
 
-.codx-theme .e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text {
-  color: var(--white) !important;
-}
+// .codx-theme .e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text {
+//   color: var(--white) !important;
+// }
 
 .e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
   color: var(--primary-inverse) !important;
@@ -3462,11 +3462,14 @@ lib-layoutonlyheader{
   border-color: var(--gray-150);
 }
 /* bỏ css trong core */
+// ::-webkit-scrollbar-thumb {
+//   background-color: #e7e8ec !important;
+// }
 ::-webkit-scrollbar-thumb {
-  background-color: #e7e8ec !important;
+  background-color: #cfd0d6 !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #cdcdd3 !important;
+  background-color: #bebed3 !important;
 }
 
 

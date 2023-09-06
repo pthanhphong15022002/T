@@ -21,6 +21,9 @@ import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.
 import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ReportComponent } from './report/report.component';
 
 
 const routes: Routes = [
@@ -66,6 +69,14 @@ const routes: Routes = [
         component: IncommingComponent,
       },
       {
+        path: 'dashboard/:funcID',
+        component: DashboardComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: ReportComponent,
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
@@ -91,13 +102,16 @@ const routes: Routes = [
     MenuListComponent,
     MasterDetailComponent,
     ApprovalsComponent,
-    MenuListApprovalComponent
+    MenuListApprovalComponent,
+    DashboardComponent,
+    ReportComponent
   ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
     CodxShareModule,
-    AccordionModule
+    AccordionModule,
+    NgbDropdownModule
   ],
   exports: [RouterModule],
 })
