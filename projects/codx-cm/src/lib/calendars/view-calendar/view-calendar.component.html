@@ -191,7 +191,7 @@
       <ejs-combobox
         [dataSource]="typeCMs"
         [fields]="fieldsGroup"
-        (change)="filterText($event, 'type')"
+        (change)="valueChangeCombobox($event, 'type')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -210,7 +210,7 @@
       <ejs-combobox
         [dataSource]="listCustomer"
         [fields]="fieldsCustomer"
-        (change)="filterText($event,'CM_Customers')"
+        (change)="valueChangeCombobox($event,'CM_Customers')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -230,7 +230,7 @@
       <ejs-combobox
         [dataSource]="listLead"
         [fields]="fieldsLead"
-        (change)="filterText($event, 'CM_Leads')"
+        (change)="valueChangeCombobox($event, 'CM_Leads')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -250,7 +250,7 @@
       <ejs-combobox
         [dataSource]="listDeal"
         [fields]="fieldsDeal"
-        (change)="filterText($event, 'CM_Deals')"
+        (change)="valueChangeCombobox($event, 'CM_Deals')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -270,7 +270,7 @@
       <ejs-combobox
         [dataSource]="listContract"
         [fields]="fieldsContract"
-        (change)="filterText($event,'CM_Contracts')"
+        (change)="valueChangeCombobox($event,'CM_Contracts')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -290,7 +290,7 @@
       <ejs-combobox
         [dataSource]="listCase"
         [fields]="fieldsCase"
-        (change)="filterText($event,'CM_Cases')"
+        (change)="valueChangeCombobox($event,'CM_Cases')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -310,7 +310,7 @@
       <ejs-combobox
         [dataSource]="listStep"
         [fields]="fieldsStep"
-        (change)="filterText($event, 'step')"
+        (change)="valueChangeCombobox($event, 'step')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>

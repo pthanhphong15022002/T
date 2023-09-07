@@ -353,7 +353,7 @@ export class ViewCalendarComponent
     this.disableButton = true;
   }
 
-  filterText(event, type) {
+  valueChangeCombobox(event, type) {
     switch (type) {
       case 'type':
         this.fieldTypeCm = event?.value;
