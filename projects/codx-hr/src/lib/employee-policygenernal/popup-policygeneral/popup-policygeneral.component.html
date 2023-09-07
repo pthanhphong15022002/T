@@ -30,6 +30,7 @@
         ></codx-label>
         <codx-input
             field="policyID"
+            [disabled]="autoNumField == 'PolicyID'"
             [formModel]="formModel"
             [Group]="formGroup"
         ></codx-input>
@@ -227,9 +228,9 @@
                 | formatvalue : benefitFormModel : 'benefitID'
                 | async"
             ></span>
-            <!-- <button (click)="deleteApplyExcludeObj(trainField, 'lstSelectedConstraintTrainField')" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <button type="button" class="btn btn-sm btn-icon btn-light-danger">
                 <span class="icon-close icon-16"></span>
-            </button> -->
+            </button>
         </div>
     </div>
 </div>

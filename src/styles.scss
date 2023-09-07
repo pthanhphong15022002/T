@@ -3789,3 +3789,7 @@ lib-employee-policybenefits ejs-listview .e-content{
 .news-group codx-listview .card-body{
   height: auto!important;
 }
+
+.page-profile .user-right .pw-content{
+  max-height: calc(100vh - 125px)!important;
+}

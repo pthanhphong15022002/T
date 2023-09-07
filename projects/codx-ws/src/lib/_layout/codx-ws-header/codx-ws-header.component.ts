@@ -10,9 +10,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
-  override onAfterViewInit(): void {
-  }
-
   title$:any;
   asideTheme:any;
   logo$:any;
@@ -20,6 +17,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedIndex = 0;
   funcID:any;
   userInfo:any;
+  listBreadCumb:any;
 
   constructor(
     inject: Injector,
@@ -36,18 +34,25 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   }
 
   override onInit(): void {
+    this.logo$ = this.layout.logo.asObservable();
     this.title$ = this.pageTitle.title.asObservable();
     this.asideTheme = this.layout.getProp('aside.theme') as string;
-    this.logo$ = this.layout.logo.asObservable();
-
+    this.listBreadCumb = this.codxWsService.listBreadCumb;
     this.getFuncChange();
     //this.getModuleByUserID();
+  }
+  
+  override onAfterViewInit(): void {
   }
   
   getFuncChange()
   {
     this.codxWsService.funcChange.subscribe(item=>{
-      if(item) this.getFuncList(item);
+      if(item) 
+      {
+        this.funcID = item;
+        this.getFuncList(item);
+      }
     })
   }
 
@@ -61,12 +66,14 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
         if(item) {
           this.funcList = item.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
           this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
+          this.SetBreadCumb();
         }
       })
     }
     else {
       this.funcList = fucList.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
       this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
+      this.SetBreadCumb();
     }
   }
 
@@ -74,5 +81,20 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   {
     this.selectedIndex = i;
     this.codxService.navigate("","/"+item.url);
+    this.SetBreadCumb();
+  }
+
+  SetBreadCumb()
+  {
+    this.codxWsService.listBreadCumb.length = 0;
+    this.codxWsService.listBreadCumb.push(this.funcList[this.selectedIndex]);
+  }
+
+  selectedBCChange(item:any)
+  {
+    debugger
+    if(item.functionID == this.codxWsService.functionID) return;
+    this.codxService.navigate("","/"+item.url);
+    this.SetBreadCumb();
   }
 }
