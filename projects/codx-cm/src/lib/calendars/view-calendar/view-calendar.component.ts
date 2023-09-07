@@ -353,11 +353,13 @@ export class ViewCalendarComponent
     this.disableButton = true;
   }
 
-  filterText(event, type) {
+  valueChangeCombobox(event, type) {
     switch (type) {
       case 'type':
         this.fieldTypeCm = event?.value;
         this.disableButton = true;
+        this.insStep = null;
+        this.listStep = [];
         let typeCM = this.typeCMs?.find(
           (type) => type.entityName == this.fieldTypeCm
         );
@@ -385,21 +387,66 @@ export class ViewCalendarComponent
         break;
       case 'step':
         this.insStep = event?.itemData;
+        this.disableButton = this.insStep ? false : true;
         break;
     }
   }
 
   checkLeads(lead) {
-    console.log(lead);
-    
+    if(!lead?.applyProcess){
+      this.objectID = lead?.recID;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+      this.disableButton = false;
+    }else{
+      this.disableButton = true;
+      var data = [lead?.refID, lead?.processID, lead?.status, '5'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
   }
   
   checkContracts(contract) {
-    console.log(contract);
+    if(!contract?.applyProcess){
+      this.objectID = contract?.recID;
+      this.disableButton = false;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+    }else{
+      this.disableButton = true;
+      var data = [contract?.refID, contract?.processID, contract?.status, '4'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
   }
 
   checkCases(cases) {
-    console.log(cases);
+    if(!cases?.applyProcess){
+      this.objectID = cases?.recID;
+      this.disableButton = false;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+    }else{
+      this.disableButton = true;
+      var data = [cases?.refID, cases?.processID, cases?.status,  cases.caseType == "1" ? '2':'3'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
   }
 
   checkDeal(dealID) {

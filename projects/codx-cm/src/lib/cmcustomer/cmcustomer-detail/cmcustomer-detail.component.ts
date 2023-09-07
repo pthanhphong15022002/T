@@ -27,6 +27,8 @@ import { CM_Contacts } from '../../models/cm_model';
 import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
 import * as XLSX from 'xlsx';
 import { firstValueFrom } from 'rxjs';
+import { CodxListContactsComponent } from './codx-list-contacts/codx-list-contacts.component';
+import { CodxAddressCmComponent } from './codx-address-cm/codx-address-cm.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -35,6 +37,9 @@ import { firstValueFrom } from 'rxjs';
 })
 export class CmCustomerDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
+  @ViewChild('codxListContact') codxListContact: CodxListContactsComponent;
+  @ViewChild('codxAddress') codxAddress: CodxAddressCmComponent;
+
   @Input() recID: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -240,20 +245,44 @@ export class CmCustomerDetailComponent implements OnInit {
         this.cmSv.getContactDeal($event?.data?.recID).subscribe((res) => {
           if (res && res.length > 0) {
             let lstContact = res;
-            let lstInsID = [];
-            lstInsID = lstContact.map(x => x.objectID);
-            var json = JSON.stringify(lstContact);
-            this.cmSv
-              .updateFieldContacts(
-                lstInsID,
-                $event?.action == 'edit' ? json : '',
-                $event?.action == 'delete' ? json : ''
-              )
-              .subscribe((res) => {});
+            let lstDealIDs = [];
+            lstDealIDs = lstContact.map((x) => x.objectID);
+            if (lstDealIDs != null && lstDealIDs.length > 0) {
+              this.api
+                .execSv<any>(
+                  'CM',
+                  'ERM.Business.CM',
+                  'DealsBusiness',
+                  'GetListIDInstancesByListDealIDAsync',
+                  [lstDealIDs]
+                )
+                .subscribe((ele) => {
+                  var lstInsID = ele ?? [];
+                  var json = JSON.stringify(lstContact);
+                  this.cmSv
+                    .updateFieldContacts(
+                      lstInsID,
+                      $event?.action == 'edit' ? json : '',
+                      $event?.action == 'delete' ? json : ''
+                    )
+                    .subscribe((res) => {});
+                });
+            }
+
           }
         });
       }
     }
+  }
+
+  onChangeContact(lstContact){
+    this.codxListContact.loadListContact(lstContact);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  onChangeAddress(lstAddress){
+    this.codxAddress.loadListAdress(lstAddress);
+    this.changeDetectorRef.detectChanges();
   }
 
   listTab(funcID) {

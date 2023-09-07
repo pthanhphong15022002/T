@@ -17,13 +17,15 @@ import { CodxFdService } from '../../../codx-fd.service';
 export class DetailPolicyComponent extends UIComponent implements OnInit {
   @Input() setting;
   @Input() settingValue;
-  @Input() policyRecID: string;
   @Input() formModel: FormModel;
+  @Input() lstPolicyLines = [];
+
   getFrom: string = '';
   value;
   id;
   lstLines = [];
-
+  policy;
+  mode = 'add' || 'edit';
   constructor(
     private modalService: NgbModal,
     private tenantStore: TenantStore,
@@ -36,13 +38,25 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    console.log('lstPolicyLines ', this.lstPolicyLines);
+
     if (this.setting) {
+      this.policy = this.setting.policy;
+      // console.log('policyRecID ', this.policyRecID);
+      console.log('policy ', this.setting.policy);
       switch (this.setting.referedType) {
         case '2': {
           this.getFrom = this.setting.referdValue;
           this.cache.valueList(this.getFrom).subscribe((data) => {
             data?.datas?.forEach((e) => {
-              this.lstLines.push({ field: e.value, text: e.text });
+              let pl = this.lstPolicyLines.find(
+                (pl) => pl.itemSelect == e.value
+              );
+              this.lstLines.push({
+                field: e.value,
+                text: e.text,
+                value: pl?.value,
+              });
             });
             console.log('vll', this.lstLines);
             this;
@@ -75,9 +89,13 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
                   .subscribe((cbbData) => {
                     let map = JSON.parse(cbbData[0]);
                     map?.forEach((e) => {
+                      let pl = this.lstPolicyLines.find(
+                        (pl) => pl.itemSelect == e.CompetenceID
+                      );
                       this.lstLines.push({
                         field: e.CompetenceID,
                         text: e.CompetenceName,
+                        value: pl?.value,
                       });
                     });
                   });
@@ -86,9 +104,31 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
             }
             case 'Positions': {
               this.getFrom = 'Positions';
-              this.lstLines.push({
-                field: null,
-                text: 'Tất cả',
+              let nullPL = this.lstPolicyLines?.find(
+                (pl) => pl.itemSelect == null
+              );
+              if (nullPL == null) {
+                this.lstLines.push({
+                  field: null,
+                  text: 'Tất cả',
+                  value: null,
+                });
+              } else {
+                this.lstLines.push({
+                  field: nullPL.itemSelect,
+                  text: '',
+                  value: nullPL.value,
+                });
+              }
+
+              this.lstPolicyLines?.forEach((pl) => {
+                if (pl.itemSelect && pl.transID == this.policy.recID) {
+                  this.lstLines.push({
+                    field: pl.itemSelect,
+                    text: '',
+                    value: pl.value,
+                  });
+                }
               });
               console.log('sett', this.setting);
               break;
@@ -98,15 +138,22 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
         }
       }
     }
-    console.log('policyRecID', this.policyRecID);
+    // console.log('policyRecID', this.policyRecID);
   }
 
   valueChange(e, ele) {
     this.value = e.data;
   }
 
-  open(content, id, value) {
+  changePosition(evt) {
+    this.id = evt?.data;
+    console.log('change position', evt);
+  }
+
+  open(content, id, value, mode = 'edit') {
+    this.mode = mode;
     this.id = id;
+    this.value = value;
     this.detectorRef.detectChanges();
 
     console.log('click open ', id);
@@ -119,27 +166,39 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
   }
 
   save(modal) {
-    console.log('save');
+    console.log('save', this.id, modal);
 
-    // this.api
-    //   .call('ERM.Business.FD', 'PoliciesLinesBusiness', 'SaveAsync', [
-    //     this.id,
-    //     this.value,
-    //     this.policy.itemType,
-    //     this.policy.recID,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res && res.msgBodyData[0]) {
-    //       var data = res.msgBodyData[0];
-    //       for (let i = 0; i < this.lstPolicyLine.length; i++) {
-    //         if (this.lstPolicyLine[i].id == data.itemSelect)
-    //           this.lstPolicyLine[i].value = data.value;
-    //       }
-    //       this.changedr.detectChanges();
-    //       modal.dismiss('Cross click');
-    //       this.notification.notifyCode('SYS007');
-    //     } else this.notification.notifyCode('SYS021');
-    //   });
+    this.api
+      .call('ERM.Business.FD', 'PoliciesLinesBusiness', 'SaveAsync', [
+        this.id,
+        this.value,
+        this.policy.itemType,
+        this.policy.recID,
+      ])
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          let data = res.msgBodyData[0];
+          let isAdded = false;
+          for (let i = 0; i < this.lstPolicyLines.length; i++) {
+            if (this.lstPolicyLines[i].id == data.itemSelect) {
+              isAdded = true;
+              this.lstPolicyLines[i].value = data.value;
+            }
+          }
+          if (!isAdded) {
+            this.lstPolicyLines.push(data);
+            this.lstLines.push({
+              field: data.itemSelect,
+              text: '',
+              value: data.value,
+            });
+          }
+          this.value = undefined;
+          this.detectorRef.detectChanges();
+          modal.dismiss('Cross click');
+          this.notification.notifyCode('SYS007');
+        } else this.notification.notifyCode('SYS021');
+      });
   }
 
   delete(recID, id) {
@@ -148,7 +207,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     // this.api
     //   .call('ERM.Business.FED', 'PoliciesLinesBusiness', 'DeleteAsync', [recID])
     //   .subscribe((res) => {
-    //     var t = this;
+    //     let t = this;
     //     if (res && res.msgBodyData[0]) {
     //       // _.filter(this.lstPolicyLine, function (o) {
     //       //   if (o.id == id) {
