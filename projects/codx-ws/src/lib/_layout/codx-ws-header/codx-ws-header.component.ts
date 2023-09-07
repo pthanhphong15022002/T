@@ -10,10 +10,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
-  override onAfterViewInit(): void {
-    
-  }
-
   title$:any;
   asideTheme:any;
   logo$:any;
@@ -21,8 +17,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedIndex = 0;
   funcID:any;
   userInfo:any;
-  listDashboard:any;
-  listReport:any;
+  listBreadCumb:any;
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -38,20 +34,25 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   }
 
   override onInit(): void {
+    this.logo$ = this.layout.logo.asObservable();
     this.title$ = this.pageTitle.title.asObservable();
     this.asideTheme = this.layout.getProp('aside.theme') as string;
-    this.logo$ = this.layout.logo.asObservable();
-
+    this.listBreadCumb = this.codxWsService.listBreadCumb;
     this.getFuncChange();
-    this.getModuleByUserID();
+    //this.getModuleByUserID();
   }
- 
   
+  override onAfterViewInit(): void {
+  }
   
   getFuncChange()
   {
     this.codxWsService.funcChange.subscribe(item=>{
-      if(item) this.getFuncList(item);
+      if(item) 
+      {
+        this.funcID = item;
+        this.getFuncList(item);
+      }
     })
   }
 
@@ -65,58 +66,35 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
         if(item) {
           this.funcList = item.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
           this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
+          this.SetBreadCumb();
         }
       })
     }
     else {
       this.funcList = fucList.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
       this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
-    }
-  }
-
-  getModuleByUserID()
-  {
-    var module = this.codxWsService.loadModuleByUserID(this.userInfo?.userID) as any;
-    if(isObservable(module))
-    {
-      module.subscribe((item:any)=>{
-        if(item) {
-          var listModule = item.join(";");
-          this.getDashboardOrReport("D",listModule);
-          this.getDashboardOrReport("R",listModule);
-        }
-      })
-    }
-    else
-    {
-      var listModule = module.join(";");
-      this.getDashboardOrReport("D",listModule);
-      this.getDashboardOrReport("R",listModule);
-    }
-  }
-  getDashboardOrReport(type:any,listModule:any)
-  {
-    var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
-    if(isObservable(result))
-    {
-      result.subscribe((item:any)=>{
-        if(item) 
-        {
-          if(type == "D") this.listDashboard = item;
-          else this.listReport = item;
-        }
-      })
-    }
-    else  {
-      if(type == "D") this.listDashboard = result;
-      else this.listReport = result;
+      this.SetBreadCumb();
     }
   }
 
   selectedChange(i:any , item:any)
   {
     this.selectedIndex = i;
-    if(item.functionType == "D" || item.functionType == "R") return;
     this.codxService.navigate("","/"+item.url);
+    this.SetBreadCumb();
+  }
+
+  SetBreadCumb()
+  {
+    this.codxWsService.listBreadCumb.length = 0;
+    this.codxWsService.listBreadCumb.push(this.funcList[this.selectedIndex]);
+  }
+
+  selectedBCChange(item:any)
+  {
+    debugger
+    if(item.functionID == this.codxWsService.functionID) return;
+    this.codxService.navigate("","/"+item.url);
+    this.SetBreadCumb();
   }
 }

@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable, Subject, finalize, map, share } from 'rxjs
   providedIn: 'root'
 })
 export class CodxWsService {
+  listBreadCumb = [];
+  functionID:any;
   SetLayout = new BehaviorSubject<any>(null);
   private caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
@@ -243,4 +245,44 @@ export class CodxWsService {
     return observable;
   }
 
+  loadListFucByListModule(moduleIDs:any)
+  {
+    let paras = [moduleIDs];
+    let keyRoot = "WSFCs" + moduleIDs;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'FunctionListBusiness',
+      'GetListFunctionListByModuleIDAsync',
+      paras
+    )
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
 }

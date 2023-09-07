@@ -40,6 +40,7 @@ export class SettingContentComponent extends UIComponent {
   @Input() groupSettings: Map<string, any[]>;
   @Input() setingValues: Map<string, Map<string, string>>;
   @Input() lstPolicies = [];
+  @Input() lstPolicyLines = [];
   @Input() curLineType;
   @Input() formName = 'FDParameters';
   @Input() formModel: FormModel;

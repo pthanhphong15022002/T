@@ -18,7 +18,8 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @Input() formModel: any;
   @Input() rowHeight: number;
   @Input() view: any;
-  @Input()   monthHeaderText: string = '';
+  @Input() monthHeaderText: string = '';
+  @Input() searchText: string = '';
 
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -32,7 +33,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @ViewChild('colALYearHRTAL01') colALYearHRTAL01: TemplateRef<any>;
   @ViewChild('colALStandardHRTAL01') colALStandardHRTAL01: TemplateRef<any>;
   @ViewChild('colALRemainHRTAL01') colALRemainHRTAL01: TemplateRef<any>;
-  @ViewChild('colUsedHRTAL01') colUsedHRTAL01 :TemplateRef<any>;
+  @ViewChild('colUsedHRTAL01') colUsedHRTAL01: TemplateRef<any>;
 
   service = 'HR';
   entityName = 'HR_EAnnualLeave';
@@ -40,7 +41,8 @@ export class EmployeeAnnualLeaveByOrgComponent {
   className = 'EAnnualLeavesBusiness';
   method = 'GetListEmployeeAnnualLeaveGrvV2Async';
   idField = 'recID';
-  predicates = '@0.Contains(EmployeeID)';
+  predicates = '@0.Contains(EmployeeID) && @1 == ALYear';
+  dataValues = '';
 
   pageIndex = 0;
   pageSize = 5;
@@ -51,6 +53,8 @@ export class EmployeeAnnualLeaveByOrgComponent {
   columnsGrid: any;
 
   popupLoading: boolean = false;
+
+  inputTimes = 0;
 
   constructor(
     private cache: CacheService,
@@ -73,17 +77,19 @@ export class EmployeeAnnualLeaveByOrgComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.orgUnitID = changes.orgUnitID.currentValue;
+    if(changes?.orgUnitID) this.orgUnitID = changes.orgUnitID.currentValue;
+    if(changes?.searchText != null) this.searchText = changes.searchText.currentValue;
+    this.dataValues = this.orgUnitID + ';' + this.searchText;
     let ins = setInterval(() => {
       if (this.grid) {
-        // this.grid.dataService.rowCount = 0;
-        // this.grid.dataService.data = [];
+        this.grid.dataService.rowCount = 0;
+        this.grid.dataService.data = [];
         clearInterval(ins);
         this.grid.refresh();
       }
-    }, 500);
-
+    }, 500);    
     this.detectorRef.detectChanges();
+    if (this.inputTimes < 2) this.inputTimes++;
   }
   initGridColumn() {
     this.columnsGrid = [
@@ -100,7 +106,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
       {
         headerTemplate: this.colALStandardHeaderHRTAL01,
         template: this.colALStandardHRTAL01,
-        width: '150',
+        width: '200',
       },
       {
         headerTemplate: this.colALRemainHeaderHRTAL01,

@@ -304,14 +304,14 @@ export class CustomerGroupsComponent extends UIComponent {
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
+      .delete([data], true, (opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {
         if (res) {
           this.view.dataService.onAction.next({
             type: 'delete',
-            data: data,
+            data: JSON.parse(JSON.stringify(data)),
           });
         }
       });

@@ -22,10 +22,9 @@
       <div class="col-6">
         <div class="d-flex">
           <codx-label
-            name="lblScheduleStart"
+            fiedName="ScheduleStart"
             [setRequire]="gridViewSetup?.ScheduleStart?.isRequire"
             [formModel]="form.formModel"
-            default="Ngày"
           >
           </codx-label>
           <span
@@ -35,41 +34,37 @@
           >
         </div>
         <codx-input
-          type="datetime"
+          [formModel]="form.formModel"
           class="test-datetime"
           [crrValue]="data?.scheduleStart"
           (valueChange)="valueDateChange($event)"
           field="scheduleStart"
-          format="d"
-          placeholder="datetime"
         >
         </codx-input>
       </div>
-      <div class="col-3">
+      <div class="col-6">
         <div class="d-flex">
           <codx-label
-            name="lblScheduleStartTime"
-            [setRequire]="gridViewSetup?.ScheduleStart?.isRequire"
+            fiedName="ScheduleTime"
+            [setRequire]="gridViewSetup?.ScheduleTime?.isRequire"
             [formModel]="form.formModel"
-            default="Từ giờ"
           >
           </codx-label>
           <span
-            *ngIf="gridViewSetup?.ScheduleStart?.isRequire"
+            *ngIf="gridViewSetup?.ScheduleTime?.isRequire"
             class="text-danger ms-1"
             >*</span
           >
         </div>
         <codx-input
-          type="datetime"
-          [crrValue]="startTime"
-          format="t"
-          placeholder="timefrom"
-          (valueChange)="valueStartTimeChange($event)"
+          [field]="'scheduleTime'"
+          [crrValue]="data.scheduleTime"
+          [formModel]="form.formModel"
+          (valueChange)="valueTimeChange($event)"
         >
         </codx-input>
       </div>
-      <div class="col-3">
+      <!-- <div class="col-3">
         <div class="d-flex">
           <codx-label
             name="lblScheduleEndTime"
@@ -92,7 +87,7 @@
           (valueChange)="valueEndTimeChange($event)"
         >
         </codx-input>
-      </div>
+      </div> -->
     </div>
     <div class="form-group" *ngIf="commentControl != '0'">
       <div class="d-flex">
@@ -102,9 +97,7 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <span
-          *ngIf="gridViewSetup?.Comment?.isRequire"
-          class="text-danger ms-1"
+        <span *ngIf="gridViewSetup?.Comment?.isRequire" class="text-danger ms-1"
           >*</span
         >
       </div>

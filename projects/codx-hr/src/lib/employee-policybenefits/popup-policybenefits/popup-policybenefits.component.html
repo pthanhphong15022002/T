@@ -846,20 +846,20 @@
             </div>
           </div> -->
           <div class="mb-3" *ngIf="constraint == '4' && benefitPolicyObj.isConstraintOther">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
               <div class="me-2">
                   <codx-label
                       fiedName="TrainLevel"
                       [formModel]="fmPolicyConstraints"
                   ></codx-label>
               </div>
-              <span
-                  class="text-dark"
+              <button type="button"
+                  class="btn btn-icon btn-sm"
                     (click)="onClickOpenComboboxConstraint('trainLevel')"
-                    [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-400'"
+                    [ngClass]="benefitPolicyObj.isConstraintKow? 'btn-light-primary':'btn-disabled'"
                     >
                     <span class="icon-edit-one icon-16"></span>
-              </span>
+              </button>
             </div>
             <div class="d-flex flex-wrap align-items-center ps-5 mt-2">
               <div *ngFor="let trainlevel of lstSelectedConstraintTrainLevel">
@@ -879,20 +879,20 @@
             </div>
           </div>
           <div class="mb-3" *ngIf="constraint == '5' && benefitPolicyObj.isConstraintOther">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
               <div class="me-2">
                   <codx-label
                       fiedName="TrainField"
                       [formModel]="fmPolicyConstraints"
                   ></codx-label>
               </div>
-              <span
-                  class="text-dark"
+              <button type="button"
+                  class="btn btn-icon btn-sm"
                   (click)="onClickOpenComboboxConstraint('trainField')"
-                  [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-400'"
+                  [ngClass]="benefitPolicyObj.isConstraintKow? 'btn-light-primary':'btn-disabled'"
                 >
                   <span class="icon-edit-one icon-16"></span>
-                </span>
+                </button>
             </div>
             <div class="d-flex flex-wrap align-items-center ps-5 mt-2">
               <div *ngFor="let trainField of lstSelectedConstraintTrainField">
@@ -912,20 +912,20 @@
             </div>
           </div>
           <div class="mb-3" *ngIf="constraint == '6' && benefitPolicyObj.isConstraintOther">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-between">
               <div class="me-2">
                   <codx-label
                       fiedName="Certificate"
                       [formModel]="fmPolicyConstraints"
                   ></codx-label>
               </div>
-              <span
-                  class="text-dark"
+              <button type="button"
+                  class="btn btn-icon btn-sm"
                   (click)="onClickOpenComboboxConstraint('certificate')"
-                  [ngClass]="benefitPolicyObj.isConstraintKow? 'text-hover-primary':'text-gray-400'"
+                  [ngClass]="benefitPolicyObj.isConstraintKow? 'btn-light-primary':'btn-disabled'"
                   >
                   <span class="icon-edit-one icon-16"></span>
-                </span>
+                </button>
             </div>
             <div class="d-flex flex-wrap align-items-center ps-5 mt-2">
               <div *ngFor="let cert of lstSelectedConstraintCertificate">

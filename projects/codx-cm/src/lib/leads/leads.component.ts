@@ -477,7 +477,7 @@ export class LeadsComponent
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
         ? (!['3', '5'].includes(data.status) && data.applyProcess) ||
-           (!data.applyProcess && data.status != '5' )
+          (!data.applyProcess && data.status != '5')
         : true;
     };
     let isChangeStatus = (eventItem, data) => {
@@ -711,32 +711,32 @@ export class LeadsComponent
       CM0205_14: () => this.updateProcess(data, true),
       CM0205_15: () => this.updateProcess(data, false),
       CM0205_16: () => this.popupPermissions(data),
-      SYS002: () => this.exportFiles(e, data),
+      //SYS002: () => this.exportFiles(e, data),
       CM0205_17: () => this.cancelApprover(data),
     };
     const executeFunction = functionMappings[e.functionID];
     if (executeFunction) {
       executeFunction();
     } else {
-      // var customData: any = null;
-      // // var customData = {
-      // //   refID: data.processID,
-      // //   refType: 'DP_Processes',
-      // //   dataSource: '', // truyen sau
-      // // };
-      // this.customData = {
-      //   refID: data.recID,
-      //   refType: 'CM_Deals',
-      //   dataSource: '', // truyen sau
-      // };
+      let customData = {
+        refID: data.recID,
+        refType: 'CM_Leads',
+      };
+
+      if (data?.refID && data.applyProcess) {
+        customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+        };
+      }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this
-        // customData
+        this,
+        customData
       );
     }
   }
@@ -1138,49 +1138,40 @@ export class LeadsComponent
         }
       });
   }
-  executeStartLead(data:any) {
-    if(data.applyProcess) {
+  executeStartLead(data: any) {
+    if (data.applyProcess) {
       this.codxCmService
-      .moveBackStartInstance([
-        data.refID,
-        data.status,
-        data.processID,
-        this.applyForLead,
-      ])
-      .subscribe((resDP) => {
-        if (resDP) {
-          let datas = [data.recID, resDP[0]];
-          this.startFirstLead(datas,resDP[1]);
-        }
-      });
-    }
-    else {
+        .moveBackStartInstance([
+          data.refID,
+          data.status,
+          data.processID,
+          this.applyForLead,
+        ])
+        .subscribe((resDP) => {
+          if (resDP) {
+            let datas = [data.recID, resDP[0]];
+            this.startFirstLead(datas, resDP[1]);
+          }
+        });
+    } else {
       let datas = [data.recID, ''];
-      this.startFirstLead(datas,null);
+      this.startFirstLead(datas, null);
     }
-
   }
-  startFirstLead(datas:any, listStep:any) {
-    this.codxCmService
-    .moveStartFirstLead(datas)
-    .subscribe((res) => {
+  startFirstLead(datas: any, listStep: any) {
+    this.codxCmService.moveStartFirstLead(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res[0];
-        this.dataSelected = JSON.parse(
-          JSON.stringify(this.dataSelected)
-        );
-        this.view.dataService
-        .update(this.dataSelected)
-        .subscribe();
-        (listStep.length > 0 && listStep ) && this.detailViewLead.reloadListStep(listStep);
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        listStep.length > 0 &&
+          listStep &&
+          this.detailViewLead.reloadListStep(listStep);
         this.notificationsService.notifyCode('SYS007');
-
       }
       this.detectorRef.detectChanges();
     });
   }
-
-
 
   updateProcess(data, isCheck) {
     this.notificationsService
@@ -1547,8 +1538,7 @@ export class LeadsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    // let formatDatas = JSON.stringify(data);
-    //  let formatDatas = formatDatas.replace('\\', '');
+    //Tạo data cho Quang debug
     // let datas = [
     //   // {
     //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
@@ -1562,22 +1552,22 @@ export class LeadsComponent
     //   // so_luong: 1,
     //   // don_gia: 100000,
 
-    //   // datas: [
-    //   {
-    //     customerID: 'Sản phẩm quần què 1',
-    //     Industries: '0',
-    //     BusinessLineID: 3333333333,
-    //     don_gia: 100000,
-    //   },
-    //   {
-    //     customerID: ' nhu ga',
-    //     Industries: '0',
-    //     BusinessLineID: 99999999,
-    //     don_gia: 5000,
-    //   },
-    //   // ,
-    //   // ],
-    //   //  }
+    // datas: [
+    // {
+    //   customerID: 'Sản phẩm 1',
+    //   Industries: '0',
+    //   BusinessLineID: 3333333333,
+    //   don_gia: 100000,
+    // },
+    // {
+    //   customerID: 'Sản phẩm 2',
+    //   Industries: '0',
+    //   BusinessLineID: 99999999,
+    //   don_gia: 5000,
+    // },
+    // ,
+    // ],
+    //  }
     // ];
 
     // let formatDatas = JSON.stringify(datas);
@@ -1597,7 +1587,7 @@ export class LeadsComponent
               ...JSON.parse(dts),
             ]);
           } else formatDatas = dts;
-
+          debugger;
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',

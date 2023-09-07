@@ -12,9 +12,7 @@
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div>
-      <ng-container
-        [ngTemplateOutlet]="toggleStep"
-      ></ng-container>
+      <ng-container [ngTemplateOutlet]="toggleStep"></ng-container>
       <!-- <div class="ms-4">
         <codx-dropdown-select
           cssPopup="h-250px w-300px"
@@ -26,7 +24,7 @@
           (valueChange)="changeValueDropdownSelect($event)"
         ></codx-dropdown-select>
       </div> -->
-      
+
       <div
         class="ms-3 d-flex align-items-center"
         #popoverDetails="ngbPopover"
@@ -84,7 +82,13 @@
 </div>
 
 <div *ngIf="typeTask == 2">
-  <task [customerID]="customerID" [isPause]="isPause" [entityName]="entityName" [owner]="owner" (saveAssign)="handelSaveAssignTask($event)"></task>
+  <task
+    [customerID]="customerID"
+    [isPause]="isPause"
+    [entityName]="entityName"
+    [owner]="owner"
+    (saveAssign)="handelSaveAssignTask($event)"
+  ></task>
 </div>
 
 <ng-template #taskTem>
@@ -150,7 +154,7 @@
         (continueStep)="handelContinueStep($event, step)"
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
-        (isSuccessStep)="susscessStepEnd($event,step)"
+        (isSuccessStep)="susscessStepEnd($event, step)"
       ></codx-step-task>
       <div
         *ngIf="
@@ -161,6 +165,15 @@
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center text-primary">
+              <div (click)="toggleReason()" class="d-flex align-items-center show-step ms-2 me-3 ">
+                <i *ngIf="isShowElement"
+                  class="icon-20 icon-expand_less text-primary"
+                ></i>
+                <i
+                  *ngIf="!isShowElement"
+                  class="icon-20 icon-expand_more text-primary"
+                ></i>
+              </div>
               <span class="w-20px me-2">
                 <span
                   [class]="getReasonValue(step?.isSuccessStep)?.icon"
@@ -184,39 +197,52 @@
                     style="font-weight: 500"
                   ></span>
                 </button>
-                <button class="button-custom">
-                  <span
-                    class="icon-expand_less icon-20 text-primary-600 py-2"
-                    style="font-weight: 500"
-                  ></span>
-                </button>
               </div>
             </div>
           </div>
 
-          <div class="mt-3 ms-9" >
-            <div class="mb-3">
-              <codx-label
-                class="fs-6 fw-bold"
-                fiedName="titleReason"
-                [default]="getNameReason(step?.isSuccessStep)"
-              ></codx-label>
+          <div  [ngClass]="isShowElement ? 'd-block' : 'd-none'">
+            <div class="mt-3 ms-9" >
+              <div class="mb-3">
+                <codx-label
+                  class="fs-6 fw-bold"
+                  fiedName="titleReason"
+                  [default]="getNameReason(step?.isSuccessStep)"
+                ></codx-label>
+              </div>
+              <ng-container *ngFor="let item of listStepReasonValue" class="pb-2">
+                <ul class="text-left drap-drop mb-1 has-action-menu">
+                  <li>
+                    {{ item.reasonName }}
+                    <codx-mfunc
+                      [formModel]="formModel"
+                      [dataItem]="moreDefaut"
+                      (changeDataMF)="changeReasonMF($event)"
+                      (clickMF)="clickMFReason($event, item)"
+                      [type]="'hover'"
+                    >
+                    </codx-mfunc>
+                  </li>
+                </ul>
+              </ng-container>
             </div>
-            <ng-container *ngFor="let item of listStepReasonValue" class="pb-2">
-              <ul class="text-left drap-drop mb-1 has-action-menu">
-                <li>
-                  {{ item.reasonName }}
-                  <codx-mfunc
-                    [formModel]="formModel"
-                    [dataItem]="moreDefaut"
-                    (changeDataMF)="changeReasonMF($event)"
-                    (clickMF)="clickMFReason($event, item)"
-                    [type]="'hover'"
-                  >
-                  </codx-mfunc>
-                </li>
-              </ul>
-            </ng-container>
+            <div class="mt-3 ms-9">
+              <div class="mb-3">
+                <codx-label
+                  class="fs-6 fw-bold label-colon"
+                  fiedName="memo"
+                  [formModel]="formModel"
+                ></codx-label>
+                <span
+                  class="text-dark fw-bold codx-textcontent"
+                  [innerHTML]="
+                    step?.memo
+                      | formatvalue : formModel : 'Memo'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -300,7 +326,7 @@
     </span>
     <div>
       <button
-      *ngIf="isZoomOut"
+        *ngIf="isZoomOut"
         type="button"
         class="btn btn-icon background-gray"
         (click)="showGuide()"
@@ -309,7 +335,7 @@
       </button>
 
       <button
-      *ngIf="isZoomIn"
+        *ngIf="isZoomIn"
         type="button"
         class="btn btn-icon background-gray"
         (click)="zoomGuide()"
@@ -367,12 +393,11 @@
   </div>
 </ng-template>
 <ng-template #toggleStep>
-  <div class="ms-2" (click)="handelToggleStep()"  style="height: 28px;">
+  <div class="ms-2" (click)="handelToggleStep()" style="height: 28px">
     <div
       role="button"
       class="d-flex align-items-center border px-2 rounded-1 w-100px bg-gray-100 h-100"
       *ngIf="isShow == true"
-      
     >
       <i class="icon-i-arrows-collapse me-2"></i>
       <codx-label
