@@ -171,12 +171,20 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
 
   onInit(): void {
+    // if (this.trainCourseObj) {
+    //   this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+    //   this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    // } else {
+    //   this.fromDateFormat = this.getFormatDate(null);
+    //   this.toDateFormat = this.getFormatDate(null);
+    // }
+
     if (this.trainCourseObj) {
-      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+      this.fromDateFormat = this.handleControlType(this.trainCourseObj.trainFrom);
+      this.toDateFormat = this.handleControlType(this.trainCourseObj.trainTo);
     } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
+      this.fromDateFormat = 'd';
+      this.toDateFormat = 'd';
     }
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
@@ -321,42 +329,70 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   Date(date) {
     return new Date(date);
   }
-  changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getFullYear();
-    let monthFromDate = event.fromDate.getMonth() + 1;
-    let dayFromDate = event.fromDate.getDate();
-    var strYear = `${yearFromDate}`;
-    var strMonth = `${yearFromDate}/${monthFromDate}`;
-    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
 
+  changeCalendar(event, changeType: string) {
+    debugger
     if (changeType === 'FromDate') {
-      if (event.type === 'year') {
-        this.trainCourseObj.trainFrom = strYear;
-      } else if (event.type === 'month') {
-        this.trainCourseObj.trainFrom = strMonth;
-      } else {
-        this.trainCourseObj.trainFrom = strDay;
-      }
+      this.trainCourseObj.trainFrom = event.type;
       this.trainCourseObj.trainFromDate = event.fromDate;
+      this.fromDateFormat = this.handleControlType(event.type);
     } else if (changeType === 'ToDate') {
-      if (event.type === 'year') {
-        this.trainCourseObj.trainTo = strYear;
-      } else if (event.type === 'month') {
-        this.trainCourseObj.trainTo = strMonth;
-      } else {
-        this.trainCourseObj.trainTo = strDay;
-      }
+      this.trainCourseObj.trainTo = event.type;
       this.trainCourseObj.trainToDate = event.fromDate;
+      this.toDateFormat = this.handleControlType(event.type);
     }
     this.formGroup.patchValue(this.trainCourseObj);
-    if (this.trainCourseObj) {
-      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
-    } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
-    }
   }
+
+  handleControlType(evt){
+    if(evt == 'day'){
+      return 'd';
+    }
+    else if(evt == 'month'){
+      return 'm';
+    }
+    else if(evt == 'year'){
+      return 'y';
+    }
+    return 'd';
+  }
+
+  // changeCalendar(event, changeType: string) {
+  //   let yearFromDate = event.fromDate.getFullYear();
+  //   let monthFromDate = event.fromDate.getMonth() + 1;
+  //   let dayFromDate = event.fromDate.getDate();
+  //   var strYear = `${yearFromDate}`;
+  //   var strMonth = `${yearFromDate}/${monthFromDate}`;
+  //   var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+  //   if (changeType === 'FromDate') {
+  //     if (event.type === 'year') {
+  //       this.trainCourseObj.trainFrom = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.trainCourseObj.trainFrom = strMonth;
+  //     } else {
+  //       this.trainCourseObj.trainFrom = strDay;
+  //     }
+  //     this.trainCourseObj.trainFromDate = event.fromDate;
+  //   } else if (changeType === 'ToDate') {
+  //     if (event.type === 'year') {
+  //       this.trainCourseObj.trainTo = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.trainCourseObj.trainTo = strMonth;
+  //     } else {
+  //       this.trainCourseObj.trainTo = strDay;
+  //     }
+  //     this.trainCourseObj.trainToDate = event.fromDate;
+  //   }
+  //   this.formGroup.patchValue(this.trainCourseObj);
+  //   if (this.trainCourseObj) {
+  //     this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+  //     this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+  //   } else {
+  //     this.fromDateFormat = this.getFormatDate(null);
+  //     this.toDateFormat = this.getFormatDate(null);
+  //   }
+  // }
   getFormatDate(trainFrom: string) {
     let resultDate = '';
     if (trainFrom) {

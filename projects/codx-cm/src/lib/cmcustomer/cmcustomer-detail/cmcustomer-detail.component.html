@@ -499,6 +499,7 @@
                   <ng-template #content>
                     <div class="mt-5">
                       <codx-list-contacts
+                        #codxListContact
                         [selectAll]="false"
                         [funcID]="funcID"
                         [objectID]="dataSelected.recID"
@@ -517,6 +518,7 @@
                               : true
                             : true
                         "
+                        (contactEvent)="contactChange($event)"
                       ></codx-list-contacts>
                     </div>
                   </ng-template>
@@ -543,6 +545,7 @@
                   <ng-template #content>
                     <div class="mt-5">
                       <codx-address-cm
+                        #codxAddress
                         [type]="'formDetail'"
                         [funcID]="funcID"
                         [entityName]="entityName"

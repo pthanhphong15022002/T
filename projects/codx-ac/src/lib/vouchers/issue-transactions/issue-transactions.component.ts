@@ -492,7 +492,7 @@ export class IssueTransactionsComponent extends UIComponent {
 
   loadhideFields() {
     this.acService
-      .execApi('AC', 'CommonBusiness', 'GetDataDefaultVoucherAsync', [this.journalNo])
+      .execApi('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.journal = res.journal;

@@ -27,13 +27,13 @@ export class CodxAcService {
 
   getCache() {
     this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheAccountAsync', '')
+      .exec('AC', 'ACBusiness', 'GetCacheAccountAsync', '')
       .subscribe((res) => {
         if (res) this.stores.set('account', res);
       });
 
     this.api
-      .exec('AC', 'CommonBusiness', 'GetCacheSubObjectAsync', '')
+      .exec('AC', 'ACBusiness', 'GetCacheSubObjectAsync', '')
       .subscribe((res) => {
         if (res) this.stores.set('subobject', res);
       });
@@ -347,5 +347,18 @@ export class CodxAcService {
   setPopupSize(dialog: any, width: any, height: any) {
     dialog.dialog.properties.height = height;
     dialog.dialog.properties.width = width;
+  }
+
+  //Call bankhub
+  call_bank(methodName: string, data: any) {
+    let token = localStorage.getItem('bh_tk');
+    if (token) data.token = token;
+    return this.api.execSv(
+      'AC',
+      'Core',
+      'CMBusiness',
+      'SendRequestBankHubAsync',
+      [methodName, JSON.stringify(data), token]
+    );
   }
 }

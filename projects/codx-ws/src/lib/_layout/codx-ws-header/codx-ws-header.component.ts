@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
-import { CacheService, CodxService, LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
+import { AuthStore, CacheService, CodxService, LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
 import { CodxWsService } from '../../codx-ws.service';
 import { isObservable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
+  override onAfterViewInit(): void {
+  }
 
   title$:any;
   asideTheme:any;
@@ -17,17 +19,20 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   funcList:any;
   selectedIndex = 0;
   funcID:any;
-  
+  userInfo:any;
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
     override codxService: CodxService,
     private codxWsService: CodxWsService,
+    private authStore: AuthStore,
   ) {
     super(inject);
     this.module = 'WS';
     this.layoutModel.asideDisplay = false;
     this.layoutModel.toolbarFixed = false;
+    this.userInfo = this.authStore.get();
   }
 
   override onInit(): void {
@@ -36,10 +41,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     this.logo$ = this.layout.logo.asObservable();
 
     this.getFuncChange();
-  }
- 
-  override onAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    //this.getModuleByUserID();
   }
   
   getFuncChange()
@@ -57,13 +59,13 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     {
       fucList.subscribe((item : any)=>{
         if(item) {
-          this.funcList = item.filter(x=>!x.parentID && x.functionType == "T");
+          this.funcList = item.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
           this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
         }
       })
     }
     else {
-      this.funcList = fucList.filter(x=>!x.parentID && x.functionType == "T");
+      this.funcList = fucList.filter(x=>x.parentID == this.module && (x.functionType == "T" || x.functionType == "D" || x.functionType == "R" ));
       this.selectedIndex = this.funcList.findIndex(x=>x.functionID == funcID);
     }
   }
@@ -71,6 +73,6 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedChange(i:any , item:any)
   {
     this.selectedIndex = i;
-    this.codxService.navigate("","/"+item.url)
+    this.codxService.navigate("","/"+item.url);
   }
 }

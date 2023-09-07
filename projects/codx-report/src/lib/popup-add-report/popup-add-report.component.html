@@ -103,28 +103,25 @@
                   </p>
                 </div>
                 <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="removeReportFile()">
+                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="remove()">
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
-                  <!-- <div class="btn btn-sm btn-icon btn-white cursor-pointer">
-                    <i class="icon-preview text-success icon-16"></i>
-                  </div> -->
-                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="dowloadReportFile()">
+                  <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download()">
                     <i class="icon-cloud_download text-primary icon-16"></i>
                   </div>
                 </div>
               </ng-container>
               <ng-container *ngIf="data.templateID">
-                <codx-attachment #codxATM
-                  [objectId]="data.templateID" 
-                  [objectType]="data.displayMode == '3'? 'AD_ExcelTemplates' :'AD_WordTemplates'" 
-                  [hideUploadBtn]="'1'" 
-                  [hideBtnSave]="'1'"
-                  [hideFolder]="'1'"
-                  [hideImageUpload]="'1'"
-                  (fileDelete)="removeTemplate($event)">
-                </codx-attachment>
-                
+                <codx-thumbnail 
+                  #codxThumbnail
+                  [formModel]="dialog.formModel" 
+                  [files]="fileTemplate"
+                  hideHover="0"
+                  displayThumb="simple" 
+                  [isScroll]="'1'"
+                  [hideMoreF]="1" 
+                  [objectID]="data.templateID" [tmpRight]="tmpMoreFC">
+                </codx-thumbnail>
               </ng-container>
             </div>
           </div>
@@ -641,13 +638,13 @@
 </ng-template>
 <ng-template #tmpMoreFC >
   <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-    <div class="btn btn-sm btn-icon btn-white cursor-pointer">
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="remove()">
       <i class="icon-close text-danger icon-16"></i>
     </div>
-    <!-- <div class="btn btn-sm btn-icon btn-white cursor-pointer">
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="view()">
       <i class="icon-preview text-success icon-16"></i>
-    </div> -->
-    <div class="btn btn-sm btn-icon btn-white cursor-pointer">
+    </div>
+    <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download()">
       <i class="icon-cloud_download text-primary icon-16"></i>
     </div>
   </div>

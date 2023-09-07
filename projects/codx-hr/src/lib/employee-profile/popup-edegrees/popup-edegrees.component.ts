@@ -76,41 +76,69 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
 
-  changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getFullYear();
-    let monthFromDate = event.fromDate.getMonth() + 1;
-    let dayFromDate = event.fromDate.getDate();
-    var strYear = `${yearFromDate}`;
-    var strMonth = `${yearFromDate}/${monthFromDate}`;
-    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+  handleControlType(evt){
+    if(evt == 'day'){
+      return 'd';
+    }
+    else if(evt == 'month'){
+      return 'm';
+    }
+    else if(evt == 'year'){
+      return 'y';
+    }
+    return 'd';
+  }
 
+
+  // changeCalendar(event, changeType: string) {
+  //   let yearFromDate = event.fromDate.getFullYear();
+  //   let monthFromDate = event.fromDate.getMonth() + 1;
+  //   let dayFromDate = event.fromDate.getDate();
+  //   var strYear = `${yearFromDate}`;
+  //   var strMonth = `${yearFromDate}/${monthFromDate}`;
+  //   var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+  //   if (changeType === 'FromDate') {
+  //     if (event.type === 'year') {
+  //       this.degreeObj.trainFrom = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.degreeObj.trainFrom = strMonth;
+  //     } else {
+  //       this.degreeObj.trainFrom = strDay;
+  //     }
+  //     this.degreeObj.trainFromDate = event.fromDate;
+  //   } else if (changeType === 'ToDate') {
+  //     if (event.type === 'year') {
+  //       this.degreeObj.trainTo = strYear;
+  //     } else if (event.type === 'month') {
+  //       this.degreeObj.trainTo = strMonth;
+  //     } else {
+  //       this.degreeObj.trainTo = strDay;
+  //     }
+  //     this.degreeObj.trainToDate = event.fromDate;
+  //   }
+  //   this.formGroup.patchValue(this.degreeObj);
+  //   if (this.degreeObj) {
+  //     this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+  //     this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+  //   } else {
+  //     this.fromDateFormat = this.getFormatDate(null);
+  //     this.toDateFormat = this.getFormatDate(null);
+  //   }
+  // }
+
+  changeCalendar(event, changeType: string) {
+    debugger
     if (changeType === 'FromDate') {
-      if (event.type === 'year') {
-        this.degreeObj.trainFrom = strYear;
-      } else if (event.type === 'month') {
-        this.degreeObj.trainFrom = strMonth;
-      } else {
-        this.degreeObj.trainFrom = strDay;
-      }
+      this.degreeObj.trainFrom = event.type;
       this.degreeObj.trainFromDate = event.fromDate;
+      this.fromDateFormat = this.handleControlType(event.type);
     } else if (changeType === 'ToDate') {
-      if (event.type === 'year') {
-        this.degreeObj.trainTo = strYear;
-      } else if (event.type === 'month') {
-        this.degreeObj.trainTo = strMonth;
-      } else {
-        this.degreeObj.trainTo = strDay;
-      }
+      this.degreeObj.trainTo = event.type;
       this.degreeObj.trainToDate = event.fromDate;
+      this.toDateFormat = this.handleControlType(event.type);
     }
     this.formGroup.patchValue(this.degreeObj);
-    if (this.degreeObj) {
-      this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
-    } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
-    }
   }
 
   tabInfo: any[] = [
@@ -220,12 +248,20 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    // if (this.degreeObj) {
+    //   this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+    //   this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+    // } else {
+    //   this.fromDateFormat = this.getFormatDate(null);
+    //   this.toDateFormat = this.getFormatDate(null);
+    // }
+
     if (this.degreeObj) {
-      this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
-      this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+      this.fromDateFormat = this.handleControlType(this.degreeObj.trainFrom);
+      this.toDateFormat = this.handleControlType(this.degreeObj.trainTo);
     } else {
-      this.fromDateFormat = this.getFormatDate(null);
-      this.toDateFormat = this.getFormatDate(null);
+      this.fromDateFormat = 'd';
+      this.toDateFormat = 'd';
     }
     if (!this.formModel)
       this.hrService.getFormModel(this.funcID).then((formModel) => {

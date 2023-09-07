@@ -2227,21 +2227,27 @@ export class CodxHrService {
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionUpdateCanceled
             );
-            cancel.disabled = true;
+            if (cancel) {
+              cancel.disabled = true;
+            }
 
             let inprogress = evt.find(
               (val) =>
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionUpdateInProgress
             );
-            inprogress.disabled = true;
+            if (inprogress) {
+              inprogress.disabled = true;
+            }
 
             let approve = evt.find(
               (val) =>
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionUpdateApproved
             );
-            approve.disabled = true;
+            if (approve) {
+              approve.disabled = true;
+            }
           }
 
           if (typeDocObj['ApprovalRule'] === '0') {
@@ -2250,14 +2256,18 @@ export class CodxHrService {
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionSubmit
             );
-            foundSubmit.disabled = true;
+            if (foundSubmit) {
+              foundSubmit.disabled = true;
+            }
 
             let foundCancel = evt.find(
               (val) =>
                 val.functionID.substr(val.functionID.length - 3) ==
                 this.actionCancelSubmit
             );
-            foundCancel.disabled = true;
+            if (foundCancel) {
+              foundCancel.disabled = true;
+            }
           }
         }
       }
@@ -2331,6 +2341,9 @@ export class CodxHrService {
             evt[i].disabled = false;
           }
           if (IDCompare === this.actionCancelSubmit) {
+            evt[i].disabled = false;
+          }
+          if (IDCompare === this.actionEdit) {
             evt[i].disabled = false;
           }
         }

@@ -403,16 +403,16 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"0.9240829789281733_layout","data":"1"},{"panelId":"0.0014514686635016538_layout","data":"2"},{"panelId":"0.7062776900074157_layout","data":"3"},{"panelId":"0.19694528981098758_layout","data":"4"},{"panelId":"0.3905464098807283_layout","data":"5"},{"panelId":"0.6324365355784578_layout","data":"6"},{"panelId":"0.7307926980008612_layout","data":"7"},{"panelId":"0.09230805583161117_layout","data":"8"},{"panelId":"0.4142359240869473_layout","data":"9"},{"panelId":"0.13567559377635385_layout","data":"10"},{"panelId":"0.0919781174656844_layout","data":"11"}]'
     );
 
-    this.tmDBService
-      .getReportsByModule(this.funcID.substring(0, 2))
-      .subscribe((report: any[]) => {
-        const lstReportID = report.map((report) => report.reportID);
-        lstReportID.forEach((reportID: string) => {
-          this.tmDBService.getChartByReportID(reportID).subscribe((chart) => {
-            console.log(chart);
-          });
-        });
-      });
+    // this.tmDBService
+    //   .getReportsByModule(this.funcID.substring(0, 2))
+    //   .subscribe((report: any[]) => {
+    //     const lstReportID = report.map((report) => report.reportID);
+    //     lstReportID.forEach((reportID: string) => {
+    //       this.tmDBService.getChartByReportID(reportID).subscribe((chart) => {
+    //         console.log(chart);
+    //       });
+    //     });
+    //   });
   }
 
   ngAfterViewInit(): void {
@@ -431,18 +431,18 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       },
     ];
     this.pageTitle.setBreadcrumbs([]);
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res.reportID) {
-        this.reportID = res.reportID;
+    this.routerActive.params.subscribe((res) => {
+      if (res.funcID) {
+        this.reportID = res.funcID;
         this.isLoaded = false;
         let reportItem: any = this.arrReport.find(
-          (x: any) => x.reportID == res.reportID
+          (x: any) => x.reportID == res.funcID
         );
         if (reportItem) {
           let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
           if (pinnedParams) this.view.pinedReportParams = pinnedParams;
         }
-        switch (res.reportID) {
+        switch (res.funcID) {
           case 'TMD001':
             this.getMyDashboardData();
             break;
@@ -556,7 +556,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         for (let i = 0; i < this.arrReport.length; i++) {
           arrChildren.push({
             title: this.arrReport[i].customName,
-            path: 'tm/tmdashboard/TMD?reportID=' + this.arrReport[i].reportID,
+            path: 'tm/tmdashboard/' + this.arrReport[i].reportID,
           });
         }
         this.pageTitle.setSubTitle(arrChildren[0].title);

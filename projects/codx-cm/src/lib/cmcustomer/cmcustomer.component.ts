@@ -86,6 +86,7 @@ export class CmCustomerComponent
   isButton = true;
   gridViewSetup: any;
   lstCustGroups = [];
+  loaded: boolean;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -101,11 +102,13 @@ export class CmCustomerComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
+        this.loaded = false;
         // this.view.dataService = JSON.parse(JSON.stringify(this.view.dataService));
         this.funcID = param.funcID;
         this.loadMethod();
         this.isButton = true;
         this.afterLoad();
+        this.loaded = true;
       }
     });
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
@@ -149,6 +152,7 @@ export class CmCustomerComponent
   }
 
   onInit(): void {
+
     this.button = {
       id: this.btnAdd,
     };
@@ -389,9 +393,11 @@ export class CmCustomerComponent
           this.isButton = true;
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
-            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-            this.view.dataService.update(e?.event).subscribe();
+            let data = e?.event[0];
+            let lstContacts = e?.event[1];
+            data.modifiedOn = new Date();
+            this.dataSelected = JSON.parse(JSON.stringify(data));
+            this.view.dataService.update(data).subscribe();
             // this.customerDetail.loadTag(this.dataSelected);
             this.detectorRef.detectChanges();
             // this.customerDetail.listTab(this.funcID);
@@ -433,10 +439,15 @@ export class CmCustomerComponent
             this.isButton = true;
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              e.event.modifiedOn = new Date();
-              this.view.dataService.update(e.event).subscribe();
-              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              let data = e.event[0];
+              let lstContact = e.event[1] ?? [];
+              let lstAddress = e.event[2] ?? [];
+              data.modifiedOn = new Date();
+              this.dataSelected = JSON.parse(JSON.stringify(data));
+              // this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              this.customerDetail.onChangeContact(lstContact);
+              this.customerDetail.onChangeAddress(lstAddress);
+              this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
           });
@@ -489,12 +500,13 @@ export class CmCustomerComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
-                e.event.modifiedOn = new Date();
-                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-                this.view.dataService.update(e.event).subscribe();
-                // this.dataSelected = JSON.parse(
-                //   JSON.stringify(this.view.dataService.data[0])
-                // );
+                let data = e?.event[0];
+                let lstContacts = e?.event[1];
+                data.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(data));
+                this.view.dataService.update(data).subscribe();
+                // this.customerDetail.loadTag(this.dataSelected);
+                this.detectorRef.detectChanges();
 
                 this.detectorRef.detectChanges();
               }

@@ -43,7 +43,8 @@
                 | formatvalue : view.formModel : 'positionID'
                 | async
             "
-          ></span>
+          >
+          </span>
           <!-- <span
             class="fs-7"
             [innerHTML]="
@@ -171,7 +172,8 @@
         <div
           *ngIf="
             data?.isCurrent &&
-            dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+            dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+            data?.status === '5'
           "
           #popOver="ngbPopover"
           [openDelay]="500"
@@ -182,6 +184,23 @@
           [style.color]="'#FFA800'"
           class="icon-queue_play_next icon-18"
         ></div>
+
+        <codx-vll
+          *ngIf="
+            data?.resignStatus &&
+            !data.RenewStatus &&
+            data.isCurrent &&
+            data?.status === '5'
+          "
+          [formModel]="view.formModel"
+          [field]="'ResignStatus'"
+          [value]="data?.resignStatus"
+          [showText]="true"
+          [showIcon]="true"
+          [showBgColor]="false"
+          ngClass="badge badge-sm"
+        >
+        </codx-vll>
       </div>
       <div class="mt-1">
         <span
@@ -345,7 +364,8 @@
     <div
       *ngIf="
         data?.isCurrent &&
-        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"
@@ -432,7 +452,7 @@
   </ng-template>
 </ng-template>
 
-<ng-template #baseHeaderRightTmp let-data>
+<!-- <ng-template #baseHeaderRightTmp let-data>
   <div>
     <ng-container
       *ngIf="
@@ -472,6 +492,8 @@
       *ngIf="
         data?.isCurrent &&
         dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        &&
+            data?.status === '5'
       "
     >
       <span
@@ -486,7 +508,7 @@
       ></span>
     </ng-container>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #panelRightListDetail let-data>
   <lib-view-detail-contracts
