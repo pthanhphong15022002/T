@@ -350,7 +350,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         let stationerySetting_1= listSetting.filter(x=>x.category =='1' && x.transType == EPCONST.PARAM.EPStationeryParameters);
         if(stationerySetting_1?.length>0){
           let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
-          this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP        
+          //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP        
           this.autoApproveItem = setting?.AutoApproveItem != null ? setting?.AutoApproveItem : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP khi đặt phòng
         }
         let epSetting_4= listSetting.filter(x=>x.category =='4' && x.tranType == null);
@@ -797,21 +797,24 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         }
       }
       let autoRelease = false;
-      if(data?.resourceType== EPCONST.VLL.ResourceType.Stationery){
-        if(this.autoComfirm==EPCONST.APPROVALRULE.Haved){
-          autoRelease=true;
-        }
-        else{
-          if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
-            autoRelease=true;
-          }
-        }
-      }
-      else{
+      // if(data?.resourceType== EPCONST.VLL.ResourceType.Stationery){
+      //   if(this.autoComfirm==EPCONST.APPROVALRULE.Haved){
+      //     autoRelease=true;
+      //   }
+      //   else{
+      //     if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+      //       autoRelease=true;
+      //     }
+      //   }
+      // }
+      // else{
+      //   if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+      //     autoRelease=true;
+      //   }
+      // }
         if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
           autoRelease=true;
         }
-      }
       if (!autoRelease ) {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)

@@ -426,7 +426,9 @@ export class CodxApprovalComponent
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          this.codxShareService
+          if(oComment)
+          {
+            this.codxShareService
             .codxApprove(
               data?.recID,
               status,
@@ -446,6 +448,7 @@ export class CodxApprovalComponent
                 this.notifySvr.notifyCode('SYS007');
               } else this.notifySvr.notify(res2?.msgCodeError);
             });
+          }
         });
       } else {
         this.codxShareService
