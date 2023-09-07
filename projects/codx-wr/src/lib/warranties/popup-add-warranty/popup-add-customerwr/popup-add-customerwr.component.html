@@ -108,7 +108,7 @@
       ></codx-input>
     </div>
     <div class="form-group row">
-      <div class="col-6" *ngIf="data?.category == '1'">
+      <div class="col-6">
         <codx-label fiedName="Mobile" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -118,7 +118,7 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <div [ngClass]="data?.category == '1' ? 'col-6' : ''">
+      <div *ngIf="data?.category == '1'" class="col-6">
         <codx-label fiedName="Phone" [formModel]="form.formModel"> </codx-label>
         <codx-input
           field="phone"

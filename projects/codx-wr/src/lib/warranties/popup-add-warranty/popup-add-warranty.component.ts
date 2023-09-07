@@ -276,7 +276,6 @@ export class PopupAddWarrantyComponent implements OnInit {
             this.data.category = customer?.category;
           }
           this.isCheckCbx = true;
-
         }
       }
 
@@ -332,8 +331,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       dialogModel.zIndex = 1010;
       dialogModel.FormModel = this.dialog?.formModel;
       let obj = {
-        title:
-          this.moreFuncAdd + ' ' + res?.defaultName,
+        title: this.moreFuncAdd + ' ' + res?.defaultName,
         data: this.data,
         gridViewSetup: this.gridViewSetup,
       };
@@ -353,7 +351,7 @@ export class PopupAddWarrantyComponent implements OnInit {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
               this.data = e?.event[0];
-              if (this.isCheckCbx){
+              if (this.isCheckCbx) {
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;
               }
@@ -363,7 +361,6 @@ export class PopupAddWarrantyComponent implements OnInit {
           }
         });
     });
-
   }
   //#endregion
 
