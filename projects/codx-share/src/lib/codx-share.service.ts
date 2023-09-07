@@ -241,6 +241,7 @@ export class CodxShareService {
             //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
+            debugger
             if (x?.event?.msgCodeError == null && x?.event?.rowCount > 0) {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
@@ -248,6 +249,7 @@ export class CodxShareService {
             }
           });
         } else {
+          debugger
           var status;
           if (
             funcID == 'SYS201' ||

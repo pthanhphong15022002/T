@@ -263,6 +263,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
           result = event.e;
           break;
         case 'C':
+          result = event?.e;
+          // var type = event?.type ?? '';
+          // var contact = event?.result ?? '';
+          // // this.convertToFieldDp(contact, type);
+          // console.log('contactsJS: ', result);
+          // console.log('contacts: ', JSON.parse(result));
           break;
       }
       field.dataValue = result;

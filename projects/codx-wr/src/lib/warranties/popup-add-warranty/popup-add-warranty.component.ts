@@ -355,7 +355,7 @@ export class PopupAddWarrantyComponent implements OnInit {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
               this.data = e?.event[0];
-              if (this.isCheckCbx){
+              if (this.isCheckCbx && type != 'switch'){
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;
               }

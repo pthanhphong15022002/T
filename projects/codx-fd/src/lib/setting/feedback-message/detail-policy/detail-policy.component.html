@@ -10,13 +10,42 @@
           <codx-label name="lblPoint" [formModel]="" default="Điểm">
           </codx-label>
         </th>
-        <th scope="col"></th>
+        <th scope="col">
+          <!-- class="d-flex justify-content-center" -->
+          <div
+            *ngIf="getFrom == 'Positions'"
+            class="btn btn-primary btn-sm btn-icon"
+          >
+            <span
+              class="icon icon-add icon-20"
+              (click)="open(content, null, null, 'add')"
+            ></span>
+          </div>
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of lstLines">
         <td>
-          <div class="pt-1">{{ item.text }}</div>
+          <div *ngIf="getFrom != 'Positions'; else showPos" class="pt-1">
+            {{ item.text }}
+          </div>
+          <ng-template #showPos class="pt-1">
+            <span class="pt-1" *ngIf="item.field; else itemAll">
+              {{ item.field | position : setting?.referdValue | async }}
+            </span>
+
+            <ng-template #itemAll>
+              <span class="pt-1">
+                <codx-label
+                  name="lblItemAllPosition"
+                  [formModel]="formModel"
+                  default="Tất cả"
+                >
+                </codx-label>
+              </span>
+            </ng-template>
+          </ng-template>
         </td>
         <td class="w-100px fs-6 fw-bold">
           <div class="d-flex pt-1" #ele>
@@ -24,7 +53,7 @@
               class="me-1 oparator"
               [style.color]="item.value < 0 ? 'red' : 'green'"
             >
-              {{ item.value < 0 ? "-" : "+" }}</span
+              {{ item.value < 0 ? "-" : item.value > 0 ? "+" : "" }}</span
             >{{ item.value < 0 ? item.value * -1 : item.value }}
           </div>
         </td>
@@ -101,6 +130,9 @@
               [refValue]="setting?.referdValue"
               [field]="setting?.fieldName"
               type="combobox"
+              [crrValue]="id"
+              [disabled]="id == null && mode == 'edit'"
+              (valueChange)="changePosition($event)"
             >
             </codx-input>
           </div>
@@ -115,6 +147,7 @@
             [ele]="ele"
             [attr.data-id]="id"
             class="form-control"
+            [crrValue]="value"
             (valueChange)="valueChange($event, ele)"
           >
           </codx-input>

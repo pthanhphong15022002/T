@@ -386,7 +386,7 @@
       </codx-imgs>
     </span>
     <div
-      class="disabled-inline"
+      class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
       [ngClass]="
         checkRoleUpdateProgress(data?.value, data?.type)
@@ -394,6 +394,15 @@
           : 'cursor-not-allowed'
       "
     >
+      <div 
+        *ngIf="data?.value?.assigned == '1'"  
+        class="progressAssigned" 
+        #p="ngbPopover"
+        [ngbPopover]="'Đã giao việc'"
+        (mouseenter)="p.open()"
+        (mouseleave)="p.close()">
+        <span class="icon-assignment_turned_in assign icon-12"></span>
+      </div>
       <codx-progressbar
         [progress]="data?.value?.progress"
         [stype]="3"
