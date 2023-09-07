@@ -274,7 +274,7 @@
               "
             >
               <ng-container *ngFor="let item of data?.listInformationRel ; let i = index">
-                <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0) || data?.listInformationRel.length == 1)">
+                <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0 && data?.dispatchType == '2') || (data?.dispatchType == '2' && data?.listInformationRel.length == 1) || data?.dispatchType != '2')">
                   <ng-container
                     *ngIf="
                       funcList?.defaultValue != '2' ||
