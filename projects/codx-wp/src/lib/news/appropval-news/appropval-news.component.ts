@@ -3,6 +3,7 @@ import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, Request
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -192,8 +193,10 @@ export class AppropvalNewsComponent extends UIComponent {
             option
           );
           popup.closed.subscribe((res: any) => {
-            if (res?.event) {
+            if (res?.event)
+            {
               this.view.dataService.update(res.event).subscribe();
+              this.tmpDetail.getPostInfor(res.event.recID);
             }
           });
         } 
