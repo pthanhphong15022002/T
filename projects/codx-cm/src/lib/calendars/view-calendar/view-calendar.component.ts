@@ -347,8 +347,8 @@ export class ViewCalendarComponent
    
   closeBeforeAddTask(){
     this.popupTypeCM.close();
-    this.isStepTask = false;
-    this.isActivitie = false;
+    // this.isStepTask = false;
+    // this.isActivitie = false;
     this.fieldTypeCm = '';
     this.disableButton = true;
   }
@@ -369,6 +369,8 @@ export class ViewCalendarComponent
         if(event?.value){
           this.objectID = event?.value;
           this.disableButton = false;
+          this.isStepTask = false;
+          this.isActivitie = true;
         }else{
           this.disableButton = true;
         }
@@ -392,39 +394,47 @@ export class ViewCalendarComponent
     }
   }
 
-  checkLeads(lead) {
+  checkLeads(lead) {   
+    console.log(lead); 
     if(!lead?.applyProcess){
       this.objectID = lead?.recID;
       this.isStepTask = false;
       this.insStep = null;
       this.listStep = [];
       this.disableButton = false;
+      this.isStepTask = false;
+      this.isActivitie = true;
     }else{
       this.disableButton = true;
       var data = [lead?.refID, lead?.processID, lead?.status, '5'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res;
+          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
           this.isStepTask = true;
+          this.isActivitie = false;
         }
       });
     }
   }
   
   checkContracts(contract) {
+    console.log(contract);
     if(!contract?.applyProcess){
       this.objectID = contract?.recID;
       this.disableButton = false;
       this.isStepTask = false;
       this.insStep = null;
       this.listStep = [];
+      this.isStepTask = false;
+      this.isActivitie = true;
     }else{
       this.disableButton = true;
       var data = [contract?.refID, contract?.processID, contract?.status, '4'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res;
+          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
           this.isStepTask = true;
+          this.isActivitie = false;
         }
       });
     }
@@ -437,26 +447,31 @@ export class ViewCalendarComponent
       this.isStepTask = false;
       this.insStep = null;
       this.listStep = [];
+      this.isStepTask = false;
+      this.isActivitie = true;
     }else{
       this.disableButton = true;
       var data = [cases?.refID, cases?.processID, cases?.status,  cases.caseType == "1" ? '2':'3'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res;
+          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
           this.isStepTask = true;
+          this.isActivitie = false;
         }
       });
     }
   }
 
   checkDeal(dealID) {
+    console.log(dealID);
     let deal = this.listDeal.find((dealFind) => dealFind.recID == dealID);
     if (deal) {
       var data = [deal?.refID, deal?.processID, deal?.status, '1'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res;
+          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
           this.isStepTask = true;
+          this.isActivitie = false;
         }
       });
     }
