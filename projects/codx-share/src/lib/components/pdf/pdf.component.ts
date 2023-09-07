@@ -2281,7 +2281,7 @@ export class PdfComponent
     if (this.isEditable) {
       if (e.data && !this.autoSignState) {
         this.curPage = this.pageMax;
-        this.autoSign();
+        setTimeout(this.autoSign.bind(this), 1000);
       }
       this.autoSignState = e.data;
       this.detectorRef.detectChanges();
