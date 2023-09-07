@@ -28,6 +28,7 @@ import { PopupListContactsComponent } from './codx-list-contacts/popup-list-cont
 import * as XLSX from 'xlsx';
 import { firstValueFrom } from 'rxjs';
 import { CodxListContactsComponent } from './codx-list-contacts/codx-list-contacts.component';
+import { CodxAddressCmComponent } from './codx-address-cm/codx-address-cm.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -37,6 +38,8 @@ import { CodxListContactsComponent } from './codx-list-contacts/codx-list-contac
 export class CmCustomerDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
   @ViewChild('codxListContact') codxListContact: CodxListContactsComponent;
+  @ViewChild('codxAddress') codxAddress: CodxAddressCmComponent;
+
   @Input() recID: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -274,6 +277,11 @@ export class CmCustomerDetailComponent implements OnInit {
 
   onChangeContact(lstContact){
     this.codxListContact.loadListContact(lstContact);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  onChangeAddress(lstAddress){
+    this.codxAddress.loadListAdress(lstAddress);
     this.changeDetectorRef.detectChanges();
   }
 

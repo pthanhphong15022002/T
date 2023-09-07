@@ -440,11 +440,13 @@ export class CmCustomerComponent
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
               let data = e.event[0];
-              let lstContact = e.event[1];
+              let lstContact = e.event[1] ?? [];
+              let lstAddress = e.event[2] ?? [];
               data.modifiedOn = new Date();
               this.dataSelected = JSON.parse(JSON.stringify(data));
               // this.customerDetail.getOneCustomerDetail(this.dataSelected);
               this.customerDetail.onChangeContact(lstContact);
+              this.customerDetail.onChangeAddress(lstAddress);
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
