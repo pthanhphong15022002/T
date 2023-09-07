@@ -67,7 +67,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     var d = data.filter(x=>x.functionID == funcID)[0];
     var parentID1 = data.filter(x=>x.functionID == d.parentID)[0];
     var parentID2 = data.filter(x=>x.functionID == parentID1.parentID)[0];
-    this.codxWsService.listBreadCumb.length = 0;
-    this.codxWsService.listBreadCumb.push(parentID2,d);
+    if(parentID2.functionType != "M")
+    {
+      this.codxWsService.listBreadCumb.length = 0;
+      this.codxWsService.listBreadCumb.push(parentID2,d);
+    }
   }
 }
