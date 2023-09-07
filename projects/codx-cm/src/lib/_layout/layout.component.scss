@@ -36,15 +36,17 @@ codx-cmcustomer-detail .codx-detail-main{
   }
   &.cm-full{
     position: absolute;
-    top: 42px;
-    bottom: 0;
-    left: 20px;
-    right: 20px;
+    inset: 42px 15px 0;
+    //top: 42px;
+    //bottom: 0;
+    //left: 20px;
+    //right: 20px;
     background-color: var(--bg-body);
     //border: 1px greenyellow solid;
     .e-content{
       height: calc(100vh - 244px)!important;
       overflow: auto;
+      padding: 0 10px;
       //border: 1px rgb(241, 29, 178) solid;
     }
   }
