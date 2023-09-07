@@ -1118,30 +1118,30 @@
         [name]="'headerNoteHasExcludeObjects'"
         [default]="grvSetup.HasExcludeObjects.headerNote"
         [formModel]="formModel"
-></codx-label>
+        ></codx-label>
     </div>
-    <div class="col-6 d-flex flex-row">
+    <div class="col-6 d-flex align-items-center justify-content-end">
+      <span class="me-2">
         <codx-input
-            class="mt-2"
             field="hasExcludeObjects"
             [formModel]="formModel"
             [Group]="formGroup"
             (valueChange)="ValChangeHasExcludeObj($event)"
         ></codx-input>
+      </span>
         <!-- <codx-input
         class="mt-2"
         field="includeObjects"
         [formModel]="formModel"
         [Group]="formGroup"
         (valueChange)="ValChangeSelectObj($event)"
-    ></codx-input> -->
-        <button
-        class="btn btn-icon ms-3"
+        ></codx-input> -->
+      <button type="button"
+        class="btn btn-icon btn-sm"
         (click)="onClickOpenSelectExcludeObj()"
+        [ngClass]="alpolicyObj.hasExcludeObjects? 'btn-light-primary':'btn-disabled'"
       >
-        <i class="icon-edit-one icon-18" 
-        [ngClass]="alpolicyObj.hasExcludeObjects? 'text-dark':'text-gray-400'"
-        ></i>
+        <span class="icon-edit-one icon-16"></span>
       </button>
     </div>
 </div>

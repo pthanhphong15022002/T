@@ -47,6 +47,7 @@ export class SettingComponent extends UIComponent implements OnInit {
   curGroup = null;
   refQueue = [];
   lstPolicies = [];
+  lstPolicyLines = [];
   funcID;
   //ViewChild
   @ViewChild('tabsTmpl') tabsTmpl: TemplateRef<any>;
@@ -62,6 +63,10 @@ export class SettingComponent extends UIComponent implements OnInit {
       .subscribe((res: Map<string, any[]>) => {
         this.groupSettings = res;
         let lstFDPolicies = [];
+        let lstShowCate = Object.keys(this.groupSettings);
+        this.lstCategory = this.lstCategory.filter((c) =>
+          lstShowCate.includes(c.value)
+        );
         Object.values(this.groupSettings).forEach((settings) => {
           settings.forEach((setting) => {
             if (setting.reference == 'FDPolicies') {
@@ -70,22 +75,25 @@ export class SettingComponent extends UIComponent implements OnInit {
           });
         });
         if (lstFDPolicies.length > 0) {
-          this.fdService.getListPolicies(lstFDPolicies).subscribe((res: []) => {
-            this.lstPolicies = res;
-            console.log('policies', this.lstPolicies);
-            this.lstPolicies.forEach((policy) => {
-              Object.values(this.groupSettings).forEach((settings) => {
-                let setting = settings.find(
-                  (x) => x.fieldName == policy.policyID
-                );
-                if (setting) {
-                  setting.actived = policy.actived;
-                  setting.activedOn = policy.activedOn;
-                  setting.policyRecID = policy.recID;
-                }
+          this.fdService
+            .getListPolicies(lstFDPolicies)
+            .subscribe((res: any[]) => {
+              this.lstPolicies = res[0];
+              this.lstPolicyLines = res[1];
+              console.log('policies', res);
+              this.lstPolicies.forEach((policy) => {
+                Object.values(this.groupSettings).forEach((settings) => {
+                  let setting = settings.find(
+                    (x) => x.fieldName == policy.policyID
+                  );
+                  if (setting) {
+                    setting.actived = policy.actived;
+                    setting.activedOn = policy.activedOn;
+                    setting.policy = policy;
+                  }
+                });
               });
             });
-          });
         }
         console.log('getSettings', res);
       });

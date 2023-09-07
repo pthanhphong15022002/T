@@ -17,6 +17,7 @@ import {
   DialogRef,
   CallFuncService,
   AuthService,
+  Util,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { AssignTaskModel } from '../../models/assign-task.model';
@@ -491,8 +492,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit, OnChanges {
         this.listNoteTemp.status = this.contents[index]?.status;
         this.listNoteTemp.format = this.contents[index]?.format;
       }
-      this.generateGuid();
-      var recID = JSON.parse(JSON.stringify(this.guidID));
+      //VTHAO- fix bug doc dc file da luu ngay 06/09/2023
+      var recID = this.contents[index]?.recID;
+      if (!recID) {
+        this.generateGuid();
+        var recID = JSON.parse(JSON.stringify(this.guidID));
+      }
+      //code cux cua Nguyen
+      // this.generateGuid();
+      // var recID = JSON.parse(JSON.stringify(this.guidID));
+
       var obj = {
         memo: data,
         status: this.listNoteTemp.status,
@@ -968,6 +977,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit, OnChanges {
 
   openPopupAttachment(index) {
     this.id = index;
+    //VTHAO-fix bug 06/09/2023 => thieu recID nen sai khi luu file
+    if (!this.contents[index]?.recID)
+      this.contents[index]['recID'] = Util.uid();
     var dt = {
       data: this.contents[index],
       funcID: this.funcID,

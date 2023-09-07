@@ -10,24 +10,27 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxWsService } from '../codx-ws.service';
-import { ApiHttpService, CodxService } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxService } from 'codx-core';
 
 @Component({ template: '' })
 export abstract class WSUIComponent implements OnInit {
     funcID:any;
     module:string = "WS";
+    userInfo:any;
 
     abstract onInit(): void;
     protected route!: ActivatedRoute;
     protected codxWsService!: CodxWsService;
     protected api: ApiHttpService;
     protected codxService: CodxService;
+    protected authStore: AuthStore;
     constructor(inject: Injector) 
     {
         this.route = inject.get(ActivatedRoute);
         this.codxWsService = inject.get(CodxWsService);
         this.api = inject.get(ApiHttpService);
         this.codxService = inject.get(CodxService);
+        this.authStore = inject.get(AuthStore);
     }
       
     ngOnInit(): void {
@@ -39,5 +42,10 @@ export abstract class WSUIComponent implements OnInit {
     {
         this.funcID = this.route.snapshot.paramMap.get('funcID');
         this.codxWsService.funcChange.next(this.funcID);
+    }
+
+    getUserInfo()
+    {
+        this.userInfo = this.authStore.get();
     }
 }
