@@ -24,6 +24,7 @@
                 isEdited)
             "
             (click)="beforeOpenPopupADR(item)"
+            *ngIf="item?.functionID != 'SYS208'"
           >
             {{ item?.text }}
           </button>

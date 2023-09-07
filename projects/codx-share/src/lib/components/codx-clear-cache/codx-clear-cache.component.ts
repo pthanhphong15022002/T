@@ -37,6 +37,8 @@ export class CodxClearCacheComponent implements OnInit {
       .execSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'GetListCacheName')
       .subscribe((res: any) => {
         this.listCache = res || [];
+        //this.listCache.splice(this.listCache.length - 1, 0, 'BUHierachy');
+        //this.listCache.push('BUHierachy');
       });
   }
 
