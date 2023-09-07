@@ -163,7 +163,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
         active: true,
         sameData: true,
-
         model: {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
@@ -173,7 +172,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.list, //? thiết lập view danh sách
         active: true,
         sameData: true,
-
         model: {
           template: this.listTemplate,
         },
@@ -409,12 +407,9 @@ export class CashPaymentsComponent extends UIComponent {
     );
     if (arrBookmark.length > 0) {
       switch (data?.status) {
-        case '0':
+        case '7':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if (element.functionID == 'ACT041009' || element.functionID == 'ACT041010') {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -526,7 +521,7 @@ export class CashPaymentsComponent extends UIComponent {
         element.isbookmark = false;
       });
       switch (data?.status) {
-        case '0':
+        case '7':
           arrBookmark.forEach((element) => {
             if (
               element.functionID == 'ACT041009' ||
@@ -627,20 +622,19 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeItemSelected(event) {
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-    //       this.itemSelected = event?.data;
-    //       return;
-    //     }
-    //     this.itemSelected = event?.data;
-    //     this.getDatadetail(this.itemSelected);
-    //   }
-    // }
-    this.itemSelected = event?.data;
-    this.getDatadetail(this.itemSelected);
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
+        return;
+      } else {
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // }
+        this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
+      }
+    }
   }
 
   /**
@@ -648,10 +642,9 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   getDatadetail(data) {
-    //this.isLoadData = true; // bật progressbar của tab
-    this.acctTrans = [];
-    this.settledInvoices = [];
-    this.vatInvoices = [];
+    // this.acctTrans = [];
+    // this.settledInvoices = [];
+    // this.vatInvoices = [];
     this.api
       .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [
         data.subType,
@@ -758,7 +751,6 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
           this.notification.notifyCode(
             'AC0029',
             0,
