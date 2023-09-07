@@ -119,6 +119,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
     } else if (this.formType == 'view') {
       this.isSaved = true;
       this.isSaving = true;
+      this.viewChooseRole = this.data?.chooseRoles;
+      this.adUser.chooseRoles = this.viewChooseRole;
+      if (this.data?.chooseRoles)
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.data?.chooseRoles)
+        );
+      this.countListViewChoose();
     } else if (this.formType == 'copy') {
       this.isSaved = false;
 

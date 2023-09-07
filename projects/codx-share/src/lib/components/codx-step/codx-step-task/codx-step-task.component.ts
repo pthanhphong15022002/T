@@ -1334,7 +1334,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'UpdatedAssignedStepTasksAsync',
             [data.stepID, data.recID]
           )
-          .subscribe();
+          .subscribe(res => {
+            if(res){
+              data.assigned == '1';
+            }
+          });
       }
       this.saveAssign.emit(doneSave);
     });

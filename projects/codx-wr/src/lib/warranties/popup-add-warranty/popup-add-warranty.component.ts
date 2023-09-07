@@ -244,13 +244,13 @@ export class PopupAddWarrantyComponent implements OnInit {
               if (
                 key[index].toLowerCase() != 'owner' &&
                 key[index].toLowerCase() != 'buid' &&
-                key[index].toLowerCase() != 'CreatedOn' &&
-                key[index].toLowerCase() != 'CreatedBy' &&
-                key[index].toLowerCase() != 'ModifiedOn' &&
-                key[index].toLowerCase() != 'ModifiedBy'
+                key[index].toLowerCase() != 'createdon' &&
+                key[index].toLowerCase() != 'createdby' &&
+                key[index].toLowerCase() != 'modifiedon' &&
+                key[index].toLowerCase() != 'modifiedby'
               )
                 if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-                  if (key[index].toLowerCase() == 'warrantyExpired') {
+                  if (key[index].toLowerCase() == 'warrantyexpired') {
                     this.data[key[index]] = new Date(serviceTag[keySv[i]]);
                   } else {
                     this.data[key[index]] = serviceTag[keySv[i]];
@@ -355,7 +355,7 @@ export class PopupAddWarrantyComponent implements OnInit {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
               this.data = e?.event[0];
-              if (this.isCheckCbx){
+              if (this.isCheckCbx && type != 'switch'){
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;
               }

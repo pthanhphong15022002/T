@@ -137,6 +137,14 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       });
 
     if (this.isEdit) {
+      this.cache.valueList('AC069').subscribe((res) => {
+        this.vllIDIMControls069 = res.datas;
+
+        this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+          this.journal.idimControl?.split(';').includes(d.value)
+        );
+      });
+
       this.assignVllToProp2('AC087', 'notAllowEditingFields087');
 
       this.journalService.hasVouchers(this.journal).subscribe((res) => {
@@ -209,27 +217,23 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
         });
     } else {
       // assign default idimControl in SYS_SettingValues to journal.idimControl
-      this.cache
-        .viewSettingValues('ACParameters')
-        .pipe(
-          map((arr) => arr.filter((f) => f.category === '1')?.[0]),
-          map((data) => JSON.parse(data.dataValue)?.IDIMControl)
-        )
-        .subscribe((defaultIdimControl) => {
-          this.journal.idimControl = defaultIdimControl;
-          this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
-            this.journal.idimControl?.split(';').includes(d.value)
-          );
-        });
+      this.cache.valueList('AC069').subscribe((res) => {
+        this.vllIDIMControls069 = res.datas;
+
+        this.cache
+          .viewSettingValues('ACParameters')
+          .pipe(
+            map((arr) => arr.filter((f) => f.category === '1')?.[0]),
+            map((data) => JSON.parse(data.dataValue)?.IDIMControl)
+          )
+          .subscribe((defaultIdimControl) => {
+            this.journal.idimControl = defaultIdimControl;
+            this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+              this.journal.idimControl?.split(';').includes(d.value)
+            );
+          });
+      });
     }
-
-    this.cache.valueList('AC069').subscribe((res) => {
-      this.vllIDIMControls069 = res.datas;
-
-      this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
-        this.journal.idimControl?.split(';').includes(d.value)
-      );
-    });
 
     this.cache
       .valueList('AC088')

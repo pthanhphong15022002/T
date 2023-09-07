@@ -499,7 +499,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (res) {
           var recID = res?.save?.recID;
 
-          this.dialog.close([res.save]);
+          this.dialog.close([res.save, this.lstContact, this.listAddress]);
         }
       });
   }
@@ -518,7 +518,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             .update(res.update)
             .subscribe();
 
-          this.dialog.close(res.update);
+          this.dialog.close([res.update, this.lstContact, this.listAddress]);
         }
       });
   }

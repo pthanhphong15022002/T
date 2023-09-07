@@ -81,7 +81,7 @@
     </div>
     <div
       *ngIf="
-        EBasicSalaryObj.isCurrent &&
+        EBasicSalaryObj.status === '5' &&
         dateNow >= moment(EBasicSalaryObj.effectedDate).format('YYYY-MM-DD') &&
         (dateNow <= moment(EBasicSalaryObj.expiredDate).format('YYYY-MM-DD') ||
           EBasicSalaryObj.expiredDate === null)
@@ -114,7 +114,8 @@
     <div
       *ngIf="
         EBasicSalaryObj?.isCurrent &&
-        dateNow < moment(EBasicSalaryObj.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(EBasicSalaryObj.effectedDate).format('YYYY-MM-DD') &&
+        EBasicSalaryObj?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"

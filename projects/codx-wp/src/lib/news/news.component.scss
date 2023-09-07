@@ -76,13 +76,18 @@
     // }
     .carousel-control-prev,
     .carousel-control-next {
-        height: 50px !important;
-        width: 5%;
-        
+        height: 40px!important;
+        width: 40px;
         background-color: var(--primary);
         position: absolute;
-        top: 50%;
+        top: 42%;
         display: block;
+        border-radius: 3px;
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            width: 1.6rem;
+            height: 1.6rem;
+            margin-top: 5px;
+        }
     }
 
     .carousel-inner .video .image-200 {

@@ -43,5 +43,8 @@ export class WorkspaceComponent extends WSUIComponent{
   selectedChange(data:any)
   {
     this.codxService.navigate("","/"+data.url)
+    this.codxWsService.functionID = data.functionID;
+    debugger
+    this.codxWsService.listBreadCumb.push(data);
   }
 }

@@ -289,6 +289,8 @@ export class CatagoryComponent implements OnInit {
           if (!category) return;
           data['transID'] = category.recID;
           data['type'] = '0';
+          data['data']=category;
+          data['vllShare']=category?.approverList;
           this.callfc.openForm(
             component,
             '',

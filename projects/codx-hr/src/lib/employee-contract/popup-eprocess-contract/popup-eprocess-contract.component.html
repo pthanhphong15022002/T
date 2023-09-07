@@ -93,24 +93,32 @@
       </codx-vll>
     </div>
     <div
-      *ngIf="data?.isCurrent && !data?.isExpire"
+      *ngIf="
+        data?.status === '5' &&
+        dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
+        (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
+          data.expiredDate === null)
+      "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
       (mouseleave)="popOver.close()"
-      placement="left"
+      placement="right"
       [ngbPopover]="popIsNewest"
       [style.color]="'#0078FF'"
       class="icon-bookmark icon-18"
     ></div>
 
     <div
-      *ngIf="data?.isCurrent && data?.isExpire"
+      *ngIf="
+        data?.isCurrent &&
+        dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
+      "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
       (mouseleave)="popOver.close()"
-      placement="left"
+      placement="right"
       [ngbPopover]="popOverDue"
       [style.color]="'#F64E60'"
       class="icon-notifications icon-18"
@@ -119,13 +127,14 @@
     <div
       *ngIf="
         data?.isCurrent &&
-        dateNow < moment(data.effectedDate).format('YYYY-MM-DD')
+        dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
+        data?.status === '5'
       "
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
       (mouseleave)="popOver.close()"
-      placement="left"
+      placement="right"
       [ngbPopover]="popIsNotNewsest"
       [style.color]="'#FFA800'"
       class="icon-queue_play_next icon-18"
@@ -737,7 +746,7 @@
   <span>
     <codx-label
       name="lblIsCurrent"
-      [formModel]="view.formModel"
+      [formModel]="formModel"
       default="Đang hiệu lực"
     ></codx-label>
   </span>
@@ -747,7 +756,7 @@
   <span>
     <codx-label
       name="lblOverDue"
-      [formModel]="view.formModel"
+      [formModel]="formModel"
       default="Quá hạn"
     ></codx-label>
   </span>
@@ -757,7 +766,7 @@
   <span>
     <codx-label
       name="lblIsNotCurrent"
-      [formModel]="view.formModel"
+      [formModel]="formModel"
       default="Chưa hiệu lực"
     ></codx-label>
   </span>

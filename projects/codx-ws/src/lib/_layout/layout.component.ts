@@ -10,6 +10,8 @@ import {
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 
 import { CodxWsService } from '../codx-ws.service';
+import { ActivatedRoute } from '@angular/router';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'codx-layout',
@@ -22,13 +24,16 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   constructor(
     inject: Injector,
-    private codxWsService: CodxWsService
+    private codxWsService: CodxWsService,
+    private route: ActivatedRoute
   ) {
     super(inject);
     this.module = 'WS';
   }
 
-  onInit() {}
+  onInit() {
+    this.SetFunctionID();
+  }
 
   onAfterViewInit() {
     this.codxWsService.SetLayout.subscribe((res) => {
@@ -36,5 +41,36 @@ export class LayoutComponent extends LayoutBaseComponent {
     });
   }
 
+  SetFunctionID()
+  {
+    var path = window.location.pathname;
+    var pathArr = path.split("/");
+    this.codxWsService.functionID = pathArr[4];
+    this.getFuncList(pathArr[4]);
+  }
 
+  getFuncList(funcID:any)
+  {
+    var fucList = this.codxWsService.loadFuncList(this.module) as any;
+
+    if(isObservable(fucList))
+    {
+      fucList.subscribe((item : any)=>{
+        if(item) this.SetBreadCumb(funcID,item);
+      })
+    }
+    else this.SetBreadCumb(funcID,fucList);
+  }
+
+  SetBreadCumb(funcID:any,data:any)
+  {
+    var d = data.filter(x=>x.functionID == funcID)[0];
+    var parentID1 = data.filter(x=>x.functionID == d.parentID)[0];
+    var parentID2 = data.filter(x=>x.functionID == parentID1.parentID)[0];
+    if(parentID2.functionType != "M")
+    {
+      this.codxWsService.listBreadCumb.length = 0;
+      this.codxWsService.listBreadCumb.push(parentID2,d);
+    }
+  }
 }

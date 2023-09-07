@@ -50,6 +50,7 @@ export class CodxApproveStepsComponent
   @Input() approveControl = '3';//Áp dụng quy trình duyệt theo: 1;Theo file trình ký; 2;ProcessID;  3;Category
   @Input() isTemplate = false; //signFile của template mẫu  
   @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
+  @Input() vllShare = null;
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -88,6 +89,7 @@ export class CodxApproveStepsComponent
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.data = dialogData?.data.data;
+      this.vllShare = this.vllShare ?? dialogData?.data.vllShare;
       console.log(this.data);
 
       this.dialogApproval = dialog;
