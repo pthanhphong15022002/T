@@ -794,7 +794,7 @@ export class CodxShareService {
       PopupCommentComponent,
       title,
       500,
-      500,
+      250,
       funcID,
       {
         title: title,
