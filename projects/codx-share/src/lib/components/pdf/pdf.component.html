@@ -273,7 +273,7 @@
                 align="Left"
               ></e-item>
               <e-item
-                *ngIf="isApprover && isEditable"
+                *ngIf="isApprover && isEditable && canHighLight"
                 (click)="clickHighlightText()"
                 prefixIcon="e-icons e-style"
                 tooltipText="Highlight"
