@@ -823,6 +823,15 @@ export class CatagoryComponent implements OnInit {
                   return item;
                 }
               });
+              if (Array.isArray(value)) {
+                value.forEach((element, i) => {
+                  let space = '';
+                  if (i > 0) space = ';';
+                  id += space + (element.id || '');
+                  name += space + (element.text || element.objectName || '');
+                  type += space + (element.objectType || '');
+                });
+              }
               if (fID) this.dataValue[transType][fID] = id;
               if (fName) this.dataValue[transType][fName] = name;
               if (fType) this.dataValue[transType][fType] = type;

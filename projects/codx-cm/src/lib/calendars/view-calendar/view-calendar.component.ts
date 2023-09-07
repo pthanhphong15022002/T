@@ -15,6 +15,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   ResourceModel,
   UIComponent,
   Util,
@@ -23,7 +24,13 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
-import { CM_Cases, CM_Contracts, CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
+import {
+  CM_Cases,
+  CM_Contracts,
+  CM_Customers,
+  CM_Deals,
+  CM_Leads,
+} from '../../models/cm_model';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
@@ -50,44 +57,6 @@ export class ViewCalendarComponent
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
   modelResource: ResourceModel;
-
-  taskType;
-  popupTypeCM: DialogRef
-  fieldsGroup = { text: 'text', value: 'entityName' };
-  fieldsStep= { text: 'stepName', value: 'recID' };
-
-  fieldsCustomer = { text: 'customerName', value: 'recID' };
-  fieldsLead = { text: 'leadName', value: 'recID' };
-  fieldsDeal = { text: 'dealName', value: 'recID' };
-  fieldsCase = { text: 'caseName', value: 'recID' };
-  fieldsContract = { text: 'contractName', value: 'recID' };
-
-  typeCMs = [
-    { text: 'Khách hàng', entityName: 'CM_Customers',funcID:'CM0101' },
-    { text: 'Tiềm năng', entityName: 'CM_Leads',funcID:'CM0205' },
-    { text: 'Cơ hội', entityName: 'CM_Deals',funcID:'CM0201' },
-    { text: 'Chăm sóc khách hàng', entityName: 'CM_Cases',funcID:'CM0401'},
-    { text: 'Hợp đồng', entityName: 'CM_Contracts',funcID:'CM0204'},
-  ];
-
-  insStep;
-  listStep: any[];
-  listLead: CM_Leads[];
-  listDeal: CM_Deals[];
-  listCase: CM_Cases[];
-  listCustomer: CM_Customers[];
-  listContract: CM_Contracts[];
-
-  objectID = '';
-  isActivitie = false;
-  isStepTask = false;
-  fieldTypeCm = '';
-  service = 'CM';
-  entityName = 'CM_Contracts';
-  className = 'ContractsBusiness';
-  assemblyName = 'ERM.Business.CM';
-  methodLoadData = 'GetListContractsAsync';
-  requestData = new DataRequest();
 
   fields = {
     id: 'recID',
@@ -124,11 +93,52 @@ export class ViewCalendarComponent
     id: 'btnAdd',
   };
 
+  taskType;
+  popupTypeCM: DialogRef;
+  fieldsGroup = { text: 'text', value: 'entityName' };
+  fieldsStep = { text: 'stepName', value: 'recID' };
+
+  fieldsCustomer = { text: 'customerName', value: 'recID' };
+  fieldsLead = { text: 'leadName', value: 'recID' };
+  fieldsDeal = { text: 'dealName', value: 'recID' };
+  fieldsCase = { text: 'caseName', value: 'recID' };
+  fieldsContract = { text: 'contractName', value: 'recID' };
+
+  typeCMs = [
+    { text: 'Khách hàng', entityName: 'CM_Customers', funcID: 'CM0101' },
+    { text: 'Tiềm năng', entityName: 'CM_Leads', funcID: 'CM0205' },
+    { text: 'Cơ hội', entityName: 'CM_Deals', funcID: 'CM0201' },
+    { text: 'Chăm sóc khách hàng', entityName: 'CM_Cases', funcID: 'CM0401' },
+    { text: 'Hợp đồng', entityName: 'CM_Contracts', funcID: 'CM0204' },
+  ];
+
+  insStep;
+  listStep: any[];
+  listLead: CM_Leads[];
+  listDeal: CM_Deals[];
+  listCase: CM_Cases[];
+  listCustomer: CM_Customers[];
+  listContract: CM_Contracts[];
+
+  disableButton = true;
+  objectID = '';
+  isActivitie = false;
+  isStepTask = false;
+  fieldTypeCm = '';
+  service = 'CM';
+  entityName = 'CM_Contracts';
+  className = 'ContractsBusiness';
+  assemblyName = 'ERM.Business.CM';
+  methodLoadData = 'GetListContractsAsync';
+  requestData = new DataRequest();
+
+
   constructor(
     private inject: Injector,
     private authstore: AuthStore,
     private cmService: CodxCmService,
     private stepService: StepService,
+    private notiService: NotificationsService,
   ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
@@ -304,12 +314,23 @@ export class ViewCalendarComponent
     this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        this.beforeAddTask();
         break;
     }
   }
 
-  add() {
+  settingViews() {}
+
+  //------------------More Func-----------------//
+  //chua goi tho phan quyền -- đang full true
+  changeDataMF(e, data) {}
+
+  clickMF(e, data) {}
+
+  //------------------More Func-----------------//
+
+  //#region add task
+  beforeAddTask() {
     let option = new DialogModel();
     option.zIndex = 1001;
     this.popupTypeCM = this.callfc.openForm(
@@ -323,62 +344,125 @@ export class ViewCalendarComponent
       option
     );
   }
+   
+  closeBeforeAddTask(){
+    this.popupTypeCM.close();
+    this.isStepTask = false;
+    this.isActivitie = false;
+    this.fieldTypeCm = '';
+    this.disableButton = true;
+  }
 
-  settingViews() {}
-
-  //------------------More Func-----------------//
-  //chua goi tho phan quyền -- đang full true
-  changeDataMF(e, data) {}
-
-  clickMF(e, data) {}
-
-  //------------------More Func-----------------//
-
-  filterText(event, type) {
+  valueChangeCombobox(event, type) {
     switch (type) {
       case 'type':
         this.fieldTypeCm = event?.value;
-        let typeCM = this.typeCMs?.find(type => type.entityName == this.fieldTypeCm);
-        this.getDatas(typeCM?.entityName,typeCM?.funcID,null,null);
+        this.disableButton = true;
+        this.insStep = null;
+        this.listStep = [];
+        let typeCM = this.typeCMs?.find(
+          (type) => type.entityName == this.fieldTypeCm
+        );
+        this.getDatas(typeCM?.entityName, typeCM?.funcID, null, null);
         break;
       case 'CM_Customers':
-        this.objectID = event?.value;
+        if(event?.value){
+          this.objectID = event?.value;
+          this.disableButton = false;
+        }else{
+          this.disableButton = true;
+        }
         break;
       case 'CM_Leads':
+        this.checkLeads(event?.itemData)
         break;
       case 'CM_Deals':
         this.checkDeal(event?.value);
         break;
       case 'CM_Contracts':
+        this.checkContracts(event?.itemData)
         break;
       case 'CM_Cases':
+        this.checkCases(event?.itemData)
         break;
       case 'step':
         this.insStep = event?.itemData;
+        this.disableButton = this.insStep ? false : true;
         break;
     }
   }
 
-
-
-  checkDeal(dealID){
-    let deal = this.listDeal.find(dealFind => dealFind.recID == dealID);
-    if(deal){
-      var data = [
-       deal?.refID,
-       deal?.processID,
-       deal?.status,
-        '1',
-      ];
+  checkLeads(lead) {
+    if(!lead?.applyProcess){
+      this.objectID = lead?.recID;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+      this.disableButton = false;
+    }else{
+      this.disableButton = true;
+      var data = [lead?.refID, lead?.processID, lead?.status, '5'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
           this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
+  }
+  
+  checkContracts(contract) {
+    if(!contract?.applyProcess){
+      this.objectID = contract?.recID;
+      this.disableButton = false;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+    }else{
+      this.disableButton = true;
+      var data = [contract?.refID, contract?.processID, contract?.status, '4'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
         }
       });
     }
   }
 
-  getDatas(entityName,funcID,predicates,dataValues) {
+  checkCases(cases) {
+    if(!cases?.applyProcess){
+      this.objectID = cases?.recID;
+      this.disableButton = false;
+      this.isStepTask = false;
+      this.insStep = null;
+      this.listStep = [];
+    }else{
+      this.disableButton = true;
+      var data = [cases?.refID, cases?.processID, cases?.status,  cases.caseType == "1" ? '2':'3'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
+  }
+
+  checkDeal(dealID) {
+    let deal = this.listDeal.find((dealFind) => dealFind.recID == dealID);
+    if (deal) {
+      var data = [deal?.refID, deal?.processID, deal?.status, '1'];
+      this.cmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listStep = res;
+          this.isStepTask = true;
+        }
+      });
+    }
+  }
+
+  getDatas(entityName, funcID, predicates, dataValues) {
     this.requestData.entityName = entityName;
     this.requestData.funcID = funcID;
     this.requestData.predicates = predicates;
@@ -386,32 +470,31 @@ export class ViewCalendarComponent
     this.requestData.pageLoading = false;
 
     this.fetch().subscribe((res) => {
-      switch(entityName) {
+      switch (entityName) {
         case 'CM_Cases':
-          this.listCase = res
+          this.listCase = res;
           break;
         case 'CM_Deals':
-          this.listDeal = res
+          this.listDeal = res;
           break;
         case 'CM_Leads':
-          this.listLead = res
+          this.listLead = res;
           break;
         case 'CM_Contracts':
-          this.listContract = res
+          this.listContract = res;
           break;
         case 'CM_Customers':
-          this.listCustomer = res
+          this.listCustomer = res;
           this.isStepTask = false;
           this.isActivitie = true;
           break;
       }
-      console.log(res)
+      console.log(res);
     });
   }
 
-
   fetch(): Observable<any[]> {
-    return  this.api
+    return this.api
       .execSv<Array<any>>(
         this.service,
         'Core',
@@ -425,57 +508,68 @@ export class ViewCalendarComponent
           return response[0];
         })
       );
-    }
+  }
 
-    continue(){
-      this.popupTypeCM.close();
-      this.chooseTypeTask();
-    }
+  continue() {
+    this.closeBeforeAddTask();
+    this.chooseTypeTask();
+  }
 
-    async chooseTypeTask(){
-     this.taskType = await this.stepService.chooseTypeTask(true);
-      if(this.taskType){
-        if (this.taskType?.value == 'G') {          
-          await this.addGroup();
-        } else {
-          await this.addTask(this.taskType);
+  async chooseTypeTask() {
+    this.taskType = await this.stepService.chooseTypeTask(false);
+    if (this.taskType) {
+      await this.addTask(this.taskType);
+    }
+  }
+
+  async addTask(dataType) {
+    let taskOutput = await this.stepService.addTask('add','',dataType,this.insStep,null,false,null,'right');
+    let task = taskOutput;
+    if (task) {
+      this.isActivitie && this.addActivitie(task);
+      this.isStepTask && this.addStepTask(task);
+    }
+  }
+  addActivitie(task) {
+    task['progress'] = 0;
+    task['refID'] = Util.uid();
+    task['isTaskDefault'] = false;
+    task['taskType'] = this.taskType?.value;
+    task['objectID'] = this.objectID;
+    task['objectType'] = this.entityName;
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        task,
+        this.entityName,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          res.StartDate = res.ActualStart ?? res.StartDate;
+          res.EndDate = res.ActualEnd ?? res.EndDate;
+          res.isActual = res.ActualStart != null ? true : false;
+          res.EntityName = 'DP_Activities';
+          this.view.dataService.add(res).subscribe();
+          this.notiService.notifyCode('SYS006');
+          this.detectorRef.detectChanges();
         }
+      });
+  }
+  addStepTask(task) {
+    console.log(task);
+    this.api
+    .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
+    .subscribe((res) => {
+      if (res) {
+        let task = res[0];
+        task.StartDate = task.ActualStart || task.StartDate;
+        task.EndDate = task.ActualEnd || task.EndDate;
+        task.isActual = task.ActualStart != null ? true : false;
+        task.EntityName = 'DP_Instances_Steps_Tasks';
+        this.view.dataService.add(task).subscribe();
+        this.notiService.notifyCode('SYS006');
+        this.detectorRef.detectChanges();
       }
-    }
-  
-    async addGroup(){
-      let groupOutput = await this.stepService.addGroupTask(null);
-      // if(groupOutput?.groupTask){
-      //   this.groupTaskAdd = groupOutput?.groupTask;
-      //   this.instanceStep?.taskGroups?.push(groupOutput?.groupTask);
-      //   this.changeDetectorRef.detectChanges();
-      // }
-    }
-  
-    async addTask(dataType){
-      let taskOutput = await this.stepService.addTask(dataType,this.insStep,null);
-      let task = taskOutput;
-      if(task){
-        task['progress'] = 0;
-        task['refID'] = Util.uid();
-        task['isTaskDefault'] = false;
-        task['taskType'] = this.taskType?.value;
-        task['objectID'] = this.objectID;
-        task['objectType'] = this.entityName;
-      this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-          task,this.entityName
-        ])
-        .subscribe((res) => {
-          if (res) {
-            res.StartDate = res.ActualStart ?? res.StartDate;
-            res.EndDate = res.ActualEnd ?? res.EndDate;
-            res.isActual = res.ActualStart != null ? true : false;
-            res.EntityName = "DP_Activities";
-            this.view.dataService.add(res).subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
-    }
+    });
+  }
+   //#endregion
 }
