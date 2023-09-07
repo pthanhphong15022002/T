@@ -63,6 +63,7 @@ import { SettingCycleComponent } from './setting/setting-cycle/setting-cycle.com
 import { SettingPolicyLinesComponent } from './setting/setting-policy-lines/setting-policy-lines.component';
 import { AddDedicationRankComponent } from './setting/dedication-rank/add-dedication-rank/add-dedication-rank.component';
 import { SettingContentComponent } from './setting/setting-content/setting-content.component';
+import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
 
 export const routes: Routes = [
   {
@@ -207,7 +208,7 @@ const Component: Type<any>[] = [
   AddDedicationRankComponent,
   SettingContentComponent,
 ];
-
+const T_Pipe: Type<any>[] = [PositionPipe];
 @NgModule({
   imports: [
     CommonModule,
@@ -220,10 +221,11 @@ const Component: Type<any>[] = [
     AccumulationChartModule,
     ChartAllModule,
     ProgressBarModule,
+
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: Component,
+  declarations: [Component, T_Pipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {
