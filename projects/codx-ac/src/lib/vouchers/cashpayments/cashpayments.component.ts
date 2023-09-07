@@ -242,7 +242,15 @@ export class CashPaymentsComponent extends UIComponent {
         this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        this.copyVoucher(data); //? sao chép chứng từ
+        //   this.copyVoucher(data); //? sao chép chứng từ
+        this.api
+          .execSv<any>('AC', 'Core', 'DataBusiness', 'SaveAsAsync', [
+            this.view.entityName,
+            data.recID,
+            data.recID,
+            '',
+          ])
+          .subscribe();
         break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
