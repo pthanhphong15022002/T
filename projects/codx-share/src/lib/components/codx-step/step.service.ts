@@ -352,7 +352,7 @@ export class StepService {
     return groupOutput;
   }
 
-  async addTask(taskType, instanceStep, groupID) {
+  async addTask(action, titleName, taskType, instanceStep, groupID, isSave,ownerParent,location) {
     let task = new DP_Instances_Steps_Tasks();
     task['taskType'] = taskType?.value;
     task['stepID'] = instanceStep?.recID;
@@ -360,30 +360,24 @@ export class StepService {
     task['taskGroupID'] = groupID || null;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
-
-    let taskOutput = await this.openPopupTask(
-      'add',
-      '',
-      taskType,
-      instanceStep,
-      task,
-      groupID
-    );
+    task['dependRule'] = '0';
+    task['isTaskDefault'] = false;
+    let taskOutput = await this.openPopupTask(action,titleName, taskType, instanceStep, task, groupID, isSave, ownerParent,location);
     return taskOutput;
   }
 
-  async openPopupTask(action,titleName, taskType, dataTask, ownerParent,location = 'right', groupTaskID = null) {
+  async openPopupTask(action,titleName, taskType,instanceStep, dataTask, groupTaskID, isSave, ownerParent,location) {
     let dataInput = {
       action,
       titleName: titleName,
       taskType: taskType,
-      step: null,
+      step: instanceStep,
       listGroup: null,
       dataTask: dataTask || {},
       listTask: null,
       isEditTimeDefault: null,
       groupTaskID, // trường hợp chọn thêm từ nhóm
-      isSave: false,
+      isSave: isSave,
       isStart: true,
       owner: ownerParent,
     };
@@ -395,6 +389,17 @@ export class StepService {
     let dataPopupOutput;
     let popupAddTask;
     if(location == 'right'){
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      popupAddTask = this.callFunc.openSide(
+        CodxAddTaskComponent,
+        dataInput,
+        option
+      );
+    }else{
+
       let opt = new DialogModel();
       opt.FormModel = frmModel;
       popupAddTask = this.callFunc.openForm(
@@ -407,16 +412,6 @@ export class StepService {
         '',
         opt
       ); 
-    }else{
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1011;
-      option.FormModel = frmModel;
-      popupAddTask = this.callFunc.openSide(
-        CodxAddTaskComponent,
-        dataInput,
-        option
-      );
     }
     dataPopupOutput = await firstValueFrom(popupAddTask.closed);
     let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;

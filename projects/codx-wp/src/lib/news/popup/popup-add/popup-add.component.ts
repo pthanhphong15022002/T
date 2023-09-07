@@ -129,8 +129,7 @@ export class PopupAddComponent implements OnInit {
 
   getPostInfo(recID:string)
   {
-    if(recID)
-    {
+    if(recID){
       this.api.execSv(
         'WP',
         'ERM.Business.WP',
@@ -162,7 +161,6 @@ export class PopupAddComponent implements OnInit {
 
   // insert post
   clickInsert(){
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     this.codxATMImage.fileUploadList = Array.from<any>(this.fileUpload);
@@ -195,11 +193,9 @@ export class PopupAddComponent implements OnInit {
   
   // release post
   clickRelease() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
-    if(this.fileUpload.length > 0)
-    {
+    if(this.fileUpload.length > 0){
       this.codxATMImage.fileUploadList = [...this.fileUpload];
       this.codxATMImage.saveFilesMulObservable()
       .subscribe((res: any) => {
@@ -428,13 +424,14 @@ export class PopupAddComponent implements OnInit {
           this.dialogRef.close();
           return;
         }
-       
+        
       });
     }
     else
     {
       this.updatePost(this.data);
     }
+    
   }
 
   // update post

@@ -1,3 +1,4 @@
+import { group } from 'console';
 import {
   OnInit,
   Optional,
@@ -111,7 +112,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.isStart = dt?.data?.isStart;
     this.typeTask = dt?.data?.taskType;
     this.ownerParent = dt?.data?.owner; // owner of Parent
-    this.listTask = dt?.data?.listTask;
+    this.listTask = dt?.data?.listTask || this.step?.tasks;
     this.stepsTasks = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
@@ -127,6 +128,8 @@ export class CodxAddTaskComponent implements OnInit {
       if (index >= 0) {
         this.listGroup?.splice(index, 1);
       }
+    }else{
+      this.listGroup = JSON.parse(JSON.stringify(this.step?.taskGroups || []));
     }
   }
 
@@ -136,7 +139,7 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(this.step?.startDate || new Date());
-      this.endDateParent = new Date(this.step?.endDate || null);
+      this.endDateParent = this.step?.endDate ? new Date(this.step?.endDate) : null;
     } else {
       this.groupTask = this.listGroup.find(
         (x) => x.refID === this.stepsTasks?.taskGroupID
@@ -164,12 +167,10 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.status = '1';
       this.stepsTasks.createTask = this.isBoughtTM;
       this.stepsTasks.taskName = this.typeTask?.text;
-      if (!this.stepsTasks?.taskGroupID) {
-        this.stepsTasks.startDate = this.startDateParent;
-        let startDays = new Date(this.startDateParent);
-        startDays.setDate(startDays?.getDate() + 1);
-        this.stepsTasks.endDate = startDays;
-      }
+      this.stepsTasks.startDate = this.startDateParent;
+      let startDays = new Date(this.startDateParent);
+      startDays.setDate(startDays?.getDate() + 1);
+      this.stepsTasks.endDate = startDays;
     }
     if (this.step?.fields?.length > 0 && this.stepsTasks?.fieldID) {
       let fieldID = this.stepsTasks?.fieldID;
@@ -281,7 +282,7 @@ export class CodxAddTaskComponent implements OnInit {
       } else {
         this.isSaveTimeTask = true;
       }
-      if (this.stepService.compareDates(this.endDateParent, endDate) < 0) {
+      if (this.endDateParent && this.stepService.compareDates(this.endDateParent, endDate) < 0) {
         this.isSaveTimeGroup = false;
         this.isLoadDate = !this.isLoadDate;
         let start =

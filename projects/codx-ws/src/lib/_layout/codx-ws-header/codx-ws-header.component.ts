@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
   override onAfterViewInit(): void {
-    
   }
 
   title$:any;
@@ -21,8 +20,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   selectedIndex = 0;
   funcID:any;
   userInfo:any;
-  listDashboard:any;
-  listReport:any;
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -43,10 +41,8 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     this.logo$ = this.layout.logo.asObservable();
 
     this.getFuncChange();
-    this.getModuleByUserID();
+    //this.getModuleByUserID();
   }
- 
-  
   
   getFuncChange()
   {
@@ -74,49 +70,9 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     }
   }
 
-  getModuleByUserID()
-  {
-    var module = this.codxWsService.loadModuleByUserID(this.userInfo?.userID) as any;
-    if(isObservable(module))
-    {
-      module.subscribe((item:any)=>{
-        if(item) {
-          var listModule = item.join(";");
-          this.getDashboardOrReport("D",listModule);
-          this.getDashboardOrReport("R",listModule);
-        }
-      })
-    }
-    else
-    {
-      var listModule = module.join(";");
-      this.getDashboardOrReport("D",listModule);
-      this.getDashboardOrReport("R",listModule);
-    }
-  }
-  getDashboardOrReport(type:any,listModule:any)
-  {
-    var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
-    if(isObservable(result))
-    {
-      result.subscribe((item:any)=>{
-        if(item) 
-        {
-          if(type == "D") this.listDashboard = item;
-          else this.listReport = item;
-        }
-      })
-    }
-    else  {
-      if(type == "D") this.listDashboard = result;
-      else this.listReport = result;
-    }
-  }
-
   selectedChange(i:any , item:any)
   {
     this.selectedIndex = i;
-    if(item.functionType == "D" || item.functionType == "R") return;
     this.codxService.navigate("","/"+item.url);
   }
 }
