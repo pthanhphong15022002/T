@@ -317,9 +317,8 @@ export class PdfComponent
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
-          if (this.oURL?.length>0)
-          {
-            res.urls=this.oURL;
+          if (this.oURL?.length > 0) {
+            res.urls = this.oURL;
           }
           let sf = res?.signFile;
           if (sf) {
@@ -1289,7 +1288,23 @@ export class PdfComponent
     }
   }
 
-  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {}
+  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
+    if (txtLayer?.source?.textLayer?.div?.nextElementSibling != null) {
+      (
+        txtLayer?.source.textLayer?.div.nextElementSibling as HTMLElement
+      ).style.zIndex = '-1';
+    }
+    if (txtLayer.pageNumber == this.pageMax) {
+      txtLayer?.source.textLayer?.textDivs.forEach((div) => {
+        // if (Number(div.style.top.replace('px', '')) > this.maxTop) {
+        if (div.offsetTop > this.maxTop) {
+          // this.maxTop = Number(div.style.top.replace('px', ''));
+          this.maxTop = div.offsetTop;
+          this.maxTopDiv = div;
+        }
+      });
+    }
+  }
   //create area
   /*
     type = 'text' || 'img' || 'group'
