@@ -187,9 +187,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
             }
             this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
             this.valueChangeCustom.emit({
-              e: contact,
+              e: JSON.stringify(this.listContacts),
               data: this.customField,
-              result: JSON.stringify(this.listContacts),
+              result: contact,
               type: 'addAndSave',
             });
             this.codxShareSv.listContactBehavior.next(null);
@@ -376,9 +376,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
             if (idx == -1) this.listContacts.push(contact);
             else this.listContacts[idx] = contact;
             this.valueChangeCustom.emit({
-              e: contact,
-              result: JSON.stringify(this.listContacts),
+              e: JSON.stringify(this.listContacts),
               data: this.customField,
+              result: contact,
             });
           }
         });
@@ -395,8 +395,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
     if (index != -1) {
       this.listContacts[index]['role'] = event?.trim();
       this.valueChangeCustom.emit({
-        e: this.listContacts[index],
-        result: JSON.stringify(this.listContacts),
+        e: JSON.stringify(this.listContacts),
+        result: this.listContacts[index],
         data: this.customField,
       });
     }
@@ -460,9 +460,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
             if (idx == -1) this.listContacts.push(contact);
             else this.listContacts[idx] = contact;
             this.valueChangeCustom.emit({
-              e: contact,
-              result: JSON.stringify(this.listContacts),
+              e: JSON.stringify(this.listContacts),
               data: this.customField,
+              result: contact,
             });
           }
         });
@@ -480,16 +480,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
           this.listContacts.splice(index, 1);
           this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
           this.valueChangeCustom.emit({
-            e: data,
+            e: JSON.stringify(this.listContacts),
             data: this.customField,
-            result: JSON.stringify(this.listContacts),
+            result: data,
             type: 'delete',
           });
         } else {
           this.valueChangeCustom.emit({
-            e: null,
+            e: JSON.stringify(this.listContacts),
             data: this.customField,
-            result: JSON.stringify(this.listContacts),
+            result: null,
           });
         }
       }
