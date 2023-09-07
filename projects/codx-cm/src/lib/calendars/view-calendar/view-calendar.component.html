@@ -152,11 +152,30 @@
 <ng-template #popupChoiseTypeCM let-data>
   <codx-form
     #form
-    [headerText]="'Thêm công việc'"
+    [customToolbar]="subHeader"
     [body]="addGroupJobBody"
     [footer]="addGroupJobFooter"
     [dialog]="popupTypeCM"
   ></codx-form>
+</ng-template>
+
+<ng-template #subHeader>
+  <div class="pt-2 px-2 w-100">
+    <div class="d-flex justify-content-between align-items-center w-100">
+      <codx-label
+        name="titleTypeTasks"
+        class="fw-bold fs-4"
+        [default]="'Thêm công việc'"
+      ></codx-label>
+      <button
+        class="button-close d-flex p-3"
+        style="border: none; outline: none; background: none"
+        (click)="closeBeforeAddTask()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </div>
 </ng-template>
 <ng-template #addGroupJobBody let-data>
   <div class="form-group w-100">
@@ -172,7 +191,7 @@
       <ejs-combobox
         [dataSource]="typeCMs"
         [fields]="fieldsGroup"
-        (change)="filterText($event, 'type')"
+        (change)="valueChangeCombobox($event, 'type')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -191,7 +210,7 @@
       <ejs-combobox
         [dataSource]="listCustomer"
         [fields]="fieldsCustomer"
-        (change)="filterText($event,'CM_Customers')"
+        (change)="valueChangeCombobox($event,'CM_Customers')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -203,6 +222,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Tiềm năng"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -210,7 +230,7 @@
       <ejs-combobox
         [dataSource]="listLead"
         [fields]="fieldsLead"
-        (change)="filterText($event, 'CM_Leads')"
+        (change)="valueChangeCombobox($event, 'CM_Leads')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -222,6 +242,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Cơ hội"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -229,7 +250,7 @@
       <ejs-combobox
         [dataSource]="listDeal"
         [fields]="fieldsDeal"
-        (change)="filterText($event, 'CM_Deals')"
+        (change)="valueChangeCombobox($event, 'CM_Deals')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -241,6 +262,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Hợp đồng"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -248,7 +270,7 @@
       <ejs-combobox
         [dataSource]="listContract"
         [fields]="fieldsContract"
-        (change)="filterText($event,'CM_Contracts')"
+        (change)="valueChangeCombobox($event,'CM_Contracts')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -260,6 +282,7 @@
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Sự cố"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
@@ -267,26 +290,27 @@
       <ejs-combobox
         [dataSource]="listCase"
         [fields]="fieldsCase"
-        (change)="filterText($event,'CM_Cases')"
+        (change)="valueChangeCombobox($event,'CM_Cases')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
   </div>
   <!-- Giai đoạn -->
-  <div class="form-group w-100" *ngIf="listStep">
+  <div class="form-group w-100" *ngIf="listStep && isStepTask">
     <div>
       <codx-label
         fiedName="StepName"
         [formModel]="view.formModel"
         default="Giai đoạn"
+        [setRequire]="true"
       >
       </codx-label>
     </div>
     <div>
       <ejs-combobox
         [dataSource]="listStep"
-        [fields]="fieldsGroup"
-        (change)="filterText($event, 'step')"
+        [fields]="fieldsStep"
+        (change)="valueChangeCombobox($event, 'step')"
         [allowCustom]="false"
       ></ejs-combobox>
     </div>
@@ -298,6 +322,8 @@
     <button
       type="button"
       class="btn btn-primary"
+      (click)="continue()"
+      [disabled]="disableButton"
     >
       <codx-label
         name="lblSave"

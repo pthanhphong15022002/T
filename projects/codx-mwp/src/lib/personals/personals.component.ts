@@ -13,6 +13,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   Injector,
+  AfterViewInit,
 } from '@angular/core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
@@ -23,7 +24,7 @@ import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-
   styleUrls: ['./personals.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PersonalsComponent extends UIComponent {
+export class PersonalsComponent extends UIComponent  implements AfterViewInit{
   
   views: Array<ViewModel> | any = [];
   formName: any;

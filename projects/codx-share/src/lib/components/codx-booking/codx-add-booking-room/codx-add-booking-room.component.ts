@@ -357,9 +357,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       if(sv){
         let roomSetting_1 = this.codxBookingService.getCacheSettingValue(sv,_EPRoomParameters,'1');
         if(roomSetting_1!=null){
-          
-          this.dueDateControl = roomSetting_1?.DueDateControl;
-          this.guestControl = roomSetting_1?.GuestControl;
+          this.dueDateControl = roomSetting_1?.dueDateControl;
+          this.guestControl = roomSetting_1?.guestControl;
         }
         let roomSetting_4 = this.codxBookingService.getCacheSettingValue(sv,null,'4',EPCONST.ES_CategoryID.Room);
         if (roomSetting_4 != null) {
@@ -375,35 +374,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.approvalRuleSta = staSetting_4?.approvalRule !=null? staSetting_4?.approvalRule :'1';
         }
       }
-    });
-    
-
-    // this.codxBookingService
-    //   .getDataValueOfSettingAsync(_EPParameters, null, '4')
-    //   .subscribe((res: string) => {
-    //     if (res) {
-    //       debugger
-    //       let roomSetting_4 = JSON.parse(res);
-    //       if (roomSetting_4 != null && roomSetting_4.length > 0) {
-    //         let setting = roomSetting_4.filter(
-    //           (x: any) => x.Category == EPCONST.ENTITY.R_Bookings
-    //         );
-    //         if (setting != null) {
-    //           this.approvalRule =
-    //             setting[0]?.ApprovalRule != null
-    //               ? setting[0]?.ApprovalRule
-    //               : '1';
-    //           this.categoryID =
-    //             setting[0]?.CategoryID != null
-    //               ? setting[0]?.CategoryID
-    //               : EPCONST.ES_CategoryID.Room;
-    //         } else {
-    //           this.approvalRule = '1'; //Đề phòng trường hợp setting lỗi/ thì lấy duyệt theo quy trình
-    //           this.categoryID = EPCONST.ES_CategoryID.Room;
-    //         }
-    //       }
-    //     }
-    //   });
+    });    
     // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {

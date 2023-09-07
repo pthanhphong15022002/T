@@ -222,11 +222,11 @@ export class PopupEProcessContractComponent
         this.notify.alertCode('SYS030').subscribe((x) => {
           if (x.event?.status == 'Y') {
             let index = this.tempBenefitArr.indexOf(data);
-            if (index) {
-              this.tempBenefitArr.splice(index, 1);
-              this.data.benefits = JSON.stringify(this.tempBenefitArr);
-              this.df.detectChanges();
-            }
+            // if (index) {
+            this.tempBenefitArr.splice(index, 1);
+            this.data.benefits = JSON.stringify(this.tempBenefitArr);
+            this.df.detectChanges();
+            // }
           }
         });
         break;

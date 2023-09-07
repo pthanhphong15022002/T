@@ -1,17 +1,200 @@
 <ng-container *ngIf="loaded">
-  <codx-gridview-v2
-    service="WR"
-    [formName]="formModel.formName"
-    [gridViewName]="formModel.gridViewName"
-    [entityName]="formModel.entityName"
-    [allowFiltering]="true"
-    [allowSorting]="true"
-    [dataSource]="lstParts"
-    [autoLoad]="false"
-    rowHeight="40"
-    [height]="'100%'"
-    [autoAddRow]="true"
-    [hideMoreFunc]="true"
-    [showRowNumber]="false"
-  ></codx-gridview-v2>
+  <div class="table-responsive mt-2">
+    <table class="table table-hover table-row-bordered">
+      <thead style="position: sticky; top: 0">
+        <tr class="border-bottom">
+          <th class="w-50 min-w-350px">
+            <div class="d-flex">
+              <codx-label
+                class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+                default="Part info"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+            </div>
+          </th>
+          <th class="min-w-100px">
+            <div class="d-flex">
+              <codx-label
+                class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+                default="Quantity"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+            </div>
+          </th>
+          <th class="min-w-150px">
+            <div class="d-flex">
+              <codx-label
+                class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+                default="Status"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+            </div>
+          </th>
+          <th class="min-w-100px">
+            <div class="d-flex">
+              <codx-label
+                class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+                default="Note"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let item of lstParts">
+        <tr
+          style="
+            border-bottom: 1px solid !important ;
+            border-bottom-color: #eaf0f7 !important;
+          "
+        >
+          <td>
+            <div class="mb-1">
+              <span
+                class="text-nowrap"
+                [innerHTML]="
+                  item?.partDesc | formatvalue : formModel : 'PartDesc' | async
+                "
+              ></span>
+            </div>
+            <div class="mb-1">
+              <span
+                class="text-nowrap"
+                [innerHTML]="
+                  item?.commodityName
+                    | formatvalue : formModel : 'CommodityName'
+                    | async
+                "
+              ></span>
+            </div>
+            <div class="mb-1">
+              <codx-label
+                class="text-dark codx-label"
+                default="Part no:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <span
+                class="text-nowrap me-2"
+                [innerHTML]="
+                  item?.partNo | formatvalue : formModel : 'PartNo' | async
+                "
+              ></span>
+              <codx-label
+                class="text-dark codx-label"
+                default="PPID old:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <span
+                class="text-nowrap text-primary me-2"
+                [innerHTML]="
+                  item?.ppidOld | formatvalue : formModel : 'PPIDOld' | async
+                "
+              ></span>
+              <codx-label
+                class="text-dark codx-label"
+                default="PPID new:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <span
+                class="text-nowrap text-primary"
+                [innerHTML]="
+                  item?.ppidNew | formatvalue : formModel : 'PPIDNew' | async
+                "
+              ></span>
+            </div>
+          </td>
+          <td>
+            <div class="mb-1">
+              <span
+                class="text-nowrap"
+                [innerHTML]="
+                  item?.qty | formatvalue : formModel : 'Qty' | async
+                "
+              ></span>
+            </div>
+            <div class="mb-1">
+              <codx-vll
+                [name]="grvSetupWorkOrderParts?.Status?.referedValue"
+                [field]="'Status'"
+                [value]="item?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm"
+              >
+              </codx-vll>
+            </div>
+          </td>
+          <td>
+            <div class="mb-1">
+              <codx-label
+                class="text-dark codx-label"
+                default="Status:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <codx-vll
+                [name]="grvSetupWorkOrderParts?.StatusCode?.referedValue"
+                [field]="'StatusCode'"
+                [value]="item?.statusCode"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm"
+              >
+              </codx-vll>
+            </div>
+            <div class="mb-1">
+              <codx-label
+                class="text-dark codx-label"
+                default="ETA:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <span
+                class="text-nowrap me-2"
+                [innerHTML]="
+                  item?.eta | formatvalue : formModel : 'ETA' | async
+                "
+              ></span>
+            </div>
+            <div class="mb-1">
+              <codx-label
+                class="text-dark codx-label"
+                default="Delivered:"
+                [formModel]="formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
+              <span class="text-nowrap me-2" [innerHTML]="'01/01/2023'"></span>
+            </div>
+          </td>
+          <td>
+            <div class="mb-1">
+              <span
+                class="text-nowrap"
+                [innerHTML]="
+                  item?.note | formatvalue : formModel : 'Note' | async
+                "
+              ></span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </ng-container>

@@ -32,7 +32,9 @@
       [formModel]="formModel"
       entityName="WP_Comments" 
       [itemTemplate]="itemTemplate" 
-      [emptyTemplate]="empty">
+      [emptyTemplate]="empty"
+      [selectFirst]="true"
+      (onSelectionChanged)="onAction($event)">
     </codx-listview>
   </div>
 </div>

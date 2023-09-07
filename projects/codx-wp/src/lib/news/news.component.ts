@@ -108,7 +108,7 @@ export class NewsComponent extends UIComponent {
         },
       },
     ];
-    this.carousel.pause();
+    this.carousel?.pause();
   }
 
   // get user permission
@@ -272,7 +272,10 @@ export class NewsComponent extends UIComponent {
         }
         //video
         else if (data.newsType == this.NEWSTYPE.VIDEO) {
-          if (this.videos.length > 0) this.videos.unshift(data);
+          if (this.videos.length == 0) 
+            this.videos.push(data);
+          else 
+            this.videos.unshift(data);
           let slideIndex = 0;
           for (let idx = 0; idx < this.videos.length; idx += 3) {
             this.slides[slideIndex] = [];

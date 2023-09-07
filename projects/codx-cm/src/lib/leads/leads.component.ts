@@ -477,7 +477,7 @@ export class LeadsComponent
       // Làm lại khi tiềm năng đã thành công or thất bại
       eventItem.disabled = data.write
         ? (!['3', '5'].includes(data.status) && data.applyProcess) ||
-           (!data.applyProcess && data.status != '5' )
+          (!data.applyProcess && data.status != '5')
         : true;
     };
     let isChangeStatus = (eventItem, data) => {
@@ -1138,49 +1138,40 @@ export class LeadsComponent
         }
       });
   }
-  executeStartLead(data:any) {
-    if(data.applyProcess) {
+  executeStartLead(data: any) {
+    if (data.applyProcess) {
       this.codxCmService
-      .moveBackStartInstance([
-        data.refID,
-        data.status,
-        data.processID,
-        this.applyForLead,
-      ])
-      .subscribe((resDP) => {
-        if (resDP) {
-          let datas = [data.recID, resDP[0]];
-          this.startFirstLead(datas,resDP[1]);
-        }
-      });
-    }
-    else {
+        .moveBackStartInstance([
+          data.refID,
+          data.status,
+          data.processID,
+          this.applyForLead,
+        ])
+        .subscribe((resDP) => {
+          if (resDP) {
+            let datas = [data.recID, resDP[0]];
+            this.startFirstLead(datas, resDP[1]);
+          }
+        });
+    } else {
       let datas = [data.recID, ''];
-      this.startFirstLead(datas,null);
+      this.startFirstLead(datas, null);
     }
-
   }
-  startFirstLead(datas:any, listStep:any) {
-    this.codxCmService
-    .moveStartFirstLead(datas)
-    .subscribe((res) => {
+  startFirstLead(datas: any, listStep: any) {
+    this.codxCmService.moveStartFirstLead(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res[0];
-        this.dataSelected = JSON.parse(
-          JSON.stringify(this.dataSelected)
-        );
-        this.view.dataService
-        .update(this.dataSelected)
-        .subscribe();
-        (listStep.length > 0 && listStep ) && this.detailViewLead.reloadListStep(listStep);
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        listStep.length > 0 &&
+          listStep &&
+          this.detailViewLead.reloadListStep(listStep);
         this.notificationsService.notifyCode('SYS007');
-
       }
       this.detectorRef.detectChanges();
     });
   }
-
-
 
   updateProcess(data, isCheck) {
     this.notificationsService
@@ -1549,40 +1540,42 @@ export class LeadsComponent
   exportFiles(e, data) {
     // let formatDatas = JSON.stringify(data);
     //  let formatDatas = formatDatas.replace('\\', '');
-    // let datas = [
-    //   // {
-    //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
-    //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-    //   // dia_chi: '06 Lê Lợi, Huế',
-    //   // ma_so_thue: '1111111111111',
-    //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
-    //   // tai_khoan: 'VCB-012024554565',
-    //   // san_pham: 'Sản phẩm quần què',
-    //   // dien_tich: '0',
-    //   // so_luong: 1,
-    //   // don_gia: 100000,
 
-    //   // datas: [
-    //   {
-    //     customerID: 'Sản phẩm quần què 1',
-    //     Industries: '0',
-    //     BusinessLineID: 3333333333,
-    //     don_gia: 100000,
-    //   },
-    //   {
-    //     customerID: ' nhu ga',
-    //     Industries: '0',
-    //     BusinessLineID: 99999999,
-    //     don_gia: 5000,
-    //   },
-    //   // ,
-    //   // ],
-    //   //  }
-    // ];
+    //Tạo data cho Quang debug
+    let datas = [
+      //   // {
+      //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
+      //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+      //   // dia_chi: '06 Lê Lợi, Huế',
+      //   // ma_so_thue: '1111111111111',
+      //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
+      //   // tai_khoan: 'VCB-012024554565',
+      //   // san_pham: 'Sản phẩm quần què',
+      //   // dien_tich: '0',
+      //   // so_luong: 1,
+      //   // don_gia: 100000,
 
-    // let formatDatas = JSON.stringify(datas);
+      // datas: [
+      {
+        customerID: 'Sản phẩm 1',
+        Industries: '0',
+        BusinessLineID: 3333333333,
+        don_gia: 100000,
+      },
+      {
+        customerID: 'Sản phẩm 2',
+        Industries: '0',
+        BusinessLineID: 99999999,
+        don_gia: 5000,
+      },
+      // ,
+      // ],
+      //  }
+    ];
 
-    let formatDatas = data.datas ?? '';
+    let formatDatas = JSON.stringify(datas);
+
+    // let formatDatas = data.datas ?? '';
     let customData = {
       refID: data.recID,
       refType: this.view.entityName,
@@ -1590,20 +1583,21 @@ export class LeadsComponent
     };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
-        if (dts) {
-          if (formatDatas) {
-            formatDatas = JSON.stringify([
-              ...JSON.parse(formatDatas),
-              ...JSON.parse(dts),
-            ]);
-          } else formatDatas = dts;
+        //coment lại cho QUANG Test
+        // if (dts) {
+        //   if (formatDatas) {
+        //     formatDatas = JSON.stringify([
+        //       ...JSON.parse(formatDatas),
+        //       ...JSON.parse(dts),
+        //     ]);
+        //   } else formatDatas = dts;
 
-          customData = {
-            refID: data.processID,
-            refType: 'DP_Processes',
-            dataSource: formatDatas,
-          };
-        }
+        //   customData = {
+        //     refID: data.processID,
+        //     refType: 'DP_Processes',
+        //     dataSource: formatDatas,
+        //   };
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           data,

@@ -62,6 +62,15 @@ export class CodxCmService {
     );
   }
 
+  getContactDeal(recID) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetContactDealAsync',
+      recID
+    );
+  }
+
   getAdminRolesByModule(){
     return this.api.exec<any>('AD', 'UserRolesBusiness', 'GetListUserIDByADMinStrAsync', ['CM']);
   }
@@ -489,6 +498,15 @@ export class CodxCmService {
       'InstancesBusiness',
       'EditInstanceAsync',
       data
+    );
+  }
+
+  updateFieldContacts(instanceID, dataValueEdit: string, dataValueDeleted: string = '') {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateFielsContactByInstanceIDAsync',
+      [instanceID, dataValueEdit, dataValueDeleted]
     );
   }
 

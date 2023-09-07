@@ -1889,7 +1889,7 @@ export class PopupAddSignFileComponent implements OnInit {
       700,
       '',
       [
-        gridModel,
+        gridModel,null,null,this.data.recID,this.refType
       ],
       null
     );

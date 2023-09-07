@@ -340,10 +340,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
     );
     if (checkControl) {
       checkControl.closed.subscribe((res) => {
-        let oComment = res?.event;
-        this.dialogSignFile.patchValue({ comment: oComment.comment });
-        this.dialogSignFile.patchValue({ reasonID: oComment.reasonID });
-        this.approve(mode, title, subTitle, null);
+        if(res?.event){
+          let oComment = res?.event;
+          this.dialogSignFile.patchValue({ comment: oComment.comment });
+          this.dialogSignFile.patchValue({ reasonID: oComment.reasonID });
+          this.approve(mode, title, subTitle, null);
+        }
+        else{
+          return;
+        }
       });
     } else {
       this.approve(mode, title, subTitle, null);
