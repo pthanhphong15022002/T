@@ -563,6 +563,7 @@ export class ViewCalendarComponent
           res.EndDate = res.ActualEnd ?? res.EndDate;
           res.isActual = res.ActualStart != null ? true : false;
           res.EntityName = 'DP_Activities';
+          this.isActivitie = false;
           this.view.dataService.add(res).subscribe();
           this.notiService.notifyCode('SYS006');
           this.detectorRef.detectChanges();
@@ -581,6 +582,7 @@ export class ViewCalendarComponent
         task.isActual = task.ActualStart != null ? true : false;
         task.EntityName = 'DP_Instances_Steps_Tasks';
         this.view.dataService.add(task).subscribe();
+        this.isStepTask = false;
         this.notiService.notifyCode('SYS006');
         this.detectorRef.detectChanges();
       }

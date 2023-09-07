@@ -374,8 +374,8 @@
               <div class="fs-5-sm d-flex align-items-center">
                 <span class="icon-qr_code_scanner icon-16 me-2"></span>
                 <span style="margin-top: 2px" #id placement="bottom" [title]="eInfoHeaderText?.EmployeeID">{{ employeeID }}</span>
-                <span
-                  class="icon-i-info-circle-fill icon-4 mx-2 text-gray-600"
+                <span *ngIf="infoPersonal"
+                  class="icon-i-info-circle-fill icon-4 mx-3 text-gray-600"
                 ></span>
                 <span class="fw-bold" placement="bottom" [title]="eInfoHeaderText?.EmployeeName">{{ infoPersonal?.employeeName }}</span>
               </div>

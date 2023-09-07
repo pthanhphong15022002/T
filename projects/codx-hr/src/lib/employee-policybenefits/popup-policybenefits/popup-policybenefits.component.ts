@@ -50,6 +50,7 @@ implements OnInit{
   headerText: string;
   benefitPolicyObj: any;
   autoNumField: any;
+  loadedAutoField = false;
   benefitFormModel: any;
 
   currentRec: any;
@@ -138,7 +139,6 @@ implements OnInit{
   cbxConstraintCbxValue: any;
 
   fieldHeaderTexts;
-  policyIdEdited = false;
   originPolicyId = '';
   originPolicyBenefitObj = '';
 
@@ -858,12 +858,6 @@ implements OnInit{
     }
   }
 
-  onInputPolicyID(evt){
-    if(this.actionType == 'edit'){
-      this.policyIdEdited = true;
-    }
-  }
-
   setTitle(evt: any){
     this.headerText += " " +  evt;
     this.df.detectChanges();
@@ -905,13 +899,18 @@ implements OnInit{
         )
         .subscribe((res: any) => {
           if (res) {
+            debugger
             if(res.key){
               this.autoNumField = res.key;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             res.data.status = '1'
             
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             this.benefitPolicyObj = res?.data;
             
@@ -937,6 +936,20 @@ implements OnInit{
           }
         });
     } else {
+      this.hrSevice
+      .getDataDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        this.idField
+      )
+      .subscribe((res: any) => {
+        debugger
+        if (res) {
+          this.autoNumField = res.key ? res.key : null;
+          this.loadedAutoField = true;
+          this.df.detectChanges();
+        }}
+        )
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         if(this.benefitPolicyObj.adjustKows){
           this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
@@ -955,8 +968,6 @@ implements OnInit{
             this.SplitConstraint();
           })
         }
-
-        
         
         this.GetPolicyDetailByAjustBy(this.benefitPolicyObj.adjustBy).subscribe((res) => {
           this.dataSourceGridView1 = res;
@@ -1605,11 +1616,13 @@ implements OnInit{
         if(res){
             this.notify.notifyCode('SYS006');
             for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+              debugger
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                 
               })
             }
             for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+              debugger
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                 
               })
@@ -1636,6 +1649,7 @@ implements OnInit{
               this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
                 if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
                 for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  debugger
                   this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   })
                 }
@@ -1765,7 +1779,6 @@ deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
 
   switch(from){
     case 'lstSelectedObj':
-      debugger
       this.lstPolicyBeneficiariesApply = lstBeneficiaries;
       let index = this.lstSelectedObj.indexOf(data);
       this.lstSelectedObj.splice(index,1);
