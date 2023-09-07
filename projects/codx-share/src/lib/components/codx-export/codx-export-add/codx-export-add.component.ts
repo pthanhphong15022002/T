@@ -334,6 +334,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
               this.attachment1.objectType = 'AD_WordTemplates';
+              this.attachment1.functionID = "AD002";
               this.attachment1.fileUploadList.forEach(elm=>{
                 elm.objectType ='AD_WordTemplates';
                 elm.funcID = "AD002";
