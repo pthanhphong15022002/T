@@ -93,6 +93,8 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue?.trim() != ''
       ) {
         if (this.isRole) {
+          if (changes['objectID']?.currentValue == this.id) return;
+          this.id = changes['objectID']?.currentValue;
           this.getListContacts();
         }
       } else {
@@ -138,11 +140,13 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   loadListContact(lstContact) {
+    this.loaded = true;
     this.listContacts = this.cmSv.bringDefaultContactToFront(lstContact);
-    if (this.listContacts != null && this.listContacts.length > 0) {
-      this.changeContacts(this.listContacts[0]);
-      if (this.isConvertLeadToCus) this.insertFieldCheckbox();
-    }
+    this.changeDetectorRef.detectChanges();
+    // if (this.listContacts != null && this.listContacts.length > 0) {
+    //   this.changeContacts(this.listContacts[0]);
+    //   if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+    // }
   }
 
   getListContacts() {

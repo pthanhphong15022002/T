@@ -27,6 +27,7 @@ import { CM_Contacts } from '../../models/cm_model';
 import { PopupListContactsComponent } from './codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
 import * as XLSX from 'xlsx';
 import { firstValueFrom } from 'rxjs';
+import { CodxListContactsComponent } from './codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-cmcustomer-detail',
@@ -35,6 +36,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class CmCustomerDetailComponent implements OnInit {
   @ViewChild('contract') contract: TemplateRef<any>;
+  @ViewChild('codxListContact') codxListContact: CodxListContactsComponent;
   @Input() recID: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
@@ -268,6 +270,11 @@ export class CmCustomerDetailComponent implements OnInit {
         });
       }
     }
+  }
+
+  onChangeContact(lstContact){
+    this.codxListContact.loadListContact(lstContact);
+    this.changeDetectorRef.detectChanges();
   }
 
   listTab(funcID) {

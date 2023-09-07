@@ -393,9 +393,11 @@ export class CmCustomerComponent
           this.isButton = true;
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
-            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-            this.view.dataService.update(e?.event).subscribe();
+            let data = e?.event[0];
+            let lstContacts = e?.event[1];
+            data.modifiedOn = new Date();
+            this.dataSelected = JSON.parse(JSON.stringify(data));
+            this.view.dataService.update(data).subscribe();
             // this.customerDetail.loadTag(this.dataSelected);
             this.detectorRef.detectChanges();
             // this.customerDetail.listTab(this.funcID);
@@ -437,10 +439,13 @@ export class CmCustomerComponent
             this.isButton = true;
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              e.event.modifiedOn = new Date();
-              this.view.dataService.update(e.event).subscribe();
-              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-              this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              let data = e.event[0];
+              let lstContact = e.event[1];
+              data.modifiedOn = new Date();
+              this.dataSelected = JSON.parse(JSON.stringify(data));
+              // this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              this.customerDetail.onChangeContact(lstContact);
+              this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
           });
@@ -493,12 +498,13 @@ export class CmCustomerComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
-                e.event.modifiedOn = new Date();
-                this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-                this.view.dataService.update(e.event).subscribe();
-                // this.dataSelected = JSON.parse(
-                //   JSON.stringify(this.view.dataService.data[0])
-                // );
+                let data = e?.event[0];
+                let lstContacts = e?.event[1];
+                data.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(data));
+                this.view.dataService.update(data).subscribe();
+                // this.customerDetail.loadTag(this.dataSelected);
+                this.detectorRef.detectChanges();
 
                 this.detectorRef.detectChanges();
               }
