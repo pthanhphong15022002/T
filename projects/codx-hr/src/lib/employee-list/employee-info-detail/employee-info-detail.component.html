@@ -3806,7 +3806,7 @@
           
           <div class="mt-4 row">
             <ng-container *ngFor="let benefit of listCrrBenefit">
-              <div class="ms-8 w-100">
+              <div class="ps-8 w-100">
                 <codx-temp-full
                   (clickMF)="clickMF($event, benefit, 'eBenefit')"
                   [dataItem]="benefit"
@@ -7185,7 +7185,7 @@
     </div>
     <div class="d-flex align-items-center" *ngIf="data?.days">
       <span
-        class="icon-i-circle-fill icon-4 text-gray-400 px-3"
+        class="icon-i-circle-fill icon-4 text-gray-400 mx-2"
       ></span>
       <span class="text-primary"
       placement="top" [title]="eBusinessTravelHeaderTexts.Days"
@@ -7552,7 +7552,7 @@
         "
       >
       </span>
-      <span class="icon-i-circle-fill icon-4 px-3"></span>
+      <span class="icon-i-circle-fill icon-4 px-2"></span>
       <span
         class="text-primary"
       placement="top" [title]="eHealthHeaderText.HealthPeriodID"
@@ -7628,8 +7628,8 @@
 
 <!-- #region Tiêm vaccine template -->
 <ng-template #tempEVaccineGridCol1 let-data>
-  <div class="hover-active cursor-pointer" >
-    <div class="d-flex align-items-center">
+  <div class="hover-active cursor-pointer py-3" >
+    <div class="d-flex align-items-center mb-5px">
       <!-- <span class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
         [style.color]="getVaccineBackgroundColor(data)"></span> -->
       <span
@@ -7643,7 +7643,7 @@
         "
       >
       </span>
-      <span class="icon-i-circle-fill icon-4 text-gray-400 mx-3"></span>
+      <span class="icon-i-circle-fill icon-4 text-gray-400 mx-2"></span>
       <span
         class="text-primary"
         placement="top" [title]="eVaccineHeaderText.VaccineName"
@@ -7655,42 +7655,44 @@
       >
       </span>
     </div>
-    <span
-      class="d-flex align-self-center text-dark"
+    <div
+      class="d-flex align-self-center text-gray-500 fs-7"
       placement="top" [title]="eVaccineHeaderText.HopitalID"
       [innerHTML]="
         data?.hopitalID | formatvalue : eVaccineFormModel : 'hopitalID' | async
       "
-    ></span>
+    ></div>
 
   </div>
 </ng-template>
 <ng-template #tempEVaccineGridCol2 let-data>
-  <div class="d-flex align-items-center">
-    <i class="icon-calendar_today text-primary icon-16 me-1"></i>
-    <span
-      class="text-dark"
-      placement="top" [title]="eVaccineHeaderText.InjectDate"
-      [innerHTML]="
-        data?.injectDate
-          | formatvalue : eVaccineFormModel : 'injectDate'
-          | async
-      "
-    >
-    </span>
-  </div>
-  <div class="d-flex align-items-center">
-    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
-    <span
-      class="text-dark"
-      placement="top" [title]="eVaccineHeaderText.NextInjectDate"
-      [innerHTML]="
-        data?.nextInjectDate
-          | formatvalue : eVaccineFormModel : 'nextInjectDate'
-          | async
-      "
-    >
-    </span>
+  <div class="py-3">
+    <div class="d-flex align-items-center mb-5px">
+      <i class="icon-calendar_today icon-14 text-dark me-2"></i>
+      <span
+        class="text-dark"
+        placement="top" [title]="eVaccineHeaderText.InjectDate"
+        [innerHTML]="
+          data?.injectDate
+            | formatvalue : eVaccineFormModel : 'injectDate'
+            | async
+        "
+      >
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <i class="icon-calendar_today icon-14 text-dark me-2"></i>
+      <span
+        class="text-dark"
+        placement="top" [title]="eVaccineHeaderText.NextInjectDate"
+        [innerHTML]="
+          data?.nextInjectDate
+            | formatvalue : eVaccineFormModel : 'nextInjectDate'
+            | async
+        "
+      >
+      </span>
+    </div>
   </div>
 </ng-template>
 <ng-template #tempEVaccineGridCol3 let-data>

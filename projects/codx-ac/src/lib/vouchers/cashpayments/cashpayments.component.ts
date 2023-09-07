@@ -113,7 +113,9 @@ export class CashPaymentsComponent extends UIComponent {
   };
   bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
-  public animation: AnimationModel = { enable: true, duration: 1000, delay: 0 }; //? animation của progressbar table
+  bankPayID:any;
+  bankNamePay: any;
+  bankReceiveName: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -166,7 +168,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
         active: true,
         sameData: true,
-
         model: {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
@@ -176,7 +177,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.list, //? thiết lập view danh sách
         active: true,
         sameData: true,
-
         model: {
           template: this.listTemplate,
         },
@@ -262,6 +262,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT041003':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
+      case 'ACT041008': 
+        this.unPostVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
       case 'ACT041010':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
@@ -295,6 +298,11 @@ export class CashPaymentsComponent extends UIComponent {
             this.optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((x) => {
+            if (x && x?.event?.update) {
+              this.getDatadetail(this.itemSelected);
+            }
+          });
         }
       });
   }
@@ -322,6 +330,11 @@ export class CashPaymentsComponent extends UIComponent {
           this.optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((x) => {
+          if (x && x?.event?.update) {
+            this.getDatadetail(this.itemSelected);
+          }
+        });
       });
   }
 
@@ -351,6 +364,11 @@ export class CashPaymentsComponent extends UIComponent {
             this.optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((x) => {
+            if (x && x?.event?.update) {
+              this.getDatadetail(this.itemSelected);
+            }
+          });
         }
       });
   }
@@ -414,12 +432,9 @@ export class CashPaymentsComponent extends UIComponent {
     );
     if (arrBookmark.length > 0) {
       switch (data?.status) {
-        case '0':
+        case '7':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if (element.functionID == 'ACT041009' || element.functionID == 'ACT041010') {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -531,7 +546,7 @@ export class CashPaymentsComponent extends UIComponent {
         element.isbookmark = false;
       });
       switch (data?.status) {
-        case '0':
+        case '7':
           arrBookmark.forEach((element) => {
             if (
               element.functionID == 'ACT041009' ||
@@ -632,20 +647,19 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeItemSelected(event) {
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-    //       this.itemSelected = event?.data;
-    //       return;
-    //     }
-    //     this.itemSelected = event?.data;
-    //     this.getDatadetail(this.itemSelected);
-    //   }
-    // }
-    this.itemSelected = event?.data;
-    this.getDatadetail(this.itemSelected);
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
+        return;
+      } else {
+        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+          this.itemSelected = event?.data;
+          return;
+        }
+        this.itemSelected = event?.data;
+        this.getDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
+      }
+    }
   }
 
   /**
@@ -653,23 +667,35 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   getDatadetail(data) {
-    //this.isLoadData = true; // bật progressbar của tab
-    this.acctTrans = [];
-    this.settledInvoices = [];
-    this.vatInvoices = [];
+    // this.acctTrans = [];
+    // this.settledInvoices = [];
+    // this.vatInvoices = [];
+    // this.api
+    //   .exec('AC', 'AcctTransBusiness', 'GetAccountingAsync', [
+    //     data.recID,
+    //   ])
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       this.acctTrans = res;
+    //       this.setTotalRecord();
+    //       this.detectorRef.detectChanges();
+    //     }
+    //   });
+
     this.api
-      .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [
-        data.subType,
-        data.recID,
+      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
+        data
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.acctTrans = res?.lsAcctrants ? res?.lsAcctrants : [];
-          this.settledInvoices = res?.lsSettledInvoices
-            ? res?.lsSettledInvoices
-            : [];
-          this.vatInvoices = res?.lsVATInvoices ? res?.lsVATInvoices : [];
+          this.acctTrans = res?.lsAcctrants || [];
+          this.settledInvoices = res?.lsSettledInvoices || [];
+          this.vatInvoices = res?.lsVATInvoices || [];
+          this.bankPayID = res?.BankPayID || '';
+          this.bankNamePay = res?.BankPayname || '';
+          this.bankReceiveName = res?.BankReceiveName || '';
           this.setTotalRecord();
           this.detectorRef.detectChanges();
         }
@@ -750,13 +776,16 @@ export class CashPaymentsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data])
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode('AC0029', 0, text);
+          this.notification.notifyCode(
+            'AC0029',
+            0,
+            text
+          );
           this.detectorRef.detectChanges();
         }
       });
@@ -768,7 +797,24 @@ export class CashPaymentsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data])
+      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
+   * @param data
+   */
+  unPostVoucher(text: any, data: any) {
+    this.api
+      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;

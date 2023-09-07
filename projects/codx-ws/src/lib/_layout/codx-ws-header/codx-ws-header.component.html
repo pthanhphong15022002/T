@@ -2,6 +2,7 @@
     <div class="d-flex align-items-center">
         <ng-template [ngTemplateOutlet]="brand" ></ng-template>
         <ng-template [ngTemplateOutlet]="title" ></ng-template>
+        <ng-template [ngTemplateOutlet]="breadcumb" ></ng-template>
    </div>
    <ng-template [ngTemplateOutlet]="funcLists" ></ng-template>
    <div class="d-flex align-items-center">
@@ -88,10 +89,22 @@
 
 <!-- begin::Danh sách function list -->
 <ng-template #funcLists>
-  <div class="d-flex align-items-center ws-fc-list">
+  <div class="d-flex align-items-center ws-fc-list" *ngIf="!listBreadCumb || listBreadCumb.length <= 1">
     <div *ngFor="let item of funcList , let i = index" class="py-3 px-5 cursor-pointer fw-bold" [class.active]="selectedIndex == i" (click)="selectedChange(i , item)">
       <span class="fs-6">{{item.customName}}</span>
     </div>
   </div>
 </ng-template>
 <!-- end::Title  -->
+
+<!-- begin::breadCumb -->
+<ng-template #breadcumb>
+  <div class="d-flex align-items-center" *ngIf="listBreadCumb && listBreadCumb.length > 1">
+    <div class="d-flex align-items-center" *ngFor="let item of listBreadCumb ; let i = index">
+      <i class="icon-navigate_next"></i>
+      <span class="text-hover-primary cursor-pointer" [class.fw-bold]="i == 0" [class.fs-5-sm]="i == 0" (click)="selectedBCChange(item)">{{item?.customName}}</span>
+    </div>
+  </div>
+ 
+</ng-template>
+<!-- end::breadCumb  -->

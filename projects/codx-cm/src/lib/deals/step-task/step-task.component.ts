@@ -463,4 +463,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isSusscess.emit(true);
     }
   }
+  toggleReason(){
+    this.isShowElement = !this.isShowElement;
+  }
 }

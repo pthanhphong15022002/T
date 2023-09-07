@@ -4,6 +4,7 @@ import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService
 import { Observable } from 'rxjs';
 import { PopupAddPostComponent } from '../../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'wp-appropval-news-detail',
@@ -34,6 +35,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
   className = "NewsBusiness";
   functionName:string = "";
   hideMFC:boolean = false;
+  imgOn:DateTime = new DateTime();
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -67,6 +69,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       [this.objectID,this.funcID])
       .subscribe((res:any) => {
         this.data = JSON.parse(JSON.stringify(res));
+        this.imgOn = new DateTime();
         if(this.data)
           this.hideMFC = this.data.approveStatus == "5";            
         this.dt.detectChanges();
