@@ -426,15 +426,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.click = true;
   }
 
-  //Click load employee
-  // clickOpen(event, data, employee) {
-  //   this.lstMyTeam = employee.slice(0, 10);
-  //   this.orgId = data;
-  //   this.scrolling = true;
-  //   this.pageIndex = 2;
-  //   event.stopPropagation();
-  // }
-
   clickOpen(event, data, employee) {
     this.lstMyTeam = [];
     this.pageIndex = 2;
