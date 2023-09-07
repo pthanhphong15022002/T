@@ -43,7 +43,8 @@
                 | formatvalue : view.formModel : 'positionID'
                 | async
             "
-          ></span>
+          >
+          </span>
           <!-- <span
             class="fs-7"
             [innerHTML]="
@@ -183,6 +184,23 @@
           [style.color]="'#FFA800'"
           class="icon-queue_play_next icon-18"
         ></div>
+
+        <codx-vll
+          *ngIf="
+            data?.resignStatus &&
+            !data.RenewStatus &&
+            data.isCurrent &&
+            data?.status === '5'
+          "
+          [formModel]="view.formModel"
+          [field]="'ResignStatus'"
+          [value]="data?.resignStatus"
+          [showText]="true"
+          [showIcon]="true"
+          [showBgColor]="false"
+          ngClass="badge badge-sm"
+        >
+        </codx-vll>
       </div>
       <div class="mt-1">
         <span

@@ -3786,3 +3786,6 @@ codx-view-tree-targets .menu-sub{
 lib-employee-policybenefits ejs-listview .e-content{
   height: 100%;
 }
+.news-group codx-listview .card-body{
+  height: auto!important;
+}
