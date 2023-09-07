@@ -240,16 +240,30 @@ export class CmCustomerDetailComponent implements OnInit {
         this.cmSv.getContactDeal($event?.data?.recID).subscribe((res) => {
           if (res && res.length > 0) {
             let lstContact = res;
-            let lstInsID = [];
-            lstInsID = lstContact.map(x => x.objectID);
-            var json = JSON.stringify(lstContact);
-            this.cmSv
-              .updateFieldContacts(
-                lstInsID,
-                $event?.action == 'edit' ? json : '',
-                $event?.action == 'delete' ? json : ''
-              )
-              .subscribe((res) => {});
+            let lstDealIDs = [];
+            lstDealIDs = lstContact.map((x) => x.objectID);
+            if (lstDealIDs != null && lstDealIDs.length > 0) {
+              this.api
+                .execSv<any>(
+                  'CM',
+                  'ERM.Business.CM',
+                  'DealsBusiness',
+                  'GetListIDInstancesByListDealIDAsync',
+                  [lstDealIDs]
+                )
+                .subscribe((ele) => {
+                  var lstInsID = ele ?? [];
+                  var json = JSON.stringify(lstContact);
+                  this.cmSv
+                    .updateFieldContacts(
+                      lstInsID,
+                      $event?.action == 'edit' ? json : '',
+                      $event?.action == 'delete' ? json : ''
+                    )
+                    .subscribe((res) => {});
+                });
+            }
+
           }
         });
       }

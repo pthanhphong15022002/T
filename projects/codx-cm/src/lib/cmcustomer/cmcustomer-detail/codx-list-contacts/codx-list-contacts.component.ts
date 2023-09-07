@@ -68,6 +68,7 @@ export class CodxListContactsComponent implements OnInit {
   placeholder = 'Nhập vai trò...';
   user: any;
   userID: any;
+  isLoad = true;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -92,8 +93,6 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue?.trim() != ''
       ) {
         if (this.isRole) {
-          if (changes['objectID']?.currentValue == this.id) return;
-          this.id = changes['objectID']?.currentValue;
           this.getListContacts();
         }
       } else {
