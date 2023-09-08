@@ -59,14 +59,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    // this.data = JSON.parse(JSON.stringify(dialog.dataService?.dataSelected));
+    this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
   ngOnInit(): void {
-    this.data.recID = Util.uid();
   }
 
   //#region save

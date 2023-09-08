@@ -96,9 +96,17 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.journal = dialogData.data?.journal;
-    this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
+    
+    if(this.formType == 'copy')
+    {
+      this.vouchers = dialog.dataService.dataSelected.data;
+    }
+    else
+    {
+      this.vouchers = dialog.dataService.dataSelected;
+    }
 
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];

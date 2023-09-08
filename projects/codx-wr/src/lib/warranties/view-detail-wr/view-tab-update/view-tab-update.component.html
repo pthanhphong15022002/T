@@ -1,5 +1,6 @@
 <ng-container *ngIf="loaded">
   <codx-gridview-v2
+    #grid
     service="WR"
     [formName]="formModel.formName"
     [gridViewName]="formModel.gridViewName"
@@ -7,11 +8,38 @@
     [allowFiltering]="true"
     [allowSorting]="true"
     [dataSource]="lstUpdate"
+    [templateMore]="tempMorefunction"
     [autoLoad]="false"
     rowHeight="40"
     [height]="'100%'"
     [autoAddRow]="true"
-    [hideMoreFunc]="true"
+    [hideMoreFunc]="false"
     [showRowNumber]="false"
   ></codx-gridview-v2>
 </ng-container>
+
+<!--temp Grids-->
+<ng-template #tempMorefunction let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      type="view"
+      [isBookMark]="false"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #tempStatusCode let-data> aaa </ng-template>
+
+<ng-template #tempComment let-data> aaa </ng-template>
+
+<ng-template #tempScheduleStart let-data> aaa </ng-template>
+
+<ng-template #tempScheduleTime let-data> aaa </ng-template>
+
+<ng-template #tempEngineerID let-data> aaa </ng-template>
+
+<ng-template #tempCreatedBy let-data> aaa </ng-template>
