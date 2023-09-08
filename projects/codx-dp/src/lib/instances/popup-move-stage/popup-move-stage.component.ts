@@ -61,7 +61,7 @@ export class PopupMoveStageComponent implements OnInit {
   lstParticipants = [];
   listCustomFile = [];
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
-  5;
+  readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   stepCurrent: any;
   lstRoles = [];
   assignControl: any;
@@ -74,12 +74,10 @@ export class PopupMoveStageComponent implements OnInit {
   firstInstance: any;
   listTaskGroupDone: any = [];
   listTaskDone: any = [];
-  listTypeTask: any = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason: any;
   gridViewInstanceStep: any;
-  isStopData: boolean = true;
   totalRequireCompleted: number = 0;
   totalRequireCompletedChecked: number = 0;
   actionCheck: string = '';
@@ -101,7 +99,7 @@ export class PopupMoveStageComponent implements OnInit {
   progressAll = false;
   progressDefault = false;
   progressAction: string = '';
-
+  ownerInstance: any;
   // CM
   dataCM: any;
   recID: any;
@@ -115,6 +113,7 @@ export class PopupMoveStageComponent implements OnInit {
     gridViewName: 'grvCMDeals',
     entityName: 'CM_Deals',
   };
+  isChanged = false;
 
   constructor(
     private codxDpService: CodxDpService,
@@ -136,18 +135,14 @@ export class PopupMoveStageComponent implements OnInit {
     this.viewClick = this.viewKanban;
 
     if (this.applyFor == '0') {
-      this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
-      this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
-      this.listStepProccess = dt?.data?.listStepProccess;
+      // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
+    //  this.listStepProccess = dt?.data?.listStepProccess;
       this.isDurationControl = dt?.data?.isDurationControl;
-      this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
-      this.getIdReason();
+  //   this.getIdReason();
     } else if (this.applyFor != '0') {
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.probability = dt?.data?.deal?.probability;
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
-      this.stepIdClick = this.dataCM?.nextStep;
-      this.executeApiCalls();
       this.isLoad = true;
     }
     this.stepID = this.dataCM ? this.dataCM?.stepID : this.instance?.stepID;
@@ -155,34 +150,20 @@ export class PopupMoveStageComponent implements OnInit {
       ? this.dataCM?.processID
       : this.instance?.processID;
     this.recID = this.dataCM ? this.dataCM?.refID : this.instance?.recID;
-
+    this.ownerInstance = this.dataCM ? dt?.data?.deal?.owner: JSON.parse(JSON.stringify(dt?.data?.instance.owner));
+    this.stepIdClick =  this.dataCM ?  this.dataCM?.nextStep: JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     if (!this.isLoad) {
       this.lstParticipants = dt?.data.lstParticipants;
     }
     this.stepIdOld = this.stepID;
-    this.codxDpService.getFirstIntance(this.processID).subscribe((res) => {
-      if (res) {
-        this.firstInstance = res;
-      }
-    });
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
-    this.applyFor == '0' &&
-      this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
-    this.getGrvInstanceStep();
+
+    this.executeApiCalls();
+
   }
 
   ngOnInit(): void {
-    if (!this.isLoad) {
-      this.removeReasonInSteps(this.listStepsCbx, this.isUseReason);
-      this.stepIdClick &&
-        this.stepIdClick != this.stepIdOld &&
-        this.autoClickedSteps(this.listStepsCbx);
-      this.eventAutoClick();
-    }
+    // if (!this.isLoad) {
+    // }
   }
   autoClickedSteps(listStep: any) {
     let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
@@ -195,35 +176,33 @@ export class PopupMoveStageComponent implements OnInit {
 
   eventAutoClick() {
     this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
+    this.isMoveNext && this.selectOwnerNext();
   }
 
   async executeApiCalls() {
     try {
-      await this.getListMoveStage(this.dataCM);
+     // this.applyFor == '0' &&  await this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+      await this.getListMoveStage();
+      await this.getGrvInstanceStep();
     } catch (error) {}
   }
 
-  async getListMoveStage(data) {
-    var datas = [data?.refID, data?.processID, data?.stepID, this.applyFor];
+  async getListMoveStage() {
+    var datas = [this.recID, this.processID, this.stepID, this.applyFor];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
         this.isDurationControl = res[0];
         this.listStepsCbx = res[1];
+        this.updateDataInstance(this.listStepsCbx.filter(x=>x.stepID === this.stepID)[0]);
         this.getListParticipants(res[2]);
         this.getIdReason();
-        this.eventAutoClick();
         this.removeReasonInStepsAuto(res[3], res[4], res[1]);
-        this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
-        !this.stepIdClick && this.autoClickedSteps(this.listStepsCbx);
-        this.isMoveNext = this.checkSpaceInStep(
-          this.stepIdClick,
-          this.stepIdOld
-        );
+        !this.stepIdClick && this.stepIdClick != this.stepIdOld && this.autoClickedSteps(this.listStepsCbx);
+        this.eventAutoClick();
         this.changeDetectorRef.detectChanges();
       }
     });
   }
-
   removeReasonInStepsAuto(isUseSuccess, isUseFail, listStepCbx) {
     !isUseFail && this.removeItemFail(listStepCbx);
     !isUseSuccess && this.removeItemSuccess(listStepCbx);
@@ -244,6 +223,10 @@ export class PopupMoveStageComponent implements OnInit {
         this.lstParticipants = await this.codxDpService.getListUserByOrg(
           this.lstParticipants
         );
+        this.lstParticipants = this.lstParticipants.map((x) => {
+          return { userID: x.userID, userName: x.userName };
+        });
+        this.isChanged = true;
       }
     }
   }
@@ -257,132 +240,129 @@ export class PopupMoveStageComponent implements OnInit {
     });
   }
 
-  getStepByStepIDAndInID(insID, stepID) {
-    this.codxDpService
-      .getStepByStepIDAndInID(insID, stepID)
-      .subscribe((res) => {
-        if (res) {
-          this.stepCurrent = res;
-          var i = -1;
-          this.assignControl = this.stepCurrent.assignControl;
-          switch (this.assignControl) {
-            //Phụ trách giai đoạn hiện tại
-            case '0':
-              if (
-                this.stepCurrent?.roles != null &&
-                this.stepCurrent?.roles.length > 0
-              ) {
-                var role = this.stepCurrent?.roles.filter(
-                  (x) =>
-                    x.objectID == this.stepCurrent?.owner && x.roleType == 'S'
-                );
-                if (role != null && role.length > 0) {
-                  if (role[0].objectType != 'U' && role[0].objectType != '1') {
-                    this.getOwnerByListRoles(
-                      role.map((x) => x.objectID),
-                      role[0].objectType
-                    );
-                  } else {
-                    this.owner = this.stepCurrent?.owner;
-                  }
-                } else {
-                  this.owner = this.stepCurrent?.owner;
-                }
-              } else {
-                this.owner = '';
-              }
-              // if (this.owner != null) this.getNameAndPosition(this.owner);
-              break;
-            //Phụ trách giai đoạn chuyển tiếp
-            case '1':
-              var index = -1;
-              index = this.listStepsCbx.findIndex(
-                (x) => x.stepID == this.stepIdClick
+  // getStepByStepIDAndInID(insID, stepID) {
+  //   this.codxDpService
+  //     .getStepByStepIDAndInID(insID, stepID)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.stepCurrent = res;
+  //         if (this.isStopData) {
+  //           var data = JSON.parse(JSON.stringify(res));
+  //           this.updateDataInstance(data);
+  //           this.isStopData = false;
+  //         }
+  //       }
+  //     });
+  // }
+  selectOwnerNext() {
+    let stepCurrent = this.listStepsCbx.filter(
+      (x) => x.stepID == this.stepIdClick
+    )[0];
+    var i = -1;
+    this.assignControl = stepCurrent.assignControl;
+    switch (this.assignControl) {
+      //Không giao cho ai - Để người phụ trách giai đoạn hiện tại quyết định
+      case '0':
+        this.owner = '';
+        // if (this.owner != null) this.getNameAndPosition(this.owner);
+        break;
+      //Giao cho người phụ trách của giai đoạn được chuyển đến
+      case '1':
+        if (stepCurrent?.roles != null && stepCurrent?.roles.length > 0) {
+          var role = stepCurrent?.roles.filter(
+            (x) => x.objectID == stepCurrent?.owner && x.roleType == 'S'
+          );
+          if (role != null && role.length > 0) {
+            if (role[0].objectType != 'U' && role[0].objectType != '1') {
+              this.getOwnerByListRoles(
+                role.map((x) => x.objectID),
+                role[0].objectType
               );
-
-              if (
-                this.listStepsCbx[index]?.roles != null &&
-                this.listStepsCbx[index]?.roles.length > 0
-              ) {
-                var roleClick = this.listStepsCbx[index]?.roles.filter(
-                  (x) =>
-                    x.objectID == this.listStepsCbx[index]?.owner &&
-                    x.roleType == 'S'
-                );
-                if (roleClick != null && roleClick.length > 0) {
-                  if (
-                    roleClick[0].objectType != 'U' &&
-                    roleClick[0].objectType != '1'
-                  ) {
-                    this.getOwnerByListRoles(
-                      roleClick.map((x) => x.objectID),
-                      roleClick[0].objectType
-                    );
-                  } else {
-                    this.owner = this.listStepsCbx[index]?.owner;
-                  }
-                } else {
-                  this.owner = this.listStepsCbx[index]?.owner;
-                }
-              } else {
-                this.owner = '';
-              }
-              // if (this.owner != null) this.getNameAndPosition(this.owner);
-
-              break;
-            //Giữ nguyên phụ trách trước
-            case '2':
-              i = this.listStepsCbx.findIndex(
-                (x) => x.stepID == this.stepCurrent.stepID
-              );
-              if (
-                this.listStepsCbx[i - 1]?.roles != null &&
-                this.listStepsCbx[i - 1]?.roles.length > 0
-              ) {
-                var roleOld = this.listStepsCbx[i - 1]?.roles.filter(
-                  (x) =>
-                    x.objectID == this.listStepsCbx[i - 1]?.owner &&
-                    x.roleType == 'S'
-                );
-                if (roleOld != null && roleOld.length > 0) {
-                  if (
-                    roleOld[0].objectType != 'U' &&
-                    roleOld[0].objectType != '1'
-                  ) {
-                    this.getOwnerByListRoles(
-                      roleOld.map((x) => x.objectID),
-                      roleOld[0].objectType
-                    );
-                  } else {
-                    this.owner = this.listStepsCbx[i - 1]?.owner;
-                  }
-                } else {
-                  this.owner = this.listStepsCbx[i - 1]?.owner;
-                }
-              } else {
-                this.owner = '';
-              }
-              // if (this.owner != null) this.getNameAndPosition(this.owner);
-              break;
-            //Người nhận nhiệm vụ đầu tiên
-            case '3':
-              this.owner = this.firstInstance?.owner;
-              // if (this.owner != null) this.getNameAndPosition(this.owner);
-              break;
-            //Người nhận nhiệm vụ hiện tại
-            case '4':
-              this.owner = this.instance?.owner;
-              // if (this.owner != null) this.getNameAndPosition(this.owner);
-              break;
+            } else {
+              this.owner = stepCurrent?.owner;
+            }
+          } else {
+            this.owner = stepCurrent?.owner;
           }
-
-          if (this.isStopData) {
-            var data = JSON.parse(JSON.stringify(res));
-            this.updateDataInstance(data);
-            this.isStopData = false;
-          }
+        } else {
+          this.owner = '';
         }
-      });
+        // var index = -1;
+        // index = this.listStepsCbx.findIndex(
+        //   (x) => x.stepID == this.stepIdClick
+        // );
+
+        // if (
+        //   this.listStepsCbx[index+1]?.roles != null &&
+        //   this.listStepsCbx[index+1]?.roles.length > 0
+        // ) {
+        //   var roleClick = this.listStepsCbx[index+1]?.roles.filter(
+        //     (x) =>
+        //       x.objectID == this.listStepsCbx[index+1]?.owner && x.roleType == 'S'
+        //   );
+        //   if (roleClick != null && roleClick.length > 0) {
+        //     if (
+        //       roleClick[0].objectType != 'U' &&
+        //       roleClick[0].objectType != '1'
+        //     ) {
+        //       this.getOwnerByListRoles(
+        //         roleClick.map((x) => x.objectID),
+        //         roleClick[0].objectType
+        //       );
+        //     } else {
+        //       this.owner = this.listStepsCbx[index+1]?.owner;
+        //     }
+        //   } else {
+        //     this.owner = this.listStepsCbx[index+1]?.owner;
+        //   }
+        // } else {
+        //   this.owner = '';
+        // }
+        // if (this.owner != null) this.getNameAndPosition(this.owner);
+
+        break;
+      //Giữ nguyên phụ trách trước
+      case '2':
+        i = this.listStepsCbx.findIndex(
+          (x) => x.stepID == stepCurrent.stepID
+        );
+        if (
+          this.listStepsCbx[i - 1]?.roles &&
+          this.listStepsCbx[i - 1]?.roles.length > 0
+        ) {
+          var roleOld = this.listStepsCbx[i - 1]?.roles.filter(
+            (x) =>
+              x.objectID == this.listStepsCbx[i - 1]?.owner && x.roleType == 'S'
+          );
+          if (roleOld != null && roleOld.length > 0) {
+            if (roleOld[0].objectType != 'U' && roleOld[0].objectType != '1') {
+              this.getOwnerByListRoles(
+                roleOld.map((x) => x.objectID),
+                roleOld[0].objectType
+              );
+            } else {
+              this.owner = this.listStepsCbx[i - 1]?.owner;
+            }
+          } else {
+            this.owner = this.listStepsCbx[i - 1]?.owner;
+          }
+        } else {
+          this.owner = '';
+        }
+        // if (this.owner != null) this.getNameAndPosition(this.owner);
+        break;
+      //Người nhận nhiệm vụ đầu tiên - onwer của nhiệm vụ đó
+      case '3':
+       // this.owner = this.firstInstance?.owner;
+       this.owner = this.ownerInstance;
+        // if (this.owner != null) this.getNameAndPosition(this.owner);
+        break;
+      // //Người nhận nhiệm vụ hiện tại
+      // case '4':
+
+      //   // if (this.owner != null) this.getNameAndPosition(this.owner);
+      //   break;
+    }
   }
 
   updateDataInstance(data: any) {
@@ -473,6 +453,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.beforeSave();
   }
   beforeSave() {
+    if(!this.owner && this.isMoveNext) {
+      this.owner = this.instance.owner;
+    }
     if (
       this.stepIdClick === this.IdSuccess ||
       this.stepIdClick === this.IdFail
@@ -497,6 +480,7 @@ export class PopupMoveStageComponent implements OnInit {
     if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
       var listTmpGroup = this.convertTmpDataInTask(this.listTaskGroupDone, 'G');
     }
+    this.instancesStepOld.actualEnd = new Date();
     var data = [
       this.recID,
       this.stepIdOld,
@@ -557,8 +541,7 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if ($event && this.stepIdClick !== $event) {
       this.stepIdClick = $event;
-      this.getStepByStepIDAndInID(this.recID, this.stepIdClick);
-      this.isMoveNext = this.checkSpaceInStep(this.stepIdClick, this.stepIdOld);
+      this.eventAutoClick();
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -587,10 +570,15 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   checkSpaceInStep(stepClick, stepOld) {
-    var indexClick = this.listStepsCbx.findIndex((x) => x.stepID == stepClick);
-    var indexOld = this.listStepsCbx.findIndex((x) => x.stepID == stepOld);
-    var space = indexClick - indexOld;
-    if (space > 0) {
+    let indexClick = this.listStepsCbx.findIndex((x) => x.stepID == stepClick);
+    let indexOld = this.listStepsCbx.findIndex((x) => x.stepID == stepOld);
+    let space = indexClick - indexOld;
+    if (
+      this.listStepsCbx[indexClick].isSuccessStep ||
+      this.listStepsCbx[indexClick].isFailStep
+    ) {
+      return false;
+    } else if (space > 0) {
       return true;
     }
     return false;
@@ -612,14 +600,14 @@ export class PopupMoveStageComponent implements OnInit {
     this.isSaving = e;
   }
 
-  showColumnControl(stepID) {
-    if (this.listStepProccess?.length > 0) {
-      var idx = this.listStepProccess.findIndex((x) => x.recID == stepID);
-      if (idx == -1) return 1;
-      return this.listStepProccess[idx]?.showColumnControl;
-    }
-    return 1;
-  }
+  // showColumnControl(stepID) {
+  //   if (this.listStepProccess?.length > 0) {
+  //     var idx = this.listStepProccess.findIndex((x) => x.recID == stepID);
+  //     if (idx == -1) return 1;
+  //     return this.listStepProccess[idx]?.showColumnControl;
+  //   }
+  //   return 1;
+  // }
 
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null

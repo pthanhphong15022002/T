@@ -36,12 +36,25 @@
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                   <ng-container *ngFor="let item of sysMoreFC">
-                    <a ngbDropdownItem class="dropdown-item" (click)="clickMF(item,report)">
-                      <div class="d-flex align-items-center cursor-pointer">
-                        <span class="icon-16" [classList]="item.largeIcon" [style.color]="item.color"></span>
-                        <span class="ms-2">{{item.customName}}</span>
-                      </div>
-                    </a>
+                    <ng-container *ngIf="item.functionID == 'SYS02'; else elseTmp">
+                      <ng-container *ngIf="report.isCustomize">
+                        <a ngbDropdownItem class="dropdown-item" (click)="clickMF(item,report)">
+                          <div class="d-flex align-items-center cursor-pointer">
+                            <span class="icon-16" [classList]="item.largeIcon" [style.color]="item.color"></span>
+                            <span class="ms-2">{{item.customName}}</span>
+                          </div>
+                        </a>
+                      </ng-container>
+                    </ng-container>
+                    <ng-template #elseTmp>
+                      <a ngbDropdownItem class="dropdown-item" (click)="clickMF(item,report)">
+                        <div class="d-flex align-items-center cursor-pointer">
+                          <span class="icon-16" [classList]="item.largeIcon" [style.color]="item.color"></span>
+                          <span class="ms-2">{{item.customName}}</span>
+                        </div>
+                      </a>
+                    </ng-template>
+                    
                   </ng-container>
                 </div>
               </div>

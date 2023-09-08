@@ -52,6 +52,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   isNoData = false;
   titleName = '';
   vllData;
+  dataTooltipDay
   moreDefaut = {
     share: true,
     write: true,
@@ -117,10 +118,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     return formModel;
   }
 
-  getRole(task, type) {
+  getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
-    return type == 'ID' ? role?.objectID : role?.objectName;
+      task?.roles.find((role) => role.objectID == task?.owner) ||task?.roles[0];
+    return role?.objectName;
   }
 
   getTypeTask(task) {
@@ -228,9 +229,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP24': // tạo lịch họp
         this.createMeeting(task);
         break;
-      // case 'SYS004':
-      //   this.sendMail();
-      //   break;
       case 'DP27':
         await this.stepService.addBookingCar(true);
         break;
@@ -462,6 +460,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           if (res) {
             task.progress = dataPopupOutput?.event?.progressTask;
             task.status = task.progress == 100 ? "3" : "2";
+            task.actualEnd = res?.actualEnd
+            task.actualStart = res?.actualStart
+            task.note = res?.note
             this.listActivitie;
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
@@ -483,9 +484,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       //a thao laasy refID
       let listRefIDAssign = '';
       switch (type) {
-        case 'T':
-          listRefIDAssign = data.recID;
-          break;
         case 'G':
           if (data.task?.length > 0) {
             let arrRecIDTask = data.task.map((x) => x.recID);
@@ -503,6 +501,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             //thieu cong task ngooai mai hoir thuan de xets
           }
           break;
+        default:
+          listRefIDAssign = data.recID;
+          break;
+
       }
 
       let listData = {
@@ -515,6 +517,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         isUpdateProgressGroup: false,
         listRefIDAssign: listRefIDAssign,
         instanceStep: null,
+        isActivitie: true,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -638,5 +641,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
   createMeeting(task){
     this.stepService.createMeeting(task,this.titleName);
+  }
+  openTooltip(popup, data){
+    this.dataTooltipDay = data;
+    popup.open();
   }
 }

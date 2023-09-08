@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { AuthStore, CacheService, CodxService, LayoutBaseComponent, LayoutService, PageTitleService } from 'codx-core';
 import { CodxWsService } from '../../codx-ws.service';
 import { isObservable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'codx-ws-header',
@@ -10,14 +9,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./codx-ws-header.component.css']
 })
 export class CodxWsHeaderComponent extends LayoutBaseComponent{
+  
   title$:any;
   asideTheme:any;
   logo$:any;
   funcList:any;
   selectedIndex = 0;
-  funcID:any;
   userInfo:any;
   listBreadCumb:any;
+  
+  @Input() funcID:any;
 
   constructor(
     inject: Injector,
@@ -92,7 +93,6 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
 
   selectedBCChange(item:any)
   {
-    debugger
     if(item.functionID == this.codxWsService.functionID) return;
     this.codxService.navigate("","/"+item.url);
     this.SetBreadCumb();

@@ -24,6 +24,7 @@ import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
+import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-off/employee-day-off.component';
 
 
 const routes: Routes = [
@@ -75,6 +76,11 @@ const routes: Routes = [
       {
         path: 'report/:funcID',
         component: ReportComponent,
+      },
+      // HR - QTNS - Đăng ký nghỉ phép
+      {
+        path: 'edayoffs/:funcID',
+        component: EmployeeDayOffComponent,
       },
       {
         path: '',
