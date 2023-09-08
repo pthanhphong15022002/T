@@ -17,7 +17,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType
+  ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -26,7 +26,7 @@ import {
   Observable,
   combineLatest,
   distinctUntilKeyChanged,
-  map
+  map,
 } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';

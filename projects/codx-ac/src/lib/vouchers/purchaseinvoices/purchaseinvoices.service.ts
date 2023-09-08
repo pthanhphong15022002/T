@@ -31,11 +31,15 @@ export class PurchaseInvoiceService {
 
   initCache(): void {
     this.apiService
-      .exec('IV', 'CommonBusiness', 'InitItemInfoListCacheAsync')
+      .exec('IV', 'IVBusiness', 'InitItemInfoListCacheAsync')
       .subscribe();
 
     this.apiService
-      .exec('IV', 'CommonBusiness', 'InitDimGroupListCacheAsync')
+      .exec('IV', 'IVBusiness', 'InitDimGroupListCacheAsync')
+      .subscribe();
+
+    this.apiService
+      .exec('IV', 'IVBusiness', 'InitDimSetupListCacheAsync')
       .subscribe();
   }
 }

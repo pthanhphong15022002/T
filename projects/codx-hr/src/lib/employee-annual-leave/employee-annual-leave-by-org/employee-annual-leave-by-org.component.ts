@@ -19,6 +19,7 @@ export class EmployeeAnnualLeaveByOrgComponent {
   @Input() rowHeight: number;
   @Input() view: any;
   @Input() monthHeaderText: string = '';
+  @Input() searchText: string = '';
 
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -40,7 +41,8 @@ export class EmployeeAnnualLeaveByOrgComponent {
   className = 'EAnnualLeavesBusiness';
   method = 'GetListEmployeeAnnualLeaveGrvV2Async';
   idField = 'recID';
-  predicates = '@0.Contains(EmployeeID)';
+  predicates = '@0.Contains(EmployeeID) && @1 == ALYear';
+  dataValues = '';
 
   pageIndex = 0;
   pageSize = 5;
@@ -75,18 +77,19 @@ export class EmployeeAnnualLeaveByOrgComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.inputTimes < 2) this.inputTimes++;
-    this.orgUnitID = changes.orgUnitID.currentValue;
+    if(changes?.orgUnitID) this.orgUnitID = changes.orgUnitID.currentValue;
+    if(changes?.searchText != null) this.searchText = changes.searchText.currentValue;
+    this.dataValues = this.orgUnitID + ';' + this.searchText;
     let ins = setInterval(() => {
       if (this.grid) {
-        // this.grid.dataService.rowCount = 0;
-        // this.grid.dataService.data = [];
+        this.grid.dataService.rowCount = 0;
+        this.grid.dataService.data = [];
         clearInterval(ins);
         this.grid.refresh();
       }
-    }, 500);
-
+    }, 500);    
     this.detectorRef.detectChanges();
+    if (this.inputTimes < 2) this.inputTimes++;
   }
   initGridColumn() {
     this.columnsGrid = [

@@ -292,8 +292,8 @@ export class ContractsComponent extends UIComponent {
             break;
 
           case 'CM0204_7': // Xem chi tiết
-            if(!isDetail){
-              res.disabled = true;          
+            if (!isDetail) {
+              res.disabled = true;
             }
             break;
 
@@ -393,15 +393,22 @@ export class ContractsComponent extends UIComponent {
         //thất bại
         this.moveReason(data, false);
         break;
-      //export
-      case 'SYS002':
-        this.exportFiles(e, data);
-        break;
+      //export core làm
+      // case 'SYS002':
+      //   this.exportFiles(e, data);
+      //   break;
       case 'CM0204_7':
         this.viewDetailContract(data);
         break;
       default: {
-        var customData: any = null;
+        var customData = {
+          refID: data.recID,
+          refType: 'CM_Contracts',
+        };
+        if (data?.refID && data.applyProcess) {
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -430,10 +437,10 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  viewDetailContract(contract){
+  viewDetailContract(contract) {
     let data = {
-      formModel:this.view.formModel,
-      contract:contract,
+      formModel: this.view.formModel,
+      contract: contract,
       isView: true,
     };
     let option = new DialogModel();
@@ -731,7 +738,7 @@ export class ContractsComponent extends UIComponent {
   }
   //end duyet
   //--------------------------------------------------------------------//
-// "Permissions", "Closed", "ClosedOn", "ClosedBy"
+  // "Permissions", "Closed", "ClosedOn", "ClosedBy"
   getColumsGrid(grvSetup) {
     this.columnGrids = [];
     this.arrFieldIsVisible.forEach((key) => {

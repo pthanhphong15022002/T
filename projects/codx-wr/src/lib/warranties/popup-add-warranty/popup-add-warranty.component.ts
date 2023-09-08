@@ -232,55 +232,52 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   async valueChangeCbx(e) {
     if (e?.data) {
-        let serviceTag = await firstValueFrom(
-          this.wrSv.getOneServiceTag(e?.data)
-        );
+      let serviceTag = await firstValueFrom(
+        this.wrSv.getOneServiceTag(e?.data)
+      );
 
-        if (serviceTag != null) {
-          var key = Object.keys(this.data);
-          var keySv = Object.keys(serviceTag);
-          for (let index = 0; index < key.length; index++) {
-            for (let i = 0; i < keySv.length; i++) {
-              if (
-                key[index].toLowerCase() != 'owner' &&
-                key[index].toLowerCase() != 'buid' &&
-                key[index].toLowerCase() != 'createdon' &&
-                key[index].toLowerCase() != 'createdby' &&
-                key[index].toLowerCase() != 'modifiedon' &&
-                key[index].toLowerCase() != 'modifiedby'
-              )
-                if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
-                  if (key[index].toLowerCase() == 'warrantyexpired') {
-                    this.data[key[index]] = new Date(serviceTag[keySv[i]]);
-                  } else {
-                    this.data[key[index]] = serviceTag[keySv[i]];
-                  }
+      if (serviceTag != null) {
+        var key = Object.keys(this.data);
+        var keySv = Object.keys(serviceTag);
+        for (let index = 0; index < key.length; index++) {
+          for (let i = 0; i < keySv.length; i++) {
+            if (
+              key[index].toLowerCase() != 'owner' &&
+              key[index].toLowerCase() != 'buid' &&
+              key[index].toLowerCase() != 'createdon' &&
+              key[index].toLowerCase() != 'createdby' &&
+              key[index].toLowerCase() != 'modifiedon' &&
+              key[index].toLowerCase() != 'modifiedby'
+            )
+              if (key[index].toLowerCase() == keySv[i].toLowerCase()) {
+                if (key[index].toLowerCase() == 'warrantyexpired') {
+                  this.data[key[index]] = new Date(serviceTag[keySv[i]]);
+                } else {
+                  this.data[key[index]] = serviceTag[keySv[i]];
                 }
-            }
-          }
-          if (new Date(this.data.warrantyExpired) > new Date()) {
-            this.data.oow = true;
-          } else {
-            this.data.oow = false;
-          }
-
-          if (this.data.customerID != null && this.data.customerID.trim() != '') {
-            var customer = await firstValueFrom(
-              this.wrSv.getOneCustomer(this.data.customerID)
-            );
-            if (customer != null) {
-              this.data.category = customer?.category;
-            }
-            this.isCheckCbx = true;
-
+              }
           }
         }
+        if (new Date(this.data.warrantyExpired) > new Date()) {
+          this.data.oow = true;
+        } else {
+          this.data.oow = false;
+        }
+
+        if (this.data.customerID != null && this.data.customerID.trim() != '') {
+          var customer = await firstValueFrom(
+            this.wrSv.getOneCustomer(this.data.customerID)
+          );
+          if (customer != null) {
+            this.data.category = customer?.category;
+          }
+          this.isCheckCbx = true;
+        }
+      }
 
       // this.data.seriNo = e?.data;
       // this.data.serviceTag = e?.component?.itemsSelected[0]?.ServiceTag;
       // this.data.customerID = e?.component?.itemsSelected[0]?.CustomerID;
-
-
 
       // let customer = await firstValueFrom(
       //   this.wrSv.getOneCustomer(this.data.customerID)
@@ -334,8 +331,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       dialogModel.zIndex = 1010;
       dialogModel.FormModel = this.dialog?.formModel;
       let obj = {
-        title:
-          this.moreFuncAdd + ' ' + res?.defaultName,
+        title: this.moreFuncAdd + ' ' + res?.defaultName,
         data: this.data,
         gridViewSetup: this.gridViewSetup,
       };
@@ -355,7 +351,7 @@ export class PopupAddWarrantyComponent implements OnInit {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
               this.data = e?.event[0];
-              if (this.isCheckCbx && type != 'switch'){
+              if (this.isCheckCbx && type != 'switch') {
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;
               }
@@ -365,7 +361,6 @@ export class PopupAddWarrantyComponent implements OnInit {
           }
         });
     });
-
   }
   //#endregion
 
