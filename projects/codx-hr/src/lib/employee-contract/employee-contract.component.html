@@ -18,7 +18,7 @@
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-3 border-bottom w-100">
+  <div class="d-flex align-items-center p-3 border-bottom w-100 c-detail">
     <div class="w-30 min-w-300px p-1">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
@@ -33,7 +33,7 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <span class="fs-6 fw-bold mb-1">{{
+          <span class="fs-6 fw-bold mb-1 c-active" (click)="viewDetail(data)">{{
             data?.inforEmployee?.employeeName
           }}</span>
           <span
@@ -238,6 +238,7 @@
           (clickMF)="clickMF($event, data)"
           (changeDataMF)="changeDataMf($event, data)"
           [dataItem]="data"
+          [isSelectMore]="false"
           type="view"
         >
         </codx-mfunc>
@@ -304,7 +305,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-4'"
-    cardCss="card-template border-bottom p-3"
+    cardCss="card-template border-bottom p-3 c-detail"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.inforEmployee?.employeeID"

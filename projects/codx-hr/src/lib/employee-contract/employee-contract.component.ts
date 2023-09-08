@@ -547,4 +547,8 @@ export class EmployeeContractComponent extends UIComponent {
   onMoreMulti(e) {
     console.log(e);
   }
+
+  viewDetail(data) {
+    this.HandleEContractInfo('Xem chi tiết', 'view', data);
+  }
 }
