@@ -546,20 +546,15 @@ export class PopupAddDealComponent
     if (contact != null) {
       if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
         let index = -1;
-        if (type == 'addAndSave') {
+
+        if (contact.refID != null && contact.refID?.trim() != '') {
           index = this.lstContactDeal.findIndex(
             (x) => x.refID == contact.refID
           );
         } else {
-          if (contact.refID != null && contact.refID?.trim() != '') {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.refID == contact.refID
-            );
-          } else {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.recID == contact.recID
-            );
-          }
+          index = this.lstContactDeal.findIndex(
+            (x) => x.recID == contact.recID
+          );
         }
 
         if (index != -1) {
