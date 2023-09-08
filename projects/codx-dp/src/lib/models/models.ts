@@ -115,7 +115,7 @@ export class DP_Steps {
   stepNo: number;
   stepName: string;
   memo: string = '';
-  durationDay: number = 0;
+  durationDay: number = 1;
   durationHour: number = 0;
   numbererval: string;
   excludeDayoff: string = '7;8';
