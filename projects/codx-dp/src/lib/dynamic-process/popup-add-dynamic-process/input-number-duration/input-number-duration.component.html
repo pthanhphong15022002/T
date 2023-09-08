@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-6">
     <div class="input-group">
-      <input type="number" class="form-control" [placeholder]="minDayDefault" [min]="minDayDefault" [max]="maxDayDefault" (focusout)="checkInputDayValue($event)"  [(ngModel)]="dayValue"
+      <input type="number" class="form-control" [placeholder]="minDayDefault" [min]="minDayDefault" [max]="maxDayDefault" (focusout)="checkInputDayValue($event)"  [value]="dayValue"
       inputmode="numeric" (keydown)="onKeyDownFormat($event)"
       oninput=" this.value = parseInt(this.value.replace(/^0+(?!$)/, ''))"
 
@@ -12,8 +12,8 @@
   </div>
   <div class="col-6">
     <div class="input-group" >
-      <input type="number" class="form-control" placeholder="0" min="0" [max]="maxHourDefault" (focusout)="checkInputHourValue($event)"
-      [(ngModel)]="hourValue" inputmode="numeric" [readonly]="isView"
+      <input type="number" class="form-control" placeholder="0" min="0" [max]="maxHourDefault" (focusout)="checkInputHourValue($event)" [value]="hourValue"
+     inputmode="numeric" [readonly]="isView"
       oninput="this.value = parseInt(this.value.replace(/^0+(?!$)/, ''))"
       (keydown)="onKeyDownFormat($event)" pattern="0*[0-9]{1,5}" [ngStyle]="{'background-color': isView ? '#e6e6e6' : 'transparent'}">
       <span class="input-group-text text-black-50" [ngStyle]="{'background-color': isView ? '#e6e6e6' : 'transparent'}"

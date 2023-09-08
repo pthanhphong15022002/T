@@ -126,7 +126,10 @@
                 "
               ></span>
             </div>
-            <div class="mb-1">
+            <div
+              *ngIf="item?.status != null && item?.status.trim() != ''"
+              class="mb-1"
+            >
               <codx-vll
                 [name]="grvSetupWorkOrderParts?.Status?.referedValue"
                 [field]="'Status'"
@@ -139,7 +142,10 @@
             </div>
           </td>
           <td>
-            <div class="mb-1">
+            <div
+              *ngIf="item?.statusCode != null && item?.statusCode.trim() != ''"
+              class="mb-1"
+            >
               <codx-label
                 class="text-dark codx-label"
                 default="Status:"

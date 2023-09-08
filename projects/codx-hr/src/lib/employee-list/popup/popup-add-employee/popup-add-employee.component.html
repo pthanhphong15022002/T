@@ -355,7 +355,7 @@
           <div>
             <codx-label [formModel]="formModel" fiedName="TrainFieldID">
             </codx-label>
-            <codx-input field="trainFieldID" [formModel]="formModel" [Group]="form.formGroup"
+            <codx-input #cbxTrain field="trainFieldID" [formModel]="formModel" [Group]="form.formGroup"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -365,7 +365,7 @@
           <div>
             <codx-label [formModel]="formModel" fiedName="TrainLevel">
             </codx-label>
-            <codx-input field="trainLevel" [formModel]="formModel" [Group]="form.formGroup"
+            <codx-input #vllTrainLevel field="trainLevel" [formModel]="formModel" [Group]="form.formGroup"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -398,8 +398,8 @@
       </div>
       <div class="pb-4">
         <codx-label [formModel]="formModel" fiedName="Address"> </codx-label>
-        <codx-input field="address" [formModel]="formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
+        <codx-input field="address" [formModel]="formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)"
+          (controlBlur)="blurInput($event)">
         </codx-input>
       </div>
       <div class="row form-group">

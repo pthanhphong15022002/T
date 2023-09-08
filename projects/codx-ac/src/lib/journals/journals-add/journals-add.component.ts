@@ -383,12 +383,16 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       delete patchObject.journalName;
       this.form.formGroup.patchValue(patchObject);
       Object.assign(this.journal, patchObject);
+      
+      this.tempIDIMControls = this.vllIDIMControls069.filter((d) =>
+        this.journal.idimControl?.split(';').includes(d.value)
+      );
     });
   }
 
-  onFiscalYearSelect(e): void {
-    console.log('onSelect', e);
-    this.journal.fiscalYear = e.itemData.value;
+  onFiscalYearChange(e): void {
+    console.log('onChange', e);
+    this.journal.fiscalYear = e.value;
   }
 
   async onClickSave(): Promise<void> {
@@ -457,7 +461,9 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       this.journal.idimControl = null;
     }
 
-    this.journal.vatControl = this.journal.vatControl ? '1' : '0';
+    if (typeof this.journal.vatControl === "boolean") {
+      this.journal.vatControl = this.journal.vatControl ? '1' : '0';
+    }
 
     const extrasObj = this.extrasProps088.reduce(
       (prev, cur) => ({ ...prev, [cur]: this.journal[cur] }),

@@ -12,6 +12,9 @@ export class MenuListApprovalComponent implements OnInit{
   funcList:any;
   listParentGroup:any;
 
+  listFavorite = ["Tất cả"];
+  selectedIndex = "Tất cả";
+
   constructor(private codxWsService: CodxWsService)
   {
   }
@@ -33,5 +36,10 @@ export class MenuListApprovalComponent implements OnInit{
     var parentG = this.codxWsService.loadParentGroup(this.funcID);
     if(isObservable(parentG)) parentG.subscribe(item=>{if(item) this.listParentGroup = item})
     else this.listParentGroup = parentG
+  }
+
+  selectedChange(i:any)
+  {
+    this.selectedIndex = i;
   }
 }
