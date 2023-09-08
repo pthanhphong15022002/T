@@ -27,6 +27,8 @@ import { ReportComponent } from './report/report.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
 import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taskextends.component';
 import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-off/employee-day-off.component';
+import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 
 const routes: Routes = [
   {
@@ -91,6 +93,17 @@ const routes: Routes = [
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
+      },
+      //CM mục tiêu + cơ hội
+      {
+        path: 'targets/:funcID',
+        component: TargetsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        // data: { noReuse: true },
       },
       {
         path: '',
