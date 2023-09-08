@@ -46,6 +46,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     var path = window.location.pathname;
     var pathArr = path.split("/");
     this.codxWsService.functionID = pathArr[4];
+    
     this.getFuncList(pathArr[4]);
   }
 
@@ -71,6 +72,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     {
       this.codxWsService.listBreadCumb.length = 0;
       this.codxWsService.listBreadCumb.push(parentID2,d);
+    }
+    else
+    {
+      this.codxWsService.funcChange.next(this.codxWsService.functionID);
     }
   }
 }

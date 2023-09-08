@@ -305,7 +305,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-4'"
-    cardCss="card-template border-bottom p-3 c-detail"
+    cardCss="card-template border-bottom p-3 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.inforEmployee?.employeeID"
@@ -317,7 +317,7 @@
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
     [title]="data.inforEmployee?.employeeName"
-    [titleCss]="'fs-6 mb-1'"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data?.inforEmployee?.positionID || data?.positionID
