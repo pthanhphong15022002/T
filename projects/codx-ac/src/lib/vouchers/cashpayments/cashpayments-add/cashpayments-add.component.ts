@@ -282,7 +282,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               if (res.data != null) {
                 this.detectorRef.detectChanges();
                 this.refreshGrid();
-                this.formCashPayment.data.subType = event.data[0];
+                this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
                 this.showHideTabDetail(
                   this.formCashPayment?.data?.subType,
                   this.elementTabDetail
@@ -295,7 +295,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         }
       });
     } else {
-      this.formCashPayment.data.subType = event.data[0];
+      this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
       }
