@@ -308,7 +308,8 @@ export class EmployeeContractComponent extends UIComponent {
         this.printContract(event, data.recID);
         break;
       case this.actionAddAppendix:
-        this.handleSubContract(event.text);
+        this.currentEmpObj = data.inforEmployee;
+        this.handleSubContract(event.text, 'add');
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -361,35 +362,30 @@ export class EmployeeContractComponent extends UIComponent {
     );
   }
 
-  handleSubContract(actionType) {
-    let optionSub = new SidebarModel();
-    optionSub.Width = '550px';
-    optionSub.zIndex = 1001;
+  handleSubContract(headerText, actionType) {
     let popupSubContract = this.callfunc.openForm(
       PopupSubEContractComponent,
       '',
       550,
-      screen.height,
+      1000,
       '',
       {
         employeeId: this.itemDetail.employeeID,
         contractNo: this.itemDetail.contractNo,
         actionType: actionType,
         dataObj: this.itemDetail,
-        headerText: 'Thêm' + ' ' + 'Phụ lục hợp đồng lao động',
+        headerText: headerText,
       }
     );
     popupSubContract.closed.subscribe((res) => {
-      console.log(res);
       if (res.event) {
-        this.df.detectChanges();
+        res.event[0].inforEmployee = this.currentEmpObj;
+        this.view.dataService.add(res.event[0], 0).subscribe();
       }
     });
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    // this.currentEmpObj = this.itemDetail?.inforEmployee;
-    //console.log(this.currentEmpObj);
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;

@@ -3599,8 +3599,12 @@ codx-view-list-tree{
     left: 0;
     right: 0;
     bottom: 0;
+    height: 42px;
     background-color: white;
     z-index: 99;
+    &.expand{
+      height: 400px;
+    }
   }
   .codx-detail-toolbar{
     background-color: white;
@@ -3792,4 +3796,25 @@ lib-employee-policybenefits ejs-listview .e-content{
 
 .page-profile .user-right .pw-content{
   max-height: calc(100vh - 125px)!important;
+}
+
+.when-hover-box:hover .then-text-primary{
+  color: var(--primary-dark)!important;
+}
+.when-hover-box .codx-detail-main{
+  padding-bottom: 36px!important;
+}
+.h-ws-header {
+  .toolbar{
+    margin-bottom: 10px!important;
+    padding: 0!important;
+   
+  }
+  .codx-detail-main{
+    height: auto;
+    margin-bottom: 30px;
+  }
+  .codx-detail-footer{
+    bottom: 32px!important;
+  }
 }
