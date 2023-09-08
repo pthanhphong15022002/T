@@ -584,7 +584,7 @@ export class DealsComponent
         refType: 'CM_Deals',
       };
 
-      if (data?.refID && data.applyProcess) {
+      if (data?.refID) {
         customData = {
           refID: data.processID,
           refType: 'DP_Processes',
@@ -779,7 +779,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -824,7 +824,6 @@ export class DealsComponent
               var dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,

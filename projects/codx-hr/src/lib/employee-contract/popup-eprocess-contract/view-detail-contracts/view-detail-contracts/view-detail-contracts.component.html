@@ -12,7 +12,7 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1 w-100">
-      <div class="mb-1 d-flex">
+      <div class="mb-1 d-flex align-items-center">
         <span class="text-dark fs-5-sm fw-bold me-3">
           {{ itemDetail?.inforEmployee?.employeeName }}
         </span>
@@ -79,6 +79,7 @@
           [showIcon]="true"
           [showBgColor]="false"
           ngClass="badge badge-sm"
+          class="d-flex align-items-center gap-2"
         >
         </codx-vll>
       </div>

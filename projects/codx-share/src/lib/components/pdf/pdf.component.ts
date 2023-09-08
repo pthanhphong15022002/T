@@ -1764,13 +1764,29 @@ export class PdfComponent
         curImgEle.src = curArea.labelValue;
         let min = 0;
         let scale = 1;
+        let scaleW = 1;
+        let scaleH = 1;
         curImgEle.onload = () => {
           let isText = this.curSelectedArea.attrs?.text ? true : false;
           if (isText) {
-            let textW = this.curSelectedArea.width();
-            let textH = this.curSelectedArea.height();
-            min = Math.min(textW, textH);
-            scale = Math.min(curImgEle.width, curImgEle.height) / min;
+            // let textW = this.curSelectedArea.width();
+            // let textH = this.curSelectedArea.height();
+            // min = Math.min(textW, textH);
+            // scale = Math.min(curImgEle.width, curImgEle.height) / min;
+            let imgFixW = 200;
+            let imgFixH = 200;
+
+            scaleW = imgFixW / curImgEle.width;
+            scaleH =
+              scaleW * (curImgEle.height / curImgEle.width) * this.yScale;
+            if (curImgEle.width < imgFixW) {
+              scaleW = 1;
+            }
+            if (curImgEle.height < imgFixH) {
+              scaleH = 1;
+            }
+
+            scaleW *= this.xScale;
           }
           let imgArea = new Konva.Image({
             image: curImgEle,
@@ -1787,7 +1803,11 @@ export class PdfComponent
             name: this.curSelectedArea.name(),
             fileRotate: curArea.location.fileRotate,
           });
-          imgArea?.scale(this.curSelectedArea.scale());
+          // imgArea?.scale(this.curSelectedArea.scale());
+          imgArea.scale({
+            x: scaleW,
+            y: scaleH,
+          });
           this.curSelectedArea.destroy();
           this.curSelectedArea = imgArea;
 
