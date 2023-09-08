@@ -34,6 +34,7 @@ import { PopupAssignEngineerComponent } from './popup-assign-engineer/popup-assi
 import { CodxWrService } from '../codx-wr.service';
 import { ViewDetailWrComponent } from './view-detail-wr/view-detail-wr.component';
 import { firstValueFrom } from 'rxjs';
+import { WR_WorkOrderUpdates } from '../_models-wr/wr-model.model';
 
 @Component({
   selector: 'lib-warranties',
@@ -123,9 +124,18 @@ export class WarrantiesComponent
     };
     this.wrSv.listOrderUpdateSubject.subscribe((res) => {
       if (res) {
-        this.lstOrderUpdate = res;
-        // this.listContacts.push(Object.assign({}, res));
-        // this.lstContactEmit.emit(this.listContacts);
+        this.lstOrderUpdate = res?.e ?? [];
+        if (res?.date) {
+          this.dataSelected.lastUpdatedOn = res?.date;
+          if (res?.update) {
+            this.dataSelected.statusCode = res?.update?.statusCode;
+          }
+          if (this.lstOrderUpdate == null || this.lstOrderUpdate.length == 0)
+            this.dataSelected.status = '1';
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.update(this.dataSelected).subscribe();
+        }
+
         this.wrSv.listOrderUpdateSubject.next(null);
       }
     });
@@ -554,7 +564,10 @@ export class WarrantiesComponent
           formModel.formName = 'WRWorkOrderUpdates';
           formModel.gridViewName = 'grvWRWorkOrderUpdates';
           dialogModel.FormModel = formModel;
+          let dataUpdates = new WR_WorkOrderUpdates();
+          dataUpdates.recID = Util.uid();
           let obj = {
+            data: dataUpdates,
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
@@ -572,15 +585,14 @@ export class WarrantiesComponent
               dialogModel
             )
             .closed.subscribe((e) => {
-              if (e?.event && e?.event != null) {
+              if (e && e?.event != null) {
                 this.dataSelected.statusCode = e?.event?.statusCode;
                 this.dataSelected.scheduleStart = e?.event?.scheduleStart;
-                this.dataSelected.scheduleEnd = e?.event?.scheduleEnd;
+                this.dataSelected.lastUpdatedOn = new Date();
                 this.dataSelected.status = '3';
                 let index = this.lstOrderUpdate.findIndex(
                   (x) =>
-                    x.statusCode == e?.event?.statusCode &&
-                    x.transID == e?.event?.transID
+                    x.recID == e?.event?.recID && x.transID == e?.event?.transID
                 );
                 if (index != -1) {
                   this.lstOrderUpdate[index] = e?.event;
@@ -625,6 +637,7 @@ export class WarrantiesComponent
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
           this.dataSelected.comment = e?.event[1];
+          this.dataSelected.lastUpdatedOn = new Date();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
               x.statusCode == this.dataSelected?.statusCode &&
@@ -669,6 +682,7 @@ export class WarrantiesComponent
               if (ele && ele?.event) {
                 this.dataSelected.status = this.status;
                 this.dataSelected.cancelledNote = this.cancelledNote;
+                this.dataSelected.lastUpdatedOn = new Date();
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
@@ -692,6 +706,7 @@ export class WarrantiesComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
+                  this.dataSelected.lastUpdatedOn = new Date();
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
@@ -744,6 +759,7 @@ export class WarrantiesComponent
     this.dialogPriority.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
+        this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');

@@ -1736,7 +1736,7 @@
               field="instanceProgressControl"
               style="width: 100%"
               [checked]="process?.instanceProgressControl"
-              (valueChange)="valueChangeChecked($event,process)"
+              (valueChange)="valueChangeChecked($event, process)"
             >
             </codx-input>
             <codx-label
@@ -2110,14 +2110,39 @@
                         <i class="icon-horizontal_rule icon-18"></i>
                       </button>
                     </span>
-                    <div class="me-3">
+                    <div
+                      class="mx-3"
+                      #popoverTooltip="ngbPopover"
+                      [ngbPopover]="tooltipImg"
+                      [placement]="'top left'"
+                      (mouseenter)="popoverTooltip.open()"
+                      (mouseleave)="popoverTooltip.close()"
+                    >
+                      <ng-template #tooltipImg let-data="value">
+                        <codx-img
+                          [width]="25"
+                          [objectId]="taskList?.owner"
+                          objectType="AD_Users"
+                        ></codx-img>
+                        <span class="ms-1 fw-bold">{{
+                          getRoleName(taskList)
+                        }}</span>
+                      </ng-template>
                       <codx-img
-                        [width]="30"
-                        [objectId]="taskList?.roles[0]?.objectID"
+                        [width]="25"
+                        [objectId]="taskList?.owner"
                         objectType="AD_Users"
-                        [objectName]="taskList?.roles[0]?.objectName"
-                      >
-                      </codx-img>
+                      ></codx-img>
+                      <!-- <codx-imgs 
+                                class="me-2 d-flex align-items-center"
+                                [width]="25"
+                                ojectType="AD_Users"
+                                [numberImages]="1"
+                                [isToolTip]="true"
+                                [objectId]="task?.owner"
+                                [objectName]="getRoleName(task)"
+                              >
+                              </codx-imgs> -->
                     </div>
                     <div class="steplist-hearder">
                       <div class="text-dark fw-bold fs-6">
@@ -2190,8 +2215,30 @@
                               [isStep]="false"
                               [size]="30"
                             ></codx-icon-step>
-                            <div class="mx-3">
-                              <codx-imgs
+                            <div
+                              class="mx-3"
+                              #popoverTooltip="ngbPopover"
+                              [ngbPopover]="tooltipImg"
+                              [placement]="'top left'"
+                              (mouseenter)="popoverTooltip.open()"
+                              (mouseleave)="popoverTooltip.close()"
+                            >
+                              <ng-template #tooltipImg let-data="value">
+                                <codx-img
+                                  [width]="25"
+                                  [objectId]="task?.owner"
+                                  objectType="AD_Users"
+                                ></codx-img>
+                                <span class="ms-1 fw-bold">{{
+                                  getRoleName(task)
+                                }}</span>
+                              </ng-template>
+                              <codx-img
+                                [width]="25"
+                                [objectId]="task?.owner"
+                                objectType="AD_Users"
+                              ></codx-img>
+                              <!-- <codx-imgs 
                                 class="me-2 d-flex align-items-center"
                                 [width]="25"
                                 ojectType="AD_Users"
@@ -2200,7 +2247,7 @@
                                 [objectId]="task?.owner"
                                 [objectName]="getRoleName(task)"
                               >
-                              </codx-imgs>
+                              </codx-imgs> -->
                             </div>
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
@@ -2362,7 +2409,11 @@
 
   <div
     class="form-group mt-5"
-    *ngIf="!stepNew?.isSuccessStep && !stepNew?.isFailStep && process?.instanceProgressControl"
+    *ngIf="
+      !stepNew?.isSuccessStep &&
+      !stepNew?.isFailStep &&
+      process?.instanceProgressControl
+    "
   >
     <div class="fw-bold text-dark mb-1">
       <codx-label

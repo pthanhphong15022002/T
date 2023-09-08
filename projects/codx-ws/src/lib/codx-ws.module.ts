@@ -26,6 +26,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
 import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
 import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taskextends.component';
+import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-off/employee-day-off.component';
 
 const routes: Routes = [
   {
@@ -77,11 +78,16 @@ const routes: Routes = [
         path: 'report/:funcID',
         component: ReportComponent,
       },
+      // HR - QTNS - Đăng ký nghỉ phép
+      {
+        path: 'edayoffs/:funcID',
+        component: EmployeeDayOffComponent,
+      },
+      //Task + duyyet TM
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
-
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
