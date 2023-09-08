@@ -38,14 +38,6 @@ export class PopupAddItemConversionComponent extends UIComponent {
   ) {
     super(injector);
 
-    this.dialogRef.beforeClose.subscribe(
-      (res) => (res.event = this.savedItemConversions)
-    );
-  }
-  //#endregion
-
-  //#region Init
-  onInit(): void {
     if (this.dialogData.data.itemConversion) {
       this.itemConversion = this.dialogData.data.itemConversion;
       this.savedItemConversions = this.dialogData.data.savedItemConversions;
@@ -55,8 +47,18 @@ export class PopupAddItemConversionComponent extends UIComponent {
         this.itemConversion.inverted == 1 ? true : false;
       this.itemConversion.conversion =
         this.itemConversion.conversion.toString();
+    } else if (this.dialogData.data.isItemSaved) {
+      this.itemConversion.itemID = this.dialogData.data.itemID;
     }
 
+    this.dialogRef.beforeClose.subscribe(
+      (res) => (res.event = this.savedItemConversions)
+    );
+  }
+  //#endregion
+
+  //#region Init
+  onInit(): void {
     this.cache
       .moreFunction('UMConversion', 'grvUMConversion')
       .pipe(
