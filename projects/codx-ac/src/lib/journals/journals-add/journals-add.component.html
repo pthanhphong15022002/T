@@ -62,7 +62,7 @@
           <ejs-combobox
             [dataSource]="fiscalYears"
             [value]="journal.fiscalYear"
-            (select)="onFiscalYearSelect($event)"
+            (change)="onFiscalYearChange($event)"
           >
           </ejs-combobox>
         </div>
