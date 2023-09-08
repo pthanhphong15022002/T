@@ -804,6 +804,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
+          this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
