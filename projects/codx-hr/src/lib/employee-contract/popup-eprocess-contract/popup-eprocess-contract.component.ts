@@ -325,6 +325,32 @@ export class PopupEProcessContractComponent
     dialog.close();
   }
 
+  initFormAdd(res, dataContractType?) {
+    this.data = res?.data;
+
+    if (dataContractType) {
+      this.data.contractTypeID = dataContractType.result?.nextContractTypeID;
+    }
+    this.data.employeeID = this.employeeId;
+    this.data.signedDate = null;
+    this.data.effectedDate = null;
+    this.formModel.currentData = this.data;
+
+    this.formGroup.patchValue(this.data);
+
+    if (this.employeeObj) {
+      this.formGroup.patchValue({
+        orgUnitID: this.employeeObj.orgUnitID,
+      });
+      this.formGroup.patchValue({
+        positionID: this.employeeObj.positionID,
+      });
+    }
+
+    this.isAfterRender = true;
+    this.cr.detectChanges();
+  }
+
   initForm() {
     this.hrSevice.getOrgUnitID(this.employeeObj?.orgUnitID).subscribe((res) => {
       this.employeeObj.orgUnitName = res.orgUnitName;
@@ -341,27 +367,61 @@ export class PopupEProcessContractComponent
           if (res) {
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
-            this.df.detectChanges();
+            //this.df.detectChanges();
 
-            this.data = res?.data;
-            this.data.employeeID = this.employeeId;
-            this.data.signedDate = null;
-            this.data.effectedDate = null;
-
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-
-            if (this.employeeObj) {
-              this.formGroup.patchValue({
-                orgUnitID: this.employeeObj.orgUnitID,
-              });
-              this.formGroup.patchValue({
-                positionID: this.employeeObj.positionID,
-              });
+            // de xuat hop dong tiep theo
+            //Check ContractType have whether NextContractTypeID
+            if (this.headerText.includes('Đề xuất')) {
+              this.api
+                .execSv<any>(
+                  'HR',
+                  'HR',
+                  'ContractTypesBusiness',
+                  'GetContractAsync',
+                  this.data.contractTypeID
+                )
+                .subscribe((dataContractType) => {
+                  this.initFormAdd(res, dataContractType);
+                });
+            } else {
+              this.initFormAdd(res);
             }
 
-            this.isAfterRender = true;
-            this.cr.detectChanges();
+            // if (this.headerText.includes('Đề xuất')) {
+            // this.api
+            //   .execSv<any>(
+            //     'HR',
+            //     'HR',
+            //     'ContractTypesBusiness',
+            //     'GetContractAsync',
+            //     this.data.contractTypeID
+            //   )
+            //   .subscribe((dataContractType) => {
+            //     this.data = res?.data;
+
+            //       this.data.contractTypeID =
+            //         dataContractType.result?.nextContractTypeID;
+
+            //     this.data.employeeID = this.employeeId;
+            //     this.data.signedDate = null;
+            //     this.data.effectedDate = null;
+            //     this.formModel.currentData = this.data;
+
+            //     this.formGroup.patchValue(this.data);
+
+            //     if (this.employeeObj) {
+            //       this.formGroup.patchValue({
+            //         orgUnitID: this.employeeObj.orgUnitID,
+            //       });
+            //       this.formGroup.patchValue({
+            //         positionID: this.employeeObj.positionID,
+            //       });
+            //     }
+
+            //     this.isAfterRender = true;
+            //     this.cr.detectChanges();
+            //   });
+            // }
           }
         });
     } else if (
