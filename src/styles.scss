@@ -3599,8 +3599,12 @@ codx-view-list-tree{
     left: 0;
     right: 0;
     bottom: 0;
+    height: 42px;
     background-color: white;
     z-index: 99;
+    &.expand{
+      height: 400px;
+    }
   }
   .codx-detail-toolbar{
     background-color: white;
