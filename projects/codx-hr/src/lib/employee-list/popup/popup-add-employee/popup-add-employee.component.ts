@@ -151,12 +151,18 @@ export class PopupAddEmployeeComponent implements OnInit {
               .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
                 if (posInfo) {
-                  this.data['jobLevel'] = posInfo.jobLevel ? posInfo.jobLevel : null;
-                  this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
-                  this.form.formGroup.patchValue({
-                    jobLevel: this.data.jobLevel,
-                    orgUnitID: this.data.orgUnitID,
-                  });
+                  if (posInfo.jobLevel) {
+                    this.data['jobLevel'] = posInfo.jobLevel;
+                    this.form.formGroup.patchValue({
+                      jobLevel: this.data.jobLevel,
+                    });
+                  }
+                  if (posInfo.orgUnitID) {
+                    this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
+                    this.form.formGroup.patchValue({
+                      orgUnitID: this.data.orgUnitID,
+                    });
+                  }
                   // this.getOrgNote();
                 }
               });
