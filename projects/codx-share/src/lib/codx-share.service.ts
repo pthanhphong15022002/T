@@ -214,7 +214,7 @@ export class CodxShareService {
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
 
-          var listApproveMF = this.getMoreFunction(funcID);
+          var listApproveMF = this.getMoreFunction(funcID,data?.unbounds?.stepType);
 
           let dialogApprove = this.callfunc.openForm(
             PopupSignForApprovalComponent,
@@ -1112,37 +1112,78 @@ export class CodxShareService {
     }
   }
 
-  getMoreFunction(funcID: any) {
+  getMoreFunction(funcID: any,stepType:any=null) {
     var listApproveMF = [];
-    if (funcID == 'SYS201') {
-      var consensus = {
-        functionID: 'SYS201',
-        text: 'Duyệt',
-        color: '#666666',
-      };
-
-      listApproveMF.push(consensus);
+    if(stepType==null){
+      if (funcID == 'SYS201') {
+        var consensus = {
+          functionID: 'SYS201',
+          text: 'Duyệt',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
+  
+      if (funcID == 'SYS202') {
+        var consensus = {
+          functionID: 'SYS202',
+          text: 'Ký',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
+  
+      if (funcID == 'SYS203') {
+        var consensus = {
+          functionID: 'SYS203',
+          text: 'Đồng thuận',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
     }
+    else{
+      switch(stepType){
+        //R;Kiểm tra;C;Góp ý;A1;Đồng thuận;---------;S1;Ký nháy;S2;Ký chính;----------S3;Đóng dấu;A2;Duyệt
+        case 'R':
+        case 'C':
+        case 'A1':
+          var consensus = {
+            functionID: 'SYS203',
+            text: 'Đồng thuận',
+            color: '#666666',
+          };    
+          listApproveMF.push(consensus);
+          break;
 
-    if (funcID == 'SYS202') {
-      var consensus = {
-        functionID: 'SYS202',
-        text: 'Ký',
-        color: '#666666',
-      };
+        case 'S':
+        case 'S1':
+        case 'S2':
+          var consensus = {
+            functionID: 'SYS202',
+            text: 'Ký',
+            color: '#666666',
+          };
+    
+          listApproveMF.push(consensus);
+          break;
 
-      listApproveMF.push(consensus);
+        case 'S3':
+        case 'A2':
+          var consensus = {
+            functionID: 'SYS201',
+            text: 'Duyệt',
+            color: '#666666',
+          };
+    
+          listApproveMF.push(consensus);
+          break;
+      }
     }
-
-    if (funcID == 'SYS203') {
-      var consensus = {
-        functionID: 'SYS203',
-        text: 'Đồng thuận',
-        color: '#666666',
-      };
-
-      listApproveMF.push(consensus);
-    }
+    
 
     //Từ chối
     var tc = {
