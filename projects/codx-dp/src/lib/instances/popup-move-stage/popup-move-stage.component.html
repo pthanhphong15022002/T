@@ -11,7 +11,7 @@
 
 <ng-template #subHeader> </ng-template>
 <ng-template #body>
-  <div class="row">
+  <!-- <div class="row">
     <div class="form-group col-3" *ngIf="isMoveNext">
       <codx-label
         fiedName="ActualEnd"
@@ -31,7 +31,7 @@
       >
       </codx-input>
     </div>
-  </div>
+  </div> -->
   <div class="title-step">
     <div class="fs-6 fw-bold text-primary">{{ stepName }}</div>
   </div>
@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="isMoveNext && isChanged">
         <div class="form-group">
           <codx-label
             fiedName="owner"
@@ -71,12 +71,29 @@
               [lstParticipants]="lstParticipants"
               [dialog]="dialog"
               [isType]="'I'"
-              (eventUser)="eventUser($event)"
               [owner]="owner"
+              (eventUser)="eventUser($event)"
             ></codx-popup-participants>
           </div>
         </div>
       </div>
+
+      <div class="col-6" *ngIf="!isMoveNext">
+        <div class="form-group">
+          <codx-label fiedName="ExpectedClosed" [formModel]="formModelDeal">
+          </codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="expectedClosed"
+            format="d"
+            [crrValue]="expectedClosed"
+            (valueChange)="valueChangeDataCM($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+
       <!-- <div class="col-3">
         <div class="form-group" *ngIf="isMoveNext">
           <codx-label
@@ -99,7 +116,7 @@
         </div>
       </div> -->
     </div>
-    <div class="row" *ngIf="applyFor == '1'">
+    <div class="row" *ngIf="applyFor == '1' && isMoveNext" >
       <!-- <div class="col-6">
         <div class="form-group">
           <div class="form-group">
