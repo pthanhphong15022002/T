@@ -141,27 +141,27 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         this.gridViewSetup.Comment.isRequire = false;
         this.data.comment = '';
       }
-      if (e?.data) {
-        let wordOrder = await firstValueFrom(
-          this.api.execSv<any>(
-            'WR',
-            'ERM.Business.WR',
-            'WorkOrderUpdatesBusiness',
-            'GetWorkOrderUpdateByStatusCodeAsync',
-            [this.data?.statusCode, this.data.transID]
-          )
-        );
-        if (wordOrder != null) {
-          this.data.recID = wordOrder?.recID;
-          this.data.attachments = wordOrder?.attachments ?? 0;
-          this.edit = true;
-        } else {
-          this.data.recID = Util.uid();
-          this.data.attachments = 0;
-          this.countFile = 0;
-          this.edit = false;
-        }
-      }
+      // if (e?.data) {
+      //   let wordOrder = await firstValueFrom(
+      //     this.api.execSv<any>(
+      //       'WR',
+      //       'ERM.Business.WR',
+      //       'WorkOrderUpdatesBusiness',
+      //       'GetWorkOrderUpdateByStatusCodeAsync',
+      //       [this.data?.statusCode, this.data.transID]
+      //     )
+      //   );
+      //   if (wordOrder != null) {
+      //     this.data.recID = wordOrder?.recID;
+      //     this.data.attachments = wordOrder?.attachments ?? 0;
+      //     this.edit = true;
+      //   } else {
+      //     this.data.recID = Util.uid();
+      //     this.data.attachments = 0;
+      //     this.countFile = 0;
+      //     this.edit = false;
+      //   }
+      // }
     }
     this.detectorRef.detectChanges();
   }

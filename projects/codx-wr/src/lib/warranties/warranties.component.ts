@@ -125,11 +125,17 @@ export class WarrantiesComponent
     this.wrSv.listOrderUpdateSubject.subscribe((res) => {
       if (res) {
         this.lstOrderUpdate = res?.e ?? [];
-        if(res?.date){
+        if (res?.date) {
           this.dataSelected.lastUpdatedOn = res?.date;
+          if (res?.update) {
+            this.dataSelected.statusCode = res?.update?.statusCode;
+          }
+          if (this.lstOrderUpdate == null || this.lstOrderUpdate.length == 0)
+            this.dataSelected.status = '1';
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected).subscribe();
         }
+
         this.wrSv.listOrderUpdateSubject.next(null);
       }
     });
@@ -558,10 +564,10 @@ export class WarrantiesComponent
           formModel.formName = 'WRWorkOrderUpdates';
           formModel.gridViewName = 'grvWRWorkOrderUpdates';
           dialogModel.FormModel = formModel;
-          let data = new WR_WorkOrderUpdates;
-          data.recID = Util.uid();
+          let dataUpdates = new WR_WorkOrderUpdates();
+          dataUpdates.recID = Util.uid();
           let obj = {
-            data: data,
+            data: dataUpdates,
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
@@ -586,8 +592,7 @@ export class WarrantiesComponent
                 this.dataSelected.status = '3';
                 let index = this.lstOrderUpdate.findIndex(
                   (x) =>
-                    x.statusCode == e?.event?.statusCode &&
-                    x.transID == e?.event?.transID
+                    x.recID == e?.event?.recID && x.transID == e?.event?.transID
                 );
                 if (index != -1) {
                   this.lstOrderUpdate[index] = e?.event;
