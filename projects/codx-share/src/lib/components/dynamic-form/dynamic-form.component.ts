@@ -294,7 +294,7 @@ export class DynamicFormComponent extends UIComponent {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
@@ -329,7 +329,7 @@ export class DynamicFormComponent extends UIComponent {
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
