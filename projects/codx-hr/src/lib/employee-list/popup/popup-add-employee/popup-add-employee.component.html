@@ -399,7 +399,7 @@
       <div class="pb-4">
         <codx-label [formModel]="formModel" fiedName="Address"> </codx-label>
         <codx-input field="address" [formModel]="formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
         </codx-input>
       </div>
       <div class="row form-group">
@@ -444,7 +444,7 @@
       <div class="pb-4">
         <codx-label [formModel]="formModel" fiedName="TAddress"> </codx-label>
         <codx-input field="tAddress" [formModel]="formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
         </codx-input>
       </div>
       <div class="row form-group">

@@ -4590,6 +4590,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
     if (this.crrIndex > -1) {
       this.LoadedEInfo = false;
+      this.infoPersonal = null;
       let urlView = '/hr/employeedetail/HRT03b';
       this.codxService.replaceNavigate(
         urlView,

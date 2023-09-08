@@ -109,7 +109,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.user = this.authStore.get();
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
-    this.isStart = dt?.data?.isStart;
+    // this.isStart = dt?.data?.isStart;
     this.typeTask = dt?.data?.taskType;
     this.ownerParent = dt?.data?.owner; // owner of Parent
     this.listTask = dt?.data?.listTask || this.step?.tasks;
@@ -118,9 +118,8 @@ export class CodxAddTaskComponent implements OnInit {
     this.groupTaskID = dt?.data?.groupTaskID;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
-    this.isSave =
-      dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-
+    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.isStart = this.step || (this.step?.startDate && this.step?.startDate) ? false  : true;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));

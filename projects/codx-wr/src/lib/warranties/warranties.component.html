@@ -118,13 +118,6 @@
     </div>
 
     <div class="d-flex justify-content-start mb-1 w-100">
-      <!-- <span
-        [ngbTooltip]="popupAddress"
-        class="icon-location_on icon-16 me-2 text-gray-600 fs-7"
-        ><ng-template #popupAddress>
-          <codx-label fiedName="Address" [formModel]="formModel"></codx-label>
-        </ng-template>
-      </span> -->
       <span
         class="text-gray-700 fs-7 line-clamp line-clamp-1"
         [ngbTooltip]="data?.address"
@@ -137,8 +130,6 @@
     <div class="d-flex justify-content-start mb-1 w-100">
       <span
         class="text-gray-700 fs-7 line-clamp line-clamp-1"
-        #note
-        [ngbTooltip]="data?.problem"
         [innerHTML]="
           data?.problem | formatvalue : view.formModel : 'Problem' | async
         "

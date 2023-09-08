@@ -1,7 +1,7 @@
 <div *ngIf="columnsGrid && inputTimes > 1" class="main-gridview">
     <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
         [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
-        [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
+        [dataValues]="dataValues" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
         [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="false"
         [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
 </div>

@@ -31,6 +31,7 @@ import { isObservable, map } from 'rxjs';
 import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
+import { PopupSubEContractComponent } from '../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -63,6 +64,7 @@ export class EmployeeContractComponent extends UIComponent {
   grvSetup: any;
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
+  resignStatus: boolean = false;
   viewActive: string;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
@@ -76,6 +78,9 @@ export class EmployeeContractComponent extends UIComponent {
   // actionUpdateRejected = 'HRTPro01AU4';
   actionUpdateApproved = 'HRTPro01AU5';
   actionUpdateClosed = 'HRTPro01AU9';
+  actionAddAppendix = 'HRTPro01A10';
+  actionCheckResignApprove = 'HRTPro01A11';
+  actionCheckResignCancel = 'HRTPro01A12';
   //#endregion
   constructor(
     inject: Injector,
@@ -149,8 +154,16 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   popupUpdateEContractStatus(funcID, data) {
-    this.hrService.handleUpdateRecordStatus(funcID, data);
+    if (
+      funcID === this.actionCheckResignCancel ||
+      funcID === this.actionCheckResignApprove
+    ) {
+      this.resignStatus = true;
+    } else {
+      this.resignStatus = false;
+    }
 
+    this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
     this.currentEmpObj = data?.inforEmployee;
     this.formGroup.patchValue(this.editStatusObj);
@@ -165,9 +178,7 @@ export class EmployeeContractComponent extends UIComponent {
 
     this.dialogEditStatus.closed.subscribe((res) => {
       if (res?.event) {
-        //this.view.dataService.update(res.event[0]).subscribe();
         this.view.dataService.update(res.event[0]).subscribe();
-
         if (res.event[1]) {
           this.view.dataService.update(res.event[1]).subscribe();
         }
@@ -271,12 +282,15 @@ export class EmployeeContractComponent extends UIComponent {
       case this.actionUpdateInProgress:
       case this.actionUpdateApproved:
       case this.actionUpdateClosed:
+      case this.actionCheckResignApprove:
+      case this.actionCheckResignCancel:
         let oUpdate = JSON.parse(JSON.stringify(data));
         this.popupUpdateEContractStatus(event.functionID, oUpdate);
         break;
-      // case this.actionAddNew: // de xuat hop dong tiep theo
-      //   this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
-      //   break;
+      case this.actionAddNew: // de xuat hop dong tiep theo
+        this.currentEmpObj = data.inforEmployee;
+        this.HandleEContractInfo(event.text.substr(0, 7), 'add', data);
+        break;
       case 'SYS03':
         this.currentEmpObj = data.inforEmployee;
         this.HandleEContractInfo(event.text, 'edit', data);
@@ -292,6 +306,9 @@ export class EmployeeContractComponent extends UIComponent {
         break;
       case 'HRTPro01A20': // in hợp đồng
         this.printContract(event, data.recID);
+        break;
+      case this.actionAddAppendix:
+        this.handleSubContract(event.text);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -342,6 +359,32 @@ export class EmployeeContractComponent extends UIComponent {
       '',
       dialogModel
     );
+  }
+
+  handleSubContract(actionType) {
+    let optionSub = new SidebarModel();
+    optionSub.Width = '550px';
+    optionSub.zIndex = 1001;
+    let popupSubContract = this.callfunc.openForm(
+      PopupSubEContractComponent,
+      '',
+      550,
+      screen.height,
+      '',
+      {
+        employeeId: this.itemDetail.employeeID,
+        contractNo: this.itemDetail.contractNo,
+        actionType: actionType,
+        dataObj: this.itemDetail,
+        headerText: 'Thêm' + ' ' + 'Phụ lục hợp đồng lao động',
+      }
+    );
+    popupSubContract.closed.subscribe((res) => {
+      console.log(res);
+      if (res.event) {
+        this.df.detectChanges();
+      }
+    });
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
