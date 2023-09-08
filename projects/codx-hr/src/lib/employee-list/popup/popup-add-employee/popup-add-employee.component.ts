@@ -3,11 +3,13 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
+  CodxComboboxComponent,
   DialogData,
   DialogRef,
   FilesService,
@@ -16,6 +18,7 @@ import {
   LayoutAddComponent,
   NotificationsService,
   Util,
+  ValueListComponent,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -53,6 +56,8 @@ export class PopupAddEmployeeComponent implements OnInit {
   ];
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
+  @ViewChild('cbxTrain') cbxTrain: any;
+  @ViewChild('vllTrainLevel') vllTrainLevel: any;
 
   trainFieldID: string = '';
   trainLevel: string = '';
@@ -158,8 +163,8 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         // case 'orgUnitID':
-          // this.getOrgNote();
-          // break;
+        // this.getOrgNote();
+        // break;
         case 'issuedOn':
           if (!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
@@ -211,33 +216,35 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (!this.hasChangedData) break;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tWardID: null });
-          break;;
-        case 'trainLevel':
-          if (this.data[field]) {
-            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
-            if (this.trainLevel && this.trainFieldID) {
-              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
-              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
-            }
-            if (!this.trainFieldID) {
-              this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + ' ', "");
-            }
-          } else {
-            this.trainLevel = null;
-          }
           break;
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
-            if (this.trainLevel && this.trainFieldID) {
+            if (!this.trainLevel && this.trainFieldID?.length > 0) {
+              this.trainLevel = this.vllTrainLevel.ComponentCurrent.dataSource.find(x => x.value == this.data['trainLevel'])?.text;
+              //this.trainLevel = this.data['degreeName'].replace(" " + this.trainFieldID, "");
+            }
+            if (this.trainLevel && this.trainFieldID && this.hasChangedData) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
             }
-            if (!this.trainLevel) {
-              this.trainLevel = this.data['degreeName'].replace(' ' + this.trainFieldID, "");
-            }
           } else {
             this.trainFieldID = null;
+          }
+          break;
+        case 'trainLevel':
+          if (this.data[field]) {
+            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
+            if (!this.trainFieldID && this.trainLevel?.length > 0) {
+              this.trainFieldID = this.cbxTrain.ComponentCurrent.dataService.data[0]?.TrainFieldName;
+              // this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + " ", "");
+            }
+            if (this.trainLevel && this.trainFieldID && this.hasChangedData) {
+              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
+              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+          } else {
+            this.trainLevel = null;
           }
           break;
         case 'siRegisterOn':

@@ -1,5 +1,5 @@
 import { Component, Injector, OnInit, Optional } from '@angular/core';
-import { CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { AlertConfirmInputConfig, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxExportAddComponent } from '../codx-export/codx-export-add/codx-export-add.component';
 import { CodxReportAddComponent } from './popup/codx-report-add/codx-report-add.component';
 import { PopupShowDatasetComponent } from 'projects/codx-report/src/lib/popup-show-dataset/popup-show-dataset.component';
@@ -73,7 +73,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
       if(mfc?.length > 0)
       {
         this.sysMoreFC = mfc.filter(element => {
-          return element.functionID == "SYS03";
+          return element.functionID == "SYS03" || element.functionID == "SYS04" || element.functionID == "SYS02" ;
         }).sort((x,y) => (x.sorting - y.sorting));
       }
     });
@@ -83,38 +83,77 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     this.dialog.close();
   }
 
-  clickMF(e:any,report:any){
+  clickMF(e:any,data:any){
     switch(e.functionID){
       case"SYS02": //xóa
+        this.delete(data);
         break;
       case"SYS03": // sửa
-        let option = new DialogModel();
-        option.DataService = this.dialog.dataService;
-        option.FormModel = this.dialog.formModel;
-        let data = {
-          module:report.moduleID,
-          reportID:report.recID,
-          reportType: this.dialog.formModel?.entityName
-        }
-        this.callfc.openForm(
-          PopupAddReportComponent,
-          '',
-          screen.width,
-          screen.height,
-          " ",
-          data,
-          '',
-          option
-        )
-        .closed.subscribe((res:any)=>{
-          if(res?.event)
-          {
-            this.dataSelected = res.event;
-            this.detectorRef.detectChanges();
-          }
-        });
+        this.edit(data);
       break;
+      case "SYS04":
+        this.coppy(data)
+        break;
     }
+  }
+
+  //coppy report
+  coppy(data:any){
+    this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","CoppyAsync",data.recID)
+      .subscribe((res2:any) => {
+        if(res2 != null)
+        {
+          this.lstReport.push(res2);
+          this.notificationSV.notifyCode("SYS006");
+        }
+        else
+          this.notificationSV.notifyCode("SYS023");
+      });
+  }
+
+  //delete report
+  delete(data:any){
+    this.notificationSV.alertCode("SYS030").subscribe((res:any) => {
+      if(res.event.status == 'Y')
+      {
+        this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","DeleteAsync",data.recID)
+        .subscribe((res2:boolean) => {
+          if(res2){
+            this.lstReport = this.lstReport.filter(x => x.recID != data.recID);
+            this.notificationSV.notifyCode("SYS008");
+          }
+          else
+            this.notificationSV.notifyCode("SYS022");
+        });
+      }
+    });
+  }
+
+  edit(data:any){
+    let option = new DialogModel();
+    option.DataService = this.dialog.dataService;
+    option.FormModel = this.dialog.formModel;
+    let obj = {
+      module:data.moduleID,
+      reportID:data.recID,
+      reportType: this.dialog.formModel?.entityName
+    };
+    this.callfc.openForm(
+      PopupAddReportComponent,
+      '',
+      screen.width,
+      screen.height,
+      " ",
+      obj,
+      '',
+      option
+    ).closed.subscribe((res:any)=>{
+      if(res?.event)
+      {
+        this.dataSelected = res.event;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   //seletecd item
   selectedItem(data:any){
