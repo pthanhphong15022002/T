@@ -243,15 +243,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        //   this.copyVoucher(data); //? sao chép chứng từ
-        this.api
-          .execSv<any>('AC', 'Core', 'DataBusiness', 'SaveAsAsync', [
-            this.view.entityName,
-            data.recID,
-            data.recID,
-            '',
-          ])
-          .subscribe();
+        this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
@@ -341,7 +333,7 @@ export class CashPaymentsComponent extends UIComponent {
       .copy((o) => this.setDefault())
       .subscribe((res: any) => {
         if (res != null) {
-          dataCopy.voucherNo = res?.data.voucherNo;
+          dataCopy.voucherNo = res?.voucherNo;
           let data = {
             action: 'copy', //? trạng thái của form (chỉnh sửa)
             headerText: this.headerText, //? tiêu đề voucher
@@ -422,7 +414,10 @@ export class CashPaymentsComponent extends UIComponent {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT041009' || element.functionID == 'ACT041010') {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -756,11 +751,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
