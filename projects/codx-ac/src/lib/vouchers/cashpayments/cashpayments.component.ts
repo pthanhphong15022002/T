@@ -667,22 +667,6 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   getDatadetail(data) {
-    // this.acctTrans = [];
-    // this.settledInvoices = [];
-    // this.vatInvoices = [];
-    // this.api
-    //   .exec('AC', 'AcctTransBusiness', 'GetAccountingAsync', [
-    //     data.recID,
-    //   ])
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       this.acctTrans = res;
-    //       this.setTotalRecord();
-    //       this.detectorRef.detectChanges();
-    //     }
-    //   });
-
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
         data
@@ -781,6 +765,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
+          this.getDatadetail(this.itemSelected);
           this.notification.notifyCode(
             'AC0029',
             0,
