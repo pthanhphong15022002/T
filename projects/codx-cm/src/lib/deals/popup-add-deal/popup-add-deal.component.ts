@@ -503,13 +503,13 @@ export class PopupAddDealComponent
         case 'P':
         case 'R':
         case 'A':
+          result = event?.e;
+          break;
         case 'C':
-          var contact = event?.e;
+          result = event?.e;
           var type = event?.type ?? '';
-          result = event?.result ?? '';
+          var contact = event?.result ?? '';
           this.convertToFieldDp(contact, type);
-          console.log('contactsJS: ', result);
-          console.log('contacts: ', JSON.parse(result));
           break;
       }
       var index = this.listInstanceSteps.findIndex(
@@ -544,20 +544,15 @@ export class PopupAddDealComponent
     if (contact != null) {
       if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
         let index = -1;
-        if (type == 'addAndSave') {
+
+        if (contact.refID != null && contact.refID?.trim() != '') {
           index = this.lstContactDeal.findIndex(
             (x) => x.refID == contact.refID
           );
         } else {
-          if (contact.refID != null && contact.refID?.trim() != '') {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.refID == contact.refID
-            );
-          } else {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.recID == contact.recID
-            );
-          }
+          index = this.lstContactDeal.findIndex(
+            (x) => x.recID == contact.recID
+          );
         }
 
         if (index != -1) {

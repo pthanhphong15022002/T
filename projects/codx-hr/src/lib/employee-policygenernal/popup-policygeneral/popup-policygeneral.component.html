@@ -30,6 +30,7 @@
         ></codx-label>
         <codx-input
             field="policyID"
+            [disabled]="autoNumField == 'PolicyID'"
             [formModel]="formModel"
             [Group]="formGroup"
         ></codx-input>
@@ -196,36 +197,43 @@
         [default]="grvSetup.HasIncludeBenefits.headerNote"
         
         [formModel]="formModel"
-></codx-label>
+        >       
+        </codx-label>
     </div>
-    <div class="col-6 d-flex flex-row">
-        <codx-input
-            class="mt-2"
-            field="hasIncludeBenefits"
-            [formModel]="formModel"
-            [Group]="formGroup"
-            (valueChange)="ValChangeHasBenefit($event)"
-        ></codx-input>
-        <button
-        class="btn btn-icon ms-3"
+    <div class="col-6 d-flex align-items-center justify-content-end">
+        <span class="me-2">
+            <codx-input
+                class="mt-2"
+                field="hasIncludeBenefits"
+                [formModel]="formModel"
+                [Group]="formGroup"
+                (valueChange)="ValChangeHasBenefit($event)"
+            ></codx-input>
+        </span>
+        <button type="button"
+        class="btn btn-icon btn-sm"
         (click)="onClickOpenCbxBenefit()"
-      >
-        <i class="icon-edit-one icon-18" 
-        [ngClass]="policyGeneralObj.hasIncludeBenefits? 'text-dark':'text-gray-400'"
-        ></i>
-      </button>
+        [ngClass]="policyGeneralObj.hasIncludeBenefits? 'btn-light-primary':'btn-disabled'"
+        >
+            <span class="icon-edit-one icon-16"></span>
+        </button>
     </div>
 </div>
-<span *ngIf="policyGeneralObj.hasIncludeBenefits && lstBenefit.length > 0">
-    <span *ngFor="let benefit of lstBenefit">
-      <span
-      class="badge badge-success border-0 ms-2"
-      [innerHTML]="benefit
-          | formatvalue : benefitFormModel : 'benefitID'
-          | async"
-    ></span>
-    </span>
-</span>
+<div class="d-flex flex-wrap ps-5" *ngIf="policyGeneralObj.hasIncludeBenefits && lstBenefit.length > 0">
+    <div *ngFor="let benefit of lstBenefit">
+        <div class="badge-with-delete mb-2 me-2">
+            <span
+            class="badge badge-light-primary badge-md"
+            [innerHTML]="benefit
+                | formatvalue : benefitFormModel : 'benefitID'
+                | async"
+            ></span>
+            <button type="button" class="btn btn-sm btn-icon btn-light-danger">
+                <span class="icon-close icon-16"></span>
+            </button>
+        </div>
+    </div>
+</div>
 
     <codx-combobox-popup
     *ngIf="!isHidden && policyGeneralObj.hasIncludeBenefits"

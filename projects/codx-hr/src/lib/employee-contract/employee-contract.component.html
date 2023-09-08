@@ -43,7 +43,8 @@
                 | formatvalue : view.formModel : 'positionID'
                 | async
             "
-          ></span>
+          >
+          </span>
           <!-- <span
             class="fs-7"
             [innerHTML]="
@@ -109,7 +110,7 @@
     </div>
 
     <div class="w-40 min-w-300px px-2">
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
         <ng-container *ngIf="flagChangeMF">
           <ng-container *ngIf="runModeCheck; else elseVll">
             <codx-vll
@@ -183,6 +184,24 @@
           [style.color]="'#FFA800'"
           class="icon-queue_play_next icon-18"
         ></div>
+
+        <codx-vll
+          *ngIf="
+            data?.resignStatus &&
+            !data.RenewStatus &&
+            data.isCurrent &&
+            data?.status === '5'
+          "
+          [formModel]="view.formModel"
+          [field]="'ResignStatus'"
+          [value]="data?.resignStatus"
+          [showText]="true"
+          [showIcon]="true"
+          [showBgColor]="false"
+          ngClass="badge badge-sm"
+          class="d-flex align-items-center gap-2"
+        >
+        </codx-vll>
       </div>
       <div class="mt-1">
         <span
@@ -511,12 +530,28 @@
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
           <div class="d-flex flex-column">
-            <codx-label
+            <!-- <codx-label
               class="dialog-title line-clamp line-clamp-1"
               name="lblEquipment"
               default="Cập nhật trạng thái"
               [formModel]="view.formModel"
-            ></codx-label>
+            ></codx-label> -->
+            <ng-container *ngIf="resignStatus; else resignStatusLabel">
+              <codx-label
+                class="dialog-title line-clamp line-clamp-1"
+                name="lblResignStatus"
+                default="Cập nhật trạng thái tái ký"
+                [formModel]="view.formModel"
+              ></codx-label>
+            </ng-container>
+            <ng-template #resignStatusLabel>
+              <codx-label
+                class="dialog-title line-clamp line-clamp-1"
+                name="lblEquipment"
+                default="Cập nhật trạng thái"
+                [formModel]="view.formModel"
+              ></codx-label>
+            </ng-template>
           </div>
         </div>
         <div class="card-toolbar">
@@ -532,18 +567,34 @@
     </div>
     <div class="card-body">
       <div class="align-items-center me-3 mt-10">
-        <div class="form-group">
-          <label>
-            <codx-label fiedName="Status" [formModel]="view.formModel">
-            </codx-label>
-          </label>
-          <codx-input
-            [disabled]="statusCbx"
-            field="status"
-            [formModel]="view.formModel"
-            [Group]="formGroup"
-          ></codx-input>
-        </div>
+        <ng-container *ngIf="resignStatus; else ResignStatus">
+          <div class="mb-4">
+            <label>
+              <codx-label fiedName="ResignStatus" [formModel]="view.formModel">
+              </codx-label>
+            </label>
+            <codx-input
+              [disabled]="statusCbx"
+              field="resignStatus"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </ng-container>
+        <ng-template #ResignStatus>
+          <div class="mb-4">
+            <label>
+              <codx-label fiedName="Status" [formModel]="view.formModel">
+              </codx-label>
+            </label>
+            <codx-input
+              [disabled]="statusCbx"
+              field="status"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </ng-template>
         <div class="form-group">
           <label>
             <codx-label

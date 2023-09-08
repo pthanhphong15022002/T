@@ -50,6 +50,7 @@ implements OnInit{
   headerText: string;
   benefitPolicyObj: any;
   autoNumField: any;
+  loadedAutoField = false;
   benefitFormModel: any;
 
   currentRec: any;
@@ -138,8 +139,9 @@ implements OnInit{
   cbxConstraintCbxValue: any;
 
   fieldHeaderTexts;
-  policyIdEdited = false;
   originPolicyId = '';
+  originPolicyBenefitObj = '';
+
   currentTab = '';
 
   tabInfo: any[] = [
@@ -188,6 +190,7 @@ implements OnInit{
     this.benefitPolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     if(this.benefitPolicyObj && this.actionType == 'edit'){
       this.originPolicyId = this.benefitPolicyObj.policyID;
+      this.originPolicyBenefitObj = JSON.parse(JSON.stringify(this.benefitPolicyObj));
     }
   }
 
@@ -855,12 +858,6 @@ implements OnInit{
     }
   }
 
-  onInputPolicyID(evt){
-    if(this.actionType == 'edit'){
-      this.policyIdEdited = true;
-    }
-  }
-
   setTitle(evt: any){
     this.headerText += " " +  evt;
     this.df.detectChanges();
@@ -902,13 +899,18 @@ implements OnInit{
         )
         .subscribe((res: any) => {
           if (res) {
+            debugger
             if(res.key){
               this.autoNumField = res.key;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             res.data.status = '1'
             
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             this.benefitPolicyObj = res?.data;
             
@@ -934,6 +936,20 @@ implements OnInit{
           }
         });
     } else {
+      this.hrSevice
+      .getDataDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        this.idField
+      )
+      .subscribe((res: any) => {
+        debugger
+        if (res) {
+          this.autoNumField = res.key ? res.key : null;
+          this.loadedAutoField = true;
+          this.df.detectChanges();
+        }}
+        )
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         if(this.benefitPolicyObj.adjustKows){
           this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
@@ -952,8 +968,6 @@ implements OnInit{
             this.SplitConstraint();
           })
         }
-
-        
         
         this.GetPolicyDetailByAjustBy(this.benefitPolicyObj.adjustBy).subscribe((res) => {
           this.dataSourceGridView1 = res;
@@ -1602,11 +1616,13 @@ implements OnInit{
         if(res){
             this.notify.notifyCode('SYS006');
             for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+              debugger
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                 
               })
             }
             for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+              debugger
               this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
                 
               })
@@ -1626,36 +1642,71 @@ implements OnInit{
     }
     else if(this.actionType === 'edit'){
       if(this.originPolicyId != '' && this.originPolicyId != this.benefitPolicyObj.policyID){
-        this.EditPolicyBenefitsIDChanged().subscribe((res) => {
-          if(res){
-            this.notify.notifyCode('SYS007');
-            this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
-              if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
-              for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                })
-              }
-              for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                })
-              }
-            }
-            })
-            if(this.benefitPolicyObj.constraintBy){
-              this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
-                if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
-                  this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
-                  this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+        this.DeletePolicyBenefit(this.originPolicyId).subscribe((x) => {
+          this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
+            if(res){
+              this.notify.notifyCode('SYS007');
+              this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+                if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
+                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  debugger
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
                   })
                 }
+                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                  })
+                }
+              }
               })
+              if(this.benefitPolicyObj.constraintBy){
+                this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
+                  if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
+                    this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                    this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+                    })
+                  }
+                })
+              }
+              this.benefitPolicyObj.editPrimaryKey = true;
+              this.benefitPolicyObj.oldData = this.originPolicyBenefitObj;
+              this.dialog && this.dialog.close(this.benefitPolicyObj);
             }
-            this.dialog && this.dialog.close(this.benefitPolicyObj);
-          }
-          else{
-            this.notify.notifyCode('SYS023');
-          }
+            else{
+              this.notify.notifyCode('SYS021');
+            }
+          })
         })
+        // this.EditPolicyBenefitsIDChanged().subscribe((res) => {
+        //   if(res){
+        //     this.notify.notifyCode('SYS007');
+        //     this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+        //       if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
+        //       for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+        //         this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+        //         })
+        //       }
+        //       for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+        //         this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+        //         })
+        //       }
+        //     }
+        //     })
+        //     if(this.benefitPolicyObj.constraintBy){
+        //       this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
+        //         if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
+        //           this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+        //           this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+        //           })
+        //         }
+        //       })
+        //     }
+        //     this.dialog && this.dialog.close(this.benefitPolicyObj);
+        //   }
+        //   else{
+        //     this.notify.notifyCode('SYS023');
+        //   }
+        // })
       }
       else{
         this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
@@ -1728,7 +1779,6 @@ deleteApplyExcludeObjMain(data, from, lstBeneficiaries){
 
   switch(from){
     case 'lstSelectedObj':
-      debugger
       this.lstPolicyBeneficiariesApply = lstBeneficiaries;
       let index = this.lstSelectedObj.indexOf(data);
       this.lstSelectedObj.splice(index,1);
@@ -1830,6 +1880,16 @@ deleteApplyExcludeObj(data, from, crrObj?){
         break;
     }
     this.df.detectChanges();
+}
+
+DeletePolicyBenefit(data){
+  return this.api.execSv<any>(
+    'HR',
+    'HR',
+    'PolicyBenefitsBusiness',
+    'DeleteBenefitPolicyAsync',
+    [data]
+  );
 }
 
 onClickOpenCbxKow(){

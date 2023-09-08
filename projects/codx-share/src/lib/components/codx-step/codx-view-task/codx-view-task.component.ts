@@ -31,6 +31,7 @@ export class CodxViewTaskComponent implements OnInit {
   isUpdateProgressGroup = false;
   isUpdateProgressStep = false;
   instanceStep: DP_Instances_Steps;
+  isActivitie = false;
   //#endregion
 
   title = ''; // tiêu đề
@@ -80,6 +81,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.dataInput = dt?.data?.value;
     this.isRoleAll = dt?.data?.isRoleAll;
     this.isOnlyView = dt?.data?.isOnlyView;
+    this.isActivitie = dt?.data?.isActivitie;
     this.instanceStep = dt?.data?.instanceStep;
     this.listRefIDAssign = dt?.data?.listRefIDAssign; // a thảo truyền để lấy listRef của cong việc
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
@@ -272,6 +274,7 @@ export class CodxViewTaskComponent implements OnInit {
       data,
       type,
       step: this.instanceStep,
+      isActivitie: this.isActivitie,
     };
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,
@@ -430,7 +433,7 @@ export class CodxViewTaskComponent implements OnInit {
 
   async addTask(dataType){
     let groupId = this.type == "G" ? this.dataView?.refID : null;
-    let taskOutput = await this.stepService.addTask(dataType,this.instanceStep,groupId);
+    let taskOutput = await this.stepService.addTask('add','',dataType,this.instanceStep,groupId, true, null,'center');
     if(taskOutput?.task){
       this.taskAdd = taskOutput?.task;
       this.instanceStep?.tasks?.push(taskOutput?.task);

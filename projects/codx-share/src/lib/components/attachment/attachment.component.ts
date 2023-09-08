@@ -1717,13 +1717,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
   editfile(file, multi = false, index = 0) {
     var option = new DialogModel();
     option.FormModel = this.dialog?.formModel;
+    var newF = JSON.parse(JSON.stringify(file));
+    var permissions = this.dataFolder?.permissions.filter(x=>x.objectType != "1" && x.objectType != "7");
+    newF.permissions = file.permissions.concat(permissions);
+    newF.assign = true;
     let dialogs = this.callfc.openForm(
       EditFileComponent,
       this.titleDialog,
       800,
       800,
       '',
-      [this.functionID, file, this.dataFolder?.copyrights],
+      [this.functionID, newF, this.dataFolder?.copyrights],
       '',
       option
     );

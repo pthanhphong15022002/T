@@ -278,6 +278,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   submit(type?: string) {
+    if (!type) {
+      type = '';
+    }
     let loginType = ['', 'otp', 'qr'];
     if (loginType.includes(type)) {
       this.login(type);

@@ -32,12 +32,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         debugger
         this.onKeypress(event);
     }
-    BASE_64_IMAGE = 'data:image/png;base64,';
-    BASE_64_PNG = `${this.BASE_64_IMAGE} `;
-    ROTACAO_PADRAO_GRAUS = 90;
-    option = {
-        a : 0
-    }
     fileSelected:any = null;
 
     @Input() dialog:DialogRef;

@@ -116,6 +116,8 @@ export class PopupPolicyalComponent
   lstSelectedExcludeObj: any = [];
 
   autoNumField: any;
+  loadedAutoField = false;
+
 
   dataSourceGridView1 : any = [];
   dataSourceGridView2 : any = [];
@@ -149,7 +151,7 @@ export class PopupPolicyalComponent
 
 
   originPolicyId = '';
-  policyIdEdited = false;
+  originPolicyALObj = '';
 
   cbxName:any;
   isHidden=true;
@@ -217,6 +219,7 @@ export class PopupPolicyalComponent
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     if(this.alpolicyObj && this.actionType == 'edit'){
       this.originPolicyId = this.alpolicyObj.policyID;
+      this.originPolicyALObj = JSON.parse(JSON.stringify(this.alpolicyObj));
     }
   }
 
@@ -476,7 +479,9 @@ export class PopupPolicyalComponent
           if (res) {
             debugger
             if(res.key){
-              this.autoNumField = res.key;
+              this.autoNumField = res.key ? res.key : null;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             res.data.status = '1'
             
@@ -493,6 +498,19 @@ export class PopupPolicyalComponent
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null;
+            this.loadedAutoField = true;
+            this.df.detectChanges();
+          }}
+          )
         this.GetApplyObjs().subscribe((res) => {
           this.lstPolicyBeneficiariesApply = res;
         })
@@ -929,12 +947,6 @@ export class PopupPolicyalComponent
     );
   }
 
-  onInputPolicyID(evt){
-    if(this.actionType == 'edit'){
-      this.policyIdEdited = true;
-    }
-  }
-
   onClickExpandIsMonth(){
     this.expandIsMonth = !this.expandIsMonth;
   }
@@ -1016,28 +1028,54 @@ export class PopupPolicyalComponent
       }
       else if(this.actionType === 'edit'){
         if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
-          this.EditPolicyALPolicyIDChanged().subscribe((res) => {
-            if(res){
-              this.notify.notifyCode('SYS007');
-
-              this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
-            if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
-                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-                  })
+          this.DeletePolicyAL(this.originPolicyId).subscribe((x) => {
+            this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
+              if(res){
+                this.notify.notifyCode('SYS007');
+  
+                this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+              if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
+                  for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                    this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+                    })
+                  }
+                  for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                    this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                    })
+                  }
                 }
-                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-                  })
-                }
+                })
+                this.alpolicyObj.editPrimaryKey = true;
+                this.alpolicyObj.oldData = this.originPolicyALObj;
+                this.dialog && this.dialog.close(this.alpolicyObj);
               }
-              })
-              this.dialog && this.dialog.close(this.alpolicyObj);
-            }
-            else{
-              this.notify.notifyCode('SYS023');
-            }
+              else{
+                this.notify.notifyCode('SYS021');
+              }
+            })
           })
+          // this.EditPolicyALPolicyIDChanged().subscribe((res) => {
+          //   if(res){
+          //     this.notify.notifyCode('SYS007');
+
+          //     this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+          //   if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
+          //       for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+          //         this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+          //         })
+          //       }
+          //       for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+          //         this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+          //         })
+          //       }
+          //     }
+          //     })
+          //     this.dialog && this.dialog.close(this.alpolicyObj);
+          //   }
+          //   else{
+          //     this.notify.notifyCode('SYS023');
+          //   }
+          // })
         }
         else{
           this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {
@@ -1065,6 +1103,16 @@ export class PopupPolicyalComponent
           })
         }
       }
+}
+
+DeletePolicyAL(data){
+  return this.api.execSv<any>(
+    'HR',
+    'HR',
+    'PolicyALBusiness',
+    'DeletePolicyALAsync',
+    [data]
+  );
 }
 
   addRowGrid1(){

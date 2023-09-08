@@ -87,6 +87,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   signFileFM: FormModel;
   curUser: any;
   sfTemplates=[];
+  vllShare=null;//vll list Approver
   tabInfo = [
     {
       icon: 'icon-info',
@@ -130,6 +131,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.type = data?.data?.type;
     this.oldRecID = data?.data?.oldRecID;
     this.disableCategoryID = data?.data?.disableCategoryID ?? '0';
+    this.vllShare = data?.data?.vllShare ?? null;
   }
 
   ngAfterViewInit(): void {
@@ -587,6 +589,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             model: this.form?.formGroup,
             data: this.data,
             isAddNew: !this.isSaved,
+            vllShare: this.vllShare,
           };
 
           let dialogModel = new DialogModel();

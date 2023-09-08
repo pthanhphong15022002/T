@@ -203,7 +203,9 @@ export class CodxShareService {
       case 'SYS203':
       case 'SYS204':
       case 'SYS205':
-      case 'SYS206': {
+      case 'SYS206':
+      case 'SYS200': 
+      {
         if (data?.unbounds?.eSign == true) {
           let option = new SidebarModel();
           option.Width = '800px';
@@ -212,7 +214,7 @@ export class CodxShareService {
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
 
-          var listApproveMF = this.getMoreFunction(funcID);
+          var listApproveMF = this.getMoreFunction(funcID,data?.unbounds?.stepType);
 
           let dialogApprove = this.callfunc.openForm(
             PopupSignForApprovalComponent,
@@ -239,6 +241,7 @@ export class CodxShareService {
             //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
+            debugger
             if (x?.event?.msgCodeError == null && x?.event?.rowCount > 0) {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
@@ -246,6 +249,7 @@ export class CodxShareService {
             }
           });
         } else {
+          debugger
           var status;
           if (
             funcID == 'SYS201' ||
@@ -352,7 +356,7 @@ export class CodxShareService {
             data.recID,
             customData?.dataSource,
             customData?.refID,
-            customData?.refType,
+            customData?.refType || formModel?.entityName,
           ],
           null
         );
@@ -792,7 +796,7 @@ export class CodxShareService {
       PopupCommentComponent,
       title,
       500,
-      500,
+      250,
       funcID,
       {
         title: title,
@@ -1047,6 +1051,26 @@ export class CodxShareService {
           list[i].disabled = true;
       }
 
+      
+      if(datas?.eSign)
+      {
+        var listDis = data.filter(
+          (x) =>
+            x.functionID == 'SYS202' ||
+            x.functionID == 'SYS203' ||
+            x.functionID == 'SYS204' ||
+            x.functionID == 'SYS205' ||
+            x.functionID == 'SYS206' ||
+            x.functionID == 'SYS201'
+            
+        );
+        for (var i = 0; i < listDis.length; i++) {
+          listDis[i].disabled = true;
+        }
+
+        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        sys200[0].disabled = false;
+      }
       // this.listApproveMF = list.filter(
       //   (p) => p.data.functionID == 'SYS208' || p.disabled == false
       // );
@@ -1088,37 +1112,78 @@ export class CodxShareService {
     }
   }
 
-  getMoreFunction(funcID: any) {
+  getMoreFunction(funcID: any,stepType:any=null) {
     var listApproveMF = [];
-    if (funcID == 'SYS201') {
-      var consensus = {
-        functionID: 'SYS201',
-        text: 'Duyệt',
-        color: '#666666',
-      };
-
-      listApproveMF.push(consensus);
+    if(stepType==null){
+      if (funcID == 'SYS201') {
+        var consensus = {
+          functionID: 'SYS201',
+          text: 'Duyệt',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
+  
+      if (funcID == 'SYS202') {
+        var consensus = {
+          functionID: 'SYS202',
+          text: 'Ký',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
+  
+      if (funcID == 'SYS203') {
+        var consensus = {
+          functionID: 'SYS203',
+          text: 'Đồng thuận',
+          color: '#666666',
+        };
+  
+        listApproveMF.push(consensus);
+      }
     }
+    else{
+      switch(stepType){
+        //R;Kiểm tra;C;Góp ý;A1;Đồng thuận;---------;S1;Ký nháy;S2;Ký chính;----------S3;Đóng dấu;A2;Duyệt
+        case 'R':
+        case 'C':
+        case 'A1':
+          var consensus = {
+            functionID: 'SYS203',
+            text: 'Đồng thuận',
+            color: '#666666',
+          };    
+          listApproveMF.push(consensus);
+          break;
 
-    if (funcID == 'SYS202') {
-      var consensus = {
-        functionID: 'SYS202',
-        text: 'Ký',
-        color: '#666666',
-      };
+        case 'S':
+        case 'S1':
+        case 'S2':
+          var consensus = {
+            functionID: 'SYS202',
+            text: 'Ký',
+            color: '#666666',
+          };
+    
+          listApproveMF.push(consensus);
+          break;
 
-      listApproveMF.push(consensus);
+        case 'S3':
+        case 'A2':
+          var consensus = {
+            functionID: 'SYS201',
+            text: 'Duyệt',
+            color: '#666666',
+          };
+    
+          listApproveMF.push(consensus);
+          break;
+      }
     }
-
-    if (funcID == 'SYS203') {
-      var consensus = {
-        functionID: 'SYS203',
-        text: 'Đồng thuận',
-        color: '#666666',
-      };
-
-      listApproveMF.push(consensus);
-    }
+    
 
     //Từ chối
     var tc = {

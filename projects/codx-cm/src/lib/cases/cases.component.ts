@@ -560,20 +560,22 @@ export class CasesComponent
       case 'CM0402_11':
         this.cancelApprover(data);
         break;
-      //export
-      case 'SYS002':
-        this.exportFiles(e, data);
-        break;
+      // //export --core lam
+      // case 'SYS002':
+      //   this.exportFiles(e, data);
+      //   break;
       case 'CM0401_10':
         this.popupPermissions(data);
         break;
       default: {
-        var customData: any = null;
-        // var customData = {
-        //   refID: data.processID,
-        //   refType: 'DP_Processes',
-        //   dataSource: '', // truyen sau
-        // };
+        var customData = {
+          refID: data.recID,
+          refType: 'CM_Contracts',
+        };
+        if (data?.refID && data.applyProcess) {
+          customData.refID = data.processID;
+          customData.refType = 'DP_Processes';
+        }
 
         this.codxShareService.defaultMoreFunc(
           e,

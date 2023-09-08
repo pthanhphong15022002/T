@@ -1,5 +1,5 @@
 <codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo" [autoLoad]="true"
+  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo"
   (selectedChange)="changeItemSelected($event)" [isSubView]="true">
 </codx-views>
 <!-- templateGrid -->
@@ -11,15 +11,13 @@
 
 <!-- template listdetail -->
 <ng-template #templateDetailLeft let-data>
-  <ng-container *ngIf="journal">
-    <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
-      [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-      (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
-    </codx-temp-full>
-  </ng-container>
+  <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
+  </codx-temp-full>
 </ng-template>
 <ng-template #templateDetailRight>
-  <ng-container *ngIf="itemSelected && journal">
+  <ng-container *ngIf="itemSelected">
     <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="view.formModel"
       [dataItem]="itemSelected" (changeDataMF)="changeTmpDetailMF($event, itemSelected)" [footer]="TmpFooterDetail"
       (clickMF)="clickMoreFunction($event, itemSelected)">
@@ -27,105 +25,79 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <ng-container *ngIf="itemSelected">
-    <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
-      <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
-      <div id="tipsub" style="background-color: var(--primary-dark)"
-        class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-        <i style="font-size: 16px !important;" class="text-white"
-          [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
+  <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
+    <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
+    <div id="tipsub" style="background-color: var(--primary-dark)"
+      class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+      <i style="font-size: 16px !important;" class="text-white"
+        [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
+    </div>
+    <ng-template #content>
+      <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063'
+        : 'text' | async}}</span>
+      <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065'
+        : 'text' | async}}</span>
+    </ng-template>
+  </ejs-tooltip>
+  <div class="d-flex flex-column text-content flex-grow-1">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex align-items-center">
+        <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+          data?.voucherNo
+          }}</span>
       </div>
-      <ng-template #content>
-        <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063'
-          : 'text' | async}}</span>
-        <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065'
-          : 'text' | async}}</span>
-      </ng-template>
-    </ejs-tooltip>
-    <!-- <ejs-tooltip position="BottomRight" id='tooltip' target="#tipsub">
-      <div *ngIf="journal" id="tipsub"
-        class="w-35px symbol h-35px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-        <codx-img *ngIf="journal.checkImage" class="cursor-pointer symbol symbol-30px" ngClass="symbol-30px"
-          [funcId]="journalNo" [objectId]="journal.recID" [objectType]="'AC_Journals'" width="35"
-          [imgOn]="journal.modifiedOn" [isDefaulImg]="true" imageType="circle">
-        </codx-img>
-        <img *ngIf="!journal.checkImage"
-          style="width: 35px !important;height:35px !important;border-radius: 50% !important;object-fit: cover;"
-          [src]="'../assets/themes/ac/default/img/' + (journal.journalType | vll : 'AC078' : 'text' | async)"
-          alt="Avatar">
-      </div>
-      <ng-template #content>
-        <span>{{journal.journalDesc}} - </span>
-        <span>{{data?.subType | vll : 'AC063' : 'text' | async}}</span>
-      </ng-template>
-    </ejs-tooltip> -->
-    <div class="d-flex flex-column text-content flex-grow-1">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
-            data?.voucherNo
-            }}</span>
-        </div>
-        <div>
-          <!-- <span *ngIf="!journal.multiCurrency && data?.totalDR != 0"
-            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
-                  | formatvalue : view.formModel : 'totalDR' : totalDR
-                  | async
-              "></span> -->
-          <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
-            [innerHTML]="(data?.totalDR
-                  | formatvalue : view.formModel : 'totalDR' : totalDR
-                  | async)+ ' ' +data?.currencyID"></span>
-          <!-- <span *ngIf="data?.totalDR == 0"
-            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span> -->
-          <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
-            data?.currencyID}}</span>
-        </div>
-      </div>
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <ejs-tooltip position="BottomCenter" id='tooltip' target="#tipmemo">
-            <span id="tipmemo" class="line-clamp line-clamp-2" #memo [innerHTML]="
-            data?.memo
-              | formatvalue : view.formModel : 'memo' : memo
-              | async
-          "></span>
-            <ng-template #content>
-              <span>{{data?.memo}}</span>
-            </ng-template>
-          </ejs-tooltip>
-        </div>
-      </div>
-      <div style="height: 18px !important;" class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
-            data?.objectID | tranformSubobject : view.formModel
-          "></span>
-        </div>
-      </div>
-      <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-end codx-badge">
-          <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-            [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
-          </codx-vll>
-          <div class="d-flex align-items-center">
-            <img style="width: 18px;height: 18px;margin-top: -1px;" src="../assets/themes/ac/default/img/calendar.svg"
-              class=" me-2" />
-            <span #voucherDate [innerHTML]="
-      data?.voucherDate
-            | formatvalue : view.formModel : 'voucherDate' : voucherDate
-            | async
-        " class="text-gray-600"></span>
-          </div>
-        </div>
-        <div class="d-flex mt-1">
-          <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
-            [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
-          </codx-imgs>
-        </div>
+      <div>
+        <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
+          [innerHTML]="(data?.totalDR
+                | formatvalue : view.formModel : 'totalDR' : totalDR
+                | async)+ ' ' +data?.currencyID"></span>
+        <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
+          data?.currencyID}}</span>
       </div>
     </div>
-  </ng-container>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex align-items-center">
+        <ejs-tooltip position="BottomCenter" id='tooltip' target="#tipmemo">
+          <span id="tipmemo" class="line-clamp line-clamp-2" #memo [innerHTML]="
+          data?.memo
+            | formatvalue : view.formModel : 'memo' : memo
+            | async
+        "></span>
+          <ng-template #content>
+            <span>{{data?.memo}}</span>
+          </ng-template>
+        </ejs-tooltip>
+      </div>
+    </div>
+    <div style="height: 18px !important;" class="d-flex justify-content-between">
+      <div class="d-flex align-items-center">
+        <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
+          data?.objectID | tranformSubobject : view.formModel
+        "></span>
+      </div>
+    </div>
+    <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-end codx-badge">
+        <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
+        </codx-vll>
+        <div class="d-flex align-items-center">
+          <img style="width: 18px;height: 18px;margin-top: -1px;" src="../assets/themes/ac/default/img/calendar.svg"
+            class=" me-2" />
+          <span #voucherDate [innerHTML]="
+    data?.voucherDate
+          | formatvalue : view.formModel : 'voucherDate' : voucherDate
+          | async
+      " class="text-gray-600"></span>
+        </div>
+      </div>
+      <div class="d-flex mt-1">
+        <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
+          [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #TmpHeaderDetail>
   <ng-container *ngIf="itemSelected">
@@ -193,20 +165,34 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
-        <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')" class="fw-bold me-2">Người nhận
-          tiền: </span>
-        <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')" class="fw-bold me-2">Người gửi
-          tiền: </span>
+        <!-- Người nhận tiền (phiếu chi)   -->
+        <codx-label *ngIf="(this.view.funcID == 'ACT0410')" class="fw-bold label-colon text-nowrap" fiedName="Payee" [formModel]="view.formModel">
+        </codx-label>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
               | formatvalue : view.formModel : 'payee' : payee
               | async
           " class="text-gray-600"></span>
+        <!-- Người nhận tiền (phiếu chi)   -->
+
+        <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
+        <codx-label *ngIf="(this.view.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay" [formModel]="view.formModel"
+        default="Tài khoản chi">
+        </codx-label>
+        <span *ngIf="(this.view.funcID == 'ACT0429' && bankPayID)" class="text-gray-600">{{bankPayID}}</span>
+        <ng-container *ngIf="(this.view.funcID == 'ACT0429' && bankNamePay)">&nbsp;-&nbsp;</ng-container>
+        <span *ngIf="(this.view.funcID == 'ACT0429' && bankNamePay)" class="text-gray-600">{{bankNamePay}}</span>
+        <!-- Người nhận tiền (phiếu chi)   -->
+
+        <!-- Người gửi tiền (phiếu thu)   -->
+        <codx-label *ngIf="(this.view.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor" [formModel]="view.formModel">
+        </codx-label>
         <span *ngIf="this.view.funcID == 'ACT0401'" #payor [innerHTML]="
             itemSelected?.payor
               | formatvalue : view.formModel : 'payor' : payor
               | async
           " class="text-gray-600"></span>
+        <!-- Người gửi tiền (phiếu thu)   -->
       </div>
       <div class="d-flex align-self-center">
         <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
@@ -215,11 +201,24 @@
       </div>
     </div>
     <div class="d-flex align-items-top mb-1">
-      <span class="fw-bold text-nowrap me-2">{{'1'| vll : 'AC091' : 'text' | async}}: </span>
-      <span class="text-gray-600">{{itemSelected?.cashBookID}}</span>
-      &nbsp;-&nbsp;
-      <span #cashBookID class="text-gray-600"
+       <!-- Sổ quỹ (thu chi) -->
+      <codx-label *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
+        [formModel]="view.formModel" default="Sổ quỹ">
+      </codx-label>
+      <span *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" class="text-gray-600">{{itemSelected?.cashBookID}}</span>
+      <ng-container *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')">&nbsp;-&nbsp;</ng-container>
+      <span *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
+      <!-- Sổ quỹ (thu chi) -->
+
+      <!-- Tài khoản nhận (ủy nhiệm chi) -->
+      <codx-label *ngIf="(this.view.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
+        [formModel]="view.formModel" default="Tài khoản nhận">
+      </codx-label>
+      <span *ngIf="(this.view.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankAcctID}}</span>
+      <ng-container *ngIf="(this.view.funcID == 'ACT0429' && bankReceiveName)">&nbsp;-&nbsp;</ng-container>
+      <span *ngIf="(this.view.funcID == 'ACT0429' && bankReceiveName)" class="text-gray-600">{{bankReceiveName}}</span>
+      <!-- Tài khoản nhận (ủy nhiệm chi)-->
     </div>
     <div class="d-flex align-items-top mb-1">
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
@@ -521,18 +520,6 @@
             <div class="fs-6 text-dark mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="isLoadData" style="background-color: white;" class="ac-empty">
-        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
-          <div class="d-flex flex-column flex-center justify-content-center">
-            <ejs-progressbar #progressbarTable id="load-save-container" type="Circular" [maximum]="100" [minimum]="0"
-              [value]="20" width="60" height="60" [animation]="animation" [isIndeterminate]="true">
-              <e-progressbar-annotations>
-                <e-progressbar-annotation content=" "> </e-progressbar-annotation>
-              </e-progressbar-annotations>
-            </ejs-progressbar>
           </div>
         </div>
       </div>

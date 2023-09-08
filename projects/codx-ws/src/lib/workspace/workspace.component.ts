@@ -17,10 +17,10 @@ export class WorkspaceComponent extends WSUIComponent{
   }
 
   override onInit(): void {
-    this.getModoule();
+    this.getModule();
   }
 
-  getModoule()
+  getModule()
   {
     var module = this.codxWsService.loadModule(this.module) as any;
     if(isObservable(module)) module.subscribe((item:any)=>{if(item && item.length>0)this.formatModule(item)})
@@ -29,7 +29,6 @@ export class WorkspaceComponent extends WSUIComponent{
 
   formatModule(data:any)
   {
-    debugger
     var listChild = data.filter(x=>x.parentID == this.funcID);
 
     for(var i = 0 ; i < listChild.length ; i++)
@@ -44,5 +43,8 @@ export class WorkspaceComponent extends WSUIComponent{
   selectedChange(data:any)
   {
     this.codxService.navigate("","/"+data.url)
+    this.codxWsService.functionID = data.functionID;
+    debugger
+    this.codxWsService.listBreadCumb.push(data);
   }
 }

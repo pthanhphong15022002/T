@@ -230,15 +230,6 @@
           <ng-container
             *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
           ></ng-container>
-          <!-- <codx-mfunc
-            [formModel]="formModelContact"
-            (clickMF)="clickMFContact($event, item)"
-            (changeDataMF)="changeDataMFContact($event, item)"
-            [isBookMark]="true"
-            [dataItem]="moreDefaults"
-            type="hover"
-          >
-          </codx-mfunc> -->
           <div class="d-flex align-items-start ms-6">
             <button
               type="button"
@@ -277,7 +268,7 @@
       <div class="d-flex">
         <codx-img
           class="me-1"
-          [objectId]="data?.refID"
+          [objectId]="data?.refID ?? data?.recID"
           [objectName]="data?.contactName"
           [objectType]="'CM_Contacts'"
           [width]="40"
