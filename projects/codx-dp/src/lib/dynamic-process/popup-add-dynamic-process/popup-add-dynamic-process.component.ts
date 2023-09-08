@@ -2974,8 +2974,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.taskList.splice(indexTask, 1, taskData);
 
-    taskData['roles']?.forEach((role, index) => {
-      this.addRole(taskData['roles'][index], roleOld[index]);
+    taskData?.roles?.forEach((role, index) => {
+      this.addRole(taskData?.roles[index], roleOld[index]);
     });
 
     this.updateStepChange(taskData?.stepID);
@@ -3520,27 +3520,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
   }
+
   //test user exists in step
   checkExistUserInStep(step: any, role: any, type: string): boolean {
-    if (step?.taskGroups?.length > 0) {
-      for (let element of this.step?.taskGroups) {
-        let check = element['roles'].some(
-          (x) => x.objectID == role.objectID && x.roleType == type
-        );
-        if (check) {
-          return true;
+    const check = (data) => {
+      for (const element of data) {
+        if (element?.roles?.some((x) => x.objectID === role?.objectID)) {
+          return true; 
         }
       }
+      return false; 
+    };
+    if (step?.taskGroups?.length > 0 && check(step.taskGroups)) {
+      return true;
     }
-    if (step?.tasks?.length > 0) {
-      for (let element of this.step?.tasks) {
-        let check = element['roles'].some(
-          (x) => x.objectID == role.objectID && x.roleType == type
-        );
-        if (check) {
-          return true;
-        }
-      }
+    if (step?.tasks?.length > 0 && check(step.tasks)) {
+      return true;
     }
     return false;
   }

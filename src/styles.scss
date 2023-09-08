@@ -1356,12 +1356,13 @@ button[type="button"]:focus {
 div.user-mini-nav {
   min-height: 26px;
   height: auto !important;
-  padding: 2px 8px 3px 2px !important;
-  margin-right: 6px;
+  padding: 2px 6px 1px 12px!important;
+  margin-right: 4px;
+  font-size: var(--fs-7);
 }
 
 div.user-mini-nav.mb-2 {
-  margin-bottom: 2px!important;
+  margin-bottom: 4px!important;
 }
 .w-30px.h-30px {
   min-width: 30px;
@@ -3599,8 +3600,12 @@ codx-view-list-tree{
     left: 0;
     right: 0;
     bottom: 0;
+    height: 42px;
     background-color: white;
     z-index: 99;
+    &.expand{
+      height: 400px;
+    }
   }
   .codx-detail-toolbar{
     background-color: white;
@@ -3812,5 +3817,10 @@ lib-employee-policybenefits ejs-listview .e-content{
   }
   .codx-detail-footer{
     bottom: 32px!important;
+  }
+}
+codx-user-inner{
+  .menu-title.position-relative{
+    text-align: left!important;
   }
 }
