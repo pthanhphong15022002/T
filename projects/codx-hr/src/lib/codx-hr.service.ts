@@ -52,6 +52,9 @@ export class CodxHrService {
   actionUpdateApproved = 'AU5';
   actionUpdateClosed = 'AU9';
   actionExport = 'A20';
+  actionAddAppendix = 'A10';
+  actionCheckResignApprove = 'A11';
+  actionCheckResignCancel = 'A12';
   //#endregion
   childMenuClick = new BehaviorSubject<any>(null);
 
@@ -2212,6 +2215,8 @@ export class CodxHrService {
     // Kiem tra document co ap dung quy trinh xet duyet hay khong, neu khong thi hide di 1 so more func
     let category = '4';
     let formName = 'HRParameters';
+    let recID = '717944fc-7799-43c2-b73d-35986fa00c8b';
+
     this.getSettingValue(formName, category).subscribe((res) => {
       if (res) {
         let parsedJSON = JSON.parse(res?.dataValue);
@@ -2276,8 +2281,37 @@ export class CodxHrService {
     for (let i = 0; i < evt.length; i++) {
       let funcIDStr = evt[i].functionID;
       let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
+      //Propose add new Contract
       if (IDCompare === this.actionAddNew) {
-        evt[i].disabled = true;
+        if (
+          data.status === '5' &&
+          data.isCurrent === true &&
+          data.resignStatus === '1'
+        ) {
+          evt[i].disabled = false;
+        } else {
+          evt[i].disabled = true;
+        }
+      }
+
+      //Resign Contract
+      if (
+        IDCompare == this.actionCheckResignApprove ||
+        IDCompare == this.actionCheckResignCancel
+      ) {
+        this.api
+          .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetAsync', recID)
+          .subscribe((res) => {
+            if (
+              res.stop == true &&
+              data.status === '5' &&
+              data.isCurrent === true
+            ) {
+              evt[i].disabled = false;
+            } else {
+              evt[i].disabled = true;
+            }
+          });
       }
 
       //Gửi mail
@@ -2286,6 +2320,10 @@ export class CodxHrService {
       }
 
       if (IDCompare === '004') {
+        evt[i].disabled = true;
+      }
+
+      if (IDCompare === this.actionAddAppendix && data.status !== '5') {
         evt[i].disabled = true;
       }
 
@@ -2461,6 +2499,14 @@ export class CodxHrService {
 
       case this.actionUpdateClosed:
         data.status = '9';
+        break;
+
+      case this.actionCheckResignApprove:
+        data.resignStatus = '1';
+        break;
+
+      case this.actionCheckResignCancel:
+        data.resignStatus = '2';
         break;
     }
   }

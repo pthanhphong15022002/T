@@ -23,9 +23,8 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   method = 'GetListEmployeeAnnualLeaveAsync';
   idField = 'recID';
 
-  predicates = '@0 = EmployeeID && @1 = ALYear && ALYear != ALYearMonth';
-  gridMethod = 'GetListEmployeeAnnualLeaveMonthGrvV2Async';
-
+  autoSearch = true;
+  searchText: string ='';
   views: Array<ViewModel> = []
   button: ButtonModel = null;
   showButton: boolean = true;
@@ -141,15 +140,21 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   }
   viewChanging(event: any) {
     if (event?.view?.type === 151 || event?.type === 151) {
+      this.autoSearch = false;
       this.view.dataService.parentIdField = 'ParentID';
       this.view.dataService.idField = 'orgUnitID';
       this.view.idField = 'orgUnitID';
     } else if (event?.view?.type === 1 || event?.type === 1) {
+      this.autoSearch = true;
       this.view.dataService.parentIdField = '';
       this.view.dataService.idField = 'recID';
       this.view.idField = 'recID';
     }
-
+  }
+  searchChanged(event :any){
+    this.searchText = event;
+  }
+  filterChanged(event :any){
   }
   viewChanged(event: any) {
   }
