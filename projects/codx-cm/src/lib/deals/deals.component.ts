@@ -584,7 +584,7 @@ export class DealsComponent
         refType: 'CM_Deals',
       };
 
-      if (data?.refID && data.applyProcess) {
+      if (data?.refID) {
         customData = {
           refID: data.processID,
           refType: 'DP_Processes',
