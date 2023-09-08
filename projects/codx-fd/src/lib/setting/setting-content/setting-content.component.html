@@ -23,8 +23,9 @@
       *ngIf="formModel"
       [setting]="curGroup"
       [settingValue]="setingValues[curGroup.transType]"
-      [policyRecID]="curGroup.policyRecID"
+      [policy]="curGroup.policy"
       [formModel]="formModel"
+      [lstPolicyLines]="lstPolicyLines"
     >
     </lib-detail-policy>
   </ng-container>

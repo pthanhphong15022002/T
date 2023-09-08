@@ -354,10 +354,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     ];
     this.codxCmService.deleteListReason(data).subscribe((res) => {
       if (res) {
-        let idx = this.listStepReason.findIndex(
+        let idx = this.listStepReasonValue.findIndex(
           (x) => x.recID === dataReason.recID
         );
-        if (idx >= 0) this.listStepReason.splice(idx, 1);
+        if (idx >= 0) this.listStepReasonValue.splice(idx, 1);
         this.notiService.notifyCode('SYS008');
         return;
       }
@@ -449,7 +449,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.isZoomOut = false;
     this.isZoomIn = false;
   }
-  
   susscessStepEnd(event, step){
     let count = this.listInstanceStepShow?.length - 1;
     let stepEnd;
@@ -462,5 +461,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     if(stepEnd?.recID == step?.recID){
       this.isSusscess.emit(true);
     }
+  }
+  toggleReason(){
+    this.isShowElement = !this.isShowElement;
   }
 }

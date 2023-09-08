@@ -194,6 +194,7 @@ export class CM_Deals {
   dealValueTo: number = 0;
   expectedFrom:Date;
   expectedTo:Date;
+  datas:string;
 
 }
 

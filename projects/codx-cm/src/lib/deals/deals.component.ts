@@ -160,7 +160,7 @@ export class DealsComponent
   processIDKanban: string;
   processIDDefault: string;
   funcIDCrr: any;
-  user:any;
+  user: any;
   crrProcessID = '';
   returnedCmt = '';
   dataColums: any = [];
@@ -179,7 +179,7 @@ export class DealsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -570,7 +570,7 @@ export class DealsComponent
       CM0201_13: () => this.confirmOrRefuse(false, data),
       CM0201_14: () => this.openFormBANT(data),
       CM0201_16: () => this.cancelApprover(data),
-      SYS002: () => this.exportFiles(e, data),
+      // SYS002: () => this.exportFiles(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
     };
@@ -579,11 +579,17 @@ export class DealsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      var customData = {
-        refID: data.processID,
-        refType: 'DP_Processes',
-        dataSource: '', // truyen sau
+      let customData = {
+        refID: data.recID,
+        refType: 'CM_Deals',
       };
+
+      if (data?.refID) {
+        customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+        };
+      }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
@@ -654,7 +660,7 @@ export class DealsComponent
     //   return;
     // }
 
-    if (  data.closed ) {
+    if (data.closed) {
       this.notificationsService.notifyCode('DP039');
       return;
     }
@@ -773,7 +779,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -818,7 +824,6 @@ export class DealsComponent
               var dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
@@ -1139,7 +1144,7 @@ export class DealsComponent
           this.renderTotal(dt.stepID, 'add', money);
           this.kanban.refresh();
         }
-     //   this.detailViewDeal.promiseAllAsync();
+        //   this.detailViewDeal.promiseAllAsync();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1174,7 +1179,6 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-
             this.view.dataService.update(e.event).subscribe();
             //up kaban
             if (
@@ -1611,8 +1615,7 @@ export class DealsComponent
         .subscribe((x) => {
           if (x?.event?.status == 'Y') {
             this.startDeal(data);
-          }
-          else {
+          } else {
             this.codxCmService
               .confirmOrRefuse(data?.recID, check, '')
               .subscribe((res) => {

@@ -116,6 +116,8 @@ export class PopupPolicyalComponent
   lstSelectedExcludeObj: any = [];
 
   autoNumField: any;
+  loadedAutoField = false;
+
 
   dataSourceGridView1 : any = [];
   dataSourceGridView2 : any = [];
@@ -150,7 +152,6 @@ export class PopupPolicyalComponent
 
   originPolicyId = '';
   originPolicyALObj = '';
-  policyIdEdited = false;
 
   cbxName:any;
   isHidden=true;
@@ -478,7 +479,9 @@ export class PopupPolicyalComponent
           if (res) {
             debugger
             if(res.key){
-              this.autoNumField = res.key;
+              this.autoNumField = res.key ? res.key : null;
+              this.loadedAutoField = true;
+              this.df.detectChanges();
             }
             res.data.status = '1'
             
@@ -495,6 +498,19 @@ export class PopupPolicyalComponent
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.autoNumField = res.key ? res.key : null;
+            this.loadedAutoField = true;
+            this.df.detectChanges();
+          }}
+          )
         this.GetApplyObjs().subscribe((res) => {
           this.lstPolicyBeneficiariesApply = res;
         })
@@ -929,12 +945,6 @@ export class PopupPolicyalComponent
       'DeleteListPolicyDetailAsync',
       this.lstPolicyDetailRecID
     );
-  }
-
-  onInputPolicyID(evt){
-    if(this.actionType == 'edit'){
-      this.policyIdEdited = true;
-    }
   }
 
   onClickExpandIsMonth(){

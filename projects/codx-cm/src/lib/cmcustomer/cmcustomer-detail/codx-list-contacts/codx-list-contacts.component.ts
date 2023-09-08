@@ -68,6 +68,7 @@ export class CodxListContactsComponent implements OnInit {
   placeholder = 'Nhập vai trò...';
   user: any;
   userID: any;
+  isLoad = true;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -139,11 +140,12 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   loadListContact(lstContact) {
+    this.loaded = true;
     this.listContacts = this.cmSv.bringDefaultContactToFront(lstContact);
     if (this.listContacts != null && this.listContacts.length > 0) {
       this.changeContacts(this.listContacts[0]);
-      if (this.isConvertLeadToCus) this.insertFieldCheckbox();
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   getListContacts() {

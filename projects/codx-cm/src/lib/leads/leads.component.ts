@@ -711,32 +711,32 @@ export class LeadsComponent
       CM0205_14: () => this.updateProcess(data, true),
       CM0205_15: () => this.updateProcess(data, false),
       CM0205_16: () => this.popupPermissions(data),
-      SYS002: () => this.exportFiles(e, data),
+      //SYS002: () => this.exportFiles(e, data),
       CM0205_17: () => this.cancelApprover(data),
     };
     const executeFunction = functionMappings[e.functionID];
     if (executeFunction) {
       executeFunction();
     } else {
-      // var customData: any = null;
-      // // var customData = {
-      // //   refID: data.processID,
-      // //   refType: 'DP_Processes',
-      // //   dataSource: '', // truyen sau
-      // // };
-      // this.customData = {
-      //   refID: data.recID,
-      //   refType: 'CM_Deals',
-      //   dataSource: '', // truyen sau
-      // };
+      let customData = {
+        refID: data.recID,
+        refType: 'CM_Leads',
+      };
+
+      if (data?.refID && data.applyProcess) {
+        customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+        };
+      }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this
-        // customData
+        this,
+        customData
       );
     }
   }
@@ -1287,7 +1287,7 @@ export class LeadsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -1328,7 +1328,7 @@ export class LeadsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              var dataUpdate = [data.recID, instance.stepID];
               this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];
@@ -1538,44 +1538,41 @@ export class LeadsComponent
 
   //export theo moreFun
   exportFiles(e, data) {
-    // let formatDatas = JSON.stringify(data);
-    //  let formatDatas = formatDatas.replace('\\', '');
-
     //Tạo data cho Quang debug
-    let datas = [
-      //   // {
-      //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
-      //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
-      //   // dia_chi: '06 Lê Lợi, Huế',
-      //   // ma_so_thue: '1111111111111',
-      //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
-      //   // tai_khoan: 'VCB-012024554565',
-      //   // san_pham: 'Sản phẩm quần què',
-      //   // dien_tich: '0',
-      //   // so_luong: 1,
-      //   // don_gia: 100000,
+    // let datas = [
+    //   // {
+    //   // dai_dien: 'Trần Đoàn Tuyết Khanh',
+    //   // ten_cong_ty: 'Tập đoàn may mặc Khanh Pig',
+    //   // dia_chi: '06 Lê Lợi, Huế',
+    //   // ma_so_thue: '1111111111111',
+    //   // hinh_thuc_thanh_toan: 'Chuyển khoản',
+    //   // tai_khoan: 'VCB-012024554565',
+    //   // san_pham: 'Sản phẩm quần què',
+    //   // dien_tich: '0',
+    //   // so_luong: 1,
+    //   // don_gia: 100000,
 
-      // datas: [
-      {
-        customerID: 'Sản phẩm 1',
-        Industries: '0',
-        BusinessLineID: 3333333333,
-        don_gia: 100000,
-      },
-      {
-        customerID: 'Sản phẩm 2',
-        Industries: '0',
-        BusinessLineID: 99999999,
-        don_gia: 5000,
-      },
-      // ,
-      // ],
-      //  }
-    ];
+    // datas: [
+    // {
+    //   customerID: 'Sản phẩm 1',
+    //   Industries: '0',
+    //   BusinessLineID: 3333333333,
+    //   don_gia: 100000,
+    // },
+    // {
+    //   customerID: 'Sản phẩm 2',
+    //   Industries: '0',
+    //   BusinessLineID: 99999999,
+    //   don_gia: 5000,
+    // },
+    // ,
+    // ],
+    //  }
+    // ];
 
-    let formatDatas = JSON.stringify(datas);
+    // let formatDatas = JSON.stringify(datas);
 
-    // let formatDatas = data.datas ?? '';
+    let formatDatas = data.datas ?? '';
     let customData = {
       refID: data.recID,
       refType: this.view.entityName,
@@ -1583,21 +1580,20 @@ export class LeadsComponent
     };
     if (data?.refID) {
       this.codxCmService.getDatasExport(data?.refID).subscribe((dts) => {
-        //coment lại cho QUANG Test
-        // if (dts) {
-        //   if (formatDatas) {
-        //     formatDatas = JSON.stringify([
-        //       ...JSON.parse(formatDatas),
-        //       ...JSON.parse(dts),
-        //     ]);
-        //   } else formatDatas = dts;
-
-        //   customData = {
-        //     refID: data.processID,
-        //     refType: 'DP_Processes',
-        //     dataSource: formatDatas,
-        //   };
-        // }
+        if (dts) {
+          if (formatDatas) {
+            formatDatas = JSON.stringify([
+              ...JSON.parse(formatDatas),
+              ...JSON.parse(dts),
+            ]);
+          } else formatDatas = dts;
+          debugger;
+          customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: formatDatas,
+          };
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,

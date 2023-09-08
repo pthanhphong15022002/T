@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable, Subject, finalize, map, share } from 'rxjs
   providedIn: 'root'
 })
 export class CodxWsService {
+  listBreadCumb = [];
+  functionID:any;
   SetLayout = new BehaviorSubject<any>(null);
   private caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();

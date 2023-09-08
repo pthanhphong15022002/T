@@ -12,7 +12,7 @@
 >
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1 w-100">
-      <div class="mb-1 d-flex">
+      <div class="mb-1 d-flex align-items-center">
         <span class="text-dark fs-5-sm fw-bold me-3">
           {{ itemDetail?.inforEmployee?.employeeName }}
         </span>
@@ -64,30 +64,24 @@
           [style.color]="'#FFA800'"
           class="icon-queue_play_next icon-18 ms-auto"
         ></span>
-        <!-- <span
-          *ngIf="itemDetail?.isCurrent && !itemDetail.isExpire"
-          class="ms-auto"
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-          [ngbPopover]="popIsNewest"
-          [style.color]="'#0078FF'"
-          class="icon-bookmark icon-25 ms-auto"
-        ></span>
 
-        <span
-          *ngIf="itemDetail?.isCurrent && itemDetail?.isExpire"
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-          [ngbPopover]="popOverDue"
-          [style.color]="'#F64E60'"
-          class="icon-notifications icon-25 ms-auto"
-        ></span> -->
+        <codx-vll
+          *ngIf="
+            itemDetail?.resignStatus &&
+            !itemDetail.RenewStatus &&
+            itemDetail.isCurrent &&
+            itemDetail?.status === '5'
+          "
+          [formModel]="formModel"
+          [field]="'ResignStatus'"
+          [value]="itemDetail?.resignStatus"
+          [showText]="true"
+          [showIcon]="true"
+          [showBgColor]="false"
+          ngClass="badge badge-sm"
+          class="d-flex align-items-center gap-2"
+        >
+        </codx-vll>
       </div>
 
       <!-- 1 -->

@@ -68,6 +68,7 @@ export class PopupSubEContractComponent implements OnInit {
 
           this.oSubContract.signedDate = null;
           this.oSubContract.effectedDate = null;
+          this.oSubContract.contractTypeID = '1';
 
           this.fmSubContract.currentData = this.oSubContract;
           this.fgSubContract.patchValue(this.oSubContract);
@@ -107,7 +108,7 @@ export class PopupSubEContractComponent implements OnInit {
       return;
     }
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.oSubContract.contractTypeID = '1';
+      //this.oSubContract.contractTypeID = '1';
       this.oSubContract.status = '1';
       this.hrService.addEContract(this.oSubContract).subscribe((res) => {
         if (res) {
@@ -116,7 +117,7 @@ export class PopupSubEContractComponent implements OnInit {
         }
       });
     } else if (this.actionType == 'edit') {
-      this.oSubContract.contractTypeID = '1';
+      //this.oSubContract.contractTypeID = '1';
       this.hrService.editEContract(this.oSubContract).subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS007');
