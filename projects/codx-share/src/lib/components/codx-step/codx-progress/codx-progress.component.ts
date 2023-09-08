@@ -16,6 +16,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
   @Input() dataSource: any; // data chứa tiến độ
   @Input() progress = 0; // tiến độ
   @Input() type: string;
+  @Input() isActivitie = false;
   @Input() isSave = true; //true:lưu lên db không
   @Input() isUpdate = true; // true: hiện form cho update
   @Input() dataAll: any; // gantchart
@@ -50,6 +51,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.dataSource = dt?.data?.data;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     this.isUpdateParent = dt?.data?.isUpdateParent == undefined ? this.isUpdateParent : dt?.data?.isUpdateParent;
+    this.isActivitie = dt?.data?.isActivitie;
   }
 
   async ngOnInit() {
@@ -172,22 +174,26 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
 
   async handeleUpdate() {
     let isUpdate = true;
-    if (this.type === 'P') {
-      this.updateProgress();
-    } else if (this.type === 'G') {
-      if(this.isUpdateParent){
-        const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
-        if (check == undefined) return;
-        isUpdate = check == "Y" ? true : false;
+    if(this.isActivitie){
+      this.updateProgress(false);
+    }else{
+      if (this.type === 'P') {
+        this.updateProgress();
+      } else if (this.type === 'G') {
+        if(this.isUpdateParent){
+          const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
+          if (check == undefined) return;
+          isUpdate = check == "Y" ? true : false;
+        }
+        this.updateProgress(isUpdate);
+      } else {
+        if(this.isUpdateParent){
+          const check = await this.beforeUpdate('DP028');// hỏi có cập nhật step và group
+          if (check == undefined) return;
+          isUpdate = check == "Y" ? true : false;
+        }
+        this.updateProgress(isUpdate);
       }
-      this.updateProgress(isUpdate);
-    } else {
-      if(this.isUpdateParent){
-        const check = await this.beforeUpdate('DP028');// hỏi có cập nhật step và group
-        if (check == undefined) return;
-        isUpdate = check == "Y" ? true : false;
-      }
-      this.updateProgress(isUpdate);
     }
   }
 
@@ -201,10 +207,17 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     dataSave.type = this.type;
     dataSave.isUpdate = isUpdate;
     if (this.isSave) {
-      this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressAsync', dataSave).subscribe(res => {
-        this.dialog.close(res)
-        this.notiService.notifyCode('SYS007');
-      });
+      if(this.isActivitie){
+        this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressActivitiesAsync', dataSave).subscribe((res) => {
+          this.dialog.close(res)
+          this.notiService.notifyCode('SYS007');
+        });
+      }else{
+        this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressAsync', dataSave).subscribe(res => {
+          this.dialog.close(res)
+          this.notiService.notifyCode('SYS007');
+        });
+      }
     } else {
       let dataOutput = this.handelDataOutput(isUpdate)
       this.dialog.close(dataOutput);

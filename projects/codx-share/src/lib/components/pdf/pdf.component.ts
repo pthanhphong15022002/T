@@ -317,9 +317,8 @@ export class PdfComponent
         ])
         .subscribe((res: any) => {
           console.table('sf', res);
-          if (this.oURL?.length>0)
-          {
-            res.urls=this.oURL;
+          if (this.oURL?.length > 0) {
+            res.urls = this.oURL;
           }
           let sf = res?.signFile;
           if (sf) {
@@ -1289,7 +1288,23 @@ export class PdfComponent
     }
   }
 
-  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {}
+  getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
+    if (txtLayer?.source?.textLayer?.div?.nextElementSibling != null) {
+      (
+        txtLayer?.source.textLayer?.div.nextElementSibling as HTMLElement
+      ).style.zIndex = '-1';
+    }
+    if (txtLayer.pageNumber == this.pageMax) {
+      txtLayer?.source.textLayer?.textDivs.forEach((div) => {
+        // if (Number(div.style.top.replace('px', '')) > this.maxTop) {
+        if (div.offsetTop > this.maxTop) {
+          // this.maxTop = Number(div.style.top.replace('px', ''));
+          this.maxTop = div.offsetTop;
+          this.maxTopDiv = div;
+        }
+      });
+    }
+  }
   //create area
   /*
     type = 'text' || 'img' || 'group'
@@ -1749,13 +1764,29 @@ export class PdfComponent
         curImgEle.src = curArea.labelValue;
         let min = 0;
         let scale = 1;
+        let scaleW = 1;
+        let scaleH = 1;
         curImgEle.onload = () => {
           let isText = this.curSelectedArea.attrs?.text ? true : false;
           if (isText) {
-            let textW = this.curSelectedArea.width();
-            let textH = this.curSelectedArea.height();
-            min = Math.min(textW, textH);
-            scale = Math.min(curImgEle.width, curImgEle.height) / min;
+            // let textW = this.curSelectedArea.width();
+            // let textH = this.curSelectedArea.height();
+            // min = Math.min(textW, textH);
+            // scale = Math.min(curImgEle.width, curImgEle.height) / min;
+            let imgFixW = 200;
+            let imgFixH = 200;
+
+            scaleW = imgFixW / curImgEle.width;
+            scaleH =
+              scaleW * (curImgEle.height / curImgEle.width) * this.yScale;
+            if (curImgEle.width < imgFixW) {
+              scaleW = 1;
+            }
+            if (curImgEle.height < imgFixH) {
+              scaleH = 1;
+            }
+
+            scaleW *= this.xScale;
           }
           let imgArea = new Konva.Image({
             image: curImgEle,
@@ -1772,7 +1803,11 @@ export class PdfComponent
             name: this.curSelectedArea.name(),
             fileRotate: curArea.location.fileRotate,
           });
-          imgArea?.scale(this.curSelectedArea.scale());
+          // imgArea?.scale(this.curSelectedArea.scale());
+          imgArea.scale({
+            x: scaleW,
+            y: scaleH,
+          });
           this.curSelectedArea.destroy();
           this.curSelectedArea = imgArea;
 
@@ -2266,7 +2301,7 @@ export class PdfComponent
     if (this.isEditable) {
       if (e.data && !this.autoSignState) {
         this.curPage = this.pageMax;
-        this.autoSign();
+        setTimeout(this.autoSign.bind(this), 1000);
       }
       this.autoSignState = e.data;
       this.detectorRef.detectChanges();

@@ -3,11 +3,13 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
+  CodxComboboxComponent,
   DialogData,
   DialogRef,
   FilesService,
@@ -16,6 +18,7 @@ import {
   LayoutAddComponent,
   NotificationsService,
   Util,
+  ValueListComponent,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -53,6 +56,8 @@ export class PopupAddEmployeeComponent implements OnInit {
   ];
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
+  @ViewChild('cbxTrain') cbxTrain: any;
+  @ViewChild('vllTrainLevel') vllTrainLevel: any;
 
   trainFieldID: string = '';
   trainLevel: string = '';
@@ -61,12 +66,13 @@ export class PopupAddEmployeeComponent implements OnInit {
   oldEmployeeID: string = '';
 
   hasChangedData: boolean = false;
+  oldAddress: string = '';
+  oldTAddress: string = '';
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
     private cache: CacheService,
     private fileSV: FilesService,
-    private dt: ChangeDetectorRef,
     private routerActive: ActivatedRoute,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -82,7 +88,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       this.employeeIDDisable = true;
       this.oldEmployeeID = this.data.employeeID;
     }
-    else{
+    else {
       this.employeeIDDisable = this.dialogRef.dataService.keyField ? true : false;
     }
   }
@@ -101,9 +107,11 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.data = res;
             this.form.formGroup.patchValue(this.data);
             this.hasChangedData = false;
+            this.oldAddress = this.data?.address;
+            this.oldTAddress = this.data?.tAddress;
           }
         })
-    }else this.hasChangedData = true;
+    } else this.hasChangedData = true;
   }
 
   //get grvSetup
@@ -118,7 +126,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   setTitle(e) {
     this.headerText += ' ' + e;
   }
-  hasChangeAva(event){
+  hasChangeAva(event) {
     this.hasChangedData = true;
   }
   //value change
@@ -132,7 +140,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
       switch (field) {
         case 'joinedOn':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (this.data[field] && this.data[field] > new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
           }
@@ -143,22 +151,28 @@ export class PopupAddEmployeeComponent implements OnInit {
               .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
                 if (posInfo) {
-                  this.data['jobLevel'] = posInfo.jobLevel ? posInfo.jobLevel : null;
-                  this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
-                  this.form.formGroup.patchValue({
-                    jobLevel: this.data.jobLevel,
-                    orgUnitID: this.data.orgUnitID,
-                  });
+                  if (posInfo.jobLevel) {
+                    this.data['jobLevel'] = posInfo.jobLevel;
+                    this.form.formGroup.patchValue({
+                      jobLevel: this.data.jobLevel,
+                    });
+                  }
+                  if (posInfo.orgUnitID) {
+                    this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
+                    this.form.formGroup.patchValue({
+                      orgUnitID: this.data.orgUnitID,
+                    });
+                  }
                   // this.getOrgNote();
                 }
               });
           }
           break;
-        case 'orgUnitID':
-          // this.getOrgNote();
-          break;
+        // case 'orgUnitID':
+        // this.getOrgNote();
+        // break;
         case 'issuedOn':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR012');
             return;
@@ -168,7 +182,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'idExpiredOn':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (value && this.data.issuedOn) {
             if (this.data.idExpiredOn < this.data.issuedOn) {
               this.notifySV.notifyCode('HR002');
@@ -176,71 +190,77 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
           break;
         case 'birthday':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (value) {
             if (!this.validateBirthday(value)) {
               this.notifySV.notifyCode('HR001');
             }
           }
           break;
+        // case 'address':
+        //   break;
         case 'provinceID':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           this.data['districtID'] = null;
           this.data['wardID'] = null;
           this.form.formGroup.patchValue({ districtID: null, wardID: null });
           break;
         case 'districtID':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           this.data['wardID'] = null;
           this.form.formGroup.patchValue({ wardID: null });
           break;
+        // case 'tAddress':
+        //   break;
         case 'tProvinceID':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           this.data['tDistrictID'] = null;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tDistrictID: null, tWardID: null });
           break;
         case 'tDistrictID':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           this.data['tWardID'] = null;
           this.form.formGroup.patchValue({ tWardID: null });
-          break;;
-        case 'trainLevel':
-          if (this.data[field]) {
-            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
-            if (this.trainLevel && this.trainFieldID) {
-              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
-              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
-            }
-            if(!this.trainFieldID){
-              this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + ' ',"");
-            }
-          } else {
-            this.trainLevel = null;
-          }
           break;
         case 'trainFieldID':
           if (this.data[field]) {
             this.trainFieldID = event.component.dataService?.data?.find((x) => x.TrainFieldID == this.data[field])?.TrainFieldName;
-            if (this.trainLevel && this.trainFieldID) {
+            if (!this.trainLevel && this.trainFieldID?.length > 0) {
+              this.trainLevel = this.vllTrainLevel.ComponentCurrent.dataSource.find(x => x.value == this.data['trainLevel'])?.text;
+              //this.trainLevel = this.data['degreeName'].replace(" " + this.trainFieldID, "");
+            }
+            if (this.trainLevel && this.trainFieldID && this.hasChangedData) {
               this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
               this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
-            }
-            if(!this.trainLevel){
-              this.trainLevel = this.data['degreeName'].replace(' ' + this.trainFieldID,"");
             }
           } else {
             this.trainFieldID = null;
           }
           break;
+        case 'trainLevel':
+          if (this.data[field]) {
+            this.trainLevel = event.component['dataSource'].find((x) => x.value == this.data[field])?.text;
+            if (!this.trainFieldID && this.trainLevel?.length > 0) {
+              this.trainFieldID = this.cbxTrain.ComponentCurrent.dataService.data[0]?.TrainFieldName;
+              // this.trainFieldID = this.data['degreeName'].replace(this.trainLevel + " ", "");
+            }
+            if (this.trainLevel && this.trainFieldID && this.hasChangedData) {
+              this.data['degreeName'] = this.trainLevel + ' ' + this.trainFieldID;
+              this.form.formGroup.controls['degreeName'].patchValue(this.data['degreeName']);
+            }
+          } else {
+            this.trainLevel = null;
+          }
+          break;
         case 'siRegisterOn':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (this.data['siRegisterOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
           }
           break;
         case 'pitIssuedOn':
-          if(!this.hasChangedData) break;
+          if (!this.hasChangedData) break;
           if (this.data['pitIssuedOn'] >= new Date().toJSON()) {
             this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
           }
@@ -248,7 +268,52 @@ export class PopupAddEmployeeComponent implements OnInit {
       }
     }
   }
-
+  blurInput(event: any) {
+    if (event?.ControlName) {
+      switch (event?.ControlName) {
+        case 'address':
+          if (this.oldAddress != this.data['address']) {
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['address'], 3])
+              .subscribe((res: any) => {
+                if (res) {
+                  let result = JSON.parse(res);
+                  if (result?.ProvinceID?.length > 0 && result?.ProvinceID != this.data['provinceID']) this.data['provinceID'] = result.ProvinceID;
+                  if (result?.DistrictID?.length > 0 && result?.DistrictID != this.data['districtID']) this.data['districtID'] = result.DistrictID;
+                  if (result?.WardID?.length > 0 && result?.WardID != this.data['wardID']) this.data['wardID'] = result.WardID;
+                  this.form.formGroup.patchValue({
+                    provinceID: this.data['provinceID'],
+                    districtID: this.data['districtID'],
+                    wardID: this.data['wardID'],
+                  }
+                  );
+                }
+              })
+            this.oldAddress = this.data['address'];
+          }
+          break;
+        case 'tAddress':
+          if (this.oldTAddress != this.data['tAddress']) {
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['tAddress'], 3])
+              .subscribe((res: any) => {
+                if (res) {
+                  let result = JSON.parse(res);
+                  if (result?.ProvinceID?.length > 0 && result?.ProvinceID != this.data['tProvinceID']) this.data['tProvinceID'] = result.ProvinceID;
+                  if (result?.DistrictID?.length > 0 && result?.DistrictID != this.data['tDistrictID']) this.data['tDistrictID'] = result.DistrictID;
+                  if (result?.WardID?.length > 0 && result?.WardID != this.data['tWardID']) this.data['tWardID'] = result.WardID;
+                  this.form.formGroup.patchValue({
+                    tProvinceID: this.data['tProvinceID'],
+                    tDistrictID: this.data['tDistrictID'],
+                    tWardID: this.data['tWardID'],
+                  }
+                  );
+                }
+              })
+            this.oldTAddress = this.data['tAddress'];
+          }
+          break;
+      }
+    }
+  }
   // validate age > 18
   validateBirthday(birthday: any) {
     let ageDifMs = Date.now() - Date.parse(birthday);

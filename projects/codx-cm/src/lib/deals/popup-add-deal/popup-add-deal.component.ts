@@ -202,11 +202,8 @@ export class PopupAddDealComponent
 
   ngAfterViewInit(): void {
     if (this.action == 'add') {
-      this.tabInfo = [this.menuGeneralInfo, this.menuGeneralContact];
-      this.tabContent = [
-        this.tabGeneralInfoDetail,
-        this.tabGeneralContactDetail,
-      ];
+      this.tabInfo = [this.menuGeneralInfo];
+      this.tabContent = [this.tabGeneralInfoDetail];
     }
   }
 
@@ -224,6 +221,7 @@ export class PopupAddDealComponent
           }
           this.getListContactByObjectID(this.customerID);
         }
+        this.itemTabContact(this.ischeckCategoryCustomer($event.component.itemsSelected[0].Category ));
       }
       if ($event.field === 'currencyID') {
         this.loadExchangeRate();
@@ -482,7 +480,7 @@ export class PopupAddDealComponent
           await this.insertInstance();
         } else {
           await this.editInstance();
-          await this.onEdit();
+
         }
       }
     } catch (error) {}
@@ -505,13 +503,13 @@ export class PopupAddDealComponent
         case 'P':
         case 'R':
         case 'A':
+          result = event?.e;
+          break;
         case 'C':
-          var contact = event?.e;
+          result = event?.e;
           var type = event?.type ?? '';
-          result = event?.result ?? '';
+          var contact = event?.result ?? '';
           this.convertToFieldDp(contact, type);
-          console.log('contactsJS: ', result);
-          console.log('contacts: ', JSON.parse(result));
           break;
       }
       var index = this.listInstanceSteps.findIndex(
@@ -546,20 +544,15 @@ export class PopupAddDealComponent
     if (contact != null) {
       if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
         let index = -1;
-        if (type == 'addAndSave') {
+
+        if (contact.refID != null && contact.refID?.trim() != '') {
           index = this.lstContactDeal.findIndex(
             (x) => x.refID == contact.refID
           );
         } else {
-          if (contact.refID != null && contact.refID?.trim() != '') {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.refID == contact.refID
-            );
-          } else {
-            index = this.lstContactDeal.findIndex(
-              (x) => x.recID == contact.recID
-            );
-          }
+          index = this.lstContactDeal.findIndex(
+            (x) => x.recID == contact.recID
+          );
         }
 
         if (index != -1) {
@@ -639,7 +632,7 @@ export class PopupAddDealComponent
                 this.action,
                 this.action !== this.actionEdit ? null : this.deal.createdOn
               );
-              this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+              this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
               if (this.listParticipants.length > 0 && this.listParticipants) {
                 let index = this.listParticipants.findIndex(
                   (x) => x.userID === this.user.userID
@@ -650,7 +643,6 @@ export class PopupAddDealComponent
                   this.owner = null;
                 }
               }
-              this.changeDetectorRef.detectChanges();
             } else {
               this.getListInstanceSteps(processId);
             }
@@ -763,7 +755,7 @@ export class PopupAddDealComponent
                   this.action,
                   this.action !== this.actionEdit ? null : this.deal.createdOn
                 );
-                this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+                this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.getListInstanceSteps(this.deal.processID);
@@ -789,7 +781,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
+        this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = null;
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
@@ -823,6 +815,7 @@ export class PopupAddDealComponent
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
+        this.deal.datas = instance.datas;
         this.onAdd();
       }
     });
@@ -831,7 +824,10 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+
         this.isLoading && this.dialog.close(instance);
+        this.deal.datas = instance.datas;
+        this.onEdit();
       }
     });
   }
@@ -987,24 +983,26 @@ export class PopupAddDealComponent
   }
 
   // --------------------------lOad Tabs ----------------------- //
-  itemTabs(check: boolean): void {
-    if (check) {
-      this.tabInfo = [
-        this.menuGeneralInfo,
-        this.menuGeneralContact,
-        this.menuInputInfo,
-      ];
-      this.tabContent = [
-        this.tabGeneralInfoDetail,
-        this.tabGeneralContactDetail,
-        this.tabCustomFieldDetail,
-      ];
-    } else {
-      this.tabInfo = [this.menuGeneralInfo, this.menuGeneralContact];
-      this.tabContent = [
-        this.tabGeneralInfoDetail,
-        this.tabGeneralContactDetail,
-      ];
+  itemTabsInput(check: boolean): void {
+    let menuInput = this.tabInfo.find(item => item === this.menuInputInfo);
+    let tabInput = this.tabContent.find(item => item === this.tabCustomFieldDetail);
+    if (check && !menuInput && !tabInput) {
+      this.tabInfo.splice(2, 0, this.menuInputInfo);
+      this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+    } else if(!check && menuInput && tabInput){
+      this.tabInfo.splice(2, 1);
+      this.tabContent.splice(2, 1);
+    }
+  }
+  itemTabContact(check: boolean): void {
+    let menuContact = this.tabInfo.find(item => item === this.menuGeneralContact);
+    let tabContact = this.tabContent.find(item => item === this.tabGeneralContactDetail);
+    if (check && !menuContact && !tabContact) {
+      this.tabInfo.splice(1, 0, this.menuGeneralContact);
+      this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
+    } else if(!check && menuContact && tabContact){
+      this.tabInfo.splice(1, 1);
+      this.tabContent.splice(1, 1);
     }
   }
   ischeckFields(steps: any): boolean {
@@ -1026,6 +1024,9 @@ export class PopupAddDealComponent
       return check;
     }
     return false;
+  }
+  ischeckCategoryCustomer(value: any): boolean {
+    return value == '1';
   }
 
   checkAddField(stepCrr, idx) {

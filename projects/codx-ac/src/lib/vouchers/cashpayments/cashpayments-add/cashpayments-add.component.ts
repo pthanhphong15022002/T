@@ -105,7 +105,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   dRAdv: any = 0; //? số tiền liên kết(xứ lí lấy số tiền của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
-  isShowInfoBank : any = true; //? biến lưu trữ khi thay đổi value của (tài khoản chi,tài khoản nhận,đối tượng)
   totalDrLine:any = 0; //? tổng số tiền của tất cả dòng line (số tiền tab ủy nhiệm chi)
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -283,7 +282,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               if (res.data != null) {
                 this.detectorRef.detectChanges();
                 this.refreshGrid();
-                this.formCashPayment.data.subType = event.data[0];
+                this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
                 this.showHideTabDetail(
                   this.formCashPayment?.data?.subType,
                   this.elementTabDetail
@@ -296,7 +295,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         }
       });
     } else {
-      this.formCashPayment.data.subType = event.data[0];
+      this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
       }
@@ -633,8 +632,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
           this.totalDrLine += item.dr; //? tính tổng tiền của tất cả dữ liệu chi tiết
         });
       }
-      if (this.isShowInfoBank) { //? nếu có thay đổi tài khoản chi và tài khoản nhận
-        this.api
+      this.api
         .exec('BS', 'BanksBusiness', 'GetBankInfoAsync', [
           this.bankAcctIDPay,
           this.bankAcctIDReceive,
@@ -642,13 +640,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           if (res) {
-            this.bankNamePay = res?.bankPayname ? res?.bankPayname : ''; //? lấy tên ngân hàng và chi nhánh tài khoản chi
-            this.bankReceiveName = res?.bankReceiveName ? res?.bankReceiveName : ''; //? lấy tên ngân hàng và chi nhánh tài khoản nhận
-            this.isShowInfoBank = false;
+            this.bankNamePay = res?.BankPayname || ''; //? lấy tên ngân hàng và chi nhánh tài khoản chi
+            this.bankReceiveName = res?.BankReceiveName || ''; //? lấy tên ngân hàng và chi nhánh tài khoản nhận
             this.detectorRef.detectChanges();
           }
         });
-      }  
     }
   }
 
@@ -677,7 +673,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.formCashPayment.save()
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if ((res || (!res?.update?.error))) {
+      if (res) {
           this.api
           .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
             this.formCashPayment.data,
@@ -688,7 +684,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
             if (res?.update) {
               this.dialog.dataService.update(res.data).subscribe();
               this.onDestroy();
-              this.dialog.close();
+              this.dialog.close({update:true});
               this.notification.notifyCode('SYS006'); 
             }
           });
@@ -704,7 +700,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.formCashPayment.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if (res || !(res.update.error)) {
+      if (res) {
         this.api
           .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
             this.formCashPayment.data,

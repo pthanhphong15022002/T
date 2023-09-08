@@ -31,6 +31,8 @@ export class PopupPolicygeneralComponent
   isAfterRender = false;
   fieldHeaderTexts: object;
   lstBenefit: any = [];
+  autoNumField: any;
+  loadedAutoField = false;
   
   constructor(
     private injector: Injector,
@@ -115,7 +117,12 @@ export class PopupPolicygeneralComponent
           this.idField
         )
         .subscribe((res: any) => {
+          debugger
           if (res) {
+            this.autoNumField = res.key ? res.key : null;
+            this.loadedAutoField = true;
+            this.df.detectChanges();
+
             this.policyGeneralObj = res?.data;
             if (this.policyGeneralObj?.activeOn == '0001-01-01T00:00:00') {
               this.policyGeneralObj.activeOn = null;
@@ -127,6 +134,20 @@ export class PopupPolicygeneralComponent
           }
         });
     } else {
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          debugger
+          if (res) {
+            this.autoNumField = res.key ? res.key : null;
+            this.loadedAutoField = true;
+            this.df.detectChanges();
+          }}
+          )
       if (this.actionType === this.ActionEdit || this.actionType === this.ActionCopy) {
         if (this.policyGeneralObj?.activeOn == '0001-01-01T00:00:00') {
           this.policyGeneralObj.activeOn = null;
@@ -193,10 +214,6 @@ export class PopupPolicygeneralComponent
             }
           });
       });
-
-      
-
-
         
         // this.UpdatePolicyGeneralIDChanged().subscribe((res) => {
         //   if (res != null) {
@@ -205,7 +222,6 @@ export class PopupPolicygeneralComponent
         //     this.dialog && this.dialog.close(res);
         //   } 
         // })
-
       }
       else{
         this.UpdatePolicyGeneral()
