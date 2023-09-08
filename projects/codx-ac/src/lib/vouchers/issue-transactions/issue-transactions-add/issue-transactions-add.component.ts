@@ -92,22 +92,30 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         if (res && res?.journalNo) this.journalNo = res.journalNo;
       });
 
-    this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
-    this.journal = dialogData.data?.journal;
-    this.vouchers = dialog.dataService.dataSelected;
-    this.fmVouchers = dialogData.data?.formModelMaster;
-    this.fmVouchersLines = dialogData.data?.formModelLine;
-
-    if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
-      this.hideFields = [...dialogData?.data.hideFields];
-    }
-
-    if (this.journal) {
-      this.modeGrid = this.journal.addNewMode;
-    }
-
-    this.funcID = dialog.formModel.funcID;
+      this.headerText = dialogData.data?.headerText;
+      this.formType = dialogData.data?.formType;
+      this.journal = dialogData.data?.journal;
+      this.fmVouchers = dialogData.data?.formModelMaster;
+      this.fmVouchersLines = dialogData.data?.formModelLine;
+      
+      if(this.formType == 'copy')
+      {
+        this.vouchers = dialog.dataService.dataSelected.data;
+      }
+      else
+      {
+        this.vouchers = dialog.dataService.dataSelected;
+      }
+  
+      if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
+        this.hideFields = [...dialogData?.data.hideFields];
+      }
+  
+      if (this.journal) {
+        this.modeGrid = this.journal.addNewMode;
+      }
+  
+      this.funcID = dialog.formModel.funcID;
   }
 
   //#endregion
