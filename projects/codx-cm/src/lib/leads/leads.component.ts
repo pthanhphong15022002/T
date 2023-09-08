@@ -1296,7 +1296,7 @@ export class LeadsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
           };
           var obj = {
             stepName: data?.currentStepName,
@@ -1337,7 +1337,7 @@ export class LeadsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [data.recID, instance.stepID, nextStep];
+              var dataUpdate = [data.recID, instance.stepID];
               this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res[0];

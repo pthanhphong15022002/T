@@ -773,7 +773,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -818,7 +818,6 @@ export class DealsComponent
               var dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
