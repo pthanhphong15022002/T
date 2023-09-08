@@ -755,6 +755,8 @@ export class PopupAddItemComponent
                 funcId: this.form.formModel?.funcID,
                 itemConversion: itemConversion,
                 savedItemConversions: this.itemConversions,
+                isItemSaved: this.isEdit,
+                itemID: this.item.itemID
               },
               '',
               options

@@ -75,6 +75,7 @@ export interface IJournal {
   isTemplate: boolean;
   unbounds: any;
   entryMode: string;
+  postedDateControl: string;
 }
 
 export enum Vll075 {
