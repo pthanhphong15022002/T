@@ -582,6 +582,28 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     delete datas.hasChildren;
     delete datas.includeTables;
     switch (funcID) {
+      //chỉ xem
+      case 'read':
+        {
+          let option = new SidebarModel();
+          option.DataService = this.view?.currentView?.dataService;
+          datas.relations = this.data.relations
+          this.dialog = this.callfunc.openSide(
+            IncommingAddComponent,
+            {
+              gridViewSetup: this.gridViewSetup,
+              headerText:
+                val?.data?.customName +
+                ' ' +
+                (this.funcList?.customName).toLowerCase(),
+              formModel: this.formModel,
+              type: 'read',
+              data: datas,
+            },
+            option
+          );
+          break;
+        }
       //Sửa
       case 'SYS03': {
         this.view.dataService.edit(datas).subscribe((res: any) => {
