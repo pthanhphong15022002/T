@@ -587,6 +587,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.view.dataService.edit(datas).subscribe((res: any) => {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
+          datas.relations = this.data.relations
           this.dialog = this.callfunc.openSide(
             IncommingAddComponent,
             {
@@ -774,7 +775,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           if (x.event) {
             this.data.lstUserID = getListImg(x.event[0].relations);
             this.data.relations = x.event[0].relations;
-            debugger
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
             );
