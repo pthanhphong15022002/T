@@ -343,8 +343,8 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   this.dialog.close([item[1][0], this.type,this.nameFile]);
                   this.notifySvr.notifyCode('RS002');
                 }
+                else this.notifySvr.notifyCode('SYS023');
               });
-              
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
