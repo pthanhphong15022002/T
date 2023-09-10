@@ -564,6 +564,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   downloadWord()
   {
-    this.container.documentEditor.save(this.nameFile, 'Docx');
+    var name = this.nameFile || this.formModel?.entityName;
+    this.container.documentEditor.save(name, 'Docx');
   }
 }
