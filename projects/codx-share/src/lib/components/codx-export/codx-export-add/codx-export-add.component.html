@@ -1,187 +1,98 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [headerText]="headerText"
-></codx-form>
-<ng-template popup adde #body>
-  <ng-container *ngIf="exportAddForm">
-    <div class="row" *ngIf="type == 'word'">
-      <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex justify-content-start flex-column w-100">
-            <div class="form-group">
-              <codx-label default="Tên template"></codx-label>
-              <codx-input
-                type="text"
-                ngClass="w-100"
-                class="test-textbox"
-                [Group]="exportAddForm"
-                ControlName="templateName"
-                [ngClass]="{ 'is-invalid': submitted && f.templateName.errors }"
-              ></codx-input>
-            </div>
-            <div class="form-group">
-              <codx-label default="Diễn giải"></codx-label>
-              <codx-input
-                type="textarea"
-                ngClass="w-100"
-                [format]="'ed2'"
-                [Group]="exportAddForm"
-                ControlName="description"
-                [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+<ng-container *ngIf="type == 'excel'">
+  <codx-form
+    #form
+    [headerText]="headerText"
+    [body]="body"
+    [footer]="footer"
+    [dialog]="dialog"
+    [headerText]="headerText"
+  ></codx-form>
+  <ng-template popup adde #body>
+    <ng-container *ngIf="exportAddForm">
+      <div class="row">
+        <div class="form-group">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-start w-100 pe-6">
+              <codx-attachment
+                #attachment2
+                [objectType]="module"
+                hideBtnSave="1"
+                hideFolder="1"
+                hideUploadBtn="1"
+                hideDes="1"
+                [functionID]="dialog?.formModel?.funcID"
+                (fileAdded)="getfileCount($event)"
+                (fileGet)="getFile($event)"
+                (fileSave)="fileSave($event)"
+                [objectId]="data?.recID"
+                [allowMultiFile]="0"
+                showMessage="0"
+                idBrowse="3"
+                [allowExtensions]="'xlsx'"
+                class="w-100 h-35px"
+                
               >
-              </codx-input>
+              </codx-attachment>
             </div>
-            <codx-attachment
-              #attachment1
-              [objectType]="module"
-              hideBtnSave="1"
-              hideFolder="1"
-              hideUploadBtn="1"
-              hideDes="1"
-              hideImageUpload="1"
-              hideImageThumb="1"
-              [functionID]="dialog?.formModel?.funcID"
-              (fileAdded)="getfileCount($event)"
-              (fileGet)="getFile($event)"
-              (fileSave)="fileSave($event)"
-              [objectId]="data?.recID"
-              [allowMultiFile]="0"
-              showMessage="0"
-              idBrowse="3"
-              [allowExtensions]="'.docx'"
-              [isSaveSelected]="'2'"
-              class="w-100"
-              
-            >
-            </codx-attachment>
-          </div>
-          <div class="d-flex justify-content-end me-2">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              style="width: 100px"
-              (click)="openFormUploadFile()"
-            >
-              <codx-label [default]="'Chọn File'"></codx-label>
+            <div class="d-flex justify-content-end me-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-light-primary"
+                style="width: 100px"
+                (click)="openFormUploadFile()"
+              >
+                <codx-label [default]="'Chọn File'"></codx-label>
+              </button>
+            </div>
+            <button type="button" class="btn btn-icon btn-sm btn-light-primary">
+              <i class="icon-download icon-16"></i>
             </button>
           </div>
         </div>
-      </div>
-      <div class="row ps-5 pe-0">
-        <div class="p-0" [ngClass]="showInsert ? 'col-lg-10' : 'col-lg-12'">
-          <ejs-documenteditorcontainer 
-            #documenteditor_default 
-            [enableToolbar]=true  
-            [serviceUrl]="serviceUrl" 
-            height="500px" 
-            style="display:block;"
-            (created)="onCreate()"
-            (contentChange)="onDocumentChange()"
-            (toolbarClick)="toolbarClick($event)"
-            [autoResizeOnVisibilityChange]="true"
+        <div class="form-group">
+          <codx-label default="Tên template"></codx-label>
+          <codx-input
+            type="text"
+            ngClass="w-100"
+            class="test-textbox"
+            [Group]="exportAddForm"
+            ControlName="templateName"
+            [ngClass]="{ 'is-invalid': submitted && f.templateName.errors }"
+          ></codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label default="Diễn giải"></codx-label>
+          <codx-input
+            type="textarea"
+            ngClass="w-100"
+            [format]="'ed2'"
+            [Group]="exportAddForm"
+            ControlName="description"
+            [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
           >
-          </ejs-documenteditorcontainer>
+          </codx-input>
         </div>
-        <div class="col-lg-2 p-0 border-top border-right border-bottom" [style.visibility]="showInsert?'visible':'hidden'" [style.height]="showInsert?'auto':'0px'">
-          <ng-container *ngFor="let item of listFeild , let i = index">
-            <div (click)="onSelect(item.text)" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover" title="Kéo và thả vào văn bản">
-              {{item.text}}
-            </div>
-          </ng-container>
-         
-          <!-- <ejs-listview id='listview' [dataSource]='listFeild' (select)="onSelect($event)" allowDragAndDrop='true' [fields]="fields" ngClass="h-100 export-add-listview"></ejs-listview>  -->
+        <div class="col form-group">
+          <codx-label default="Định dạng mật khẩu"></codx-label>
+          <codx-input
+            type="text"
+            [class]="'me-3'"
+            style="width: 100%"
+            [Group]="exportAddForm"
+            ControlName="pWControl"
+          ></codx-input>
         </div>
-      </div>
-    </div>
-    <div class="row" *ngIf="type == 'excel'">
-      <div class="form-group">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex justify-content-start w-100 pe-6">
-            <codx-attachment
-              #attachment2
-              [objectType]="module"
-              hideBtnSave="1"
-              hideFolder="1"
-              hideUploadBtn="1"
-              hideDes="1"
-              [functionID]="dialog?.formModel?.funcID"
-              (fileAdded)="getfileCount($event)"
-              (fileGet)="getFile($event)"
-              (fileSave)="fileSave($event)"
-              [objectId]="data?.recID"
-              [allowMultiFile]="0"
-              showMessage="0"
-              idBrowse="3"
-              [allowExtensions]="'xlsx'"
-              class="w-100 h-35px"
-              
-            >
-            </codx-attachment>
-          </div>
-          <div class="d-flex justify-content-end me-2">
-            <button
-              type="button"
-              class="btn btn-sm btn-light-primary"
-              style="width: 100px"
-              (click)="openFormUploadFile()"
-            >
-              <codx-label [default]="'Chọn File'"></codx-label>
-            </button>
-          </div>
-          <button type="button" class="btn btn-icon btn-sm btn-light-primary">
-            <i class="icon-download icon-16"></i>
-          </button>
+        <div class="col form-group">
+          <codx-label default="Mật khẩu mặc định"></codx-label>
+          <codx-input
+            type="text"
+            [class]="'me-3'"
+            style="width: 100%"
+            [Group]="exportAddForm"
+            ControlName="pWDefault"
+          ></codx-input>
         </div>
       </div>
-      <div class="form-group">
-        <codx-label default="Tên template"></codx-label>
-        <codx-input
-          type="text"
-          ngClass="w-100"
-          class="test-textbox"
-          [Group]="exportAddForm"
-          ControlName="templateName"
-          [ngClass]="{ 'is-invalid': submitted && f.templateName.errors }"
-        ></codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label default="Diễn giải"></codx-label>
-        <codx-input
-          type="textarea"
-          ngClass="w-100"
-          [format]="'ed2'"
-          [Group]="exportAddForm"
-          ControlName="description"
-          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-        >
-        </codx-input>
-      </div>
-      <div class="col form-group">
-        <codx-label default="Định dạng mật khẩu"></codx-label>
-        <codx-input
-          type="text"
-          [class]="'me-3'"
-          style="width: 100%"
-          [Group]="exportAddForm"
-          ControlName="pWControl"
-        ></codx-input>
-      </div>
-      <div class="col form-group">
-        <codx-label default="Mật khẩu mặc định"></codx-label>
-        <codx-input
-          type="text"
-          [class]="'me-3'"
-          style="width: 100%"
-          [Group]="exportAddForm"
-          ControlName="pWDefault"
-        ></codx-input>
-      </div>
-    </div>
-    <ng-container *ngIf="type == 'excel'">
       <div class="row">
         <div class="col d-flex align-items-center">
           <codx-label class="me-2" default="Xuất PDF"></codx-label>
@@ -348,10 +259,124 @@
         </div>
       </div>
     </ng-container>
-  </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSave()">Lưu</button>
+    </div>
+  </ng-template>
+</ng-container>
+<ng-container *ngIf="type == 'word'">
+  <div class="d-flex flex-column h-100">
+    <ng-template [ngTemplateOutlet]="wordheader" ></ng-template>
+    <ng-template [ngTemplateOutlet]="wordbody" ></ng-template>
+  </div>
+</ng-container>
+<ng-template #wordheader>
+  <div class="d-flex align-items-center justify-content-between w-100 h-50px">
+    <div class="d-flex align-items-center">
+      <div class="h-100 cursor-pointer" (click)="close()">
+        <i class="fs-32px icon-i-arrow-left-short text-dark"></i>
+      </div>
+      <div class="h-100">
+        <i class="icon-24 icon-i-file-earmark-text-fill me-2 icon-exp-word"></i>
+      </div>
+      <div class="h-100">
+        <codx-input
+          type="text"
+          ngClass="w-100"
+          class="border-0 ip-header-tmpname"
+          [Group]="exportAddForm"
+          ControlName="templateName"
+          [placeholder]="'Tên template mẫu'"          
+          [ngClass]="{ 'is-invalid': submitted && f.templateName.errors }"
+        ></codx-input>
+        <codx-input
+          type="text"
+          ngClass="w-100"
+          class="border-0 ip-header-tmpdes"
+          [Group]="exportAddForm"
+          ControlName="description"
+          [placeholder]="'Nhập mô tả'"   
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment1
+        [objectType]="module"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        hideImageUpload="1"
+        hideImageThumb="1"
+        [functionID]="dialog?.formModel?.funcID"
+        (fileAdded)="getfileCount($event)"
+        (fileGet)="getFile($event)"
+        (fileSave)="fileSave($event)"
+        [objectId]="data?.recID"
+        [allowMultiFile]="0"
+        showMessage="0"
+        idBrowse="3"
+        [allowExtensions]="'.docx'"
+        [isSaveSelected]="'2'"
+        class="w-100"
+        
+      >
+      </codx-attachment>
+    </div>
+    <div class="d-flex align-items-center">
+      <button
+        type="button"
+        class="btn btn-light-primary"
+        (click)="downloadWord()"
+      >
+        <codx-label default="Download" formName="fmExportWordDownload" fiedName="lblExportWordDownload"></codx-label>
+      </button>
+      <button
+        type="button"
+        class="btn btn-light-primary ms-3"
+        (click)="openFormUploadFile()"
+      >
+        <codx-label default="Chọn File" formName="fmExportWordSelectFile" fiedName="lblExportWordSelectFile"></codx-label>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary mx-3"
+        (click)="onSave()"
+      >
+        <codx-label default="Lưu" formName="fmExportWordSave" fiedName="lblExportWordSave"></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>
-<ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSave()">Lưu</button>
+<ng-template #wordbody>
+  <div class="row w-100 h-100 overflow-hidden">
+    <div class="p-0 h-100" [ngClass]="showInsert ? 'col-lg-10' : 'col-lg-12'">
+      <ejs-documenteditorcontainer 
+        #documenteditor_default 
+        [enableToolbar]=true  
+        [serviceUrl]="serviceUrl" 
+        height="100%" 
+        style="display:block;"
+        (created)="onCreate()"
+        (contentChange)="onDocumentChange()"
+        (toolbarClick)="toolbarClick($event)"
+        [autoResizeOnVisibilityChange]="true"
+      >
+      </ejs-documenteditorcontainer>
+    </div>
+    <div class="col-lg-2 p-0 border-top border-right border-bottom" [style.visibility]="showInsert?'visible':'hidden'" [style.height]="showInsert?'auto':'0px'">
+      <ng-container *ngFor="let item of listFeild , let i = index">
+        <div (click)="onSelect(item.text)" (dragstart)="dragStart($event)" draggable="true" [class.border-top]="i>0" class="p-2 bg-export-hover" title="Kéo và thả vào văn bản">
+          {{item.text}}
+        </div>
+      </ng-container>
+    
+      <!-- <ejs-listview id='listview' [dataSource]='listFeild' (select)="onSelect($event)" allowDragAndDrop='true' [fields]="fields" ngClass="h-100 export-add-listview"></ejs-listview>  -->
+    </div>
   </div>
 </ng-template>

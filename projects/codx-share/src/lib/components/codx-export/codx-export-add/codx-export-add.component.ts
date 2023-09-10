@@ -33,7 +33,7 @@ import {
 import { type } from 'os';
 import { Observable, from, map, mergeMap, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
-import { DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
+import { DocumentEditorComponent, DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
 import { environment } from 'src/environments/environment';
 import {
   ClickEventArgs,
@@ -331,7 +331,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             if (item && item.length > 1) {
-              this.notifySvr.notifyCode('RS002');
               this.attachment1.objectId = item[1][0].recID;
               this.attachment1.objectType = 'AD_WordTemplates';
               this.attachment1.functionID = "AD002";
@@ -340,7 +339,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                 elm.funcID = "AD002";
               });
               this.onSaveWord().subscribe(saveW =>{
-                if(saveW) this.dialog.close([item[1][0], this.type,this.nameFile]);
+                if(saveW) {
+                  this.dialog.close([item[1][0], this.type,this.nameFile]);
+                  this.notifySvr.notifyCode('RS002');
+                }
               });
               
             } else this.notifySvr.notifyCode('SYS023');
@@ -553,5 +555,15 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   showInsertFielddialog() {
     this.showInsert = !this.showInsert;
     this.container.documentEditor.focusIn();
+  }
+
+  close()
+  {
+    this.dialog.close();
+  }
+
+  downloadWord()
+  {
+    this.container.documentEditor.save(this.nameFile, 'Docx');
   }
 }
