@@ -316,8 +316,7 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.inforEmployee?.employeeName"
-    [titleCss]="'fs-6 mb-1 then-text-primary'"
+    [titleTmp]="titleTmp"
     [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data?.inforEmployee?.positionID || data?.positionID
@@ -330,6 +329,13 @@
     (changeDataMF)="changeDataMf($event, data)"
   >
   </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span class="fw-bold fs-6 mb-1 then-text-primary" (click)="viewDetail(data)">
+      {{ data.inforEmployee?.employeeName }}
+    </span>
+  </ng-template>
+
   <ng-template #titleRight>
     <div
       *ngIf="
