@@ -545,7 +545,11 @@ export class EmployeeContractComponent extends UIComponent {
 
   //Send multi
   onMoreMulti(e) {
-    console.log(e);
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    console.log(dataSelected);
+    console.log(funcID);
   }
 
   viewDetail(data) {

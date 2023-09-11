@@ -119,6 +119,7 @@ export class CustomerGroupsComponent extends UIComponent {
         colums = {
           field: field,
           headerText: grid[key].headerText,
+          // width: 350, //set như vậy mới full width
           // width: grid[key].width,
           template: template,
           // textAlign: 'center',
@@ -127,6 +128,7 @@ export class CustomerGroupsComponent extends UIComponent {
         colums = {
           field: field,
           headerText: grid[key].headerText,
+          // width: 350, //set như vậy mới full width
           // width: grid[key].width,
         };
       }
