@@ -416,7 +416,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (res) {
             this.codxModifiedOn = new Date();
             this.data.employeeID = res.employeeID;
-            if(this.codxImg){
+            if(this.codxImg?.data?.url){
               this.codxImg.objectId = res.employeeID;
               this.codxImg.uploadAvatar()
             } 
