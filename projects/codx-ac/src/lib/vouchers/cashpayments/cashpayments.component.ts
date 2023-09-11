@@ -353,7 +353,7 @@ export class CashPaymentsComponent extends UIComponent {
             action: 'copy', //? trạng thái của form (chỉnh sửa)
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
-            oData: { ...dataCopy }, //?  data của cashpayment
+            oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
