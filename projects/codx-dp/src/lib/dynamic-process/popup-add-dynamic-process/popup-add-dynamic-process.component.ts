@@ -188,10 +188,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskList: DP_Steps_Tasks[] = [];
   taskGroupList: DP_Steps_TaskGroups[] = [];
   roleGroupTaskOld: DP_Steps_Roles[] = [];
-  grvStep: FormModel;
+  formModelStep: FormModel;
   grvTaskGroups: FormModel;
-  grvMoreFunction: FormModel;
-  formGroup: FormGroup;
+  formModelMF: FormModel;
+  // formGroup: FormGroup; ko dung nua
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -317,6 +317,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   };
   isEditReason = false;
   isBoughtTM = false;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -400,21 +401,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       dataExport: ['all', Validators.required],
       format: ['excel', Validators.required],
     });
-    this.grvMoreFunction = await this.getFormModel('DPT040102');
-    this.grvStep = await this.getFormModel('DPS0103');
+    this.formModelMF = await this.getFormModel('DPT040102');
+    this.formModelStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
-    this.initForm();
+    // this.initForm() // khong xai nua bo luon ;
     this.checkedDayOff(this.step?.excludeDayoff);
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
     this.cache
-      .gridViewSetup(this.grvStep?.formName, this.grvStep?.gridViewName)
+      .gridViewSetup(
+        this.formModelStep?.formName,
+        this.formModelStep?.gridViewName
+      )
       .subscribe((res) => {
         this.headerTextStepName = res['StepName']['headerText'];
       });
@@ -519,17 +518,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  //#region setup formModels and formGroup
-  async initForm() {
-    this.dpService
-      .getFormGroup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .then(async (fg) => {
-        this.formGroup = fg;
-      });
-  }
+  //#region setup formModels and formGroup ko dung nua
+  // async initForm() {
+  //   this.dpService
+  //     .getFormGroup(
+  //       this.dialog.formModel.formName,
+  //       this.dialog.formModel.gridViewName
+  //     )
+  //     .then(async (fg) => {
+  //       this.formGroup = fg;
+  //     });
+  // }
   //#endregion
   //#region onSave
 
@@ -555,6 +554,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
+        this.attachment?.clearData();
         if (res) {
           this.handlerSave();
         }
@@ -3013,6 +3013,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   updateStepChange(stepID, isChangeTime = false) {
     if (stepID) {
+      let stepList = JSON.parse(localStorage.getItem('stepList'));
       let checkEdit = this.listStepEdit?.some((id) => id == stepID);
       let checkAdd = this.listStepAdd?.some((id) => id == stepID);
       let checkDelete = this.listStepDelete?.some((id) => id == stepID);
@@ -3426,15 +3427,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  clickout(event) {}
+  //ko cần bắt event =>> can thì bật lên
+  // @HostListener('document:click', ['$event'])
+  // clickout(event) {
+  //   debugger;
+  // }
 
-  @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (event.code === 'F5') {
-      // xử lý sự kiện nhấn F5 ở đây
-    }
-  }
+  // @HostListener('document:keydown', ['$event'])
+  // onKeyDown(event: KeyboardEvent) {
+  //   if (event.code === 'F5') {
+  //     // xử lý sự kiện nhấn F5 ở đây
+  //   }
+  // }
 
   // add role to permissions process
   addRole(role: object, roleOld?: object) {
@@ -3526,10 +3530,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     const check = (data) => {
       for (const element of data) {
         if (element?.roles?.some((x) => x.objectID === role?.objectID)) {
-          return true; 
+          return true;
         }
       }
-      return false; 
+      return false;
     };
     if (step?.taskGroups?.length > 0 && check(step.taskGroups)) {
       return true;
