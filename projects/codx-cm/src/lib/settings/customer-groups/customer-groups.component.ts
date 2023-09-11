@@ -118,16 +118,16 @@ export class CustomerGroupsComponent extends UIComponent {
       if (template) {
         colums = {
           field: field,
-          headerText: grid[key].headerText ?? key,
-          width: grid[key].width,
+          headerText: grid[key].headerText,
+          // width: grid[key].width,
           template: template,
           // textAlign: 'center',
         };
       } else {
         colums = {
           field: field,
-          headerText: grid[key].headerText ?? key,
-          width: grid[key].width,
+          headerText: grid[key].headerText,
+          // width: grid[key].width,
         };
       }
 
@@ -191,7 +191,6 @@ export class CustomerGroupsComponent extends UIComponent {
 
   //#region  CRUDService
   add(evt) {
-    this.view.dataService.service = 'CM'; //Lỗi k bắt được service khi add new && copy
     this.view.dataService.addNew().subscribe((res: any) => {
       this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
@@ -218,7 +217,7 @@ export class CustomerGroupsComponent extends UIComponent {
       popupAdd.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
-          this.view.dataService.update(e?.event[0]).subscribe();
+          this.view.dataService.update(e?.event).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -294,7 +293,7 @@ export class CustomerGroupsComponent extends UIComponent {
       popupCopy.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
-          this.view.dataService.update(e?.event[0]).subscribe();
+          this.view.dataService.update(e?.event).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -304,9 +303,7 @@ export class CustomerGroupsComponent extends UIComponent {
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([data], true, (opt) =>
-        this.beforeDel(opt)
-      )
+      .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
           this.view.dataService.onAction.next({

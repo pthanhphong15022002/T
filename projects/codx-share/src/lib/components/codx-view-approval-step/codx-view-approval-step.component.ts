@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   Component,
   TemplateRef,
@@ -29,6 +30,7 @@ import {
   CodxEsService,
   GridModels,
 } from 'projects/codx-es/src/lib/codx-es.service';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-view-approval-step',
@@ -54,6 +56,7 @@ export class CodxViewApprovalStepComponent
   // lstStep: any = [];
   constructor(
     private esService: CodxEsService,
+    private shareService: CodxShareService,
     private cr: ChangeDetectorRef,
     private cache: CacheService,
   ) {
@@ -90,6 +93,32 @@ export class CodxViewApprovalStepComponent
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
                 if (res && res?.length >= 0) {                  
                   this.process = res;
+                  let listPosition=[];
+                  for(let step of this.process){
+                    for(let approve of step.approvers){
+                      if(approve?.roleType=='P' && !listPosition.includes(approve?.approver)){
+                        listPosition.push(approve?.approver);
+                      }
+                    }
+                  }
+                  if(listPosition?.length>0){
+                    this.shareService.getUserIDByPositionsID(listPosition).subscribe(lstUserInfo=>{
+                      if(lstUserInfo){
+                        for(let step of this.process){
+                          for(let approve of step.approvers){
+                            if(approve?.roleType=='P'){
+                              let crrApprover = lstUserInfo.filter(x=>x?.positionID == approve?.approver);
+                              if(crrApprover?.length>0){
+                                approve.userID= crrApprover[0].userID;
+                                approve.userName= crrApprover[0].userName;
+                                this.cr.detectChanges();
+                              }
+                            }
+                          }
+                        }
+                      }                      
+                    });
+                  }
                   this.cr.detectChanges();
                 }
               });
