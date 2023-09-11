@@ -234,6 +234,8 @@ export class InstancesComponent
     purple: '#5710b2',
     navy: '#192440',
   };
+  // For CM
+  categoryCustomer:any = '';
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -589,6 +591,7 @@ export class InstancesComponent
                   if (dataCM && dataCM[0]) {
                     this.dataCM = dataCM[0];
                     this.dataCM.reCID = Util.uid();
+                    this.categoryCustomer = dataCM[1];
                     this.openPopUpAdd(applyFor, formMD, option, 'copy', null);
                   }
                 });
@@ -617,6 +620,7 @@ export class InstancesComponent
       processID: this.processID,
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
+      categoryCustomer: this.categoryCustomer,
     };
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
@@ -655,6 +659,7 @@ export class InstancesComponent
       addFieldsControl: this.addFieldsControl,
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
+      categoryCustomer: this.categoryCustomer,
     };
     let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
@@ -718,8 +723,9 @@ export class InstancesComponent
                   applyFor,
                 ];
                 this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
-                  if (dataCM && dataCM[0]) {
+                  if (dataCM) {
                     this.dataCM = dataCM[0];
+                    this.categoryCustomer = dataCM[1]
                     this.openPopupEdit(applyFor, formMD, option, titleAction);
                   }
                 });
