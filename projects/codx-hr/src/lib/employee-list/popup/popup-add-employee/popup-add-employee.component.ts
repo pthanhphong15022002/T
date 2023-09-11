@@ -418,7 +418,7 @@ export class PopupAddEmployeeComponent implements OnInit {
             this.data.employeeID = res.employeeID;
             if(this.codxImg){
               this.codxImg.objectId = res.employeeID;
-              this.codxImg.onSaveFile(res.employeeID)
+              this.codxImg.uploadAvatar()
             } 
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
             this.notifySV.notifyCode('SYS006');
