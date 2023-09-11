@@ -18,6 +18,7 @@
   ></codx-gridview-v2>
 </ng-container>
 
+
 <!--temp Grids-->
 <ng-template #tempMorefunction let-data>
   <div class="" style="height: 30px">
@@ -32,14 +33,109 @@
   </div>
 </ng-template>
 
-<ng-template #tempStatusCode let-data> aaa </ng-template>
+<ng-template #headerStatusCode>
+  <codx-label
+    [formModel]="formModel"
+    fiedName="StatusCode"
+    [setRequire]="false"
+  >
+  </codx-label>
+</ng-template>
 
-<ng-template #tempComment let-data> aaa </ng-template>
+<ng-template #tempStatusCode let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="
+        data?.statusCode | formatvalue : formModel : 'statusCode' | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
 
-<ng-template #tempScheduleStart let-data> aaa </ng-template>
-
-<ng-template #tempScheduleTime let-data> aaa </ng-template>
-
-<ng-template #tempEngineerID let-data> aaa </ng-template>
-
-<ng-template #tempCreatedBy let-data> aaa </ng-template>
+<ng-template #headerComment>
+  <codx-label [formModel]="formModel" fiedName="Comment" [setRequire]="false">
+  </codx-label>
+</ng-template>
+<ng-template #tempComment let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="data?.comment | formatvalue : formModel : 'comment' | async"
+    >
+    </span>
+  </div>
+</ng-template>
+<ng-template #headerScheduleStart>
+  <codx-label
+    [formModel]="formModel"
+    fiedName="ScheduleStart"
+    [setRequire]="false"
+  >
+  </codx-label>
+</ng-template>
+<ng-template #tempScheduleStart let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="
+        data?.scheduleStart | formatvalue : formModel : 'ScheduleStart' | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+<ng-template #headerScheduleTime>
+  <codx-label
+    [formModel]="formModel"
+    fiedName="ScheduleTime"
+    [setRequire]="false"
+  >
+  </codx-label>
+</ng-template>
+<ng-template #tempScheduleTime let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="
+        data?.scheduleTime | formatvalue : formModel : 'ScheduleTime' | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+<ng-template #headerEngineerID>
+  <codx-label
+    [formModel]="formModel"
+    fiedName="EngineerID"
+    [setRequire]="false"
+  >
+  </codx-label>
+</ng-template>
+<ng-template #tempEngineerID let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="
+        data?.engineerID | formatvalue : formModel : 'EngineerID' | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
+<ng-template #headerCreatedBy>
+  <codx-label [formModel]="formModel" fiedName="CreatedBy" [setRequire]="false">
+  </codx-label>
+</ng-template>
+<ng-template #tempCreatedBy let-data>
+  <div class="d-flex justify-content-start align-items-center">
+    <span
+      class="text-gray-800"
+      [innerHTML]="
+        data?.createdBy | formatvalue : formModel : 'CreatedBy' | async
+      "
+    >
+    </span>
+  </div>
+</ng-template>
