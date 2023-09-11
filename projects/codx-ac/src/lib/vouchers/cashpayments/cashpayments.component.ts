@@ -113,7 +113,7 @@ export class CashPaymentsComponent extends UIComponent {
   };
   bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
-  bankPayID:any;
+  bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -262,7 +262,7 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT041003':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008': 
+      case 'ACT041008':
         this.unPostVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT041010':
@@ -348,12 +348,12 @@ export class CashPaymentsComponent extends UIComponent {
       .copy((o) => this.setDefault())
       .subscribe((res: any) => {
         if (res != null) {
-          dataCopy.voucherNo = res?.data.voucherNo;
+          dataCopy.voucherNo = res?.voucherNo;
           let data = {
             action: 'copy', //? trạng thái của form (chỉnh sửa)
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
-            oData: { ...dataCopy }, //?  data của cashpayment
+            oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
@@ -434,7 +434,10 @@ export class CashPaymentsComponent extends UIComponent {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT041009' || element.functionID == 'ACT041010') {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -668,9 +671,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   getDatadetail(data) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
-        data
-      ])
+      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [data])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
@@ -766,11 +767,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
           this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });

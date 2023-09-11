@@ -30,6 +30,7 @@ import {
   GridModels,
 } from 'projects/codx-es/src/lib/codx-es.service';
 import { AddEditApprovalStepComponent } from './add-edit-approval-step/add-edit-approval-step.component';
+import { CodxShareService } from '../../codx-share.service';
 //import { PopupAddApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-approval-step/popup-add-approval-step.component';
 
 export class Approver {}
@@ -56,7 +57,6 @@ export class CodxApproveStepsComponent
   headerText = '';
   subHeaderText;
 
-  lstOldData;
   public isEdited = false;
 
   currentStepNo = 1;
@@ -79,6 +79,7 @@ export class CodxApproveStepsComponent
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
+    private shareService: CodxShareService,
     private notifySvr: NotificationsService,
     private cache: CacheService,
     @Optional() dialogData: DialogData,
@@ -154,9 +155,35 @@ export class CodxApproveStepsComponent
         this.esService.getApprovalSteps(gridModels).subscribe((res) => {
           if (res && res?.length >= 0) {
             this.lstStep = res;
-            this.currentStepNo = this.lstStep.length + 1;
-            this.lstOldData = [...res];
+            let listPosition=[];
+            for(let step of this.lstStep){
+              for(let approve of step.approvers){
+                if(approve?.roleType=='P' && !listPosition.includes(approve?.approver)){
+                  listPosition.push(approve?.approver);
+                }
+              }
+            }
+            if(listPosition?.length>0){
+              this.shareService.getUserIDByPositionsID(listPosition).subscribe(lstUserInfo=>{
+                if(lstUserInfo){
+                  for(let step of this.lstStep){
+                    for(let approve of step.approvers){
+                      if(approve?.roleType=='P'){
+                        let crrApprover = lstUserInfo.filter(x=>x?.positionID == approve?.approver);
+                        if(crrApprover?.length>0){
+                          approve.userID= crrApprover[0].userID;
+                          approve.userName= crrApprover[0].userName;
+                          this.cr.detectChanges();
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            }
+            this.currentStepNo = this.lstStep.length + 1; 
             this.cr.detectChanges();
+            
           }
         });
       } else {
