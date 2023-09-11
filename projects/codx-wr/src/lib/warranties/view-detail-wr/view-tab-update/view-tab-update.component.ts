@@ -34,11 +34,17 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
   @Output() listChange = new EventEmitter<any>();
+  @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
+  @ViewChild('headerComment') headerComment: TemplateRef<any>;
   @ViewChild('tempComment') tempComment: TemplateRef<any>;
+  @ViewChild('headerScheduleStart') headerScheduleStart: TemplateRef<any>;
   @ViewChild('tempScheduleStart') tempScheduleStart: TemplateRef<any>;
+  @ViewChild('headerScheduleTime') headerScheduleTime: TemplateRef<any>;
   @ViewChild('tempScheduleTime') tempScheduleTime: TemplateRef<any>;
+  @ViewChild('headerEngineerID') headerEngineerID: TemplateRef<any>;
   @ViewChild('tempEngineerID') tempEngineerID: TemplateRef<any>;
+  @ViewChild('headerCreatedBy') headerCreatedBy: TemplateRef<any>;
   @ViewChild('createdBy') tempCreatedBy: TemplateRef<any>;
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
@@ -95,6 +101,7 @@ export class ViewTabUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     // this.columnsGrid = [
     //   {
     //     field: 'statusCode',
@@ -143,15 +150,47 @@ export class ViewTabUpdateComponent implements OnInit {
     this.request.entityName = 'WR_WorkOrderUpdates';
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
+      this.loaded = true;
       this.lstUpdate = item;
       this.wrSv.listOrderUpdateSubject.next({
         e: this.lstUpdate,
         date: null,
         update: null,
       });
-      this.loaded = true;
-      // this.grid.refresh();
-      // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
+      // this.columnsGrid = [
+      //   {
+      //     headerTemplate: this.headerStatusCode,
+      //     template: this.tempStatusCode,
+      //     width: 100,
+      //   },
+      //   {
+      //     headerTemplate: this.headerComment,
+      //     template: this.tempComment,
+      //     width: 400,
+      //   },
+      //   {
+      //     headerTemplate: this.headerScheduleStart,
+      //     template: this.tempScheduleStart,
+      //     width: 100,
+      //   },
+      //   {
+      //     headerTemplate: this.headerScheduleTime,
+      //     template: this.tempScheduleTime,
+      //     width: 200,
+      //   },
+      //   {
+      //     headerTemplate: this.headerEngineerID,
+      //     template: this.tempEngineerID,
+      //     width: 200,
+      //   },
+      //   {
+      //     headerTemplate: this.headerCreatedBy,
+      //     template: this.tempCreatedBy,
+      //     width: 200,
+      //   },
+      // ];
+      // this.grid.showRowNumber = false;
+      this.grid.refresh();
     });
   }
 
@@ -173,6 +212,13 @@ export class ViewTabUpdateComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  loadList(lstUpdate){
+    this.lstUpdate = lstUpdate;
+    if(this.grid){
+      this.grid.dataSource = this.lstUpdate;
+    }
   }
 
   getGridViewSetup() {

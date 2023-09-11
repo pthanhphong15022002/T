@@ -241,7 +241,6 @@ export class CodxShareService {
             //   data.unbounds.statusApproval = x.event?.mode;
             //   dataService.update(data).subscribe();
             // }
-            debugger
             if (x?.event?.msgCodeError == null && x?.event?.rowCount > 0) {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
@@ -249,7 +248,6 @@ export class CodxShareService {
             }
           });
         } else {
-          debugger
           var status;
           if (
             funcID == 'SYS201' ||
@@ -622,7 +620,15 @@ export class CodxShareService {
     );
   }
   //#endregion
-
+  getApprovalTrans(recID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
   beforeApprove(
     status: string,
     approvalTrans: any,
@@ -708,9 +714,6 @@ export class CodxShareService {
     title: string,
     funcID: string = null
   ) {
-    let formModel;
-    let approvalTrans: any = {};
-
     this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -1295,6 +1298,15 @@ export class CodxShareService {
       [fileRecID, fileExtension]
     );
   }
+  getUserIDByPositionsID(listPositionID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmployeesByPositionsAsync',
+      listPositionID
+    );
+  }
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
 
@@ -1476,6 +1488,8 @@ export class CodxShareService {
   ): ES_SignFile {
     let signFile = new ES_SignFile();
     signFile.recID = approveProcess?.recID;
+    signFile.approveControl = "2";
+    signFile.processID = approveProcess?.template?.processID;
     signFile.categoryID = approveProcess?.category?.categoryID;
     signFile.refID = approveProcess?.recID;
     signFile.refType = approveProcess?.entityName;
@@ -1928,6 +1942,8 @@ export class Approvers {
   createdOn: any = new Date();
   delete: boolean = true;
   write: boolean = false;
+  userID:string;
+  userName:string;
 }
 export class ExportUpload {
   templateRecID: string;
