@@ -171,6 +171,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() tmpRightThumb?: TemplateRef<any>;
   @Input() tmpCustomMFc?: TemplateRef<any>;
   @Input() isScroll = true;
+  @Input() isFristVer = false;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -544,21 +545,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //Kiểm tra tenant đã có chưa
   }
 
-  getFolderNameByFuncList() {
-    // this.cache.functionList(this.functionID).subscribe(item=>{
-    //   if(item && item.subFolderControl && item.subFolderControl != "" && item.subFolderControl != "1" && item.subFolderControl != "2" && item.subFolderControl != "3"  && item.subFolderControl != "4" && !this.fdName)
-    //     this.fdName = item.subFolderControl;
-    // })
-  }
-  ngOnDestroy() {
-    //   this.atSV.openForm.unsubscribe();
-    // if (this.interval?.length > 0) {
-    //   this.interval.forEach((element) => {
-    //     clearInterval(element.instant);
-    //   });
-    // }
-  }
-
   onSelectionAddChanged($data, tree) {
     var id = $data.dataItem.recID;
     this.selectId = id;
@@ -571,11 +557,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var breadcumbLink = [];
 
     that.selectId = id;
-    // if (that.folderId == id) {
-    //   that.dmSV.setDisableSave.next(true);
-    // }
-    // else that.dmSV.setDisableSave.next(false);
-
     for (var i = list.length - 1; i >= 0; i--) {
       if (pathFolder == '') {
         pathFolder = list[i].id;

@@ -75,7 +75,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   type: string;
   parentRecID: string;
   oldRecID: string;
-
+  isES=false;
   //test to update signtype for all step
   isChangeSignatureType: boolean = false;
   signatureType: string;
@@ -126,6 +126,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     } else this.data = JSON.parse(JSON.stringify(data?.data?.data));
     this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
+    this.isES = data?.data?.isES;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
     this.type = data?.data?.type;
