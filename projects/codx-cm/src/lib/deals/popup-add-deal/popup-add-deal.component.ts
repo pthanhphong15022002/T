@@ -140,6 +140,7 @@ export class PopupAddDealComponent
   processIdDefault: string = '';
   currencyIDDefault: string = '';
   defaultDeal: string = '';
+  categoryCustomer: string = '';
 
   // load data form DP
   isLoading: boolean = false;
@@ -176,6 +177,7 @@ export class PopupAddDealComponent
         this.action != this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
+      this.categoryCustomer = dt?.data?.categoryCustomer;
     }
 
     if (dt?.data.processID) {
@@ -201,9 +203,10 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    if (this.action == 'add') {
-      this.tabInfo = [this.menuGeneralInfo];
-      this.tabContent = [this.tabGeneralInfoDetail];
+    this.tabInfo = [this.menuGeneralInfo];
+    this.tabContent = [this.tabGeneralInfoDetail];
+    if(this.action !== this.actionAdd) {
+      this.itemTabContact(this.ischeckCategoryCustomer( this.categoryCustomer));
     }
   }
 
