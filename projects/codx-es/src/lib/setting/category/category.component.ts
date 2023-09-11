@@ -68,6 +68,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   dataSelected: any;
   dialog: DialogRef;
+  isES =false;
 
   constructor(
     private cacheSv: CacheService,
@@ -83,6 +84,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
+      this.isES = this.funcList?.module == "ES" ? true : false;
     });
   }
 
@@ -248,7 +250,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   add(evt?: any) {
-    this.viewBase.dataService.addNew().subscribe((res) => {
+    this.viewBase.dataService.addNew().subscribe((res) => {      
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
@@ -260,6 +262,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           data: this.viewBase.dataService.dataSelected,
           isAdd: true,
           headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          isES:this.isES,
         },
         option
       );
@@ -292,6 +295,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           headerText: evt.text + ' ' + this.funcList?.customName ?? '',
           type: 'copy',
           oldRecID: evt?.data?.recID,
+          isES:this.isES,
         },
         option
       );
@@ -326,6 +330,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               data: evt?.data,
               isAdd: false,
               headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+              isES:this.isES,
             },
             option
           );

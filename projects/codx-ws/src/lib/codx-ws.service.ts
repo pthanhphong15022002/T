@@ -56,7 +56,6 @@ export class CodxWsService {
     );
     this.cachedObservables.set(key, observable);
     return observable;
-    return null;
   }
 
   loadFuncList(module:any): Observable<any>

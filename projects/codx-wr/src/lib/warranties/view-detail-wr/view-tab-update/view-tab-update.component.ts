@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
@@ -17,6 +18,7 @@ import {
   DataRequest,
   DialogModel,
   FormModel,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
@@ -74,6 +76,7 @@ export class ViewTabUpdateComponent implements OnInit {
     private wrSv: CodxWrService,
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
+    private notiSv: NotificationsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -141,7 +144,11 @@ export class ViewTabUpdateComponent implements OnInit {
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
       this.lstUpdate = item;
-      this.wrSv.listOrderUpdateSubject.next({e: this.lstUpdate, date: null});
+      this.wrSv.listOrderUpdateSubject.next({
+        e: this.lstUpdate,
+        date: null,
+        update: null,
+      });
       this.loaded = true;
       // this.grid.refresh();
       // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
@@ -247,58 +254,96 @@ export class ViewTabUpdateComponent implements OnInit {
   //#endregion
 
   //#region  CRUD
-  edit(data){
+  edit(data) {
     this.cache
-    .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
-    .subscribe((res) => {
-      if (res) {
-        let dialogModel = new DialogModel();
-        dialogModel.zIndex = 1010;
-        let formModel = new FormModel();
+      .gridViewSetup('WRWorkOrderUpdates', 'grvWRWorkOrderUpdates')
+      .subscribe((res) => {
+        if (res) {
+          let dialogModel = new DialogModel();
+          dialogModel.zIndex = 1010;
+          let formModel = new FormModel();
 
-        formModel.entityName = 'WR_WorkOrderUpdates';
-        formModel.formName = 'WRWorkOrderUpdates';
-        formModel.gridViewName = 'grvWRWorkOrderUpdates';
-        dialogModel.FormModel = formModel;
-        let obj = {
-          data: data,
-          title: this.titleAction,
-          transID: data?.transID,
-          engineerID: data?.engineerID,
-          gridViewSetup: res,
+          formModel.entityName = 'WR_WorkOrderUpdates';
+          formModel.formName = 'WRWorkOrderUpdates';
+          formModel.gridViewName = 'grvWRWorkOrderUpdates';
+          dialogModel.FormModel = formModel;
+          let obj = {
+            data: data,
+            title: this.titleAction,
+            transID: this.transID,
+            engineerID: data?.engineerID,
+            gridViewSetup: res,
+          };
+          this.callFc
+            .openForm(
+              PopupUpdateReasonCodeComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e && e?.event != null) {
+                var data = e?.event;
+                let idx = this.lstUpdate.findIndex(
+                  (x) => x.recID == data.recID
+                );
+                if (idx != -1) {
+                  this.lstUpdate[idx] = data;
+                } else {
+                  this.lstUpdate.push(Object.assign({}, data));
+                }
+                this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
+                this.wrSv.listOrderUpdateSubject.next({
+                  e: this.lstUpdate,
+                  date: new Date(),
+                  update: null,
+                });
 
-        };
-        this.callFc
-          .openForm(
-            PopupUpdateReasonCodeComponent,
-            '',
-            600,
-            700,
-            '',
-            obj,
-            '',
-            dialogModel
-          )
-          .closed.subscribe((e) => {
-            if (e && e?.event != null) {
-              var data = e?.event;
-              let idx = this.lstUpdate.findIndex(x => x.recID == data.recID);
-              if(idx != -1){
-                this.lstUpdate[idx] = data;
-              }else{
-                this.lstUpdate.push(Object.assign({}, data));
+                this.detectorRef.detectChanges();
               }
-              this.wrSv.listOrderUpdateSubject.next({e: this.lstUpdate, date: new Date()});
+            });
+        }
+      });
+  }
 
+  delete(data) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiSv.alertCode('SYS030').subscribe(async (x) => {
+      if (x?.event?.status == 'Y') {
+        this.api
+          .execSv<any>(
+            'WR',
+            'ERM.Business.WR',
+            'WorkOrderUpdatesBusiness',
+            'DeleteReasonCodeAsync',
+            [data.recID, this.transID]
+          )
+          .subscribe((res) => {
+            if (res[0]) {
+              let indx = this.lstUpdate.findIndex(
+                (x) => x.recID == data?.recID
+              );
+              if (indx != -1) {
+                this.lstUpdate.splice(indx, 1);
+              }
+              this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
+              let last = res[1];
+              this.wrSv.listOrderUpdateSubject.next({
+                e: this.lstUpdate,
+                date: new Date(),
+                update: last,
+              });
+              this.notiSv.notifyCode('SYS008');
               this.detectorRef.detectChanges();
             }
           });
       }
     });
-  }
-
-  delete(data){
-
   }
   //#endregion
 }

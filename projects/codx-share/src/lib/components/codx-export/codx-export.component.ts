@@ -206,6 +206,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         option.DataService = data;
+        if(this.type == "word") option.IsFull = true;
         this.callfunc
           .openForm(
             CodxExportAddComponent,

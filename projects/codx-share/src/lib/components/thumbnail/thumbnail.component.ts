@@ -52,6 +52,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() objectID = '';
   @Input() isReferType: boolean = false;
   @Input() isOpenFile: boolean = false;
+  @Input() isFristVer = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Input() tmpCustomMFc?: TemplateRef<any>;
   @Output() fileCount = new EventEmitter<any>();
@@ -118,12 +119,35 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         }
       });
     }
-
+    //Lấy version đầu tiên
+    else if(this.isFristVer) this.formatFristVersion(this.files);
     this.userID = this.authStore.get().userID;
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.changeDetectorRef.detectChanges();
+  }
+
+  //Lấy version đầu tiên
+  formatFristVersion(data)
+  {
+    data.forEach(elm => {
+      if(elm.history && elm.history.length>0)
+      {
+        var frist = elm?.history.filter(x=>x.version == "Ver 001");
+        if(frist && frist[0])
+        {
+          var f = frist[0];
+          elm.extension = f.extension;
+          elm.fileSize = f.fileSize;
+          elm.thumbnail = f.thumbnail;
+          elm.pathDisk = f.pathDisk;
+          elm.uploadId = f.uploadId;
+        }
+      }
+     
+    });
+    return data;
   }
 
   openPermission(data) {

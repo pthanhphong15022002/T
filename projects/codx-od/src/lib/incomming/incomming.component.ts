@@ -217,7 +217,16 @@ export class IncommingComponent
         break;
     }
   }
-
+  dbClick(data:any)
+  {
+    var func = 
+    {
+      data:{customName: 'Xem chi tiết'},
+      functionID : 'read'
+    };
+    this.openFormFuncID(func, data)
+  }
+  
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
