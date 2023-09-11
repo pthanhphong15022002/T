@@ -147,6 +147,7 @@ export class PopupAddDealComponent
   isBlock: boolean = true;
   currencyIDOld: string;
   idxCrr: any = -1;
+  instanceRes: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -171,6 +172,7 @@ export class PopupAddDealComponent
 
       if (this.action != this.actionAdd) {
         this.deal = dt?.data?.dataCM;
+        this.categoryCustomer = dt?.data?.categoryCustomer;
       }
     } else {
       this.deal =
@@ -197,6 +199,7 @@ export class PopupAddDealComponent
     if (this.action === this.actionAdd) {
       this.currencyIDDefault = dt?.data?.currencyIDDefault;
       this.deal.currencyID = this.currencyIDDefault;
+      this.loadExchangeRate();
     }
   }
 
@@ -214,6 +217,8 @@ export class PopupAddDealComponent
     if ($event) {
       this.deal[$event.field] = $event.data;
       if ($event.field === 'customerID') {
+        this.lstContactDeal = [];
+        this.lstContactDelete = [];
         this.customerID = $event?.data ? $event.data : null;
         if (this.customerID) {
           this.customerOld = this.customerID;
@@ -226,9 +231,9 @@ export class PopupAddDealComponent
         }
         this.itemTabContact(this.ischeckCategoryCustomer($event.component.itemsSelected[0].Category ));
       }
-      if ($event.field === 'currencyID') {
-        this.loadExchangeRate();
-      }
+      // if ($event.field === 'currencyID') {
+      //   this.loadExchangeRate();
+      // }
       if ($event.field === 'consultantID') {
         this.searchOwner(
           'U',
@@ -355,7 +360,6 @@ export class PopupAddDealComponent
       } else {
         this.lstContactCustomer = [];
       }
-
       if (
         this.action === this.actionEdit &&
         this.deal.customerID === this.customerIDOld
@@ -469,24 +473,12 @@ export class PopupAddDealComponent
   }
 
   async executeSaveData() {
-    try {
-      if (this.isLoading) {
-        if (this.action !== this.actionEdit) {
-          await this.addDealForDP();
-          this.insertInstance();
-        } else {
-          await this.editDealForDP();
-          await this.editInstance();
-        }
-      } else {
-        if (this.action !== this.actionEdit) {
-          await this.insertInstance();
-        } else {
-          await this.editInstance();
-
-        }
-      }
-    } catch (error) {}
+    if (this.action !== this.actionEdit) {
+      this.addPermission(this.deal.processID);
+      await this.insertInstance();
+    } else {
+      await this.editInstance();
+    }
   }
 
   cbxChange($event, field) {
@@ -661,21 +653,24 @@ export class PopupAddDealComponent
   }
 
   onAdd() {
-    this.addPermission(this.deal.processID);
+
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res.save[0]);
+         this.dialog.close(res.save[0]);
         } else this.dialog.close();
       });
   }
-  async onEdit() {
+  onEdit() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.dialog.close(res.update[0]);
+         this.dialog.close(res.update[0]);
+        }
+        else {
+          this.dialog.close();
         }
       });
   }
@@ -817,9 +812,11 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
-        this.isLoading && this.dialog.close(instance);
+        this.instanceRes = instance;
         this.deal.datas = instance.datas;
-        this.onAdd();
+        !this.isLoading && this.onAdd();
+        this.isLoading && this.addDealForDP();
+
       }
     });
   }
@@ -827,10 +824,10 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-
-        this.isLoading && this.dialog.close(instance);
+        this.instanceRes = instance;
         this.deal.datas = instance.datas;
-        this.onEdit();
+        !this.isLoading && this.onEdit();
+        this.isLoading && this.editDealForDP();
       }
     });
   }
@@ -839,6 +836,7 @@ export class PopupAddDealComponent
     var datas = [this.deal, this.lstContactDeal];
     this.codxCmService.addDeal(datas).subscribe((deal) => {
       if (deal) {
+        this.dialog.close(this.instanceRes);
       }
     });
   }
@@ -852,6 +850,7 @@ export class PopupAddDealComponent
     ];
     this.codxCmService.editDeal(datas).subscribe((deal) => {
       if (deal) {
+        this.dialog.close(this.instanceRes);
       }
     });
   }
@@ -1064,26 +1063,26 @@ export class PopupAddDealComponent
     }
   }
 
-  contactEventDeal(e) {
-    if (e.data) {
-      var findIndex = this.lstContactCustomer.findIndex(
-        (x) => x.recID == e.data?.refID
-      );
-      if (e.action == 'edit') {
-        if (findIndex != -1) {
-          var isDefault = this.lstContactCustomer[findIndex].isDefault;
-          this.lstContactCustomer[findIndex] = JSON.parse(
-            JSON.stringify(e.data)
-          );
-          this.lstContactCustomer[findIndex].recID = e.data.refID;
-          this.lstContactCustomer[findIndex].role = null;
-          this.lstContactCustomer[findIndex].isDefault = isDefault;
-          this.loadContactDeal.loadListContact(this.lstContactCustomer);
-        }
-      }
-      this.changeDetectorRef.detectChanges();
-    }
-  }
+  // contactEventDeal(e) {
+  //   if (e.data) {
+  //     var findIndex = this.lstContactCustomer.findIndex(
+  //       (x) => x.recID == e.data?.refID
+  //     );
+  //     if (e.action == 'edit') {
+  //       if (findIndex != -1) {
+  //         var isDefault = this.lstContactCustomer[findIndex].isDefault;
+  //         this.lstContactCustomer[findIndex] = JSON.parse(
+  //           JSON.stringify(e.data)
+  //         );
+  //         this.lstContactCustomer[findIndex].recID = e.data.refID;
+  //         this.lstContactCustomer[findIndex].role = null;
+  //         this.lstContactCustomer[findIndex].isDefault = isDefault;
+  //         this.loadContactDeal.loadListContact(this.lstContactCustomer);
+  //       }
+  //     }
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
 
   loadExchangeRate() {
     let day = this.deal.createdOn ?? new Date();

@@ -106,7 +106,7 @@
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
-  <div class="w-100 d-flex justify-content-between">
+  <div class="w-100 d-flex justify-content-between" *ngIf="isMoveStage">
     <div class="fs-6 text-primary fw-bold">
       <codx-label
         fiedName="taskNo"
@@ -115,7 +115,7 @@
       >
       </codx-label>
     </div>
-    <div class="d-flex" *ngIf="isMoveStage">
+    <div class="d-flex" >
       <div class="d-flex me-5">
         <div class="me-2">
           <codx-input

@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   CacheService,
   CodxComboboxComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FilesService,
@@ -58,7 +59,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('cbxTrain') cbxTrain: any;
   @ViewChild('vllTrainLevel') vllTrainLevel: any;
-
   trainFieldID: string = '';
   trainLevel: string = '';
   funcID: string = '';
@@ -112,6 +112,9 @@ export class PopupAddEmployeeComponent implements OnInit {
           }
         })
     } else this.hasChangedData = true;
+  }
+  ngAfterViewInit() {
+    this.form.formGroup.patchValue({ joinedOn: null });
   }
 
   //get grvSetup
@@ -402,7 +405,6 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   //save data
   save(data: any, funcID: string) {
-    console.log(this.codxImg);
     if (data) {
       this.api
         .execSv(
@@ -416,10 +418,10 @@ export class PopupAddEmployeeComponent implements OnInit {
           if (res) {
             this.codxModifiedOn = new Date();
             this.data.employeeID = res.employeeID;
-            if(this.codxImg){
+            if (this.codxImg?.data?.url) {
               this.codxImg.objectId = res.employeeID;
               this.codxImg.uploadAvatar()
-            } 
+            }
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
             this.notifySV.notifyCode('SYS006');
             this.dialogRef.close(res);
