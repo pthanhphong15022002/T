@@ -692,7 +692,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     {
       this.api.exec(
         'ERM.Business.AC',
-        'CommonBusiness',
+        'ACBusiness',
         'GenerateAutoNumberAsync',
       )
       .subscribe((autoNumber: string) => {
