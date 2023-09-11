@@ -625,25 +625,57 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               }
             });
           } else if (element?.objectType == 'P') {
+            // if (element?.id != null) {
+            //   this.api
+            //     .execSv<any>(
+            //       'HR',
+            //       'HR',
+            //       'EmployeesBusiness',
+            //       'GetListUserIDByListPositionsIDAsync',
+            //       [element?.id]
+            //     )
+            //     .subscribe((res) => {
+            //       if (res) {
+            //         let listUserID = res[0].split(';');
+            //         if (listUserID != null && listUserID.length >= 2) {
+            //           this.notifySvr.alertCode('ES033').subscribe((x) => {
+            //             if (x.event?.status == 'Y') {
+            //               let appr = new Approvers();
+            //               appr.roleType = element?.objectType;
+            //               appr.name = element?.text;
+            //               appr.approver = element?.id;
+            //               appr.userID = listUserID[0];
+            //               appr.icon = element?.icon != null ? element?.icon : null;
+            //               this.lstApprover.push(appr);
+            //             } else {
+            //               return;
+            //             }
+            //           });
+            //         } else {
+            //           let appr = new Approvers();
+            //           appr.roleType = element?.objectType;
+            //           appr.name = element?.text;
+            //           appr.approver = element?.id;
+            //           appr.icon = element?.icon != null ? element?.icon : null;
+            //           appr.userID = listUserID[0];
+            //           this.lstApprover.push(appr);
+            //         }
+            //       }
+            //     });
+            // }
             if (element?.id != null) {
-              this.api
-                .execSv<any>(
-                  'HR',
-                  'HR',
-                  'EmployeesBusiness',
-                  'GetListUserIDByListPositionsIDAsync',
-                  [element?.id]
-                )
-                .subscribe((res) => {
-                  if (res) {
-                    let listUser = res[0].split(';');
-                    if (listUser != null && listUser.length >= 2) {
+              this.codxService.getUserIDByPositionsID(element?.id).subscribe(lstUserInfo=>{
+                
+                  if (lstUserInfo) {
+                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
                       this.notifySvr.alertCode('ES033').subscribe((x) => {
                         if (x.event?.status == 'Y') {
                           let appr = new Approvers();
                           appr.roleType = element?.objectType;
                           appr.name = element?.text;
                           appr.approver = element?.id;
+                          appr.userID = lstUserInfo[0]?.userID;
+                          appr.userName = lstUserInfo[0]?.userName;
                           appr.icon = element?.icon != null ? element?.icon : null;
                           this.lstApprover.push(appr);
                         } else {
@@ -656,6 +688,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                       appr.name = element?.text;
                       appr.approver = element?.id;
                       appr.icon = element?.icon != null ? element?.icon : null;
+                      appr.userID = lstUserInfo[0]?.userID;
+                      appr.userName = lstUserInfo[0]?.userName;
                       this.lstApprover.push(appr);
                     }
                   }

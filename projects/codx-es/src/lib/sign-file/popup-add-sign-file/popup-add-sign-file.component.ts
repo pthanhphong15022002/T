@@ -264,11 +264,13 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refDate = this.oSignFile?.refDate;
               this.data.refNo = this.oSignFile?.refNo;
               this.data.priority = this.oSignFile?.priority;
+              this.data.approveControl = this.oSignFile?.approveControl ?? this.data.approveControl ;
+              this.data.processID = this.oSignFile?.processID ?? this.data.processID ;
 
               this.isSaved = true;
               this.isAddNew = false;
-
-              this.esService
+              if(this.data.approveControl=="3"){
+                this.esService
                 .getCategoryByCateIDType(
                   this.data?.categoryID,
                   this.typeCategory
@@ -280,6 +282,12 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
+              }
+              else{                
+                this.processTab = 3;
+                this.initForm();
+              }
+              
             } else {
               this.esService
                 .getDataDefault(
@@ -299,8 +307,10 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.refNo = this.oSignFile.refNo;
                     this.data.priority = this.oSignFile.priority;
                     this.data.refType = this.oSignFile.refType;
-
-                    this.esService
+                    this.data.approveControl = this.oSignFile?.approveControl ?? this.data.approveControl ;
+                    this.data.processID = this.oSignFile?.processID ?? this.data.processID ;
+                    if(this.data.approveControl=="3"){
+                      this.esService
                       .getCategoryByCateIDType(
                         this.data?.categoryID,
                         this.typeCategory
@@ -311,6 +321,12 @@ export class PopupAddSignFileComponent implements OnInit {
                           this.initForm();
                         }
                       });
+                    }
+                    else{
+                      
+                      this.initForm();
+                    }
+                    
                   }
                 });
             }
@@ -431,7 +447,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.deptID = this.user.employee?.departmentID;
               this.data.divisionID = this.user.employee?.divisionID;
               this.data.companyID = this.user.employee?.companyID;
-              this.data.approveControl = '3';
+              this.data.approveControl = this.data.approveControl ?? '3';
               this.data.refDate = new Date();
 
               if (!this.data?.refNo) {
