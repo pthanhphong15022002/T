@@ -582,7 +582,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
                 morefunction.disabled = true;
             });
           }
-          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
+          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0' || this.journal.approvalControl == null)
           {
             bm.forEach((morefunction) => {
               if(morefunction.functionID == 'ACT070806' || morefunction.functionID == 'ACT070808')

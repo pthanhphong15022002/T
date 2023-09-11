@@ -121,12 +121,12 @@
         <div
           class="d-flex align-items-center w-100"
         >
-        
+          
           <!--Type User-->
           <codx-temp-full
             cardCss="card-template mb-4"
             *ngIf="item?.roleType=='U' "
-            [imageId]="item?.approver"
+            [imageId]=" item?.approver"
             [title]="item?.name"
             [subTitle]="item?.position ?? positionDefault"
             [imageObjType]="'AD_Users'"
@@ -142,15 +142,10 @@
           <codx-temp-full
             cardCss="card-template mb-4"
             *ngIf="item?.roleType=='P' "
-            [imageSrc]="
-          './assets/themes/sys/default/img/' +
-          (item?.icon ? item?.icon : 'share_default.svg')
-        "
-        [imageWidth]="20"
-        imgCss="w-30px p-3 me-3 user-mini-icon"
-        [imageWidth]="30"
+        [imageId]=" item?.userID"
+        
             [title]="item?.name"
-            [subTitle]="item?.roleType | vll : 'ES014' : 'text' | async"
+            [subTitle]="item?.userName "
             [imageObjType]="'AD_Users'"
             [imageWidth]="35"
             [titleLine]="3"
