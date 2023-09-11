@@ -128,8 +128,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
-  vllApprove = '';
-  vllStatus = '';
+  vllApprove = 'DP043';
+  vllStatus = 'CRM042';
   crrFuncID = '';
   nameModule: string = '';
   currencyIDDefault: any = 'VND';
