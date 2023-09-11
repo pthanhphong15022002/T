@@ -238,14 +238,15 @@ export class PopupAddComponent implements OnInit {
   checkValidate(){
     if(this.arrFieldRequire.length > 0)
     {
-      let arrFieldUnValid:string = "";
-      this.arrFieldRequire.forEach((key) => {
-        if (!this.data[Util.camelize(key)])
-          arrFieldUnValid += this.grvSetup[key]['headerText'] + ";";
-      });
-      if(arrFieldUnValid)
+      let arrFieldUnValid = this.arrFieldRequire.filter((key) => !this.data[Util.camelize(key)]);
+      if(arrFieldUnValid.length > 0)
       {
-        this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
+        this.notifSV.notifyCode("SYS009",0,arrFieldUnValid.join(";"));
+        return true;
+      }
+      if(this.data.newsType == 2 && this.fileImage == null)
+      {
+        this.notifSV.notifyCode("SYS009",0,this.grvSetup["Image"]['headerText']);
         return true;
       }
     }
@@ -392,7 +393,6 @@ export class PopupAddComponent implements OnInit {
 
   //update
   clickUpdate() {
-    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileDelete.length > 0)
