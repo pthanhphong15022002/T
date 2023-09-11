@@ -47,6 +47,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   countResource = 0;
   id: string;
   itemSelected: any;
+
+  @Output() changeMF = new EventEmitter<any>();
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
@@ -202,93 +204,96 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //cai nay khong goi ve vì no con view riêng
   changeDataMF(e, data) {
-    if (e) {
-      // sua ngay 08/06/2023 - clearn code
-      e.forEach((x) => {
-        switch (x.functionID) {
-          //tắt duyệt confirm
-          case 'TMT02016':
-          case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
-            break;
-          //an gia hạn cong viec
-          case 'TMT02019':
-          case 'TMT02027':
-            if (
-              (data.verifyControl == '0' &&
-                (data.category == '1' ||
-                  (data.owner == data.createdBy && data.category == '2'))) ||
-              data.status == '80' ||
-              data.status == '90' ||
-              data.status == '05' ||
-              data.extendControl == '0'
-            )
-              x.disabled = true;
-            break;
-          //tắt duyệt xác nhận:
-          case 'TMT04032':
-          case 'TMT04031':
-            if (data.verifyStatus != '1') x.disabled = true;
-            break;
-          //tắt duyệt đánh giá
-          case 'TMT04021':
-          case 'TMT04022':
-          case 'TMT04023':
-            if (data.approveStatus != '3') x.disabled = true;
-            break;
-          case 'SYS005':
-            x.disabled = true;
-            break;
-          //an giao viec
-          case 'TMT02015':
-          case 'TMT02025':
-          //an cap nhat tien do khi hoan tat
-          case 'TMT02018':
-          case 'TMT02026':
-          case 'TMT02035':
-            if (
-              data.status == '90' ||
-              data.status == '80' ||
-              data.status == '05' ||
-              data.status == '00'
-            )
-              x.disabled = true;
-            break;
-          //an voi ca TMT026
-          case 'SYS02':
-          case 'SYS03':
-            if (
-              this.taskExtends ||
-              this.formModel?.funcID == 'TMT0402' ||
-              this.formModel?.funcID == 'TMT0401' ||
-              this.formModel?.funcID == 'TMT0206' ||
-              this.formModel?.funcID == 'MWP0063' ||
-              ((this.formModel?.funcID == 'TMT03011' ||
-                this.formModel?.funcID == 'TMT05011') &&
-                data.category == '1' &&
-                data.createdBy != this.user?.userID &&
-                !this.user?.administrator)
-            )
-              x.disabled = true;
-            break;
-          case 'SYS04':
-            if (
-              this.formModel?.funcID == 'TMT0402' ||
-              this.formModel?.funcID == 'TMT0401' ||
-              this.formModel?.funcID == 'TMT0206' ||
-              this.formModel?.funcID == 'MWP0063' ||
-              this.taskExtends
-            )
-              x.disabled = true;
-            break;
-          //rieng extend
-          case 'TMT04011':
-          case 'TMT04012':
-            if (this.taskExtends.status != '3') x.disabled = true;
-            break;
-        }
-      });
-    }
+    if (this.taskExtends)
+      return this.changeMF.emit({ e: e, data: this.taskExtends });
+    this.changeMF.emit({ e: e, data: data });
+    // if (e) {
+    //   // sua ngay 08/06/2023 - clearn code
+    //   e.forEach((x) => {
+    //     switch (x.functionID) {
+    //       //tắt duyệt confirm
+    //       case 'TMT02016':
+    //       case 'TMT02017':
+    //         if (data.confirmStatus != '1') x.disabled = true;
+    //         break;
+    //       //an gia hạn cong viec
+    //       case 'TMT02019':
+    //       case 'TMT02027':
+    //         if (
+    //           (data.verifyControl == '0' &&
+    //             (data.category == '1' ||
+    //               (data.owner == data.createdBy && data.category == '2'))) ||
+    //           data.status == '80' ||
+    //           data.status == '90' ||
+    //           data.status == '05' ||
+    //           data.extendControl == '0'
+    //         )
+    //           x.disabled = true;
+    //         break;
+    //       //tắt duyệt xác nhận:
+    //       case 'TMT04032':
+    //       case 'TMT04031':
+    //         if (data.verifyStatus != '1') x.disabled = true;
+    //         break;
+    //       //tắt duyệt đánh giá
+    //       case 'TMT04021':
+    //       case 'TMT04022':
+    //       case 'TMT04023':
+    //         if (data.approveStatus != '3') x.disabled = true;
+    //         break;
+    //       case 'SYS005':
+    //         x.disabled = true;
+    //         break;
+    //       //an giao viec
+    //       case 'TMT02015':
+    //       case 'TMT02025':
+    //       //an cap nhat tien do khi hoan tat
+    //       case 'TMT02018':
+    //       case 'TMT02026':
+    //       case 'TMT02035':
+    //         if (
+    //           data.status == '90' ||
+    //           data.status == '80' ||
+    //           data.status == '05' ||
+    //           data.status == '00'
+    //         )
+    //           x.disabled = true;
+    //         break;
+    //       //an voi ca TMT026
+    //       case 'SYS02':
+    //       case 'SYS03':
+    //         if (
+    //           this.taskExtends ||
+    //           this.formModel?.funcID == 'TMT0402' ||
+    //           this.formModel?.funcID == 'TMT0401' ||
+    //           this.formModel?.funcID == 'TMT0206' ||
+    //           this.formModel?.funcID == 'MWP0063' ||
+    //           ((this.formModel?.funcID == 'TMT03011' ||
+    //             this.formModel?.funcID == 'TMT05011') &&
+    //             data.category == '1' &&
+    //             data.createdBy != this.user?.userID &&
+    //             !this.user?.administrator)
+    //         )
+    //           x.disabled = true;
+    //         break;
+    //       case 'SYS04':
+    //         if (
+    //           this.formModel?.funcID == 'TMT0402' ||
+    //           this.formModel?.funcID == 'TMT0401' ||
+    //           this.formModel?.funcID == 'TMT0206' ||
+    //           this.formModel?.funcID == 'MWP0063' ||
+    //           this.taskExtends
+    //         )
+    //           x.disabled = true;
+    //         break;
+    //       //rieng extend
+    //       case 'TMT04011':
+    //       case 'TMT04012':
+    //         if (this.taskExtends.status != '3') x.disabled = true;
+    //         break;
+    //     }
+    //   });
+    // }
   }
 
   searchName(e) {

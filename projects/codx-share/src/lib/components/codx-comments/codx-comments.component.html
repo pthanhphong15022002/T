@@ -41,10 +41,10 @@
                     <div class="d-flex position-relative w-fit-content" style="width: fit-content;">
                         <div class="my-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
-                                <img [src]="file.source" alt="" class="w-100 h-100px rounded" >
+                                <img [src]="file.source" alt="" class="w-200px h-auto rounded" >
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.VIDEO">
-                                <video controls class="w-100 h-100px rounded" [src]="file.source | safe:'resourceUrl'">
+                                <video controls class="w-200px h-auto rounded" [src]="file.source | safe:'resourceUrl'">
                                 </video>
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.APPLICATION">
@@ -144,10 +144,10 @@
                 <div class="d-flex my-3" (click)="clickViewFile(file)">
                     <ng-container *ngIf="file">
                         <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
-                            <img [src]="file.source" width="100px h-100px"/>
+                            <img [src]="file.source" class="w-200px h-auto rounded"/>
                         </ng-container>
                         <ng-container *ngIf="file.referType == REFERTYPE.VIDEO">
-                            <video controls [autoplay]="false" class="w-100 h-100px rounded" [src]="file.source | safe:'resourceUrl'">
+                            <video controls [autoplay]="false" class="w-200px h-100px rounded" [src]="file.source | safe:'resourceUrl'">
                             </video>
                         </ng-container>
                         <ng-container *ngIf="file.referType == REFERTYPE.APPLICATION">
