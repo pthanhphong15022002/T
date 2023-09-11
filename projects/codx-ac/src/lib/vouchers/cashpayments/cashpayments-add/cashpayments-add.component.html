@@ -52,7 +52,7 @@
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
   <div style="height: 250px !important">
-    <ejs-tab enablePersistence="true" (selected)="tabSelectedMaster($event)">
+    <ejs-tab enablePersistence="true" (selected)="onTabSelectedMaster($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -85,7 +85,7 @@
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)"
-      (selected)="tabSelectedDetail($event)">
+      (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
