@@ -402,6 +402,7 @@ export class PopupAddEmployeeComponent implements OnInit {
 
   //save data
   save(data: any, funcID: string) {
+    console.log(this.codxImg);
     if (data) {
       this.api
         .execSv(
@@ -414,6 +415,11 @@ export class PopupAddEmployeeComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.codxModifiedOn = new Date();
+            this.data.employeeID = res.employeeID;
+            if(this.codxImg){
+              this.codxImg.objectId = res.employeeID;
+              this.codxImg.onSaveFile(res.employeeID)
+            } 
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
             this.notifySV.notifyCode('SYS006');
             this.dialogRef.close(res);
