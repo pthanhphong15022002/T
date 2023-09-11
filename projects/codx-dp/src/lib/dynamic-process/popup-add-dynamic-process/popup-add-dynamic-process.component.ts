@@ -4503,15 +4503,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   formClear() {
     this.attachment?.clearData();
     this.imageAvatar.clearData();
-    this.stepList = [];
-    this.listStepAdd = [];
-    this.listStepDelete = [];
-    this.listStepEdit = [];
-    this.listStepDrop = [];
-    this.taskList = [];
-    this.taskGroupList = [];
-    this.roleGroupTaskOld = [];
-    this.listStepApprover = [];
-    this.listStepApproverDelete = [];
+    // this.stepList = [];
+    // this.listStepAdd = [];
+    // this.listStepDelete = [];
+    // this.listStepEdit = [];
+    // this.listStepDrop = [];
+    // this.taskList = [];
+    // this.taskGroupList = [];
+    // this.roleGroupTaskOld = [];
+    // this.listStepApprover = [];
+    // this.listStepApproverDelete = [];
+    // this.stepNew = null;
+    // this.stepEdit = null;
   }
 }
