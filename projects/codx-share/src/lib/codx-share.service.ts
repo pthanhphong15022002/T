@@ -213,7 +213,7 @@ export class CodxShareService {
           option.FormModel = formModel;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
-          //R;Kiểm tra;C;Góp ý;A1;Đồng thuận;---------;S1;Ký nháy;S2;Ký chính;----------S3;Đóng dấu;A2;Duyệt
+
           var listApproveMF = this.getMoreFunction(funcID,data?.unbounds?.stepType);
 
           let dialogApprove = this.callfunc.openForm(

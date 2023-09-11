@@ -506,6 +506,7 @@ export class PopupJobComponent implements OnInit {
       : JSON.parse(JSON.stringify(this.listTask));
     await this.getTasksWithoutLoop(this.stepsTasks, this.listTaskLink);
     this.stepsTasks['parentID'] = '';
+    this.listParentID = [];
   }
 
   async getTasksWithoutLoop(task, tasks) {

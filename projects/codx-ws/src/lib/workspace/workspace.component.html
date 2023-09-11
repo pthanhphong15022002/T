@@ -2,7 +2,7 @@
     <!-- <div #header class="my-3">
         <lib-header [funcID]="funcID"></lib-header>
     </div> -->
-    <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column py-4 px-6 scroll-y">
+    <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column pt-4 pb-60px px-6 scroll-y">
         <!-- begin content -->
           <ng-container *ngFor="let md of modules">
             <div class="d-flex flex-column my-2">
@@ -21,7 +21,9 @@
                     <span class="fs-7 opacity-75">{{c.countsNote}}</span>
                   </div>
                   <div class="d-flex justify-content-between align-items-center h-50px">
-                    <span class="icon-30px" [ngClass]="c.largeIcon"></span>
+                    <ng-container *ngIf="c?.smallIcon">
+                      <img class="w-40px h-40px" [src]="c.smallIcon"/>
+                    </ng-container>
                   </div>
                 </div>
               </div>

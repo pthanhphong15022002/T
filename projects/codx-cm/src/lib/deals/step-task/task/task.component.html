@@ -108,7 +108,7 @@
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
     <div
-      class="date text-nowrap mx-2"
+      class="date text-nowrap mx-2 cursor-pointer"
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
       [placement]="'top-left'"
@@ -141,26 +141,13 @@
       </div>
 
       <div
-        class="date text-nowrap mx-2"
+        class="date text-nowrap mx-2 cursor-pointer"
         #popoverTooltip="ngbPopover"
         [ngbPopover]="tooltipDate"
         [placement]="'top-left'"
         (mouseenter)="openTooltip(popoverTooltip, data?.value)"
         (mouseleave)="popoverTooltip.close()"
       >
-        <span
-          *ngIf="data?.value?.actualStart && data?.value?.status == '3'"
-          [innerHTML]="
-            data?.value?.actualStart
-              | formatvalue : grvMoreFunction : 'StartDate'
-              | async
-          "
-        ></span>
-        <span
-          class="mx-1"
-          *ngIf="data?.value?.actualStart && data?.value?.status == '3'"
-          >-</span
-        >
         <span
           *ngIf="data?.value?.actualEnd && data?.value?.status == '3'"
           [innerHTML]="
@@ -179,8 +166,8 @@
         ojectType="AD_Users"
         [numberImages]="1"
         [isToolTip]="true"
-        [objectId]="getRole(data?.value, 'ID')"
-        [objectName]="getRole(data?.value, 'name')"
+        [objectId]="data?.value?.owner"
+        [objectName]="getRoleName(data?.value)"
       >
       </codx-imgs>
     </span>
@@ -294,4 +281,3 @@
     </div>
   </div>
 </ng-template>
-

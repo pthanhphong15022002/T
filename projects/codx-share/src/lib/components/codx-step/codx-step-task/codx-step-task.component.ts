@@ -71,7 +71,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isDeepCopy = true; // copy sâu
   @Input() isAddTask = false;
   @Input() isShowStep = false;
-  @Input() isShowElement = true;       
+  @Input() isShowElement = true;  // thu gọn mở rộng group, task trong step     
   @Input() isShowComment = true;
   @Input() isShowBtnAddTask = true;
   @Input() isSaveProgress = true; // lưu progress vào db
@@ -192,7 +192,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (this.isOnlyView) {
         this.getTaskEnd();
       }
-      this.isShowElement = this.isOnlyView;
+      this.isShowElement =  this.isShowStep ? this.isOnlyView : true; 
     }
     if (changes?.groupTaskAdd && this.groupTaskAdd) {
       let indexGroupNoID = this.listGroupTask?.findIndex(
