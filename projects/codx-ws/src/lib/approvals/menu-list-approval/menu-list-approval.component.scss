@@ -32,3 +32,23 @@
     }
    
 }
+.ws-approval-layout>div:hover
+{
+    color: var(--text-primary);
+}
+.ws-approval-layout
+{
+    .active>span
+    {
+        color: var(--text-primary);
+    } 
+    .active  
+    {
+        .bullet
+        {
+            background-color: var(--text-primary) !important;
+        }
+    }   
+}
+
+  

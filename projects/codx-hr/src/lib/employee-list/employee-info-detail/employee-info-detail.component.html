@@ -2359,7 +2359,7 @@
                       class="timeline-exper-item"
                       [ngClass]="lstExperiences ? 'has-action-menu' : ''"
                     >
-                      <div class="timeline-exper-nav w-100 d-flex pb-4">
+                      <div class="timeline-exper-nav w-100 d-flex pb-5">
                         <div class="timeline-media w-125px min-w-125px">
                           <span class="stepper-number fw-bold">
                             {{ item.fromDate | date : "MM/y" }}
@@ -2374,7 +2374,7 @@
                             class="icon-fiber_manual_record text-gray-600"
                           ></span>
                         </div>
-                        <div class="stepper-label has-action-menu mb-2 py-2 hover-active bg-hover cursor-pointer"
+                        <div class="stepper-label min-w-350px has-action-menu hover-active bg-hover cursor-pointer"
                         
                         >
                           <div
@@ -6195,7 +6195,7 @@
 <!--#endregion-->
 
 <ng-template #templateECertificateGridCol1 let-data>
-  <div class="d-flex align-items-center mb-5px hover-active cursor-pointer" >
+  <div class="d-flex align-items-center mb-5px mt-2 hover-active cursor-pointer" >
     <!-- <i class="icon-class icon-16 text-primary me-2"></i> -->
     <span
       class="fw-bold item-active"
@@ -6238,48 +6238,50 @@
 </ng-template>
 
 <ng-template #templateECertificateGridCol2 let-data>
-  <div
-    class="d-flex align-items-center mb-5px"
-  placement="top" [title]="eCertificateHeaderText.TrainSupplierID"
+  <div class="py-2">
+    <div
+      class="d-flex align-items-center mb-5px"
+    placement="top" [title]="eCertificateHeaderText.TrainSupplierID"
 
-    [innerHTML]="
-      data?.trainSupplierID
-        | formatvalue : eCertificateFormModel : 'trainSupplierID'
-        | async
-    "
-  ></div>
-  <div class="d-flex flex-wrap">
-    <div class="d-flex align-items-center">
-      <span class="icon-insights icon-14 text-warning me-1"></span>
-      <span
-        class="text-warning"
-  placement="top" [title]="eCertificateHeaderText.Ranking"
-
-        #ranking
-        [innerHTML]="
-          data?.ranking
-            | formatvalue : eCertificateFormModel : 'ranking'
-            | async
-        "
-      >
-      </span>
-    </div>
-    <div class="d-flex align-items-center">
-      <span
-        class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-      ></span>
-      <span class="fw-bold text-primary">
+      [innerHTML]="
+        data?.trainSupplierID
+          | formatvalue : eCertificateFormModel : 'trainSupplierID'
+          | async
+      "
+    ></div>
+    <div class="d-flex flex-wrap">
+      <div class="d-flex align-items-center">
+        <span class="icon-insights icon-14 text-warning me-1"></span>
         <span
-          class="text-danger"
-          placement="top" [title]="eCertificateHeaderText.TotalScore"
+          class="text-warning"
+      placement="top" [title]="eCertificateHeaderText.Ranking"
+
+          #ranking
           [innerHTML]="
-            data?.totalScore
-              | formatvalue : eCertificateFormModel : 'totalScore'
+            data?.ranking
+              | formatvalue : eCertificateFormModel : 'ranking'
               | async
           "
         >
         </span>
-      </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold text-primary">
+          <span
+            class="text-danger"
+            placement="top" [title]="eCertificateHeaderText.TotalScore"
+            [innerHTML]="
+              data?.totalScore
+                | formatvalue : eCertificateFormModel : 'totalScore'
+                | async
+            "
+          >
+          </span>
+        </span>
+      </div>
     </div>
   </div>
   <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
@@ -6976,7 +6978,7 @@
 
 <!-- #region Bổ nhiệm columnGrid templates -->
 <ng-template #templateAppointionGridCol1 let-data>
-  <div class="py-1 hover-active cursor-pointer" >
+  <div class="py-2 hover-active cursor-pointer" >
     <div
       class="mb-2 fw-bold fs-6 item-active"
       (click)="viewGridDetail(data, appointionFuncID)"

@@ -1356,12 +1356,13 @@ button[type="button"]:focus {
 div.user-mini-nav {
   min-height: 26px;
   height: auto !important;
-  padding: 2px 8px 3px 2px !important;
-  margin-right: 6px;
+  padding: 2px 6px 1px 12px!important;
+  margin-right: 4px;
+  font-size: var(--fs-7);
 }
 
 div.user-mini-nav.mb-2 {
-  margin-bottom: 2px!important;
+  margin-bottom: 4px!important;
 }
 .w-30px.h-30px {
   min-width: 30px;
@@ -3155,6 +3156,15 @@ codx-vll.vll-post{
     border: none !important;
   }
 }
+.ip-header-tmpname.e-input
+{
+  height: 20px !important;
+  font-size: 15px !important;
+}
+.ip-header-tmpdes.e-input
+{
+  height: 20px !important;
+}
 /*TBChung thêm á đừng xóa tội em*/
 .card-survey .e-checkbox-wrapper .e-checkbox{
   opacity: 1;
@@ -3599,8 +3609,12 @@ codx-view-list-tree{
     left: 0;
     right: 0;
     bottom: 0;
+    height: 42px;
     background-color: white;
     z-index: 99;
+    &.expand{
+      height: 400px;
+    }
   }
   .codx-detail-toolbar{
     background-color: white;
@@ -3792,4 +3806,33 @@ lib-employee-policybenefits ejs-listview .e-content{
 
 .page-profile .user-right .pw-content{
   max-height: calc(100vh - 125px)!important;
+}
+
+.when-hover-box:hover .then-text-primary{
+  color: var(--primary-dark)!important;
+}
+.when-hover-box .codx-detail-main{
+  padding-bottom: 36px!important;
+}
+.h-ws-header {
+  .toolbar{
+    margin-bottom: 10px!important;
+    padding: 0!important;
+   
+  }
+  .codx-detail-main{
+    height: auto;
+    margin-bottom: 30px;
+  }
+  .codx-detail-footer{
+    bottom: 32px!important;
+  }
+}
+codx-user-inner{
+  .menu-title.position-relative{
+    text-align: left!important;
+  }
+}
+.attach-noheight .attach-files{
+  max-height: none!important;
 }

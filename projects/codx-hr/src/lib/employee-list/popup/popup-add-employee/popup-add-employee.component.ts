@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   CacheService,
   CodxComboboxComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FilesService,
@@ -58,7 +59,6 @@ export class PopupAddEmployeeComponent implements OnInit {
   @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('cbxTrain') cbxTrain: any;
   @ViewChild('vllTrainLevel') vllTrainLevel: any;
-
   trainFieldID: string = '';
   trainLevel: string = '';
   funcID: string = '';
@@ -113,6 +113,9 @@ export class PopupAddEmployeeComponent implements OnInit {
         })
     } else this.hasChangedData = true;
   }
+  ngAfterViewInit() {
+    this.form.formGroup.patchValue({ joinedOn: null });
+  }
 
   //get grvSetup
   getGrvSetup(fromName: string, grdViewName: string) {
@@ -151,12 +154,18 @@ export class PopupAddEmployeeComponent implements OnInit {
               .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
                 if (posInfo) {
-                  this.data['jobLevel'] = posInfo.jobLevel ? posInfo.jobLevel : null;
-                  this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
-                  this.form.formGroup.patchValue({
-                    jobLevel: this.data.jobLevel,
-                    orgUnitID: this.data.orgUnitID,
-                  });
+                  if (posInfo.jobLevel) {
+                    this.data['jobLevel'] = posInfo.jobLevel;
+                    this.form.formGroup.patchValue({
+                      jobLevel: this.data.jobLevel,
+                    });
+                  }
+                  if (posInfo.orgUnitID) {
+                    this.data['orgUnitID'] = posInfo.orgUnitID ? posInfo.orgUnitID : null;
+                    this.form.formGroup.patchValue({
+                      orgUnitID: this.data.orgUnitID,
+                    });
+                  }
                   // this.getOrgNote();
                 }
               });
@@ -408,6 +417,11 @@ export class PopupAddEmployeeComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.codxModifiedOn = new Date();
+            this.data.employeeID = res.employeeID;
+            if (this.codxImg?.data?.url) {
+              this.codxImg.objectId = res.employeeID;
+              this.codxImg.uploadAvatar()
+            }
             this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
             this.notifySV.notifyCode('SYS006');
             this.dialogRef.close(res);
