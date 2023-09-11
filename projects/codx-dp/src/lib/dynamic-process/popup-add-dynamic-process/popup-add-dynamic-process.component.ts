@@ -650,8 +650,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
-          this.attachment?.clearData();
-          this.imageAvatar.clearData();
           if (res) {
             this.dialog.close(res.save);
             this.dpService.upDataApprovalStep(
@@ -664,6 +662,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             //   if (this.recIDCategory) {
             //     this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
             //   }
+            this.formClear();
           }
         });
     } else {
@@ -687,6 +686,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.codxService.navigate('', `shared/settings/CMS`);
             this.dialog.close(res);
             this.notiService.notifyCode('SYS006');
+            this.formClear();
           }
         });
     }
@@ -697,8 +697,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
-          this.attachment?.clearData();
-          this.imageAvatar.clearData();
           if (res && res.update) {
             this.dpService.upDataApprovalStep(
               this.listStepApprover,
@@ -713,6 +711,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             let isUseSuccess = this.stepSuccess.isUsed;
             let isUseFail = this.stepFail.isUsed;
             let dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
+
             this.dpService
               .countInstanceByProccessId(dataCountInstance)
               .subscribe((totalInstance) => {
@@ -724,6 +723,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   this.dialog.close(res.update);
                 }
               });
+            this.formClear();
           }
         });
     } else {
@@ -756,6 +756,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.codxService.navigate('', `shared/settings/CMS`);
             this.dialog.close(res);
             this.notiService.notifyCode('SYS007');
+            this.formClear();
           }
         });
     }
@@ -4497,5 +4498,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
         }
       });
+  }
+
+  formClear() {
+    this.attachment?.clearData();
+    this.imageAvatar.clearData();
+    this.stepList = [];
+    this.listStepAdd = [];
+    this.listStepDelete = [];
+    this.listStepEdit = [];
+    this.listStepDrop = [];
+    this.taskList = [];
+    this.taskGroupList = [];
+    this.roleGroupTaskOld = [];
+    this.listStepApprover = [];
+    this.listStepApproverDelete = [];
   }
 }
