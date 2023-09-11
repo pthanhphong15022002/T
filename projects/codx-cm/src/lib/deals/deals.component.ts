@@ -128,8 +128,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
-  vllApprove = '';
-  vllStatus = '';
+  vllApprove = 'DP043';
+  vllStatus = 'CRM042';
   crrFuncID = '';
   nameModule: string = '';
   currencyIDDefault: any = 'VND';
@@ -1128,6 +1128,7 @@ export class DealsComponent
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
+      categoryCustomer: this.dataSelected.categoryCustomer
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1171,6 +1172,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
+          categoryCustomer: this.dataSelected.categoryCustomer
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
