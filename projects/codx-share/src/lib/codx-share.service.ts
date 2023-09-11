@@ -1491,6 +1491,7 @@ export class CodxShareService {
     signFile.approveControl = "2";
     signFile.processID = approveProcess?.template?.processID;
     signFile.categoryID = approveProcess?.category?.categoryID;
+    signFile.category = approveProcess?.category?.category;
     signFile.refID = approveProcess?.recID;
     signFile.refType = approveProcess?.entityName;
     signFile.title = approveProcess?.title;

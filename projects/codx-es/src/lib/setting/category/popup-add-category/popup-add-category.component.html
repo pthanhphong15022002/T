@@ -141,7 +141,7 @@
     </codx-view-approval-step>
   </ng-template>
   <ng-template #tabTemplate>
-    <div >
+    <div *ngIf="(isAdd && isSaved)||!isAdd">
       <button type="button" class="btn btn-light-primary me-3" (click)="templateMF('add', this.sfModel)">
         <codx-label name="lblAddTemplate" [formModel]="formModel" default="Thêm mới mẫu">
         </codx-label>
