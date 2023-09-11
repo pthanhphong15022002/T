@@ -348,7 +348,7 @@ export class CashPaymentsComponent extends UIComponent {
       .copy((o) => this.setDefault())
       .subscribe((res: any) => {
         if (res != null) {
-          dataCopy.voucherNo = res?.voucherNo;
+          dataCopy = res;
           let data = {
             action: 'copy', //? trạng thái của form (chỉnh sửa)
             headerText: this.headerText, //? tiêu đề voucher
@@ -422,22 +422,26 @@ export class CashPaymentsComponent extends UIComponent {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ
-        x.functionID == 'ACT041002' || // MF gửi duyệt
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || // Mf khôi phục
+        x.functionID == 'ACT041003' || // MF ghi sổ (PC)
+        x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
+        x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
+        x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
+        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
+        x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
+        x.functionID == 'ACT041008' || // Mf khôi phục (PC)
+        x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
         x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // Mf in
-        x.functionID == 'ACT041009' // MF kiểm tra tính hợp lệ
+        x.functionID == 'ACT041010' || // Mf in (PC)
+        x.functionID == 'ACT042907' || // Mf in (UNC)
+        x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
+        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
+        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
     );
     if (arrBookmark.length > 0) {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -447,10 +451,7 @@ export class CashPaymentsComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
+              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -458,10 +459,7 @@ export class CashPaymentsComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041002' ||
-                element.functionID == 'ACT041010'
-              ) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -469,18 +467,9 @@ export class CashPaymentsComponent extends UIComponent {
             });
           }
           break;
-        case '2':
-        case '4':
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
         case '3':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041004' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -489,10 +478,7 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -501,10 +487,7 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041008' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -513,14 +496,16 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
             }
+          });
+          break;
+        default:
+          arrBookmark.forEach((element) => {
+            element.disabled = true;
           });
           break;
       }
@@ -654,10 +639,10 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          this.itemSelected = event?.data;
-          return;
-        }
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // }
         this.itemSelected = event?.data;
         this.getDatadetail(this.itemSelected);
         this.detectorRef.detectChanges();
@@ -766,8 +751,12 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode('AC0029', 0, text);
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode(
+            'AC0029',
+            0,
+            text
+          );
           this.detectorRef.detectChanges();
         }
       });
@@ -801,7 +790,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
+          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
