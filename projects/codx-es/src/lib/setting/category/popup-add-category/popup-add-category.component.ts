@@ -75,7 +75,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   type: string;
   parentRecID: string;
   oldRecID: string;
-
+  isES=false;
   //test to update signtype for all step
   isChangeSignatureType: boolean = false;
   signatureType: string;
@@ -126,6 +126,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     } else this.data = JSON.parse(JSON.stringify(data?.data?.data));
     this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
+    this.isES = data?.data?.isES;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
     this.type = data?.data?.type;
@@ -686,8 +687,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             sfData.category=this.data.category;
             sfData.categoryID=this.data.categoryID; 
             sfData.title = this.data?.categoryName;
-            sfData.categoryID = this.data?.categoryID;
-            sfData.refType = this.data?.category ?? 'ES_SignFiles';
+            sfData.refType = this.isES ? 'ES_SignFiles' : this.data?.category;
             sfData.owner = this.authService?.userValue?.userID;
             sfData.isTemplate = true;
             sfData.processID = this.data?.recID;
@@ -730,51 +730,52 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openPopupSignFile() {
-    let option = new SidebarModel();    
-    option.FormModel = this.signFileFM;
-    let isAddNew = false;
-    this.esService
-      .getTemplateOfCategory(this.data?.categoryID)
-      .subscribe((res: any) => {
-        if (res) {
-          let signFile = res;
-          if (signFile.categoryID == null || signFile.categoryID == '') {
-            signFile.title = this.data?.categoryName;
-            signFile.categoryID = this.data?.categoryID;
-            signFile.refType = 'ES_Categories';
-            signFile.owner = this.authService?.userValue?.userID;
-            signFile.isTemplate = true;
-            signFile.processID = this.data?.recID;
-            signFile.approveControl = '3';
-            signFile.buid = this.curUser?.buid;
-            signFile.createdBy = this.authService?.userValue?.userID;
-            signFile.createdOn = new Date();
-            isAddNew=true;
-          }
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          let dialogAdd = this.callfunc.openForm(
-            PopupAddSignFileComponent,
-            'Thêm mới',
-            700,
-            650,
-            this.signFileFM.funcID,
-            {
-              data: signFile,
-              isAddNew: isAddNew,
-              formModel: this.signFileFM,
-              option: option,
-              disableCateID: true,
-              isTemplate: true,
-              refType:'ES_Categories'
-            },
-            '',
-            dialogModel
-          );
-        }
-      });
-  }
+  // openPopupSignFile() {
+  //   let option = new SidebarModel();    
+  //   option.FormModel = this.signFileFM;
+  //   let isAddNew = false;
+  //   this.esService
+  //     .getTemplateOfCategory(this.data?.categoryID)
+  //     .subscribe((res: any) => {
+  //       if (res) {
+  //         let signFile = res;
+  //         if (signFile.categoryID == null || signFile.categoryID == '') {
+  //           signFile.title = this.data?.categoryName;
+  //           signFile.categoryID = this.data?.categoryID;
+  //           signFile.category = this.data?.category;
+  //           signFile.refType = 'ES_SignFiles';
+  //           signFile.owner = this.authService?.userValue?.userID;
+  //           signFile.isTemplate = true;
+  //           signFile.processID = this.data?.recID;
+  //           signFile.approveControl = '3';
+  //           signFile.buid = this.curUser?.buid;
+  //           signFile.createdBy = this.authService?.userValue?.userID;
+  //           signFile.createdOn = new Date();
+  //           isAddNew=true;
+  //         }
+  //         let dialogModel = new DialogModel();
+  //         dialogModel.IsFull = true;
+  //         let dialogAdd = this.callfunc.openForm(
+  //           PopupAddSignFileComponent,
+  //           'Thêm mới',
+  //           700,
+  //           650,
+  //           this.signFileFM.funcID,
+  //           {
+  //             data: signFile,
+  //             isAddNew: isAddNew,
+  //             formModel: this.signFileFM,
+  //             option: option,
+  //             disableCateID: true,
+  //             isTemplate: true,
+  //             refType:'ES_Categories'
+  //           },
+  //           '',
+  //           dialogModel
+  //         );
+  //       }
+  //     });
+  // }
 
   setViewAutoNumber(modelAutoNumber) {
     let vllDateFormat;

@@ -59,6 +59,7 @@ export class EmployeeListByOrgComponent {
   funcIDEmpInfor: string = 'HRT03b';
   itemSelected;
   hadEmitDataService = false;
+  inputTimes = 0;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -164,9 +165,11 @@ export class EmployeeListByOrgComponent {
         this.getManager(this.orgUnitID);
       }
       if (this.grid) {
-        this.grid.dataService.rowCount = 0;
+        // this.grid.dataService.rowCount = null;
+        //this.grid.dataService.rowCount = 0;
         //clearInterval(ins);
         this.grid.refresh();
+        //clearInterval(ins);
         if (this.grid && this.editable && !this.hadEmitDataService) {
           this.hadEmitDataService = true;
           this.gridViewDataService.emit(this.grid.dataService);
@@ -327,7 +330,7 @@ export class EmployeeListByOrgComponent {
                   clearInterval(ins);
                   this.grid.refresh();
                 }
-              }, 100);
+              }, 200);
             }
             if (this.showManager)
               this.getManager(this.orgUnitID);
@@ -390,5 +393,4 @@ export class EmployeeListByOrgComponent {
       }
     });
   }
-
 }

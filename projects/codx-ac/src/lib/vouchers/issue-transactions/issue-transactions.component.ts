@@ -33,6 +33,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
+import { Vouchers } from '../../models/Vouchers.model';
 
 @Component({
   selector: 'lib-issue-transactions',
@@ -80,6 +81,7 @@ export class IssueTransactionsComponent extends UIComponent {
   loading: any = false;
   loadingAcct: any = false;
   journal: IJournal;
+  voucherCopy: Vouchers = new Vouchers();
   hideFields: Array<any> = [];
   fmVouchers: FormModel = {
     formName: 'VouchersIssues',
@@ -193,7 +195,7 @@ export class IssueTransactionsComponent extends UIComponent {
         this.edit(e, data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
@@ -234,6 +236,7 @@ export class IssueTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
+            oData: res?.data,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -276,6 +279,7 @@ export class IssueTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
+            oData: res,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -301,9 +305,10 @@ export class IssueTransactionsComponent extends UIComponent {
       });
   }
 
-  copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
+  copy(dataCopy) {
+    if(dataCopy)
+    {
+      this.voucherCopy = Object.assign(this.voucherCopy, dataCopy);
     }
     this.view.dataService
       .copy((o) => this.setDefault(o))
@@ -311,6 +316,10 @@ export class IssueTransactionsComponent extends UIComponent {
       .subscribe((res: any) => {
         if(res)
         {
+          this.voucherCopy.recID = res?.data.recID;
+          this.voucherCopy.voucherNo = res?.data.voucherNo;
+          this.voucherCopy.status = res?.data.status;
+          this.voucherCopy['_uuid'] = res?.data['_uuid'];
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
@@ -318,6 +327,7 @@ export class IssueTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
+            oData: { ...this.voucherCopy },
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -334,7 +344,7 @@ export class IssueTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data'];
+                this.itemSelected = res.event['data']?.data;
                 this.loadDatadetail(this.itemSelected);
               }
             }
@@ -407,7 +417,7 @@ export class IssueTransactionsComponent extends UIComponent {
         this.detectorRef.detectChanges();
       });
     this.api
-      .exec('AC', 'AcctTransBusiness', 'GetListDataDetailAsync', [data.recID])
+      .exec('AC', 'AcctTransBusiness', 'GetAccountingAsync', [data.recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if(res)
@@ -582,7 +592,7 @@ export class IssueTransactionsComponent extends UIComponent {
                 morefunction.disabled = true;
             });
           }
-          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0')
+          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0' || this.journal.approvalControl == null)
           {
             bm.forEach((morefunction) => {
               if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')

@@ -162,7 +162,7 @@
     <div class="d-flex justify-content-between align-items-center mt-1">
       <div class="d-flex align-items-end codx-badge">
         <div
-          *ngIf="data.status == '2'; else statusDefault"
+          *ngIf="data?.status == '2'; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
           }"
@@ -214,7 +214,7 @@
             class="text-gray-700"
             #modifiedOn
             [innerHTML]="
-              data.modifiedOn
+              data?.modifiedOn
                 | formatvalue : view.formModel : 'modifiedOn'
                 | async
             "
@@ -251,10 +251,10 @@
         </span>
         <span
           class="line-clamp-menu"
-          [ngbTooltip]="data.headerText"
+          [ngbTooltip]="data?.headerText"
           [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
         >
-          {{ data.headerText }}
+          {{ data?.headerText }}
         </span>
       </div>
     </div>
@@ -673,7 +673,7 @@
     <codx-imgs
       [isToolTip]="true"
       [width]="25"
-      [objectId]="data.owner"
+      [objectId]="data?.owner"
       objectType="AD_Users"
       [numberImages]="1"
     >
@@ -730,7 +730,7 @@
     #expectedClosed
     [ngbTooltip]="gridViewSetup['ExpectedClosed']?.headerText"
     [innerHTML]="
-      data.expectedClosed
+      data?.expectedClosed
         | formatvalue : view.formModel : 'expectedClosed'
         | async
     "
