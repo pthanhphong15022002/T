@@ -19,7 +19,10 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
-import { ComboBoxComponent, MultiSelectComponent } from '@syncfusion/ej2-angular-dropdowns';
+import {
+  ComboBoxComponent,
+  MultiSelectComponent,
+} from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -33,7 +36,7 @@ export class PopupJobComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
-  
+
   step: DP_Steps;
   dialog!: DialogRef;
   stepsTasks: DP_Steps_Tasks;
@@ -44,7 +47,7 @@ export class PopupJobComponent implements OnInit {
 
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
-  fieldsFields= { text: 'title', value: 'recID' };
+  fieldsFields = { text: 'title', value: 'recID' };
 
   typeTask;
   action = 'add';
@@ -93,10 +96,15 @@ export class PopupJobComponent implements OnInit {
     this.isBoughtTM = dt?.data?.isBoughtTM;
     this.stepID = this.step?.recID;
     this.stepName = this.step?.stepName;
-    if (dt?.data?.listGroup) { // remove group task recID null
+    if (dt?.data?.listGroup) {
+      // remove group task recID null
       this.listGroupTask = dt?.data?.listGroup || [];
-      this.listGroupTaskCombobox = JSON.parse(JSON.stringify(this.listGroupTask));
-      let index = this.listGroupTaskCombobox?.findIndex((group) => !group.recID);
+      this.listGroupTaskCombobox = JSON.parse(
+        JSON.stringify(this.listGroupTask)
+      );
+      let index = this.listGroupTaskCombobox?.findIndex(
+        (group) => !group.recID
+      );
       if (index >= 0) {
         this.listGroupTaskCombobox?.splice(index, 1);
       }
@@ -127,31 +135,44 @@ export class PopupJobComponent implements OnInit {
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) || [];
-    this.participant = this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) || [];
+    this.owner =
+      this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) ||
+      [];
+    this.participant =
+      this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) ||
+      [];
 
-    let group = this.listGroupTask?.find((x) => x.recID === this.stepsTasks?.taskGroupID);
-    let listTaskConvert = group?.recID ? JSON.parse(JSON.stringify(group?.task)) : JSON.parse(JSON.stringify(this.listTask));
+    let group = this.listGroupTask?.find(
+      (x) => x.recID === this.stepsTasks?.taskGroupID
+    );
+    let listTaskConvert = group?.recID
+      ? JSON.parse(JSON.stringify(group?.task))
+      : JSON.parse(JSON.stringify(this.listTask));
     await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);
     this.listTaskLink = listTaskConvert;
-    this.listParentID = this.stepsTasks?.parentID ? this.stepsTasks?.parentID?.split(';') : [];
+    this.listParentID = this.stepsTasks?.parentID
+      ? this.stepsTasks?.parentID?.split(';')
+      : [];
 
-    this.listFieldID = this.stepsTasks?.fieldID ? this.stepsTasks?.fieldID?.split(';') : [];
+    this.listFieldID = this.stepsTasks?.fieldID
+      ? this.stepsTasks?.fieldID?.split(';')
+      : [];
     this.listFields = this.step?.fields || [];
 
     let listField = [];
     if (this.step?.tasks?.length > 0) {
-      this.step.tasks.forEach(task => {
+      this.step.tasks.forEach((task) => {
         if (task?.fieldID && task.recID != this.stepsTasks?.recID) {
           listField.push(...task.fieldID.split(';'));
         }
       });
     }
-    this.listFields = this.step?.fields.filter(field => !listField.includes(field.recID));
+    this.listFields = this.step?.fields.filter(
+      (field) => !listField.includes(field.recID)
+    );
   }
 
-  ngAfterViewInit(){
-  }
+  ngAfterViewInit() {}
   getFormModel() {
     this.cache
       .gridViewSetup(
@@ -262,6 +283,8 @@ export class PopupJobComponent implements OnInit {
     } else {
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          this.attachment?.clearData();
+
           if (res) {
             if (res?.length >= 0) {
               res.forEach((item) => {
@@ -525,5 +548,4 @@ export class PopupJobComponent implements OnInit {
     });
   }
   //#endregion
-  
 }

@@ -805,7 +805,7 @@ export class LeadsComponent
       applyFor: this.applyForLead,
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
-      applyProcess: this.dataSelected.applyProcess,
+      applyProcess: this.dataSelected?.applyProcess,
       listCategory: this.listCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
@@ -1487,7 +1487,7 @@ export class LeadsComponent
     popup.closed.subscribe((e) => {});
   }
   checkApplyProcess(data) {
-    return data.applyProcess;
+    return data?.applyProcess;
   }
   saveCopy() {
     if (this.dataSelected.status === this.statusDefault) {

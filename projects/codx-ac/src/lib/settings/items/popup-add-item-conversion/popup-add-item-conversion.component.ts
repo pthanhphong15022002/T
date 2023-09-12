@@ -51,6 +51,10 @@ export class PopupAddItemConversionComponent extends UIComponent {
       this.itemConversion.itemID = this.dialogData.data.itemID;
     }
 
+    if (!this.isEdit) {
+      this.itemConversion.toUMID = this.dialogData.data.umid;
+    }
+
     this.dialogRef.beforeClose.subscribe(
       (res) => (res.event = this.savedItemConversions)
     );
@@ -92,8 +96,6 @@ export class PopupAddItemConversionComponent extends UIComponent {
       !this.acService.validateFormData(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup,
-        [],
-        ['ItemID']
       )
     ) {
       return;

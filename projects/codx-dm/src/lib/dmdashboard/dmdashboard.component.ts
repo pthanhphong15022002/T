@@ -64,6 +64,12 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     valueType: 'Category',
   };
 
+  public levels: object = [
+    // { groupPath: 'Country', border: { color: 'black', width: 0.5 } },
+    // { groupPath: 'JobDescription', border: { color: 'black', width: 0.5 } },
+    // { groupPath: 'JobGroup', border: { color: 'black', width: 0.5 } },
+  ];
+
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
@@ -245,26 +251,5 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
 
   getThumbnail(data) {
     return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;
-  }
-
-  viewFile(id: string) {
-    var dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    this.fileService.getFile(id).subscribe((fileInfo: any) => {
-      if (fileInfo && fileInfo.read) {
-        this.callfc.openForm(
-          ViewFileDialogComponent,
-          fileInfo.fileName,
-          1000,
-          800,
-          '',
-          [fileInfo, this.view?.currentView?.formModel],
-          '',
-          dialogModel
-        );
-      } else {
-        this.notificationsService.notifyCode('SYS032');
-      }
-    });
   }
 }

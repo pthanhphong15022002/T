@@ -29,7 +29,6 @@ export class PopAddDimensionSetupComponent
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText: string;
-  formModel: FormModel;
   dimensionSetup: DimensionSetup = new DimensionSetup();
   type: any;
   isPopupCbb: any;
@@ -65,7 +64,6 @@ export class PopAddDimensionSetupComponent
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
     if (this.dimensionSetup.dimType == null) {
       this.dimensionSetup.dimType = this.type;
     }
