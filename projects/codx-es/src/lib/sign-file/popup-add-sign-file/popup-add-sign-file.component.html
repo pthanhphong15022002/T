@@ -232,7 +232,7 @@
                       hideImageUpload="0" [objectId]="data?.recID" hideBtnSave="1" hideFolder="1"
                       [hideUploadBtn]="isTemplate? '1':'0'" [functionID]="formModelCustom?.funcID" type="inline"
                       (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="source"
-                      [tmpRightThumb]="tmpRightAttach">
+                      [tmpRightThumb]="tmpRightAttach" [isFristVer]="data?.approveStatus !='5' ? true : false">
                     </codx-attachment>
                   </div>
                   <ng-template #tmpRightAttach let-file>
