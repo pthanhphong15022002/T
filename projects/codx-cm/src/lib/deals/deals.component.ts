@@ -128,8 +128,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
-  vllApprove = '';
-  vllStatus = '';
+  vllApprove = 'DP043';
+  vllStatus = 'CRM042';
   crrFuncID = '';
   nameModule: string = '';
   currencyIDDefault: any = 'VND';
@@ -1114,7 +1114,6 @@ export class DealsComponent
       var formMD = new FormModel();
       option.Width = '800px';
       option.zIndex = 1001;
-      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -1128,6 +1127,7 @@ export class DealsComponent
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
+      exchangeRateDefault: this.exchangeRateDefault,
       categoryCustomer: this.dataSelected.categoryCustomer
     };
     let dialogCustomDeal = this.callfc.openSide(

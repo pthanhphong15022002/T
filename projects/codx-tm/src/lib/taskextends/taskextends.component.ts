@@ -106,7 +106,9 @@ export class TaskExtendsComponent
     });
   }
   //#endregion
-
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
   receiveMF(e: any) {
     this.clickMF(e.e, this.taskExtends);
   }

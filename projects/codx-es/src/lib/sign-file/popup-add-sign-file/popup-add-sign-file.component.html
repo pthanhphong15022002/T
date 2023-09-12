@@ -31,26 +31,6 @@
           modeView != '1'
         ">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <!-- <div [ngClass]="
-              isAddNew ? 'stepper-item active' : 'stepper-item approve'
-            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
-              <div class="stepper-icon h-30px">
-                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
-                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
-                  <span class="icon-check icon-18"></span>
-                </div>
-                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
-                  <span class="icon-check icon-18"></span>
-                </div>
-              </div>
-              <div class="stepper-label" [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''">
-                <codx-label name="lblUploadFile" default="Tải tài liệu" [formModel]="formModelCustom"></codx-label>
-              </div>
-            </div>
-          </div> -->
-
           <div [ngClass]="
               isAddNew ? 'stepper-item active' : 'stepper-item approve'
             " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
@@ -69,13 +49,12 @@
                 <codx-label name="lblFileInfo" default="Thông tin tài liệu" [formModel]="formModelCustom"></codx-label>
               </div>
             </div>
-            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
-          <div *ngIf="!editApprovers" [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+          <div  [ngClass]="
+              [isAddNew ? 'stepper-item' : 'stepper-item approve-disabled',showStepSetting && !editApprovers ? 'visible' :'d-none']
             " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
+            <div *ngIf="showStepSetting && !editApprovers" class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
@@ -90,7 +69,6 @@
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModelCustom"></codx-label>
               </div>
             </div>
-            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
           <div *ngIf="eSign == true" [ngClass]="
               isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
@@ -119,6 +97,16 @@
             modeView != '1' &&
             modeView != '2'
           ">
+          <!-- <div *ngIf="currentTab == 2 && !isTemplate && data?.approveControl=='3'" class=" d-flex flex-grow-1">
+
+            <ejs-combobox 
+              id='templateArea' 
+              #templateArea [dataSource]='sfTemplates'           
+              [fields]='fields' 
+              (valueChange)="applyTemplate($event)"
+            ></ejs-combobox>
+          </div> -->
+
           <div ngbDropdown class="dropdown d-flex flex-row" [style.visibility]="
               currentTab == 2 && data.files?.length > 0 ? 'visible' : 'hidden'
             ">
@@ -152,11 +140,11 @@
                 </a>
               </li>
             </ul>
-            <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
+            <!-- <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" *ngIf="isTemplate "
               (click)="openTemplateName(addTemplateName)">
               <codx-label Name="lblAprrove" [formModel]="dialog.formModel"
                 default="Lưu thành quy trình mẫu"></codx-label>
-            </a>
+            </a> -->
           </div>
 
           <button class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()"
@@ -181,9 +169,6 @@
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
         <div class="mb-6 mt-9 text-center tab-pane-header">
           <h2 class="h2-title">
-            <!-- <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModelCustom"
-              default="Upload file">
-            </codx-label> -->
             <codx-label *ngIf="currentTab == 0" name="lblTitleAddSignFile" [formModel]="formModelCustom"
               default="Bổ sung thông tin tài liệu">
             </codx-label>
@@ -231,28 +216,6 @@
                         </button> -->
                       </span>
                     </button>
-                    <!-- <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('excel')">
-                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1"  [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'es-bg-primary-light':''">
-                      <span class="d-flex flex-row justify-content-between align-items-center ">
-                        <i class="fa-solid fa-file-excel fs-2 pe-3" style="color: #347442;"></i>
-                        <codx-label name="lblExcelTemplate" default="Excel Template" class="fw-bold" [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'':'text-secondary'"></codx-label>
-                      </span>
-                      <button type="button" [ngClass]="data?.templateType == 'AD_ExcelTemplates'?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == 'AD_ExcelTemplates')"
-                       (click)="addEditTemplateFile('excel')">                    
-                      </button>
-                    </span>
-                  </button>
-                  <button class="col-4 px-1 es-button" role="button"(click)="chooseTemplateType('word')">
-                    <span class="d-flex flex-row justify-content-between align-items-center es-pick-template rounded-2 px-2 py-1"  [ngClass]="data?.templateType == 'AD_WordTemplates'?'es-bg-primary-light':''">
-                      <span class="d-flex flex-row justify-content-between align-items-center ">
-                        <i class="fa-solid fa-file-word fs-2  pe-3" style="color: #005dc7;"></i>
-                        <codx-label name="lblWordTemplate" default="Word Template" class="fw-bold" [ngClass]="data?.templateType == 'AD_WordTemplates'?'':'text-secondary'"></codx-label>
-                      </span>
-                      <button type="button" [ngClass]="data?.templateType == 'AD_WordTemplates'?'es-upload-button text-primary':'text-secondary'" class="es-button rounded-2 icon-i-upload px-2 py-2" [disabled]="!(data?.templateType == 'AD_WordTemplates')"
-                       (click)="addEditTemplateFile('word')">                    
-                      </button>
-                    </span>
-                  </button>  -->
 
                   </div>
 
@@ -272,11 +235,6 @@
                       [tmpRightThumb]="tmpRightAttach">
                     </codx-attachment>
                   </div>
-
-                  <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0" [objectId]="data.recID"
-                  hideBtnSave="1" hideFolder="1" [hideUploadBtn]="'0'" [functionID]="formModelCustom.funcID" type="inline"
-                  (fileDelete)="fileDelete($event)" (fileCount)="fileCount($event)" referType="sign" [tmpRight]="tmpRightAttach">
-                </codx-attachment> -->
                   <ng-template #tmpRightAttach let-file>
                     <div *ngIf="eSign">
                       <codx-input type="checkbox" [checked]="checkFileESign(file?.recID)"
@@ -296,13 +254,6 @@
                     <div class="form-group">
                       <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
                       </codx-label>
-                      <!-- <codx-input
-                      field="categoryID"
-                      [formModel]="formModelCustom"
-                      [Group]="dialogSignFile"
-                      [disabled]="disableCateID"
-                    >
-                    </codx-input> -->
                       <codx-input field="categoryID" [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup['CategoryID']['description']" [refValue]="
                         this.cbxCategory ??
@@ -367,7 +318,7 @@
             </div>
 
 
-            <div *ngIf="!editApprovers" class="tab-pane fade" id="pane_2"
+            <div *ngIf="!editApprovers && showStepSetting" class="tab-pane fade" id="pane_2"
               [ngClass]="currentTab == 1 ? 'active show' : ''">
               <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
                 data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
@@ -413,8 +364,17 @@
             <codx-label name="lblContinue" [formModel]="formModelCustom" default="Tiếp tục"></codx-label>
           </button>
 
-          <div class="d-flex" *ngIf="eSign == false && currentTab == 1 && !editApprovers && modeView != '2'">
+          <div class="d-flex" *ngIf="eSign == false && currentTab == 1 && !editApprovers && showStepSetting && modeView != '2'">
             <ng-container>
+              <!-- <div *ngIf="currentTab == 2 && !isTemplate && data?.approveControl=='3'">
+
+              <ejs-combobox 
+                id='templateArea2' 
+                #templateArea2 [dataSource]='sfTemplates'           
+                [fields]='fields' 
+                (valueChange)="applyTemplate($event)"
+              ></ejs-combobox>
+              </div> -->
               <div ngbDropdown class="dropdown">
                 <button
                   class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
@@ -447,11 +407,11 @@
                   </li>
                 </ul>
               </div>
-              <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+              <!-- <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
                 *ngIf="isTemplate " (click)="openTemplateName(addTemplateName)">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel"
                   default="Lưu thành quy trình mẫu"></codx-label>
-              </a>
+              </a> -->
               <button class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
                 *ngIf="!isTemplate " (click)="release()" [disabled]="isReleasing">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
@@ -462,13 +422,16 @@
       </div>
     </div>
     <div class="stepper-body  pt-2 w-100" *ngIf="currentTab == 2 && data.files?.length > 0 && data?.recID">
-      <lib-pdf [recID]="data?.recID" [isApprover]="false" [oApprovalTrans]="data" [isEditable]="
-          (data?.approveStatus == '1' || data?.approveStatus == '2') &&
-          modeView != '1'
-            ? true
-            : false
-        " (isAreaControl)="setValueAreaControl($event)">
-      </lib-pdf>
+      <div *ngIf="showPdf">
+        <lib-pdf #pdfView [recID]="data?.recID" [isApprover]="false" [oApprovalTrans]="data" [isEditable]="
+        (data?.approveStatus == '1' || data?.approveStatus == '2') &&
+        modeView != '1'
+          ? true
+          : false
+      " (isAreaControl)="setValueAreaControl($event)">
+    </lib-pdf>
+      </div>
+      
     </div>
   </div>
 </div>

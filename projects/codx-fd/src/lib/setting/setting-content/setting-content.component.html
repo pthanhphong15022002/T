@@ -2,13 +2,13 @@
   <div class="btn-primary btn" (click)="closePopUp()">X</div>
 </div>
 <div
-  class="group w-100 h-100 bg-body rounded-2 p-9 scroll-y"
+  class="group w-100 h-100 bg-body rounded-3 p-6 scroll-y"
   *ngIf="groupSettings && groupSettings[cate.value]"
 >
   <div class="d-flex" *ngIf="curLineType > firstLineType">
-    <div class="back btn btn-primary" (click)="changeLineType(null, false)">
-      Back
-    </div>
+    <button type="button" class="btn btn-icon btn-white" (click)="changeLineType(null, false)">
+      <span class="icon-arrow_back"></span>
+    </button>
     <div class="d-flex flex-column">
       <div class="fs-4 ms-3 fw-bold text-dark category-title">
         {{ curGroup?.tilte }}
@@ -45,117 +45,119 @@
 
         <div
           *ngSwitchDefault
-          class="category-title d-flex mt-5 list-item bg-hover"
+          class="category-title d-flex py-3 list-item bg-hover border-bottom border-gray-150"
         >
           <div class="setting-btnright align-items-center">
             <span class="w-30px d-flex justify-content-center">
               <span [class]="'icon-18 ' + row.icon"></span
             ></span>
           </div>
-
-          <div
-            *ngIf="row.controlType == 'GroupControl'; else rowDetail"
-            class="fs-4 fw-bold text-dark category-title"
-          >
-            {{ row.tilte }}
-          </div>
-          <ng-template #rowDetail>
+          <div class="d-flex flex-column w-100">
             <div
-              class="d-flex justify-content-between mb-2 list-item w-100 ms-5"
-            >
-              <div class="d-flex flex-column">
-                <div class="title fw-bold text-dark">
-                  {{ row.tilte }}
-                </div>
-                <div class="text-gray-500 pt-1">
-                  {{ row.description }}
-                </div>
-              </div>
+              *ngIf="row.controlType == 'GroupControl'; else rowDetail"
+              class="fs-4 fw-bold text-dark category-title"
+              >
+              {{ row.tilte }}
             </div>
-          </ng-template>
-
-          <ng-container
-            *ngIf="(row.fieldName && row?.controlType) || row.displayMode"
-            class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
-          >
-            <div class="d-flex align-items-center" [ngSwitch]="row.reference">
-              <div *ngSwitchCase="'FDPolicies'">
-                <codx-input
-                  [field]="row.fieldName"
-                  [refType]="row?.referedType"
-                  type="switch"
-                  [crrValue]="row?.actived"
-                  (valueChange)="changeActivePolicy(row, $event)"
-                >
-                </codx-input>
+            <ng-template #rowDetail>
+              <div
+                class="d-flex justify-content-between mb-2 list-item w-100 ms-5"
+              >
+                <div class="d-flex flex-column">
+                  <div class="title fw-bold text-dark">
+                    {{ row.tilte }}
+                  </div>
+                  <div class="text-gray-500 pt-1">
+                    {{ row.description }}
+                  </div>
+                </div>
               </div>
-              <div *ngSwitchDefault>
-                <div *ngIf="row.fieldName && row?.controlType">
+            </ng-template>
+          </div>
+          <div class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control pe-3">
+            <ng-container
+              *ngIf="(row.fieldName && row?.controlType) || row.displayMode"
+              class="fd-control"
+            >
+              <div class="d-flex align-items-center" [ngSwitch]="row.reference">
+                <div *ngSwitchCase="'FDPolicies'">
                   <codx-input
                     [field]="row.fieldName"
                     [refType]="row?.referedType"
-                    [refValue]="row?.referdValue"
-                    [type]="row.controlType"
-                    [style]="
-                      row.controlType &&
-                      (row.controlType.toLowerCase() == 'textbox' ||
-                        row.controlType.toLowerCase() == 'combobox')
-                        ? 'width: 200px'
-                        : ''
-                    "
-                    [crrValue]="
-                      setingValues[row.transType ?? '']
-                        ? setingValues[row.transType ?? ''][row.fieldName]
-                        : ''
-                    "
-                    (valueChange)="
-                      changeFieldValue(
-                        formName,
-                        row.transType ?? '',
-                        row.category,
-                        $event
-                      )
-                    "
-                  ></codx-input>
+                    type="switch"
+                    [crrValue]="row?.actived"
+                    (valueChange)="changeActivePolicy(row, $event)"
+                  >
+                  </codx-input>
+                </div>
+                <div *ngSwitchDefault>
+                  <div *ngIf="row.fieldName && row?.controlType">
+                    <codx-input
+                      [field]="row.fieldName"
+                      [refType]="row?.referedType"
+                      [refValue]="row?.referdValue"
+                      [type]="row.controlType"
+                      [style]="
+                        row.controlType &&
+                        (row.controlType.toLowerCase() == 'textbox' ||
+                          row.controlType.toLowerCase() == 'combobox')
+                          ? 'width: 200px'
+                          : ''
+                      "
+                      [crrValue]="
+                        setingValues[row.transType ?? '']
+                          ? setingValues[row.transType ?? ''][row.fieldName]
+                          : ''
+                      "
+                      (valueChange)="
+                        changeFieldValue(
+                          formName,
+                          row.transType ?? '',
+                          row.category,
+                          $event
+                        )
+                      "
+                    ></codx-input>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div [ngSwitch]="row.displayMode" class="d-flex align-items-center">
-              <button
-                *ngSwitchCase="'1'"
-                class="setting-btnright"
-                style="border: none; background: none"
-                [disabled]="
-                  row.reference == 'FDPolicies' && row.actived == false
-                "
-                (click)="changeLineType(row, true)"
-              >
-                <span class="w-30px d-flex justify-content-center"
-                  ><span class="icon-keyboard_arrow_right icon-22"></span
-                ></span>
-              </button>
-              <div *ngSwitchCase="'2'">
+              <div [ngSwitch]="row.displayMode" class="d-flex align-items-center">
                 <button
-                  href="javascript:void(0)"
-                  (click)="openPopup($event, row)"
+                  *ngSwitchCase="'1'"
+                  class="setting-btnright"
                   style="border: none; background: none"
                   [disabled]="
                     row.reference == 'FDPolicies' && row.actived == false
                   "
+                  (click)="changeLineType(row, true)"
                 >
                   <span class="w-30px d-flex justify-content-center"
-                    ><span
-                      class="icon-18"
-                      [ngClass]="
-                        row.category == '5' ? 'icon-email' : 'icon-edit-one'
-                      "
-                    ></span
+                    ><span class="icon-keyboard_arrow_right icon-22"></span
                   ></span>
                 </button>
+                <div *ngSwitchCase="'2'">
+                  <button
+                    href="javascript:void(0)"
+                    (click)="openPopup($event, row)"
+                    style="border: none; background: none"
+                    [disabled]="
+                      row.reference == 'FDPolicies' && row.actived == false
+                    "
+                  >
+                    <span class="w-30px d-flex justify-content-center"
+                      ><span
+                        class="icon-18"
+                        [ngClass]="
+                          row.category == '5' ? 'icon-email' : 'icon-edit-one'
+                        "
+                      ></span
+                    ></span>
+                  </button>
+                </div>
               </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
       </ng-container>
     </div>
