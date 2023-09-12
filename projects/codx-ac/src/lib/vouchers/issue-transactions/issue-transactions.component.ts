@@ -236,7 +236,7 @@ export class IssueTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
-            oData: res?.data,
+            oData: res,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -316,10 +316,10 @@ export class IssueTransactionsComponent extends UIComponent {
       .subscribe((res: any) => {
         if(res)
         {
-          this.voucherCopy.recID = res?.data.recID;
-          this.voucherCopy.voucherNo = res?.data.voucherNo;
-          this.voucherCopy.status = res?.data.status;
-          this.voucherCopy['_uuid'] = res?.data['_uuid'];
+          this.voucherCopy.recID = res.recID;
+          this.voucherCopy.voucherNo = res.voucherNo;
+          this.voucherCopy.status = res.status;
+          this.voucherCopy['_uuid'] = res['_uuid'];
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
