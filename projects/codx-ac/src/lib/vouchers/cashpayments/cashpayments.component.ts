@@ -542,6 +542,7 @@ export class CashPaymentsComponent extends UIComponent {
         // }
         this.itemSelected = event?.data;
         this.getDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
       }
     }
   }
@@ -704,6 +705,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res) {
           this.journal = res?.journal; // data journal
           this.hideFields = res?.hideFields; // array field ẩn từ sổ nhật kí
+          this.detectorRef.detectChanges();
         }
       });
   }

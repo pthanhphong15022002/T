@@ -7,8 +7,6 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
   CRUDService,
   CodxFormComponent,
@@ -21,15 +19,12 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { lastValueFrom } from 'rxjs';
-import { CodxAcService } from '../../../codx-ac.service';
 import {
   IJournal,
   Vll067,
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { TableLineDetailComponent } from '../components/table-line-detail/table-line-detail.component';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../salesinvoices.service';
@@ -47,16 +42,13 @@ export class SalesinvoicesAddComponent
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
-  @ViewChild('tableLineDetail') tableLineDetail: TableLineDetailComponent;
 
-  initialMaster: ISalesInvoice;
-  prevMaster: ISalesInvoice;
   master: ISalesInvoice = {} as ISalesInvoice;
+  prevMaster: ISalesInvoice;
   prevLine: ISalesInvoicesLine;
   masterService: CRUDService;
-  gvsSalesInvoicesLines: any;
-  fmSalesInvoicesLines: FormModel;
 
+  fmSalesInvoicesLines: FormModel;
   baseCurr: string;
   journal: IJournal;
   hiddenFields: string[] = [];
@@ -66,37 +58,27 @@ export class SalesinvoicesAddComponent
     { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'link', textDefault: 'Liên kết', isActive: false },
   ];
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
+  defaultLineData: ISalesInvoicesLine;
 
   isEdit: boolean = false;
   isReturnInvoice: boolean;
 
-  defaultLineData: ISalesInvoicesLine;
-
   constructor(
     injector: Injector,
+    salesInvoiceService: SalesInvoiceService,
     private journalService: JournalService,
-    private salesInvoiceService: SalesInvoiceService,
     private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
     this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
-    this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
     this.journal = salesInvoiceService.journal;
 
     this.masterService = dialogRef.dataService;
     this.isEdit = dialogData.data.formType === 'edit';
-    this.masterService.hasSaved = this.isEdit;
     this.master = this.dialogRef.dataService?.dataSelected;
     this.prevMaster = { ...this.master };
-    this.initialMaster = { ...this.master };
 
     this.isReturnInvoice = dialogRef.formModel.funcID === 'ACT0701';
   }
@@ -108,33 +90,33 @@ export class SalesinvoicesAddComponent
       this.baseCurr = res[0]?.baseCurr;
     });
 
-    this.editSettings.mode =
-      this.journal.addNewMode == '2' ? 'Dialog' : 'Normal';
-
     this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
     this.setDefaultLineData();
   }
 
-  ngAfterViewInit(): void {
-    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
-      this.form.formGroup.controls['voucherNo'].removeValidators(
-        Validators.required
-      );
-      this.form.formGroup.updateValueAndValidity();
-    }
-  }
+  ngAfterViewInit(): void {}
   //#endregion
 
   //#region Event
+  onAfterFormInit(form: CodxFormComponent) {
+    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+      form.setRequire([
+        {
+          field: 'voucherNo',
+          require: false,
+        },
+      ]);
+    }
+  }
+
   onGridInit(grid: CodxGridviewV2Component): void {
     if (this.journal.addNewMode === '2') {
       return;
     }
 
-    grid.hideColumns(this.hiddenFields);
-
     const requiredFields: string[] = [];
+    grid.hideColumns(this.hiddenFields);
 
     if (
       [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
@@ -204,27 +186,38 @@ export class SalesinvoicesAddComponent
     }
   }
 
-  onClickSave(closeAfterSave: boolean): void {
-    if (this.form.formGroup.invalid) {
-      return;
-    }
-
+  onAfterValidation(o): void {
     if (
       this.journal.transLimit &&
       this.master.totalAmt > this.journal.transLimit
     ) {
       this.notiService.notifyCode('AC0016');
-      return;
+      o.cancle = true;
     }
+  }
 
+  onClickSave(closeAfterSave: boolean): void {
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
       'AC',
       'AC_SalesInvoices',
       this.form,
-      this.masterService.hasSaved,
-      () => this.save(closeAfterSave)
+      this.form.data._isEdit,
+      () => {
+        this.master.status = '1';
+        this.form.save().subscribe((res: any) => {
+          if (res === false || res.save?.error || res.update?.error) {
+            return;
+          }
+
+          if (closeAfterSave) {
+            this.dialogRef.close();
+          } else {
+            this.resetForm();
+          }
+        });
+      }
     );
   }
 
@@ -243,18 +236,51 @@ export class SalesinvoicesAddComponent
   }
 
   onClickAddRow(): void {
-    if (this.form.formGroup.invalid) {
-      return;
-    }
-
     this.journalService.checkVoucherNoBeforeSave(
       this.journal,
       this.master,
       'AC',
       'AC_SalesInvoices',
       this.form,
-      this.masterService.hasSaved,
-      async () => await this.addRow()
+      this.form.data._isEdit,
+      () => {
+        // save master before adding a new row
+        this.form.save(null, null, null, null, false).subscribe((res) => {
+          if (res === false || res.save?.error || res.update?.error) {
+            return;
+          }
+
+          if (this.journal.addNewMode === '1') {
+            this.grid.addRow(
+              this.createNewSalesInvoiceLine(),
+              this.grid.dataSource.length
+            );
+          } else {
+            // const dialogModel = new DialogModel();
+            // dialogModel.FormModel = this.fmSalesInvoicesLines;
+            // dialogModel.DataService = this.detailService;
+            // this.callfc
+            //   .openForm(
+            //     SalesinvoiceslinesAddComponent,
+            //     'This param is not working',
+            //     500,
+            //     700,
+            //     '',
+            //     {
+            //       formType: 'add',
+            //       index: this.grid.dataSource.length,
+            //     },
+            //     '',
+            //     dialogModel
+            //   )
+            //   .closed.subscribe(({ event }) => {
+            //     if (event?.length > 0) {
+            //       this.tableLineDetail.grid.refresh();
+            //     }
+            //   });
+          }
+        });
+      }
     );
   }
 
@@ -293,16 +319,17 @@ export class SalesinvoicesAddComponent
       return;
     }
 
+    const field: string = e.field.toLowerCase();
     const postFields: string[] = [
-      'objectID',
-      'currencyID',
-      'exchangeRate',
-      'voucherDate',
+      'objectid',
+      'currencyid',
+      'exchangerate',
+      'voucherdate',
     ];
-    if (postFields.includes(e.field)) {
+    if (postFields.includes(field)) {
       this.api
         .exec('AC', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
-          e.field,
+          field,
           this.master,
         ])
         .subscribe((res: any) => {
@@ -321,10 +348,6 @@ export class SalesinvoicesAddComponent
   //#region Event SalesInvoicesLines
   onCellChange(e): void {
     console.log('onCellChange', e);
-
-    if (!this.master) {
-      return;
-    }
 
     if (this.prevLine?.[e.field] == e.data[e.field]) {
       return;
@@ -383,81 +406,6 @@ export class SalesinvoicesAddComponent
   //#endregion
 
   //#region Method
-  save(closeAfterSave: boolean): void {
-    this.master.status = '1';
-
-    if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(this.master.recID, this.master);
-    }
-
-    this.masterService.save().subscribe((res: any) => {
-      if (res.save.data || res.update.data) {
-        if (closeAfterSave) {
-          this.dialogRef.close();
-        } else {
-          this.resetForm();
-        }
-      }
-    });
-  }
-
-  /** Save master before adding a new row */
-  async addRow(): Promise<void> {
-    const { updateColumns: a, updateColumn: b, ...rest1 } = this.master as any;
-    const {
-      updateColumns: c,
-      updateColumn: d,
-      ...rest2
-    } = this.initialMaster as any;
-    if (JSON.stringify(rest1) !== JSON.stringify(rest2)) {
-      if (this.masterService.hasSaved) {
-        this.masterService.updateDatas.set(this.master.recID, this.master);
-      }
-
-      const res: any = await lastValueFrom(
-        this.masterService.save(null, null, null, null, false)
-      );
-
-      if (!res.save.data && !res.update.data) {
-        return;
-      }
-
-      this.masterService.hasSaved = true;
-      this.initialMaster = { ...this.master };
-    }
-
-    if (this.journal.addNewMode === '1') {
-      this.grid.addRow(
-        this.createNewSalesInvoiceLine(),
-        this.grid.dataSource.length
-      );
-    } else {
-      // error ??
-      // const dialogModel = new DialogModel();
-      // dialogModel.FormModel = this.fmSalesInvoicesLines;
-      // dialogModel.DataService = this.detailService;
-      // this.callfc
-      //   .openForm(
-      //     SalesinvoiceslinesAddComponent,
-      //     'This param is not working',
-      //     500,
-      //     700,
-      //     '',
-      //     {
-      //       formType: 'add',
-      //       index: this.grid.dataSource.length,
-      //     },
-      //     '',
-      //     dialogModel
-      //   )
-      //   .closed.subscribe(({ event }) => {
-      //     if (event?.length > 0) {
-      //       this.tableLineDetail.grid.refresh();
-      //     }
-      //   });
-    }
-  }
-
   resetForm(): void {
     this.masterService
       .addNew(() =>
@@ -466,13 +414,10 @@ export class SalesinvoicesAddComponent
         ])
       )
       .subscribe((res: ISalesInvoice) => {
-        this.master = this.form.formModel.currentData = res;
+        this.master = this.form.data = this.form.formModel.currentData = res;
         this.form.formGroup.patchValue(res);
 
-        this.initialMaster = { ...this.master };
         this.prevMaster = { ...this.master };
-        this.form.formGroup.patchValue(res);
-        this.masterService.hasSaved = false;
         this.grid.dataSource = [];
 
         this.setDefaultLineData();
