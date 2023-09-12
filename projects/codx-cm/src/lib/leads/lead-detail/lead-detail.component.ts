@@ -75,6 +75,7 @@ export class LeadDetailComponent implements OnInit {
   isBool: boolean = false;
   hasRunOnce: boolean = false;
   isShow = false;
+  isLoadOwner: boolean = true;
 
   tabControl = [
     {
@@ -139,7 +140,7 @@ export class LeadDetailComponent implements OnInit {
           template: this.referencesDeal,
           icon: 'icon-i-link',
         };
-
+        this.isLoadOwner = false;
         if (
           this.oldRecId !== changes['dataSelected'].currentValue?.recID &&
           this.oldRecId
@@ -147,9 +148,11 @@ export class LeadDetailComponent implements OnInit {
           this.hasRunOnce = true;
           this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
+          this.isLoadOwner = true;
         }
         !this.hasRunOnce && this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
+
         this.tabControl.push(references);
       } else {
         this.tmpDeal = null;
