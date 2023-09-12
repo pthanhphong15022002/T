@@ -67,4 +67,5 @@ export interface ISalesInvoice {
   refType: string;
   sendMail: string;
   sendSMS: string;
+  channelID: string;
 }

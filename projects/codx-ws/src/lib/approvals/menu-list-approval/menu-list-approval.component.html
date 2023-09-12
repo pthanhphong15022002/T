@@ -9,9 +9,9 @@
         </div>
     </div>
     <ng-template #list>
-        <div class="d-flex align-items-center ms-6 mt-2 cursor-pointer" [class.active]="selectedIndex == item" *ngFor="let item of listFavorite ; let i = index" (click)="selectedChange(item)">
+        <div class="d-flex align-items-center ms-6 mt-2 cursor-pointer" [class.active]="selectedIndex == item?.functionID" *ngFor="let item of listFavorite ; let i = index" (click)="selectedChange(item)">
             <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-            <span class="ms-2">{{item}}</span>
+            <span class="ms-2">{{item?.customName}}</span>
         </div>
     </ng-template>
     <ng-template #group>
@@ -24,7 +24,7 @@
                           </ng-template>
                           <ng-template #content>
                             {{""}}
-                            <div class="d-flex align-items-center cursor-pointer" [class.active]="selectedIndex == itemChild?.functionID" *ngFor="let itemChild of item?.child ; let i = index" (click)="selectedChange(itemChild?.functionID)">
+                            <div class="d-flex align-items-center cursor-pointer" [class.active]="selectedIndex == itemChild?.functionID" *ngFor="let itemChild of item?.child ; let i = index" (click)="selectedChange(itemChild)">
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="ms-2">{{itemChild?.customName}}</span>
                             </div>

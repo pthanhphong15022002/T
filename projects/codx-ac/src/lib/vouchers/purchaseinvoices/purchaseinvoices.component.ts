@@ -408,13 +408,13 @@ export class PurchaseinvoicesComponent
       .exec(
         'AC',
         'AcctTransBusiness',
-        'GetListDataDetailAsync',
-        'e973e7b7-10a1-11ee-94b4-00155d035517'
+        'GetAccountingAsync',
+        '8dfddc85-4d44-11ee-8552-d880839a843e'
       )
       .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.acctTranLines = this.groupBy(res.lsAcctrants, 'entryID');
+          this.acctTranLines = this.groupBy(res, 'entryID');
         }
 
         this.acctLoading = false;
