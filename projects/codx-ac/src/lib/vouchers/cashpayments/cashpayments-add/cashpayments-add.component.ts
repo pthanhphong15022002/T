@@ -275,21 +275,23 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
       this.notification.alertCode('AC0014', null).subscribe((res) => {
         if (res.event.status === 'Y') {
-          this.detectorRef.detectChanges();
-          this.dialog.dataService
-            .delete([this.formCashPayment?.data], false, null, '', '', null, null, false)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res) => {
-              if (res.data != null) {
-                this.detectorRef.detectChanges();
-                this.refreshGrid();
-                this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
-                this.showHideTabDetail(
-                  this.formCashPayment?.data?.subType,
-                  this.elementTabDetail
-                );
-              }
-            });
+          let obj = {
+            SubType : event.data[0]
+          }
+          this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+            'subType',
+            this.formCashPayment.data,
+            JSON.stringify(obj)
+          ])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+            this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+            this.showHideTabDetail(
+              this.formCashPayment?.data?.subType,
+              this.elementTabDetail
+            );
+          });
         } else {
           // this.cbxSub.dropdownContent.value = this.cashpayment.subType;
           // this.dt.detectChanges();
@@ -335,7 +337,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
                 this.showHideColumn();
                 this.detectorRef.detectChanges();
               }
-              if (this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length) {
+              if ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length)) {
+                this.dialog.dataService.update(this.formCashPayment.data).subscribe();
                 this.refreshGrid();
               }
               if (this.formCashPayment.data.journalType == 'BP') {
@@ -428,6 +431,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
                   this.formCashPayment.setValue('exchangeRate',res.exchangeRate,{ onlySelf: true, emitEvent: false }); //? lấy tỷ giá của currency
                   this.detectorRef.detectChanges();
                 }
+                this.dialog.dataService.update(this.formCashPayment.data).subscribe();
                 this.showHideColumn();
                 this.refreshGrid();
               }
@@ -436,7 +440,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
 
         //* Tỷ giá
         case 'exchangerate':
-          if (this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length) {
+          if ((this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length) ) {
             this.api
               .exec('AC', 'CashPaymentsBusiness', 'UpdateLineAsync', [
                 this.formCashPayment.data,
@@ -444,6 +448,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               ])
               .subscribe((res) => {
                 if (res) {
+                  this.dialog.dataService.update(this.formCashPayment.data).subscribe();
                   this.refreshGrid();
                 }
               });
@@ -462,6 +467,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
               if (this.formCashPayment.data.exchangeRate != res.exchangeRate) {
                 this.formCashPayment.setValue('exchangeRate',res.exchangeRate,{ onlySelf: true, emitEvent: false }); //? lấy tỷ giá của currency
                 this.detectorRef.detectChanges();
+                this.dialog.dataService.update(this.formCashPayment.data).subscribe();
                 setTimeout(() => {
                   this.refreshGrid();
                 }, 100);
@@ -677,8 +683,8 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    * *Hàm lưu chứng từ
    * @returns
    */
-  onSaveVoucher() { 
-    this.formCashPayment.save()
+  onSaveVoucher() {
+    this.formCashPayment.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
@@ -1161,10 +1167,23 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         hCR2 = true; //? mode 1 tài khoản => hiện cột có,HT
       }
     }
-    this.settingFormatGridCashPayment(this.eleGridCashPayment);
     this.eleGridCashPayment.showHideColumns(['DR2'], hDR2);
     this.eleGridCashPayment.showHideColumns(['CR2'], hCR2);
     this.settingFormatGridCashPayment(this.eleGridCashPayment);
+    }
+
+    if (this.eleGridSettledInvoices) {
+      let hBalAmt2 = false;
+      let hSettledAmt2 = false;
+      let hSettledDisc2 = false;
+      if (this.formCashPayment.data.currencyID != this.baseCurr) { //? nếu tiền tệ chứng từ là ngoại tệ
+        hBalAmt2 = true;
+        hSettledAmt2 = true;
+        hSettledDisc2 = true;
+      }
+      this.eleGridSettledInvoices.showHideColumns(['BalAmt2'], hBalAmt2);
+      this.eleGridSettledInvoices.showHideColumns(['SettledAmt2'], hSettledAmt2);
+      this.eleGridSettledInvoices.showHideColumns(['SettledDisc2'], hSettledDisc2);
     }
     this.refreshGrid();
   }
@@ -1405,15 +1424,12 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   refreshGrid() {
     if(this.eleGridCashPayment){
-      this.eleGridCashPayment.dataSource = [];
       this.eleGridCashPayment.refresh();
     }
     if(this.eleGridSettledInvoices){
-      this.eleGridSettledInvoices.dataSource = [];
       this.eleGridSettledInvoices.refresh();
     }
     if(this.eleGridVatInvoices){
-      this.eleGridVatInvoices.dataSource = [];
       this.eleGridVatInvoices.refresh();
     }
   }
