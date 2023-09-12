@@ -154,8 +154,9 @@ export class LeadDetailComponent implements OnInit {
         this.oldRecId = changes['dataSelected'].currentValue.recID;
 
         this.tabControl.push(references);
-      } else {
-        this.tmpDeal = null;
+        if(!this.dataSelected?.dealID) {
+          this.tmpDeal = null;
+        }
       }
       this.getTags(this.dataSelected);
     }
