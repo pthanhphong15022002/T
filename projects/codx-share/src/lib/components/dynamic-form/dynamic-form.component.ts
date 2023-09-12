@@ -312,6 +312,7 @@ export class DynamicFormComponent extends UIComponent {
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         dialog.closed.subscribe((item) => {
           var dt = item?.event?.save;
+          dt.data.category = option.FormModel.entityName;
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
