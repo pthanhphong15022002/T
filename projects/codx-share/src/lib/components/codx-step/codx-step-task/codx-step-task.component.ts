@@ -332,12 +332,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let f = await firstValueFrom(this.cache.functionList(functionID) || null);
     let formModel = {};
-    formModel['formName'] = f?.formName;
-    formModel['gridViewName'] = f?.gridViewName;
-    formModel['entityName'] = f?.entityName;
-    formModel['funcID'] = functionID;
+    if(f){
+      formModel['formName'] = f?.formName;
+      formModel['gridViewName'] = f?.gridViewName;
+      formModel['entityName'] = f?.entityName;
+      formModel['funcID'] = functionID;
+    }
     return formModel;
   }
 
@@ -2294,7 +2296,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (countTask > 0) {
       let sumProgress = 0;
       let check = false;
-
       const processTask = (task) => {
         task.progress = 100;
         task.status = '3';
@@ -2304,8 +2305,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
       if (isRequired) {
         group?.task?.forEach((task) => {
-          if (task?.requireCompleted) {
+          if (task?.requireCompleted || task?.isChange) {
             processTask(task);
+          }else{
+            task.progress = task?.progressOld;
+            task.status = task?.statusOld;
           }
           sumProgress += task.progress;
         });
@@ -2325,18 +2329,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   
-  resetProgress(group, progressData) {
+  resetProgress(group, progressData,isRequired = false) {
     let countTask = group?.task?.length;
     if (countTask > 0) {
       let sumProgress = 0;
       group?.task?.forEach((task) => {
-        if (task?.requireCompleted) {
-          task.progress = task?.progressOld;
-          task.status = task?.statusOld;
-          if (task?.isChange) {
-            progressData.push(this.setProgressOutput(null, group));
-          }
-        }
+        task.progress = task?.progressOld;
+        task.status = task?.statusOld;
+        if (task?.isChange) {
+          progressData.push(this.setProgressOutput(null, group));
+        }   
         sumProgress += task.progress;
       });
       if (group?.isChangeAuto) {
@@ -2349,39 +2351,40 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   
   changeSuccessAll(event) {
-    let progressData = [];
-    if (event && event?.data) {
-      this.successAll = true;
-      this.successRequired = false;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group,progressData)
-      });
-    } else {
-      this.successAll = false;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group, progressData);
-      });
-    }
-    console.log('all',progressData);
-    this.valueChangeProgress.emit({ type: 'A', data: progressData });
+      this.isSuccessRequired = false;
+      let progressData = [];
+      if (event && event?.checked) {
+        this.successAll = true;
+        this.successRequired = false;
+        this.listGroupTask?.forEach((group) => {
+          this.updateProgress(group,progressData)
+        });
+      } else {
+        this.successAll = false;
+        this.listGroupTask?.forEach((group) => {
+          this.resetProgress(group, progressData);
+        });
+      }
+      console.log('all',progressData);
+      this.valueChangeProgress.emit({ type: 'A', data: progressData });
   }
   
   changeSuccessRequired(event) {
-    let progressData = [];
-    if(this.successAll || (!this.successAll && !this.successRequired)) return;
-    if (event && event.data) {
-      this.successAll = false;
-      this.successRequired = true;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group, progressData, true);
-      });
-    } else {
-      this.successRequired = false;
-      this.listGroupTask?.forEach((group) => {
-        this.resetProgress(group, progressData);
-      });
-    }
-    console.log('Required',progressData);
-    this.valueChangeProgress.emit({ type: 'A', data: progressData });
+      this.isSuccessAll = false;
+      let progressData = [];
+      if (event && event?.checked) {
+        this.successAll = false;
+        this.successRequired = true;
+        this.listGroupTask?.forEach((group) => {
+          this.updateProgress(group, progressData, true);
+        });
+      } else {
+        this.successRequired = false;
+        this.listGroupTask?.forEach((group) => {
+          this.resetProgress(group, progressData, true);
+        });
+      }
+      console.log('Required',progressData);
+      this.valueChangeProgress.emit({ type: 'A', data: progressData });
   }
 }

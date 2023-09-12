@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { CodxWsService } from '../../codx-ws.service';
 import { isObservable } from 'rxjs';
 
@@ -8,12 +8,15 @@ import { isObservable } from 'rxjs';
   styleUrls: ['./menu-list-approval.component.scss'],
 })
 export class MenuListApprovalComponent implements OnInit{
+
   @Input() funcID: any;
+  @Output() menuChange = new EventEmitter<any>();
+  
   funcList:any;
   listParentGroup:any;
 
-  listFavorite = ["Tất cả"];
-  selectedIndex = "Tất cả";
+  listFavorite = [{customName:"Tất cả",functionID:"All"}];
+  selectedIndex = "All";
 
   constructor(private codxWsService: CodxWsService)
   {
@@ -38,8 +41,9 @@ export class MenuListApprovalComponent implements OnInit{
     else this.listParentGroup = parentG
   }
 
-  selectedChange(i:any)
+  selectedChange(data:any)
   {
-    this.selectedIndex = i;
+    this.selectedIndex = data?.functionID;
+    this.menuChange.emit(this.selectedIndex);
   }
 }

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ComponentRef, Type, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
-import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
-import { RequestReviewComponent } from './request-review/request-review.component';
+import { components } from './routing';
 
 @Component({
   selector: 'lib-approvals',
@@ -12,17 +11,41 @@ export class ApprovalsComponent extends WSUIComponent implements AfterViewInit {
  
   @ViewChild('content', { read: ViewContainerRef, static: false })
   content!: ViewContainerRef;
-  private components = {
-    cpnApproval: RequestReviewComponent,
-  };
+  private components = components
+  
   override onInit(): void {
   }
+  
   ngAfterViewInit(): void {
-    this.loadContent()
-  }
-  loadContent()
-  {
     let component: Type<any> = this.components.cpnApproval;
-    this.content.createComponent<RequestReviewComponent>(component);
+    this.loadContent(component,null)
+  }
+
+  loadContent(cpn:any,funcID:any)
+  {
+    let componentRef = this.content.createComponent<ApprovalsComponent>(cpn);
+    if(funcID) componentRef.instance.funcID = funcID;
+  }
+
+  menuChange(menuID:any)
+  {
+    let funcID = ""; //functionID form xét duyệt (runmode = 1)
+    let component:Type<any> = null;
+    switch(menuID)
+    {
+      case "All":
+      {
+        component = this.components.cpnApproval;
+        break;
+      }
+      case "OD":
+      {
+        funcID = "ODT71";
+        component = this.components.cpnDispatches;
+        break;
+      }
+    }
+    this.content.clear();
+    this.loadContent(component,funcID)
   }
 }

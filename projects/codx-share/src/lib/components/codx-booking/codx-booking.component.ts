@@ -48,9 +48,6 @@ import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 })
 export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //Input
-  @Input() funcID: string;
-  @Input() queryParams: any;
-  @Input() resourceType: any;
   //list view
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
@@ -78,7 +75,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  //---------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------//  
+  funcID: string;
+  queryParams: any;
+  resourceType: any;
+
   viewType = ViewType;
   formModel: FormModel;
   grView: any;
@@ -125,10 +126,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     private notificationsService: NotificationsService,
     private authService: AuthService,
     private authStore: AuthStore,
-    private activatedRoute: ActivatedRoute
   ) {
     super(injector);       
-    this.funcID = this.activatedRoute.snapshot.params['funcID']; 
+    this.funcID = this.router.snapshot.params['funcID']; 
+    this.queryParams = this.router.snapshot.queryParams;
     this.cache.functionList(this.funcID).subscribe(funcList=>{
       if(funcList){
         this.crrEntityName= funcList?.entityName;
@@ -308,7 +309,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     
   }
   getBaseVariable() {
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.cache.functionList(this.funcID).subscribe(funcList=>{
       if(funcList){
         this.crrEntityName= funcList?.entityName;
@@ -316,9 +318,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.detectorRef.detectChanges();
       }
     });
-    if (this.queryParams == null) {
-      this.queryParams = this.router.snapshot.queryParams;
-    }
     this.codxBookingService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -436,7 +435,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
   viewChanged(evt: any) {
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.cache.functionList(this.funcID).subscribe(funcList=>{
       if(funcList){
         this.crrEntityName= funcList?.entityName;
