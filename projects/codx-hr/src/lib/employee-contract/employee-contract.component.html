@@ -318,7 +318,6 @@
     [typeMF]="'view'"
     [titleTmp]="titleTmp"
     [titleCss]="'fs-6 mb-1 then-text-primary'"
-    [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data?.inforEmployee?.positionID || data?.positionID
         | formatvalue : view.formModel : 'PositionID'
@@ -335,9 +334,7 @@
     <span class="fw-bold fs-6 mb-1" (click)="viewDetail(data)">
       {{ data.inforEmployee?.employeeName }}
     </span>
-  </ng-template>
 
-  <ng-template #titleRight>
     <div
       *ngIf="
         data?.status === '5' &&
