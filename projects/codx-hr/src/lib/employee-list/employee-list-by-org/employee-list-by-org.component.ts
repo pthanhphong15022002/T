@@ -178,7 +178,11 @@ export class EmployeeListByOrgComponent {
     }
 
   }
-
+  getRefreshFlag(event){
+    if(event?.field == 'rowCount'){
+      this.grid.dataService.rowCount = event.value;
+    }
+  }
   getManager(orgUnitID: string) {
     if (orgUnitID) {
       this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetOrgManager', [orgUnitID])
