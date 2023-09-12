@@ -379,12 +379,12 @@ export class CodxApprovalComponent
             this.esService.setupChange.next(true);
             this.esService.isStatusChange.subscribe((res) => {
               if (res != null) {
-                if (res.toString() == '2') {
-                  this.view.dataService.remove(data).subscribe();
-                } else {
+                // if (res.toString() == '2') {
+                //   this.view.dataService.remove(data).subscribe();
+                // } else {
                   data.status = res;
                   this.view.dataService.update(data).subscribe();
-                }
+                //}
               }
             });
           }

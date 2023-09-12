@@ -976,6 +976,7 @@ export class OrganizationOrgchartComponent {
         )
         .subscribe((res: any) => {
           if (res) {
+            this.orgUnitID = res;
             this.getDataPositionByID(
               res,
               this.selectedTeam.includes('No') ? false : true,
@@ -1049,8 +1050,6 @@ export class OrganizationOrgchartComponent {
 
         this.selectedTeam = this.dataTree.isGetManager;
         this.level = this.dataTree.level;
-        //this.level = this.dataTree.level;
-        //this.isGetManager(this.selectedTeam);
 
         this.dataTree.isOrgUnitID = JSON.parse(this.dataTree.isOrgUnitID);
 
@@ -1272,6 +1271,7 @@ export class OrganizationOrgchartComponent {
       changes?.orgUnitID?.currentValue != changes?.orgUnitID?.previousValue &&
       !changes?.orgUnitID.firstChange
     ) {
+      this.firstOrgLoaded = this.orgUnitID;
       if (this.orgUnitID) {
         //Function get new orgchart
         this.isGetManager();

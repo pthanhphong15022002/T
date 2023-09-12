@@ -315,7 +315,7 @@ export class DynamicFormComponent extends UIComponent {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
@@ -333,6 +333,7 @@ export class DynamicFormComponent extends UIComponent {
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         dialog.closed.subscribe((item) => {
           var dt = item?.event?.save;
+          dt.data.category = option.FormModel.entityName;
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
@@ -350,7 +351,7 @@ export class DynamicFormComponent extends UIComponent {
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
         CodxFormDynamicComponent,

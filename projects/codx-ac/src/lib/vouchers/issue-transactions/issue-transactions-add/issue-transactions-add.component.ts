@@ -37,7 +37,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   reason: Array<Reason> = [];
   headerText: string;
   dialog!: DialogRef;
-  vouchers: Vouchers;
+  vouchers: Vouchers = new Vouchers();
   formType: any;
   validate: any = 0;
   //totalAmt: any = 0;
@@ -45,7 +45,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   modeGrid: any;
   dataUpdate: VouchersLines = new VouchersLines();
   hideFields = [];
-  hasSaved: any = false;
   funcID: any;
   journal: IJournal;
 
@@ -95,9 +94,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.journal = dialogData.data?.journal;
-    this.vouchers = dialog.dataService.dataSelected;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
+    this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
 
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
@@ -150,9 +149,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   loadInit() {
-    if (this.formType == 'edit') {
-      this.hasSaved = true;
-    }
   }
   //endregion Init Master
 
@@ -243,14 +239,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   onClose() {
-    if (this.hasSaved) {
-      this.dialog.close({
-        update: true,
-        data: this.vouchers,
-      });
-    } else {
-      this.dialog.close();
-    }
+    this.dialog.close();
   }
   //#endregion Event Master
 
@@ -422,10 +411,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.vouchers.status = '1';
       this.form.formGroup.patchValue({status: this.vouchers.status});
     }
-    this.dialog.dataService.updateDatas.set(
-      this.vouchers['_uuid'],
-      this.vouchers
-    );
 
     switch(this.formType)
     {
@@ -466,10 +451,10 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 if(res)
                 {
                   this.vouchers = res.data;
+                  this.formType = 'add';
                   this.form.formGroup.patchValue(this.vouchers);
                   this.form.preData = { ...this.vouchers };
                   this.detectorRef.detectChanges();
-                  this.hasSaved = false;
                 }
             });
           }
@@ -585,10 +570,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   saveMasterBeforeAddLine() {
     if(this.form.validation())
       return;
-    this.dialog.dataService.updateDatas.set(
-      this.vouchers['_uuid'],
-      this.vouchers
-    );
     this.form
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
@@ -599,7 +580,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             this.vouchers.voucherNo = res.save.data.voucherNo;
             this.form.formGroup?.patchValue({voucherNo: this.vouchers.voucherNo});
           }
-          this.hasSaved = true;
           this.checkModeGridBeforeAddLine();
         }
       });
@@ -674,7 +654,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 if (dataline) {
                   this.grvVouchersLine.dataSource.push(dataline);
                 }
-                this.hasSaved = true;
               }
             });
         }
@@ -730,7 +709,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                   if (res.event != null) {
                     var dataline = res.event['data'];
                     this.grvVouchersLine.dataSource[index] = dataline;
-                    this.hasSaved = true;
                   }
                 });
             }

@@ -748,13 +748,16 @@ export class PopupAddItemComponent
               PopupAddItemConversionComponent,
               'This param is not working',
               500,
-              300,
+              325,
               '',
               {
                 gridViewSetup: res,
                 funcId: this.form.formModel?.funcID,
                 itemConversion: itemConversion,
                 savedItemConversions: this.itemConversions,
+                isItemSaved: this.isEdit,
+                itemID: this.item.itemID,
+                umid: this.item.umid,
               },
               '',
               options

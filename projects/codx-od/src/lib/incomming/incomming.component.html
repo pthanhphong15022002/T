@@ -1,8 +1,8 @@
 <ng-template #itemTemplate let-data>
   <ng-container *ngIf="gridViewSetup">
     <codx-temp-full
+      (dblclick)="dbClick(data)"
       (clickMF)="openFormFuncID($event, data)"
-      (click)="click(data)"
       [typeMF]="'hover'"
       [title]="data?.title"
       [desc]="
@@ -141,6 +141,7 @@
   (selectedChange)="valueChange($event)"
   [selectedFirst]="true"
   idField="recID"
+  [funcID]="funcID"
   (requestEnded)="requestEnded($event)"
   (viewChanged)="viewChange($event)"
 >

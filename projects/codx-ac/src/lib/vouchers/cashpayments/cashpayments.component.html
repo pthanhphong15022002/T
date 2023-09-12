@@ -4,8 +4,8 @@
 </codx-views>
 <!-- templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeTmpGridMF($event,data)" [formModel]="view.formModel"
-    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event,data,'viewgrid')" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" isBookMark="false" type="view"></codx-mfunc>
 </ng-template>
 <!-- templateGrid -->
 
@@ -13,13 +13,13 @@
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
     <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="view.formModel"
-      [dataItem]="itemSelected" (changeDataMF)="changeTmpDetailMF($event, itemSelected)" [footer]="TmpFooterDetail"
+      [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
       (clickMF)="clickMoreFunction($event, itemSelected)">
     </codx-detail-tmp>
   </ng-container>
@@ -317,13 +317,8 @@
   <ng-container *ngIf="acctTrans">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
-        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15;">
+        <thead class="border-gray-200" style="position: sticky;top: 0;z-index: 15;background-color: #f8f9fa;">
           <tr class="border-bottom">
-            <!-- <th class="w-10 bg-gray-100 border-bottom text-center">
-              <span class="fw-bold line-clamp line-clamp-1 fs-6">
-                {{'1' | vll : 'ACL0001' : 'text' | async}}
-              </span>
-            </th> -->
             <th class="w-40 border-bottom">
               <div class="d-flex align-items-center justify-content-start ps-3">
                 <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
@@ -368,7 +363,7 @@
             </th>
           </tr>
         </thead>
-        <tbody *ngIf="!isLoadData">
+        <tbody>
           <ng-container *ngFor="let item of acctTrans;trackBy: trackByFn">
             <tr [style]="item | tranformClassBorder : acctTrans">
               <td class="text-center">
@@ -503,17 +498,22 @@
                 </div>
               </td>
               <td>
-                <div *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
-                  <div class="d-flex align-items-center mb-1 ps-3">
-                    <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.memo }}</span>
+                <ejs-tooltip position="BottomLeft" id='tooltip' target="#tipmemo">
+                  <div id="tipmemo" *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
+                    <div class="d-flex align-items-center mb-1 ps-3">
+                      <span class="line-clamp line-clamp-1 text-gray-600 fs-7">{{ item.memo }}</span>
+                    </div>
                   </div>
-                </div>
+                  <ng-template #content>
+                    <span>{{ item.memo }}</span>
+                  </ng-template>
+                </ejs-tooltip>
               </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
-      <div *ngIf="acctTrans && acctTrans.length == 0 && !isLoadData" class="ac-empty">
+      <div *ngIf="acctTrans && acctTrans.length == 0" class="ac-empty">
         <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
             <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
@@ -529,14 +529,21 @@
         <td class="w-40"></td>
         <td class="w-15">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaltransAmt1
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctDR
                     | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
         <td class="w-15">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totaltransAmt2
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctCR
+                    | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
+            <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
+        <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15">
+          <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+            <span *ngIf="acctTrans.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalTransAmt
                     | formatvalue : fmAcctTrans : 'transAmt' : transAmt | async"></span>
             <span *ngIf="acctTrans.length == 0" class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
@@ -551,7 +558,7 @@
   <ng-container *ngIf="settledInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
-        <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;">
+        <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;background-color: #f8f9fa;">
           <tr class="border-bottom">
             <th class="border-bottom w-20">
               <div class="d-flex align-items-center justify-content-start ps-3">
@@ -577,16 +584,21 @@
                 </codx-label>
               </div>
             </th>
-            <!-- <th class="w-20">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CurrencyID"
-                  [formModel]="fmSettledInvoices">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom w-20">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblBalanceAmt2" default="Số dư, HT">
                 </codx-label>
               </div>
-            </th> -->
+            </th>
             <th class="border-bottom w-30">
               <div class="d-flex align-items-center justify-content-end ps-3">
                 <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Thanh toán">
+                </codx-label>
+              </div>
+            </th>
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom w-30">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblSettledAmt2" default="Thanh toán, HT">
                 </codx-label>
               </div>
             </th>
@@ -634,11 +646,25 @@
                 <span *ngIf="(item?.balAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.balAmt2 > 0)" class="fw-bold line-clamp line-clamp-1" #balAmt2 [innerHTML]="item?.balAmt2
+                      | formatvalue : fmSettledInvoices : 'balAmt2' : balAmt2 | async"></span>
+                <span *ngIf="(item?.balAmt2 == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
+              </div>
+            </td>
             <td>
               <div class="d-flex align-items-center justify-content-end ps-3">
                 <span *ngIf="(item?.settledAmt > 0)" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="item?.settledAmt
                       | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
                 <span *ngIf="(item?.settledAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
+              </div>
+            </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.settledAmt2 > 0)" class="fw-bold line-clamp line-clamp-1" #settledAmt2 [innerHTML]="item?.settledAmt2
+                      | formatvalue : fmSettledInvoices : 'settledAmt2' : settledAmt2 | async"></span>
+                <span *ngIf="(item?.settledAmt2 == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
             <td>
@@ -665,7 +691,7 @@
         </div>
       </div>
     </div>
-    <table style="table-layout: fixed;" class="table border mb-0">
+    <table style="table-layout: fixed;" class="table mb-0">
       <tfoot style="position: sticky;bottom: 0;background-color:#f8f9fa;border-top: 1px solid #dee2e6;">
         <td class="w-20"></td>
         <td class="w-30"></td>
@@ -678,11 +704,27 @@
               class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
+        <td class="w-20" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+          <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+            <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #balAmt2 [innerHTML]="totalbalAmt2
+                  | formatvalue : fmSettledInvoices : 'balAmt2' : balAmt2 | async"></span>
+            <span *ngIf="settledInvoices.length == 0 || totalbalAmt2 == 0"
+              class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
         <td class="w-30">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
             <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
                   | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
             <span *ngIf="settledInvoices.length == 0 || totalsettledAmt == 0"
+              class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
+        <td class="w-30" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+          <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+            <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #settledAmt2 [innerHTML]="totalsettledAmt2
+                  | formatvalue : fmSettledInvoices : 'settledAmt2' : settledAmt2 | async"></span>
+            <span *ngIf="settledInvoices.length == 0 || totalsettledAmt2 == 0"
               class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
@@ -695,7 +737,7 @@
   <ng-container *ngIf="vatInvoices">
     <div class="table-responsive table-ac">
       <table style="table-layout: fixed;" class="table mb-0">
-        <thead class="border-gray-200" style="position: sticky; top: 0">
+        <thead class="border-gray-200" style="position: sticky; top: 0;z-index: 15;background-color: #f8f9fa;">
           <tr class="border-bottom">
             <th class="border-bottom w-20">
               <div class="d-flex align-items-center justify-content-start ps-3">
@@ -872,7 +914,7 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'"
-    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #listtitleTmp let-data>

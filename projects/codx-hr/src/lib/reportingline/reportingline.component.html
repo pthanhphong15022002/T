@@ -132,10 +132,10 @@
                     </codx-img>
                 </ng-container>
                 <ng-template #manyEmployees>
-                    <span *ngIf="data?.staff > 2" class="multiple-employee rounded-circle">
+                    <span *ngIf="data?.sampleStaff > 2" class="multiple-employee rounded-circle">
                         <span class="text-white"
-                            [ngClass]="(data.staff - 1) < 100 ? 'fs-5' : 
-                            ((data.staff -1 < 1000)? 'fs-6': 'fs-9')">+{{(data.staff - 1)}}</span>
+                            [ngClass]="(data.sampleStaff - 1) < 100 ? 'fs-5' : 
+                            ((data.sampleStaff -1 < 1000)? 'fs-6': 'fs-9')">+{{(data.sampleStaff - 1)}}</span>
                     </span>
                 </ng-template>
             </div>

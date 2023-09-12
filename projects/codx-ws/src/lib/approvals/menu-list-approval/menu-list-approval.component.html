@@ -1,25 +1,39 @@
-<div class="d-flex flex-column w-250px bg-white h-100 p-5">
-    <div class="d-flex align-items-center" *ngFor="let item of funcList">
-        <i [ngClass]="item?.largeIcon"></i>
-        <span class="fw-bold ms-2">{{item?.customName}}</span>
+<div class="ws-approval-layout d-flex flex-column w-250px bg-white h-100 p-5 ">
+    <div class="d-flex flex-column" *ngFor="let item of funcList , let i = index">
+        <div class="d-flex align-items-center">
+            <i [ngClass]="item?.largeIcon"></i>
+            <span class="fw-bold ms-2">{{item?.customName}}</span>
+        </div>
+        <div class="ms-2">
+            <ng-container *ngTemplateOutlet="i == 0 ? list : group"></ng-container>
+        </div>
     </div>
-    <ejs-accordion class="ws-accordion h-100">
-        <e-accordionitems>
-            <ng-container *ngFor="let item of listParentGroup">
-                <e-accordionitem expanded='true'>
-                    <ng-template #header>
-                        <div>{{item?.customName}}</div>
-                      </ng-template>
-                      <ng-template #content>
-                        {{""}}
-                        <div class="d-flex align-items-center" *ngFor="let itemChild of item?.child">
-                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                            <span class="ms-2">{{itemChild?.customName}}</span>
-                        </div>
-                    </ng-template>
-                </e-accordionitem>
-            </ng-container>
-        </e-accordionitems>
-    </ejs-accordion>
+    <ng-template #list>
+        <div class="d-flex align-items-center ms-6 mt-2 cursor-pointer" [class.active]="selectedIndex == item?.functionID" *ngFor="let item of listFavorite ; let i = index" (click)="selectedChange(item)">
+            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+            <span class="ms-2">{{item?.customName}}</span>
+        </div>
+    </ng-template>
+    <ng-template #group>
+        <ejs-accordion class="ws-accordion h-100">
+            <e-accordionitems>
+                <ng-container *ngFor="let item of listParentGroup">
+                    <e-accordionitem expanded='true'>
+                        <ng-template #header>
+                            <div>{{item?.customName}}</div>
+                          </ng-template>
+                          <ng-template #content>
+                            {{""}}
+                            <div class="d-flex align-items-center cursor-pointer" [class.active]="selectedIndex == itemChild?.functionID" *ngFor="let itemChild of item?.child ; let i = index" (click)="selectedChange(itemChild)">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="ms-2">{{itemChild?.customName}}</span>
+                            </div>
+                        </ng-template>
+                    </e-accordionitem>
+                </ng-container>
+            </e-accordionitems>
+        </ejs-accordion>
+    </ng-template>
+    
 </div>
 

@@ -128,8 +128,8 @@ export class DealsComponent
 
   titleAction = '';
   vllPriority = 'TM005';
-  vllApprove = '';
-  vllStatus = '';
+  vllApprove = 'DP043';
+  vllStatus = 'CRM042';
   crrFuncID = '';
   nameModule: string = '';
   currencyIDDefault: any = 'VND';
@@ -347,7 +347,6 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         mappingFunction && mappingFunction(eventItem, data);
@@ -584,7 +583,7 @@ export class DealsComponent
         refType: 'CM_Deals',
       };
 
-      if (data?.refID && data.applyProcess) {
+      if (data?.refID) {
         customData = {
           refID: data.processID,
           refType: 'DP_Processes',
@@ -779,7 +778,7 @@ export class DealsComponent
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
+            nextStep: this.stepIdClick ? this.stepIdClick : '',
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -824,7 +823,6 @@ export class DealsComponent
               var dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
@@ -1115,7 +1113,6 @@ export class DealsComponent
       var formMD = new FormModel();
       option.Width = '800px';
       option.zIndex = 1001;
-      this.view.dataService.dataSelected.currencyID = this.currencyIDDefault;
       this.openFormDeal(formMD, option, 'add');
     });
   }
@@ -1129,6 +1126,8 @@ export class DealsComponent
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
+      exchangeRateDefault: this.exchangeRateDefault,
+      categoryCustomer: this.dataSelected.categoryCustomer
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1172,6 +1171,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
+          categoryCustomer: this.dataSelected.categoryCustomer
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,

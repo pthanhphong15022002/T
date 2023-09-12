@@ -153,7 +153,9 @@ export class IncommingAddComponent implements OnInit {
       //   })
       // }
       this.dispatch.createdOn = new Date();
-    } else if (this.type == 'edit') {
+    } 
+    else if (this.type == 'edit') 
+    {
       if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if (this.dispatch.agencyName)
         this.dispatch.agencyName = this.dispatch.agencyName.toString();
@@ -192,6 +194,7 @@ export class IncommingAddComponent implements OnInit {
         this.hidepb = false;
       }
     }
+    else if(this.type == 'read') this.disableSave = true;
 
     this.getKeyRequied();
   }
@@ -401,6 +404,9 @@ export class IncommingAddComponent implements OnInit {
   }
   /////// lưu/câp nhật công văn
   async onSave() {
+    //chế độ chỉ xem
+    if(this.type == "read") return;
+
     this.disableSave = true;
 
     if (!this.checkIsRequired()) {

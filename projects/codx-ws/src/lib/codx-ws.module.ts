@@ -24,7 +24,12 @@ import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportComponent } from './report/report.component';
-
+import { TasksComponent } from 'projects/codx-tm/src/lib/tasks/tasks.component';
+import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taskextends.component';
+import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-off/employee-day-off.component';
+import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { RequestReviewComponent } from './approvals/request-review/request-review.component';
 
 const routes: Routes = [
   {
@@ -76,6 +81,31 @@ const routes: Routes = [
         path: 'report/:funcID',
         component: ReportComponent,
       },
+      // HR - QTNS - Đăng ký nghỉ phép
+      {
+        path: 'edayoffs/:funcID',
+        component: EmployeeDayOffComponent,
+      },
+      //Task + duyyet TM
+      {
+        path: 'tasks/:funcID',
+        component: TasksComponent,
+      },
+      {
+        path: 'taskextends/:funcID',
+        component: TaskExtendsComponent,
+      },
+      //CM mục tiêu + cơ hội
+      {
+        path: 'targets/:funcID',
+        component: TargetsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        // data: { noReuse: true },
+      },
       {
         path: '',
         redirectTo: 'home',
@@ -88,7 +118,6 @@ const routes: Routes = [
     ],
   },
 ];
-
 
 @NgModule({
   declarations: [
@@ -104,15 +133,16 @@ const routes: Routes = [
     ApprovalsComponent,
     MenuListApprovalComponent,
     DashboardComponent,
-    ReportComponent
+    ReportComponent,
+    RequestReviewComponent
   ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
     CodxShareModule,
     AccordionModule,
-    NgbDropdownModule
+    NgbDropdownModule,
   ],
   exports: [RouterModule],
 })
-export class CodxWsModule { }
+export class CodxWsModule {}

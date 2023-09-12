@@ -85,13 +85,14 @@ export class InputNumberDurationComponent
   }
   onInit() {}
   checkInputDayValue($event: any) {
-    var value = parseInt($event.target.value ? $event.target.value: this.minDayDefault);
+    let value = parseInt($event.target.value ? $event.target.value: this.minDayDefault);
     if (( value ||value == 0) && this.dayMax) {
       if (value >= this.maxDayDefault) {
         value = this.maxDayDefault;
       } else if (value < this.dayMax) {
         this.notificationsService.notifyCode('DP012');
         value = this.dayMax;
+        this.hourValue = this.hourValue >= this.hourMax ? this.hourValue: this.hourMax ;
       } else if (!value && value != 0) {
         value = this.dayMax;
       }
@@ -99,7 +100,7 @@ export class InputNumberDurationComponent
     value = this.isTurnInput(this.typeDay, value);
     $event.target.value = value;
     this.dayValue = value;
-    var data = {
+    let data = {
       valueDay: value,
       valueHour: this.hourValue,
       type: this.typeDay,
@@ -109,11 +110,11 @@ export class InputNumberDurationComponent
   }
 
   checkInputHourValue($event: any) {
-    var value = parseInt( $event.target.value ? $event.target.value: this.minHourDefault) ;
-    if ((value || value == 0) && this.dayMax) {
+    let value = parseInt( $event.target.value ? $event.target.value: this.minHourDefault) ;
+    if ((value || value == 0) && this.dayMax && this.dayValue == this.dayMax) {
       if (value >= this.maxHourDefault) {
         value = this.maxHourDefault;
-      } else if (value < this.hourMax) {
+      } else if ( value < this.hourMax  ) {
         this.notificationsService.notifyCode('DP012');
         value = this.hourMax;
       } else if (!value && value != 0) {
@@ -123,7 +124,7 @@ export class InputNumberDurationComponent
     value = this.isTurnInput(this.typeHour, value);
     $event.target.value = value;
     this.hourValue = value;
-    var data = {
+    let data = {
       valueHour: value,
       valueDay: this.dayValue,
       type: this.typeHour,
@@ -139,10 +140,10 @@ export class InputNumberDurationComponent
 
   isTurnInput(type: string, value: number) {
     if (type === this.typeDay) {
-      if (value >= this.maxDayDefault) {
-        this.isView = true;
+      if (value >= this.maxDayDefault) {;
         this.hourValue = this.minHourDefault;
         value = this.maxDayDefault;
+        this.isView = true
       }
       else if( value == this.secondMaxDayDefault && this.hourValue == this.maxHourDefault) {
         this.hourValue = this.minHourDefault;
@@ -159,12 +160,12 @@ export class InputNumberDurationComponent
         this.dayValue == this.secondMaxDayDefault &&
         value == this.maxHourDefault
       ) {
-        this.isView = true;
         this.dayValue = this.maxDayDefault;
         value = this.minHourDefault;
+        this.isView = true;
       }
        else {
-        this.isView = false;
+        this.isView = this.dayValue == this.maxDayDefault;
       }
   } else {
       this.isView = false;

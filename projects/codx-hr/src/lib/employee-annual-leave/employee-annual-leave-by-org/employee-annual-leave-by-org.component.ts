@@ -142,14 +142,10 @@ export class EmployeeAnnualLeaveByOrgComponent {
     }
     if (this.listDaysOff?.length <= 0)
       this.popupLoading = true;
-    // var item = this.grid.dataSource.findIndex(x => x.recID == data.recID);
-    // var item2 = this.grid.dataService.data.findIndex(x => x.recID == data.recID);
 
     this.api.execSv('HR', 'ERM.Business.HR', 'EAnnualLeavesBusiness', 'GetDaysOffByEAnnualLeaveAsync',
       [data.employeeID, data.alYear, data.alYearMonth, data.isMonth, this.pageIndex, this.pageSize]).subscribe((res: any) => {
         if (res && res?.length > 0) {
-          // this.grid.dataSource[item].listDaysOff = res;
-          // this.grid.dataService.data[item].listDaysOff = res;
           this.listDaysOff = this.listDaysOff.concat(res);
           this.pageIndex = this.pageIndex + 1;
         } else {
