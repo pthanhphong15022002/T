@@ -331,7 +331,10 @@
   </codx-temp-full>
 
   <ng-template #titleTmp>
-    <span class="fw-bold fs-6 mb-1" (click)="viewDetail(data)">
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
       {{ data.inforEmployee?.employeeName }}
     </span>
 

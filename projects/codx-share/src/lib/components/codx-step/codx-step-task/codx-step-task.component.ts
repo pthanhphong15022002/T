@@ -127,7 +127,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   dataTooltipDay;
   successAll = false;
   successRequired = false;
-  countChangedSuccess = 0;
+  isSuccessAll = false;
+  isSuccessRequired = false;
 
   dialogGuideZoomIn: DialogRef;
   dialogGuideZoomOut: DialogRef;
@@ -2287,112 +2288,100 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     popup.open();
   }
 
-  changeSuccessAll(event){
-    if(event) {
+  // hoàn thành tất hoặc bắt buột
+  updateProgress(group, progressData, isRequired = false) {
+    let countTask = group?.task?.length;
+    if (countTask > 0) {
+      let sumProgress = 0;
+      let check = false;
 
-    }
-  }
+      const processTask = (task) => {
+        task.progress = 100;
+        task.status = '3';
+        progressData.push(this.setProgressOutput(task, group));
+        check = true;
+      };
 
-  changeSuccessRequired(event){
-    if(event) {
-      
-    }
-  }
-
-  checkRadioSuccess(event) {
-    if (event && this.countChangedSuccess == 0) {
-     let progressData = [];
-      if (event?.field == 'all') {
-        if (event?.data) {
-          this.successAll = true;
-          this.successRequired = false;
-          this.listGroupTask?.forEach((group) => {
-            group?.task?.forEach((task) => {
-              task.progress = 100;
-              task.status = '3';
-              progressData.push(this.setProgressOutput(task, group));
-            });
-            group.progress = 100;
-            if (group?.recID) {
-              progressData.push(this.setProgressOutput(null, group));
-            }
-          }); 
-        } else {
-          this.successAll = false;
-          this.listGroupTask?.forEach((group) => {
-            let countTask = group?.task?.length;
-            let sumProgress = 0;
-            group?.task?.forEach((task) => {
-              task.progress = task?.progressOld;
-              task.status = task?.statusOld;
-              sumProgress += task?.progress;
-              if (task?.isChange) {
-                progressData.push(this.setProgressOutput(task, group));
-              }
-            });
-            if (group?.isChangeAuto) {
-              group.progress = Number((sumProgress / countTask).toFixed(2));
-            }
-            // group.progress = group?.progressOld;
-            if (group?.recID && group?.isChange) {
-              progressData.push(this.setProgressOutput(null, group));
-            }
-          });
+      if (isRequired) {
+        group?.task?.forEach((task) => {
+          if (task?.requireCompleted) {
+            processTask(task);
+          }
+          sumProgress += task.progress;
+        });
+        if (check && group?.recID) {
+          group.progress = Number((sumProgress / countTask).toFixed(2));
+          progressData.push(this.setProgressOutput(null, group));
         }
-      } else if (event?.field == 'required') {
-        if (event?.data) {
-          this.successAll = false;
-          this.successRequired = true;
-          this.listGroupTask?.forEach((group) => {
-            let countTask = group?.task?.length;
-            if (countTask > 0) {
-              let sumProgress = 0;
-              let check = false;
-              group?.task?.forEach((task) => {
-                if (task?.requireCompleted) {
-                  task.progress = 100;
-                  task.status = '3';
-                  progressData.push(this.setProgressOutput(task, group));
-                  check = true;
-                }
-                sumProgress += task.progress;
-              });
-              if (check && group?.recID) {
-                group.progress = Number((sumProgress / countTask).toFixed(2));
-                progressData.push(this.setProgressOutput(null, group));
-              }
-            }
-          });
-        } else {
-          this.successRequired = false;
-          this.listGroupTask?.forEach((group) => {
-            let countTask = group?.task?.length;
-            if (countTask > 0) {
-              let sumProgress = 0;
-              group?.task?.forEach((task) => {
-                if (task?.requireCompleted) {
-                  task.progress = task?.progressOld;
-                  task.status = task?.statusOld;
-                  if (task?.isChange) {
-                    progressData.push(this.setProgressOutput(null, group));
-                  }
-                }
-                sumProgress += task.progress;
-              });
-              // group.progress = group?.progressOld;
-              if (group?.isChangeAuto) {
-                group.progress = Number((sumProgress / countTask).toFixed(2));
-              }
-              if (group?.recID && group?.isChange) {
-                progressData.push(this.setProgressOutput(null, group));
-              }
-            }
-          });
+      } else {
+        group?.task?.forEach((task) => {
+          processTask(task);
+        });
+        group.progress = 100;
+        if (group?.recID) {
+          progressData.push(this.setProgressOutput(null, group));
         }
       }
-      console.log(progressData);
-      this.valueChangeProgress.emit({ type: 'A', data: progressData });
     }
-    // this.countChangedSuccess = this.countChangedSuccess.toString() == '2' ? 0 : this.countChangedSuccess + 1;
+  }
+  
+  resetProgress(group, progressData) {
+    let countTask = group?.task?.length;
+    if (countTask > 0) {
+      let sumProgress = 0;
+      group?.task?.forEach((task) => {
+        if (task?.requireCompleted) {
+          task.progress = task?.progressOld;
+          task.status = task?.statusOld;
+          if (task?.isChange) {
+            progressData.push(this.setProgressOutput(null, group));
+          }
+        }
+        sumProgress += task.progress;
+      });
+      if (group?.isChangeAuto) {
+        group.progress = Number((sumProgress / countTask).toFixed(2));
+      }
+      if (group?.recID && group?.isChange) {
+        progressData.push(this.setProgressOutput(null, group));
+      }
+    }
+  }
+  
+  changeSuccessAll(event) {
+    let progressData = [];
+    if (event && event?.data) {
+      this.successAll = true;
+      this.successRequired = false;
+      this.listGroupTask?.forEach((group) => {
+        this.updateProgress(group,progressData)
+      });
+    } else {
+      this.successAll = false;
+      this.listGroupTask?.forEach((group) => {
+        this.updateProgress(group, progressData);
+      });
+    }
+    console.log('all',progressData);
+    this.valueChangeProgress.emit({ type: 'A', data: progressData });
+  }
+  
+  changeSuccessRequired(event) {
+    let progressData = [];
+    if(this.successAll || (!this.successAll && !this.successRequired)) return;
+    if (event && event.data) {
+      this.successAll = false;
+      this.successRequired = true;
+      this.listGroupTask?.forEach((group) => {
+        this.updateProgress(group, progressData, true);
+      });
+    } else {
+      this.successRequired = false;
+      this.listGroupTask?.forEach((group) => {
+        this.resetProgress(group, progressData);
+      });
+    }
+    console.log('Required',progressData);
+    this.valueChangeProgress.emit({ type: 'A', data: progressData });
   }
 }

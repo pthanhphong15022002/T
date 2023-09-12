@@ -29,6 +29,7 @@ export class ES_SignFile {
   autoCreated: boolean = false;
   buid: string = null;
   categoryID: string = null;
+  category: string = null;
   categoryName: string = null;
   comments: number = 0;
   companyID: string = null;

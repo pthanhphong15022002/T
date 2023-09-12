@@ -3378,7 +3378,7 @@ codx-card-center .card.codx_cardcenter{
   &.filter-form {
     top: -16px;
     //left: -6px;
-    box-shadow: #c1b0b03b 0 5px 5px;
+    //box-shadow: #c1b0b03b 0 5px 5px;
   }
   .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
     height: 34px;
@@ -3832,4 +3832,7 @@ codx-user-inner{
   .menu-title.position-relative{
     text-align: left!important;
   }
+}
+.attach-noheight .attach-files{
+  max-height: none!important;
 }

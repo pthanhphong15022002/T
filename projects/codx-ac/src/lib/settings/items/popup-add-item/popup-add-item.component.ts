@@ -748,7 +748,7 @@ export class PopupAddItemComponent
               PopupAddItemConversionComponent,
               'This param is not working',
               500,
-              300,
+              325,
               '',
               {
                 gridViewSetup: res,
@@ -756,7 +756,8 @@ export class PopupAddItemComponent
                 itemConversion: itemConversion,
                 savedItemConversions: this.itemConversions,
                 isItemSaved: this.isEdit,
-                itemID: this.item.itemID
+                itemID: this.item.itemID,
+                umid: this.item.umid,
               },
               '',
               options
