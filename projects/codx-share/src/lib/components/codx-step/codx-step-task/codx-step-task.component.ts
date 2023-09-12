@@ -1532,8 +1532,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data.status = dataProgress?.progressTask == 100 ? '3' : '2';
       if(this.isMoveStage && !this.moveStageData?.some(task => task.taskID == dataProgress?.taskID)){
         this.moveStageData?.push(this.setProgressOutput(data, null));
-        this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
-        console.log(this.moveStageData);      
+        this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
       }
     }
     data.note = dataProgress?.note;
@@ -2332,7 +2331,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.resetProgress(group, this.moveStageData);
         });
       }
-      console.log('all',this.moveStageData);
       this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
   }
   
@@ -2351,7 +2349,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.resetProgress(group, this.moveStageData, true);
         });
       }
-      console.log('Required',this.moveStageData);
       this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
   }
   //#endregion
