@@ -1,55 +1,19 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  AfterViewInit,
-  OnChanges,
-  SimpleChanges,
-  OnInit,
-  ChangeDetectorRef,
-  Input,
-  Output,
-  EventEmitter,
-  ViewEncapsulation,
-  Injector,
-} from '@angular/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import {
-  ApiHttpService,
-  ButtonModel,
-  CacheService,
-  CallFuncService,
-  CodxService,
-  DataRequest,
-  DialogModel,
-  NotificationsService,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewsComponent,
-  ViewType,
-} from 'codx-core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { ButtonModel, CallFuncService, DialogModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
-import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { CodxEsService } from 'projects/codx-es/src/public-api';
+import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
-import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
-import { CodxShareService } from '../../codx-share.service';
-import { log } from 'console';
 
 @Component({
-  selector: 'codx-approval',
-  templateUrl: './codx-approval.component.html',
-  styleUrls: ['./codx-approval.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'lib-request-review',
+  templateUrl: './request-review.component.html',
+  styleUrls: ['./request-review.component.css']
 })
-export class CodxApprovalComponent
+export class RequestReviewComponent
   extends UIComponent
   implements OnChanges, AfterViewInit
 {
@@ -126,69 +90,17 @@ export class CodxApprovalComponent
   click(e: any) {}
   openFormFuncID(e: any) {}
   valueChange(dt: any) {
-    this.transID = null;
-    if (dt?.data) {
-      if (dt?.data[0]) {
-        this.transID = dt.data[0].transID;
-        this.recID = dt.data[0].recID;
-        this.dataItem = dt?.data[0];
-      } else {
-        this.transID = dt?.data?.transID;
-        this.recID = dt?.data?.recID;
-        this.dataItem = dt?.data;
+    this.dataItem = dt?.data;
+    switch(dt?.data?.functionID)
+    {
+      case "HRTPro01":
+      {
+
+        break;
       }
-    } else if (dt?.transID) {
-      this.transID = dt.transID;
-      this.recID = dt?.recID;
-      this.dataItem = dt;
     }
-    this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      var sa = new URL(environment.apiUrl + '/' + this.routers.url);
-      var check = sa.searchParams.get('dataValue');
-      //Lấy params không có dataValue
-      let r = '';
-      if (check) {
-        var arrPath = sa.pathname.split('/');
-        var slicePath = arrPath.slice(3);
-        r = slicePath.join('/') + '/';
-      } else {
-        var s = this.routers.url.split('/');
-        s = s.slice(2, 5);
-        r = '/' + s.join('/').toString() + '/';
-      }
-
-      //var c = this.routers.routerState.subscribe()
-      if (fuc) {
-        if (fuc?.url) {
-          var params = fuc?.url.split('/');
-          if (
-            r &&
-            params[1] &&
-            fuc?.functionID &&
-            this.dataItem?.transID
-          ) {
-            var url =
-              r +
-              params[1] +
-              '/' +
-              fuc?.functionID +
-              '/' +
-              this.dataItem?.transID;
-            if (url) this.codxService.navigate('', url);
-          }
-        }
-
-        ///es/approvals/EST021/
-        //const queryParams = { 'id' : this.dataItem?.transID};
-
-        //this.router.navigate(['tester/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID]);
-      }
-      //this.router.navigate([{ outlets: { 'detail': ['/tester/'+fuc?.url+'/detail'] } }], { skipLocationChange: true });
-      //this.router.navigate([ { outlets: { primary:['/tester/od/dispatches/'+fuc?.url+'/detail', 'test1'] } }]);
-      //this.router.navigate(['/tester/od/dispatches/'+fuc?.url+'/detail'])
-      //this.codxService.navigate("","",{})
-    });
-    this.selectedChange.emit([this.dataItem, this.view]);
+    debugger
+    return ;
   }
 
   vllApproval: any;
@@ -209,15 +121,6 @@ export class CodxApprovalComponent
         //this.ref.detectChanges();
       }
     });
-    /*  this.cache.functionList('ODT31').subscribe((fuc) => {
-
-        this.cache
-          .gridViewSetup(fuc?.formName, fuc?.gridViewName)
-          .subscribe((grd) => {
-            this.gridViewSetup = grd;
-          });
-      }); */
-    //formName: string, gridName: string
   }
   setStyles(bg: any): any {
     let styles = {
@@ -379,12 +282,12 @@ export class CodxApprovalComponent
             this.esService.setupChange.next(true);
             this.esService.isStatusChange.subscribe((res) => {
               if (res != null) {
-                // if (res.toString() == '2') {
-                //   this.view.dataService.remove(data).subscribe();
-                // } else {
+                if (res.toString() == '2') {
+                  this.view.dataService.remove(data).subscribe();
+                } else {
                   data.status = res;
                   this.view.dataService.update(data).subscribe();
-                //}
+                }
               }
             });
           }

@@ -43,7 +43,10 @@
                         ></codx-label>
                       </h3>
                     </div>
-                    <div class="tabs tabs-login" *ngIf="enableMultiLogin; else loginPW">
+                    <div
+                      class="tabs tabs-login"
+                      *ngIf="enableMultiLogin; else loginPW"
+                    >
                       <ejs-tab
                         class="h-100 w-100"
                         overflowMode="Popup"
@@ -201,9 +204,7 @@
                           <e-tabitem>
                             <ng-template #headerText>
                               <div class="nav-item w-100">
-                                <div
-                                  class="d-flex flex-column text-center"
-                                >
+                                <div class="d-flex flex-column text-center">
                                   <div
                                     [class]="
                                       'icon-20 mb-2 icon-qr_code_scanner'
@@ -262,7 +263,8 @@
                                   </div>
                                   <ng-template #avatar></ng-template>
                                   <div class="qr-codx-msg mt-3 text-center">
-                                    <codx-label class="fs-7 text-gray-600"
+                                    <codx-label
+                                      class="fs-7 text-gray-600"
                                       default="Chỉ dùng đăng nhập CoDX trên máy tính"
                                     ></codx-label>
                                     <!-- <button
@@ -293,7 +295,8 @@
                                 <div
                                   class="qr-codx-guid d-flex flex-column text-center mt-3"
                                 >
-                                  <codx-label class="fw-bold text-dark fs-6"
+                                  <codx-label
+                                    class="fw-bold text-dark fs-6"
                                     default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"
                                   ></codx-label>
                                   <!-- <button
@@ -304,17 +307,17 @@
                                     
                                   </button> -->
                                   <div class="mt-3">
-                                  <button
-                                    type="button"
-                                    class="btn btn-primary"
-                                    (click)="openScanQRGuid()"
-                                  >
-                                    <codx-label
-                                      class="text-primary"
-                                      default="Hướng dẫn quét"
-                                    ></codx-label>
-                                  </button>
-                                </div>
+                                    <button
+                                      type="button"
+                                      class="btn btn-primary"
+                                      (click)="openScanQRGuid()"
+                                    >
+                                      <codx-label
+                                        class="text-primary"
+                                        default="Hướng dẫn quét"
+                                      ></codx-label>
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </ng-template>
@@ -398,6 +401,7 @@
                           ></a>
                         </div>
                         <div class="form-group d-grid gap-2 mb-5">
+                          <!-- //nho xoa -->
                           <button
                             [disabled]="loginForm.invalid"
                             type="submit"
@@ -1159,41 +1163,6 @@
             <codx-label class="text-primary" default="Đóng"></codx-label>
           </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-toggle="modal"
-    data-target="#myModal"
-    (click)="openScanQRGuid()"
-  >
-    Open modal
-  </button>
-
-  <!-- The Modal -->
-  <div class="modal" id="myModal" #content>
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Modal Heading</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            (click)="closeScanQRGuid()"
-          >
-            &times;
-          </button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">Modal body..</div>
       </div>
     </div>
   </div>

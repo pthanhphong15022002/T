@@ -161,7 +161,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: 'sm',
+      size: 'md',
     });
   }
 

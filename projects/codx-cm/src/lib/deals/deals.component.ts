@@ -347,7 +347,6 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-
         const functionID = eventItem.functionID;
         const mappingFunction = this.getRoleMoreFunction(functionID);
         mappingFunction && mappingFunction(eventItem, data);
