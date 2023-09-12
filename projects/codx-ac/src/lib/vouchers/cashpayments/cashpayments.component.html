@@ -577,16 +577,21 @@
                 </codx-label>
               </div>
             </th>
-            <!-- <th class="w-20">
-              <div class="d-flex">
-                <codx-label class="fw-bold line-clamp line-clamp-1 fs-6" fiedName="CurrencyID"
-                  [formModel]="fmSettledInvoices">
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom w-20">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblBalanceAmt2" default="Số dư, HT">
                 </codx-label>
               </div>
-            </th> -->
+            </th>
             <th class="border-bottom w-30">
               <div class="d-flex align-items-center justify-content-end ps-3">
                 <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Thanh toán">
+                </codx-label>
+              </div>
+            </th>
+            <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom w-30">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <codx-label class="fw-bold" fiedName="lblSettledAmt2" default="Thanh toán, HT">
                 </codx-label>
               </div>
             </th>
@@ -634,11 +639,25 @@
                 <span *ngIf="(item?.balAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.balAmt2 > 0)" class="fw-bold line-clamp line-clamp-1" #balAmt2 [innerHTML]="item?.balAmt2
+                      | formatvalue : fmSettledInvoices : 'balAmt2' : balAmt2 | async"></span>
+                <span *ngIf="(item?.balAmt2 == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
+              </div>
+            </td>
             <td>
               <div class="d-flex align-items-center justify-content-end ps-3">
                 <span *ngIf="(item?.settledAmt > 0)" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="item?.settledAmt
                       | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
                 <span *ngIf="(item?.settledAmt == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
+              </div>
+            </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+              <div class="d-flex align-items-center justify-content-end ps-3">
+                <span *ngIf="(item?.settledAmt2 > 0)" class="fw-bold line-clamp line-clamp-1" #settledAmt2 [innerHTML]="item?.settledAmt2
+                      | formatvalue : fmSettledInvoices : 'settledAmt2' : settledAmt2 | async"></span>
+                <span *ngIf="(item?.settledAmt2 == 0)" class="fw-bold line-clamp line-clamp-1">0</span>
               </div>
             </td>
             <td>
@@ -678,11 +697,27 @@
               class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
+        <td class="w-20" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+          <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+            <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #balAmt2 [innerHTML]="totalbalAmt2
+                  | formatvalue : fmSettledInvoices : 'balAmt2' : balAmt2 | async"></span>
+            <span *ngIf="settledInvoices.length == 0 || totalbalAmt2 == 0"
+              class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
         <td class="w-30">
           <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
             <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #settledAmt [innerHTML]="totalsettledAmt
                   | formatvalue : fmSettledInvoices : 'settledAmt' : settledAmt | async"></span>
             <span *ngIf="settledInvoices.length == 0 || totalsettledAmt == 0"
+              class="fw-bold line-clamp line-clamp-1">0</span>
+          </div>
+        </td>
+        <td class="w-30" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+          <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+            <span *ngIf="settledInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #settledAmt2 [innerHTML]="totalsettledAmt2
+                  | formatvalue : fmSettledInvoices : 'settledAmt2' : settledAmt2 | async"></span>
+            <span *ngIf="settledInvoices.length == 0 || totalsettledAmt2 == 0"
               class="fw-bold line-clamp line-clamp-1">0</span>
           </div>
         </td>
