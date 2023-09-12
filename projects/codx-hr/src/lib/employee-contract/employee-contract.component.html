@@ -317,7 +317,7 @@
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
     [titleTmp]="titleTmp"
-    [baseHeaderRightTmp]="titleRight"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [subTitle]="
       data?.inforEmployee?.positionID || data?.positionID
         | formatvalue : view.formModel : 'PositionID'
@@ -331,12 +331,13 @@
   </codx-temp-full>
 
   <ng-template #titleTmp>
-    <span class="fw-bold fs-6 mb-1 then-text-primary" (click)="viewDetail(data)">
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
       {{ data.inforEmployee?.employeeName }}
     </span>
-  </ng-template>
 
-  <ng-template #titleRight>
     <div
       *ngIf="
         data?.status === '5' &&

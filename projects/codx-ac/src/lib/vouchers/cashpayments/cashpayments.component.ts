@@ -62,6 +62,8 @@ export class CashPaymentsComponent extends UIComponent {
   totaltransAmt2: any = 0; //? tông tiền có tab hạch toán
   totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
   totalbalAmt: any = 0; //? tổng tiền số dư tab thông tin hóa đơn
+  totalsettledAmt2: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn,HT
+  totalbalAmt2: any = 0; //? tổng tiền số dư tab thông tin hóa đơn,HT
   totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
   totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
   settledInvoices: any; //? data của tab thông tin hóa đơn
@@ -283,7 +285,7 @@ export class CashPaymentsComponent extends UIComponent {
       .addNew((o) => this.setDefault())
       .subscribe((res) => {
         if (res != null) {
-          this.dataDefault = res?.data;
+          this.dataDefault = res;
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
@@ -830,9 +832,12 @@ export class CashPaymentsComponent extends UIComponent {
     this.totaltransAmt1 = 0;
     this.totaltransAmt2 = 0;
     this.totalbalAmt = 0;
+    this.totalbalAmt2 = 0;
     this.totalsettledAmt = 0;
+    this.totalsettledAmt2 = 0;
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
+    
     if (this.acctTrans && this.acctTrans.length > 0) {
       this.acctTrans.forEach((item) => {
         if (!item.crediting) {
@@ -847,6 +852,10 @@ export class CashPaymentsComponent extends UIComponent {
       this.settledInvoices.forEach((item) => {
         this.totalbalAmt += item.balAmt;
         this.totalsettledAmt += item.settledAmt;
+        if (this.itemSelected.currencyID != this.baseCurr) {
+          this.totalbalAmt2 += item.balAmt2;
+          this.totalsettledAmt2 += item.settledAmt2;
+        }
       });
     }
 
