@@ -30,6 +30,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { Modal } from 'bootstrap';
+import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
 
 @Component({
   selector: 'codx-login',
@@ -72,7 +73,7 @@ export class LoginDefaultComponent extends UIComponent {
   enableCaptcha = 0;
   token = '';
   captChaValid = false;
-  enableMultiLogin = true;
+  enableMultiLogin = false;
   // private fields
 
   //#region OTP
@@ -88,6 +89,7 @@ export class LoginDefaultComponent extends UIComponent {
   qrBase64: string = '/assets/codx/bg/qrCodx.png';
   isScaned = false;
   modal;
+  testQRContent = '';
   //#endregion
 
   constructor(
@@ -106,8 +108,6 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
-    console.log('isnot ad', this.isNotADMode);
-
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
@@ -121,15 +121,41 @@ export class LoginDefaultComponent extends UIComponent {
       let t = this;
       x.hub.invoke('GetConnectionId').then(function (connectionId) {
         t.hubConnectionID = connectionId;
-        console.log('hub', connectionId);
       });
 
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
-            this.authService.setLogin(z.data?.user);
-            this.realHub.stop();
-            window.location.href = z.data?.host + z.data?.tenant;
+            if (z.data.isLg2FA == '') {
+              this.authService.setLogin(z.data?.user);
+              this.realHub.stop();
+              window.location.href = z.data?.host + z.data?.tenant;
+            } else {
+              let user = JSON.parse(z.data.user);
+              let objData = {
+                data: {
+                  data: {
+                    email: user.Email,
+                    ...user,
+                  },
+                },
+                login2FA: z.data.isLg2FA,
+              };
+
+              let lg2FADialog = this.callfc.openForm(
+                Login2FAComponent,
+                '',
+                400,
+                600,
+                '',
+                objData
+              );
+              lg2FADialog.closed.subscribe((lg2FAEvt) => {
+                this.authService.setLogin(z.data?.user);
+                this.realHub.stop();
+                window.location.href = z.data?.host + z.data?.tenant;
+              });
+            }
           }
         });
       }
@@ -209,9 +235,7 @@ export class LoginDefaultComponent extends UIComponent {
       });
   }
 
-  changeTabs(evt) {
-    console.log('tab', evt);
-  }
+  changeTabs(evt) {}
 
   changeOTP(evt) {
     if (!evt) return;
@@ -250,6 +274,8 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   generateQR() {
+    console.log('hub', this.hubConnectionID);
+
     let deviceInfo = this.deviceInfo.getDeviceInfo();
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -268,10 +294,12 @@ export class LoginDefaultComponent extends UIComponent {
                 position.coords.latitude +
                 ';' +
                 position.coords.longitude,
+              '1',
             ]
           )
           .subscribe((qrImg) => {
             if (qrImg) {
+              // this.testQRContent = qrImg;
               this.qrTimeout = 180;
               this.qrBase64 = 'data:image/png;base64,' + qrImg;
               let id = setInterval(
@@ -310,7 +338,7 @@ export class LoginDefaultComponent extends UIComponent {
     //     'ERM.Business.AD',
     //     'UsersBusiness',
     //     'ScanQRCodeAsync',
-    //     ['', '', '']
+    //     [this.testQRContent, '', '']
     //   )
     //   .subscribe((qrInfo: any) => {
     //     this.authService

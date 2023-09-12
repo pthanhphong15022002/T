@@ -1,6 +1,6 @@
 <codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo"
-  (selectedChange)="changeItemSelected($event)" [isSubView]="true">
+  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
+  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="changeItemSelected($event)" [isSubView]="true">
 </codx-views>
 <!-- templateGrid -->
 <ng-template #templateGrid let-data>
@@ -131,9 +131,6 @@
               | async
           " class="text-gray-600 mt-1"></span>
       </div>
-      <div class="d-flex">
-        <!-- <button (click)="call()">{{bhLogin ? "Đã login" : "Bấm vô mình nè"}}</button> -->
-      </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div style="height: 27px !important;" class="d-flex align-items-center">
@@ -166,7 +163,8 @@
     <div class="d-flex justify-content-between flex-grow-1 mb-1">
       <div class="d-flex align-items-center">
         <!-- Người nhận tiền (phiếu chi)   -->
-        <codx-label *ngIf="(this.view.funcID == 'ACT0410')" class="fw-bold label-colon text-nowrap" fiedName="Payee" [formModel]="view.formModel">
+        <codx-label *ngIf="(this.view.funcID == 'ACT0410')" class="fw-bold label-colon text-nowrap" fiedName="Payee"
+          [formModel]="view.formModel">
         </codx-label>
         <span *ngIf="this.view.funcID == 'ACT0410'" #payee [innerHTML]="
             itemSelected?.payee
@@ -176,8 +174,8 @@
         <!-- Người nhận tiền (phiếu chi)   -->
 
         <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
-        <codx-label *ngIf="(this.view.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay" [formModel]="view.formModel"
-        default="Tài khoản chi">
+        <codx-label *ngIf="(this.view.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap"
+          fiedName="lblBankAccountPay" [formModel]="view.formModel" default="Tài khoản chi">
         </codx-label>
         <span *ngIf="(this.view.funcID == 'ACT0429' && bankPayID)" class="text-gray-600">{{bankPayID}}</span>
         <ng-container *ngIf="(this.view.funcID == 'ACT0429' && bankNamePay)">&nbsp;-&nbsp;</ng-container>
@@ -185,7 +183,8 @@
         <!-- Người nhận tiền (phiếu chi)   -->
 
         <!-- Người gửi tiền (phiếu thu)   -->
-        <codx-label *ngIf="(this.view.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor" [formModel]="view.formModel">
+        <codx-label *ngIf="(this.view.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor"
+          [formModel]="view.formModel">
         </codx-label>
         <span *ngIf="this.view.funcID == 'ACT0401'" #payor [innerHTML]="
             itemSelected?.payor
@@ -201,12 +200,14 @@
       </div>
     </div>
     <div class="d-flex align-items-top mb-1">
-       <!-- Sổ quỹ (thu chi) -->
-      <codx-label *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
-        [formModel]="view.formModel" default="Sổ quỹ">
+      <!-- Sổ quỹ (thu chi) -->
+      <codx-label *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')"
+        class="fw-bold label-colon text-nowrap" fiedName="lblCashBook" [formModel]="view.formModel" default="Sổ quỹ">
       </codx-label>
-      <span *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" class="text-gray-600">{{itemSelected?.cashBookID}}</span>
-      <ng-container *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')">&nbsp;-&nbsp;</ng-container>
+      <span *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')"
+        class="text-gray-600">{{itemSelected?.cashBookID}}</span>
+      <ng-container
+        *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')">&nbsp;-&nbsp;</ng-container>
       <span *ngIf="(this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0401')" #cashBookID class="text-gray-600"
         [innerHTML]="itemSelected?.cashBookID | formatvalue : view.formModel : 'cashBookID' : cashBookID | async"></span>
       <!-- Sổ quỹ (thu chi) -->
