@@ -4,8 +4,8 @@
 </codx-views>
 <!-- templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeTmpGridMF($event,data)" [formModel]="view.formModel"
-    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event,data,'viewgrid')" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" isBookMark="false" type="view"></codx-mfunc>
 </ng-template>
 <!-- templateGrid -->
 
@@ -13,13 +13,13 @@
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
     <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="view.formModel"
-      [dataItem]="itemSelected" (changeDataMF)="changeTmpDetailMF($event, itemSelected)" [footer]="TmpFooterDetail"
+      [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
       (clickMF)="clickMoreFunction($event, itemSelected)">
     </codx-detail-tmp>
   </ng-container>
@@ -914,7 +914,7 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'"
-    (changeDataMF)="changeTmpDetailMF($event, data)" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #listtitleTmp let-data>
