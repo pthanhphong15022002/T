@@ -23,7 +23,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
+import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -34,6 +34,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
+import { X } from '@angular/cdk/keycodes';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -272,6 +273,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'ACT042906':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
+      case 'ACT042901':
+        this.call();
+        break;
       case 'ACT041010':
       case 'ACT042907':
         this.printVoucher(data, e.functionID); //? in chứng từ
@@ -301,16 +305,11 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
-            CashPaymentAdd,
+            CashPaymentAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-          dialog.closed.subscribe((x) => {
-            if (x && x?.event?.update) {
-              this.getDatadetail(this.itemSelected);
-            }
-          });
         }
       });
   }
@@ -333,16 +332,11 @@ export class CashPaymentsComponent extends UIComponent {
           legalName: this.legalName, //? tên company
         };
         let dialog = this.callfc.openSide(
-          CashPaymentAdd,
+          CashPaymentAddComponent,
           data,
           this.optionSidebar,
           this.view.funcID
         );
-        dialog.closed.subscribe((x) => {
-          if (x && x?.event?.update) {
-            this.getDatadetail(this.itemSelected);
-          }
-        });
       });
   }
 
@@ -367,16 +361,11 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
-            CashPaymentAdd,
+            CashPaymentAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-          dialog.closed.subscribe((x) => {
-            if (x && x?.event?.update) {
-              this.getDatadetail(this.itemSelected);
-            }
-          });
         }
       });
   }
@@ -472,7 +461,7 @@ export class CashPaymentsComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || element.functionID == 'ACT042901') {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -705,7 +694,6 @@ export class CashPaymentsComponent extends UIComponent {
         if (res) {
           this.journal = res?.journal; // data journal
           this.hideFields = res?.hideFields; // array field ẩn từ sổ nhật kí
-          this.detectorRef.detectChanges();
         }
       });
   }

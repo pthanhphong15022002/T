@@ -62,13 +62,12 @@ import { Validators } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CashPaymentAdd extends UIComponent implements OnInit {
+export class CashPaymentAddComponent extends UIComponent implements OnInit {
   //#region Contructor
-  @ViewChild('eleGridCashPayment') eleGridCashPayment: CodxGridviewV2Component; //? element codx-grv2 lưới Cashpayemnts
-  @ViewChild('eleGridSettledInvoices')
-  eleGridSettledInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới SettledInvoices
+  @ViewChild('eleGridCashPayment') eleGridCashPayment: CodxGridviewV2Component; //? element codx-grv2 lưới Cashpayments
+  @ViewChild('eleGridSettledInvoices') eleGridSettledInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới SettledInvoices
   @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
-  @ViewChild('formCashPayment') public formCashPayment: CodxFormComponent; //? element codx-form của Cashpayment
+  @ViewChild('formCashPayment') public formCashPayment: CodxFormComponent; //? element codx-form của Cashpayments
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn công nợ,hóa đơn GTGT)
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any; //? element codx-input cbx của lý do chi
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any; //? element codx-input cbx của đối tượng
@@ -76,7 +75,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   @ViewChild('eleCbxCashBook') eleCbxCashBook: any; //? element codx-input cbx của sổ quỹ
   @ViewChild('eleCbxBankAcct') eleCbxBankAcct: any; //? element codx-input cbx của tài khoản nhận
   @ViewChild('eleCbxSubType') eleCbxSubType: any; //? element codx-dropdown của loại phiếu
-  @ViewChild('elelblObjectID') elelblObjectID: any; //? element codx-label của đối tượng
   headerText: string; //? tên tiêu đề
   dialog!: DialogRef; //? dialog truyền vào
   dialogData?: any; //? dialog hứng data truyền vào
@@ -106,6 +104,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   totalDrLine:any = 0; //? tổng số tiền của tất cả dòng line (số tiền tab ủy nhiệm chi)
+  isAddRow:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -634,6 +633,11 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && ((!res?.save?.error) || (!res?.update?.error))) {
+          if (this.eleGridCashPayment && this.eleGridCashPayment.isEdit) { // bùa mốt gỡ
+            this.isAddRow = true;
+            this.eleGridCashPayment.endEdit();
+            return;
+          }
           this.addRowDetailByType(typeBtn);
         }
       });
@@ -1301,6 +1305,10 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
             element.focus();
           }, 100);
         }
+        if (this.isAddRow) { // bùa khi lưới đang edit nhấn nút thêm dòng thì chờ thêm dòng xong => thêm dòng mới
+          this.isAddRow = false;
+          this.onAddLine('1');
+        }
         break;
       case 'closeEdit': //? khi thoát dòng
         setTimeout(() => {
@@ -1495,18 +1503,18 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
     this.formCashPayment.setRequire(lstDisable);
   }
 
-  @HostListener('click', ['$event'])
-  onClick(e) {
-    if (
-      e.target.closest('.e-grid') == null &&
-      e.target.closest('.e-popup') == null &&
-      e.target.closest('.edit-value') == null
-    ) {
-      if (this.eleGridCashPayment && this.eleGridCashPayment.gridRef.isEdit) {
-        this.eleGridCashPayment.autoAddRow = false;
-        this.eleGridCashPayment.endEdit();
-      }
-    }
-  }
+  // @HostListener('click', ['$event'])
+  // onClick(e) {
+  //   if (
+  //     e.target.closest('.e-grid') == null &&
+  //     e.target.closest('.e-popup') == null &&
+  //     e.target.closest('.edit-value') == null
+  //   ) {
+  //     if (this.eleGridCashPayment && this.eleGridCashPayment.gridRef.isEdit) {
+  //       this.eleGridCashPayment.autoAddRow = false;
+  //       this.eleGridCashPayment.endEdit();
+  //     }
+  //   }
+  // }
   //#endregion Function
 }

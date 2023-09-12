@@ -69,7 +69,7 @@ import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { TableAccountingComponent } from './vouchers/salesinvoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
-import { CashPaymentAdd } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
+import { CashPaymentAddComponent } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
 import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-add.component';
 import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
@@ -245,7 +245,7 @@ export const routes: Routes = [
     CodxAcComponent,
     LayoutComponent,
     CashPaymentsComponent,
-    CashPaymentAdd,
+    CashPaymentAddComponent,
     JournalsComponent,
     CashtransfersComponent,
     CashtransfersAddComponent,
