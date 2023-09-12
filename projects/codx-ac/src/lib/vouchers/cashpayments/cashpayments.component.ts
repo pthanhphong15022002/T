@@ -420,7 +420,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeTmpDetailMF(event: any, data: any) {
+  changeMFDetail(event: any, data: any,type:any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
@@ -440,6 +440,11 @@ export class CashPaymentsComponent extends UIComponent {
         x.functionID == 'ACT042901' // MF chuyển tiền điện tử
     );
     if (arrBookmark.length > 0) {
+      if (type == 'viewgrid') {
+        arrBookmark.forEach((element) => {
+          element.isbookmark = false;
+        });
+      }
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
@@ -513,122 +518,6 @@ export class CashPaymentsComponent extends UIComponent {
       }
     }
     return;
-  }
-
-  /**
-   * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view lưới)
-   * @param event : danh sách morefunction
-   * @param data
-   */
-  changeTmpGridMF(event: any, data: any) {
-    let arrBookmark = event.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || //? MF ghi sổ
-        x.functionID == 'ACT041002' || //? MF gửi duyệt
-        x.functionID == 'ACT041004' || //? MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || //? MF khôi phục
-        x.functionID == 'ACT042901' || //? MF chuyển tiền điện tử
-        x.functionID == 'ACT041010' || //? MF in
-        x.functionID == 'ACT041009' //? MF kiểm tra tính hợp lệ
-    );
-    if (arrBookmark.length > 0) {
-      arrBookmark.forEach((element) => {
-        element.isbookmark = false;
-      });
-      switch (data?.status) {
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041002' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '2':
-        case '4':
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041004' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041008' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-      }
-    }
   }
 
   /**
