@@ -332,12 +332,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let f = await firstValueFrom(this.cache.functionList(functionID) || null);
     let formModel = {};
-    formModel['formName'] = f?.formName;
-    formModel['gridViewName'] = f?.gridViewName;
-    formModel['entityName'] = f?.entityName;
-    formModel['funcID'] = functionID;
+    if(f){
+      formModel['formName'] = f?.formName;
+      formModel['gridViewName'] = f?.gridViewName;
+      formModel['entityName'] = f?.entityName;
+      formModel['funcID'] = functionID;
+    }
     return formModel;
   }
 
@@ -2294,7 +2296,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (countTask > 0) {
       let sumProgress = 0;
       let check = false;
-
       const processTask = (task) => {
         task.progress = 100;
         task.status = '3';
@@ -2304,8 +2305,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
       if (isRequired) {
         group?.task?.forEach((task) => {
-          if (task?.requireCompleted) {
+          if (task?.requireCompleted || task?.isChange) {
             processTask(task);
+          }else{
+            task.progress = task?.progressOld;
+            task.status = task?.statusOld;
           }
           sumProgress += task.progress;
         });
@@ -2330,22 +2334,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (countTask > 0) {
       let sumProgress = 0;
       group?.task?.forEach((task) => {
-        if(isRequired){
-          if (task?.requireCompleted) {
-            task.progress = task?.progressOld;
-            task.status = task?.statusOld;
-            if (task?.isChange) {
-              progressData.push(this.setProgressOutput(null, group));
-            }
-          }
-        }else{         
-          task.progress = task?.progressOld;
-          task.status = task?.statusOld;
-          if (task?.isChange) {
-            progressData.push(this.setProgressOutput(null, group));
-          }         
-        }
-        
+        task.progress = task?.progressOld;
+        task.status = task?.statusOld;
+        if (task?.isChange) {
+          progressData.push(this.setProgressOutput(null, group));
+        }   
         sumProgress += task.progress;
       });
       if (group?.isChangeAuto) {
