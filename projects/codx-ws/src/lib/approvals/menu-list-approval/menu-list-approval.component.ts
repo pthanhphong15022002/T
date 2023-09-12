@@ -10,7 +10,7 @@ import { isObservable } from 'rxjs';
 export class MenuListApprovalComponent implements OnInit{
 
   @Input() funcID: any;
-  @Output() menuChange = new EventEmitter<any>();
+  @Output() clickChange = new EventEmitter<any>();
   
   funcList:any;
   listParentGroup:any;
@@ -44,6 +44,6 @@ export class MenuListApprovalComponent implements OnInit{
   selectedChange(data:any)
   {
     this.selectedIndex = data?.functionID;
-    this.menuChange.emit(this.selectedIndex);
+    this.clickChange.emit(this.selectedIndex);
   }
 }

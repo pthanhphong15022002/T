@@ -4,11 +4,11 @@
 </div>
 
 <ng-template #menu>
-    <lib-menu-list-approval [funcID]="funcID" (menuChange)="menuChange($event)"></lib-menu-list-approval>
+    <lib-menu-list-approval [funcID]="funcID" (clickChange)="clickChange($event)"></lib-menu-list-approval>
 </ng-template>
 
 <ng-template #detail>
-    <div class="h-100 w-100 ps-4">
+    <div class="h-100 w-100 ps-4 ws-approval">
         <ng-template #content></ng-template>
     </div>
 </ng-template>

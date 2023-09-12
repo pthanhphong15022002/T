@@ -27,11 +27,11 @@ export class ApprovalsComponent extends WSUIComponent implements AfterViewInit {
     if(funcID) componentRef.instance.funcID = funcID;
   }
 
-  menuChange(menuID:any)
+  clickChange(module:any)
   {
     let funcID = ""; //functionID form xét duyệt (runmode = 1)
     let component:Type<any> = null;
-    switch(menuID)
+    switch(module)
     {
       case "All":
       {
@@ -42,6 +42,12 @@ export class ApprovalsComponent extends WSUIComponent implements AfterViewInit {
       {
         funcID = "ODT71";
         component = this.components.cpnDispatches;
+        break;
+      }
+      case "HR":
+      {
+        funcID = "HRTAppro01";
+        component = this.components.cpnEmployeeContract;
         break;
       }
     }
