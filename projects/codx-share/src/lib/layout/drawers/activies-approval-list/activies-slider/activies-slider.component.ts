@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogModel, DialogRef, NotificationsService, ScrollComponent, SidebarModel, CallFuncService } from 'codx-core';
+import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
@@ -40,6 +41,7 @@ export class ActiviesSliderComponent implements OnInit {
     private auth:AuthStore,
     private codxService:CodxService,
     private cache:CacheService,
+    private callFuncService : CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   )
@@ -210,7 +212,45 @@ export class ActiviesSliderComponent implements OnInit {
 
   // xem trình ký
   viewSignature(data:any){
-    // gọi hàm xử lý xem trình ký
+    this.codxShareService.getApprovalTrans(data?.transID).subscribe((trans:any)=>{
+      if(trans){
+        // gọi hàm xử lý xem trình ký
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        var listApproveMF = this.codxShareService.getMoreFunction(null,trans?.stepType);
+
+        let dialogApprove = this.callFuncService.openForm(
+          PopupSignForApprovalComponent,
+          'Thêm mới',
+          700,
+          650,
+          'EST021',
+          {
+            funcID: 'EST021',
+            sfRecID: trans?.transID,
+            title: trans?.htmlView,
+            status: trans?.status,
+            stepType: trans?.stepType,
+            stepNo: trans?.stepNo,
+            transRecID: trans?.recID,
+            oTrans: trans,
+            lstMF: listApproveMF,
+          },
+          '',
+          dialogModel
+        );
+        // dialogApprove.closed.subscribe((x) => {
+        //   // if (x.event?.result) {
+        //   
+        //   }
+        // });
+      }
+      else{
+        this.notiSV.notifyCode("SYS001");
+        return;
+      }
+    });
+    
   }
 }
 

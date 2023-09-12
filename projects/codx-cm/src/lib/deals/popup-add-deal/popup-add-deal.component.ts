@@ -137,15 +137,17 @@ export class PopupAddDealComponent
   isViewAll: boolean = false;
   functionModule: any;
   paramView: any;
+
   processIdDefault: string = '';
-  currencyIDDefault: string = '';
   defaultDeal: string = '';
+  categoryCustomer: string = '';
 
   // load data form DP
   isLoading: boolean = false;
   isBlock: boolean = true;
   currencyIDOld: string;
   idxCrr: any = -1;
+  instanceRes: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -167,15 +169,20 @@ export class PopupAddDealComponent
     this.gridViewSetup = dt?.data?.gridViewSetup;
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-
       if (this.action != this.actionAdd) {
         this.deal = dt?.data?.dataCM;
+        this.categoryCustomer = dt?.data?.categoryCustomer;
       }
     } else {
       this.deal =
         this.action != this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
+      this.categoryCustomer = dt?.data?.categoryCustomer;
+      if(this.action === this.actionAdd) {
+        this.deal.exchangeRate= dt?.data?.exchangeRateDefault;
+        this.deal.currencyID = dt?.data?.currencyIDDefault;
+      }
     }
 
     if (dt?.data.processID) {
@@ -192,18 +199,15 @@ export class PopupAddDealComponent
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
     }
-    if (this.action === this.actionAdd) {
-      this.currencyIDDefault = dt?.data?.currencyIDDefault;
-      this.deal.currencyID = this.currencyIDDefault;
-    }
   }
 
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    if (this.action == 'add') {
-      this.tabInfo = [this.menuGeneralInfo];
-      this.tabContent = [this.tabGeneralInfoDetail];
+    this.tabInfo = [this.menuGeneralInfo];
+    this.tabContent = [this.tabGeneralInfoDetail];
+    if (this.action !== this.actionAdd) {
+      this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
     }
   }
 
@@ -211,6 +215,8 @@ export class PopupAddDealComponent
     if ($event) {
       this.deal[$event.field] = $event.data;
       if ($event.field === 'customerID') {
+        this.lstContactDeal = [];
+        this.lstContactDelete = [];
         this.customerID = $event?.data ? $event.data : null;
         if (this.customerID) {
           this.customerOld = this.customerID;
@@ -221,11 +227,15 @@ export class PopupAddDealComponent
           }
           this.getListContactByObjectID(this.customerID);
         }
-        this.itemTabContact(this.ischeckCategoryCustomer($event.component.itemsSelected[0].Category ));
+        this.itemTabContact(
+          this.ischeckCategoryCustomer(
+            $event.component.itemsSelected[0].Category
+          )
+        );
       }
-      if ($event.field === 'currencyID') {
-        this.loadExchangeRate();
-      }
+      // if ($event.field === 'currencyID') {
+      //   this.loadExchangeRate();
+      // }
       if ($event.field === 'consultantID') {
         this.searchOwner(
           'U',
@@ -352,7 +362,6 @@ export class PopupAddDealComponent
       } else {
         this.lstContactCustomer = [];
       }
-
       if (
         this.action === this.actionEdit &&
         this.deal.customerID === this.customerIDOld
@@ -466,24 +475,12 @@ export class PopupAddDealComponent
   }
 
   async executeSaveData() {
-    try {
-      if (this.isLoading) {
-        if (this.action !== this.actionEdit) {
-          await this.addDealForDP();
-          this.insertInstance();
-        } else {
-          await this.editDealForDP();
-          await this.editInstance();
-        }
-      } else {
-        if (this.action !== this.actionEdit) {
-          await this.insertInstance();
-        } else {
-          await this.editInstance();
-
-        }
-      }
-    } catch (error) {}
+    if (this.action !== this.actionEdit) {
+      this.addPermission(this.deal.processID);
+      await this.insertInstance();
+    } else {
+      await this.editInstance();
+    }
   }
 
   cbxChange($event, field) {
@@ -658,7 +655,6 @@ export class PopupAddDealComponent
   }
 
   onAdd() {
-    this.addPermission(this.deal.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -667,12 +663,14 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
-  async onEdit() {
+  onEdit() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
           this.dialog.close(res.update[0]);
+        } else {
+          this.dialog.close();
         }
       });
   }
@@ -704,6 +702,9 @@ export class PopupAddDealComponent
           this.formModel.formName,
           this.formModel.gridViewName
         ));
+      if(this.action === this.actionAdd) {
+        this.loadExchangeRate();
+      }
       if (this.action !== this.actionAdd) {
         await this.getListInstanceSteps(this.deal.processID);
       }
@@ -814,9 +815,10 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
-        this.isLoading && this.dialog.close(instance);
+        this.instanceRes = instance;
         this.deal.datas = instance.datas;
-        this.onAdd();
+        !this.isLoading && this.onAdd();
+        this.isLoading && this.addDealForDP();
       }
     });
   }
@@ -824,10 +826,10 @@ export class PopupAddDealComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-
-        this.isLoading && this.dialog.close(instance);
+        this.instanceRes = instance;
         this.deal.datas = instance.datas;
-        this.onEdit();
+        !this.isLoading && this.onEdit();
+        this.isLoading && this.editDealForDP();
       }
     });
   }
@@ -836,6 +838,7 @@ export class PopupAddDealComponent
     var datas = [this.deal, this.lstContactDeal];
     this.codxCmService.addDeal(datas).subscribe((deal) => {
       if (deal) {
+        this.dialog.close(this.instanceRes);
       }
     });
   }
@@ -849,6 +852,7 @@ export class PopupAddDealComponent
     ];
     this.codxCmService.editDeal(datas).subscribe((deal) => {
       if (deal) {
+        this.dialog.close(this.instanceRes);
       }
     });
   }
@@ -984,23 +988,29 @@ export class PopupAddDealComponent
 
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
-    let menuInput = this.tabInfo.find(item => item === this.menuInputInfo);
-    let tabInput = this.tabContent.find(item => item === this.tabCustomFieldDetail);
+    let menuInput = this.tabInfo.find((item) => item === this.menuInputInfo);
+    let tabInput = this.tabContent.find(
+      (item) => item === this.tabCustomFieldDetail
+    );
     if (check && !menuInput && !tabInput) {
       this.tabInfo.splice(2, 0, this.menuInputInfo);
       this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    } else if(!check && menuInput && tabInput){
+    } else if (!check && menuInput && tabInput) {
       this.tabInfo.splice(2, 1);
       this.tabContent.splice(2, 1);
     }
   }
   itemTabContact(check: boolean): void {
-    let menuContact = this.tabInfo.find(item => item === this.menuGeneralContact);
-    let tabContact = this.tabContent.find(item => item === this.tabGeneralContactDetail);
+    let menuContact = this.tabInfo.find(
+      (item) => item === this.menuGeneralContact
+    );
+    let tabContact = this.tabContent.find(
+      (item) => item === this.tabGeneralContactDetail
+    );
     if (check && !menuContact && !tabContact) {
       this.tabInfo.splice(1, 0, this.menuGeneralContact);
       this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
-    } else if(!check && menuContact && tabContact){
+    } else if (!check && menuContact && tabContact) {
       this.tabInfo.splice(1, 1);
       this.tabContent.splice(1, 1);
     }
@@ -1061,48 +1071,44 @@ export class PopupAddDealComponent
     }
   }
 
-  contactEventDeal(e) {
-    if (e.data) {
-      var findIndex = this.lstContactCustomer.findIndex(
-        (x) => x.recID == e.data?.refID
-      );
-      if (e.action == 'edit') {
-        if (findIndex != -1) {
-          var isDefault = this.lstContactCustomer[findIndex].isDefault;
-          this.lstContactCustomer[findIndex] = JSON.parse(
-            JSON.stringify(e.data)
-          );
-          this.lstContactCustomer[findIndex].recID = e.data.refID;
-          this.lstContactCustomer[findIndex].role = null;
-          this.lstContactCustomer[findIndex].isDefault = isDefault;
-          this.loadContactDeal.loadListContact(this.lstContactCustomer);
-        }
-      }
-      this.changeDetectorRef.detectChanges();
-    }
-  }
+  // contactEventDeal(e) {
+  //   if (e.data) {
+  //     var findIndex = this.lstContactCustomer.findIndex(
+  //       (x) => x.recID == e.data?.refID
+  //     );
+  //     if (e.action == 'edit') {
+  //       if (findIndex != -1) {
+  //         var isDefault = this.lstContactCustomer[findIndex].isDefault;
+  //         this.lstContactCustomer[findIndex] = JSON.parse(
+  //           JSON.stringify(e.data)
+  //         );
+  //         this.lstContactCustomer[findIndex].recID = e.data.refID;
+  //         this.lstContactCustomer[findIndex].role = null;
+  //         this.lstContactCustomer[findIndex].isDefault = isDefault;
+  //         this.loadContactDeal.loadListContact(this.lstContactCustomer);
+  //       }
+  //     }
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
 
   loadExchangeRate() {
-    let day = this.deal.createdOn ?? new Date();
-    if (this.deal.currencyID) {
-      this.codxCmService
-        .getExchangeRate(this.deal.currencyID, day)
-        .subscribe((res) => {
-          let exchangeRateNew = res?.exchRate ?? 0;
-          if (exchangeRateNew == 0) {
-            this.notificationsService.notify(
-              'Tỷ giá tiền tệ "' +
-                this.deal.currencyID +
-                '" chưa thiết lập xin hay chọn lại !',
-              '3'
-            );
-            this.form.formGroup.patchValue(this.deal);
-            return;
-          } else {
-            this.deal.exchangeRate = exchangeRateNew;
-          }
-        });
-    }
+    this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {
+      if (dataParam1) {
+        let paramDefault = JSON.parse(dataParam1.dataValue);
+        this.deal.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+        let day = new Date();
+        this.codxCmService
+          .getExchangeRate(this.deal.currencyID, day)
+          .subscribe((res) => {
+            if (res) this.deal.exchangeRate = res?.exchRate;
+            else {
+              this.deal.currencyID = 'VND';
+              this.deal.exchangeRate = 1;
+            }
+          });
+      }
+    });
   }
   valueTagChange(e) {
     this.deal.tags = e.data;

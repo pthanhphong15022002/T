@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -45,6 +46,10 @@ export class PopupConvertLeadComponent implements OnInit {
   @ViewChild('codxConvert') codxConvert: CodxListContactsComponent;
   @ViewChild('codxListAddress') codxListAddress: CodxAddressCmComponent;
   @ViewChild('codxLoadAdress') codxLoadAdress: CodxAddressCmComponent;
+  @ViewChild('tabDeal') tabDeal: TemplateRef<any>;
+  @ViewChild('tabCustomer') tabCustomer: TemplateRef<any>;
+  @ViewChild('tabContacts') tabContacts: TemplateRef<any>;
+  @ViewChild('tabInput') tabInput: TemplateRef<any>;
 
   deal: CM_Deals = new CM_Deals();
   lead: CM_Leads = new CM_Leads();
@@ -61,16 +66,17 @@ export class PopupConvertLeadComponent implements OnInit {
       name: 'Customer',
     },
     {
-      icon: 'icon-contact_phone',
-      text: 'Người liên hệ',
-      name: 'Contacts',
-    },
-    {
       icon: 'icon-read_more',
       text: 'Thông tin khác',
       name: 'InputInformation',
     },
   ];
+  tabContact = {
+    icon: 'icon-contact_phone',
+    text: 'Người liên hệ',
+    name: 'Contacts',
+  };
+  tabContents = [];
   formModelDeals: any;
   formModelCustomer: any;
   listCbxProcess = [];
@@ -134,7 +140,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.currencyID = this.lead?.currencyID;
     this.deal.exchangeRate = this.lead?.exchangeRate;
     this.promiseAll();
-    this.customer.category = this.lead.category;
+    // this.customer.category = this.lead.category;
   }
 
   async ngOnInit() {
@@ -157,7 +163,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.getProcessIDBybusinessLineID(this.lead.businessLineID);
 
     this.setData();
-
+    this.tabContents = [this.tabDeal, this.tabCustomer, this.tabInput];
     this.changeDetectorRef.detectChanges();
   }
 
@@ -547,23 +553,25 @@ export class PopupConvertLeadComponent implements OnInit {
 
   //#endregion
   valueBusinessLine(e) {
-    if (this.deal?.businessLineID != e?.data) {
-      this.deal.businessLineID = e?.data;
-      let businessName = e?.component.itemsSelected[0].BusinessLineName;
-      var nameDefault =
-        this.lead.shortName != null && this.lead.shortName.trim() != ''
-          ? this.lead.shortName
-          : this.lead.leadName;
-      this.deal.dealName =
-        nameDefault + ' mua ' + businessName;
-      if (this.deal.businessLineID) {
-        var processId = e.component.itemsSelected[0].ProcessID;
-        if (!this.deal?.processID || processId != this.deal?.processID) {
-          this.deal.processID = processId;
-          this.getListInstanceSteps(this.deal.processID);
+    if (e?.data != null && e?.data?.trim() != '') {
+      if (this.deal?.businessLineID != e?.data) {
+        this.deal.businessLineID = e?.data;
+        let businessName = e?.component.itemsSelected[0].BusinessLineName;
+        var nameDefault =
+          this.lead.shortName != null && this.lead.shortName.trim() != ''
+            ? this.lead.shortName
+            : this.lead.leadName;
+        this.deal.dealName = nameDefault + ' mua ' + businessName;
+        if (this.deal.businessLineID) {
+          var processId = e.component.itemsSelected[0].ProcessID;
+          if (!this.deal?.processID || processId != this.deal?.processID) {
+            this.deal.processID = processId;
+            this.getListInstanceSteps(this.deal.processID);
+          }
         }
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   groupByStep(listStep) {
@@ -719,6 +727,7 @@ export class PopupConvertLeadComponent implements OnInit {
       }
       this.setDataCustomer();
       this.setContact();
+      this.isCheckTab();
       this.countAddNew++;
 
       // this.getListContactByObjectID(this.customerNewOld);
@@ -751,6 +760,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.owner = this.deal.owner;
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
+    this.customer.category = this.lead?.category;
   }
 
   setContact() {
@@ -775,6 +785,23 @@ export class PopupConvertLeadComponent implements OnInit {
       this.recIDContact = this.lead.contactID;
       this.lstContactDeal.push(tmp);
     }
+  }
+
+  isCheckTab() {
+    var index = this.tabInfo.findIndex((x) => x.name == this.tabContact.name);
+    var idxCons = this.tabContents.findIndex((x) => x == this.tabContacts);
+    if (this.customer.category == '1') {
+      if (index == -1) {
+        this.tabInfo.splice(2, 0, this.tabContact);
+        this.tabContents.splice(2, 0,this.tabContacts);
+      }
+    } else {
+      if (index != -1) {
+        this.tabInfo.splice(2, 1);
+        this.tabContents.splice(2, 1);
+      }
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChangeOwner(e) {
@@ -810,6 +837,10 @@ export class PopupConvertLeadComponent implements OnInit {
           this.lead.customerID = this.customerID;
           this.getListContactByObjectID(this.customerID);
         }
+        if (e?.data != null && e?.data?.trim() != '') {
+          this.customer.category = e.component?.itemsSelected[0]?.Category;
+          this.isCheckTab();
+        }
       }
 
       if (e.field == 'consultantID') {
@@ -820,6 +851,7 @@ export class PopupConvertLeadComponent implements OnInit {
         this.loadExchangeRate();
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueDateChange(e, type) {

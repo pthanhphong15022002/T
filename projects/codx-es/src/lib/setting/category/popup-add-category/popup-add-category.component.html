@@ -83,7 +83,14 @@
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group"></div>
+          <div class="form-group" *ngIf="grvSetup && grvSetup['ReleaseControl'] && !isES" field="releaseControl">
+            <codx-label fiedName="ReleaseControl" [formModel]="formModel">
+            </codx-label>
+            <codx-input 
+              [crrValue]="data?.releaseControl" field="releaseControl" type="valuelist" [refValue]="grvSetup['ReleaseControl']['referedValue']"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -134,7 +141,7 @@
     </codx-view-approval-step>
   </ng-template>
   <ng-template #tabTemplate>
-    <div >
+    <div *ngIf="(isAdd && isSaved)||!isAdd">
       <button type="button" class="btn btn-light-primary me-3" (click)="templateMF('add', this.sfModel)">
         <codx-label name="lblAddTemplate" [formModel]="formModel" default="Thêm mới mẫu">
         </codx-label>
