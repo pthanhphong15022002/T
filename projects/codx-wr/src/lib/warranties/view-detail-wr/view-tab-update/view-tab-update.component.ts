@@ -101,46 +101,11 @@ export class ViewTabUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // this.columnsGrid = [
-    //   {
-    //     field: 'statusCode',
-    //     headerText: 'StatusCode',
-    //     template: this.tempStatusCode,
-    //     width: 180,
-    //   },
-    //   {
-    //     field: 'comment',
-    //     headerText: 'Comment',
-    //     template: this.tempComment,
-    //     width: 400,
-    //   },
-    //   {
-    //     field: 'scheduleStart',
-    //     headerText: 'ScheduleStart',
-    //     template: this.tempScheduleStart,
-    //     width: 100,
-    //   },
-    //   {
-    //     field: 'scheduleTime',
-    //     headerText: 'ScheduleTime',
-    //     template: this.tempScheduleTime,
-    //     width: 200,
-    //   },
-    //   {
-    //     field: 'engineerID',
-    //     headerText: 'EngineerID',
-    //     template: this.tempEngineerID,
-    //     width: 200,
-    //   },
-    //   {
-    //     field: 'createdBy',
-    //     headerText: 'CreatedBy',
-    //     template: this.tempCreatedBy,
-    //     width: 200,
-    //   },
-    // ];
     // this.getGridViewSetup();
+  }
+
+  ngAfterViewInit(): void {
+    this.detectorRef.detectChanges();
   }
 
   getListOrderUpdate() {
@@ -152,45 +117,46 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
+      // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
+
+      this.columnsGrid = [
+        {
+          headerTemplate: this.headerStatusCode,
+          template: this.tempStatusCode,
+          width: 150,
+        },
+        {
+          headerTemplate: this.headerComment,
+          template: this.tempComment,
+          width: 400,
+        },
+        {
+          headerTemplate: this.headerScheduleStart,
+          template: this.tempScheduleStart,
+          width: 100,
+        },
+        {
+          headerTemplate: this.headerScheduleTime,
+          template: this.tempScheduleTime,
+          width: 200,
+        },
+        {
+          headerTemplate: this.headerEngineerID,
+          template: this.tempEngineerID,
+          width: 200,
+        },
+        {
+          headerTemplate: this.headerCreatedBy,
+          template: this.tempCreatedBy,
+          width: 200,
+        },
+      ];
       this.wrSv.listOrderUpdateSubject.next({
         e: this.lstUpdate,
         date: null,
         update: null,
       });
-      // this.columnsGrid = [
-      //   {
-      //     headerTemplate: this.headerStatusCode,
-      //     template: this.tempStatusCode,
-      //     width: 100,
-      //   },
-      //   {
-      //     headerTemplate: this.headerComment,
-      //     template: this.tempComment,
-      //     width: 400,
-      //   },
-      //   {
-      //     headerTemplate: this.headerScheduleStart,
-      //     template: this.tempScheduleStart,
-      //     width: 100,
-      //   },
-      //   {
-      //     headerTemplate: this.headerScheduleTime,
-      //     template: this.tempScheduleTime,
-      //     width: 200,
-      //   },
-      //   {
-      //     headerTemplate: this.headerEngineerID,
-      //     template: this.tempEngineerID,
-      //     width: 200,
-      //   },
-      //   {
-      //     headerTemplate: this.headerCreatedBy,
-      //     template: this.tempCreatedBy,
-      //     width: 200,
-      //   },
-      // ];
       // this.grid.showRowNumber = false;
-      this.grid.refresh();
     });
   }
 
@@ -214,9 +180,9 @@ export class ViewTabUpdateComponent implements OnInit {
       );
   }
 
-  loadList(lstUpdate){
+  loadList(lstUpdate) {
     this.lstUpdate = lstUpdate;
-    if(this.grid){
+    if (this.grid) {
       this.grid.dataSource = this.lstUpdate;
     }
   }
