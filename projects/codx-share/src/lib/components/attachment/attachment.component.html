@@ -285,7 +285,7 @@
         </div>
     </div>
     <div class="attach-group">
-        <div *ngIf="hideImageThumb == '0'">
+        <div *ngIf="hideImageThumb == '0' && data">
             <div class="mt-2 attach-files" style="overflow: auto" [style.maxHeight]="heightScroll + 'px'"
                 (scroll)="scrollFile()">
                 <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"

@@ -316,7 +316,7 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
         this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
       }
     }
-    //this.setValidateForm()
+    this.setValidateForm()
   }
 
   /**
@@ -1484,7 +1484,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
    */
   setValidateForm(){
     let rObjectID = false;
-    let rVoucherNo = false;
     let lstDisable :any = [];
     if (this.formCashPayment.data.subType != '1' && this.formCashPayment) {
       rObjectID = true;
@@ -1494,33 +1493,6 @@ export class CashPaymentAdd extends UIComponent implements OnInit {
       lstDisable.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formCashPayment.setRequire(lstDisable);
-    // if (this.journal.assignRule == '1' || this.journal.assignRule == '2') { //? nếu số chứng từ tự động hoặc từ động tạo khi lưu
-    //   this.formCashPayment.formGroup.controls['voucherNo'].removeValidators(Validators.required); //? không cần bắt buộc nhập
-    // }
-    // if (this.cashpayment.subType != '1') { //? nếu chứng từ khác nhà cung cấp ko theo hóa đơn
-    //   this.formCashPayment.formGroup.controls['objectID'].setValidators(Validators.required); //? set bắt buộc nhập đối tượng
-    // }else{
-    //   this.formCashPayment.formGroup.controls['objectID'].removeValidators(Validators.required); //? set ko bắt buộc nhập đối tượng
-    // }
-    // this.formCashPayment.formGroup.controls['objectID'].updateValueAndValidity();
-    // this.formCashPayment.formGroup.controls['voucherNo'].updateValueAndValidity();
-
-    // let ins = setInterval(() => {
-    //   if (this.eleCbxObjectID && this.elelblObjectID) {
-    //     clearInterval(ins);
-    //     if (this.formCashPayment.formGroup.controls['objectID'].status == 'INVALID') {
-    //       this.eleCbxObjectID.require = true;
-    //       this.elelblObjectID?.changeDetectorRef?._cdRefInjectingView[0]?.children[0]?.classList?.add('required'); //? set label có hình bắt buộc
-    //     }else{
-    //       this.eleCbxObjectID.require = false;
-    //       this.elelblObjectID?.changeDetectorRef?._cdRefInjectingView[0]?.children[0]?.classList?.remove('required'); //? set label ko có hình bắt buộc
-    //     }
-    //   }
-    // }, 200);
-    // setTimeout(() => {
-    //   if (ins) clearInterval(ins);
-    // }, 5000);
-
   }
 
   @HostListener('click', ['$event'])
