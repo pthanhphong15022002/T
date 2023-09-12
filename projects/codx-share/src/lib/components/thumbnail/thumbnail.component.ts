@@ -125,7 +125,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.changeDetectorRef.detectChanges();
   }
 
   //Lấy version đầu tiên
@@ -152,7 +151,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   openPermission(data) {
     this.dmSV.dataFileEditing = data;
-    //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
     this.callfc.openForm(
       RolesComponent,
       this.titleRolesDialog,
