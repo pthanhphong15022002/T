@@ -1271,6 +1271,7 @@ export class OrganizationOrgchartComponent {
       changes?.orgUnitID?.currentValue != changes?.orgUnitID?.previousValue &&
       !changes?.orgUnitID.firstChange
     ) {
+      this.firstOrgLoaded = this.orgUnitID;
       if (this.orgUnitID) {
         //Function get new orgchart
         this.isGetManager();

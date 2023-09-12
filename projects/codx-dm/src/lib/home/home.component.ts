@@ -59,6 +59,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   @ViewChild('Dialog') public Dialog: DialogComponent;
+  selectedFirst = false;
   animationSettings: AnimationSettingsModel = { effect: 'None' };
   viewActive: any;
   currView?: TemplateRef<any>;
@@ -180,6 +181,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     
   }
   onInit(): void {
+
+   
     //View mặc định 
     var check = document.getElementById("dm-home-mark-id");
     
@@ -672,6 +675,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
+        
+        if(this.funcID == "DMT00") this.selectedFirst = true;
+        else this.selectedFirst = false;
+
         if(this.funcID != "DMT00" && this.funcID != "DMT06" && this.funcID != "DMT07") this.getDataByFuncID(this.funcID);
         else if(this.funcID == "DMT06" || this.funcID == "DMT07") 
         {
@@ -787,6 +794,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if(res[0][0].read)
         {
           this.getDataFolder(res[0][0].recID);
+         
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue(),res[0][0].folderName);
@@ -1101,6 +1109,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data , noTree = false) {
+    if(this.funcID == "DMT00") return;
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1541,6 +1550,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
         this.dmSV.listFolder = this.dmSV.listFolder.concat(res[0]);
         this.listFolders = res[0];
+        
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         if(this.data && this.data.length == 0) this.loaded = true;
         if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))

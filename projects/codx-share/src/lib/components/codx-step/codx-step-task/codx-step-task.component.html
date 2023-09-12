@@ -118,13 +118,14 @@
     <div class="d-flex" >
       <div class="d-flex me-5">
         <div class="me-2">
-          <codx-input
+          <ejs-checkbox #checkbox [checked]="successAll" (change)="changeSuccessAll($event)"></ejs-checkbox>
+          <!-- <codx-input
             type="checkbox"
             [checked]="successAll"
             field="all"
-            (valueChange)="checkRadioSuccess($event)"
+            (valueChange)="changeSuccessAll($event)"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
         <codx-label
           name="progressAll"
@@ -135,13 +136,14 @@
       </div>
       <div class="d-flex">
         <div class="me-2">
-          <codx-input
+          <ejs-checkbox  [checked]="successRequired" (change)="changeSuccessRequired($event)"></ejs-checkbox>
+          <!-- <codx-input
             type="checkbox"
             [checked]="successRequired"
             field="required"
-            (valueChange)="checkRadioSuccess($event)"
+            (valueChange)="changeSuccessRequired($event)"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
         <codx-label
           name="progressDefault"

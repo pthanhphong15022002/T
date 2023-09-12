@@ -25,7 +25,7 @@
                         <ng-template #lblPositionName>
                             <span class="place-holder">{{grvSetup['PositionID']?.headerText}}</span>
                         </ng-template>
-                        <span class="ms-2 me-2 text-gray-500">|</span>
+                        <span class="mx-2 text-gray-500">|</span>
                         <ng-container *ngIf="manager?.orgUnitID; else lblOrgUnitName">
                             <span class="text-gray-700">{{manager.orgUnitName? manager.orgUnitName:
                                 manager.orgUnitID}}</span>
@@ -34,16 +34,16 @@
                             <span class="place-holder"> {{grvSetup['OrgUnitID']?.headerText}}</span>
                         </ng-template>
                     </div>
-                    <div>
+                    <div class="d-flex">
                         <ng-container *ngIf="manager?.phone; else lblPhone">
-                            <span class="text-gray-700">{{ manager?.phone }}</span>
+                            <span [innerHTML]="manager.phone | formatvalue: formModel:'phone' | async"></span>
                         </ng-container>
                         <ng-template #lblPhone>
                             <span class="place-holder"> {{grvSetup['Phone']?.headerText}}</span>
                         </ng-template>
-                        <span class="mx-2">|</span>
+                        <span class="mx-2 text-gray-5000">|</span>
                         <ng-container *ngIf="manager?.email; else lblEmail">
-                            <span class="text-gray-700">{{ manager.email }}</span>
+                            <span [innerHTML]="manager.email | formatvalue: formModel:'email' | async"></span>
                         </ng-container>
                         <ng-template #lblEmail>
                             <span class="place-holder"> {{grvSetup['Email']?.headerText}}</span>
@@ -59,12 +59,12 @@
         </div>
     </ng-container>
 
-    <div *ngIf="columnsGrid" class="h-100 employee-grid" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
+    <div *ngIf="columnsGrid && inputTimes > 1" class="h-100 employee-grid" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
         <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
             [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
             [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true"
-            [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
+            [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true" (valueProperty)="getRefreshFlag($event)"></codx-gridview-v2>
     </div>
 </div>
 
@@ -185,7 +185,7 @@
         </div>
         <div class="d-flex flex-column">
             <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
-                class="align-items-center line-clamp line-clamp-1">
+                class="line-clamp line-clamp-1 mb-1">
                 <span class="fw-bold fs-6 me-3 item-active text-nowrap" (click)="clickViewEmpInfo(data)">
                     {{data.employeeName}}</span>
                 <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
@@ -199,7 +199,7 @@
                     </div>
                 </ng-template>
             </div>
-            <div #positionField *ngIf="data.positionID" class="text-gray-600 fs-7 line-clamp line-clamp-1">
+            <div #positionField *ngIf="data.positionID" class="text-gray-600 fs-7 line-clamp line-clamp-1 mb-1">
                 <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName :
                     data.positionID}}</span>
                 <ng-template #positionTooltip>
@@ -210,7 +210,7 @@
                     </div>
                 </ng-template>
             </div>
-            <div #orgUnitField *ngIf="data.orgUnitID" class="text-gray-700 line-clamp line-clamp-1">
+            <div #orgUnitField *ngIf="data.orgUnitID" class="text-gray-700 line-clamp line-clamp-1 mb-1">
                 <span [ngbTooltip]="orgUnitTooltip">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
                 <ng-template #orgUnitTooltip>
                     <div class="d-flex flex-column">
