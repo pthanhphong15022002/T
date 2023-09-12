@@ -106,6 +106,54 @@
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
+  <div class="w-100 d-flex justify-content-between" *ngIf="isMoveStage">
+    <div class="fs-6 text-primary fw-bold">
+      <codx-label
+        fiedName="taskNo"
+        [formModel]="grvMoreFunction"
+        default="Công việc chưa hoàn tất:"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex" >
+      <div class="d-flex me-5">
+        <div class="me-2">
+          <ejs-checkbox #checkbox [checked]="successAll" (change)="changeSuccessAll($event)"></ejs-checkbox>
+          <!-- <codx-input
+            type="checkbox"
+            [checked]="successAll"
+            field="all"
+            (valueChange)="changeSuccessAll($event)"
+          >
+          </codx-input> -->
+        </div>
+        <codx-label
+          name="progressAll"
+          [formModel]="grvMoreFunction"
+          default="Hoàn thành tất cả"
+        >
+        </codx-label>
+      </div>
+      <div class="d-flex">
+        <div class="me-2">
+          <ejs-checkbox  [checked]="successRequired" (change)="changeSuccessRequired($event)"></ejs-checkbox>
+          <!-- <codx-input
+            type="checkbox"
+            [checked]="successRequired"
+            field="required"
+            (valueChange)="changeSuccessRequired($event)"
+          >
+          </codx-input> -->
+        </div>
+        <codx-label
+          name="progressDefault"
+          [formModel]="grvMoreFunction"
+          default="Hoàn thành bắt buộc"
+        >
+        </codx-label>
+      </div>
+    </div>
+  </div>
   <div
     class="main-body ms-12 mt-1"
     *ngIf="listGroupTask?.length > 0 && isShowElement"

@@ -23,7 +23,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { CashPaymentAdd } from './cashpayments-add/cashpayments-add.component';
+import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -34,6 +34,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
+import { X } from '@angular/cdk/keycodes';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -58,10 +59,13 @@ export class CashPaymentsComponent extends UIComponent {
   userID: any; //?  tên user đăng nhập
   dataCategory: any; //? data của category
   journal: any; //? data sổ nhật kí
-  totaltransAmt1: any = 0; //? tổng tiền nợ tab hạch toán
-  totaltransAmt2: any = 0; //? tông tiền có tab hạch toán
+  totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
+  totalAcctCR: any = 0; //? tông tiền có tab hạch toán
+  totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
   totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
   totalbalAmt: any = 0; //? tổng tiền số dư tab thông tin hóa đơn
+  totalsettledAmt2: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn,HT
+  totalbalAmt2: any = 0; //? tổng tiền số dư tab thông tin hóa đơn,HT
   totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
   totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
   settledInvoices: any; //? data của tab thông tin hóa đơn
@@ -70,7 +74,6 @@ export class CashPaymentsComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
-  isLoadData: any = false; //? trạng thái load data
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
   fmCashPaymentsLines: FormModel = {
     //? formModel của cashpaymentlines
@@ -113,7 +116,7 @@ export class CashPaymentsComponent extends UIComponent {
   };
   bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
-  bankPayID:any;
+  bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -251,21 +254,30 @@ export class CashPaymentsComponent extends UIComponent {
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT041002':
+      case 'ACT042903':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
       case 'ACT041004':
+      case 'ACT042904':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT041009':
+      case 'ACT042902':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT041003':
+      case 'ACT042905':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008': 
-        this.unPostVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT041008':
+      case 'ACT042906':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT042901':
+        this.call();
         break;
       case 'ACT041010':
+      case 'ACT042907':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
@@ -283,7 +295,7 @@ export class CashPaymentsComponent extends UIComponent {
       .addNew((o) => this.setDefault())
       .subscribe((res) => {
         if (res != null) {
-          this.dataDefault = res?.data;
+          this.dataDefault = res;
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
@@ -293,16 +305,11 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
-            CashPaymentAdd,
+            CashPaymentAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-          dialog.closed.subscribe((x) => {
-            if (x && x?.event?.update) {
-              this.getDatadetail(this.itemSelected);
-            }
-          });
         }
       });
   }
@@ -325,16 +332,11 @@ export class CashPaymentsComponent extends UIComponent {
           legalName: this.legalName, //? tên company
         };
         let dialog = this.callfc.openSide(
-          CashPaymentAdd,
+          CashPaymentAddComponent,
           data,
           this.optionSidebar,
           this.view.funcID
         );
-        dialog.closed.subscribe((x) => {
-          if (x && x?.event?.update) {
-            this.getDatadetail(this.itemSelected);
-          }
-        });
       });
   }
 
@@ -348,27 +350,22 @@ export class CashPaymentsComponent extends UIComponent {
       .copy((o) => this.setDefault())
       .subscribe((res: any) => {
         if (res != null) {
-          dataCopy.voucherNo = res?.data.voucherNo;
+          dataCopy = res;
           let data = {
             action: 'copy', //? trạng thái của form (chỉnh sửa)
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
-            oData: { ...dataCopy }, //?  data của cashpayment
+            oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
-            CashPaymentAdd,
+            CashPaymentAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-          dialog.closed.subscribe((x) => {
-            if (x && x?.event?.update) {
-              this.getDatadetail(this.itemSelected);
-            }
-          });
         }
       });
   }
@@ -418,23 +415,35 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeTmpDetailMF(event: any, data: any) {
+  changeMFDetail(event: any, data: any,type:any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ
-        x.functionID == 'ACT041002' || // MF gửi duyệt
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || // Mf khôi phục
+        x.functionID == 'ACT041003' || // MF ghi sổ (PC)
+        x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
+        x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
+        x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
+        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
+        x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
+        x.functionID == 'ACT041008' || // Mf khôi phục (PC)
+        x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
         x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // Mf in
-        x.functionID == 'ACT041009' // MF kiểm tra tính hợp lệ
+        x.functionID == 'ACT041010' || // Mf in (PC)
+        x.functionID == 'ACT042907' || // Mf in (UNC)
+        x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
+        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
+        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
     );
     if (arrBookmark.length > 0) {
+      if (type == 'viewgrid') {
+        arrBookmark.forEach((element) => {
+          element.isbookmark = false;
+        });
+      }
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT041009' || element.functionID == 'ACT041010') {
+            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -444,10 +453,7 @@ export class CashPaymentsComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
+              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -455,10 +461,7 @@ export class CashPaymentsComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041002' ||
-                element.functionID == 'ACT041010'
-              ) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || element.functionID == 'ACT042901') {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -466,18 +469,9 @@ export class CashPaymentsComponent extends UIComponent {
             });
           }
           break;
-        case '2':
-        case '4':
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
         case '3':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041004' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -486,10 +480,7 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -498,10 +489,7 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041008' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -510,135 +498,21 @@ export class CashPaymentsComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
             }
+          });
+          break;
+        default:
+          arrBookmark.forEach((element) => {
+            element.disabled = true;
           });
           break;
       }
     }
     return;
-  }
-
-  /**
-   * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view lưới)
-   * @param event : danh sách morefunction
-   * @param data
-   */
-  changeTmpGridMF(event: any, data: any) {
-    let arrBookmark = event.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || //? MF ghi sổ
-        x.functionID == 'ACT041002' || //? MF gửi duyệt
-        x.functionID == 'ACT041004' || //? MF hủy yêu cầu duyệt
-        x.functionID == 'ACT041008' || //? MF khôi phục
-        x.functionID == 'ACT042901' || //? MF chuyển tiền điện tử
-        x.functionID == 'ACT041010' || //? MF in
-        x.functionID == 'ACT041009' //? MF kiểm tra tính hợp lệ
-    );
-    if (arrBookmark.length > 0) {
-      arrBookmark.forEach((element) => {
-        element.isbookmark = false;
-      });
-      switch (data?.status) {
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041003' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT041002' ||
-                element.functionID == 'ACT041010'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '2':
-        case '4':
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041004' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041008' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041003' ||
-              element.functionID == 'ACT041010'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-      }
-    }
   }
 
   /**
@@ -651,10 +525,10 @@ export class CashPaymentsComponent extends UIComponent {
       if (event?.data.data || event?.data.error) {
         return;
       } else {
-        if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-          this.itemSelected = event?.data;
-          return;
-        }
+        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+        //   this.itemSelected = event?.data;
+        //   return;
+        // }
         this.itemSelected = event?.data;
         this.getDatadetail(this.itemSelected);
         this.detectorRef.detectChanges();
@@ -668,9 +542,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   getDatadetail(data) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
-        data
-      ])
+      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [data])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
@@ -765,7 +637,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
+          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode(
             'AC0029',
             0,
@@ -804,7 +676,7 @@ export class CashPaymentsComponent extends UIComponent {
         if (res?.update) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
-          this.getDatadetail(this.itemSelected);
+          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -841,18 +713,31 @@ export class CashPaymentsComponent extends UIComponent {
    * Hàm tính tổng các số tiền của các tab detail(hạch toán,thông tin hóa đơn,hóa đơn GTGT)
    */
   setTotalRecord() {
-    this.totaltransAmt1 = 0;
-    this.totaltransAmt2 = 0;
+    this.totalAcctDR = 0;
+    this.totalAcctCR = 0;
+    this.totalTransAmt = 0;
     this.totalbalAmt = 0;
+    this.totalbalAmt2 = 0;
     this.totalsettledAmt = 0;
+    this.totalsettledAmt2 = 0;
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
+    
     if (this.acctTrans && this.acctTrans.length > 0) {
       this.acctTrans.forEach((item) => {
-        if (!item.crediting) {
-          this.totaltransAmt1 += item.transAmt;
-        } else {
-          this.totaltransAmt2 += item.transAmt;
+        if (this.itemSelected.currencyID == this.baseCurr) {
+          if (!item.crediting) {
+            this.totalAcctDR += item.transAmt;
+          } else {
+            this.totalAcctCR += item.transAmt;
+          }
+        }else{
+          if (!item.crediting) {
+            this.totalAcctDR += item.transAmt2;
+            this.totalTransAmt += item.transAmt;
+          } else {
+            this.totalAcctCR += item.transAmt2;
+          }
         }
       });
     }
@@ -861,6 +746,10 @@ export class CashPaymentsComponent extends UIComponent {
       this.settledInvoices.forEach((item) => {
         this.totalbalAmt += item.balAmt;
         this.totalsettledAmt += item.settledAmt;
+        if (this.itemSelected.currencyID != this.baseCurr) {
+          this.totalbalAmt2 += item.balAmt2;
+          this.totalsettledAmt2 += item.settledAmt2;
+        }
       });
     }
 

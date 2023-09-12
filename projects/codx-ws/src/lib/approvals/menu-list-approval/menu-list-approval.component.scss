@@ -32,9 +32,15 @@
     }
    
 }
-.ws-approval-layout>div:hover
+.ws-approval-layout
 {
-    color: var(--text-primary);
+    .ws-mn-item
+    {
+        span:hover
+        {
+            color: var(--text-primary);
+        }
+    }
 }
 .ws-approval-layout
 {

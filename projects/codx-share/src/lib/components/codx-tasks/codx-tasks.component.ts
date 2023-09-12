@@ -2105,4 +2105,8 @@ export class CodxTasksComponent
     //   return;
     // this.afterLoad();
   }
+
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
 }

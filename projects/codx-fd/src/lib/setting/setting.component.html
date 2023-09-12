@@ -1,19 +1,22 @@
-<codx-views #view [views]="views" (viewChanged)="viewChanged($event, view)">
-</codx-views>
+<div class="container h-100">
+  <codx-views #view [views]="views" (viewChanged)="viewChanged($event, view)">
+  </codx-views>
+</div>
+
 <ng-template #tabsTmpl>
   <!-- heightAdjustMode="Fill" -->
   <ejs-tab
     *ngIf="lstCategory.length > 0"
     headerPlacement="Left"
     heightAdjustMode="Auto"
-    class="h-100 w-100 d-flex"
+    class="w-100 h-100 d-flex"
     overflowMode="Popup"
     (selected)="changeTabs()"
   >
     <e-tabitems>
       <e-tabitem *ngFor="let cate of lstCategory">
         <ng-template #headerText>
-          <div class="nav-item m-5 p-2">
+          <div class="nav-item">
             <a
               class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0"
             >

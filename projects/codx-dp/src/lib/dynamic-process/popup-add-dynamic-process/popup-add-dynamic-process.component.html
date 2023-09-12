@@ -1835,7 +1835,7 @@
                     <codx-label
                       class="label-colon"
                       fiedName="InstanceProgress"
-                      [formModel]="grvStep"
+                      [formModel]="formModelStep"
                       [setRequire]="false"
                     ></codx-label>
                     <span class="fw-bold"
@@ -1845,7 +1845,7 @@
                 </div>
                 <codx-mfunc
                   *ngIf="viewStepCrr == viewStepCustom"
-                  [formModel]="grvMoreFunction"
+                  [formModel]="formModelMF"
                   (clickMF)="clickMFStep($event, itemStep)"
                   [dataItem]="moreDefaut"
                   [type]="'hover'"
@@ -1892,9 +1892,9 @@
                 </div>
               </div>
               <codx-mfunc
-                *ngIf="grvMoreFunction"
+                *ngIf="formModelMF"
                 [dataItem]="moreDefaut"
-                [formModel]="grvMoreFunction"
+                [formModel]="formModelMF"
                 (changeDataMF)="changeDataMFReason($event)"
                 (clickMF)="clickReason($event, stepSuccess)"
                 [type]="'hover'"
@@ -1934,10 +1934,10 @@
                 </div>
               </div>
               <codx-mfunc
-                *ngIf="grvMoreFunction"
+                *ngIf="formModelMF"
                 [type]="'hover'"
                 [dataItem]="moreDefaut"
-                [formModel]="grvMoreFunction"
+                [formModel]="formModelMF"
                 (changeDataMF)="changeDataMFReason($event)"
                 (clickMF)="clickReason($event, stepFail)"
               >
@@ -2173,7 +2173,7 @@
                       </div>
                     </div>
                     <codx-mfunc
-                      [formModel]="grvMoreFunction"
+                      [formModel]="formModelMF"
                       (clickMF)="clickMFTaskGroup($event, taskList)"
                       [dataItem]="moreDefaut"
                       [type]="'hover'"
@@ -2284,7 +2284,7 @@
                             </div>
                           </div>
                           <codx-mfunc
-                            [formModel]="grvMoreFunction"
+                            [formModel]="formModelMF"
                             (clickMF)="
                               clickMFTask($event, taskList?.task, task)
                             "
@@ -2368,7 +2368,7 @@
       [fiedName]="
         actionStep == 'edit' ? headerStep?.edit[1] : headerStep?.add[1]
       "
-      [formModel]="grvStep"
+      [formModel]="formModelStep"
       [default]="
         actionStep == 'edit' ? headerStep?.edit[0] : headerStep?.add[0]
       "
@@ -2384,13 +2384,13 @@
     <div class="fw-bold text-dark mb-1">
       <codx-label
         fiedName="StepName"
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
         default="Tên giai đoạn"
       ></codx-label>
     </div>
     <codx-input
       field="stepName"
-      [formModel]="grvStep"
+      [formModel]="formModelStep"
       type="text"
       [crrValue]="stepNew?.stepName"
       (valueChange)="changeNameStep($event, stepNew)"
@@ -2400,7 +2400,7 @@
 
     <div class="fs-7 text-gray-500 text-italic mt-1" *ngIf="isAddStage">
       <codx-label
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
         default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
         giai đoạn hoàn tất)"
       ></codx-label>
@@ -2418,7 +2418,7 @@
     <div class="fw-bold text-dark mb-1">
       <codx-label
         fiedName="InstanceProgress"
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
       ></codx-label>
     </div>
     <ejs-numerictextbox
@@ -2438,7 +2438,7 @@
     >
       <codx-label
         fiedName="backgroundColor"
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
         default="Màu nền giai đoạn:"
       >
       </codx-label>
@@ -2461,7 +2461,7 @@
       <codx-label
         class="me-4"
         fiedName="textColor"
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
         default="Màu chữ:"
       >
       </codx-label>
@@ -2482,7 +2482,7 @@
     <div class="col-6 d-flex justify-content-between align-items-center">
       <codx-label
         fiedName="icon"
-        [formModel]="grvStep"
+        [formModel]="formModelStep"
         default="Icon hiển thị:"
       >
       </codx-label>
@@ -2515,7 +2515,7 @@
   <div class="form-group mt-5">
     <codx-label
       fiedName="demoStep"
-      [formModel]="grvStep"
+      [formModel]="formModelStep"
       default="Demo:"
       class="me-4"
     >

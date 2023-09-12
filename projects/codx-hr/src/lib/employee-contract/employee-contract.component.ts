@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -20,6 +21,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { Observable, concat, of } from 'rxjs';
+import { delay, toArray, tap } from 'rxjs/operators';
 import moment from 'moment';
 import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
@@ -40,6 +43,7 @@ import { PopupSubEContractComponent } from '../employee-profile/popup-sub-econtr
 })
 export class EmployeeContractComponent extends UIComponent {
   console = console;
+
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
@@ -47,7 +51,10 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true })
+
   templateUpdateStatus: TemplateRef<any>;
+  @Input() funcID:any;
+
   views: Array<ViewModel> = [];
   dataCategory;
   itemDetail;
@@ -68,6 +75,7 @@ export class EmployeeContractComponent extends UIComponent {
   viewActive: string;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
+  datasUpdated: Array<ViewModel> = [];
 
   //#region eContractFuncID
   actionCancelSubmit = 'HRTPro01A00';
@@ -297,7 +305,16 @@ export class EmployeeContractComponent extends UIComponent {
         this.df.detectChanges();
         break;
       case 'SYS02': //delete
-        this.view.dataService.delete([data]).subscribe();
+        this.view.dataService
+          .delete([data], true, (option: RequestOption) =>
+            this.beforeDelete(option, data)
+          )
+          .subscribe((res) => {
+            if (res[1]) {
+              res[1].inforEmployee = data?.inforEmployee;
+              this.view.dataService.update(res[1]).subscribe();
+            }
+          });
         break;
       case 'SYS04': //copy
         this.currentEmpObj = data.inforEmployee;
@@ -543,9 +560,81 @@ export class EmployeeContractComponent extends UIComponent {
       });
   }
 
+  handleMutipleUpdateStatus(funcID, data) {
+    this.datasUpdated = [];
+    if (
+      funcID === this.actionCheckResignCancel ||
+      funcID === this.actionCheckResignApprove
+    ) {
+      this.resignStatus = true;
+    } else {
+      this.resignStatus = false;
+    }
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.editEContract(data).subscribe((res) => {
+      this.datasUpdated.push(res[0]);
+      if (res != null) {
+        res[0].inforEmployee = data?.inforEmployee;
+        this.view.dataService.update(res[0]).subscribe();
+
+        if (res[1]) {
+          res[1].inforEmployee = data?.inforEmployee;
+          this.view.dataService.update(res[1]).subscribe();
+        }
+        this.view.formModel.entityName;
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EContractsBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              res[0].recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+        this.df.detectChanges();
+      }
+    });
+  }
+
   //Send multi
-  onMoreMulti(e) {
-    console.log(e);
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+      case this.actionCheckResignApprove:
+      case this.actionCheckResignCancel:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
+
+    console.log(this.datasUpdated);
   }
 
   viewDetail(data) {

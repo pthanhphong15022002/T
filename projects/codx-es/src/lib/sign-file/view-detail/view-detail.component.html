@@ -130,7 +130,7 @@
     </div>
     <div class="mt-2">
       <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
+        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'" [isFristVer]="itemDetail?.approveStatus !='5' ? true : false ">
         </codx-thumbnail>
       </ng-container>
     </div>

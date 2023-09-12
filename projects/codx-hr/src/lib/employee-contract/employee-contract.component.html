@@ -10,6 +10,7 @@
   [selectedFirst]="true"
   idField="recID"
   [button]="buttonAdd"
+  [funcID]="funcID"
   (buttonClick)="addContract($event)"
   (selectedChange)="changeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
@@ -316,9 +317,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.inforEmployee?.employeeName"
+    [titleTmp]="titleTmp"
     [titleCss]="'fs-6 mb-1 then-text-primary'"
-    [baseHeaderRightTmp]="titleRight"
     [subTitle]="
       data?.inforEmployee?.positionID || data?.positionID
         | formatvalue : view.formModel : 'PositionID'
@@ -330,7 +330,15 @@
     (changeDataMF)="changeDataMf($event, data)"
   >
   </codx-temp-full>
-  <ng-template #titleRight>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.inforEmployee?.employeeName }}
+    </span>
+
     <div
       *ngIf="
         data?.status === '5' &&
