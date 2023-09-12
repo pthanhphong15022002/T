@@ -1,6 +1,6 @@
 <div *ngIf="isForm" class="d-flex justify-content-end">
   <div class="position-absolute top-0 right-0 " style="z-index: 999;">
-    <button type="button" class="btn btn-icon btn-sm btn-light-primary mt-3 me-3" (click)="closePopUp()">
+    <button type="button" class="btn btn-icon btn-sm btn-white mt-3 me-3" (click)="closePopUp()">
       <span class="icon-close icon-16"></span>
     </button>
   </div>
@@ -34,16 +34,16 @@
     </lib-detail-policy>
   </ng-container>
   <ng-template #defaultDetail>
-    <div class="title" *ngFor="let row of groupSettings[cate.value]">
+    <div class="title clear" *ngFor="let row of groupSettings[cate.value]">
       <ng-container
-        class="d-flex w-100 bg-hover justify-content-between"
+        class="d-flex w-100 bg-hover justify-content-between green"
         *ngIf="
           row.lineType == curLineType &&
           row.refLineID == this.refQueue[this.refQueue.length - 1]
         "
         [ngSwitch]="row.reference"
       >
-        <div *ngSwitchCase="'FDPatterns'">
+        <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
           <app-pattern [type]="row.transType"></app-pattern>
         </div>
 

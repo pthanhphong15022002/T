@@ -3839,3 +3839,8 @@ codx-user-inner{
 app-setting .e-tab-header{
   padding-top: 0!important;
 }
+.container-fluid-h-auto{
+  .container-fluid{
+    height: auto!important;
+  }
+}
