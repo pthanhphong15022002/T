@@ -51,6 +51,12 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
   onInit(): void {
   }
 
+  ngAfterViewInit() {
+    this.itemSeries.manufaturedDate = this.form.formGroup?.controls.manufaturedDate.value;
+    this.itemSeries.warrantyDate = this.form.formGroup?.controls.warrantyDate.value;
+    this.itemSeries.salesWarranty = this.form.formGroup?.controls.salesWarranty.value;
+  }
+
   //End Init
 
   //Event
