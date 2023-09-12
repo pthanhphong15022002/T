@@ -176,6 +176,11 @@ export class DynamicFormComponent extends UIComponent {
         this.sendActiveTenantEmail(data);
         break;
       }
+      //drop tenant
+      case 'TNT0016': {
+        this.dropTenant(data);
+        break;
+      }
       default:
         break;
     }
@@ -192,6 +197,22 @@ export class DynamicFormComponent extends UIComponent {
         data.tenantID
       )
       .subscribe((res) => {});
+  }
+
+  dropTenant(data) {
+    this.api
+      .execSv(
+        'Tenant',
+        'Tenant',
+        'TenantsBusiness',
+        'DropTenantAsync',
+        data.tenantID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.currentView.refesh();
+        }
+      });
   }
 
   //Form lịch sử đơn hàng
