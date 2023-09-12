@@ -29,6 +29,7 @@ import { TaskExtendsComponent } from 'projects/codx-tm/src/lib/taskextends/taske
 import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-off/employee-day-off.component';
 import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { RequestReviewComponent } from './approvals/request-review/request-review.component';
 
 const routes: Routes = [
   {
@@ -133,6 +134,7 @@ const routes: Routes = [
     MenuListApprovalComponent,
     DashboardComponent,
     ReportComponent,
+    RequestReviewComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -1,0 +1,87 @@
+<codx-views
+  #view
+  [views]="views"
+  (buttonClick)="click($event)"
+  (selectedChange)="valueChange($event)"
+  [button]="button"
+  [entityName]="'ES_ApprovalTrans'"
+  [method]="'GetAsync'"
+  [assemblyName]="'ES'"
+  [service]="'ES'"
+  [className]="'ApprovalTransBusiness'"
+  [funcID]="'EST021'"
+  [selectedFirst]="true"
+  idField="recID"
+>
+</codx-views>
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    [title]="(data?.unbounds?.categoryName) ? (data?.unbounds?.categoryName) :(vllApproval ? vllApproval[data.processType]?.text : dvlApproval?.text)"
+    [icoCss]="((data?.unbounds?.icon) ? (data?.unbounds?.icon) : (vllApproval ? vllApproval[data.processType]?.icon : dvlApproval?.icon)) +
+      ' w-35px d-flex h-35px justify-content-center align-items-center rounded-circle text-white me-3 fs-4'
+    "
+    [icoStyle]="setStyles((data?.unbounds?.color) ? (data?.unbounds?.color) : (vllApproval ? vllApproval[data.processType]?.color : dvlApproval?.color))"
+    [desc]="data?.htmlView"
+    [statusVll]="'ES030'"
+    [status]="data?.status + data?.stepType"
+    [titleLine]="2"
+    [date]="data.createdOn"
+    [resources]="data?.createdBy"
+    [resourceObjType]="'AD_Users'"
+    [icoDateCss]="'icon-access_alarm'"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [formModel]="view?.formModel"
+    [dataItem]="data"
+    [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeMF($event, data)"
+    [baseHeaderRightTmp]="baseHeaderRight"
+  >
+  </codx-temp-full>
+  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
+</ng-template>
+<ng-template #panelRightRef>
+  <codx-detail-tmp
+    [header]="header"
+    [dataItem]="dataItem"
+    [formModel]="view?.formModel"
+    (changeDataMF)="changeMF($event, dataItem)"
+    [body]="body"
+    [footer]="footer"
+    (clickMF)="clickMF($event, dataItem)"
+    class="h-100 dt-aprovel dt-es pt-2"
+  ></codx-detail-tmp>
+  <ng-template #header> </ng-template>
+  <ng-template #body>
+    <div class="od-approval-detail h-100">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <codx-tabs
+      [TabControl]="tabControl"
+      [entityName]="view?.formModel?.entityName"
+      [objectID]="transID"
+      [transID]="transID"
+      [formModel]="view?.formModel"
+      [funcID]="view?.formModel?.funcID"
+    >
+    </codx-tabs>
+  </ng-template>
+  <!-- <div class="pe-6 pt-1">
+    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>
+  </div>
+  <div class="od-approval-detail">
+    <router-outlet></router-outlet>
+  </div> -->
+</ng-template>
+<ng-template #baseHeaderRight let-data>
+  <codx-vll
+    [name]="'ES002'"
+    [value]="data?.stepType"
+    [showText]="true"
+    [showBgColor]="true"
+    [isBorder]="true"
+    ngClass="badge badge-sm"
+  ></codx-vll>
+</ng-template>
