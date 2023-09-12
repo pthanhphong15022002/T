@@ -1,16 +1,20 @@
 <div *ngIf="isForm" class="d-flex justify-content-end">
-  <div class="btn-primary btn" (click)="closePopUp()">X</div>
+  <div class="position-absolute top-0 right-0 " style="z-index: 999;">
+    <button type="button" class="btn btn-icon btn-sm btn-white mt-3 me-3" (click)="closePopUp()">
+      <span class="icon-close icon-16"></span>
+    </button>
+  </div>
 </div>
 <div
-  class="group w-100 h-100 bg-body rounded-3 p-6 scroll-y"
+  class="group w-100 h-100 bg-body rounded-3 p-5 pt-12 scroll-y"
   *ngIf="groupSettings && groupSettings[cate.value]"
 >
   <div class="d-flex" *ngIf="curLineType > firstLineType">
-    <button type="button" class="btn btn-icon btn-white" (click)="changeLineType(null, false)">
+    <button type="button" class="btn btn-icon btn-white me-4" (click)="changeLineType(null, false)">
       <span class="icon-arrow_back"></span>
     </button>
     <div class="d-flex flex-column">
-      <div class="fs-4 ms-3 fw-bold text-dark category-title">
+      <div class="fs-5 fw-bold text-dark category-title">
         {{ curGroup?.tilte }}
       </div>
       <div class="text-gray-500 pt-1 ms-3">
@@ -30,16 +34,16 @@
     </lib-detail-policy>
   </ng-container>
   <ng-template #defaultDetail>
-    <div class="title" *ngFor="let row of groupSettings[cate.value]">
+    <div class="title clear" *ngFor="let row of groupSettings[cate.value]">
       <ng-container
-        class="d-flex w-100 bg-hover justify-content-between"
+        class="d-flex w-100 bg-hover justify-content-between green"
         *ngIf="
           row.lineType == curLineType &&
           row.refLineID == this.refQueue[this.refQueue.length - 1]
         "
         [ngSwitch]="row.reference"
       >
-        <div *ngSwitchCase="'FDPatterns'">
+        <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
           <app-pattern [type]="row.transType"></app-pattern>
         </div>
 
@@ -47,9 +51,9 @@
           *ngSwitchDefault
           class="category-title d-flex py-3 list-item bg-hover border-bottom border-gray-150"
         >
-          <div class="setting-btnright align-items-center">
-            <span class="w-30px d-flex justify-content-center">
-              <span [class]="'icon-18 ' + row.icon"></span
+          <div class="me-3 ms-3">
+            <span class="w-20px h-20px d-flex align-items-center justify-content-center">
+              <span [class]="'icon-16 ' + row.icon"></span
             ></span>
           </div>
           <div class="d-flex flex-column w-100">
@@ -61,7 +65,7 @@
             </div>
             <ng-template #rowDetail>
               <div
-                class="d-flex justify-content-between mb-2 list-item w-100 ms-5"
+                class="d-flex justify-content-between list-item w-100"
               >
                 <div class="d-flex flex-column">
                   <div class="title fw-bold text-dark">
@@ -74,7 +78,7 @@
               </div>
             </ng-template>
           </div>
-          <div class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control pe-3">
+          <div class="d-flex align-items-center ms-4 min-w-250px justify-content-end category-control pe-3">
             <ng-container
               *ngIf="(row.fieldName && row?.controlType) || row.displayMode"
               class="fd-control"

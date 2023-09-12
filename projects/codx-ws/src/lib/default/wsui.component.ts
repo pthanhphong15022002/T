@@ -7,6 +7,7 @@ import {
     EventEmitter,
     ViewChild,
     ComponentRef,
+    ChangeDetectorRef,
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxWsService } from '../codx-ws.service';
@@ -24,6 +25,7 @@ export abstract class WSUIComponent implements OnInit {
     protected api: ApiHttpService;
     protected codxService: CodxService;
     protected authStore: AuthStore;
+    protected changeDetectorRef: ChangeDetectorRef
     constructor(inject: Injector) 
     {
         this.route = inject.get(ActivatedRoute);
@@ -31,6 +33,7 @@ export abstract class WSUIComponent implements OnInit {
         this.api = inject.get(ApiHttpService);
         this.codxService = inject.get(CodxService);
         this.authStore = inject.get(AuthStore);
+        this.changeDetectorRef = inject.get(ChangeDetectorRef);
     }
       
     ngOnInit(): void {

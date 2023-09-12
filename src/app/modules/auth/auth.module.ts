@@ -28,6 +28,7 @@ import {
   RecaptchaSettings,
 } from 'ng-recaptcha';
 import { AngularDeviceInformationService } from 'angular-device-information';
+import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { AngularDeviceInformationService } from 'angular-device-information';
     ForgotPasswordQTSCComponent,
     TenantsComponent,
     RedirectToComponent,
+    Login2FAComponent,
   ],
   imports: [
     CommonModule,

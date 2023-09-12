@@ -24,6 +24,10 @@
     }
   }
 
+  ejs-tab:first-of-type {
+    height: calc(100% - 96px) !important;
+  }
+
   #styledTab > div:last-of-type {
     // sometimes it calculates the height wrong (height: calc(100% - 0px)), so I have to fix it here
     height: calc(100% - 32px) !important;

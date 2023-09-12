@@ -7,12 +7,14 @@
   [customToolbar]="customToolbar"
   [data]="master"
   class="ac-dialog"
+  (onAfterInit)="onAfterFormInit($event)"
+  (afterValidate)="onAfterValidation($event)"
 >
 </codx-form>
 
 <ng-template #body>
   <div class="card-add popup-sales h-100 d-flex flex-column">
-    <ejs-tab>
+    <ejs-tab heightAdjustMode="Auto">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -421,13 +423,10 @@
                 [gridViewName]="fmSalesInvoicesLines.gridViewName"
                 [entityName]="fmSalesInvoicesLines.entityName"
                 [templateMore]="more"
-                [editSettings]="editSettings"
                 service="AC"
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
-                [showRowNumber]="true"
                 [showEmptyRecord]="false"
-                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -445,6 +444,7 @@
 
               <button
                 id="btnAddLine"
+                tab-index=""
                 class="btn btn-light-primary btn-sm rounded-5 d-flex align-items-center position-absolute end-0"
                 style="
                   top: -32px;
@@ -496,6 +496,7 @@
       style="top: 4px"
     >
       <button
+        tab-index=""
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
         (click)="onClickDiscard()"
@@ -512,6 +513,7 @@
 
       <button
         *ngIf="!isEdit"
+        tab-index=""
         type="button"
         style="border: 1px solid var(--primary-dark) !important"
         class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
@@ -527,6 +529,7 @@
       </button>
 
       <button
+        tab-index=""
         type="button"
         style="
           min-width: 60px;
@@ -609,7 +612,7 @@
 </ng-template>
 
 <ng-template #salesInvoiceTemplate>
-  <div class="col-3 form-group">
+  <div class="col-8 form-group">
     <codx-label
       fiedName="objectID"
       [formModel]="form.formModel"
@@ -622,57 +625,7 @@
       (valueChange)="onInputChange($event)"
     ></codx-input>
   </div>
-  <div class="col-9 form-group">
-    <codx-label
-      fiedName="objectName"
-      [formModel]="form.formModel"
-      default="Tên khách"
-    ></codx-label>
-    <codx-input
-      field="objectName"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      [disabled]="true"
-    ></codx-input>
-  </div>
-
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="pmtMethodID"
-      [formModel]="form.formModel"
-      default="Hình thức thanh toán"
-    ></codx-label>
-    <codx-input
-      field="pmtMethodID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="pmtTermID"
-      [formModel]="form.formModel"
-      default="Điều khoản thanh toán"
-    ></codx-label>
-    <codx-input
-      field="pmtTermID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group">
-    <codx-label
-      fiedName="delModeID"
-      [formModel]="form.formModel"
-      default="Hình thức giao hàng"
-    ></codx-label>
-    <codx-input
-      field="delModeID"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    ></codx-input>
-  </div>
-  <div class="col-3 form-group">
+  <div class="col-4 form-group">
     <codx-label
       fiedName="warehouseID"
       [formModel]="form.formModel"
@@ -685,7 +638,44 @@
     ></codx-input>
   </div>
 
-  <div class="col-3 form-group">
+  <div class="col-4 form-group">
+    <codx-label
+      fiedName="pmtTermID"
+      [formModel]="form.formModel"
+      default="Điều khoản thanh toán"
+    ></codx-label>
+    <codx-input
+      field="pmtTermID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-4 form-group">
+    <codx-label
+      fiedName="pmtMethodID"
+      [formModel]="form.formModel"
+      default="Hình thức thanh toán"
+    ></codx-label>
+    <codx-input
+      field="pmtMethodID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+  <div class="col-4 form-group">
+    <codx-label
+      fiedName="delModeID"
+      [formModel]="form.formModel"
+      default="Hình thức giao hàng"
+    ></codx-label>
+    <codx-input
+      field="delModeID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    ></codx-input>
+  </div>
+
+  <div class="col-4 form-group">
     <codx-label
       fiedName="channelID"
       [formModel]="form.formModel"
@@ -697,7 +687,7 @@
       [Group]="form.formGroup"
     ></codx-input>
   </div>
-  <div class="col-3 form-group">
+  <div class="col-4 form-group">
     <codx-label
       fiedName="salespersonID"
       [formModel]="form.formModel"
@@ -710,7 +700,7 @@
       (valueChange)="onInputChange($event)"
     ></codx-input>
   </div>
-  <div class="col-3 form-group">
+  <div class="col-4 form-group">
     <codx-label
       fiedName="consultantID"
       [formModel]="form.formModel"
@@ -722,7 +712,7 @@
       [Group]="form.formGroup"
     ></codx-input>
   </div>
-  <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
+  <!-- <div class="col-3 form-group" *ngIf="!hiddenFields.includes('ProjectID')">
     <codx-label
       fiedName="projectID"
       [formModel]="form.formModel"
@@ -733,7 +723,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
     ></codx-input>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #returnInvoiceTemplate>

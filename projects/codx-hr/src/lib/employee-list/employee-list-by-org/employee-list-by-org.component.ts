@@ -159,29 +159,30 @@ export class EmployeeListByOrgComponent {
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.orgUnitID = changes.orgUnitID.currentValue;
-    if (this.showManager) {
-      this.getManager(this.orgUnitID);
-    }
-    let ins = setInterval(() => {
+    if(changes.orgUnitID.currentValue){
+      this.orgUnitID = changes.orgUnitID.currentValue;
+      if (this.showManager) {
+        this.getManager(this.orgUnitID);
+      }
       if (this.grid) {
         // this.grid.dataService.rowCount = null;
+        //this.grid.dataService.rowCount = 0;
+        //clearInterval(ins);
         this.grid.refresh();
-        clearInterval(ins);
+        //clearInterval(ins);
         if (this.grid && this.editable && !this.hadEmitDataService) {
           this.hadEmitDataService = true;
           this.gridViewDataService.emit(this.grid.dataService);
         }
       }
-    }, 200);
-    if (this.inputTimes < 2) this.inputTimes++;
+    }
+
   }
   getRefreshFlag(event){
     if(event?.field == 'rowCount'){
       this.grid.dataService.rowCount = event.value;
     }
   }
-
   getManager(orgUnitID: string) {
     if (orgUnitID) {
       this.api.execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetOrgManager', [orgUnitID])
@@ -349,7 +350,7 @@ export class EmployeeListByOrgComponent {
       .subscribe(res => {
         if (res){
           let dataValue = Array(res).join();
-          
+
           let request = this.grid.dataService.request;
           request.dataValues = dataValue;
 
