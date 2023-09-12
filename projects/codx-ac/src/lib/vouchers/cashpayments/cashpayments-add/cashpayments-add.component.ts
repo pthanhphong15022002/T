@@ -1305,7 +1305,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             element.focus();
           }, 100);
         }
-        if (this.isAddRow) {
+        if (this.isAddRow) { // bùa khi lưới đang edit nhấn nút thêm dòng thì chờ thêm dòng xong => thêm dòng mới
           this.isAddRow = false;
           this.onAddLine('1');
         }
