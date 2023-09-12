@@ -253,21 +253,27 @@ export class CashPaymentsComponent extends UIComponent {
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT041002':
+      case 'ACT042903':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
       case 'ACT041004':
+      case 'ACT042904':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT041009':
+      case 'ACT042902':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT041003':
+      case 'ACT042905':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT041008':
-        this.unPostVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT042906':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT041010':
+      case 'ACT042907':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
