@@ -176,6 +176,11 @@ export class DynamicFormComponent extends UIComponent {
         this.sendActiveTenantEmail(data);
         break;
       }
+      //drop tenant
+      case 'TNT0016': {
+        this.dropTenant(data);
+        break;
+      }
       default:
         break;
     }
@@ -192,6 +197,22 @@ export class DynamicFormComponent extends UIComponent {
         data.tenantID
       )
       .subscribe((res) => {});
+  }
+
+  dropTenant(data) {
+    this.api
+      .execSv(
+        'Tenant',
+        'Tenant',
+        'TenantsBusiness',
+        'DropTenantAsync',
+        data.tenantID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.currentView.refesh();
+        }
+      });
   }
 
   //Form lịch sử đơn hàng
@@ -312,7 +333,7 @@ export class DynamicFormComponent extends UIComponent {
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         dialog.closed.subscribe((item) => {
           var dt = item?.event?.save;
-          dt.data.category = option.FormModel.entityName;
+          dt.data.category = "OD_Dispatches";
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
@@ -347,7 +368,8 @@ export class DynamicFormComponent extends UIComponent {
       //Xử lý riêng của OD
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         this.dialog.closed.subscribe((item) => {
-          var dt = item?.event?.update?.data;
+          var dt = item?.event?.update?.data;          
+          dt.category = "OD_Dispatches";
           if (dt && dt?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api

@@ -16,6 +16,8 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  PageLink,
+  PageTitleService,
   RequestOption,
   SidebarModel,
   TenantStore,
@@ -30,7 +32,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { ReceiptTransactionsAddComponent } from './receipt-transactions-add/receipt-transactions-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { VouchersLines } from '../../models/VouchersLines.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { Vouchers } from '../../models/Vouchers.model';
@@ -107,6 +109,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     private tenant: TenantStore,
+    private pageTitleService: PageTitleService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -158,6 +161,44 @@ export class ReceiptTransactionsComponent extends UIComponent {
       },
     ];
     this.view.setRootNode(this.parent?.customName);
+
+    const options1 = new DataRequest();
+    options1.entityName = 'SYS_FunctionList';
+    options1.pageLoading = false;
+    options1.predicates = 'ParentID=@0';
+    options1.dataValues = 'ACT';
+
+    const options2 = new DataRequest();
+    options2.entityName = 'AC_Journals';
+    options2.pageLoading = false;
+    options2.predicates = 'Status=@0';
+    options2.dataValues = '1';
+
+    combineLatest({
+      functionList: this.acService.loadDataAsync('SYS', options1),
+      journals: this.acService.loadDataAsync('AC', options2),
+      vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
+    }).subscribe(({ functionList, journals, vll077 }) => {
+      console.log(journals);
+      const links: PageLink[] = [];
+      for (const journal of journals as IJournal[]) {
+        if (journal.journalNo === this.journalNo) {
+          continue;
+        }
+
+        const functionId: string = vll077.find(
+          (v) => v.value === journal.journalType
+        )?.default;
+        links.push({
+          title: journal.journalDesc,
+          path:
+            functionList.find((f) => f.functionID === functionId)?.url +
+            `?journalNo=${journal.journalNo}`,
+        });
+      }
+
+      this.pageTitleService.setChildren(links);
+    });
   }
 
   ngOnDestroy() {
@@ -236,7 +277,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
-            oData: res?.data,
+            oData: res,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -316,10 +357,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
       .subscribe((res: any) => {
         if(res)
         {
-          this.voucherCopy.recID = res?.data.recID;
-          this.voucherCopy.voucherNo = res?.data.voucherNo;
-          this.voucherCopy.status = res?.data.status;
-          this.voucherCopy['_uuid'] = res?.data['_uuid'];
+          this.voucherCopy.recID = res.recID;
+          this.voucherCopy.voucherNo = res.voucherNo;
+          this.voucherCopy.status = res.status;
+          this.voucherCopy['_uuid'] = res['_uuid'];
           var obj = {
             formType: 'copy',
             headerText: this.funcName,
@@ -546,6 +587,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
+      formModel:this.view.formModel
     };
     let opt = new DialogModel();
     var dialog = this.callfunc.openForm(

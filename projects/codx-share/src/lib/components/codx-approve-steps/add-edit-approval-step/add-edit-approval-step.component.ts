@@ -99,6 +99,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   ];
   tabContent: any[];
   qbFilter: any;
+  vllStepType = [];
   setTitle(e: any) {
     console.log(e);
   }
@@ -144,6 +145,12 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.confirmControl = data?.data?.confirmControl;
 
     this.eSign = data?.data?.eSign ?? false;
+    let vllStepTypeName= this.eSign ? 'ES002' : 'ES026';
+    this.cache.valueList(vllStepTypeName).subscribe(vllStepType=>{
+      if(vllStepType){
+        this.vllStepType = vllStepType?.datas;
+      }
+    })
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     if (this.vllShare == null) {
       this.vllShare =
@@ -265,18 +272,28 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               if (res) {
                 this.data = res.data;
                 if (this.data.stepName == '' || this.data.stepName == null) {
-                  let vllName = this.eSign == true ? 'ES002' : 'ES026';
-                  this.cache.valueList(vllName).subscribe((res) => {
-                    if (res?.datas) {
-                      let i = res.datas.findIndex(
-                        (p) => p.value == this.data.stepType
-                      );
-                      this.data.stepName = res.datas[i]?.text;
+                  // let vllName = this.eSign == true ? 'ES002' : 'ES026';
+                  // this.cache.valueList(vllName).subscribe((res) => {
+                  //   if (res?.datas) {
+                  //     let i = res.datas.findIndex(
+                  //       (p) => p.value == this.data.stepType
+                  //     );
+                  //     this.data.stepName = res.datas[i]?.text;
+                  //     this.dialogApprovalStep.patchValue({
+                  //       stepName: this.data.stepName,
+                  //     });
+                  //   }
+                  // });
+                  if (this.vllStepType?.length>0) {
+                    let stepType = this.vllStepType.filter((p) => p.value ==  this.data.stepType);
+                    if(stepType?.length>0){
+                      this.data.stepName = stepType[0]?.text;
                       this.dialogApprovalStep.patchValue({
                         stepName: this.data.stepName,
-                      });
+                      });                  
+                      this.cr.detectChanges();
                     }
-                  });
+                  }  
                 }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
@@ -339,19 +356,18 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         case 'stepType': {
           this.data[event?.field] = event.data;
           this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-          if (this.data.stepName == '' || this.data.stepName == null) {
-            let vllName = this.eSign == true ? 'ES002' : 'ES026';
-            this.cache.valueList(vllName).subscribe((res) => {
-              if (res?.datas) {
-                let i = res.datas.findIndex((p) => p.value == event.data);
-                this.data.stepName = res.datas[i]?.text;
-                this.dialogApprovalStep.patchValue({
-                  stepName: this.data.stepName,
-                });
-                this.cr.detectChanges();
-              }
-            });
-          }
+          
+          if (this.vllStepType?.length>0) {
+            let stepType = this.vllStepType.filter((p) => p.value == event.data);
+            if(stepType?.length>0){
+              this.data.stepName = stepType[0]?.text;
+              this.dialogApprovalStep.patchValue({
+                stepName: this.data.stepName,
+              });                  
+              this.cr.detectChanges();
+            }
+          }  
+          
 
           //Loại cấp phát -> duyệt đại diện
           if (this.data.stepType == 'I') {

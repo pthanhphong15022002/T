@@ -41,7 +41,7 @@ export class AddApproversComponent extends UIComponent {
 
   //#region RoleType
   grv;
-  lstRoleTypes;
+  lstRoleTypes = [];
   curSelectMemberID;
   popover;
   //#endregion
@@ -111,7 +111,7 @@ export class AddApproversComponent extends UIComponent {
             this.cache
               .valueList(this.grv.RoleType?.referedValue)
               .subscribe((vll) => {
-                this.lstRoleTypes = vll.datas;
+                this.lstRoleTypes = vll?.datas;
                 console.log('lstRoleTypes', this.lstRoleTypes);
               });
           }

@@ -533,6 +533,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       }
     }
 
+    this.EAppointionObj.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
+
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
         if (item2?.status == 0) {

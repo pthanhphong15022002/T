@@ -15,7 +15,7 @@
       <button
         class="btn btn-primary"
         (click)="onSaveForm()"
-        [disabled]="!formModel.currentData.updateColumn"
+        [disabled]="!formModel.currentData.updateColumn && !changedInForm"
       >
         <i class="icon-save"></i>
         <codx-label
@@ -60,27 +60,39 @@
                 fiedName="SubmitWhen"
                 [formModel]="formModel"
             ></codx-label>
-            <codx-input
+            <span>: </span>
+            <span
+            [innerHTML]="
+            documentObj.submitWhen
+                | formatvalue : formModel : 'submitWhen'
+                | async
+            "
+          ></span>
+            <!-- <codx-input
             [disabled]="disabledInput"
                 field="submitWhen"
                 [formModel]="formModel"
                 [Group]="formGroup"
-            ></codx-input>
+            ></codx-input> -->
         </div>   
         </div>
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
-                    fiedName="IsRequired"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                [disabled]="disabledInput"
-                    field="isRequired"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
+                <div>
+                    <codx-label
+                        fiedName="IsRequired"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                <div>
+                    <codx-input
+                    [disabled]="disabledInput"
+                        field="isRequired"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    </div>
             </div>
 
             <div class="col-6">
@@ -115,16 +127,20 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
-                    fiedName="HasReturn"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                [disabled]="disabledInput"
-                    field="hasReturn"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
+                <div>
+                    <codx-label
+                        fiedName="HasReturn"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                <div>
+                    <codx-input
+                    [disabled]="disabledInput"
+                        field="hasReturn"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                </div>
             </div>
 
             <div class="col-6">
