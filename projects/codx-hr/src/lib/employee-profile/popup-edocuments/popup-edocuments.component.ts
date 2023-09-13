@@ -25,11 +25,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   originDocumentTypeID : any;
   headerText: any;
-<<<<<<< HEAD
-=======
-  funcID: any;
   changedInForm = false;
->>>>>>> 2850248cae69fc718f9d9fa5e3673b00ca6083d5
   actionType: any;
   documentObj: any;
   fieldHeaderTexts;
