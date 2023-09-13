@@ -35,7 +35,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('noData') noData: TemplateRef<any>;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
-  funcID = 'DPT01';
   views: Array<ViewModel> = [];
   button = {
     id: 'btnAdd',
@@ -261,6 +260,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ) {
     super(inject);
     this.user = this.authstore.get();
+    this.funcID = "DPT01";
     this.language = this.auth.userValue?.language?.toLowerCase();
     this.funcID = this.router.snapshot.params['funcID'];
     this.loadChangeDefault();

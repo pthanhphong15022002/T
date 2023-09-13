@@ -37,7 +37,6 @@ export class CodxBookingViewDetailComponent
 {
   //Input
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() viewMode = '1'; //1:Đặt; 2:Duyệt
   @Input() resourceType = '1'; //1:Phòng; 2:Xe; 6:VPP;
   @Input() formModel;

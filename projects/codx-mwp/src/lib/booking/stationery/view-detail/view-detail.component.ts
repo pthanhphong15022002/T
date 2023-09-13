@@ -30,7 +30,6 @@ export class BookingStationeryViewDetailComponent
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() data: any;
   @Input() hideMF = false;

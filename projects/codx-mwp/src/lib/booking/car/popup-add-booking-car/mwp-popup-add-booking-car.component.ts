@@ -101,7 +101,6 @@ export class MWPPopupAddBookingCarComponent extends UIComponent {
   lstDeviceCar = [];
   tmplstDevice = [];
   lstPeople = [];
-  funcID: string;
   driver: any;
   smallListPeople = [];
   editCarDevice = null;

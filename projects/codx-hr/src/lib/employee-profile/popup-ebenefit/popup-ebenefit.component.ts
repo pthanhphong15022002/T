@@ -37,7 +37,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   autoNumField = '';
   employeeObj: any;
   headerText: '';
-  funcID: string;
   employeeSign;
   data: any;
   moment = moment;
@@ -192,6 +191,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       this.form.validation(false)
       return;
     }
+
+    this.benefitObj.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {

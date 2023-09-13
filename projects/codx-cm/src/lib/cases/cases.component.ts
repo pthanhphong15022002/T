@@ -69,7 +69,6 @@ export class CasesComponent
   formModel: FormModel;
 
   // type any for view detail
-  @Input() funcID: any;
   @Input() dataObj?: any;
   kanban: any;
 
@@ -290,93 +289,6 @@ export class CasesComponent
       });
       this.loadKanban();
     }
-
-    //cu ok xong xoas
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.viewCrr = e?.view?.type;
-    // this.changeFilter();
-    // if (!this.funCrr) {
-    //   this.funCrr = this.funcID;
-    //   return;
-    // }
-
-    // if (this.funCrr != this.funcID) {
-    //   this.funCrr = this.funcID;
-    //   this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    //   if (this.processID) this.dataObj = { processID: this.processID };
-    //   if (this.crrFuncID != this.funcID) {
-    //     this.cache.viewSettings(this.funcID).subscribe((views) => {
-    //       if (views) {
-    //         this.afterLoad();
-    //         this.crrFuncID = this.funcID;
-    //         this.views = [];
-    //         let idxActive = -1;
-    //         let viewOut = false;
-    //         this.viewsDefault.forEach((v, index) => {
-    //           let idx = views.findIndex((x) => x.view == v.type);
-    //           if (idx != -1) {
-    //             v.hide = false;
-    //             if (v.type != this.viewCrr) v.active = false;
-    //             else v.active = true;
-    //             if (views[idx].isDefault) idxActive = index;
-    //           } else {
-    //             v.hide = true;
-    //             v.active = false;
-    //             if (this.viewCrr == v.type) viewOut = true;
-    //           }
-    //           if (v.type == 6) {
-    //             v.request.dataObj = this.dataObj;
-    //             v.request2.dataObj = this.dataObj;
-    //           }
-    //           if (
-    //             !(
-    //               (this.funcID == 'CM0401' || this.funcID == 'CM0402') &&
-    //               v.type == '6'
-    //             )
-    //           )
-    //             this.views.push(v);
-    //           else viewOut = true;
-    //         });
-    //         if (!this.views.some((x) => x.active)) {
-    //           if (idxActive != -1) this.views[idxActive].active = true;
-    //           else this.views[0].active = true;
-
-    //           let viewModel =
-    //             idxActive != -1 ? this.views[idxActive] : this.views[0];
-    //           this.view.viewActiveType = viewModel.type;
-    //           this.view.viewChange(viewModel);
-    //           if (viewOut) this.view.load();
-    //         }
-    //         if ((this.view?.currentView as any)?.kanban) {
-    //           let kanban = (this.view?.currentView as any)?.kanban;
-    //           let settingKanban = kanban.kanbanSetting;
-    //           settingKanban.isChangeColumn = true;
-    //           settingKanban.formName = this.view?.formModel?.formName;
-    //           settingKanban.gridViewName = this.view?.formModel?.gridViewName;
-    //           this.api
-    //             .exec<any>('DP', 'ProcessesBusiness', 'GetColumnsKanbanAsync', [
-    //               settingKanban,
-    //               this.dataObj,
-    //             ])
-    //             .subscribe((resource) => {
-    //               if (resource?.columns && resource?.columns.length)
-    //                 kanban.columns = resource.columns;
-    //               kanban.kanbanSetting.isChangeColumn = false;
-    //               kanban.dataObj = this.dataObj;
-    //               kanban.loadDataSource(
-    //                 kanban.columns,
-    //                 kanban.kanbanSetting?.swimlaneSettings,
-    //                 false
-    //               );
-    //               kanban.refresh();
-    //             });
-    //         }
-
-    //         this.detectorRef.detectChanges();
-    //       }
-    //     });
-    //   }
-    // }
   }
 
   click(evt: ButtonModel) {
@@ -1061,7 +973,10 @@ export class CasesComponent
       option
     );
     dialogCustomcases.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+
       if (e && e.event != null) {
+        this.dataSelected = JSON.parse(JSON.stringify(e?.event));
         this.view.dataService.update(e.event).subscribe();
         this.changeDetectorRef.detectChanges();
       }
@@ -1092,7 +1007,10 @@ export class CasesComponent
           option
         );
         dialogCustomcases.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+
           if (e && e.event != null) {
+            this.dataSelected = JSON.parse(JSON.stringify(e?.event));
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }

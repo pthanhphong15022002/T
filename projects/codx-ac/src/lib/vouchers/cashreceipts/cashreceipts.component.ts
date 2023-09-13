@@ -126,6 +126,10 @@ export class CashreceiptsComponent extends UIComponent {
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
@@ -483,7 +487,7 @@ export class CashreceiptsComponent extends UIComponent {
    * @param event 
    * @returns 
    */
-  changeItemSelected(event) {
+  onSelectedItem(event) {
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -802,6 +806,7 @@ export class CashreceiptsComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
+      formModel:this.view.formModel
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(

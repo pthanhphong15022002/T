@@ -29,7 +29,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //indexSelected;
   //lstDegrees;
   successFlag = false;
-  funcID: string;
   actionType;
   disabledInput = false;
 

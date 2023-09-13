@@ -35,7 +35,6 @@ export class PopupEBasicSalariesComponent
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
-  funcID: string;
   employeeId: string | null;
   isAfterRender = false;
   headerText: ' ';
@@ -292,6 +291,9 @@ export class PopupEBasicSalariesComponent
       );
       return;
     }
+
+    this.EBasicSalaryObj.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {

@@ -31,7 +31,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId: string;
   genderGrvSetup: any;
@@ -533,6 +532,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         return;
       }
     }
+
+    this.EAppointionObj.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {

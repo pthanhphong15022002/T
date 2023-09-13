@@ -33,7 +33,6 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   healthTemp: any;
   //lstEHealth
   //indexSelected
-  funcID: string;
   actionType: string;
   employId: string;
   idField = 'RecID';

@@ -26,7 +26,6 @@ export class EPHistoryCardComponent
   dataValue='';
   predicate='ResourceID=@0'
   viewType = ViewType;
-  funcID:any;
   formModel:FormModel;
   columnGrids:any;
   views:any;

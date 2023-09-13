@@ -807,7 +807,7 @@ export class CodxTasksComponent
       if (this.paramModule.ReOpenDays) {
         var time =
           moment(new Date()).toDate().getTime() -
-          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;
+          Number.parseFloat(this.paramModule.ReOpenDays) * (3600000*24);
         var timeCompletedOn = moment(new Date(taskAction.completedOn))
           .toDate()
           .getTime();

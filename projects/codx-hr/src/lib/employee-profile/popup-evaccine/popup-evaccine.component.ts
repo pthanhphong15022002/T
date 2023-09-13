@@ -30,7 +30,6 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   data: any;
   //listData: any; //
-  funcID: string;
   idField: string = 'recID';
   actionType: string;
   employeeId: string;

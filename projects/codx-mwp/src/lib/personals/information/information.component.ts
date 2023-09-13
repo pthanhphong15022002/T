@@ -116,7 +116,6 @@ const themeModeDefault = themeModeDatas[0];
 })
 export class InformationComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  funcID: any;
   formModel: any;
   formModelES: any;
   employeeInfo: any;

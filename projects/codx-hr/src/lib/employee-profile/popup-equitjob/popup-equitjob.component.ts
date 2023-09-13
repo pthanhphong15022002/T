@@ -14,7 +14,6 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
   formGroup: FormGroup;
   dialog: DialogRef;
   quitJobObj: any;
-  funcID: string;
   actionType: string;
   crrEContract: any;
   employeeId: string;

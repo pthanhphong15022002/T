@@ -50,7 +50,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   idField = 'RecID';
 
   familyMemberObj;
-  funcID: string;
   headerText: '';
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;

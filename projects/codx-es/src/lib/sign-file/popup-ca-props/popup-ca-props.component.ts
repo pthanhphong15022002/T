@@ -22,7 +22,6 @@ export class PopupCaPropsComponent extends UIComponent {
 
   data;
   title: string;
-  funcID;
   dialog;
 
   stt;

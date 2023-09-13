@@ -33,7 +33,6 @@ export class PersonalsComponent extends UIComponent  implements AfterViewInit{
   menuUrl: any;
   active = false;
   icon: any;
-  funcID = '';
   default = true;
   showHeader: boolean = true;
   checkRefreshAvatar = false;

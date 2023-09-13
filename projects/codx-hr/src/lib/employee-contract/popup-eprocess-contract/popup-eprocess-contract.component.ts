@@ -35,11 +35,11 @@ export class PopupEProcessContractComponent
   extends UIComponent
   implements OnInit
 {
+  console = console;
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  funcID: string;
   actionType: string;
   employeeId: string;
   idField = 'RecID';
@@ -522,6 +522,9 @@ export class PopupEProcessContractComponent
     this.data.companyID = this.employeeObj?.companyID;
     this.data.positionID = this.employeeObj?.positionID;
 
+    this.data.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
+
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
         if (item2?.status == 0) {
@@ -612,11 +615,6 @@ export class PopupEProcessContractComponent
       this.employeeObj.positionName = event.itemsSelected
         ? event.itemsSelected[0].PositionName
         : event.component.itemsSelected[0].PositionNam;
-      // console.log(
-      //   event.itemsSelected
-      //     ? event.itemsSelected[0].PositionName
-      //     : event.component.itemsSelected[0].PositionName
-      // );
     }
   }
 
@@ -688,7 +686,6 @@ export class PopupEProcessContractComponent
           this.hrSevice
             .getOrgUnitID(this.employeeObj?.orgUnitID)
             .subscribe((res) => {
-              console.log(res);
               this.employeeObj.orgUnitName = res.orgUnitName;
             });
 

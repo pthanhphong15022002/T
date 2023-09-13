@@ -19,7 +19,6 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./popup-eself-info.component.css'],
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   fieldHeaderTexts;

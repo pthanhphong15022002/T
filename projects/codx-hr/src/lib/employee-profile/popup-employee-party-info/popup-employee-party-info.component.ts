@@ -19,7 +19,6 @@ export class PopupEmployeePartyInfoComponent
   extends UIComponent
   implements OnInit
 {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   formModel: FormModel;

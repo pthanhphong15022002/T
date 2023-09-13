@@ -24,7 +24,6 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   idField = 'RecID';
   currentEJobSalaries: any;
-  funcID: string;
   lstJobSalaries;
   actionType: string;
   employeeId: string;

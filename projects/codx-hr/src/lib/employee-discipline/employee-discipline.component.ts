@@ -36,7 +36,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus') templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  funcID: string;
   editStatusObj: any;
   dataCategory;
   eDisciplineHeaderText;
@@ -173,7 +172,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
         if (res != null) {
           this.notify.notifyCode('SYS007');
           res.emp = this.currentEmpObj;
-          this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
               res.recID,
@@ -458,5 +456,62 @@ export class EmployeeDisciplineComponent extends UIComponent {
   viewDetail(data) {
     this.currentEmpObj = data.emp;
     this.HandleEDisciplineInfo('Xem chi tiết', 'view', data);
+  }
+
+  handleMutipleUpdateStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.UpdateEmployeeDisciplineInfo(data).subscribe((res) => {
+      if (res != null) {
+        res.emp = this.currentEmpObj;
+        this.view.dataService.update(res).subscribe();
+
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EDisciplinesBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              res[0].recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+        this.df.detectChanges();
+      }
+    });
+  }
+
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
   }
 }

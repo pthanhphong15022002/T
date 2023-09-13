@@ -27,7 +27,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   skillObj;
   lstSkills;
   actionType;
-  funcID;
   idField = 'RecID';
   employId;
   isAfterRender = false;

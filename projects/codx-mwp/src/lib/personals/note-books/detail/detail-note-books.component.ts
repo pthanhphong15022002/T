@@ -33,7 +33,6 @@ export class DetailNoteBooksComponent extends UIComponent {
   data: any;
   item: any;
   columnsGrid;
-  funcID = '';
   predicate = 'TransID=@0 && IsNote = false';
   dataValue = '';
   button?: ButtonModel;

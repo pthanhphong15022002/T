@@ -43,7 +43,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   //#endregion
 
   views: Array<ViewModel> = [];
-  funcID: string;
   method = 'GetEJobSalariesListAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',

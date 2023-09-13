@@ -38,7 +38,6 @@ export class PopupDriverAssignComponent extends UIComponent {
   dialogRef: DialogRef;
   isAfterRender = false;
   returnData: any;
-  funcID: any;
   driverID:any;
   listDriver=[];
   driver:any;

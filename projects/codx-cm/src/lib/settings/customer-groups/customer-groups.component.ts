@@ -32,7 +32,6 @@ export class CustomerGroupsComponent extends UIComponent {
   @ViewChild('modifiedOn') modifiedOn!: TemplateRef<any>;
   @ViewChild('createdBy') createdBy!: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  funcID = '';
   authStore: any;
   views: Array<ViewModel> = [];
   entityName = 'CM_CustomerGroups';

@@ -30,7 +30,6 @@ export class PopupADRComponent extends UIComponent {
   title: string;
   subTitle: string;
   mode;
-  funcID;
   recID;
 
   dialog;

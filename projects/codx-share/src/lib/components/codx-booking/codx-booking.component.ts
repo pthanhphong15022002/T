@@ -76,7 +76,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   method = 'GetListBookingAsync';
   idField = 'recID';
   //---------------------------------------------------------------------------------//  
-  funcID: string;
   queryParams: any;
   resourceType: any;
 

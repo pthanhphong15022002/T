@@ -40,7 +40,6 @@ export class UserGroupsComponent extends UIComponent {
   moreFuncs: Array<ButtonModel> = [];
 
   user: any;
-  funcID: string;
 
   constructor(
     private inject: Injector,
