@@ -1303,9 +1303,21 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           element.focus();
         }, 100);
         break;
+      case 'beginEdit':
+        this.eleGridCashPayment.saveValidator = this.validate;
+        break;
     }
   }
-
+  validate(data:any){
+    let errField:any={};
+    if(data.dr ==0){
+      errField.field='dr';
+      errField.error='phải lớn hơn 0'
+      errField.value=0;
+      return [errField];
+    }
+    return []
+  }
   /**
    * *Hàm các sự kiện của lưới VatInvoice
    * @param event

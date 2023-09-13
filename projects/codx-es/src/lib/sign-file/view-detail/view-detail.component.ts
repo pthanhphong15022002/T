@@ -10,6 +10,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -24,6 +25,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  UIDetailComponent,
   ViewsComponent,
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -38,9 +40,10 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   runMode: any;
   constructor(
+    inject: Injector,
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
@@ -48,10 +51,9 @@ export class ViewDetailComponent implements OnInit {
     private notify: NotificationsService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService,
-    private api: ApiHttpService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
+    super(inject);
+    this.funcID = this.view?.formModel?.funcID ?? this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;        
@@ -103,8 +105,7 @@ export class ViewDetailComponent implements OnInit {
     // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
-
-  ngOnInit(): void {
+  override onInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
@@ -183,6 +184,13 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
+    this.funcID = this.view?.formModel?.funcID;
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;     
+        this.detectorRef.detectChanges();   
+      }
+    });
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
@@ -207,12 +215,20 @@ export class ViewDetailComponent implements OnInit {
             }
           });
       }
+      let dataRequest = new DataRequest();
+      dataRequest.formName = this.view?.formModel?.formName;
+      dataRequest.gridViewName = this.view?.formModel?.gridViewName;
+      dataRequest.entityName = this.view?.formModel?.entityName;
+      dataRequest.funcID = this.view?.formModel?.funcID;
+      dataRequest.dataObj= this.itemDetail?.recID;
+      dataRequest.page = 1;
       this.esService
-        .getDetailSignFile(this.itemDetail?.recID)
+        .getDetailSignFile(this.itemDetail?.recID,dataRequest)
         .subscribe((res) => {
           this.dataReferences = [];
           if (res) {
-            this.itemDetail = res;
+            this.itemDetail = res;            
+            this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
@@ -338,7 +354,7 @@ export class ViewDetailComponent implements OnInit {
 
   //#region MoreFunc viewDetai
   changeDataMF(e: any, data: any) {
-    if (this.runMode == '1') {
+    if (this.runMode == '1') {      
       this.codxShareService.changeMFApproval(e, data?.unbounds);
     } else {
       var bookmarked = false;
