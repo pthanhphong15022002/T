@@ -21,7 +21,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxWrService } from '../../../codx-wr.service';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/popup-update-reasoncode.component';
@@ -234,7 +234,28 @@ export class ViewTabUpdateComponent implements OnInit {
   }
 
   //#region more
-  clickMF(e, data) {
+  async clickMF(e, data) {
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('WRParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        let time = paramDefault['AdjustWorkOrderUpdate'] ?? '1';
+        let createdOn = Number(new Date(data?.createdOn));
+        let currentDate = Number(new Date());
+        let timeDifferenceInHours =
+          (currentDate - createdOn) / (1000 * 60 * 60);
+
+        if (parseFloat(time) < timeDifferenceInHours) {
+          this.notiSv.notifyCode('Đã quá hạn nên không chỉnh sửa được');
+          return;
+        }
+        console.log(time);
+      }
+    }
+
     this.dataSelected = data;
     this.titleAction = e.text;
     switch (e.functionID) {
