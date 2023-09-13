@@ -1,10 +1,12 @@
-import { Component, Injector, Optional } from '@angular/core';
+import { variableAudio } from './../../../../../../projects/codx-share/src/lib/components/viewFileDialog/extention';
+import { AfterViewInit, Component, Injector, Optional } from '@angular/core';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import {
   AuthService,
   AuthStore,
   DialogData,
   DialogRef,
+  NotificationsService,
   RealHub,
   RealHubService,
   UIComponent,
@@ -19,7 +21,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './login2-fa.component.html',
   styleUrls: ['./login2-fa.component.scss'],
 })
-export class Login2FAComponent extends UIComponent {
+export class Login2FAComponent extends UIComponent implements AfterViewInit {
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -27,33 +29,40 @@ export class Login2FAComponent extends UIComponent {
     private realHub: RealHubService,
     private authService: AuthService,
     private adService: CodxAdService,
+    private notiService: NotificationsService,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.user = dt?.data?.data;
+    this.hubConnectionID = dt?.data?.hubConnectionID;
     this.email = this.user.data.email;
     this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
   }
   user;
   dialog;
+
+  // #region QR
+  // testQRContent = '';
+
   isFirstQR = true;
   qrTimeout: number = 0;
   hubConnectionID: string;
   qrBase64: string = '/assets/codx/bg/qrCodx.png';
   qrTimeoutMinutes: number = 0;
   isScaned = false;
-  modal;
   lstOptions = [];
   clickQueue = [];
   curLgType: string = '';
   email;
   unsubscribe: Subscription[] = [];
+  // #endregion
 
   //#region OTP
   otpTimeout = 0;
+  otpValues = ['', '', '', '', '', ''];
   //#endregion
 
   //#region 2FA
@@ -66,37 +75,66 @@ export class Login2FAComponent extends UIComponent {
     });
     this.cache.valueList('SYS060').subscribe((vll) => {
       this.lstOptions = vll?.datas.filter((x) => x.value != '1');
-      console.log('lst options ', this.lstOptions);
     });
 
-    // this.realHub.start('ad').then((x: RealHub) => {
-    //   let t = this;
-    //   x.hub.invoke('GetConnectionId').then(function (connectionId) {
-    //     t.hubConnectionID = connectionId;
-    //     console.log('hub', connectionId);
-    //   });
-
-    //   if (x) {
-    //     x.$subjectReal.asObservable().subscribe((z) => {
-    //       if (z.event == 'AcceptLoginQR') {
-    //         this.authService.setLogin(z.data?.user);
-    //         this.realHub.stop();
-    //         window.location.href = z.data?.host + z.data?.tenant;
-    //       }
-    //     });
-    //   }
-    // });
+    if (this.hubConnectionID == '') {
+      this.realHub.start('ad').then((x: RealHub) => {
+        this.hubConnectionID = this.realHub['hubConnectionID'];
+      });
+    }
+    this.generateQR();
   }
+
   ngAfterViewInit() {
-    // const element = document.getElementById('scanQRGuid2') as HTMLElement;
-    // this.modal = new Modal(element);
+    this.setOTPEvent();
+  }
+
+  setOTPEvent() {
+    const inputs = document.getElementById('inputs');
+
+    if (inputs) {
+      inputs.addEventListener('input', function (e) {
+        const target = e.target as HTMLInputElement;
+        const val = target.value as any;
+
+        if (isNaN(val) || val == ' ') {
+          target.value = '';
+          return;
+        }
+
+        if (val != '') {
+          const next = target.nextElementSibling as HTMLInputElement;
+          if (next) {
+            next.focus();
+          }
+        }
+      });
+
+      inputs.addEventListener('keyup', function (e) {
+        const target = e.target as HTMLInputElement;
+        const key = e.key.toLowerCase();
+
+        if (key == 'backspace' || key == 'delete') {
+          target.value = '';
+          const prev = target.previousElementSibling as HTMLInputElement;
+          if (prev) {
+            prev.focus();
+          }
+          return;
+        }
+      });
+    }
   }
 
   changeLogin2FAType(option) {
     this.curLgType =
       option.value == '2' ? 'qr' : option.value == '3' ? 'otp' : '';
+
     this.clickQueue.push(option.value);
     this.detectorRef.detectChanges();
+    if (option.value == '3') {
+      this.setOTPEvent();
+    }
   }
   generateQR() {
     let deviceInfo = this.deviceInfo.getDeviceInfo();
@@ -122,6 +160,9 @@ export class Login2FAComponent extends UIComponent {
           )
           .subscribe((qrImg) => {
             if (qrImg) {
+              //nho xoa
+              // this.testQRContent = qrImg;
+
               this.qrTimeout = 180;
               this.qrBase64 = 'data:image/png;base64,' + qrImg;
               let id = setInterval(
@@ -176,12 +217,7 @@ export class Login2FAComponent extends UIComponent {
         }
       });
   }
-  openScanQRGuid() {
-    this.modal.show();
-  }
-  closeScanQRGuid() {
-    this.modal.hide();
-  }
+
   close() {
     this.dialog.close();
   }
@@ -190,11 +226,17 @@ export class Login2FAComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  changeOTP(evt) {
-    this.loginFG.controls['password'].setValue(evt.data);
+  changeOTP(evt, idx) {
+    if (evt.target.value) {
+      this.otpValues[idx] = evt.target.value;
+    }
+    console.log('changeOTP', this.otpValues);
+
+    // this.loginFG.controls['password'].setValue(evt.data);
   }
 
   login2FAOTP() {
+    this.loginFG.controls['password'].setValue(this.otpValues.join(''));
     const login2FASubscr = this.authService
       .login(
         this.loginFG.controls['email'].value,
@@ -208,7 +250,26 @@ export class Login2FAComponent extends UIComponent {
           this.dialog.close({
             data,
           });
+        else {
+          this.notiService.notifyCode('');
+        }
       });
     this.unsubscribe.push(login2FASubscr);
+  }
+
+  testQR() {
+    // this.api
+    //   .execSv<string>(
+    //     'SYS',
+    //     'ERM.Business.AD',
+    //     'UsersBusiness',
+    //     'ScanQRCodeAsync',
+    //     [this.testQRContent, '', '']
+    //   )
+    //   .subscribe((qrInfo: any) => {
+    //     this.authService
+    //       .login('mannhi1601@gmail.com', qrInfo.session as string, 'qr')
+    //       .subscribe((res) => {});
+    //   });
   }
 }

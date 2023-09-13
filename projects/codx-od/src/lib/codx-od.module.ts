@@ -43,6 +43,8 @@ import {
   ProgressBarModule,
 } from '@syncfusion/ej2-angular-progressbar';
 import { ApprovalStepComponent } from './incomming/approval-step/approval-step.component';
+import { ODDashboardComponent } from './oddashboard/oddashboard.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 const routes: Routes = [
   {
     path: '',
@@ -51,6 +53,10 @@ const routes: Routes = [
       {
         path: 'home/:funcID',
         component: HomeComponent,
+      },
+      {
+        path: 'oddashboard/:funcID',
+        component: ODDashboardComponent,
       },
       {
         path: 'dispatches/:funcID',
@@ -120,7 +126,8 @@ const routes: Routes = [
     CompletedComponent,
     RefuseComponent,
     UpdateVersionComponent,
-    ApprovalStepComponent
+    ApprovalStepComponent,
+    ODDashboardComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -133,7 +140,8 @@ const routes: Routes = [
     SharedModule,
     CodxShareModule,
     UploaderModule,
-    ProgressBarModule
+    ProgressBarModule,
+    TreeMapModule,
     // NgbModule
   ],
   exports: [RouterModule],
