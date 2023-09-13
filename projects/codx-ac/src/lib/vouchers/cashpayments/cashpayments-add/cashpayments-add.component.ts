@@ -138,17 +138,14 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     this.setValidateForm();
   }
 
-  // onSaveLine(type:string){
-  //   this.subscription && this.subscription.unsubscribe();
-  //   this.eleGridCashPayment.save();
-  //   this.subscription =  this.eleGridCashPayment.onSaved.subscribe((res:any)=>{
-  //     if(res) {
+  onSaveLine(){
+    this.eleGridCashPayment.saveRow((res:any)=>{
+      if(res){
+        debugger
+      }
+    })
 
-  //       debugger
-  //     }
-  //   })
-
-  // }
+  }
 
   // /**
   //  * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
