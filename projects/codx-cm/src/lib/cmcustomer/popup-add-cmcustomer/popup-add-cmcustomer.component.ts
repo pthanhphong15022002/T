@@ -712,9 +712,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
       );
       if (json != null && json.trim() != '') {
         let lstDis = JSON.parse(json);
-        this.data.provinceID = lstDis?.ProvinceID;
-        this.data.districtID = lstDis?.DistrictID;
-        this.data.wardID = lstDis?.WardID;
+        if (this.data.provinceID != lstDis?.ProvinceID)
+          this.data.provinceID = lstDis?.ProvinceID;
+        if (this.data.districtID != lstDis?.DistrictID)
+          this.data.districtID = lstDis?.DistrictID;
+        if (this.data.wardID != lstDis?.WardID)
+          this.data.wardID = lstDis?.WardID;
       }
       if (this.action != 'edit') {
         if (this.listAddress != null && this.listAddress.length > 0) {

@@ -200,9 +200,11 @@ export class PopupAddressComponent implements OnInit {
     );
     if (json != null && json.trim() != '') {
       let lstDis = JSON.parse(json);
-      this.data.provinceID = lstDis?.ProvinceID;
-      this.data.districtID = lstDis?.DistrictID;
-      this.data.wardID = lstDis?.WardID;
+      if (this.data.provinceID != lstDis?.ProvinceID)
+        this.data.provinceID = lstDis?.ProvinceID;
+      if (this.data.districtID != lstDis?.DistrictID)
+        this.data.districtID = lstDis?.DistrictID;
+      if (this.data.wardID != lstDis?.WardID) this.data.wardID = lstDis?.WardID;
     }
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
