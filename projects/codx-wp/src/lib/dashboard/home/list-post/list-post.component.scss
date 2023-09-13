@@ -338,7 +338,6 @@ ejs-listview .e-ul>li {
 .WP_Comments{
     border: 1px solid var(--border-gray);
     border-radius: 4px;
-    padding: 4px;
 }
 
 .WP_News-contents {
@@ -362,7 +361,7 @@ ejs-listview .e-ul>li {
     height: 300px !important;
 }
 .wp-share-contents {
-    margin-top: 8px;
+    padding: 4px;
 }
 codx-img > .news-image > div{
     width: 100% !important;
