@@ -40,7 +40,6 @@ export class QuotationsTabViewComponent
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
   @ViewChild('popDetail') popDetail?: TemplateRef<any>;
-  @Input() funcID: string = 'CM0202';
   @Input() predicates: any; //
   @Input() dataValues: any; //= '
   @Input() customerID: string;
@@ -151,7 +150,9 @@ export class QuotationsTabViewComponent
     this.getQuotations();
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.funcID = "CM0202";
+  }
 
   ngAfterViewInit() {}
 

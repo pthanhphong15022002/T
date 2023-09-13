@@ -37,7 +37,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   scheduledTasks;
   scheduledTasks_CoCoin;
   scheduledTasks_KuDos;
-  funcID: any;
   functionList: any;
 
   transType: any;

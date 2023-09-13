@@ -27,7 +27,6 @@ export class PopupAddEventComponent extends UIComponent {
   formModel: FormModel;
   dialog: DialogRef;
   user: any;
-  funcID: string;
   evtData: any;
   dayOff: any;
   set = false;

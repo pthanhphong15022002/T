@@ -48,7 +48,6 @@ export class PopupAddResourcesComponent extends UIComponent {
   subHeaderText = '';
   imgRecID: any;
   grView: any;
-  funcID:string;
     r_FuncID=EPCONST.FUNCID.R_Category;
     c_FuncID=EPCONST.FUNCID.C_Category;
     dr_FuncID=EPCONST.FUNCID.DR_Category;

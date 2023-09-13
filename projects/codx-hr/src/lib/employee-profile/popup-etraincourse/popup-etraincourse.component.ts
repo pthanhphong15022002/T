@@ -29,7 +29,6 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   headerText: string = '';
   idField: string = 'recID';
-  funcID;
   employId;
   IsAfterRender = false;
   data;

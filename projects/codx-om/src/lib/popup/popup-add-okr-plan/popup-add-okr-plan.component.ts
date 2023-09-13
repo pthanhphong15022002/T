@@ -38,7 +38,6 @@ export class PopupAddOKRPlanComponent
   dialogRef: DialogRef;
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
-  funcID: any;
   okrPlan: any;
   headerText = '';
   curOrgName = '';

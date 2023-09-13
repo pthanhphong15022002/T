@@ -42,7 +42,6 @@ import { SettingService } from '../../setting.service';
   styleUrls: ['./gift-group.component.scss'],
 })
 export class GiftGroupComponent extends UIComponent implements OnInit {
-  funcID = '';
   views: Array<ViewModel> = [];
   dataItem: any;
   userPermission: any;

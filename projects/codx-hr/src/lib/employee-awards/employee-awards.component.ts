@@ -71,7 +71,6 @@ export class EmployeeAwardsComponent extends UIComponent {
   actionUpdateApproved = 'HRTPro06AU5';
   actionUpdateClosed = 'HRTPro06AU9'; // đóng
 
-  funcID: string;
   grvSetup: any;
   // genderGrvSetup: any;
   views: Array<ViewModel> = [];

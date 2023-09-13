@@ -34,7 +34,6 @@ export class MWPBookingRoomViewDetailComponent extends UIComponent implements On
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() data: any;
   @Input() hideMF = false;

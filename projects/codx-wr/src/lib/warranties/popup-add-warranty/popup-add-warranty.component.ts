@@ -163,10 +163,28 @@ export class PopupAddWarrantyComponent implements OnInit {
     }
   }
 
-  addCustomer() {
+  async addCustomer() {
     let lstAddress = [];
     if (this.data?.address != null && this.data?.address?.trim() != '') {
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [this.data.address, 3]
+        )
+      );
       var tmp = {};
+
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        this.data.province = lstDis?.ProvinceID;
+        this.data.district = lstDis?.DistrictID;
+        tmp['provinceID'] = lstDis?.ProvinceID;
+        tmp['districtID'] = lstDis?.DistrictID;
+        tmp['wardID'] = lstDis?.WardID;
+      }
       tmp['recID'] = Util.uid();
       tmp['adressType'] = '0';
       tmp['adressName'] = this.data.address;

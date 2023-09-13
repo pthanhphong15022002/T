@@ -98,7 +98,6 @@ export class DealsComponent
   formModel: FormModel;
 
   // type any for view detail
-  @Input() funcID: any;
   @Input() dataObj?: any;
   kanban: any;
 
@@ -1171,7 +1170,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected.categoryCustomer
+          categoryCustomer: this.dataSelected?.categoryCustomer,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,

@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)"
+    <ejs-tab #elementTabDetail enablePersistence="true"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -575,6 +575,11 @@
               " (click)="onAddLine('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+            </button>
+            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+              class="btn btn-sm btn-light-primary rounded-15"(click)="onSaveLine()">
+              <i class="icon-playlist_add icon-16"></i>
+              <codx-label fiedName="lblSaveAndClear" default="Lưu dòng"></codx-label>
             </button>
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">

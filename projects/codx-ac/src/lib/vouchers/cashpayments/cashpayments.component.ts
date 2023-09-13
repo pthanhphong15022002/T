@@ -157,6 +157,10 @@ export class CashPaymentsComponent extends UIComponent {
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
@@ -215,10 +219,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
 
-  }
-
-  ngDoCheck() {
-    this.detectorRef.detectChanges();
   }
 
   ngOnDestroy() {
@@ -289,6 +289,27 @@ export class CashPaymentsComponent extends UIComponent {
         break;
     }
   }
+
+/**
+   * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
+   * @param event
+   * @returns
+   */
+onSelectedItem(event) {
+  if (typeof event.data !== 'undefined') {
+    if (event?.data.data || event?.data.error) {
+      return;
+    } else {
+      // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+      //   this.itemSelected = event?.data;
+      //   return;
+      // }
+      this.itemSelected = event?.data;
+      this.getDatadetail(this.itemSelected);
+      this.detectorRef.detectChanges();
+    }
+  }
+}
 
   //#endregion
 
@@ -522,26 +543,7 @@ export class CashPaymentsComponent extends UIComponent {
     return;
   }
 
-  /**
-   * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
-   * @param event
-   * @returns
-   */
-  changeItemSelected(event) {
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        // if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
-        //   this.itemSelected = event?.data;
-        //   return;
-        // }
-        this.itemSelected = event?.data;
-        this.getDatadetail(this.itemSelected);
-        this.detectorRef.detectChanges();
-      }
-    }
-  }
+  
 
   /**
    * *Hàm get data chi tiết của các tab (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
@@ -725,7 +727,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.totalsettledAmt2 = 0;
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
-    
+
     if (this.acctTrans && this.acctTrans.length > 0) {
       this.acctTrans.forEach((item) => {
         if (this.itemSelected.currencyID == this.baseCurr) {

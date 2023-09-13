@@ -132,7 +132,6 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
   lstEquipment = [];
 
   listRoles = [];
-  funcID: string;
   isAdd = false;
   range: any;
   optionalData;

@@ -30,7 +30,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   lstCertificates;
   indexSelected;
   actionType;
-  funcID;
   idField = 'RecID';
   employId;
   isAfterRender = false;

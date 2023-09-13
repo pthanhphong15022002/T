@@ -40,7 +40,6 @@ export class PopupEProcessContractComponent
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  funcID: string;
   actionType: string;
   employeeId: string;
   idField = 'RecID';

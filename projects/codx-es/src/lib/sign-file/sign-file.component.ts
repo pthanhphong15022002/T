@@ -84,7 +84,6 @@ export class SignFileComponent extends UIComponent {
   resourceKanban?: ResourceModel;
   convertHtmlAgency = convertHtmlAgency;
 
-  funcID: string;
   formModel: FormModel;
   grvSetup: any = {};
 
@@ -357,11 +356,20 @@ export class SignFileComponent extends UIComponent {
   }
 
   viewChange(e: any) {
-    var funcID = e?.component?.instance?.funcID;
-    this.esService.getFormModel(funcID).then((fm) => {
-      if (fm) {
+    // var funcID = e?.component?.instance?.funcID;
+    // this.esService.getFormModel(funcID).then((fm) => {
+    //   if (fm) {
+    //   }
+    // });
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;
+        this.detectorRef.detectChanges;        
       }
     });
+    this.detectorRef.detectChanges;   
+
   }
   browsingProcess(recID:any,approveStatus:any)
   {

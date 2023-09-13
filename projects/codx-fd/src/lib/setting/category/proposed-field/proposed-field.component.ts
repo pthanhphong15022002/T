@@ -38,7 +38,6 @@ import { AddProposedFieldComponent } from './add-proposed-field/add-proposed-fie
   styleUrls: ['./proposed-field.component.scss'],
 })
 export class ProposedFieldComponent extends UIComponent implements OnInit {
-  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;

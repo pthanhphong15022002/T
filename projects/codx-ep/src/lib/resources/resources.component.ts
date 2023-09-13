@@ -75,7 +75,6 @@ export class ResourcesComponent extends UIComponent {
   };
   //---------------------------------------------------------//
   vllDevices = [];
-  funcID: string;
   resourceEquipments = [];
   moreFunc: any;
   funcIDName: any;

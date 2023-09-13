@@ -45,7 +45,6 @@ export class CodxRescheduleBookingRoomComponent
   endMinute = 0;
   startDate: any;
   endDate: any;
-  funcID: any;
   comment = '';
   showAllResource = true;
   formModel: any;

@@ -29,7 +29,6 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   actionType;
   notitfy: NotificationsService;
   employeeObj: any;
-  funcID;
   openFrom: string;
   idField = 'RecID';
   genderGrvSetup: any;
