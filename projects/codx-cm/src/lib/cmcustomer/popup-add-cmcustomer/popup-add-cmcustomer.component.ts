@@ -20,6 +20,7 @@ import {
   AlertConfirmInputConfig,
   ImageViewerComponent,
   Util,
+  CodxFormComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -46,11 +47,11 @@ import { CodxAddressCmComponent } from '../cmcustomer-detail/codx-address-cm/cod
 export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
   @ViewChild('codxListAddress') codxListAddress: CodxAddressCmComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   @Output() loadData = new EventEmitter();
 
   @ViewChild('vllCbx') vllCbx;
-
   data: any;
   dialog: any;
   title = '';
@@ -428,9 +429,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeIndustries(e) {
-    if (e?.data != this.data?.industries) {
-      this.data[e.field] = e?.data;
+    this.data.industries = e?.data;
+    if (e?.data) {
+      this.data.owner = e?.component?.itemsSelected[0]?.Owner;
     }
+    this.form.formGroup.patchValue(this.data);
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region save
@@ -567,7 +571,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       return;
     }
     let check = false;
-    if(this.action != 'edit'){
+    if (this.action != 'edit') {
       check = await firstValueFrom(
         this.api.execSv<any>(
           'CM',
