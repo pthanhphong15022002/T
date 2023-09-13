@@ -11,30 +11,18 @@ const routes: Routes = [
     path: '',
     component: CodxApprovalComponent,
     children: [
-      {
-        path: 'dispatches/:funcID/:id',
-        component: ODApprovelComponent,
-      },
-      {
-        path: 'tasks/:funcID/:id',
-        component: ODTestDetailComponent,
-      },
+      // {
+      //   path: 'dispatches/:funcID/:id',
+      //   component: ODApprovelComponent,
+      // },
+      // {
+      //   path: 'tasks/:funcID/:id',
+      //   component: ODTestDetailComponent,
+      // },
       {
         path: 'signfiles/:funcID/:id',
         component: ESApprovelComponent,
-      },
-      // {
-      //   path: 'bookingcars/:funcID/:id',
-      //   component: BookingCarViewDetailComponent,
-      // },
-      // {
-      //   path: 'bookingrooms/:funcID/:id',
-      //   component: BookingRoomViewDetailComponent,
-      // },
-      // {
-      //   path: 'bookingstationery/:funcID/:id',
-      //   component: BookingStationeryViewDetailComponent,
-      // },
+      },      
     ],
   },
 ];
