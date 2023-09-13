@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
   DialogRef,
@@ -166,6 +167,9 @@ export class PopupAddressComponent implements OnInit {
               if (x.event && x.event?.status) {
                 if (x.event.status == 'Y') {
                   this.onSaveHanle();
+                } else {
+                  this.isDefault = false;
+                  this.onSaveHanle();
                 }
               }
             });
@@ -183,8 +187,23 @@ export class PopupAddressComponent implements OnInit {
     }
   }
 
-  onSaveHanle() {
+  async onSaveHanle() {
     this.data.isDefault = this.isDefault;
+    let json = await firstValueFrom(
+      this.api.execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'ProvincesBusiness',
+        'GetLocationAsync',
+        [this.data.adressName, 3]
+      )
+    );
+    if (json != null && json.trim() != '') {
+      let lstDis = JSON.parse(json);
+      this.data.provinceID = lstDis?.ProvinceID;
+      this.data.districtID = lstDis?.DistrictID;
+      this.data.wardID = lstDis?.WardID;
+    }
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
@@ -213,6 +232,7 @@ export class PopupAddressComponent implements OnInit {
       }
     }
   }
+
   clickRefesh() {
     this.setAdressName();
   }

@@ -157,8 +157,6 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-  }
-  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.listdetail,
@@ -187,6 +185,9 @@ export class CmCustomerComponent
         },
       },
     ];
+  }
+  ngAfterViewInit(): void {
+
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
@@ -444,7 +445,7 @@ export class CmCustomerComponent
               let lstAddress = e.event[2] ?? [];
               data.modifiedOn = new Date();
               this.dataSelected = JSON.parse(JSON.stringify(data));
-              // this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              this.customerDetail.getOneCustomerDetail(this.dataSelected);
               this.customerDetail.onChangeContact(lstContact);
               this.customerDetail.onChangeAddress(lstAddress);
               this.view.dataService.update(data).subscribe();
