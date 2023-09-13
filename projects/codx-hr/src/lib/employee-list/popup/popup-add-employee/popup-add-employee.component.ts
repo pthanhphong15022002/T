@@ -29,6 +29,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./popup-add-employee.component.css'],
 })
 export class PopupAddEmployeeComponent implements OnInit {
+  @ViewChild('codxImg') codxImg: ImageViewerComponent;
+  @ViewChild('form') form: LayoutAddComponent;
+  @ViewChild('cbxTrain') cbxTrain: any;
+  @ViewChild('vllTrainLevel') vllTrainLevel: any;
+  @ViewChild('cbxPosition') cbxPosition: any;
+  @ViewChild('cbxJobLevel') cbxJobLevel: any;
+
   data: any = null;
   headerText: string = '';
   action: string = '';
@@ -55,10 +62,6 @@ export class PopupAddEmployeeComponent implements OnInit {
       name: 'lblLegalInfo',
     },
   ];
-  @ViewChild('codxImg') codxImg: ImageViewerComponent;
-  @ViewChild('form') form: LayoutAddComponent;
-  @ViewChild('cbxTrain') cbxTrain: any;
-  @ViewChild('vllTrainLevel') vllTrainLevel: any;
   trainFieldID: string = '';
   trainLevel: string = '';
   funcID: string = '';
@@ -150,8 +153,11 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'positionID':
           if (value && this.hasChangedData) {
-            this.api
-              .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
+            if (event?.component?.dataService?.data.findIndex(x => x.PositionID == value) < 0) {
+              this.notifySV.notifyCode('HR022', 0, this.grvSetUp['PositionID']['headerText']);
+              return;
+            }
+            this.api.execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'GetPosInfoAsync', [value])
               .subscribe((posInfo: any) => {
                 if (posInfo) {
                   if (posInfo.jobLevel) {
@@ -174,6 +180,14 @@ export class PopupAddEmployeeComponent implements OnInit {
         // case 'orgUnitID':
         // this.getOrgNote();
         // break;
+        case 'jobLevel':
+          if (value && this.hasChangedData) {
+            if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0) {
+              this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
+              return;
+            }
+          }
+          break;
         case 'issuedOn':
           if (!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
@@ -355,7 +369,18 @@ export class PopupAddEmployeeComponent implements OnInit {
         }
       }
     }
-
+    if (this.data?.positionID) {
+      if (this.cbxPosition?.ComponentCurrent?.dataService?.data.findIndex(x => x.PositionID == this.data.positionID) < 0) {
+        this.notifySV.notifyCode('HR022', 0, this.grvSetUp['PositionID']['headerText']);
+        return false;
+      }
+    }
+    if (this.data?.jobLevel) {
+      if (this.cbxJobLevel?.ComponentCurrent?.dataService?.data.findIndex(x => x.PositionID == this.data.positionID) < 0) {
+        this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
+        return false;
+      }
+    }
     if (this.data?.phone) {
       if (!this.validatePhoneNumber(this.data.phone, 'Phone'))
         return false;
