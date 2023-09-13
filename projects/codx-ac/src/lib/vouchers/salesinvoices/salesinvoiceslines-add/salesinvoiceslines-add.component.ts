@@ -21,6 +21,7 @@ import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/name-by-id.pipe';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../salesinvoices.service';
+import { toCamelCase } from '../../../utils';
 
 @Component({
   selector: 'lib-salesinvoiceslines-add',
@@ -122,7 +123,7 @@ export class SalesinvoiceslinesAddComponent
     const title$ = this.cache.valueList('AC070').pipe(
       tap((t) => console.log(t)),
       map((data) =>
-        this.acService.toCamelCase(
+        toCamelCase(
           data?.datas.find((d) => d.value === '1')?.text
         )
       ),

@@ -20,8 +20,10 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { CodxAcService } from '../../codx-ac.service';
 import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
-import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 import { CashtransfersService } from './cashtransfers.service';
+import { ICashTransfer } from './interfaces/ICashTransfer.interface';
+import { JournalService } from '../../journals/journals.service';
+import { groupBy, toCamelCase } from '../../utils';
 
 @Component({
   selector: 'lib-cashtransfers',
@@ -54,7 +56,6 @@ export class CashtransfersComponent
 
   lines: IAcctTran[][] = [[]];
   loading: boolean = false;
-  isFirstChange: boolean = true;
   fmAcctTrans: FormModel = {
     entityName: 'AC_AcctTrans',
     formName: 'AcctTrans',
@@ -68,7 +69,8 @@ export class CashtransfersComponent
   constructor(
     injector: Injector,
     private acService: CodxAcService,
-    cashTransferService: CashtransfersService // don't remove
+    private journalService: JournalService,
+    cashTransferService: CashtransfersService // don't remove this, please
   ) {
     super(injector);
 
@@ -85,6 +87,8 @@ export class CashtransfersComponent
       .subscribe((gvs) => {
         this.gvsAcctTrans = gvs;
       });
+    
+    this.journalService.setChildLinks(this.journalNo);
   }
 
   ngAfterViewInit(): void {
@@ -110,17 +114,13 @@ export class CashtransfersComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = this.acService.toCamelCase(res.defaultName);
+      this.functionName = toCamelCase(res.defaultName);
     });
   }
 
   ngAfterViewChecked(): void {
     const element: HTMLElement = this.memo?.nativeElement;
     this.overflowed = element?.scrollWidth > element?.offsetWidth;
-  }
-
-  ngOnDestroy() {
-    this.view.setRootNode('');
   }
   //#endregion
 
@@ -157,12 +157,6 @@ export class CashtransfersComponent
       return;
     }
 
-    // prevent this function from being called twice on the first run
-    if (this.isFirstChange) {
-      this.isFirstChange = false;
-      return;
-    }
-
     this.expanding = false;
 
     this.loading = true;
@@ -172,12 +166,12 @@ export class CashtransfersComponent
         'AC',
         'AcctTransBusiness',
         'GetListDataDetailAsync',
-        'e973e7b7-10a1-11ee-94b4-00155d035517'
+        '8dfddc85-4d44-11ee-8552-d880839a843e'
       )
       .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.lines = this.groupBy(res.lsAcctrants, 'entryID');
+          this.lines = groupBy(res, 'entryID');
         }
 
         this.loading = false;
@@ -268,7 +262,7 @@ export class CashtransfersComponent
 
   //#region Function
   export(data): void {
-    var gridModel = new DataRequest();
+    const gridModel = new DataRequest();
     gridModel.formName = this.view.formModel.formName;
     gridModel.entityName = this.view.formModel.entityName;
     gridModel.funcID = this.view.formModel.funcID;
@@ -278,8 +272,7 @@ export class CashtransfersComponent
     gridModel.predicate = this.view.dataService.request.predicates;
     gridModel.dataValue = this.view.dataService.request.dataValues;
     gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
+    gridModel.groupFields = 'createdBy'; //Chưa có group
     this.callfc.openForm(
       CodxExportComponent,
       null,
@@ -288,20 +281,6 @@ export class CashtransfersComponent
       '',
       [gridModel, data.recID],
       null
-    );
-  }
-
-  groupBy(arr: any[], key: string): any[][] {
-    if (!Array.isArray(arr)) {
-      return [[]];
-    }
-
-    return Object.values(
-      arr.reduce((acc, current) => {
-        acc[current[key]] = acc[current[key]] ?? [];
-        acc[current[key]].push(current);
-        return acc;
-      }, {})
     );
   }
   //#endregion

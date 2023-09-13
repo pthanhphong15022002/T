@@ -360,6 +360,7 @@ export class EmployeeContractComponent extends UIComponent {
       headerText: moreFC.text,
       reportID: moreFC.functionID,
       parameters: parameters,
+      formModel:this.view.formModel
     };
     this.callfc.openForm(
       CodxListReportsComponent,

@@ -12,25 +12,17 @@ import {
   ButtonModel,
   DataRequest,
   FormModel,
-  PageLink,
-  PageTitleService,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import {
-  BehaviorSubject,
-  Observable,
-  combineLatest,
-  distinctUntilKeyChanged,
-  map,
-} from 'rxjs';
-import { CodxAcService } from '../../codx-ac.service';
+import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
+import { groupBy } from '../../utils';
 import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
 import {
   SumFormat,
@@ -78,7 +70,6 @@ export class PurchaseinvoicesComponent
   ];
   defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
 
-  isFirstChange: boolean = true;
   expanding: boolean = false;
   overflowed: boolean = false;
   loading: boolean = false;
@@ -103,9 +94,7 @@ export class PurchaseinvoicesComponent
     inject: Injector,
     private purchaseInvoiceService: PurchaseInvoiceService,
     private journalService: JournalService,
-    private routerActive: ActivatedRoute,
-    private pageTitleService: PageTitleService,
-    private acService: CodxAcService
+    private routerActive: ActivatedRoute
   ) {
     super(inject);
 
@@ -184,43 +173,7 @@ export class PurchaseinvoicesComponent
       this.purchaseInvoiceService.journal = this.journal = journal;
     });
 
-    const options1 = new DataRequest();
-    options1.entityName = 'SYS_FunctionList';
-    options1.pageLoading = false;
-    options1.predicates = 'ParentID=@0';
-    options1.dataValues = 'ACT';
-
-    const options2 = new DataRequest();
-    options2.entityName = 'AC_Journals';
-    options2.pageLoading = false;
-    options2.predicates = 'Status=@0';
-    options2.dataValues = '1';
-
-    combineLatest({
-      functionList: this.acService.loadDataAsync('SYS', options1),
-      journals: this.acService.loadDataAsync('AC', options2),
-      vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
-    }).subscribe(({ functionList, journals, vll077 }) => {
-      console.log(journals);
-      const links: PageLink[] = [];
-      for (const journal of journals as IJournal[]) {
-        if (journal.journalNo === this.journalNo) {
-          continue;
-        }
-
-        const functionId: string = vll077.find(
-          (v) => v.value === journal.journalType
-        )?.default;
-        links.push({
-          title: journal.journalDesc,
-          path:
-            functionList.find((f) => f.functionID === functionId)?.url +
-            `?journalNo=${journal.journalNo}`,
-        });
-      }
-
-      this.pageTitleService.setChildren(links);
-    });
+    this.journalService.setChildLinks(this.journalNo);
 
     // this.purchaseInvoiceService.initCache();
   }
@@ -275,7 +228,7 @@ export class PurchaseinvoicesComponent
       MF.KiemTraTinhHopLe,
     ];
     switch (data.status) {
-      case '0': // phac thao
+      case '7': // phac thao
         disabledFuncs = disabledFuncs.filter(
           (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
         );
@@ -355,7 +308,7 @@ export class PurchaseinvoicesComponent
               PurchaseinvoicesAddComponent,
               {
                 formType: 'add',
-                formTitle: `${e.text} ${this.funcName}`,
+                formTitle: this.funcName,
               },
               options,
               this.view.funcID
@@ -377,12 +330,6 @@ export class PurchaseinvoicesComponent
 
     this.master = e.data.data ?? e.data;
     if (!this.master) {
-      return;
-    }
-
-    // prevent this function from being called twice on the first run
-    if (this.isFirstChange) {
-      this.isFirstChange = false;
       return;
     }
 
@@ -414,7 +361,7 @@ export class PurchaseinvoicesComponent
       .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.acctTranLines = this.groupBy(res, 'entryID');
+          this.acctTranLines = groupBy(res, 'entryID');
         }
 
         this.acctLoading = false;
@@ -442,7 +389,7 @@ export class PurchaseinvoicesComponent
         PurchaseinvoicesAddComponent,
         {
           formType: 'edit',
-          formTitle: `${e.text} ${this.funcName}`,
+          formTitle: this.funcName,
         },
         options,
         this.view.funcID
@@ -458,7 +405,7 @@ export class PurchaseinvoicesComponent
         if (res) {
           var obj = {
             formType: 'add',
-            formTitle: `${e.text} ${this.funcName}`,
+            formTitle: this.funcName,
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -479,7 +426,7 @@ export class PurchaseinvoicesComponent
   }
 
   export(data): void {
-    var gridModel = new DataRequest();
+    const gridModel = new DataRequest();
     gridModel.formName = this.view.formModel.formName;
     gridModel.entityName = this.view.formModel.entityName;
     gridModel.funcID = this.view.formModel.funcID;
@@ -489,8 +436,7 @@ export class PurchaseinvoicesComponent
     gridModel.predicate = this.view.dataService.request.predicates;
     gridModel.dataValue = this.view.dataService.request.dataValues;
     gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
+    gridModel.groupFields = 'createdBy'; //Chưa có group
     this.callfc.openForm(
       CodxExportComponent,
       null,
@@ -511,20 +457,6 @@ export class PurchaseinvoicesComponent
         recID: res.data.recID,
       });
     });
-  }
-
-  groupBy(arr: any[], key: string): any[][] {
-    if (!Array.isArray(arr)) {
-      return [[]];
-    }
-
-    return Object.values(
-      arr.reduce((acc, current) => {
-        acc[current[key]] = acc[current[key]] ?? [];
-        acc[current[key]].push(current);
-        return acc;
-      }, {})
-    );
   }
   //#endregion
 }
