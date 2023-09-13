@@ -29,7 +29,6 @@ export class PopupChangeTargetComponent extends UIComponent {
 
   dialogRef: DialogRef;
   formModel: FormModel;
-  funcID: string;
   dataKR: any;
   okrFM: any;
   versions =[];

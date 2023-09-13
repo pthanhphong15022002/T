@@ -145,7 +145,6 @@ export class PopupAddLeadComponent
   dateMessage: any;
   dateMax: any;
   customerIDOld: any;
-  funcID: any;
   instanceSteps: any;
   addFieldsControl: any = '1';
   planceHolderAutoNumber: any = '';

@@ -38,7 +38,6 @@ export class ItempostingaccountsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   dialog: DialogRef;
   entityName: any;
-  funcID: any = 'ACS248';
   menuInventory: Array<any> = [];
   menuPurchase: Array<any> = [];
   menuSell: Array<any> = [];
@@ -72,6 +71,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.funcID = "ACS248";
     this.cache.functionList(this.funcID).subscribe((res: any) => {
       if(res)
       {

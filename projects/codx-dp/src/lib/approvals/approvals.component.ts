@@ -35,7 +35,6 @@ export class ApprovalsComponent
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   data: any;
-  funcID: any;
   formModel: any;
   active = 1;
   referType = 'source';

@@ -58,7 +58,6 @@ export class SprintsComponent extends UIComponent {
   resourceKanban?: ResourceModel;
   dialog!: DialogRef;
   itemSelected: any;
-  funcID = '';
   valuelist = {};
   action = 'edit';
   listMoreFunc = [];

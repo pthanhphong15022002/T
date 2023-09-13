@@ -21,7 +21,6 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
   categoryID: string = '1';
   policyCoinList = [];
   tenant: string;
-  funcID;
   constructor(
     private changeDr: ChangeDetectorRef,
     private tenantStore: TenantStore,

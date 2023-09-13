@@ -7,11 +7,13 @@
   method="GetListEBasicSalariesAsync"
   [views]="views"
   [autoLoad]="true"
+  [selectedFirst]="true"
   idField="recID"
   [button]="buttonAdd"
   (buttonClick)="addBasicSalary($event)"
   (selectedChange)="changeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 <ng-template #headerTemplate let-data>
@@ -42,7 +44,7 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-4 border-bottom w-100">
+  <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
     <!-- emp info -->
     <div class="w-30">
       <div class="d-flex align-items-start">
@@ -58,7 +60,9 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <span class="me-2 fw-bold">{{ data?.emp?.employeeName }}</span>
+          <span class="fs-6 fw-bold mb-1 c-active" (click)="viewDetail(data)">{{
+            data?.emp?.employeeName
+          }}</span>
           <span
             [innerHTML]="
               data?.positionID
@@ -257,7 +261,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-3'"
-    cardCss="card-template border-bottom p-3"
+    cardCss="card-template border-bottom p-3 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
@@ -268,8 +272,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
-    [baseHeaderRightTmp]="titleRight"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
@@ -280,26 +284,32 @@
   >
   </codx-temp-full>
 
-  <ng-template #titleRight>
+  <ng-template #titleTmp>
     <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+
+    <div
       *ngIf="
         data?.status === '5' &&
         dateNow >= moment(data.effectedDate).format('YYYY-MM-DD') &&
         (dateNow <= moment(data.expiredDate).format('YYYY-MM-DD') ||
           data.expiredDate === null)
       "
-      [style.color]="'#0078FF'"
-      class="icon-bookmark icon-18"
-      [ngbPopover]="popIsNewest"
       #popOver="ngbPopover"
       [openDelay]="500"
       (mouseenter)="popOver.open()"
       (mouseleave)="popOver.close()"
       placement="left"
-    >
-    </span>
+      [ngbPopover]="popIsNewest"
+      [style.color]="'#0078FF'"
+      class="icon-bookmark icon-18 ms-auto"
+    ></div>
 
-    <span
+    <div
       *ngIf="
         data?.isCurrent &&
         dateNow > moment(data.expiredDate).format('YYYY-MM-DD')
@@ -312,9 +322,9 @@
       [ngbPopover]="popOverDue"
       [style.color]="'#F64E60'"
       class="icon-notifications icon-18"
-    ></span>
+    ></div>
 
-    <span
+    <div
       *ngIf="
         data?.isCurrent &&
         dateNow < moment(data.effectedDate).format('YYYY-MM-DD') &&
@@ -328,7 +338,7 @@
       [ngbPopover]="popIsNotNewsest"
       [style.color]="'#FFA800'"
       class="icon-queue_play_next icon-18"
-    ></span>
+    ></div>
   </ng-template>
 
   <ng-template #descTmp>
@@ -422,7 +432,7 @@
 
 <ng-template #templateItemDetailRight let-data>
   <lib-view-basic-salary-detail
-    #viewDetail
+    #viewdetail
     [itemDetail]="itemDetail"
     [formModel]="view?.formModel"
     [view]="view"

@@ -120,7 +120,6 @@ export class EmployeeProfileComponent extends UIComponent {
   formModelWPermit: FormModel;
 
   statusVll = 'L0225';
-  funcID = '';
   service = '';
   assemblyName = '';
   entity = '';

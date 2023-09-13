@@ -28,7 +28,6 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   accidentObj;
   employeeId: string;
-  funcID: string;
   idField: string = 'recID';
   actionType;
   disabledInput = false;

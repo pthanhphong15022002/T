@@ -30,7 +30,6 @@ export class IssueTransactionsLineAddComponent extends UIComponent implements On
   objectIdim: any;
   hideFields: any;
   itemName: any;
-  funcID: any;
   vouchersLine: VouchersLines;
   vouchers: Vouchers;
   objectVouchersLines: Array<VouchersLines> = [];

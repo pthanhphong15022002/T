@@ -17,7 +17,6 @@ export class ClosingDataComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any;
   entityName: any;
   mfFormName: any = 'ClosingData';
   mfGrvName: any = 'grvClosingData';

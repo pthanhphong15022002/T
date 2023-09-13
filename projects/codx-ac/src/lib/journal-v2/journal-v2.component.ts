@@ -25,6 +25,7 @@ import { JournalService } from '../journals/journals.service';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 import { IJournal } from '../journals/interfaces/IJournal.interface';
+import { toCamelCase } from '../utils';
 
 @Component({
   selector: 'lib-test-journal',
@@ -238,7 +239,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = this.acService.toCamelCase(res.defaultName);
+      this.functionName = toCamelCase(res.defaultName);
     });
   }
 

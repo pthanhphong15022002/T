@@ -56,7 +56,6 @@ export class EmpContactsComponent extends UIComponent {
   request: ResourceModel;
   itemSelected: any;
   grvSetup: any;
-  funcID: string = '';
 
   service = 'HR';
   assemblyName = 'ERM.Business.HR';

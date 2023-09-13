@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   DataRequest,
   NotificationsService,
+  PageLink,
+  PageTitleService,
 } from 'codx-core';
-import { Observable, Subject, map, tap } from 'rxjs';
+import { Observable, Subject, combineLatest, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
 import {
   IJournal,
@@ -29,7 +32,9 @@ export class JournalService {
     private apiService: ApiHttpService,
     private acService: CodxAcService,
     private notiService: NotificationsService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private authStore: AuthStore,
+    private pageTitleService: PageTitleService
   ) {
     this.cacheService
       .viewSettingValues('ACParameters')
@@ -159,7 +164,7 @@ export class JournalService {
     }
 
     if (journal?.vatControl == '0') {
-      hiddenFields.push('VATID', 'VATBase', 'VATAmt', "VATPct");
+      hiddenFields.push('VATID', 'VATBase', 'VATAmt', 'VATPct');
     }
 
     if (!journal?.useDutyTax) {
@@ -260,5 +265,45 @@ export class JournalService {
 
   getUsers(): Observable<any[]> {
     return this.acService.loadComboboxData('Share_Users', 'AD');
+  }
+
+  setChildLinks(journalNo: string): void {
+    const options1 = new DataRequest();
+    options1.entityName = 'SYS_FunctionList';
+    options1.pageLoading = false;
+    options1.predicates = 'ParentID=@0 and Language=@1';
+    options1.dataValues = `ACT;${this.authStore.get().language}`;
+
+    const options2 = new DataRequest();
+    options2.entityName = 'AC_Journals';
+    options2.pageLoading = false;
+    options2.predicates = 'Status=@0';
+    options2.dataValues = '1';
+
+    combineLatest({
+      functionList: this.acService.loadDataAsync('SYS', options1),
+      journals: this.acService.loadDataAsync('AC', options2),
+      vll077: this.cacheService.valueList('AC077').pipe(map((v) => v.datas)),
+    }).subscribe(({ functionList, journals, vll077 }) => {
+      console.log(journals);
+      const links: PageLink[] = [];
+      for (const journal of journals as IJournal[]) {
+        if (journal.journalNo === journalNo) {
+          continue;
+        }
+
+        const functionId: string = vll077.find(
+          (v) => v.value === journal.journalType
+        )?.default;
+        const func: any = functionList.find((f) => f.functionID === functionId);
+        links.push({
+          title: func?.defaultName,
+          desc: journal.journalDesc,
+          path: func?.url + `?journalNo=${journal.journalNo}`,
+        });
+      }
+
+      this.pageTitleService.setChildren(links);
+    });
   }
 }

@@ -33,7 +33,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   fromdateVal: any;
   todateVal: any;
   idField = 'RecID';
-  funcID: string;
   employId: string;
   actionType: string;
   disabledInput = false;

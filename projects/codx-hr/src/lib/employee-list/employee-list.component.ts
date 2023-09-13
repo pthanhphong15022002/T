@@ -24,7 +24,6 @@ export class EmployeeListComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button: ButtonModel = null;
   columnsGrid = [];
-  funcID: string = '';
   itemSelected: any;
   sysMoreFunc: any[] = [];
   grvSetup: any;

@@ -172,14 +172,14 @@
             <span class="icon-more_vert icon-18"></span>
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-            <a ngbDropdownItem class="dropdown-item">
-              <div class="d-flex align-items-center cursor-pointer" (click)="templateMF('edit', item)">
+            <a ngbDropdownItem class="dropdown-item" (click)="templateMF('edit', item)">
+              <div class="d-flex align-items-center cursor-pointer" >
                 <span class="icon-edit text-primary icon-16"></span>
                 <span class="ms-2"><codx-label name="lblEdit" default="Chỉnh sửa"></codx-label> </span>
               </div>
             </a>
-            <a ngbDropdownItem class="dropdown-item">
-              <div class="d-flex align-items-center cursor-pointer" (click)="templateMF('delete', item)">
+            <a ngbDropdownItem class="dropdown-item"(click)="templateMF('delete', item)">
+              <div class="d-flex align-items-center cursor-pointer" >
                 <span class="icon-delete text-danger icon-16"></span>
                 <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
               </div>

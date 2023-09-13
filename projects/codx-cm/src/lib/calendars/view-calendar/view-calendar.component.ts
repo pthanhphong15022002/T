@@ -52,7 +52,6 @@ export class ViewCalendarComponent
 
   @ViewChild('popupChoiseTypeCM') popupChoiseTypeCM: TemplateRef<any>;
 
-  @Input() funcID: any;
   @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
@@ -359,6 +358,7 @@ export class ViewCalendarComponent
         if (res) {
           this.handleTask(type,'edit', data);
         }
+        this.handleTask(type,'edit', data);
       });
     }
   }

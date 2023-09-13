@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, TemplateRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModel, CallFuncService, DialogModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
@@ -6,7 +6,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { environment } from 'src/environments/environment';
+import { componentsDetail } from '../routing';
 
 @Component({
   selector: 'lib-request-review',
@@ -19,11 +19,15 @@ export class RequestReviewComponent
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+  @ViewChild('content', { read: ViewContainerRef, static: false })
+  content!: ViewContainerRef;
+
   @Input() tmpHeader?: TemplateRef<any>;
   @Input() tmpBody?: TemplateRef<any>;
   @Input() tmpDetail?: TemplateRef<any>;
   @Output() selectedChange = new EventEmitter<any>();
-  funcID: any;
+
+  private components = componentsDetail;
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];
@@ -34,11 +38,7 @@ export class RequestReviewComponent
   lstDtDis: any;
   lstUserID: any;
   listApproveMF: any = [];
-
   tabControl: TabModel[] = [];
-  /**
-   *
-   */
   odService: DispatchService;
   codxShareService: CodxShareService;
   notifySvr: NotificationsService;
@@ -46,6 +46,8 @@ export class RequestReviewComponent
   esService: CodxEsService;
   routers: Router;
   allMFunc: any;
+  vllApproval: any;
+
   constructor(inject: Injector) {
     super(inject);
     this.routers = inject.get(Router);
@@ -87,23 +89,42 @@ export class RequestReviewComponent
     this.detectorRef.detectChanges();
   }
 
-  click(e: any) {}
-  openFormFuncID(e: any) {}
-  valueChange(dt: any) {
-    this.dataItem = dt?.data;
-    switch(dt?.data?.functionID)
-    {
-      case "HRTPro01":
-      {
+  loadContent(cpn:any,transID:any,funcID:any)
+  {
+    let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
+    if(funcID) componentRef.instance.funcID = funcID;
+    if(transID) componentRef.instance.recID = transID;
+  }
 
+  click(e: any) {}
+
+  openFormFuncID(e: any) {}
+  
+  valueChange(dt: any) {
+
+    this.dataItem = dt?.data;
+    let component:Type<any> = null;
+    let funcID = null;
+    
+    switch(dt?.data?.module)
+    {
+      case "ES":
+      {
+        alert("a");
+        break;
+      }
+      case "OD":
+      {
+        funcID = "ODT71";
+        component = this.components.cpnDtDispatches;
         break;
       }
     }
-    debugger
-    return ;
+    this.content.clear();
+    this.loadContent(component,dt?.data?.transID,funcID)
   }
 
-  vllApproval: any;
+
 
   getGridViewSetup(funcID: any) {
     this.cache.valueList('SYS055').subscribe((result) => {

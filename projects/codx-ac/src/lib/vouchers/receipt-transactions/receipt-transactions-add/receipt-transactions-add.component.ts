@@ -46,7 +46,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   modeGrid: any;
   dataUpdate: VouchersLines = new VouchersLines();
   hideFields = [];
-  funcID: any;
   journal: IJournal;
 
   fmVouchers: FormModel = {

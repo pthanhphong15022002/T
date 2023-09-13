@@ -33,7 +33,6 @@ export class TaskExtendsComponent
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   user: any;
-  funcID: any;
   dataTree = [];
   taskExtends: TM_TaskExtends;
   dialogExtendsStatus!: DialogRef;

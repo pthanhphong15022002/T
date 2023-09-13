@@ -29,7 +29,6 @@ export class PopupSettingCalendarComponent extends UIComponent {
   stShift = new BS_CalendarWeekdays();
   ndShift = new BS_CalendarWeekdays();
   user: any;
-  funcID: string;
   calendarName: string = '';
   data: any;
   dayOffId: string;

@@ -17,7 +17,6 @@ export class ExchangeRateTransactionComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any;
   entityName: any;
   mfFormName: any = 'ExchangeRateTransaction';
   mfGrvName: any = 'grvExchangeRateTransaction';

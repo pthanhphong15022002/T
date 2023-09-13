@@ -27,7 +27,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   actionType;
   headerText: '';
-  funcID;
   idField = 'RecID';
   employId;
   empObj;

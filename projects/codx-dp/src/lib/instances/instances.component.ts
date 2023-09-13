@@ -99,7 +99,6 @@ export class InstancesComponent
   entityName = 'DP_Instances';
   className = 'InstancesBusiness';
   idField = 'recID';
-  funcID = 'DPT04';
   method = 'GetListInstancesAsync';
   //end
   // data T
@@ -253,6 +252,7 @@ export class InstancesComponent
     @Optional() dt: DialogData
   ) {
     super(inject);
+    this.funcID = "DPT04";
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {

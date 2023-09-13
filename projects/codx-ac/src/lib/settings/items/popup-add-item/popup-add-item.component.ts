@@ -34,6 +34,7 @@ import { PopupAddItemConversionComponent } from '../popup-add-item-conversion/po
 import { PopupAddItemSizeComponent } from '../popup-add-item-size/popup-add-item-size.component';
 import { PopupAddItemStyleComponent } from '../popup-add-item-style/popup-add-item-style.component';
 import { EntityName, getClassName } from '../utils/unknown.util';
+import { toPascalCase } from '../../../utils';
 
 @Component({
   selector: 'lib-popup-add-item',
@@ -865,8 +866,8 @@ export class PopupAddItemComponent
     option.pageLoading = false;
     this.acService.loadDataAsync(service, option).subscribe((res: any[]) => {
       if (first) {
-        const formModel: string = 'fm' + this.acService.toPascalCase(prop);
-        const formGroup: string = 'fg' + this.acService.toPascalCase(prop);
+        const formModel: string = 'fm' + toPascalCase(prop);
+        const formGroup: string = 'fg' + toPascalCase(prop);
 
         this[prop] = this[formModel].currentData = res[0];
         this[formGroup].patchValue(res[0]);

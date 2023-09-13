@@ -50,7 +50,6 @@ export class CompanySettingComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  funcID: any;
   moreFunc = [];
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;

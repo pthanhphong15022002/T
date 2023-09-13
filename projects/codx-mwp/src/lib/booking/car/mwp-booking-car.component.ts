@@ -61,7 +61,6 @@ export class MWPBookingCarComponent extends UIComponent implements AfterViewInit
   moreFunc: Array<ButtonModel> = [];
   fields: any;
   resourceField: any;
-  funcID: string;
   itemDetail;
   popupTitle = '';
   funcIDName = '';

@@ -1,8 +1,5 @@
 import { Component, Injector, OnInit, Optional } from '@angular/core';
-import { AlertConfirmInputConfig, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, UIComponent } from 'codx-core';
-import { CodxExportAddComponent } from '../codx-export/codx-export-add/codx-export-add.component';
-import { CodxReportAddComponent } from './popup/codx-report-add/codx-report-add.component';
-import { PopupShowDatasetComponent } from 'projects/codx-report/src/lib/popup-show-dataset/popup-show-dataset.component';
+import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 
 @Component({
@@ -25,7 +22,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   jsParameters:string = "";
   loading:boolean = true;
   loaded:boolean = false;
-
+  formModel:FormModel = null;
   constructor(
     inject: Injector,
     private notificationSV: NotificationsService,
@@ -38,6 +35,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     this.headerText = dialogData.data?.headerText;
     this.reportID = dialogData?.data?.reportID;
     this.jsParameters = dialogData?.data?.parameters;
+    this.formModel = dialogData?.data?.formModel
   }
   onInit(): void {
     if(this.reportID)
@@ -164,7 +162,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     if(!this.loading)
     {
       this.loading = true;
-      this.api.execSv(this.dataSelected.service,"Codx.RptBusiness","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters])
+      this.api.execSv(this.dataSelected.service,"Codx.RptBusiness","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters,this.formModel?.entityName,this.formModel?.formName,this.formModel?.gridViewName])
       .subscribe((res:any) => {
         if (res)
         {
