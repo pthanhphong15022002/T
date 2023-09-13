@@ -1127,7 +1127,7 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer: this.dataSelected.categoryCustomer
+      categoryCustomer: action === 'add' ? '': this.dataSelected?.categoryCustomer
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
