@@ -276,7 +276,7 @@ export class CodxShareService {
                 null
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
-                  data.unbounds.statusApproval = status;
+                  data.unbounds.statusApproval = status ?? res2?.returnStatus;
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -293,7 +293,7 @@ export class CodxShareService {
               null
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
-                data.unbounds.statusApproval = status;
+                data.unbounds.statusApproval = status ?? res2?.returnStatus;
                 dataService.update(data).subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
@@ -306,11 +306,12 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (res) {
-              data.unbounds.statusApproval = res?.status;
+            if (!res?.msgCodeError && res?.rowCount>0) {
+              data.unbounds.statusApproval = res?.returnStatus;
               dataService.update(data).subscribe();
-              //this.notificationsService.notifyCode('SYS007');
+              this.notificationsService.notifyCode('SYS007');
             }
+            else this.notificationsService.notify(res?.msgCodeError);
           }
         );
         break;

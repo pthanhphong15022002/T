@@ -734,7 +734,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
                 ])
                 .subscribe((res: any) => {
                   if (res) {
-                    this.formCashPayment.refreshData(res.data);
+                    // this.formCashPayment.refreshData(res.data);
                     // this.formCashPayment.data = res.data;
                     // this.detectorRef.detectChanges();
                     // this.formCashPayment.formGroup.patchValue(

@@ -806,6 +806,7 @@ export class CashreceiptsComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
+      formModel:this.view.formModel
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(

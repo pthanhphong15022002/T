@@ -139,7 +139,7 @@
 </ng-template>
 
 <ng-template #body>
-  <div class="d-flex flex-column h-100">
+  <div class="d-flex flex-column h-100" *ngIf="master">
     <div class="d-flex align-items-center justify-content-between mb-2">
       <span class="fw-bold line-clamp line-clamp-1 fs-4">
         <span
@@ -451,7 +451,7 @@
   <codx-tabs
     [entityName]="view.formModel.entityName"
     [formModel]="view.formModel"
-    [objectID]="master.recID"
+    [objectID]="master?.recID"
     [funcID]="view.formModel.funcID"
     [TabControl]="tabControl"
   ></codx-tabs>

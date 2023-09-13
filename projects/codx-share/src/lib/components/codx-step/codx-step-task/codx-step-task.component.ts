@@ -1536,6 +1536,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           let progressData = this.setProgressOutput(data, null);
           this.moveStageData?.splice(index, 1, progressData)
           this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
+        }else{
+          let progressData = this.setProgressOutput(data, null);
+          this.moveStageData?.push(progressData);
+          this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });   
         }
       }
     }
@@ -1602,62 +1606,34 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.isSuccessStep.emit(true);
           }
         }
-        if (this.isMoveStage) {
-          data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
-          data.isChange = true;
-          data.isChangeProgressAuto = false;
-        }
       } else {
         this.updateDataProgress(data, dataProgress);
         if (this.isMoveStage) {
           data.progressOld = dataProgress?.progressTask; // dành cho cập nhật tất cả
           data.isChange = true;
+          data.statusOld = dataProgress?.progressTask == 100 ? '3' : '2';
         }
-        let taskFind = this.currentStep?.tasks?.find(
-          (task) => task.recID == dataProgress.taskID
-        );
-        if (taskFind) {
-          this.updateDataProgress(taskFind, dataProgress);
-        }
+        let taskFind = this.currentStep?.tasks?.find((task) => task.recID == dataProgress.taskID);
+        taskFind && this.updateDataProgress(taskFind, dataProgress);
+
         //cập nhật group và step
         if (dataProgress?.isUpdate) {
-          let groupView = this.listGroupTask.find(
-            (group) =>
-              group.recID == dataProgress?.groupTaskID ||
-              group.refID == dataProgress?.groupTaskID
-          );
-          let groupData = this.currentStep?.taskGroups?.find(
-            (group) => group.recID == dataProgress?.groupTaskID
-          );
+          let groupView = this.listGroupTask.find((group) => group.recID == dataProgress?.groupTaskID || group.refID == dataProgress?.groupTaskID);
+          let groupData = this.currentStep?.taskGroups?.find((group) => group.recID == dataProgress?.groupTaskID);
           if (groupView) {
             groupView.progress = dataProgress?.progressGroupTask;
-            if (this.isMoveStage) {
-              groupView.progressOld = dataProgress?.progressGroupTask; // dành cho cập nhật tất cả
-              groupView.isChange = false;
-              data.isChangeProgressAuto = true;
-            }
           }
-          if (groupData) {
-            groupData.progress = dataProgress?.progressGroupTask;
-          }
+          if (groupData) {groupData.progress = dataProgress?.progressGroupTask;}
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
-          if (dataProgress?.progressStep == 100) {
-            this.isSuccessStep.emit(true);
-          }
+          dataProgress?.progressStep == 100 && this.isSuccessStep.emit(true);
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find(
-          (group) => group.refID == dataCopy?.taskGroupID
-        );
+        let groupFind = this.listGroupTask.find((group) => group.refID == dataCopy?.taskGroupID);
         if (groupFind) {
-          let index = groupFind?.task?.findIndex(
-            (taskFind) => taskFind.recID == dataCopy?.recID
-          );
-          if (index >= 0) {
-            groupFind?.task?.splice(index, 1, dataCopy);
-          }
+          let index = groupFind?.task?.findIndex((taskFind) => taskFind.recID == dataCopy?.recID);
+          index >= 0 && groupFind?.task?.splice(index, 1, dataCopy);
         }
         if (dataProgress?.progressTask == 100) {
           let isTaskEnd = dataProgress.taskID == this.idTaskEnd ? true : false;
@@ -2270,14 +2246,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task.progress = 100;
         task.status = '3';
         task.actualEnd = new Date();
-        progressData.push(this.setProgressOutput(task, group));
+        progressData.push(this.setProgressOutput(task, null));
         check = true;
       };
 
       if (isRequired) {
         group?.task?.forEach((task) => {
-          if (task?.requireCompleted || task?.isChange) {
+          if (task?.requireCompleted) {
             processTask(task);
+          }else if(task?.isChange){
+            task.progress = task?.progressOld;
+            task.status = task?.statusOld;
+            progressData.push(this.setProgressOutput(task, null));
           }else{
             task.progress = task?.progressOld;
             task.status = task?.statusOld;
@@ -2307,16 +2287,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task.status = task?.statusOld;
         task.actualEnd = null;
         if (task?.isChange) {
-          progressData.push(this.setProgressOutput(null, group));
+          progressData.push(this.setProgressOutput(task, null));
         }   
         sumProgress += task.progress;
       });
       if (group?.isChangeAuto) {
         group.progress = Number((sumProgress / countTask).toFixed(2));
       }
-      if (group?.recID && group?.isChange) {
-        progressData.push(this.setProgressOutput(null, group));
-      }
+      // if (group?.recID && group?.isChange) {
+      //   progressData.push(this.setProgressOutput(null, group));
+      // }
     }
   }
   
@@ -2335,7 +2315,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.resetProgress(group, this.moveStageData);
         });
       }
-      this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
+      this.valueChangeProgress.emit(this.moveStageData );
   }
   
   changeSuccessRequired(event) {
@@ -2353,7 +2333,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.resetProgress(group, this.moveStageData, true);
         });
       }
-      this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
+      this.valueChangeProgress.emit(this.moveStageData );
   }
   //#endregion
 

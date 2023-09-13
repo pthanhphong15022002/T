@@ -427,6 +427,7 @@
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (eventAction)="onActionEvent($event)"
