@@ -245,6 +245,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue(this.formModel.currentData);
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

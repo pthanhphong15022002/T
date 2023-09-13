@@ -188,6 +188,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.benefitObj.employeeID = this.employId;
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

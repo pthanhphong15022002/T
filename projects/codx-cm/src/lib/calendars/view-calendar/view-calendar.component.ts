@@ -350,15 +350,16 @@ export class ViewCalendarComponent
   //------------------More Func-----------------//
 
   editTask(data){
-    if(data){
+    if(data && data?.entityName == ''){
       const type = this.listTaskType?.find(t => t?.value === data?.taskType);
       type && this.api
       .exec<any>('DP', 'InstanceStepsBusiness', 'GetTaskInCalendarAsync', [data?.stepID,data?.recID])
       .subscribe((res) => {
         if (res) {
-          this.handleTask(type,'edit', data);
+          this.handleTask(type,'edit', res);
+        }else{
+
         }
-        this.handleTask(type,'edit', data);
       });
     }
   }

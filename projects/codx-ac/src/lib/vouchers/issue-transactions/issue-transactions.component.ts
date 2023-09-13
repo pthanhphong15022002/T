@@ -159,6 +159,7 @@ export class IssueTransactionsComponent extends UIComponent {
         },
       },
     ];
+    
     this.view.setRootNode(this.parent?.customName);
 
     const options1 = new DataRequest();
