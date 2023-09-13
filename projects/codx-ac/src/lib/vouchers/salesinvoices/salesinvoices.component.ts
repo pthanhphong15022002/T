@@ -28,6 +28,7 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { IPurchaseInvoice } from '../purchaseinvoices/interfaces/IPurchaseInvoice.inteface';
+import { groupBy, toCamelCase } from '../../utils';
 
 enum MF {
   GuiDuyet = 'ACT060504',
@@ -78,7 +79,6 @@ export class SalesinvoicesComponent
   acctLoading: boolean = false;
   overflowed: boolean = false;
   expanding: boolean = false;
-  isFirstChange: boolean = true;
 
   fmSalesInvoicesLines: FormModel;
   fmAcctTrans: FormModel = {
@@ -170,6 +170,8 @@ export class SalesinvoicesComponent
     this.journalService.getJournal(this.journalNo).subscribe((journal) => {
       this.salesInvoiceService.journal = this.journal = journal;
     });
+
+    this.journalService.setChildLinks(this.journalNo);
   }
 
   ngAfterViewInit(): void {
@@ -195,7 +197,7 @@ export class SalesinvoicesComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = this.acService.toCamelCase(res.defaultName);
+      this.functionName = toCamelCase(res.defaultName);
     });
   }
 
@@ -217,12 +219,6 @@ export class SalesinvoicesComponent
 
     this.master = e.data.data ?? e.data;
     if (!this.master) {
-      return;
-    }
-
-    // prevent this function from being called twice on the first run
-    if (this.isFirstChange) {
-      this.isFirstChange = false;
       return;
     }
 
@@ -254,7 +250,7 @@ export class SalesinvoicesComponent
       .subscribe((res: any) => {
         console.log(res);
         if (res) {
-          this.acctTranLines = this.groupBy(res, 'entryID');
+          this.acctTranLines = groupBy(res, 'entryID');
         }
 
         this.acctLoading = false;
@@ -280,7 +276,7 @@ export class SalesinvoicesComponent
               SalesinvoicesAddComponent,
               {
                 formType: 'add',
-                formTitle: `${e.text} ${this.functionName}`,
+                formTitle: this.functionName,
               },
               options,
               this.view.funcID
@@ -321,7 +317,7 @@ export class SalesinvoicesComponent
       MF.KiemTraTinhHopLe,
     ];
     switch (data.status) {
-      case '0': // phac thao
+      case '7': // phac thao
         disabledFuncs = disabledFuncs.filter(
           (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
         );
@@ -396,7 +392,7 @@ export class SalesinvoicesComponent
         SalesinvoicesAddComponent,
         {
           formType: 'edit',
-          formTitle: `${e.text} ${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.view.funcID
@@ -418,7 +414,7 @@ export class SalesinvoicesComponent
         SalesinvoicesAddComponent,
         {
           formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.view.funcID
@@ -426,8 +422,8 @@ export class SalesinvoicesComponent
     });
   }
 
-  export(data) {
-    var gridModel = new DataRequest();
+  export(data): void {
+    const gridModel = new DataRequest();
     gridModel.formName = this.view.formModel.formName;
     gridModel.entityName = this.view.formModel.entityName;
     gridModel.funcID = this.view.formModel.funcID;
@@ -437,8 +433,7 @@ export class SalesinvoicesComponent
     gridModel.predicate = this.view.dataService.request.predicates;
     gridModel.dataValue = this.view.dataService.request.dataValues;
     gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
+    gridModel.groupFields = 'createdBy'; //Chưa có group
     this.callfc.openForm(
       CodxExportComponent,
       null,
@@ -459,20 +454,6 @@ export class SalesinvoicesComponent
         recID: res.data.recID,
       });
     });
-  }
-
-  groupBy(arr: any[], key: string): any[][] {
-    if (!Array.isArray(arr)) {
-      return [[]];
-    }
-
-    return Object.values(
-      arr.reduce((acc, current) => {
-        acc[current[key]] = acc[current[key]] ?? [];
-        acc[current[key]].push(current);
-        return acc;
-      }, {})
-    );
   }
   //#endregion
 }

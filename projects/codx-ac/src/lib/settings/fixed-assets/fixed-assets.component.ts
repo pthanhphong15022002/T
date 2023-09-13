@@ -9,6 +9,7 @@ import {
 import { map, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddFixedAssetComponent } from './popup-add-fixed-asset/popup-add-fixed-asset.component';
+import { toCamelCase } from '../../utils';
 
 @Component({
   selector: 'lib-fixed-assets',
@@ -27,7 +28,7 @@ export class FixedAssetsComponent extends UIComponent {
   btnAdd: ButtonModel = { id: 'btnAdd' };
   functionName: string;
 
-  constructor(injector: Injector, private acService: CodxAcService) {
+  constructor(injector: Injector) {
     super(injector);
   }
   //#endregion
@@ -38,7 +39,7 @@ export class FixedAssetsComponent extends UIComponent {
       .functionList('ACT0811')
       .pipe(
         tap((t) => console.log(t)),
-        map((data) => this.acService.toCamelCase(data.defaultName))
+        map((data) => toCamelCase(data.defaultName))
       )
       .subscribe((res) => (this.functionName = res));
   }
