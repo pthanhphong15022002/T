@@ -1127,7 +1127,7 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer: this.dataSelected.categoryCustomer
+      categoryCustomer: this.dataSelected?.categoryCustomer,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1171,7 +1171,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected.categoryCustomer
+          categoryCustomer: this.dataSelected?.categoryCustomer,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
