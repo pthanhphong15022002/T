@@ -10,6 +10,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -49,7 +50,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   isNullTo: boolean = true;
 
   isAfterRender = false;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
   tabInfo: any[] = [
@@ -213,6 +214,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
 

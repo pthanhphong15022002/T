@@ -15,6 +15,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
  } from 'codx-core';
@@ -40,7 +41,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   disabledInput = false;
 
   headerText: string;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('ultrasound') ultrasound: CodxListviewComponent;
   @ViewChild('bloodtest') bloodtest: CodxListviewComponent;
@@ -169,6 +170,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
 

@@ -144,6 +144,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     if (this.data.injectDate > this.data.nextInjectDate) {
