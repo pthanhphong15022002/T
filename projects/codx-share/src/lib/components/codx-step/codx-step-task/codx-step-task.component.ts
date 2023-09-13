@@ -1530,9 +1530,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     } else {
       data.progress = dataProgress?.progressTask;
       data.status = dataProgress?.progressTask == 100 ? '3' : '2';
-      if(this.isMoveStage && !this.moveStageData?.some(task => task.taskID == dataProgress?.taskID)){
-        this.moveStageData?.push(this.setProgressOutput(data, null));
-        this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
+      if(this.isMoveStage){
+        let index = this.moveStageData?.findIndex(task => task.taskID == dataProgress?.taskID);
+        if(index >= 0){
+          let progressData = this.setProgressOutput(data, null);
+          this.moveStageData?.splice(index, 1, progressData)
+          this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
+        }
       }
     }
     data.note = dataProgress?.note;

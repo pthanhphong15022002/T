@@ -495,4 +495,9 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   }
 
   //#endregion
+
+  viewDetail(data) {
+    this.currentEmpObj = data?.emp;
+    this.HandleEBusinessTravel('Xem chi tiết', 'view', data);
+  }
 }

@@ -1158,7 +1158,7 @@ export class OrganizationOrgchartComponent {
             )
             .subscribe((res: any) => {
               if (res) {
-                res.map((item) => {
+                res.forEach((item) => {
                   this.items.push(
                     new OrgItemConfig({
                       id: item.orgUnitID,
@@ -1189,78 +1189,10 @@ export class OrganizationOrgchartComponent {
                     e.context.loadChildrent = true;
                   }
                 });
+                this.dt.detectChanges();
               }
             });
         }
-        // this.items.forEach((e) => {
-        //   if (e.id === data.parentID && e.context.loadChildrent !== false) {
-        //     //Add to chart from parent
-        //     this.items.push(
-        //       new OrgItemConfig({
-        //         id: data.orgUnitID,
-        //         parent: data.parentID,
-        //         title: data.orgUnitName,
-        //         description: data.positionName,
-        //         label: data.orgUnitName,
-        //         templateName: 'contactTemplate',
-        //         itemTitleColor: String(this.getColorItem(data.orgUnitType)),
-        //         context: {
-        //           employeeID: data.employeeID,
-        //           employeeName: data.employeeName,
-        //           employeeManager: data.employeeManager,
-        //           orgUnitType: data.orgUnitType,
-        //           data: data,
-        //           isChildren: data.isChildren,
-        //           loadChildrent: data.loadChildrent,
-        //         },
-        //       })
-        //     );
-        //     e.context.isChildren = true;
-        //     e.context.loadChildrent = true;
-        //   } else {
-        //     this.api
-        //       .execSv(
-        //         'HR',
-        //         'ERM.Business.HR',
-        //         'OrganizationUnitsBusiness',
-        //         'GetChildChartAsync',
-        //         [data.parentID, this.selectedTeam.includes('No') ? false : true]
-        //       )
-        //       .subscribe((res: any) => {
-        //         if (res) {
-        //           res.map((item) => {
-        //             this.items.push(
-        //               new OrgItemConfig({
-        //                 id: item.orgUnitID,
-        //                 parent: item.parentID,
-        //                 title: item.orgUnitName,
-        //                 description: item.positionName,
-        //                 label: item.orgUnitName,
-        //                 templateName: 'contactTemplate',
-        //                 itemTitleColor: String(
-        //                   this.getColorItem(item.orgUnitType)
-        //                 ),
-        //                 context: {
-        //                   employeeID: item.employeeID,
-        //                   employeeName: item.employeeName,
-        //                   employeeManager: item.employeeManager,
-        //                   orgUnitType: item.orgUnitType,
-        //                   data: item,
-        //                   isChildren: item.isChildren,
-        //                   loadChildrent: item.loadChildrent,
-        //                 },
-        //               })
-        //             );
-        //           });
-
-        //           if (e.id == data.parentID) {
-        //             e.context.isChildren = true;
-        //             e.context.loadChildrent = true;
-        //           }
-        //         }
-        //       });
-        //   }
-        // });
       }
 
       //CursorItem

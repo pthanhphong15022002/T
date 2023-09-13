@@ -86,15 +86,9 @@
 
       <!-- 1 -->
       <div class="d-flex align-items-center text-gray-600">
-        <span
-          class="me-4 fw-bold text-dark"
-          [innerHTML]="
-            itemDetail?.inforEmployee?.positionID
-              | formatvalue : formModel : 'positionID'
-              | async
-          "
-          >' '</span
-        >
+        <span class="me-4 fw-bold text-dark">{{
+          itemDetail?.inforEmployee?.positionName
+        }}</span>
         <span
           class="me-4 d-flex align-items-center"
           *ngIf="itemDetail?.inforEmployee?.email"
