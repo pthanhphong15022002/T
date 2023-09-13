@@ -14,7 +14,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
   service: string = 'WP';
   assemblyName: string = 'ERM.Business.WP';
-  funcID: string = '';
   functionName: string = '';
   user: any;
   acceptApprove: string = '5';

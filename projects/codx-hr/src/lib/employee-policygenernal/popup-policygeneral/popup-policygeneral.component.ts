@@ -26,7 +26,6 @@ export class PopupPolicygeneralComponent
   policyGeneralObj: any;
   formGroup: any;
   originPolicyId = '';
-  funcID
   benefitFuncID = 'HRTEM0403'
   isAfterRender = false;
   fieldHeaderTexts: object;

@@ -50,7 +50,6 @@ export class CodxAddBookingCarComponent
   user: any;
   dialogRef: DialogRef;
   formModel: FormModel;
-  funcID: string;
   data: any;
   funcType: any;
   isAfterRender: boolean;

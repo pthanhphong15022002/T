@@ -28,7 +28,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   actionType;
   headerText: '';
   fieldHeaderTexts;
-  funcID;
   idField = 'RecID';
   disabledInput = false;
   indexSelected;

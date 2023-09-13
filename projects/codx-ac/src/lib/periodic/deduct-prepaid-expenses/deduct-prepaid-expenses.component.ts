@@ -17,7 +17,6 @@ export class DeductPrepaidExpensesComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any;
   entityName: any;
   mfFormName: any = 'DeductPrepaidExpenses';
   mfGrvName: any = 'grvDeductPrepaidExpenses';

@@ -39,7 +39,6 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   value=new OM_Statistical();
   loadedData = false;
   curUser: any;
-  funcID: any;
   isCollapsed = false;
   totalOB=0;
   constructor(

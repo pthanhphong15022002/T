@@ -42,7 +42,6 @@ import { PopupEProcessContractComponent } from 'projects/codx-hr/src/lib/employe
 })
 export class PopupViewAllComponent extends UIComponent implements OnInit {
   rowCount: any;
-  funcID: any;
   employeeId: any;
   sortModel: SortModel;
   headerText: any;

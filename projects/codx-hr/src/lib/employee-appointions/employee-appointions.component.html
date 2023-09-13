@@ -12,11 +12,12 @@
   (buttonClick)="AddAppoint($event)"
   (selectedChange)="ChangeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-4 border-bottom w-100">
+  <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
     <div class="w-30">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
@@ -31,7 +32,9 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <span class="me-2 fw-bold">{{ data?.emp?.employeeName }}</span>
+          <span class="me-2 fw-bold c-active" (click)="viewDetail(data)">{{
+            data?.emp?.employeeName
+          }}</span>
           <span
             [innerHTML]="
               data?.emp?.positionID
@@ -303,7 +306,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-4'"
-    cardCss="card-template border-bottom p-3"
+    cardCss="card-template border-bottom p-3 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
@@ -314,8 +317,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
-    [titleCss]="'fs-6 text-dark'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 text-dark then-text-primary'"
     [subTitle]="
       data?.emp?.positionID
         | formatvalue : view.formModel : 'PositionID'
@@ -326,6 +329,15 @@
     (changeDataMF)="ChangeDataMF($event, data)"
   >
   </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
 
   <ng-template #descTmp>
     <div class="d-flex flex-wrap mt-1 align-items-center">

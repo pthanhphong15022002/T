@@ -28,7 +28,6 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   views: Array<ViewModel> = []
   button: ButtonModel = null;
   showButton: boolean = true;
-  funcID: string = null;
   grvSetup: any;
   grvEDaysOff: any;
   popupLoading: boolean = false;

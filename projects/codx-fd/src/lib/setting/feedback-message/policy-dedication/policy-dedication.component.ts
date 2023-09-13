@@ -14,7 +14,6 @@ import { NotificationsService, TenantStore, UIComponent } from 'codx-core';
   styleUrls: ['./policy-dedication.component.scss'],
 })
 export class PolicyDedicationComponent extends UIComponent implements OnInit {
-  funcID: any;
   tenant: string;
   @Input() isGroup: any;
   constructor(

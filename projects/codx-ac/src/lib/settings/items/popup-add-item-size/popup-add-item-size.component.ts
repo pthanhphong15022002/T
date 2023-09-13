@@ -19,6 +19,7 @@ import { map } from 'rxjs/operators';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemSize } from '../interfaces/ItemSize.interface';
 import { EntityName, getClassName } from '../utils/unknown.util';
+import { toCamelCase } from '../../../utils';
 
 @Component({
   selector: 'lib-popup-add-item-size',
@@ -62,11 +63,11 @@ export class PopupAddItemSizeComponent
 
     const functionName1$ = this.acService
       .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21301')
-      .pipe(map((res) => this.acService.toCamelCase(res)));
+      .pipe(map((res) => toCamelCase(res)));
 
     const functionName2$ = this.acService
       .getDefaultNameFromMoreFunctions('ItemSizes', 'grvItemSizes', 'ACS21304')
-      .pipe(map((res) => this.acService.toCamelCase(res)));
+      .pipe(map((res) => toCamelCase(res)));
 
     combineLatest({
       functionName:

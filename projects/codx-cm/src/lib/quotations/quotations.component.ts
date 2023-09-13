@@ -54,7 +54,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   @ViewChild('templateDeal') templateDeal: TemplateRef<any>;
   @ViewChild('templateApproverStatus') templateApproverStatus: TemplateRef<any>;
 
-  @Input() funcID: string;
   @Input() customerID: string;
 
   views: Array<ViewModel> = [];

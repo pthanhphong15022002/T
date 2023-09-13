@@ -9,7 +9,6 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
   styleUrls: ['./news-tag.component.scss']
 })
 export class NewsTagComponent extends UIComponent {
-  funcID: string = "";
   entityName: string = "WP_News";
   predicate: string = "Category != @0 && (ApproveStatus==@1 ||  ApproveStatus==@2 || ApproveStatus==null) && Status==@3 && Stop==false ";
   dataValue: string = "companyinfo;1;5;2";

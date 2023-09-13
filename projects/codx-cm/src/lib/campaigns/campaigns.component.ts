@@ -39,7 +39,6 @@ export class CampaignsComponent
   templateViewCard: TemplateRef<any>;
   dataObj: any;
   //region Method
-  funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = 'CM_Campaigns';

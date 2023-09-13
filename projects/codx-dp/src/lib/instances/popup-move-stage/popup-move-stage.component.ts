@@ -72,8 +72,10 @@ export class PopupMoveStageComponent implements OnInit {
   ownerName = '';
   stepOld: any;
   firstInstance: any;
-  listTaskGroupDone: any = [];
+  // listTaskGroupDone: any = [];
   listTaskDone: any = [];
+  listTmpTask: any[] = [];
+  listTaskEvent: any[] = [];
   isShow: boolean = true;
   isCheckAll: boolean = false;
   isUseReason: any;
@@ -85,8 +87,6 @@ export class PopupMoveStageComponent implements OnInit {
   listStepProccess: any;
   user: any;
 
-  tmpTasks: any[] = [];
-  tmpGroups: any[] = [];
   isMoveNext: boolean = false;
   isDurationControl: boolean = false;
   readonly oneHundredNumber: number = 100;
@@ -136,9 +136,9 @@ export class PopupMoveStageComponent implements OnInit {
 
     if (this.applyFor == '0') {
       // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
-    //  this.listStepProccess = dt?.data?.listStepProccess;
+      //  this.listStepProccess = dt?.data?.listStepProccess;
       this.isDurationControl = dt?.data?.isDurationControl;
-  //   this.getIdReason();
+      //   this.getIdReason();
     } else if (this.applyFor != '0') {
       this.dataCM = JSON.parse(JSON.stringify(dt?.data?.dataCM));
       this.probability = dt?.data?.deal?.probability;
@@ -150,15 +150,18 @@ export class PopupMoveStageComponent implements OnInit {
       ? this.dataCM?.processID
       : this.instance?.processID;
     this.recID = this.dataCM ? this.dataCM?.refID : this.instance?.recID;
-    this.ownerInstance = this.dataCM ? dt?.data?.deal?.owner: JSON.parse(JSON.stringify(dt?.data?.instance.owner));
-    this.stepIdClick =  this.dataCM ?  this.dataCM?.nextStep: JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
+    this.ownerInstance = this.dataCM
+      ? dt?.data?.deal?.owner
+      : JSON.parse(JSON.stringify(dt?.data?.instance.owner));
+    this.stepIdClick = this.dataCM
+      ? this.dataCM?.nextStep
+      : JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     if (!this.isLoad) {
       this.lstParticipants = dt?.data.lstParticipants;
     }
     this.stepIdOld = this.stepID;
 
     this.executeApiCalls();
-
   }
 
   ngOnInit(): void {
@@ -181,7 +184,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   async executeApiCalls() {
     try {
-     // this.applyFor == '0' &&  await this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
+      // this.applyFor == '0' &&  await this.getStepByStepIDAndInID(this.recID, this.stepIdOld);
       await this.getListMoveStage();
       await this.getGrvInstanceStep();
     } catch (error) {}
@@ -193,11 +196,15 @@ export class PopupMoveStageComponent implements OnInit {
       if (res && res.length > 0) {
         this.isDurationControl = res[0];
         this.listStepsCbx = res[1];
-        this.updateDataInstance(this.listStepsCbx.filter(x=>x.stepID === this.stepID)[0]);
+        this.updateDataInstance(
+          this.listStepsCbx.filter((x) => x.stepID === this.stepID)[0]
+        );
         this.getListParticipants(res[2]);
         this.getIdReason();
         this.removeReasonInStepsAuto(res[3], res[4], res[1]);
-        !this.stepIdClick && this.stepIdClick != this.stepIdOld && this.autoClickedSteps(this.listStepsCbx);
+        !this.stepIdClick &&
+          this.stepIdClick != this.stepIdOld &&
+          this.autoClickedSteps(this.listStepsCbx);
         this.eventAutoClick();
         this.changeDetectorRef.detectChanges();
       }
@@ -323,9 +330,7 @@ export class PopupMoveStageComponent implements OnInit {
         break;
       //Giữ nguyên phụ trách trước
       case '2':
-        i = this.listStepsCbx.findIndex(
-          (x) => x.stepID == stepCurrent.stepID
-        );
+        i = this.listStepsCbx.findIndex((x) => x.stepID == stepCurrent.stepID);
         if (
           this.listStepsCbx[i - 1]?.roles &&
           this.listStepsCbx[i - 1]?.roles.length > 0
@@ -353,8 +358,8 @@ export class PopupMoveStageComponent implements OnInit {
         break;
       //Người nhận nhiệm vụ đầu tiên - onwer của nhiệm vụ đó
       case '3':
-       // this.owner = this.firstInstance?.owner;
-       this.owner = this.ownerInstance;
+        // this.owner = this.firstInstance?.owner;
+        this.owner = this.ownerInstance;
         // if (this.owner != null) this.getNameAndPosition(this.owner);
         break;
       // //Người nhận nhiệm vụ hiện tại
@@ -375,9 +380,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter(
-      (x) => x.progress < this.oneHundredNumber
-    );
+    // this.listTaskGroupDone = this.instancesStepOld.taskGroups.filter(
+    //   (x) => x.progress < this.oneHundredNumber
+    // );
   }
 
   onSave() {
@@ -445,7 +450,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.notiService.notifyCode(messageCheckFormat);
         return;
       }
-
+      this.handleDataTask(this.listTaskDone);
       if (this.isCheckRequiredTask(this.listTaskDone)) {
         return;
       }
@@ -453,7 +458,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.beforeSave();
   }
   beforeSave() {
-    if(!this.owner && this.isMoveNext) {
+    if (!this.owner && this.isMoveNext) {
       this.owner = this.instance.owner;
     }
     if (
@@ -469,26 +474,25 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.stepID = this.stepIdClick;
     }
     if (
-      (!!this.listTaskGroupDone || !!this.listTaskDone) &&
+      this.listTaskDone &&
+      this.listTaskDone?.length > 0 &&
       this.stepIdClick === this.stepIdOld
     ) {
       this.stepIdOld = '';
     }
-    if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
-      var listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
-    }
-    if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
-      var listTmpGroup = this.convertTmpDataInTask(this.listTaskGroupDone, 'G');
-    }
+    this.listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
+    // if (this.listTaskDone.length > 0 && this.listTaskDone != null) {
+    //   var listTmpGroup = this.convertTmpDataInTask(this.listTaskGroupDone, 'G');
+    // }
     this.instancesStepOld.actualEnd = new Date();
-    var data = [
+    let data = [
       this.recID,
       this.stepIdOld,
       this.owner,
       this.ownerName,
       this.instancesStepOld,
-      listTmpTask,
-      listTmpGroup,
+      this.listTmpTask,
+      // listTmpGroup,
     ];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
       if (res) {
@@ -661,16 +665,15 @@ export class PopupMoveStageComponent implements OnInit {
     return '';
   }
 
-  updateProgressInstance() {
-    if (this.listTaskDone?.length > 0 && this.listTaskGroupDone?.length > 0) {
-      if (
-        this.listTaskDone.length == this.listTaskDone.length &&
-        this.listTaskGroupDone.length == this.listTaskGroupDone.length
-      ) {
-        this.instancesStepOld.progress = 100;
-      }
-    }
-  }
+  // updateProgressInstance() {
+  //   if (this.listTaskDone?.length > 0) {
+  //     if (
+  //       this.listTaskDone.length == this.listTaskDone.length
+  //     ) {
+  //       this.instancesStepOld.progress = 100;
+  //     }
+  //   }
+  // }
   getOwnerByListRoles(lstRoles, objectType) {
     var lstOrg = [];
     if (lstRoles != null && lstRoles.length > 0) {
@@ -728,29 +731,44 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     // type A = all, D=default, R = required
     if (event) {
-      for (let item of event.data) {
-        if (item.taskID && item.type === 'T') {
-          var task = this.listTaskDone.find((x) => x.recID === item?.taskID);
-          var taskNew = {
-            progress: item?.progressTask,
-            actualEnd: item?.actualEnd,
-            isUpdate: item?.isUpdate,
-            note: item?.note,
-          };
-          this.updateDataTask(task, taskNew);
-        }
-        if (item?.groupTaskID && item.type === 'G') {
-          var group = this.listTaskGroupDone.find(
-            (x) => x.recID === item?.groupTaskID
-          );
-          var groupNew = {
-            progress: item?.progressGroupTask,
-            isUpdate: item?.isUpdate,
-            actualEnd: item?.actualEnd,
-            note: item?.note,
-          };
-          this.updateDataGroup(group, groupNew);
-        }
+      this.listTaskEvent = event.data;
+      // for (let item of event.data) {
+      //   if (item.taskID && item.type === 'T') {
+      //     var task = this.listTaskDone.find((x) => x.recID === item?.taskID);
+      //     var taskNew = {
+      //       progress: item?.progressTask,
+      //       actualEnd: item?.actualEnd,
+      //       isUpdate: item?.isUpdate,
+      //       note: item?.note,
+      //     };
+      //     this.updateDataTask(task, taskNew);
+      //   }
+      //   if (item?.groupTaskID && item.type === 'G') {
+      //     var group = this.listTaskGroupDone.find(
+      //       (x) => x.recID === item?.groupTaskID
+      //     );
+      //     var groupNew = {
+      //       progress: item?.progressGroupTask,
+      //       isUpdate: item?.isUpdate,
+      //       actualEnd: item?.actualEnd,
+      //       note: item?.note,
+      //     };
+      //     this.updateDataGroup(group, groupNew);
+      //   }
+      // }
+    }
+  }
+  handleDataTask(listTask: any) {
+    for (let item of listTask) {
+      if (item.taskID && item.type === 'T') {
+        let task = this.listTaskDone.find((x) => x.recID === item?.taskID);
+        let taskNew = {
+          progress: item?.progressTask,
+          actualEnd: item?.actualEnd,
+          isUpdate: item?.isUpdate,
+          note: item?.note,
+        };
+        this.updateDataTask(task, taskNew);
       }
     }
   }
@@ -763,12 +781,12 @@ export class PopupMoveStageComponent implements OnInit {
     taskNew.modifiedBy = this.user.userID;
     taskNew.isUpdate = taskOld.isUpdate;
   }
-  updateDataGroup(groupNew: any, groupOld: any) {
-    groupNew.progress = groupOld?.progress;
-    groupNew.modifiedOn = new Date();
-    groupNew.modifiedBy = this.user.userID;
-    groupNew.isUpdate = groupOld.isUpdate;
-  }
+  // updateDataGroup(groupNew: any, groupOld: any) {
+  //   groupNew.progress = groupOld?.progress;
+  //   groupNew.modifiedOn = new Date();
+  //   groupNew.modifiedBy = this.user.userID;
+  //   groupNew.isUpdate = groupOld.isUpdate;
+  // }
 
   handleTmpInTask(data, type) {
     var tmpProgressUpdate = {
@@ -804,11 +822,8 @@ export class PopupMoveStageComponent implements OnInit {
     return false;
   }
 
-  checkListDoneIsNull(tasks: any, groups: any) {
-    if (
-      (tasks.length > 0 && tasks != null) ||
-      (groups.length > 0 && groups != null)
-    ) {
+  checkListDoneIsNull(tasks: any) {
+    if (tasks.length > 0 && tasks != null) {
       return true;
     }
     return false;

@@ -182,6 +182,21 @@
   <div class="row">
     <div class="col-12">
       <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ShortName">
+        </codx-label>
+        <codx-input
+          field="shortName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Address">
         </codx-label>
         <codx-input
@@ -379,7 +394,7 @@
         >
         </codx-label>
         <codx-input
-        field="currencyID"
+        field="dealValue"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         (valueChange)="valueChange($event)"

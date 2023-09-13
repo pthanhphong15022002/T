@@ -205,7 +205,7 @@ export class SalesinvoicesAddComponent
       this.form,
       this.form.data._isEdit,
       () => {
-        this.master.status = '1';
+        this.form.formGroup.patchValue({ status: '1' });
         this.form.save().subscribe((res: any) => {
           if (res === false || res.save?.error || res.update?.error) {
             return;
