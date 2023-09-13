@@ -10,6 +10,7 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Reason } from './models/Reason.model';
+import { toPascalCase } from './utils';
 
 @Injectable({
   providedIn: 'root',
@@ -144,7 +145,7 @@ export class CodxAcService {
         const gvsPropName =
           irregularGvsPropNames.find(
             (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? this.toPascalCase(propName);
+          ) ?? toPascalCase(propName);
 
         invalidFields.push(gvsPropName);
       }
@@ -182,57 +183,6 @@ export class CodxAcService {
     }
 
     return false;
-  }
-
-  /** @param irregularDataPropNames Use irregularDataPropNames in case unable to transform some gvs prop names to data prop names respectively. */
-  validateFormDataUsingGvs(
-    gridViewSetup: any,
-    data: any,
-    irregularDataPropNames: string[] = [],
-    ignoredFields: string[] = []
-  ): boolean {
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-
-    let isValid = true;
-    for (const propName in gridViewSetup) {
-      if (gridViewSetup[propName].isRequire) {
-        if (ignoredFields.includes(propName.toLowerCase())) {
-          continue;
-        }
-
-        const dataPropName =
-          irregularDataPropNames.find(
-            (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? this.toCamelCase(propName);
-
-        if (
-          gridViewSetup[propName].dataType === 'String' &&
-          !data[dataPropName]?.trim()
-        ) {
-          //console.log('invalid', { propName });
-
-          this.notiService.notifyCode(
-            'SYS009',
-            0,
-            `"${gridViewSetup[propName]?.headerText}"`
-          );
-
-          isValid = false;
-        }
-      }
-    }
-
-    return isValid;
-  }
-
-  /** @example StudentId => studentId */
-  toCamelCase(pascalCase: string): string {
-    return pascalCase.charAt(0).toLowerCase() + pascalCase.slice(1);
-  }
-
-  /** @example studentId => StudentId */
-  toPascalCase(camelCase: string): string {
-    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
 
   loadComboboxData(
