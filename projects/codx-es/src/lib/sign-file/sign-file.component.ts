@@ -34,6 +34,7 @@ import { PopupAddSignatureComponent } from '../setting/signature/popup-add-signa
 import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { ApprovalStepSignComponent } from './approval-step/approval-step.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'app-sign-file',
@@ -41,9 +42,11 @@ import { ApprovalStepSignComponent } from './approval-step/approval-step.compone
   styleUrls: ['./sign-file.component.scss'],
 })
 export class SignFileComponent extends UIComponent {
+  runMode;
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
+    private shareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notifySv: NotificationsService,
     private callfunc: CallFuncService,
@@ -52,6 +55,11 @@ export class SignFileComponent extends UIComponent {
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;        
+      }
+    });
     this.user = this.authStore.get();
   }
   @ViewChild('popup', { static: true }) popup;
@@ -140,13 +148,6 @@ export class SignFileComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-
-    // this.esService.getSFByUserID(['ADMIN', '5']).subscribe((res) => {
-    //   console.log('kq', res);
-    // });
-    // this.cache.functionList('EST021').subscribe((res) => {
-    //   console.log('funcList', res);
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -282,16 +283,6 @@ export class SignFileComponent extends UIComponent {
 
   clickMF(event: any, data) {
     this.viewdetail.openFormFuncID(event, data);
-    // switch (event?.functionID) {
-
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     this.viewdetail.openFormFuncID(event, data);
-    //     break;
-    //   case 'SYS02':
-    //     this.viewdetail.openFormFuncID(event, data);
-    //     break;
-    // }
   }
 
   openFormFuncID(val: any, data: any) {
@@ -299,50 +290,55 @@ export class SignFileComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data: any) {
-    var bookmarked = false;
-    let lstBookmark = data?.bookmarks;
-    if (lstBookmark) {
-      let isbookmark = lstBookmark.filter(
-        (p) => p.objectID == this.user.userID
+    if(this.runMode == "1")
+    {
+      this.shareService.changeMFApproval(e,data.unbounds);
+    }
+    else{
+      var bookmarked = false;
+      let lstBookmark = data?.bookmarks;
+      if (lstBookmark) {
+        let isbookmark = lstBookmark.filter(
+          (p) => p.objectID == this.user.userID
+        );
+        if (isbookmark?.length > 0) {
+          bookmarked = true;
+        }
+      }
+      var bm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01103'
       );
-      if (isbookmark?.length > 0) {
-        bookmarked = true;
+      var unbm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01104'
+      );
+      var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
+      var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+      var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
+      if (copy?.length) copy[0].disabled = true;
+      var release = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01105'
+      );
+  
+      if (bookmarked == true) {
+        if (bm?.length) bm[0].disabled = true;
+        if (unbm?.length) unbm[0].disabled = false;
+      } else {
+        if (unbm?.length) unbm[0].disabled = true;
+        if (bm?.length) bm[0].disabled = false;
+      }
+  
+      if (data.approveStatus != 3) {
+        var cancel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'EST01101'
+        );
+        if (cancel?.length) cancel[0].disabled = true;
+      }
+      if (data.approveStatus != 1 && data.approveStatus != 2) {
+        if (edit?.length) edit[0].disabled = true;
+        if (release?.length) release[0].disabled = true;
+        if (del?.length) del[0].disabled = true;
       }
     }
-    var bm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01103'
-    );
-    var unbm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01104'
-    );
-    var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
-    var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
-    if (copy?.length) copy[0].disabled = true;
-    var release = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01105'
-    );
-
-    if (bookmarked == true) {
-      if (bm?.length) bm[0].disabled = true;
-      if (unbm?.length) unbm[0].disabled = false;
-    } else {
-      if (unbm?.length) unbm[0].disabled = true;
-      if (bm?.length) bm[0].disabled = false;
-    }
-
-    if (data.approveStatus != 3) {
-      var cancel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'EST01101'
-      );
-      if (cancel?.length) cancel[0].disabled = true;
-    }
-    if (data.approveStatus != 1 && data.approveStatus != 2) {
-      if (edit?.length) edit[0].disabled = true;
-      if (release?.length) release[0].disabled = true;
-      if (del?.length) del[0].disabled = true;
-    }
-    
   }
 
   isBookmark(data) {
@@ -360,11 +356,20 @@ export class SignFileComponent extends UIComponent {
   }
 
   viewChange(e: any) {
-    var funcID = e?.component?.instance?.funcID;
-    this.esService.getFormModel(funcID).then((fm) => {
-      if (fm) {
+    // var funcID = e?.component?.instance?.funcID;
+    // this.esService.getFormModel(funcID).then((fm) => {
+    //   if (fm) {
+    //   }
+    // });
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;
+        this.detectorRef.detectChanges;        
       }
     });
+    this.detectorRef.detectChanges;   
+
   }
   browsingProcess(recID:any,approveStatus:any)
   {

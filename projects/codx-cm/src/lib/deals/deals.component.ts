@@ -379,11 +379,11 @@ export class DealsComponent
     };
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? data.closed || data.status == '0' : true;
+        data?.alloweStatus == '1' ? data.closed ||['1','0'].includes(data.status) : true;
     };
     let isOpened = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? !data.closed || data.status == '0' : true;
+        data?.alloweStatus == '1' ? !data.closed  || ['1','0'].includes(data.status): true;
     };
     let isStartDay = (eventItem, data) => {
       eventItem.disabled =
@@ -393,7 +393,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2'].includes(data.status) || data.closed
+        ? !['1', '2'].includes(data.status) || data.closed || ['1','0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -407,13 +407,13 @@ export class DealsComponent
         (data.processID && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
     };
-    let isUpdateBANT = (eventItem, data) => {
-      eventItem.disabled = data.write
-        ? (data.closed && data.status != '1') ||
-          data.status == '0' ||
-          this.checkMoreReason(data)
-        : true;
-    };
+    // let isUpdateBANT = (eventItem, data) => {
+    //   eventItem.disabled = data.write
+    //     ? (data.closed && data.status != '1') ||
+    //       data.status == '0' ||
+    //       this.checkMoreReason(data)
+    //     : true;
+    // };
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
@@ -443,7 +443,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data.status != '2';
+      eventItem.disabled = data.status != '2' || data.closed;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -470,7 +470,7 @@ export class DealsComponent
       SYS03: isEdit,
       SYS04: isCopy,
       SYS02: isDelete,
-      CM0201_14: isUpdateBANT,
+      // CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,

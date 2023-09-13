@@ -2486,7 +2486,7 @@
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul class="nav nav-tabs px-4">
       <ng-container *ngFor="let item of lstFuncJobInfo; let i = index">
-        <li class="nav-item" (click)="navChange(item.functionID, 1 , $event.target)" *ngIf="item.functionID != eNeedToSubmitProfileFuncID">
+        <li class="nav-item" (click)="navChange(item.functionID, 1 , $event.target)">
           <a
             class="nav-link"
             [ngClass]="item.functionID == active[1] ? 'active' : ''"
@@ -3284,7 +3284,7 @@
         class="user-profile overview d-block"
         [id]="eNeedToSubmitProfileFuncID"
       >
-        <!-- <div class="rounded-2 p-5 bg-white mb-1">
+        <div class="rounded-2 p-5 bg-white mb-1">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status d-flex align-items-center text-primary">
@@ -3300,128 +3300,87 @@
                 </codx-label>
               </div>
             </div>
-
-            <div class="d-flex align-items-center ms-5">
-              <a class="btn btn-icon btn-white">
-                <span
-                  class="icon-edit icon-18"
-                  (click)="editEmployeeCaculateSalaryInfo(editHeaderText)"
-                ></span>
-              </a>
-            </div>
           </div>
 
-          <div #salaryInfo class="mb-1 mt-6" *ngIf="eInfoFormModel">
-            <div class="row mb-5">
-              <div class="col">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="PayrollGroupID"
-                    [formModel]="eInfoFormModel"
-                    [setRequire]="false"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.payrollGroupID
-                        | formatvalue : eInfoFormModel : 'payrollGroupID'
-                        | async
-                    "
-                  ></span>
-                </div>
-              </div>
-              <div class="col">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="CurrencyID"
-                    [formModel]="eInfoFormModel"
-                    [setRequire]="false"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.currencyID
-                        | formatvalue : eInfoFormModel : 'currencyID'
-                        | async
-                    "
-                  >
-                  </span>
-                </div>
-              </div>
-              <div class="col">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="TaxTableID"
-                    [formModel]="eInfoFormModel"
-                    [setRequire]="false"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span class="icon-local_atm icon-16 text-danger me-2"></span>
-                  <div
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.taxTableID
-                        | formatvalue : eInfoFormModel : 'taxTableID'
-                        | async
-                    "
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <div class="row mb-5">
-              <div class="col-4">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="IsSettleTax"
-                    [formModel]="eInfoFormModel"
-                    [setRequire]="false"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
+          <div #eDocument class="mb-1 mt-6" *ngIf="eInfoFormModel">
+            <div *ngFor="let doc of lstEmpDocument">
+              <div class="has-action-menu">
+                <span *ngIf="doc?.isSubmitted == true">
                   <codx-input
-                    field="IsSettleTax"
-                    [formModel]="eInfoFormModel"
-                    [crrValue]="infoPersonal?.isSettleTax"
-                    [disabled]="true"
-                  ></codx-input>
-                </div>
-              </div>
-              <div class="col-8">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="AdvanceAmount"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.advanceAmount
-                        | formatvalue : eInfoFormModel : 'advanceAmount'
-                        | async
-                    "
-                  >
-                  </span>
-                </div>
+                  [type]="'checkbox'"
+                  [checked]="true"
+                  [disabled]="true"
+                ></codx-input>
+                </span>
+  
+                <span *ngIf="doc?.isRequired == true" class="me-3">
+                Ngoi sao
+                </span>
+  
+                <span
+                [innerHTML]="
+                doc.documentTypeID | formatvalue : edocumentFormModel : 'documentTypeID' | async
+              "
+                >
+                </span>
+  
+                <span *ngIf="doc?.submittedDate" class="ms-5">
+                  {{doc?.submittedDate | fmDT}}
+                </span>
+  
+                    <ng-container *ngIf="doc?.lstFile && doc?.lstFile?.length > 0">
+                      <span>|</span>
+                      <codx-thumbnail [files]="doc?.lstFile" displayThumb="simple" [hideHover]="'0'">
+                      </codx-thumbnail>
+                    </ng-container>
+                    <!-- <div class="flex-nowrap">
+                      <codx-attachment
+                          #attachment
+                          [objectType]="edocumentFormModel?.entityName"
+                          showMessage="0"
+                          hideBtnSave="1"
+                          hideFolder="1"
+                          hideUploadBtn="1"
+                          hideDes="1"
+                          hideImageUpload="1"
+                          hideImageThumb="0"
+                          [objectId]="doc?.recID"
+                          [allowMultiFile]="1"
+                          [idBrowse]="'add'"
+                          displayThumb="full"
+                          [functionID]="eNeedToSubmitProfileFuncID"
+                          [referType]="'source'"
+                          >
+                      </codx-attachment>
+                      </div>   -->
+
+                  <codx-mfunc
+                  [formModel]="edocumentFormModel"
+                  (clickMF)="clickMF($event, doc, 'eDocument')"
+                  type="hover"
+                  [dataItem]="doc"
+            (changeDataMF)="handleShowHideMF($event)"
+                >
+                </codx-mfunc>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
 
       <div class="div_final"></div>
     </ng-container>
+
+    <codx-combobox-popup
+      *ngIf="!isHiddenCbxDocument"
+      [comboboxName]="eDocumentGrvSetup.DocumentTypeID.referedValue"
+      [multiple]="true"
+      [width]="600"
+      [height]="500"
+      [value]="strCurrentDocuments"
+      (clickSave)="onClickHideComboboxPopup($event)"
+      >
+      </codx-combobox-popup>
     <!-- </div> -->
   </div>
 </ng-template>

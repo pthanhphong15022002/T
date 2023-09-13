@@ -352,8 +352,8 @@ export class StepService {
     return groupOutput;
   }
 
-  async addTask(action, titleName, taskType, instanceStep, groupID, isSave,ownerParent,location) {
-    let task = new DP_Instances_Steps_Tasks();
+  async addTask(action, titleName,taskData, taskType, instanceStep, groupID, isSave,ownerParent,location) {
+    let task = taskData || new DP_Instances_Steps_Tasks();
     task['taskType'] = taskType?.value;
     task['stepID'] = instanceStep?.recID;
     task['progress'] = 0;

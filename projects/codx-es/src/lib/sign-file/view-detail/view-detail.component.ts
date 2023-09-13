@@ -1,4 +1,7 @@
-import { AssignTaskModel, tmpReferences } from './../../../../../codx-share/src/lib/models/assign-task.model';
+import {
+  AssignTaskModel,
+  tmpReferences,
+} from './../../../../../codx-share/src/lib/models/assign-task.model';
 import {
   Component,
   Input,
@@ -36,6 +39,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   encapsulation: ViewEncapsulation.None,
 })
 export class ViewDetailComponent implements OnInit {
+  runMode: any;
   constructor(
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
@@ -48,6 +52,11 @@ export class ViewDetailComponent implements OnInit {
     private api: ApiHttpService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;        
+      }
+    });
     this.user = this.authStore.get();
   }
 
@@ -120,14 +129,14 @@ export class ViewDetailComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.data &&
-      (changes.data?.previousValue?.recID != changes.data?.currentValue?.recID || changes.data?.currentValue?.recID== this.itemDetail?.recID)
+      (changes.data?.previousValue?.recID !=
+        changes.data?.currentValue?.recID ||
+        changes.data?.currentValue?.recID == this.itemDetail?.recID)
     ) {
       this.data = changes.data?.currentValue;
     }
@@ -186,91 +195,84 @@ export class ViewDetailComponent implements OnInit {
     }
 
     if (this.itemDetail && this.itemDetail !== null) {
+      this.files = [];
+      this.df.detectChanges();
       if (this.itemDetail?.files?.length > 0) {
         this.esService
           .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
           .subscribe((res) => {
             if (res) {
               this.files = res;
-              // if(this.itemDetail.approveStatus!='5' && this.files?.length>0){
-              //   for(let i=0;i<this.files?.length;i++){
-              //     if(this.files[i].history?.length>0 ){
-              //       let orgFile = this.files[i].history.filter((x:any)=>x.version=='Ver 001');
-              //       if(orgFile?.length>0){
-              //         let tempFile =orgFile[0];
-              //         //tempFile.fileName = this.files[i].fileName.split('.')[0] + tempFile?.extension;
-              //         //tempFile.permissions = this.files[i].permissions;
-              //         this.files[i]=tempFile;
-              //       }
-              //     }      
-              //   }                            
-              // }
+              this.df.detectChanges();
             }
           });
       }
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
-        .subscribe((res) => {          
+        .subscribe((res) => {
           this.dataReferences = [];
-          if (res) {            
+          if (res) {
             this.itemDetail = res;
             if (res.refType != null) {
               this.esService
-              .getEntity(this.itemDetail?.refType)
-              .subscribe((oEntity) => {
-                if (oEntity!=null) {
-                  
-                  let tempRef= new tmpReferences();                  
-                  tempRef.refType = this.itemDetail?.refType;
-                  switch (oEntity?.entityName){
-                    case 'OD_Dispatches':
-                      this.esService
-                      .getod(this.itemDetail?.recID)
-                      .subscribe((ref) => {
-                        if(ref){
-                          tempRef.recIDReferences = ref?.recID;
-                          tempRef.createdOn = ref?.createdOn;
-                          tempRef.memo = ref?.title;
-                          tempRef.createdBy = ref?.createdBy;
-                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
-                            if(user){                              
-                              tempRef.createByName = user?.employeeName;
+                .getEntity(this.itemDetail?.refType)
+                .subscribe((oEntity) => {
+                  if (oEntity != null) {
+                    let tempRef = new tmpReferences();
+                    tempRef.refType = this.itemDetail?.refType;
+                    switch (oEntity?.entityName) {
+                      case 'OD_Dispatches':
+                        this.esService
+                          .getod(this.itemDetail?.recID)
+                          .subscribe((ref) => {
+                            if (ref) {
+                              tempRef.recIDReferences = ref?.recID;
+                              tempRef.createdOn = ref?.createdOn;
+                              tempRef.memo = ref?.title;
+                              tempRef.createdBy = ref?.createdBy;
+                              this.cache
+                                .getCompany(ref?.createdBy)
+                                .subscribe((user) => {
+                                  if (user) {
+                                    tempRef.createByName = user?.employeeName;
+                                  }
+                                });
+                              this.dataReferences = [];
+                              this.dataReferences.push(tempRef);
+                              this.df.detectChanges();
+
+                              // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
+                              // if (index < 0) this.dataReferences.push(ref);
+                              // this.df.detectChanges();
                             }
                           });
-                          this.dataReferences = [];
-                          this.dataReferences.push(tempRef);
-                          this.df.detectChanges();
+                        break;
 
-                          // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
-                          // if (index < 0) this.dataReferences.push(ref);
-                          // this.df.detectChanges();
-                        }
-                        
-                      });
-                    break;
-
-                    case 'ES_SignFiles':
-                      this.esService.getDetailSignFile(res?.refID).subscribe(ref=>{
-                        if(ref){
-                          tempRef.recIDReferences = ref?.recID;
-                          tempRef.createdOn = ref?.createdOn;
-                          tempRef.memo = ref?.title;
-                          tempRef.createdBy = ref?.createdBy;
-                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
-                            if(user){                              
-                              tempRef.createByName = user?.employeeName;
+                      case 'ES_SignFiles':
+                        this.esService
+                          .getDetailSignFile(res?.refID)
+                          .subscribe((ref) => {
+                            if (ref) {
+                              tempRef.recIDReferences = ref?.recID;
+                              tempRef.createdOn = ref?.createdOn;
+                              tempRef.memo = ref?.title;
+                              tempRef.createdBy = ref?.createdBy;
+                              this.cache
+                                .getCompany(ref?.createdBy)
+                                .subscribe((user) => {
+                                  if (user) {
+                                    tempRef.createByName = user?.employeeName;
+                                  }
+                                });
+                              this.dataReferences = [];
+                              this.dataReferences.push(tempRef);
+                              this.df.detectChanges();
                             }
                           });
-                          this.dataReferences = [];
-                          this.dataReferences.push(tempRef);
-                          this.df.detectChanges();
-                        }
-                      })
-                    break;
+                        break;
+                    }
                   }
-                  
-                }
-              });
+                });
             }
             this.df.detectChanges();
           }
@@ -336,48 +338,58 @@ export class ViewDetailComponent implements OnInit {
 
   //#region MoreFunc viewDetai
   changeDataMF(e: any, data: any) {
-    var bookmarked = false;
-    let lstBookmark = data?.bookmarks;
-    if (lstBookmark) {
-      let isbookmark = lstBookmark.filter(
-        (p) => p.objectID == this.user.userID
-      );
-      if (isbookmark?.length > 0) {
-        bookmarked = true;
-      }
-    }
-    var bm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01103'
-    );
-    var unbm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01104'
-    );
-    var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
-    var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
-    if (copy?.length) copy[0].disabled = true;
-    var release = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01105'
-    );
-
-    if (bookmarked == true) {
-      if (bm?.length) bm[0].disabled = true;
-      if (unbm?.length) unbm[0].disabled = false;
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
     } else {
-      if (unbm?.length) unbm[0].disabled = true;
-      if (bm?.length) bm[0].disabled = false;
-    }
-
-    if (data?.approveStatus != 3) {
-      var cancel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'EST01101'
+      var bookmarked = false;
+      let lstBookmark = data?.bookmarks;
+      if (lstBookmark) {
+        let isbookmark = lstBookmark.filter(
+          (p) => p.objectID == this.user.userID
+        );
+        if (isbookmark?.length > 0) {
+          bookmarked = true;
+        }
+      }
+      var bm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01103'
       );
-      if (cancel?.length) cancel[0].disabled = true;
-    }
-    if (data?.approveStatus != 1 && data?.approveStatus != 2) {
-      if (edit?.length) edit[0].disabled = true;
-      if (release?.length) release[0].disabled = true;
-      if (del?.length) del[0].disabled = true;
+      var unbm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01104'
+      );
+      var edit = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS03'
+      );
+      var del = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS02'
+      );
+      var copy = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS04'
+      );
+      if (copy?.length) copy[0].disabled = true;
+      var release = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01105'
+      );
+
+      if (bookmarked == true) {
+        if (bm?.length) bm[0].disabled = true;
+        if (unbm?.length) unbm[0].disabled = false;
+      } else {
+        if (unbm?.length) unbm[0].disabled = true;
+        if (bm?.length) bm[0].disabled = false;
+      }
+
+      if (data?.approveStatus != 3) {
+        var cancel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'EST01101'
+        );
+        if (cancel?.length) cancel[0].disabled = true;
+      }
+      if (data?.approveStatus != 1 && data?.approveStatus != 2) {
+        if (edit?.length) edit[0].disabled = true;
+        if (release?.length) release[0].disabled = true;
+        if (del?.length) del[0].disabled = true;
+      }
     }
   }
 
@@ -421,6 +433,33 @@ export class ViewDetailComponent implements OnInit {
         break;
       case 'EST01106': //Tạo signfile từ signfile
         this.addSignFile(datas);
+        break;
+      default:
+        //Biến động , tự custom
+        var customData = 
+        {
+          refID : "",
+          refType : this.formModel?.entityName,
+          dataSource: datas,
+        }
+
+        this.codxShareService.defaultMoreFunc(
+          val,
+          datas,
+          null,
+          this.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
+        // this.shareService.defaultMoreFunc(
+        //   val,
+        //   datas,
+        //   this.afterSaveTask,
+        //   this.view.formModel,
+        //   this.view.dataService,
+        //   that
+        // );
         break;
     }
   }
@@ -471,7 +510,7 @@ export class ViewDetailComponent implements OnInit {
           option: option,
           headerText: mF?.text,
           moreFunction: this.mfRelease,
-          dataService :this.view?.dataService,
+          dataService: this.view?.dataService,
         },
         '',
         dialogModel
@@ -494,7 +533,7 @@ export class ViewDetailComponent implements OnInit {
     this.view.dataService.dataSelected = datas;
     this.view.dataService.addNew().subscribe((res: any) => {
       if (!res) return;
-      res.refID=datas.recID
+      res.refID = datas.recID;
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -512,7 +551,7 @@ export class ViewDetailComponent implements OnInit {
           isAddNew: true,
           formModel: this.view?.formModel,
           option: option,
-          refID:datas?.recID,
+          refID: datas?.recID,
         },
         '',
         dialogModel
@@ -594,7 +633,7 @@ export class ViewDetailComponent implements OnInit {
     // let mssgCode = 'ES015';
     // this.notify.alertCode(mssgCode).subscribe((x) => {
     //   if (x.event?.status == 'Y') {
-        
+
     //   }
     // });
     if (datas.approveStatus == '1') {
@@ -608,10 +647,7 @@ export class ViewDetailComponent implements OnInit {
             if (this.cancelControl == '0') {
             } else if (this.cancelControl == '1') {
               this.cancel(datas);
-            } else if (
-              this.cancelControl == '2' ||
-              this.cancelControl == '3'
-            ) {
+            } else if (this.cancelControl == '2' || this.cancelControl == '3') {
               this.oCancelSF = datas;
               this.callfunc.openForm(this.addCancelComment, '', 650, 380);
             }
@@ -744,16 +780,17 @@ export class ViewDetailComponent implements OnInit {
     //   return;
     // }
 
-    
     this.codxShareService
       .codxRelease(
         'ES',
         this.itemDetail?.recID,
-        this.itemDetail.approveControl == '1'? this.itemDetail?.recID: this.itemDetail?.processID,
+        this.itemDetail.approveControl == '1'
+          ? this.itemDetail?.recID
+          : this.itemDetail?.processID,
         this.formModel.entityName,
         this.formModel.funcID,
-        "",
-        this.itemDetail.title ,
+        '',
+        this.itemDetail.title,
         this.itemDetail?.refType
       )
       .subscribe((res) => {

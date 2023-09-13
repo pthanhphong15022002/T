@@ -119,6 +119,7 @@ export class ViewCalendarComponent
   listCustomer: CM_Customers[];
   listContract: CM_Contracts[];
 
+  actionName = '';
   disableButton = true;
   objectID = '';
   isActivitie = false;
@@ -130,7 +131,7 @@ export class ViewCalendarComponent
   assemblyName = 'ERM.Business.CM';
   methodLoadData = 'GetListContractsAsync';
   requestData = new DataRequest();
-
+  listTaskType = [];
 
   constructor(
     private inject: Injector,
@@ -155,6 +156,11 @@ export class ViewCalendarComponent
   }
   onInit(): void {
     this.getDayOff();
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTaskType = res.datas;
+      }
+    });
   }
   ngAfterViewInit(): void {
     this.afterLoad();
@@ -322,12 +328,40 @@ export class ViewCalendarComponent
 
   //------------------More Func-----------------//
   //chua goi tho phan quyền -- đang full true
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    
+  }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.actionName = e.text;
+    switch (e.functionID) {
+      case 'SYS02':
+        console.log(this.listTaskType);
+        break;
+      case 'SYS03':
+        this.editTask(data);
+        break;
+      case 'SYS04':
+        console.log(data);
+        break;
+    }
+  }
 
   //------------------More Func-----------------//
 
+  editTask(data){
+    if(data){
+      const type = this.listTaskType?.find(t => t?.value === data?.taskType);
+      type && this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetTaskInCalendarAsync', [data?.stepID,data?.recID])
+      .subscribe((res) => {
+        if (res) {
+          this.handleTask(type,'edit', data);
+        }
+        this.handleTask(type,'edit', data);
+      });
+    }
+  }
   //#region add task
   beforeAddTask() {
     let option = new DialogModel();
@@ -532,12 +566,12 @@ export class ViewCalendarComponent
   async chooseTypeTask() {
     this.taskType = await this.stepService.chooseTypeTask(false);
     if (this.taskType) {
-      await this.addTask(this.taskType);
+      await this.handleTask(this.taskType,'add');
     }
   }
 
-  async addTask(dataType) {
-    let taskOutput = await this.stepService.addTask('add','',dataType,this.insStep,null,false,null,'right');
+  async handleTask(dataType, type,taskData = null) {
+    let taskOutput = await this.stepService.addTask(type,'',taskData,dataType,this.insStep,null,false,null,'right');
     let task = taskOutput;
     if (task) {
       this.isActivitie && this.addActivitie(task);

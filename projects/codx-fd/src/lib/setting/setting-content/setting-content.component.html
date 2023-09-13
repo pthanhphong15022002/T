@@ -1,12 +1,12 @@
 <div *ngIf="isForm" class="d-flex justify-content-end">
   <div class="position-absolute top-0 right-0 " style="z-index: 999;">
-    <button type="button" class="btn btn-icon btn-sm btn-light-primary mt-3 me-3" (click)="closePopUp()">
+    <button type="button" class="btn btn-icon btn-sm btn-white mt-3 me-3" (click)="closePopUp()">
       <span class="icon-close icon-16"></span>
     </button>
   </div>
 </div>
 <div
-  class="group w-100 h-100 bg-body rounded-3 p-5 pt-12 scroll-y"
+  class="group w-100 h-100 bg-body rounded-3 p-6 pt-12 scroll-y"
   *ngIf="groupSettings && groupSettings[cate.value]"
 >
   <div class="d-flex" *ngIf="curLineType > firstLineType">
@@ -17,7 +17,7 @@
       <div class="fs-5 fw-bold text-dark category-title">
         {{ curGroup?.tilte }}
       </div>
-      <div class="text-gray-500 pt-1 ms-3">
+      <div class="text-gray-500 pt-2 mb-3">
         {{ curGroup?.description }}
       </div>
     </div>
@@ -34,27 +34,25 @@
     </lib-detail-policy>
   </ng-container>
   <ng-template #defaultDetail>
-    <div class="title" *ngFor="let row of groupSettings[cate.value]">
+    <div class="title clear" *ngFor="let row of groupSettings[cate.value]">
       <ng-container
-        class="d-flex w-100 bg-hover justify-content-between"
+        class="d-flex w-100 bg-hover justify-content-between green"
         *ngIf="
           row.lineType == curLineType &&
           row.refLineID == this.refQueue[this.refQueue.length - 1]
         "
         [ngSwitch]="row.reference"
       >
-        <div *ngSwitchCase="'FDPatterns'">
+        <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
           <app-pattern [type]="row.transType"></app-pattern>
         </div>
 
         <div
           *ngSwitchDefault
-          class="category-title d-flex py-3 list-item bg-hover border-bottom border-gray-150"
+          class="category-title d-flex py-4 list-item bg-hover border-bottom border-gray-150"
         >
-          <div class="me-3 ms-3">
-            <span class="w-20px h-20px d-flex align-items-center justify-content-center">
-              <span [class]="'icon-16 ' + row.icon"></span
-            ></span>
+          <div class="w-20px h-20px me-3 d-flex align-items-center justify-content-between">
+            <span [class]="'icon-16 text-primary' + row.icon "></span>
           </div>
           <div class="d-flex flex-column w-100">
             <div
@@ -78,7 +76,7 @@
               </div>
             </ng-template>
           </div>
-          <div class="d-flex align-items-center ms-4 min-w-250px justify-content-end category-control pe-3">
+          <div class="d-flex align-items-center ms-3 min-w-300px justify-content-end category-control pe-2">
             <ng-container
               *ngIf="(row.fieldName && row?.controlType) || row.displayMode"
               class="fd-control"
@@ -95,7 +93,7 @@
                   </codx-input>
                 </div>
                 <div *ngSwitchDefault>
-                  <div *ngIf="row.fieldName && row?.controlType">
+                  <div class="w-225px d-flex justify-content-end" *ngIf="row.fieldName && row?.controlType">
                     <codx-input
                       [field]="row.fieldName"
                       [refType]="row?.referedType"
@@ -105,7 +103,7 @@
                         row.controlType &&
                         (row.controlType.toLowerCase() == 'textbox' ||
                           row.controlType.toLowerCase() == 'combobox')
-                          ? 'width: 200px'
+                          ? 'width: 225px'
                           : ''
                       "
                       [crrValue]="
@@ -126,36 +124,30 @@
                 </div>
               </div>
 
-              <div [ngSwitch]="row.displayMode" class="d-flex align-items-center">
-                <button
+              <div [ngSwitch]="row.displayMode" class="d-flex align-items-center w-30px ms-2">
+                <button type="button"
                   *ngSwitchCase="'1'"
-                  class="setting-btnright"
-                  style="border: none; background: none"
+                  class="btn btn-icon btn-sm btn-light setting-btnright"
                   [disabled]="
                     row.reference == 'FDPolicies' && row.actived == false
                   "
                   (click)="changeLineType(row, true)"
                 >
-                  <span class="w-30px d-flex justify-content-center"
-                    ><span class="icon-keyboard_arrow_right icon-22"></span
-                  ></span>
+                <span class="icon-keyboard_arrow_right icon-20"></span>
                 </button>
                 <div *ngSwitchCase="'2'">
-                  <button
+                  <button type="button"
                     href="javascript:void(0)"
+                    class="btn btn-icon btn-sm btn-light setting-btnright"
                     (click)="openPopup($event, row)"
-                    style="border: none; background: none"
                     [disabled]="
                       row.reference == 'FDPolicies' && row.actived == false
                     "
                   >
-                    <span class="w-30px d-flex justify-content-center"
-                      ><span
-                        class="icon-18"
-                        [ngClass]="
-                          row.category == '5' ? 'icon-email' : 'icon-edit-one'
-                        "
-                      ></span
+                  <span class="icon-16"
+                    [ngClass]="
+                      row.category == '5' ? 'icon-email' : 'icon-edit-one'
+                    "
                     ></span>
                   </button>
                 </div>

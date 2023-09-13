@@ -12,11 +12,12 @@
   (buttonClick)="addBusinessTravel($event)"
   (selectedChange)="changeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-4 border-bottom w-100">
+  <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
     <div class="w-40">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
@@ -31,10 +32,11 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="mb-1">
-            <div class="fw-bold text-dark fs-6">
-              {{ data?.emp?.employeeName }}
-            </div>
+          <div
+            class="mb-1fw-bold text-dark fs-6 c-active"
+            (click)="viewDetail(data)"
+          >
+            {{ data?.emp?.employeeName }}
           </div>
           <div class="text-gray-600 fs-7 mb-1">
             <span
@@ -272,7 +274,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-2'"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
     [imageId]="data.emp?.employeeID"
@@ -283,7 +285,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
@@ -292,6 +295,15 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
 
   <ng-template #descTmp>
     <span

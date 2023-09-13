@@ -12,6 +12,7 @@
   (buttonClick)="addAward($event)"
   (selectedChange)="changeItemDetail($event)"
   (viewChanged)="viewChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -45,7 +46,7 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-4 min-h-100px border-bottom">
+  <div class="d-flex align-items-center p-4 min-h-100px border-bottom c-detail">
     <!-- emp info -->
     <div class="w-40">
       <div class="d-flex align-items-start">
@@ -64,9 +65,11 @@
         </div>
         <div class="d-flex flex-column">
           <div class="d-flex align-items-center fs-6">
-            <span class="me-2 text-dark fw-bold text-nowrap">{{
-              data?.emp?.employeeName
-            }}</span>
+            <span
+              class="me-2 text-dark fw-bold text-nowrap c-active"
+              (click)="viewDetail(data)"
+              >{{ data?.emp?.employeeName }}</span
+            >
             <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
                         <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
           </div>
@@ -271,7 +274,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-3'"
-    cardCss="card-template border-bottom p-3"
+    cardCss="card-template border-bottom p-3 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
@@ -282,7 +285,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
@@ -292,6 +296,15 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
 
   <ng-template #descTmp>
     <div class="d-flex flex-column align-items-start">

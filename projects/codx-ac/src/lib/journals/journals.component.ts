@@ -17,6 +17,7 @@ import { IJournal } from './interfaces/IJournal.interface';
 import { IJournalPermission } from './interfaces/IJournalPermission.interface';
 import { JournalsAddComponent } from './journals-add/journals-add.component';
 import { JournalService } from './journals.service';
+import { toCamelCase } from '../utils';
 
 @Component({
   selector: 'lib-journal',
@@ -210,7 +211,7 @@ export class JournalsComponent extends UIComponent {
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = this.acService.toCamelCase(res.defaultName);
+      this.functionName = toCamelCase(res.defaultName);
     });
   }
   //#region Init
