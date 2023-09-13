@@ -27,7 +27,7 @@ import {
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
-import { firstValueFrom, filter } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { StepService } from '../step.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -92,12 +92,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSuccessStep = new EventEmitter<any>();
   //#endregion
-
+  
+  //#region variable
   isUpdate;
   user: any;
   id: string;
   taskType: any;
   listTask = [];
+  moveStageData = [];
   idStepOld = '';
   addCarTitle = '';
   titleAction = '';
@@ -143,7 +145,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
-
+  //#endregion
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -241,31 +243,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  setProgressOutput(task, group) {
-    let dataOutput = {};
-    if (task) {
-      dataOutput['isUpdate'] = true;
-      dataOutput['actualEnd'] = new Date();
-      dataOutput['note'] = null;
-      dataOutput['type'] = 'T';
-      dataOutput['progressTask'] = task?.progress;
-      dataOutput['taskID'] = task?.recID;
-      dataOutput['groupTaskID'] = group?.refID;
-      dataOutput['stepID'] = this.currentStep?.recID;
-    } else {
-      dataOutput['isUpdate'] = true;
-      dataOutput['actualEnd'] = new Date();
-      dataOutput['note'] = null;
-      dataOutput['type'] = 'G';
-      dataOutput['progressTask'] = null;
-      dataOutput['taskID'] = task?.recID;
-      dataOutput['groupTaskID'] = group?.recID;
-      dataOutput['stepID'] = this.currentStep?.recID;
-      dataOutput['progressGroupTask'] = group?.progress;
-    }
-    return dataOutput;
-  }
-
   ngAfterViewInit() {
     this.cache.functionList('EPT21').subscribe((res) => {
       if (res) {
@@ -332,12 +309,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let f = await firstValueFrom(this.cache.functionList(functionID) || null);
     let formModel = {};
-    formModel['formName'] = f?.formName;
-    formModel['gridViewName'] = f?.gridViewName;
-    formModel['entityName'] = f?.entityName;
-    formModel['funcID'] = functionID;
+    if(f){
+      formModel['formName'] = f?.formName;
+      formModel['gridViewName'] = f?.gridViewName;
+      formModel['entityName'] = f?.entityName;
+      formModel['funcID'] = functionID;
+    }
     return formModel;
   }
 
@@ -919,6 +898,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     return dataPopupOutput;
   }
+
+  getTaskEnd() {
+    let countGroup = this.listGroupTask?.length;
+    if (countGroup > 0) {
+      for (let i = countGroup - 1; i >= 0; i--) {
+        const groupTask = this.listGroupTask[i];
+        const task = groupTask?.task
+          ?.slice()
+          .reverse()
+          .find((t) => t?.isTaskDefault);
+        if (task) {
+          this.idTaskEnd = task.recID;
+          this.progressTaskEnd = task?.progress || 0;
+          return;
+        }
+      }
+    }
+  }
   //#endregion
 
   //#region chon loai task
@@ -1424,10 +1421,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.isMoveStage) {
       // chuyển giai đoạn
       if (type == 'G') {
-        return true;
-        // return this.isSuccessTaskDefault || this.isSuccessAllTask
-        //   ? true
-        //   : false;
+        return false;
       } else {
         return true;
       }
@@ -1536,6 +1530,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     } else {
       data.progress = dataProgress?.progressTask;
       data.status = dataProgress?.progressTask == 100 ? '3' : '2';
+      if(this.isMoveStage && !this.moveStageData?.some(task => task.taskID == dataProgress?.taskID)){
+        let index = this.moveStageData?.findIndex(task => task.taskID == dataProgress?.taskID);
+        if(index >= 0){
+          let progressData = this.setProgressOutput(data, null);
+          this.moveStageData?.splice(index, 1, progressData)
+          this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
+        }
+      }
     }
     data.note = dataProgress?.note;
     data.actualEnd = dataProgress?.actualEnd;
@@ -1666,7 +1668,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.startTaskAuto(data);
         }
       }
-      this.valueChangeProgress.emit({ type: 'D', data: [dataProgress] });
     }
   }
   //#endregion
@@ -1735,24 +1736,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
-
-  getTaskEnd() {
-    let countGroup = this.listGroupTask?.length;
-    if (countGroup > 0) {
-      for (let i = countGroup - 1; i >= 0; i--) {
-        const groupTask = this.listGroupTask[i];
-        const task = groupTask?.task
-          ?.slice()
-          .reverse()
-          .find((t) => t?.isTaskDefault);
-        if (task) {
-          this.idTaskEnd = task.recID;
-          this.progressTaskEnd = task?.progress || 0;
-          return;
-        }
-      }
-    }
-  }
 
   //#region cheack
   checRoleOwner(data) {
@@ -2068,6 +2051,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   //#endregion
 
+  //#region user
   getListUserIDBy(lstId, type) {
     return this.api.execSv<any>(
       'HR',
@@ -2087,26 +2071,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       [id]
     );
   }
-  //lấy user
-  //end gui hop
-  //Gửi email
+  //#endregion
+  
+  //#region mail
   sendMail() {
-    // let option = new SidebarModel();
-    // option.DataService = this.view?.currentView?.dataService;
     let dialogEmail = this.callfc.openForm(CodxEmailComponent, '', 900, 800);
     dialogEmail.closed.subscribe((x) => {
       if (x.event != null) {
-        // this.data = x.event[0];
-        // this.data.lstUserID = getListImg(x.event[0].relations);
-        // this.data.listInformationRel = x.event[1];
       }
     });
   }
-
-  toggleElemen() {
-    this.isShowElement = !this.isShowElement;
-  }
-
+  //#endregion
+ 
+  //#region Booking Car
   async updateBookingCar(task) {
     let booking = await firstValueFrom(
       this.api.exec<any>(
@@ -2128,7 +2105,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
     }
   }
-
   addBookingCar(task) {
     let roleTypeP = task?.roles?.filter((role) => role.roleType == 'P') || [];
     let option = new SidebarModel();
@@ -2169,7 +2145,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
   }
-
+  //#endregion
+  
+  //#region status
   setStatusGroup(group) {
     if (!group) {
       return '1';
@@ -2189,43 +2167,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         : '3';
     }
   }
-  setNameTypeTask(taskType) {
-    let type = this.listTaskType?.find((task) => task?.value == taskType);
-    return type?.text;
-  }
-  getDefaultCM() {
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.AD',
-        'UsersBusiness',
-        'GetListBoughtModuleAsync',
-        ''
-      )
-      .subscribe((res: Array<TN_OrderModule>) => {
-        if (res) {
-          let lstModule = res;
-          this.isBoughtTM = lstModule?.some(
-            (md) =>
-              !md?.boughtModule?.refID &&
-              md.bought &&
-              md.boughtModule?.moduleID == 'TM1'
-          );
-        }
-      });
-  }
-  getFields(listField, fieldID) {
-    if (listField?.length > 0) {
-      let a = listField?.filter((field) => fieldID.includes(field?.recID));
-      return a;
-    }
-    return null;
+  //#endregion
+ 
+  //#region Guide
+  toggleElemen() {
+    this.isShowElement = !this.isShowElement;
   }
 
   showGuide() {
-    if (this.isZoomIn) {
-      return;
-    }
+    if (this.isZoomIn) return;
     if (this.isZoomOut) {
       this.dialogGuideZoomOut?.close();
       this.isZoomOut = false;
@@ -2248,12 +2198,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   zoomGuide() {
-    if (this.isZoomOut) {
-      return;
-    }
-    if (this.isZoomIn) {
-      this.dialogGuideZoomIn?.close();
-    }
+    if (this.isZoomOut) return; 
+    this.isZoomIn && this.dialogGuideZoomIn?.close();
     this.isZoomOut = true;
     this.isZoomIn = false;
     let option = new DialogModel();
@@ -2287,25 +2233,54 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.dataTooltipDay = data;
     popup.open();
   }
+  //#endregion
+  
+  //#region Move Stage
+  setProgressOutput(task, group) {
+    let dataOutput = {};
+    if (task) {
+      dataOutput['isUpdate'] = true;
+      dataOutput['actualEnd'] = new Date();
+      dataOutput['note'] = null;
+      dataOutput['type'] = 'T';
+      dataOutput['progressTask'] = task?.progress;
+      dataOutput['taskID'] = task?.recID;
+      dataOutput['groupTaskID'] = group?.refID;
+      dataOutput['stepID'] = this.currentStep?.recID;
+    } else {
+      dataOutput['isUpdate'] = true;
+      dataOutput['actualEnd'] = new Date();
+      dataOutput['note'] = null;
+      dataOutput['type'] = 'G';
+      dataOutput['progressTask'] = null;
+      dataOutput['taskID'] = task?.recID;
+      dataOutput['groupTaskID'] = group?.recID;
+      dataOutput['stepID'] = this.currentStep?.recID;
+      dataOutput['progressGroupTask'] = group?.progress;
+    }
+    return dataOutput;
+  }
 
-  // hoàn thành tất hoặc bắt buột
-  updateProgress(group, progressData, isRequired = false) {
+  updateProgress(group, progressData, isRequired = false) {  
     let countTask = group?.task?.length;
     if (countTask > 0) {
       let sumProgress = 0;
       let check = false;
-
       const processTask = (task) => {
         task.progress = 100;
         task.status = '3';
+        task.actualEnd = new Date();
         progressData.push(this.setProgressOutput(task, group));
         check = true;
       };
 
       if (isRequired) {
         group?.task?.forEach((task) => {
-          if (task?.requireCompleted) {
+          if (task?.requireCompleted || task?.isChange) {
             processTask(task);
+          }else{
+            task.progress = task?.progressOld;
+            task.status = task?.statusOld;
           }
           sumProgress += task.progress;
         });
@@ -2314,9 +2289,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           progressData.push(this.setProgressOutput(null, group));
         }
       } else {
-        group?.task?.forEach((task) => {
-          processTask(task);
-        });
+        group?.task?.forEach((task) => {processTask(task);});
         group.progress = 100;
         if (group?.recID) {
           progressData.push(this.setProgressOutput(null, group));
@@ -2325,18 +2298,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   
-  resetProgress(group, progressData) {
+  resetProgress(group, progressData,isRequired = false) {
     let countTask = group?.task?.length;
     if (countTask > 0) {
       let sumProgress = 0;
       group?.task?.forEach((task) => {
-        if (task?.requireCompleted) {
-          task.progress = task?.progressOld;
-          task.status = task?.statusOld;
-          if (task?.isChange) {
-            progressData.push(this.setProgressOutput(null, group));
-          }
-        }
+        task.progress = task?.progressOld;
+        task.status = task?.statusOld;
+        task.actualEnd = null;
+        if (task?.isChange) {
+          progressData.push(this.setProgressOutput(null, group));
+        }   
         sumProgress += task.progress;
       });
       if (group?.isChangeAuto) {
@@ -2349,39 +2321,74 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   
   changeSuccessAll(event) {
-    let progressData = [];
-    if (event && event?.data) {
-      this.successAll = true;
-      this.successRequired = false;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group,progressData)
-      });
-    } else {
-      this.successAll = false;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group, progressData);
-      });
-    }
-    console.log('all',progressData);
-    this.valueChangeProgress.emit({ type: 'A', data: progressData });
+      this.isSuccessRequired = false;
+      this.moveStageData = [];
+      if (event && event?.checked) {
+        this.successAll = true;
+        this.successRequired = false;
+        this.listGroupTask?.forEach((group) => {
+          this.updateProgress(group,this.moveStageData)
+        });        
+      } else {
+        this.successAll = false;
+        this.listGroupTask?.forEach((group) => {
+          this.resetProgress(group, this.moveStageData);
+        });
+      }
+      this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
   }
   
   changeSuccessRequired(event) {
-    let progressData = [];
-    if(this.successAll || (!this.successAll && !this.successRequired)) return;
-    if (event && event.data) {
-      this.successAll = false;
-      this.successRequired = true;
-      this.listGroupTask?.forEach((group) => {
-        this.updateProgress(group, progressData, true);
+      this.isSuccessAll = false;
+      this.moveStageData = [];
+      if (event && event?.checked) {
+        this.successAll = false;
+        this.successRequired = true;
+        this.listGroupTask?.forEach((group) => {
+          this.updateProgress(group, this.moveStageData, true);
+        });
+      } else {
+        this.successRequired = false;
+        this.listGroupTask?.forEach((group) => {
+          this.resetProgress(group, this.moveStageData, true);
+        });
+      }
+      this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });
+  }
+  //#endregion
+
+  setNameTypeTask(taskType) {
+    let type = this.listTaskType?.find((task) => task?.value == taskType);
+    return type?.text;
+  }
+
+  getDefaultCM() {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GetListBoughtModuleAsync',
+        ''
+      )
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+        }
       });
-    } else {
-      this.successRequired = false;
-      this.listGroupTask?.forEach((group) => {
-        this.resetProgress(group, progressData);
-      });
+  }
+
+  getFields(listField, fieldID) {
+    if (listField?.length > 0) {
+      let a = listField?.filter((field) => fieldID.includes(field?.recID));
+      return a;
     }
-    console.log('Required',progressData);
-    this.valueChangeProgress.emit({ type: 'A', data: progressData });
+    return null;
   }
 }

@@ -6,6 +6,7 @@ import {
   OnChanges,
   SimpleChanges,
   Injector,
+  Input,
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
@@ -74,6 +75,7 @@ export class IncommingComponent
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
+  @Input() funcID:any;
   public lstDtDis: any;
   public lstUserID: any = '';
   public disEdit: any;
@@ -158,6 +160,7 @@ export class IncommingComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
+    var a = this.funcID;
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';

@@ -235,7 +235,7 @@ export class InstancesComponent
     navy: '#192440',
   };
   // For CM
-  categoryCustomer:any = '';
+  categoryCustomer: any = '';
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -725,7 +725,7 @@ export class InstancesComponent
                 this.codxDpService.getOneDeal(datas).subscribe((dataCM) => {
                   if (dataCM) {
                     this.dataCM = dataCM[0];
-                    this.categoryCustomer = dataCM[1]
+                    this.categoryCustomer = dataCM[1];
                     this.openPopupEdit(applyFor, formMD, option, titleAction);
                   }
                 });

@@ -97,7 +97,7 @@ export class DealDetailComponent implements OnInit {
   oCountFooter: any = {};
 
   isShow = false;
-
+  isLoadOwner: boolean = true;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -172,8 +172,10 @@ export class DealDetailComponent implements OnInit {
         };
         this.tabControl.push(references);
         this.getTags(this.dataSelected);
+        this.isLoadOwner = false;
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
+          this.isLoadOwner = true;
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;

@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -36,6 +37,7 @@ import { PopupSubEContractComponent } from '../employee-profile/popup-sub-econtr
 })
 export class EmployeeContractComponent extends UIComponent {
   console = console;
+
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailContractsComponent;
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
@@ -43,7 +45,10 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true })
+
   templateUpdateStatus: TemplateRef<any>;
+  @Input() funcID:any;
+
   views: Array<ViewModel> = [];
   dataCategory;
   itemDetail;

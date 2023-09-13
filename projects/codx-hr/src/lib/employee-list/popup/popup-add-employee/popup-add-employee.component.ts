@@ -114,7 +114,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     } else this.hasChangedData = true;
   }
   ngAfterViewInit() {
-    this.form.formGroup.patchValue({ joinedOn: null });
+    this.form.formGroup.patchValue({ joinedOn: null }); // fix tạm bằng cách gán cứng
   }
 
   //get grvSetup
