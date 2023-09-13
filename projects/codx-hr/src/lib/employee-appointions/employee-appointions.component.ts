@@ -484,4 +484,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   //#endregion
+
+  viewDetail(data) {
+    this.HandleEAppoint('Xem chi tiết', 'view', data);
+  }
 }

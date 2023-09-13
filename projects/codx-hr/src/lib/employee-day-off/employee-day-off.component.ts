@@ -489,4 +489,8 @@ export class EmployeeDayOffComponent extends UIComponent {
       });
   }
   //#endregion
+
+  viewDetail(data) {
+    this.handlerEDayOffs('Xem chi tiết', 'view', data);
+  }
 }

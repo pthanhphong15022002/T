@@ -148,8 +148,18 @@
           "
         >
         </span>
-        <span class="px-1"> - </span>
         <span
+          class="px-1"
+          *ngIf="
+            itemDetail.endDate && itemDetail?.beginDate != itemDetail.endDate
+          "
+        >
+          -
+        </span>
+        <span
+          *ngIf="
+            itemDetail.endDate && itemDetail?.beginDate != itemDetail.endDate
+          "
           class="fw-bold text-dark"
           [innerHTML]="
             itemDetail?.endDate | formatvalue : formModel : 'endDate' | async

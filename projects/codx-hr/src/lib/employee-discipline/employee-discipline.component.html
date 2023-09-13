@@ -19,7 +19,7 @@
 </codx-views>
 
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center p-4 border-bottom w-100">
+  <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
     <div class="w-30 min-w-250px">
       <div class="d-flex align-items-start">
         <!-- highlight row -->
@@ -50,7 +50,11 @@
         <div class="d-flex flex-column">
           <div>
             <div class="fw-bold">
-              <span class="me-2 text-dark">{{ data?.emp?.employeeName }}</span>
+              <span
+                class="me-2 text-dark c-active"
+                (click)="viewDetail(data)"
+                >{{ data?.emp?.employeeName }}</span
+              >
               <!-- <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data?.emp?.employeeID }}</span> -->
             </div>
@@ -353,7 +357,7 @@
 <ng-template #templateListDetail let-data>
   <div class="border-bottom position-relative avatar-vllbadge">
     <codx-temp-full
-      cardCss="codx_cardcenter p-3"
+      cardCss="codx_cardcenter p-3 when-hover-box"
       (clickMF)="clickMF($event, data)"
       [moreFuncCss]="'me-10'"
       [imageId]="data.emp?.employeeID"
@@ -364,7 +368,8 @@
       [dataItem]="data"
       [imgOn]="data?.modifiedOn"
       [typeMF]="'view'"
-      [title]="data.emp?.employeeName"
+      [titleTmp]="titleTmp"
+      [titleCss]="'fs-6 mb-1 then-text-primary'"
       [subTitle]="
         data?.emp?.positionID
           | formatvalue : view.formModel : 'PositionID'
@@ -376,6 +381,15 @@
     >
     </codx-temp-full>
   </div>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
 
   <ng-template #descTmp let-data>
     <div class="w-100">
