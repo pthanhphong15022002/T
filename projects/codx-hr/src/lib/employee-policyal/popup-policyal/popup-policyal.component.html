@@ -133,7 +133,7 @@
     </div>
   </div>
 
-  <div class="fs-5-sm fw-bold text-primary mt-6 mb-1">
+  <div class="fs-5-sm fw-bold text-primary mt-6 mb-1" *ngIf="alpolicyObj.attachments > 0">
     <codx-label
       name="lblAttachFile"
       [formModel]="formModel"
