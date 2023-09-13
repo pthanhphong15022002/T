@@ -454,4 +454,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
       }
     });
   }
+
+  viewDetail(data) {
+    this.currentEmpObj = data.emp;
+    this.HandleEDisciplineInfo('Xem chi tiết', 'view', data);
+  }
 }

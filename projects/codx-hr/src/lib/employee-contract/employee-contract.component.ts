@@ -10,7 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
-  DataRequest,
   DialogModel,
   DialogRef,
   NotificationsService,
@@ -20,16 +19,11 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { Observable, concat, of } from 'rxjs';
-import { delay, toArray, tap } from 'rxjs/operators';
 import moment from 'moment';
-import { getListImg } from 'projects/codx-od/src/lib/function/default.function';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
-import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { isObservable, map } from 'rxjs';
+import { isObservable } from 'rxjs';
 import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
@@ -237,9 +231,8 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   changeDataMf(event, data) {
-    this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    //this.hrService.handleShowHideMF(event, data, this.view.formModel);
 
-    this.flagChangeMF = true;
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
     );
@@ -255,13 +248,14 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   changeDataMFBefore(e: any, data: any, fc: any) {
+    this.flagChangeMF = true;
+
     if (fc.runMode == '1') {
       this.runModeCheck = true;
       this.codxShareService.changeMFApproval(e, data?.unbounds);
+    } else {
+      this.hrService.handleShowHideMF(e, data, this.view.formModel);
     }
-    //  else {
-    //   this.hrService.handleShowHideMF(event, data, this.view.formModel);
-    // }
   }
 
   //Call api delete
@@ -418,7 +412,7 @@ export class EmployeeContractComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.currentEmpObj = res.event.inforEmployee;
+          //this.currentEmpObj = res.event.inforEmployee;
           this.view.dataService.add(res.event, 0).subscribe();
           // this.view.dataService.update(res.event[1]).subscribe();
         } else if (actionType == 'copy') {
@@ -556,7 +550,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   handleMutipleUpdateStatus(funcID, data) {
-    this.datasUpdated = [];
+    //this.datasUpdated = [];
     if (
       funcID === this.actionCheckResignCancel ||
       funcID === this.actionCheckResignApprove
@@ -568,7 +562,7 @@ export class EmployeeContractComponent extends UIComponent {
     this.hrService.handleUpdateRecordStatus(funcID, data);
 
     this.hrService.editEContract(data).subscribe((res) => {
-      this.datasUpdated.push(res[0]);
+      //this.datasUpdated.push(res[0]);
       if (res != null) {
         res[0].inforEmployee = data?.inforEmployee;
         this.view.dataService.update(res[0]).subscribe();
@@ -628,8 +622,6 @@ export class EmployeeContractComponent extends UIComponent {
           ),
         ]);
     }
-
-    console.log(this.datasUpdated);
   }
 
   viewDetail(data) {

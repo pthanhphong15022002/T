@@ -36,23 +36,9 @@
           <span class="fs-6 fw-bold mb-1 c-active" (click)="viewDetail(data)">{{
             data?.inforEmployee?.employeeName
           }}</span>
-          <span
-            class="text-gray-600 fs-7"
-            [innerHTML]="
-              data?.positionID
-                | formatvalue : view.formModel : 'positionID'
-                | async
-            "
-          >
+          <span class="text-gray-600 fs-7">
+            {{ data?.inforEmployee?.positionName }}
           </span>
-          <!-- <span
-            class="fs-7"
-            [innerHTML]="
-              data?.orgUnitName
-                | formatvalue : view.formModel : 'orgUnitID'
-                | async
-            "
-          ></span> -->
           <span *ngIf="data?.inforEmployee?.orgUnitName; else noOrgUnitName">{{
             data.inforEmployee.orgUnitName
           }}</span>
@@ -318,11 +304,7 @@
     [typeMF]="'view'"
     [titleTmp]="titleTmp"
     [titleCss]="'fs-6 mb-1 then-text-primary'"
-    [subTitle]="
-      data?.inforEmployee?.positionID || data?.positionID
-        | formatvalue : view.formModel : 'PositionID'
-        | async
-    "
+    [subTitle]="data?.inforEmployee?.positionName"
     [subTitleCss]="'fs-7 text-gray-500'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"

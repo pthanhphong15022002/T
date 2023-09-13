@@ -39,7 +39,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
   @ViewChild('templateItemDetailRight')
   templateItemDetailRight?: TemplateRef<any>;
 
-  @ViewChild('viewDetail') viewDetail: ViewBasicSalaryDetailComponent;
+  @ViewChild('viewdetail') viewdetail: ViewBasicSalaryDetailComponent;
 
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
@@ -496,4 +496,8 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       });
   }
   //#endregion
+
+  viewDetail(data) {
+    this.handlerEBasicSalaries('Xem chi tiết', 'view', data);
+  }
 }

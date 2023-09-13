@@ -61,7 +61,7 @@
 
 <!-- list view -->
 <ng-template #templateList let-data>
-  <div class="d-flex align-items-center border-bottom p-4">
+  <div class="d-flex align-items-center border-bottom p-4 c-detail">
     <!-- emp info -->
     <div class="w-50">
       <div class="d-flex align-items-start">
@@ -77,9 +77,12 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="fs-6 text-dark fw-bold text-nowrap mb-1">
+          <span
+            class="fs-6 text-dark fw-bold text-nowrap mb-1 c-active"
+            (click)="viewDetail(data)"
+          >
             {{ data?.emp?.employeeName }}
-          </div>
+          </span>
           <div class="text-gray-600 fs-7">
             <span
               [innerHTML]="
@@ -268,7 +271,7 @@
 <ng-template #templateListDetail let-data>
   <codx-temp-full
     [imgCss]="'me-3'"
-    cardCss="card-template border-bottom p-3"
+    cardCss="card-template border-bottom p-3 when-hover-box"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-10'"
     [imageId]="data.emp?.employeeID"
@@ -279,7 +282,8 @@
     [dataItem]="data"
     [imgOn]="data?.modifiedOn"
     [typeMF]="'view'"
-    [title]="data.emp?.employeeName"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
     [subTitle]="
       data.emp.positionID | formatvalue : view.formModel : 'PositionID' | async
     "
@@ -289,6 +293,15 @@
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span
+      class="fw-bold fs-6 mb-1 then-text-primary"
+      (click)="viewDetail(data)"
+    >
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
 
   <ng-template #descTmp>
     <span
@@ -334,9 +347,14 @@
           "
           [ngbTooltip]="grvSetup?.BeginDate?.headerText"
         ></span>
-        <span *ngIf="data.endDate" class="mx-1"> - </span>
         <span
-          *ngIf="data.endDate"
+          *ngIf="data.endDate && data?.beginDate != data.endDate"
+          class="mx-1"
+        >
+          -
+        </span>
+        <span
+          *ngIf="data.endDate && data?.beginDate != data.endDate"
           [innerHTML]="
             data?.endDate | formatvalue : view.formModel : 'endDate' | async
           "

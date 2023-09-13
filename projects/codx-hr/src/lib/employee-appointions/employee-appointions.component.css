@@ -1,0 +1,4 @@
+.c-detail:hover .c-active {
+  color: var(--primary);
+  font-weight: bold;
+}

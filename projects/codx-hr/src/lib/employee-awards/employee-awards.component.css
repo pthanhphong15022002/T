@@ -1,9 +1,4 @@
-/* .text-highlight {
-  color: #3286e6;
+.c-detail:hover .c-active {
+  color: var(--primary) !important;
+  font-weight: bold !important;
 }
-
-.prevent-overflow-text {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-} */
