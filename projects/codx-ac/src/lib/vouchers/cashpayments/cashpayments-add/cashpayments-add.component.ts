@@ -1318,9 +1318,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           element.focus();
         }, 100);
         break;
-      case 'beginEdit':
-        this.eleGridCashPayment.saveValidator = this.validate;
-        break;
+      // case 'beginEdit':
+      //   this.eleGridCashPayment.saveValidator = this.validate;
+      //   break;
     }
   }
   validate(data:any){
