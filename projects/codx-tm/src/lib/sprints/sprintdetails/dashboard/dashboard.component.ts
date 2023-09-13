@@ -26,7 +26,6 @@ export class DashboardComponent
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   @Input() projectID?: any;
   @Input() resources?: any;
-  funcID: string;
   model: DataRequest;
   daySelected: Date;
   fromDate: Date;

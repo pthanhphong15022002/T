@@ -39,7 +39,6 @@ export class PopupAssignmentOKRComponent
   orgUnitTree: any;
   isAfterRender = false;
   dataOKR: any;
-  funcID: '';
   radioKRCheck = true;
   radioOBCheck = false;
   listDistribute = [];

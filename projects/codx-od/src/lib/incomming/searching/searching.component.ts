@@ -16,7 +16,6 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
-  funcID = "ODT6";
   service = "OD"
   entityName = "OD_Dispatches"
   formModel: any = {};
@@ -30,6 +29,7 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
     private hideToolbar: CodxOdService
   ) {
     super(inject);
+    this.funcID = "ODT6";
   }
   ngAfterViewInit(): void {
     this.hideToolbar.SetLayout.next(false);

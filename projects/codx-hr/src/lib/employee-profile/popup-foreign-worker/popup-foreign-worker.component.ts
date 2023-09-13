@@ -24,7 +24,6 @@ export class PopupForeignWorkerComponent extends UIComponent implements OnInit{
   actionType: string;
   formGroup: FormGroup;
   idField = 'RecID';
-  funcID: string;
   employId: string;
   isAfterRender = false;
   headerText: string = '';

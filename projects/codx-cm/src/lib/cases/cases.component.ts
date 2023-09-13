@@ -69,7 +69,6 @@ export class CasesComponent
   formModel: FormModel;
 
   // type any for view detail
-  @Input() funcID: any;
   @Input() dataObj?: any;
   kanban: any;
 

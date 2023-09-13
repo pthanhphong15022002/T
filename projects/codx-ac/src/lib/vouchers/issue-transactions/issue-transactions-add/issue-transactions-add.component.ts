@@ -45,7 +45,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   modeGrid: any;
   dataUpdate: VouchersLines = new VouchersLines();
   hideFields = [];
-  funcID: any;
   journal: IJournal;
 
   fmVouchers: FormModel = {

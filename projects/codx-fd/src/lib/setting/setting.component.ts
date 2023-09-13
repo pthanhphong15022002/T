@@ -48,7 +48,6 @@ export class SettingComponent extends UIComponent implements OnInit {
   refQueue = [];
   lstPolicies = [];
   lstPolicyLines = [];
-  funcID;
   //ViewChild
   @ViewChild('tabsTmpl') tabsTmpl: TemplateRef<any>;
 

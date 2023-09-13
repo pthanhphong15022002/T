@@ -98,7 +98,6 @@ export class DealsComponent
   formModel: FormModel;
 
   // type any for view detail
-  @Input() funcID: any;
   @Input() dataObj?: any;
   kanban: any;
 

@@ -34,7 +34,6 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   indexSelected
   idField = 'RecID';
   disabledInput = false;
-  funcID;
   actionType: string;
   employeeId: string;
   isAfterRender = false;

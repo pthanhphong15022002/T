@@ -36,7 +36,6 @@ export class PopupEmpBusinessTravelsComponent
   formModel: FormModel;
   dialog: DialogRef;
   headerText: string = '';
-  funcID;
   employId;
   data;
   isNotOverseaFlag: boolean;

@@ -37,7 +37,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   autoNumField = '';
   employeeObj: any;
   headerText: '';
-  funcID: string;
   employeeSign;
   data: any;
   moment = moment;

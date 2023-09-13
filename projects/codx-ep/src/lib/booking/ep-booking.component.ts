@@ -16,7 +16,6 @@ import { EPCONST } from '../codx-ep.constant';
   styleUrls: ['./ep-booking.component.scss'],
 })
 export class EPBookingComponent extends UIComponent implements AfterViewInit {
-  funcID: any;
   queryParams: any;
   
   constructor(

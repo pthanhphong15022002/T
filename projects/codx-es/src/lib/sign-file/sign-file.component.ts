@@ -76,7 +76,6 @@ export class SignFileComponent extends UIComponent {
   resourceKanban?: ResourceModel;
   convertHtmlAgency = convertHtmlAgency;
 
-  funcID: string;
   formModel: FormModel;
   grvSetup: any = {};
 

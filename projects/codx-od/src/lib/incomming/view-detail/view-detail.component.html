@@ -1,475 +1,478 @@
-<codx-detail-tmp
-  [header]="header"
-  [dataItem]="dataItem"
-  [formModel]="formModel"
-  [body]="body"
-  [footer]="!hideFooter ? footer : null"
-  [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
-  (changeDataMF)="changeDataMF($event, dataItem)"
-  class="h-100"
->
-  <ng-template #header>
-    <div class="d-flex justify-content-between mt-4">
-      <div class="w-100">
-        <div class="mb-1">
-          <codx-temp-full
-            [title]="data?.title"
-            [titleCss]="'fs-5 mb-2'"
-            [desc]="convertHtmlAgency(data?.agencyName, data?.deptName, data?.agencies)"
-            [bookmark]="false"
-            [titleLine]="2"
-          >
-          </codx-temp-full>
-        </div>
-        <div class="d-flex flex-wrap mt-3">
-          <div class="d-flex align-items-center me-5 mb-1">
-            <ng-container *ngIf="formModel['gridViewName']">
+<ng-container *ngIf="formModel">
+  <codx-detail-tmp
+    [header]="header"
+    [dataItem]="dataItem"
+    [formModel]="formModel"
+    [body]="body"
+    [footer]="!hideFooter ? footer : null"
+    [hideMF]="hideMF"
+    (clickMF)="openFormFuncID($event)"
+    (changeDataMF)="changeDataMF($event, dataItem)"
+    class="h-100"
+  >
+    <ng-template #header>
+      <div class="d-flex justify-content-between mt-4">
+        <div class="w-100">
+          <div class="mb-1">
+            <codx-temp-full
+              [title]="data?.title"
+              [titleCss]="'fs-5 mb-2'"
+              [desc]="convertHtmlAgency(data?.agencyName, data?.deptName, data?.agencies)"
+              [bookmark]="false"
+              [titleLine]="2"
+            >
+            </codx-temp-full>
+          </div>
+          <div class="d-flex flex-wrap mt-3">
+            <div class="d-flex align-items-center me-5 mb-1">
+              <ng-container *ngIf="formModel['gridViewName']">
+                <codx-label
+                  [gridViewName]="formModel['gridViewName']"
+                  [formName]="formModel['formName']"
+                  fiedName="RefNo"
+                  ngClass="fw-bold label-colon"
+                ></codx-label>
+                <span class="text-gray-700">{{
+                  data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+                }}</span>
+              </ng-container>
+            </div>
+            <div class="d-flex align-items-center me-5 mb-1">
               <codx-label
                 [gridViewName]="formModel['gridViewName']"
                 [formName]="formModel['formName']"
-                fiedName="RefNo"
+                fiedName="DispatchNo"
                 ngClass="fw-bold label-colon"
               ></codx-label>
               <span class="text-gray-700">{{
-                data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+                data?.dispatchNo
+                  ? data?.dispatchNo
+                  : gridViewSetup?.dispatchNo?.headerText
               }}</span>
-            </ng-container>
-          </div>
-          <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="DispatchNo"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <span class="text-gray-700">{{
-              data?.dispatchNo
-                ? data?.dispatchNo
-                : gridViewSetup?.dispatchNo?.headerText
-            }}</span>
-          </div>
-          <div class="d-flex align-items-center me-5 mb-1">
-            <ng-container *ngIf="formModel['gridViewName']">
+            </div>
+            <div class="d-flex align-items-center me-5 mb-1">
+              <ng-container *ngIf="formModel['gridViewName']">
+                <codx-label
+                  [gridViewName]="formModel['gridViewName']"
+                  [formName]="formModel['formName']"
+                  fiedName="CategoryID"
+                  class="fw-bold label-colon"
+                ></codx-label>
+                <ng-container *ngIf="gridViewSetup?.CategoryID">
+                  <span [class.text-gray-700]="!data?.category">{{
+                    data?.category
+                      ? data?.category
+                      : gridViewSetup["CategoryID"]["headerText"]
+                  }}</span>
+                </ng-container>
+              </ng-container>
+            </div>
+            <div
+              class="d-flex align-items-center me-5 mb-1"
+              *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'"
+            >
               <codx-label
                 [gridViewName]="formModel['gridViewName']"
                 [formName]="formModel['formName']"
-                fiedName="CategoryID"
-                class="fw-bold label-colon"
+                fiedName="Urgency"
+                [ngClass]="'fw-bold label-colon'"
               ></codx-label>
-              <ng-container *ngIf="gridViewSetup?.CategoryID">
-                <span [class.text-gray-700]="!data?.category">{{
-                  data?.category
-                    ? data?.category
-                    : gridViewSetup["CategoryID"]["headerText"]
-                }}</span>
-              </ng-container>
-            </ng-container>
-          </div>
-          <div
-            class="d-flex align-items-center me-5 mb-1"
-            *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'"
-          >
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="Urgency"
-              [ngClass]="'fw-bold label-colon'"
-            ></codx-label>
-            <codx-vll
-              [formModel]="formModel"
-              [field]="'Urgency'"
-              [value]="data?.urgency"
-              [showText]="true"
-              [showIcon]="true"
-              class="text-gray-700 d-flex"
-            >
-            </codx-vll>
-            <!-- icon-flag -->
-          </div>
-          <div
-            class="d-flex align-items-center me-5 mb-1"
-            *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'"
-          >
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="Security"
-              [ngClass]="'fw-bold label-colon'"
-            ></codx-label>
-            <codx-vll
-              [formModel]="formModel"
-              [field]="'Security'"
-              [value]="data?.security"
-              [showText]="true"
-              [showIcon]="true"
-              class="text-gray-700 d-flex"
-            >
-            </codx-vll>
-          </div>
-          <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="CreatedOn"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <span class="text-gray-700">{{
-              data?.createdOn
-                ? (data?.createdOn | date : "dd/MM/yyyy")
-                : gridViewSetup?.CreatedOn?.headerText
-            }}</span>
-          </div>
-          <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="DispatchOn"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <span class="text-gray-700">{{
-              data?.dispatchOn
-                ? (data?.dispatchOn | date : "dd/MM/yyyy")
-                : gridViewSetup?.DispatchOn?.headerText
-            }}</span>
-            <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-700"></codx-label> -->
-          </div>
-          <div
-            class="d-flex align-items-center me-5 mb-1"
-            *ngIf="gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'"
-          >
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="Deadline"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <span class="text-gray-700">{{
-              data?.deadline
-                ? (data?.deadline | date : "dd/MM/yyyy")
-                : gridViewSetup?.Deadline?.headerText
-            }}</span>
-          </div>
-
-          <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="RefDate"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <!--<span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
-            <span class="text-gray-700">{{
-              data?.refDate
-                ? (data?.refDate | date : "dd/MM/yyyy")
-                : gridViewSetup?.RefDate?.headerText
-            }}</span>
-          </div>
-          <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="ContactName"
-              ngClass="fw-bold label-colon"
-            ></codx-label>
-            <!--             <span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
-            <span class="text-gray-700">{{
-              data?.contactName
-                ? data?.contactName
-                : gridViewSetup?.ContactName?.headerText
-            }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-column justify-content-start w-150px pt-2">
-        <div class="d-flex justify-content-end">
-          <ng-container
-            *ngIf="
-              data?.percentage &&
-              data?.percentage != '0' &&
-              data?.percentage != '100'
-            "
-          >
-            <span class="badge badge-square badge-od me-2"
-              >{{ data?.percentage }}%</span
-            >
-          </ng-container>
-          <ng-container
-            *ngIf="funcList?.runMode != '1'; else tmpApprovalStatus"
-          >
-            <codx-vll
-              [showText]="true"
-              [showBgColor]="true"
-              [formModel]="formModel"
-              [field]="'Status'"
-              [value]="data?.status"
-              class="badge badge-light badge-square badge-md fs-7 p-2"
-            >
-            </codx-vll>
-          </ng-container>
-          <ng-template #tmpApprovalStatus>
-            <codx-vll
-              [showText]="true"
-              [showBgColor]="true"
-              [name]="'ES030'"
-              [value]="
-                data?.unbounds?.statusApproval + data?.unbounds?.stepType
-              "
-              class="badge badge-light badge-square badge-md fs-7 p-2"
-            >
-            </codx-vll>
-          </ng-template>
-        </div>
-        <div class="d-flex justify-content-end mt-2">
-          <codx-imgs
-            [objectId]="data?.lstUserID"
-            [numberImages]="3"
-            [width]="30"
-            [mode]="false"
-          ></codx-imgs>
-        </div>
-      </div>
-    </div>
-    <ng-container *ngIf="data">
-      <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-      <codx-thumbnail
-        [files]="data?.files"
-        displayThumb="simple"
-        [hideDelete]="'1'"
-        [hideMoreF]="'0'"
-        (viewFile)="handleViewFile($event)"
-        [permissions]="data?.relations"
-      >
-      </codx-thumbnail>
-    </ng-container>
-  </ng-template>
-  <ng-template #body>
-    <div class="tab-horizone h-od-tab h-100">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="fa-solid fa-user-tag me-2 mt-1"
-                [ngClass]="{ 'text-primary': active === 1 }"
-              ></i
-              ><span
-                ><codx-label
-                  [default]="
-                  funcList?.defaultValue == '1' ||
-                    (funcList?.defaultValue == '4' && data?.dispatchType == '4')
-                      ? 'Nơi nhận'
-                      : 'Nơi gửi'
-                  "
-                  fiedName="lblTitleReceive"
-                  [formName]="formModel?.formName"
-                ></codx-label
-              ></span>
+              <codx-vll
+                [formModel]="formModel"
+                [field]="'Urgency'"
+                [value]="data?.urgency"
+                [showText]="true"
+                [showIcon]="true"
+                class="text-gray-700 d-flex"
+              >
+              </codx-vll>
+              <!-- icon-flag -->
             </div>
-          </a>
-          <ng-template ngbNavContent>
+            <div
+              class="d-flex align-items-center me-5 mb-1"
+              *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'"
+            >
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="Security"
+                [ngClass]="'fw-bold label-colon'"
+              ></codx-label>
+              <codx-vll
+                [formModel]="formModel"
+                [field]="'Security'"
+                [value]="data?.security"
+                [showText]="true"
+                [showIcon]="true"
+                class="text-gray-700 d-flex"
+              >
+              </codx-vll>
+            </div>
+            <div class="d-flex align-items-center me-5 mb-1">
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="CreatedOn"
+                ngClass="fw-bold label-colon"
+              ></codx-label>
+              <span class="text-gray-700">{{
+                data?.createdOn
+                  ? (data?.createdOn | date : "dd/MM/yyyy")
+                  : gridViewSetup?.CreatedOn?.headerText
+              }}</span>
+            </div>
+            <div class="d-flex align-items-center me-5 mb-1">
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="DispatchOn"
+                ngClass="fw-bold label-colon"
+              ></codx-label>
+              <span class="text-gray-700">{{
+                data?.dispatchOn
+                  ? (data?.dispatchOn | date : "dd/MM/yyyy")
+                  : gridViewSetup?.DispatchOn?.headerText
+              }}</span>
+              <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-700"></codx-label> -->
+            </div>
+            <div
+              class="d-flex align-items-center me-5 mb-1"
+              *ngIf="gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'"
+            >
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="Deadline"
+                ngClass="fw-bold label-colon"
+              ></codx-label>
+              <span class="text-gray-700">{{
+                data?.deadline
+                  ? (data?.deadline | date : "dd/MM/yyyy")
+                  : gridViewSetup?.Deadline?.headerText
+              }}</span>
+            </div>
+
+            <div class="d-flex align-items-center me-5 mb-1">
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="RefDate"
+                ngClass="fw-bold label-colon"
+              ></codx-label>
+              <!--<span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+              <span class="text-gray-700">{{
+                data?.refDate
+                  ? (data?.refDate | date : "dd/MM/yyyy")
+                  : gridViewSetup?.RefDate?.headerText
+              }}</span>
+            </div>
+            <div class="d-flex align-items-center me-5 mb-1">
+              <codx-label
+                [gridViewName]="formModel['gridViewName']"
+                [formName]="formModel['formName']"
+                fiedName="ContactName"
+                ngClass="fw-bold label-colon"
+              ></codx-label>
+              <!--             <span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+              <span class="text-gray-700">{{
+                data?.contactName
+                  ? data?.contactName
+                  : gridViewSetup?.ContactName?.headerText
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-start w-150px pt-2">
+          <div class="d-flex justify-content-end">
             <ng-container
               *ngIf="
-                data?.listInformationRel && data?.listInformationRel.length > 0
+                data?.percentage &&
+                data?.percentage != '0' &&
+                data?.percentage != '100'
               "
             >
-              <ng-container *ngFor="let item of data?.listInformationRel ; let i = index">
-                <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0 && data?.dispatchType == '2') || (data?.dispatchType == '2' && data?.listInformationRel.length == 1) || data?.dispatchType != '2')">
-                  <ng-container
-                    *ngIf="
-                      funcList?.defaultValue != '2' ||
-                      (funcList?.defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' )))
-                    "
-                  >
-                    <div class="list-item has-action-menu-od mb-6">
-                      <div class="d-flex align-items-start">
-                        <div class="w-120px me-6">
-                          <div
-                            class="text-primary d-flex justify-content-center fw-bold fs-4"
-                          >
-                            {{
-                              (item.date ? item.date : item.createdOn)
-                                | date : "shortTime"
-                            }}
-                          </div>
-                          <div
-                            class="text-dark d-flex justify-content-center text-gray-400 fs-6"
-                          >
-                            {{
-                              (item.date ? item.date : item.createdOn)
-                                | date : "dd/MM/yyyy"
-                            }}
-                          </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <codx-temp-full
-                            [imageId]="item?.userID"
-                            [imageObjType]="'AD_Users'"
-                            [title]="item?.employeeName"
-                            [subTitle]="item?.positionName"
-                            [desc]="
-                              getSubTitle(
-                                item.relationType,
-                                data?.agencyName,
-                                item?.shareBy,
-                                data?.agencies
-                              )
-                            "
-                            [descLine]="1"
-                            [dataItem]="item"
-                            [baseHeaderRightTmp]="baseTmpRight"
-                            [cardCss]="
-                              'justify-content-center align-items-center'
-                            "
-                          >
-                          </codx-temp-full>
-                        </div>
-                        <ng-container
-                          *ngIf="
-                            item.relationType != '1' &&
-                            !item.reCall &&
-                            formModel.userPermission?.refer != 0 &&
-                            (checkUserPer?.created || checkUserPer?.owner)
-                          "
-                        >
-                          <ng-container
-                            *ngIf="
-                              item.userID != data?.owner ||
-                              item.relationType != '2'
-                            "
-                          >
-                            <div
-                              class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
-                              (click)="
-                                openFormFuncID({
-                                  functionID: 'recallUser',
-                                  relID: item.recID,
-                                })
-                              "
-                              ngbTooltip="Thu hồi"
-                            >
-                              <!--  -->
-                              <i class="icon-redo text-primary icon-18"></i>
-                            </div>
-                          </ng-container>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </ng-container>
-                </ng-container>
-              
-              </ng-container>
+              <span class="badge badge-square badge-od me-2"
+                >{{ data?.percentage }}%</span
+              >
             </ng-container>
-          </ng-template>
-        </li>
-        <ng-container *ngIf="xd">
-          <li [ngbNavItem]="2">
+            <ng-container
+              *ngIf="funcList?.runMode != '1'; else tmpApprovalStatus"
+            >
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="true"
+                [formModel]="formModel"
+                [field]="'Status'"
+                [value]="data?.status"
+                class="badge badge-light badge-square badge-md fs-7 p-2"
+              >
+              </codx-vll>
+            </ng-container>
+            <ng-template #tmpApprovalStatus>
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="true"
+                [name]="'ES030'"
+                [value]="
+                  data?.unbounds?.statusApproval + data?.unbounds?.stepType
+                "
+                class="badge badge-light badge-square badge-md fs-7 p-2"
+              >
+              </codx-vll>
+            </ng-template>
+          </div>
+          <div class="d-flex justify-content-end mt-2">
+            <codx-imgs
+              [objectId]="data?.lstUserID"
+              [numberImages]="3"
+              [width]="30"
+              [mode]="false"
+            ></codx-imgs>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="data">
+        <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+        <codx-thumbnail
+          [files]="data?.files"
+          displayThumb="simple"
+          [hideDelete]="'1'"
+          [hideMoreF]="'0'"
+          (viewFile)="handleViewFile($event)"
+          [permissions]="data?.relations"
+        >
+        </codx-thumbnail>
+      </ng-container>
+    </ng-template>
+    <ng-template #body>
+      <div class="tab-horizone h-od-tab h-100">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <li [ngbNavItem]="1">
             <a ngbNavLink>
               <div class="d-flex align-item-center">
                 <i
-                  class="icon-people_alt me-2"
-                  [ngClass]="{ 'text-primary': active === 2 }"
+                  class="fa-solid fa-user-tag me-2 mt-1"
+                  [ngClass]="{ 'text-primary': active === 1 }"
                 ></i
-                ><span>Quy trình duyệt</span>
+                ><span
+                  ><codx-label
+                    [default]="
+                    funcList?.defaultValue == '1' ||
+                      (funcList?.defaultValue == '4' && data?.dispatchType == '4')
+                        ? 'Nơi nhận'
+                        : 'Nơi gửi'
+                    "
+                    fiedName="lblTitleReceive"
+                    [formName]="formModel?.formName"
+                  ></codx-label
+                ></span>
               </div>
             </a>
             <ng-template ngbNavContent>
-              <codx-view-approval-step
-                [transID]="data?.recID"
-                [approveStatus]="data?.approveStatus"
+              <ng-container
+                *ngIf="
+                  data?.listInformationRel && data?.listInformationRel.length > 0
+                "
               >
-              </codx-view-approval-step>
+                <ng-container *ngFor="let item of data?.listInformationRel ; let i = index">
+                  <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0 && data?.dispatchType == '2') || (data?.dispatchType == '2' && data?.listInformationRel.length == 1) || data?.dispatchType != '2')">
+                    <ng-container
+                      *ngIf="
+                        funcList?.defaultValue != '2' ||
+                        (funcList?.defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' )))
+                      "
+                    >
+                      <div class="list-item has-action-menu-od mb-6">
+                        <div class="d-flex align-items-start">
+                          <div class="w-120px me-6">
+                            <div
+                              class="text-primary d-flex justify-content-center fw-bold fs-4"
+                            >
+                              {{
+                                (item.date ? item.date : item.createdOn)
+                                  | date : "shortTime"
+                              }}
+                            </div>
+                            <div
+                              class="text-dark d-flex justify-content-center text-gray-400 fs-6"
+                            >
+                              {{
+                                (item.date ? item.date : item.createdOn)
+                                  | date : "dd/MM/yyyy"
+                              }}
+                            </div>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <codx-temp-full
+                              [imageId]="item?.userID"
+                              [imageObjType]="'AD_Users'"
+                              [title]="item?.employeeName"
+                              [subTitle]="item?.positionName"
+                              [desc]="
+                                getSubTitle(
+                                  item.relationType,
+                                  data?.agencyName,
+                                  item?.shareBy,
+                                  data?.agencies
+                                )
+                              "
+                              [descLine]="1"
+                              [dataItem]="item"
+                              [baseHeaderRightTmp]="baseTmpRight"
+                              [cardCss]="
+                                'justify-content-center align-items-center'
+                              "
+                            >
+                            </codx-temp-full>
+                          </div>
+                          <ng-container
+                            *ngIf="
+                              item.relationType != '1' &&
+                              !item.reCall &&
+                              formModel.userPermission?.refer != 0 &&
+                              (checkUserPer?.created || checkUserPer?.owner)
+                            "
+                          >
+                            <ng-container
+                              *ngIf="
+                                item.userID != data?.owner ||
+                                item.relationType != '2'
+                              "
+                            >
+                              <div
+                                class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+                                (click)="
+                                  openFormFuncID({
+                                    functionID: 'recallUser',
+                                    relID: item.recID,
+                                  })
+                                "
+                                ngbTooltip="Thu hồi"
+                              >
+                                <!--  -->
+                                <i class="icon-redo text-primary icon-18"></i>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                
+                </ng-container>
+              </ng-container>
             </ng-template>
           </li>
-        </ng-container>
-        <!-- <li [ngbNavItem]="3">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i class="icon-info me-2" [ngClass]="{ 'text-primary': active === 3 }"></i><span>Chi tiết</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
-          </ng-template>
-        </li> -->
-      </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div>
-  </ng-template>
-  <ng-template #footer>
-    <codx-tabs
-      [entityName]="formModel?.entityName"
-      [objectID]="data?.recID"
-      [funcID]="formModel?.funcID"
-      [dataTree]="data?.tasks ? data.tasks : []"
-      [TabControl]="tabControl"
-      [transID]="data?.recID"
-      [approveStatus]="data?.approveStatus"
-      [formModel]="formModel"
-      [dataSelected]="data"
-      [addPermissions]="listPermission"
-    ></codx-tabs>
-  </ng-template>
-  <ng-template #templateorg let-item>
-    <div class="container-fluid justify-content-between d-flex">
-      <div class="d-flex align-items-top mt-5">
-        <codx-temp-full
-          [imageId]="item?.userID"
-          [imageObjType]="'AD_Users'"
-          [title]="item?.userName"
-          [titleLine]="2"
-          [subTitle]="item?.positionNameCreate"
-          [desc]="item?.taskName"
-          [dataItem]="item"
-          [footer]="footerTask"
-        >
-        </codx-temp-full>
+          <ng-container *ngIf="xd">
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>
+                <div class="d-flex align-item-center">
+                  <i
+                    class="icon-people_alt me-2"
+                    [ngClass]="{ 'text-primary': active === 2 }"
+                  ></i
+                  ><span>Quy trình duyệt</span>
+                </div>
+              </a>
+              <ng-template ngbNavContent>
+                <codx-view-approval-step
+                  [transID]="data?.recID"
+                  [approveStatus]="data?.approveStatus"
+                >
+                </codx-view-approval-step>
+              </ng-template>
+            </li>
+          </ng-container>
+          <!-- <li [ngbNavItem]="3">
+            <a ngbNavLink>
+              <div class="d-flex align-item-center">
+                <i class="icon-info me-2" [ngClass]="{ 'text-primary': active === 3 }"></i><span>Chi tiết</span>
+              </div>
+            </a>
+            <ng-template ngbNavContent>
+              <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
+            </ng-template>
+          </li> -->
+        </ul>
+        <div [ngbNavOutlet]="nav" class="pt-5"></div>
       </div>
-      <div class="mt-5 ms-5 justify-content-end w-120px text-center">
-        <codx-vll
-          [name]="item?.category == '3' ? vllStatusAssign : vllStatus"
-          [value]="item?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7 ms-2"
-        ></codx-vll>
-        <div class="fs-7 text-gray-700 mt-1">
-          {{ data?.percentage.toFixed(2) }}%
+    </ng-template>
+    <ng-template #footer>
+      <codx-tabs
+        [entityName]="formModel?.entityName"
+        [objectID]="data?.recID"
+        [funcID]="formModel?.funcID"
+        [dataTree]="data?.tasks ? data.tasks : []"
+        [TabControl]="tabControl"
+        [transID]="data?.recID"
+        [approveStatus]="data?.approveStatus"
+        [formModel]="formModel"
+        [dataSelected]="data"
+        [addPermissions]="listPermission"
+      ></codx-tabs>
+    </ng-template>
+    <ng-template #templateorg let-item>
+      <div class="container-fluid justify-content-between d-flex">
+        <div class="d-flex align-items-top mt-5">
+          <codx-temp-full
+            [imageId]="item?.userID"
+            [imageObjType]="'AD_Users'"
+            [title]="item?.userName"
+            [titleLine]="2"
+            [subTitle]="item?.positionNameCreate"
+            [desc]="item?.taskName"
+            [dataItem]="item"
+            [footer]="footerTask"
+          >
+          </codx-temp-full>
         </div>
-        <div class="progress d-flex flex-column w-100 h-5px">
-          <div class="progress w-100 h-5px">
-            <div
-              class="progress-bar progress-bar-done"
-              role="progressbar"
-              [style.width.%]="data?.percentage"
-            ></div>
+        <div class="mt-5 ms-5 justify-content-end w-120px text-center">
+          <codx-vll
+            [name]="item?.category == '3' ? vllStatusAssign : vllStatus"
+            [value]="item?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          ></codx-vll>
+          <div class="fs-7 text-gray-700 mt-1">
+            {{ data?.percentage.toFixed(2) }}%
+          </div>
+          <div class="progress d-flex flex-column w-100 h-5px">
+            <div class="progress w-100 h-5px">
+              <div
+                class="progress-bar progress-bar-done"
+                role="progressbar"
+                [style.width.%]="data?.percentage"
+              ></div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center align-item-center mt-2">
+            <!-- <span class="icon-schedule icon-16 text-gray-700"></span> -->
+            <span
+              *ngIf="data?.isTimeOut"
+              class="icon-notifications expired icon-16 ms-1"
+            ></span>
+            <span
+              class="ms-2 text-dark"
+              #dueDate
+              [innerHTML]="
+                item?.dueDate
+                  | formatvalue
+                    : formModel
+                    : 'dueDate'
+                    : dueDate
+                    : 'Tasks'
+                    : 'grvTasks'
+                  | async
+              "
+            ></span>
           </div>
         </div>
-        <div class="d-flex justify-content-center align-item-center mt-2">
-          <!-- <span class="icon-schedule icon-16 text-gray-700"></span> -->
-          <span
-            *ngIf="data?.isTimeOut"
-            class="icon-notifications expired icon-16 ms-1"
-          ></span>
-          <span
-            class="ms-2 text-dark"
-            #dueDate
-            [innerHTML]="
-              item?.dueDate
-                | formatvalue
-                  : formModel
-                  : 'dueDate'
-                  : dueDate
-                  : 'Tasks'
-                  : 'grvTasks'
-                | async
-            "
-          ></span>
-        </div>
       </div>
-    </div>
-  </ng-template>
-</codx-detail-tmp>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
+
 <ng-template #tmpdeadline let-dialog>
   <app-od-deadline
     [dialog]="dialog"

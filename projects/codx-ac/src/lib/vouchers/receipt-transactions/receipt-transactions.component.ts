@@ -71,7 +71,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
   oData: any;
   lsVatCode: any;
   entityName: any;
-  funcID: any;
   acctTrans: any;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';

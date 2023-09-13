@@ -41,7 +41,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   itemDetail;
 
   views: Array<ViewModel> = [];
-  funcID: string;
   method = 'LoadDataEBTravelsAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',

@@ -32,7 +32,6 @@ export class AprpermissionComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  funcID: any;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];

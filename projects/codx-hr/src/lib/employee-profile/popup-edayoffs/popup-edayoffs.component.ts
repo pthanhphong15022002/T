@@ -35,7 +35,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   //lstDayoffs: any;
   idField = 'RecID';
   successFlag = false;
-  funcID: string;
   //indexSelected
   isnormalPregnant = false;
   isNotNormalPregnant = false;

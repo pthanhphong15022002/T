@@ -53,7 +53,6 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateUpdateStatus', { static: true })
 
   templateUpdateStatus: TemplateRef<any>;
-  @Input() funcID:any;
 
   views: Array<ViewModel> = [];
   dataCategory;

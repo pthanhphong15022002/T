@@ -11,7 +11,6 @@ export class FileComponent extends UIComponent implements OnInit {
   headerAttachment = 'Danh sách file đính kèm';
   dialog: any;
   objectType: any;
-  funcID: any;
   objectID: any;
   data: any;
   files: any;

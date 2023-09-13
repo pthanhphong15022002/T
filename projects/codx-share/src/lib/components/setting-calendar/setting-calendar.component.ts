@@ -35,7 +35,6 @@ export class SettingCalendarComponent
   formModel: FormModel;
   request?: ResourceModel;
   calendarID: string;
-  funcID: string;
 
   constructor(
     private injector: Injector,

@@ -107,7 +107,6 @@ export class PdfComponent
 
   //core
   dialog: import('codx-core').DialogRef;
-  funcID;
   user: any = {};
 
   //virtual layer for sign areas

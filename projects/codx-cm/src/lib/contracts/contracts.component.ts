@@ -47,7 +47,6 @@ import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-
   styleUrls: ['./contracts.component.scss'],
 })
 export class ContractsComponent extends UIComponent {
-  @Input() funcID: string;
   @Input() customerID: string;
 
   @ViewChild('contract') contract: TemplateRef<any>;

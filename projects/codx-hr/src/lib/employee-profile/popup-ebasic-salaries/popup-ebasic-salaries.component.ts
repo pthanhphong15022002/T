@@ -35,7 +35,6 @@ export class PopupEBasicSalariesComponent
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
-  funcID: string;
   employeeId: string | null;
   isAfterRender = false;
   headerText: ' ';

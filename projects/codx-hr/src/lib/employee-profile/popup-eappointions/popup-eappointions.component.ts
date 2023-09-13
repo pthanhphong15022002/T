@@ -31,7 +31,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId: string;
   genderGrvSetup: any;

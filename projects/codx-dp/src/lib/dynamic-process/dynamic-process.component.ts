@@ -68,7 +68,6 @@ export class DynamicProcessComponent
   dialogQuestionCopy: DialogRef;
   // create variables
   crrFunID: string = '';
-  funcID: string = '';
   gridViewSetup: any;
   showID = false;
   processNo: any;

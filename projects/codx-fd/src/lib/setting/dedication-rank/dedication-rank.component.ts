@@ -43,7 +43,6 @@ import { AddDedicationRankComponent } from './add-dedication-rank/add-dedication
 export class DedicationRankComponent extends UIComponent implements OnInit {
   datafuntion = null;
   titlePage = '';
-  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;

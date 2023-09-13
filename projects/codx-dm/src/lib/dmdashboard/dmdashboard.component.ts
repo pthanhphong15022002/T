@@ -45,7 +45,6 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   @Input() datas1: any;
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
-  funcID: string = 'DMD';
   reportID: string = 'DMD001';
   arrReport: any = [];
   dbData;
@@ -78,6 +77,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     private notificationsService: NotificationsService
   ) {
     super(inject);
+    this.funcID = "DMD";
     this.funcID = this.router.snapshot.params['funcID'];
   }
 

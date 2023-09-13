@@ -34,7 +34,6 @@ export class PopupEditCalendarComponent extends UIComponent {
   stShift = new CalendarWeekModel();
   ndShift = new CalendarWeekModel();
   user: any;
-  funcID: string;
   data: any;
   dayOffId: string;
   calendateDate: any;

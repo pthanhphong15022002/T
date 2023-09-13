@@ -27,7 +27,6 @@ export class PopupAddCalendarComponent extends UIComponent {
   formModel: FormModel;
   isAfterRender: boolean = false;
   user: any;
-  funcID: string;
   calendarID: string;
   data: any;
 
