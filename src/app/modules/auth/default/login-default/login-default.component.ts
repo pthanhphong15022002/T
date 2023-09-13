@@ -60,6 +60,7 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() c: any;
   @Input() fl: any;
   @Input() isNotADMode: boolean;
+  @Input() hubConnectionID: string;
 
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
@@ -73,7 +74,7 @@ export class LoginDefaultComponent extends UIComponent {
   enableCaptcha = 0;
   token = '';
   captChaValid = false;
-  enableMultiLogin = true;
+  enableMultiLogin = false;
   // private fields
 
   //#region OTP
@@ -81,7 +82,6 @@ export class LoginDefaultComponent extends UIComponent {
   //#endregion
 
   //#region QR
-  hubConnectionID: string;
   isFirstQR = true;
   connection: any;
   qrTimeout: number = 0;
@@ -89,7 +89,7 @@ export class LoginDefaultComponent extends UIComponent {
   qrBase64: string = '/assets/codx/bg/qrCodx.png';
   isScaned = false;
   modal;
-  testQRContent = '';
+  // testQRContent = '';
   //#endregion
 
   constructor(
@@ -118,11 +118,6 @@ export class LoginDefaultComponent extends UIComponent {
     }
 
     this.realHub.start('ad').then((x: RealHub) => {
-      let t = this;
-      x.hub.invoke('GetConnectionId').then(function (connectionId) {
-        t.hubConnectionID = connectionId;
-      });
-
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
@@ -140,6 +135,7 @@ export class LoginDefaultComponent extends UIComponent {
                   },
                 },
                 login2FA: z.data.isLg2FA,
+                hubConnectionID: this.hubConnectionID,
               };
 
               let lg2FADialog = this.callfc.openForm(
@@ -160,24 +156,6 @@ export class LoginDefaultComponent extends UIComponent {
         });
       }
     });
-
-    //   })
-    // if (
-    //   environment.saas == 1 &&
-    //   (environment.externalLogin.amazonId ||
-    //     environment.externalLogin.facebookId ||
-    //     environment.externalLogin.googleId ||
-    //     environment.externalLogin.microsoftId)
-    // ) {
-    //   this.externalLogin = true;
-    //   let iCol = 0;
-    //   if (environment.externalLogin.amazonId) iCol += 1;
-    //   if (environment.externalLogin.facebookId) iCol += 1;
-    //   if (environment.externalLogin.googleId) iCol += 1;
-    //   if (environment.externalLogin.microsoftId) iCol += 1;
-    //   this.externalLoginShowText = iCol <= 2;
-    //   this.externalLoginCol = 'col-md-' + (12/iCol);
-    // }
   }
 
   ngOnDestroy() {
@@ -299,6 +277,7 @@ export class LoginDefaultComponent extends UIComponent {
           )
           .subscribe((qrImg) => {
             if (qrImg) {
+              //nho xoa
               // this.testQRContent = qrImg;
               this.qrTimeout = 180;
               this.qrBase64 = 'data:image/png;base64,' + qrImg;
