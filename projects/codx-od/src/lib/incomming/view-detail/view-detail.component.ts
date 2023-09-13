@@ -214,16 +214,18 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   getDtDis(id: any,data:any = null) {
     this.data = null;
     if (id) {
+      
+      var dataRequest = new DataRequest();
+      dataRequest.dataObj = id;
+      dataRequest.page = 1;
+      dataRequest.pageSize = 20;
+      dataRequest.entityName = this.formModel.entityName;
+      dataRequest.funcID = this.funcID;
       this.odService
-        .getDetailDispatch(id, this.formModel.entityName , this.referType)
+        .getDetailDispatch(id, this.formModel.entityName , this.referType , false , dataRequest)
         .subscribe((item) => {
           if (item) {
             this.data = formatDtDis(item);
-            if(this.funcList.runMode == "1" )
-            {
-              if(this.dataUnbounds) this.data.unbounds = this.dataUnbounds;
-              else if(data) this.data.unbounds = data.unbounds;
-            }
           }
         });
     }
