@@ -121,8 +121,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   }
 
   override onInit(): void {
-    var a = this.dataUnbounds;
-    debugger
     this.active = 1;
     this.formModel = this.view?.formModel;
     //this.data = this.view.dataService.dataSelected;
@@ -189,8 +187,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       this.userID = this.authStore.get().userID;
       this.recID = changes.recID?.currentValue;
       if (!this.data) this.data = {};
-      this.getDtDis(this.recID, this.dataItem)
+
+      this.getDtDis(this.recID)
       this.getPermission(this.recID);
+
       this.detectorRef.detectChanges();
     }
     if (changes?.view?.currentValue != changes?.view?.previousValue)
@@ -211,16 +211,17 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
 
 
   //Hàm lấy thông tin chi tiết của công văn
-  getDtDis(id: any,data:any = null) {
+  getDtDis(id: any) {
     this.data = null;
     if (id) {
-      
       var dataRequest = new DataRequest();
       dataRequest.dataObj = id;
       dataRequest.page = 1;
       dataRequest.pageSize = 20;
       dataRequest.entityName = this.formModel.entityName;
       dataRequest.funcID = this.funcID;
+      dataRequest.predicate = "RecID=@0";
+      dataRequest.dataValue = id;
       this.odService
         .getDetailDispatch(id, this.formModel.entityName , this.referType , false , dataRequest)
         .subscribe((item) => {
@@ -288,7 +289,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           this.gridViewSetup = gw;
           this.getDataValuelist();
         }
-        this.getDtDis(this.recID, this.dataItem)
+        this.getDtDis(this.recID)
       });
     } else {
       this.funcList = funcList;
@@ -299,7 +300,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
-      this.getDtDis(this.recID, this.dataItem)
+      this.getDtDis(this.recID)
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName

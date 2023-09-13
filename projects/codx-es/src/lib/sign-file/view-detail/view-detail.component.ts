@@ -221,6 +221,8 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
       dataRequest.entityName = this.view?.formModel?.entityName;
       dataRequest.funcID = this.view?.formModel?.funcID;
       dataRequest.dataObj= this.itemDetail?.recID;
+      dataRequest.predicate = "RecID=@0";
+      dataRequest.dataValue = this.itemDetail?.recID;
       dataRequest.page = 1;
       this.esService
         .getDetailSignFile(this.itemDetail?.recID,dataRequest)
