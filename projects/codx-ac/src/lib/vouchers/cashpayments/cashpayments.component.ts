@@ -732,7 +732,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.totalsettledAmt2 = 0;
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
-    
+
     if (this.acctTrans && this.acctTrans.length > 0) {
       this.acctTrans.forEach((item) => {
         if (this.itemSelected.currencyID == this.baseCurr) {
