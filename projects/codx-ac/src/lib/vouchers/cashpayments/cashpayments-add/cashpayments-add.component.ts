@@ -146,21 +146,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
   }
 
-  
-  // onSaveLine(type:string){
-  //   this.subscription && this.subscription.unsubscribe();
-  //   this.eleGridCashPayment.save();
-  //   this.subscription =  this.eleGridCashPayment.onSaved.subscribe((res:any)=>{
-  //     if(res) {
-  onSaveLine(){
-    this.eleGridCashPayment.saveRow((res:any)=>{
-      if(res){
-        debugger
-      }
-    })
-
-  }
-
   // /**
   //  * *Hàm khởi tạo trước khi init của lưới Cashpaymentlines (Ẩn hiện,format,predicate các cột của lưới theo sổ nhật ký)
   //  * @param columnsGrid : danh sách cột của lưới
@@ -636,7 +621,12 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.addRowDetailByType(typeBtn);
+          this.eleGridCashPayment.saveRow((res:any)=>{
+            if(res){
+              
+            }
+          })
+          //this.addRowDetailByType(typeBtn);
         }
       });
   }
@@ -1323,16 +1313,16 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       //   break;
     }
   }
-  validate(data:any){
-    let errField:any={};
-    if(data.dr ==0){
-      errField.field='dr';
-      errField.error='phải lớn hơn 0'
-      errField.value=0;
-      return [errField];
-    }
-    return []
-  }
+  // validate(data:any){
+  //   let errField:any={};
+  //   if(data.dr ==0){
+  //     errField.field='dr';
+  //     errField.error='phải lớn hơn 0'
+  //     errField.value=0;
+  //     return [errField];
+  //   }
+  //   return []
+  // }
   /**
    * *Hàm các sự kiện của lưới VatInvoice
    * @param event
