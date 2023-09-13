@@ -359,6 +359,7 @@ export class ViewCalendarComponent
         if (res) {
           this.handleTask(type,'edit', data);
         }
+        this.handleTask(type,'edit', data);
       });
     }
   }

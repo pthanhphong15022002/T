@@ -488,4 +488,8 @@ export class EmployeeAwardsComponent extends UIComponent {
       });
   }
   //#endregion
+
+  viewDetail(data) {
+    this.handlerEAwards('Xem chi tiết', 'view', data);
+  }
 }

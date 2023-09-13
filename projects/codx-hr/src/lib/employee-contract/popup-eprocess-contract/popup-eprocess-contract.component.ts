@@ -601,6 +601,23 @@ export class PopupEProcessContractComponent
     }
   }
 
+  renderChangePosition(event) {
+    if (
+      event.itemsSelected
+        ? event.itemsSelected[0].PositionName
+        : event.component.itemsSelected[0].PositionName
+    ) {
+      this.employeeObj.positionName = event.itemsSelected
+        ? event.itemsSelected[0].PositionName
+        : event.component.itemsSelected[0].PositionNam;
+      // console.log(
+      //   event.itemsSelected
+      //     ? event.itemsSelected[0].PositionName
+      //     : event.component.itemsSelected[0].PositionName
+      // );
+    }
+  }
+
   valueChange(event) {
     if (!event.data) {
       this.data.signerPosition = '';
@@ -635,6 +652,8 @@ export class PopupEProcessContractComponent
           }
           break;
         }
+        default:
+          break;
       }
 
       this.cr.detectChanges();
@@ -667,6 +686,7 @@ export class PopupEProcessContractComponent
           this.hrSevice
             .getOrgUnitID(this.employeeObj?.orgUnitID)
             .subscribe((res) => {
+              console.log(res);
               this.employeeObj.orgUnitName = res.orgUnitName;
             });
 
