@@ -297,9 +297,10 @@ export class OrgorganizationComponent extends UIComponent {
           );
           popup.closed.subscribe((res: any) => {
             if (res.event) {
-              this.view.dataService.add(res.event, 0).subscribe();
               //Update view chart diagram
               this.itemAdded = res.event;
+
+              this.view.dataService.add(res.event).subscribe();
               // this.child.GetChartDiagram();
               this.flagLoaded = true;
             }
@@ -445,5 +446,4 @@ export class OrgorganizationComponent extends UIComponent {
   preventDedefault(e) {
     e.stopPropagation();
   }
-  
 }
