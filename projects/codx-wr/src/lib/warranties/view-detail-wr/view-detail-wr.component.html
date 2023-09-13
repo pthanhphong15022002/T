@@ -4,7 +4,7 @@
     [formModel]="formModel"
     [body]="body"
     [dataItem]="dataSelected"
-    [hideMF]="funcID == 'WR0101'"
+    [hideMF]="true"
     [footer]="tabs"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
@@ -448,14 +448,14 @@
                     <div class="d-flex flex-row">
                       <div class="col-6 text-dark fw-bold fs-6 mb-3">
                         <codx-label
-                          default="Case info"
+                          default="Thông tin phiếu"
                           [formModel]="formModel"
                           name="lblCaseInfo"
                         ></codx-label>
                       </div>
                       <div class="col-6 text-dark fw-bold fs-6 mb-3">
                         <codx-label
-                          default="Part"
+                          default="Thiết bị"
                           [formModel]="formModel"
                           name="lblPart"
                         ></codx-label>
