@@ -9,17 +9,13 @@ import {
 } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FileService } from '@shared/services/file.service';
 import {
   ButtonModel,
-  DialogModel,
-  NotificationsService,
   PageTitleService,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 export class GridModels {
   pageSize: number;
@@ -33,13 +29,12 @@ export class GridModels {
 }
 
 @Component({
-  selector: 'app-dmdashboard',
+  selector: 'dmdashboard',
   templateUrl: './dmdashboard.component.html',
   styleUrls: ['./dmdashboard.component.scss'],
 })
 export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
-  @ViewChildren('panel') lstPanels: QueryList<any>;
   @ViewChildren('my_dashboard') templates1: QueryList<any>;
   @Input() panels1: any;
   @Input() datas1: any;
@@ -72,9 +67,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
-    private routerActive: ActivatedRoute,
-    private fileService: FileService,
-    private notificationsService: NotificationsService
+    private routerActive: ActivatedRoute
   ) {
     super(inject);
     this.funcID = "DMD";
@@ -106,18 +99,18 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
       },
     ];
     this.pageTitle.setBreadcrumbs([]);
-    this.routerActive.queryParams.subscribe((res) => {
-      if (res.reportID) {
-        this.reportID = res.reportID;
+    this.routerActive.params.subscribe((res) => {
+      if (res.funcID) {
+        this.reportID = res.funcID;
         this.isLoaded = false;
         let reportItem: any = this.arrReport.find(
-          (x: any) => x.reportID == res.reportID
+          (x: any) => x.reportID == res.funcID
         );
         if (reportItem) {
           let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
           if (pinnedParams) this.view.pinedReportParams = pinnedParams;
         }
-        switch (res.reportID) {
+        switch (res.funcID) {
           case 'DMD001':
             this.getDashboardData();
             break;
@@ -166,6 +159,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onActions(e: any) {
+    debugger;
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
       if (this.arrReport.length) {
@@ -173,7 +167,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
         for (let i = 0; i < this.arrReport.length; i++) {
           arrChildren.push({
             title: this.arrReport[i].customName,
-            path: 'dm/dmdashboard/DMD?reportID=' + this.arrReport[i].reportID,
+            path: 'dm/dmdashboard/' + this.arrReport[i].reportID,
           });
         }
         this.pageTitle.setSubTitle(arrChildren[0].title);
@@ -252,4 +246,14 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   getThumbnail(data) {
     return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;
   }
+
+  getData1() {}
+
+  getData2() {}
+
+  getData3() {}
+
+  getData4() {}
+
+  getData5() {}
 }
