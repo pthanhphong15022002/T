@@ -1536,6 +1536,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           let progressData = this.setProgressOutput(data, null);
           this.moveStageData?.splice(index, 1, progressData)
           this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });     
+        }else{
+          let progressData = this.setProgressOutput(data, null);
+          this.moveStageData?.push(progressData);
+          this.valueChangeProgress.emit({ type: 'A', data: this.moveStageData });   
         }
       }
     }
