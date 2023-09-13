@@ -134,10 +134,19 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   onAfterInitForm(event){
-    this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
     this.setValidateForm();
   }
 
+  /**
+   * *Hàm khởi tạo các tab detail khi mở form(ẩn hiện tab theo loại chứng từ)
+   * @param event
+   * @param eleTab
+   */
+  createTabDetail(event: any, eleTab: TabComponent) {
+    this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
+  }
+
+  
   // onSaveLine(type:string){
   //   this.subscription && this.subscription.unsubscribe();
   //   this.eleGridCashPayment.save();
@@ -302,6 +311,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       });
     } else {
       this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+      this.detectorRef.detectChanges();
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
       }
@@ -623,7 +633,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     this.formCashPayment.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res && ((!res?.save?.error) || (!res?.update?.error))) {
+        if (res) {
           this.addRowDetailByType(typeBtn);
         }
       });
@@ -734,7 +744,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
                 ])
                 .subscribe((res: any) => {
                   if (res) {
-                    // this.formCashPayment.refreshData(res.data);
+                    this.formCashPayment.refreshData(res.data);
                     // this.formCashPayment.data = res.data;
                     // this.detectorRef.detectChanges();
                     // this.formCashPayment.formGroup.patchValue(
