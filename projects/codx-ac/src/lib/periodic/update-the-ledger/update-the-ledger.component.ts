@@ -17,7 +17,6 @@ export class UpdateTheLedgerComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any = 'ACP10201';
   entityName: any;
   mfFormName: any = 'UpdateTheLedger';
   mfGrvName: any = 'grvUpdateTheLedger';
@@ -34,6 +33,7 @@ export class UpdateTheLedgerComponent extends UIComponent{
   ) {
     super(inject);
     this.dialog = dialog;
+    this.funcID = "ACP10201";
     this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACP10101');

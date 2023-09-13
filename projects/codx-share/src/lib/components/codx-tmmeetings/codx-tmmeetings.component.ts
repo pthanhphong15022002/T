@@ -45,7 +45,6 @@ export class CodxTmmeetingsComponent
   implements OnInit, AfterViewInit
 {
   meeting = new CO_Meetings();
-  @Input() funcID: string;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() projectID?: any; //view meeting to sprint_details

@@ -77,7 +77,6 @@ export class LeadsComponent
   formModel: FormModel;
 
   // type any for view detail
-  funcID: any;
   dataObj?: any;
   kanban: any;
 

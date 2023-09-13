@@ -27,7 +27,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   skillObj;
   lstSkills;
   actionType;
-  funcID;
   idField = 'RecID';
   employId;
   isAfterRender = false;
@@ -152,6 +151,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     });
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
+
       return;
     }
     console.log('data chuan bi luu', this.skillObj);

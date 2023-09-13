@@ -35,7 +35,6 @@ export class PopupEBasicSalariesComponent
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
-  funcID: string;
   employeeId: string | null;
   isAfterRender = false;
   headerText: ' ';
@@ -274,6 +273,7 @@ export class PopupEBasicSalariesComponent
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

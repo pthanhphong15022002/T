@@ -28,7 +28,6 @@ export class PopupViewVersionComponent extends UIComponent {
 
   dialogRef: DialogRef;
   formModel: FormModel;
-  funcID: string;
   dataPlan: any;
   okrFM: any;
   versions =[];

@@ -33,7 +33,6 @@ export class PopupAddKRComponent extends UIComponent {
   fGroupAddKR: FormGroup;
   oParentID: any;
   dialogTargets: DialogRef;
-  funcID: any;
   funcType: any;
   isSubKR: boolean;
   isAdd = true;

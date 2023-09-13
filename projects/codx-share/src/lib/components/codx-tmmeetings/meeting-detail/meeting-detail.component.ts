@@ -30,7 +30,6 @@ import { CO_Content, CO_MeetingTemplates } from '../models/CO_MeetingTemplates.m
   encapsulation: ViewEncapsulation.None,
 })
 export class MeetingDetailComponent extends UIComponent {
-  funcID = '';
   views = [];
   meetingID: any;
   functionList = {

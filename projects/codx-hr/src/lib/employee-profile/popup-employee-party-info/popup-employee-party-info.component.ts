@@ -19,7 +19,6 @@ export class PopupEmployeePartyInfoComponent
   extends UIComponent
   implements OnInit
 {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   formModel: FormModel;
@@ -86,6 +85,7 @@ export class PopupEmployeePartyInfoComponent
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     this.hrService.saveEmployeeUnionAndPartyInfo(this.data).subscribe((p) => {

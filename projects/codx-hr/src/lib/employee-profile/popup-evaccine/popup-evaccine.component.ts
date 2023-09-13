@@ -30,7 +30,6 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   data: any;
   //listData: any; //
-  funcID: string;
   idField: string = 'recID';
   actionType: string;
   employeeId: string;
@@ -144,6 +143,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     if (this.data.injectDate > this.data.nextInjectDate) {

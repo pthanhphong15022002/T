@@ -23,7 +23,6 @@ export class TemplateComponent extends UIComponent implements OnInit {
   dialog: any;
   data: any;
   title = 'Chọn template';
-  funcID: any;
   show: boolean = false;
   displayMembers: any;
   viewMember: any;

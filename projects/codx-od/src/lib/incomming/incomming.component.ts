@@ -75,7 +75,7 @@ export class IncommingComponent
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
-  @Input() funcID:any;
+
   public lstDtDis: any;
   public lstUserID: any = '';
   public disEdit: any;
@@ -91,7 +91,7 @@ export class IncommingComponent
   public switchTemplate = 'new';
   public objectIDFile: any;
   public objectType = 'OD_Dispatches';
-  referType = "source"
+  recID:any;
   dialog!: DialogRef;
   button?: ButtonModel;
   request: ResourceModel;
@@ -160,7 +160,6 @@ export class IncommingComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    var a = this.funcID;
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -562,19 +561,7 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService
-        .getDetailDispatch(id, this.view.formModel.entityName , this.referType)
-        .subscribe((item) => {
-          //this.getChildTask(id);
-          if (item) {
-            this.lstDtDis = formatDtDis(item);
-            if(this.funcList.runMode == "1" && data)
-            {
-              this.lstDtDis.unbounds = data.unbounds;
-            }
-            //this.view.dataService.setDataSelected(this.lstDtDis);
-          }
-        });
+      this.recID = id;
     }
   }
 

@@ -73,7 +73,6 @@ export class IssueTransactionsComponent extends UIComponent {
   oData: any;
   lsVatCode: any;
   entityName: any;
-  funcID: any;
   acctTrans: any;
   vllReceipt: any = 'AC116';
   vllIssue: any = 'AC117';
@@ -160,6 +159,7 @@ export class IssueTransactionsComponent extends UIComponent {
         },
       },
     ];
+    
     this.view.setRootNode(this.parent?.customName);
 
     const options1 = new DataRequest();

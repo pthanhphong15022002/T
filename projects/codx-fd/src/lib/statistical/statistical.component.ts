@@ -232,7 +232,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   predicate = '';
   dataValue = '';
   options = new DataRequest();
-  funcID = '';
   functionList: any;
   ballot_SENDED = false;
   ballot_RECEIVED = false;

@@ -11,7 +11,6 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser
 })
 export class CompanyInforComponent extends UIComponent {
 
-  funcID:string = '';
   entityName:string = 'WP_News';
   gridViewName:string = 'grvNews';
   fromName:string = "News";

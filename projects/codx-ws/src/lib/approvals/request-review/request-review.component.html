@@ -11,6 +11,8 @@
   [className]="'ApprovalTransBusiness'"
   [funcID]="'EST021'"
   [selectedFirst]="true"
+  [predicate]="'Approver=@0'"
+  [dataValue]="'[UserID]'"
   idField="recID"
 >
 </codx-views>
@@ -38,42 +40,10 @@
     [baseHeaderRightTmp]="baseHeaderRight"
   >
   </codx-temp-full>
-  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
-  <codx-detail-tmp
-    [header]="header"
-    [dataItem]="dataItem"
-    [formModel]="view?.formModel"
-    (changeDataMF)="changeMF($event, dataItem)"
-    [body]="body"
-    [footer]="footer"
-    (clickMF)="clickMF($event, dataItem)"
-    class="h-100 dt-aprovel dt-es pt-2"
-  ></codx-detail-tmp>
-  <ng-template #header> </ng-template>
-  <ng-template #body>
-    <div class="od-approval-detail h-100">
-      <router-outlet></router-outlet>
-    </div>
+  <ng-template #content>
   </ng-template>
-  <ng-template #footer>
-    <codx-tabs
-      [TabControl]="tabControl"
-      [entityName]="view?.formModel?.entityName"
-      [objectID]="transID"
-      [transID]="transID"
-      [formModel]="view?.formModel"
-      [funcID]="view?.formModel?.funcID"
-    >
-    </codx-tabs>
-  </ng-template>
-  <!-- <div class="pe-6 pt-1">
-    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>
-  </div>
-  <div class="od-approval-detail">
-    <router-outlet></router-outlet>
-  </div> -->
 </ng-template>
 <ng-template #baseHeaderRight let-data>
   <codx-vll

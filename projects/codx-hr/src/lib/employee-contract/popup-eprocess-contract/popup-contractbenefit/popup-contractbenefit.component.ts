@@ -10,7 +10,6 @@ import { CodxHrService } from '../../../codx-hr.service';
 })
 export class PopupContractbenefitComponent  extends UIComponent
 implements OnInit{
-  funcID: any;
   formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;

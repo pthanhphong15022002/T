@@ -50,7 +50,6 @@ export class ViewDetailCoinsComponent extends UIComponent implements OnInit {
   USER_ID = '';
   columnsGrid = [];
   favoriteID = '';
-  funcID = '';
   views: Array<ViewModel> = [];
   userPermission: any;
   headerStyle = {

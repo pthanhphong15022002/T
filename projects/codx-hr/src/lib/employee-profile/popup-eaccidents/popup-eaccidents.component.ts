@@ -10,6 +10,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -28,7 +29,6 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   accidentObj;
   employeeId: string;
-  funcID: string;
   idField: string = 'recID';
   actionType;
   disabledInput = false;
@@ -36,7 +36,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   data;
   isAfterRender = false;
   @ViewChild('listView') listView: CodxListviewComponent;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
 
   tabInfo: any[] = [
     {
@@ -138,6 +138,8 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     this.accidentObj.employeeID = this.employeeId;
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
+
       return;
     }
     // if (this.accidentObj.accidentDate) {
