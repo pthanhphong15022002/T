@@ -242,7 +242,7 @@ export class WarrantiesComponent
   }
 
   async getValueListRole() {
-    this.cache.valueList('CRM040').subscribe((res) => {
+    this.cache.valueList('WR005').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
