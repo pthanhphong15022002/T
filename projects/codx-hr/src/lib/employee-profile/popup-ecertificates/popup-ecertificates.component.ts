@@ -30,7 +30,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   lstCertificates;
   indexSelected;
   actionType;
-  funcID;
   idField = 'RecID';
   employId;
   isAfterRender = false;
@@ -48,9 +47,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   displayForeignCert = false;
 
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  // @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   fieldHeaderTexts: any;
 
   constructor(
@@ -202,6 +201,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
 

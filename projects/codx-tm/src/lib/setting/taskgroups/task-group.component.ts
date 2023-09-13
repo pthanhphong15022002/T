@@ -77,7 +77,6 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
 
   // @ViewChild('view') view!: ViewsComponent;
   user: any;
-  funcID: any;
   views: Array<ViewModel> = [];
   formName = '';
   gridViewName = '';

@@ -25,7 +25,6 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   originDocumentTypeID : any;
   headerText: any;
-  funcID: any;
   changedInForm = false;
   actionType: any;
   documentObj: any;
@@ -165,6 +164,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
     debugger

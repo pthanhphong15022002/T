@@ -24,7 +24,6 @@ export class CardsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   itemSelected: any = null;
   cardType = "";
-  funcID: string = "";
   selectedID: string = "";
   grdViewSetup: any = null;
   ratingVLL: string = "";

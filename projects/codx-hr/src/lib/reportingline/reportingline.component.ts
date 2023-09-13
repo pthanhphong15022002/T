@@ -41,7 +41,6 @@ export class ReportinglineComponent extends UIComponent {
   button?: ButtonModel;
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
-  funcID: string;
   employees: any = [];
   itemSelected: any;
   ListViewService: CRUDService;

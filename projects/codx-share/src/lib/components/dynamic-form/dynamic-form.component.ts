@@ -49,7 +49,6 @@ export class DynamicFormComponent extends UIComponent {
   dialog: DialogRef;
   buttons: ButtonModel;
   formGroup: FormGroup;
-  funcID: string;
   idField: string = 'recID';
   dataSelected: any;
   function: any = {};

@@ -22,7 +22,6 @@ export class PopupAddCardTransComponent extends UIComponent {
   dialogRef: DialogRef;
   isAfterRender = false;
   returnData: any;
-  funcID: any;
   data: any;
   headerText = '';
   fGroup: any;

@@ -58,7 +58,6 @@ export class EmployeePositionsComponent extends UIComponent {
   dialog: DialogRef;
   //codx-views setting
   views: Array<ViewModel> | any = [];
-  funcID: string;
   service = 'HR';
   assemblyName = 'HR';
   entity = 'HR_EAppointions';

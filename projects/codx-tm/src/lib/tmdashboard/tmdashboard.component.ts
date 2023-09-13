@@ -62,7 +62,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   viewType = ViewType;
   views: Array<ViewModel> = [];
   dashboard = [];
-  funcID: string = 'TMD';
   reportID: string = 'TMD001';
 
   templates: QueryList<any>;

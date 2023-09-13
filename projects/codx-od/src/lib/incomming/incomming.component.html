@@ -39,12 +39,12 @@
 <ng-template #panelRightRef>
   <app-view-detail
     #viewdetail
-    [data]="lstDtDis"
+    [recID]="recID"
     [dataItem]="dataItem"
     [gridViewSetup]="gridViewSetup"
     [view]="view"
     (uploaded)="getDtDis($event)"
-    [pfuncID]="view?.formModel?.funcID"
+    [funcID]="view?.formModel?.funcID"
     [hideMF]="view.formModel.funcID.includes('ODT8')"
   >
   </app-view-detail>

@@ -91,7 +91,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //icon Sort
   itemSelected: any;
   dataFile: any;
-  funcID:any;
   visible: boolean = false;
   isScrollFolder = true;
   isScrollFile = true;

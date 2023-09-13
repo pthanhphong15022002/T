@@ -75,7 +75,6 @@ export class ProcessStepsComponent
 
   @Input() process: BP_Processes;
   @Input() viewMode = '16';
-  @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
   @Input() isEdit: boolean = false;
@@ -168,6 +167,7 @@ export class ProcessStepsComponent
     private fileService: FileService
   ) {
     super(inject);
+    this.funcID = "BPT11";
     this.user = this.authStore.get();
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {

@@ -34,7 +34,6 @@ export class ViewsTabsDetailsComponent
   @Input() viewMode = '6';
   @Input() dataObj: any;
 
-  funcID: any = 'DPT06';
 
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
@@ -75,6 +74,8 @@ export class ViewsTabsDetailsComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
+
+    this.funcID = 'DPT06';
   }
 
   ngAfterViewInit(): void {

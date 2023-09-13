@@ -36,7 +36,6 @@ export class PopupEmpBusinessTravelsComponent
   formModel: FormModel;
   dialog: DialogRef;
   headerText: string = '';
-  funcID;
   employId;
   data;
   isNotOverseaFlag: boolean;
@@ -315,6 +314,7 @@ export class PopupEmpBusinessTravelsComponent
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

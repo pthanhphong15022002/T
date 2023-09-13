@@ -38,7 +38,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   headerText = 'Thêm mới đăng ký';
 
   requestType;
-  funcID: string;
 
   currentTab = 1; // buoc hiện tại
   formModel: FormModel;

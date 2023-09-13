@@ -31,7 +31,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId: string;
   genderGrvSetup: any;
@@ -519,6 +518,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

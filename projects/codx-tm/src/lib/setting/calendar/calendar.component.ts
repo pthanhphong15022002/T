@@ -52,7 +52,6 @@ export class CalendarComponent
   calendateDate: any;
   scheduleObj: any = undefined;
   vlls: any;
-  funcID: string;
   param: any = 'STD';
   selectedDate = new Date();
   viewBase: any;

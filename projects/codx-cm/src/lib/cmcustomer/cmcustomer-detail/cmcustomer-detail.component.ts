@@ -112,7 +112,7 @@ export class CmCustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.addressNameCM = this.dataSelected?.address;
+    this.addressNameCM = this.dataSelected?.address ?? '';
     this.loadTag(this.dataSelected);
     // this.listTab(this.funcID);
     this.loaded = true;
@@ -276,8 +276,11 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   onChangeContact(lstContact){
-    this.codxListContact.loadListContact(lstContact);
-    this.changeDetectorRef.detectChanges();
+    if(this.codxListContact){
+      this.codxListContact.loadListContact(lstContact);
+      this.changeDetectorRef.detectChanges();
+    }
+
   }
 
   onChangeAddress(lstAddress){
