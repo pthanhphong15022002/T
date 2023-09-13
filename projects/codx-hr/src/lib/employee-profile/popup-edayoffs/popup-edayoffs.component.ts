@@ -196,6 +196,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
     if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {

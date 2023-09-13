@@ -176,6 +176,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
 

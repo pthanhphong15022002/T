@@ -154,7 +154,9 @@
     ></codx-input>
   </div>
 
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3"
+  *ngIf="certificateObj?.attachments > 0"
+  >
     <codx-label
       name="lblAttachFile"
       [formModel]="formModel"
