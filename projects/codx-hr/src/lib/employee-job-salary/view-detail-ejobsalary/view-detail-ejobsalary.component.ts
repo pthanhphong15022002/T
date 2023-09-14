@@ -53,7 +53,7 @@ export class ViewDetailEjobsalaryComponent implements OnInit{
       if (formModel) {
         this.benefitFormModel = formModel;
         this.hrService
-          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName)
+          .getFormGroup(this.benefitFormModel.formName, this.benefitFormModel.gridViewName, this.benefitFormModel)
           .then((fg) => {
             if (fg) {
               this.benefitFormGroup = fg;

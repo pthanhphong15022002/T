@@ -116,7 +116,7 @@ export class PopupEmpBusinessTravelsComponent
 
   onInit(): void {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;

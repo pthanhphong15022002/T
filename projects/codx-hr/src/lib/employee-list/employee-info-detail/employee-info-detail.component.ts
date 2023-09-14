@@ -1029,7 +1029,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
       this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
         this.eInfoFormModel = res;
-        this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName).then((fg) =>{
+        this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName, this.eInfoFormModel).then((fg) =>{
           this.eInfoFormGroup = fg;
           this.eInfoFormGroup.patchValue(this.infoPersonal);
           this.eInfoFormModel.currentData = this.infoPersonal;
