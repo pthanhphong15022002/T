@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, Injector, Optional, ViewChild } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-advance-payment-add',
   templateUrl: './advance-payment-add.component.html',
-  styleUrls: ['./advance-payment-add.component.css']
+  styleUrls: ['./advance-payment-add.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AdvancePaymentAddComponent extends UIComponent
 {
@@ -16,18 +17,29 @@ export class AdvancePaymentAddComponent extends UIComponent
   headerText: string = '';
   company: any;
   logosrc: any;
+  columns: Array<any> = [];
   dialogRef!: DialogRef;
   advancedPayment: AdvancedPayment;
+  grvSetupAdvancedPaymentLines: any;
   vendorData: Object[] = [
     {
       detailName: 'Maria ',
       costPrice: 250000,
+      friend: 'Maria ',
+      totalPrice: 250000,
     },
     {
       detailName: 'Ana Trujillo ',
       costPrice: 250000,
+      friend: 'Ana Trujillo ',
+      totalPrice: 250000,
     },
   ];
+  fmAdvancedPaymentLines: FormModel = {
+    entityName: 'AC_AdvancedPaymentLines',
+    formName: 'AdvancedPaymentLines',
+    gridViewName: 'grvAdvancedPaymentLines',
+  }
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -40,6 +52,8 @@ export class AdvancePaymentAddComponent extends UIComponent
     this.advancedPayment = dialogData.data?.advancedPayment;
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
+    this.grvSetupAdvancedPaymentLines = Object.values(dialogData.data?.grvSetupAdvancedPaymentLines);
+    this.loadColumnVisible();
   }
 
   onInit(): void {
@@ -133,5 +147,15 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   clearAdvancedPayment(){
 
+  }
+
+  loadColumnVisible()
+  {
+    this.grvSetupAdvancedPaymentLines.forEach((item: any) => {
+      if(item.isVisible == true)
+      {
+        this.columns.push(item);
+      }
+    });
   }
 }
