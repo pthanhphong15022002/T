@@ -450,12 +450,13 @@ export class PopupMoveStageComponent implements OnInit {
         this.notiService.notifyCode(messageCheckFormat);
         return;
       }
-      this.handleDataTask(this.listTaskDone);
+      this.handleDataTask(this.listTaskEvent);
       if (this.isCheckRequiredTask(this.listTaskDone)) {
         return;
       }
+      this.listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
     }
-    this.beforeSave();
+   this.beforeSave();
   }
   beforeSave() {
     if (!this.owner && this.isMoveNext) {
@@ -731,36 +732,12 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     // type A = all, D=default, R = required
     if (event) {
-      this.listTaskEvent = event.data;
-      // for (let item of event.data) {
-      //   if (item.taskID && item.type === 'T') {
-      //     var task = this.listTaskDone.find((x) => x.recID === item?.taskID);
-      //     var taskNew = {
-      //       progress: item?.progressTask,
-      //       actualEnd: item?.actualEnd,
-      //       isUpdate: item?.isUpdate,
-      //       note: item?.note,
-      //     };
-      //     this.updateDataTask(task, taskNew);
-      //   }
-      //   if (item?.groupTaskID && item.type === 'G') {
-      //     var group = this.listTaskGroupDone.find(
-      //       (x) => x.recID === item?.groupTaskID
-      //     );
-      //     var groupNew = {
-      //       progress: item?.progressGroupTask,
-      //       isUpdate: item?.isUpdate,
-      //       actualEnd: item?.actualEnd,
-      //       note: item?.note,
-      //     };
-      //     this.updateDataGroup(group, groupNew);
-      //   }
-      // }
+      this.listTaskEvent = event;
     }
   }
   handleDataTask(listTask: any) {
-    for (let item of listTask) {
-      if (item.taskID && item.type === 'T') {
+    if(listTask?.length > 0 && listTask) {
+      for (let item of listTask) {
         let task = this.listTaskDone.find((x) => x.recID === item?.taskID);
         let taskNew = {
           progress: item?.progressTask,
@@ -769,8 +746,9 @@ export class PopupMoveStageComponent implements OnInit {
           note: item?.note,
         };
         this.updateDataTask(task, taskNew);
-      }
     }
+    }
+
   }
   updateDataTask(taskNew: any, taskOld: any) {
     taskNew.actualEnd = taskOld?.actualEnd;

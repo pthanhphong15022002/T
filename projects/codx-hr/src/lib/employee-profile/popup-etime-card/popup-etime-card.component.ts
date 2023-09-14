@@ -47,7 +47,7 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
   onInit(): void {
     if (this.formModel) {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((res) => {
           if (res) {
             this.formGroup = res;
