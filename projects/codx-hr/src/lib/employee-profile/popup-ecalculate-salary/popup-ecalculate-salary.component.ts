@@ -45,7 +45,7 @@ export class PopupECalculateSalaryComponent
   onInit(): void {
     if (this.formModel) {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((res) => {
           if (res) {
             this.formGroup = res;

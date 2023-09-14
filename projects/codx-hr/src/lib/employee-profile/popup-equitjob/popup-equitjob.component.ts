@@ -145,7 +145,7 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -156,7 +156,7 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;

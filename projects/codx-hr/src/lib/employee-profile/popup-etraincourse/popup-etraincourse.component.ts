@@ -98,7 +98,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   initForm() {
     if (this.formModel) {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -213,7 +213,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.form.validation(false)
+      this.form?.form?.validation(false)
       return;
     }
 

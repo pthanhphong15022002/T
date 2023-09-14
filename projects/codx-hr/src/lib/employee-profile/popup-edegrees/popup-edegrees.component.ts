@@ -198,7 +198,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         }
       });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((item) => {
         this.formGroup = item;
         if (this.actionType == 'add') {

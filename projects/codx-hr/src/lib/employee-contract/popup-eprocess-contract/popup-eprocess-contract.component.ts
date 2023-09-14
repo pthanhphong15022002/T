@@ -177,7 +177,8 @@ export class PopupEProcessContractComponent
         this.hrSevice
           .getFormGroup(
             this.benefitFormModel.formName,
-            this.benefitFormModel.gridViewName
+            this.benefitFormModel.gridViewName,
+            this.benefitFormModel
           )
           .then((fg) => {
             if (fg) {
@@ -192,7 +193,7 @@ export class PopupEProcessContractComponent
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -203,7 +204,7 @@ export class PopupEProcessContractComponent
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;

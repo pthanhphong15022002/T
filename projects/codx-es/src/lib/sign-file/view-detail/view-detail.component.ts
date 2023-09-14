@@ -53,7 +53,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private authStore: AuthStore,
   ) {
     super(inject);
-    this.funcID = this.view?.funcID;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;
