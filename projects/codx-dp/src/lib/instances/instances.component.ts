@@ -881,13 +881,13 @@ export class InstancesComponent
                 break;
               //Đóng nhiệm vụ = true
               case 'DP14':
-                if (data.closed || !data.permissionCloseInstances)
-                  res.isblur = true;
+                if (data.closed || !data.permissionCloseInstances )
+                  res.disabled = true;
                 break;
               //Mở nhiệm vụ = false
               case 'DP15':
-                if (!data.closed || !data.permissionCloseInstances) {
-                  res.isblur = true;
+                if (!data.closed || !data.permissionCloseInstances ) {
+                  res.disabled = true;
                 }
                 break;
               case 'DP02':
@@ -955,11 +955,12 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP02':
+              case 'DP22':
+              case 'DP14':
+              case 'DP15':
               case 'DP23':
                 mf.disabled = true;
                 break;
-              default:
-                mf.isblur = true;
             }
           });
         }
