@@ -89,12 +89,11 @@ export class RequestReviewComponent
     this.detectorRef.detectChanges();
   }
 
-  loadContent(cpn:any,transID:any,funcID:any, dataUnbounds:any)
+  loadContent(cpn:any,transID:any,funcID:any)
   {
     let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
     if(funcID) componentRef.instance.funcID = funcID;
     if(transID) componentRef.instance.recID = transID;
-    if(dataUnbounds) componentRef.instance.dataUnbounds = dataUnbounds;
   }
 
   click(e: any) {}
@@ -110,7 +109,8 @@ export class RequestReviewComponent
     {
       case "ES":
       {
-        alert("a");
+        funcID = "EST012";
+        component = this.components.cpnDtESSignFile;
         break;
       }
       case "OD":
@@ -120,24 +120,9 @@ export class RequestReviewComponent
         break;
       }
     }
-    let dataUnbounds = 
-    {
-      processType : this.dataItem?.processType,
-      stepType: this.dataItem?.stepType,
-      statusApproval: this.dataItem?.status,
-      stepNo: this.dataItem?.stepNo,
-      approvalRecID: this.dataItem?.recID,
-      eSign: this.dataItem?.eSign,
-      approveControl: this.dataItem?.approveControl,
-      transID : this.dataItem?.transID,
-      htmlView : this.dataItem?.htmlView,
-      confirmControl : this.dataItem?.confirmControl,
-      approver: this.dataItem?.approver,
-      stepRecID: this.dataItem?.stepRecID
-    }
   
     this.content.clear();
-    this.loadContent(component,dt?.data?.transID,funcID,dataUnbounds)
+    this.loadContent(component,dt?.data?.transID,funcID)
   }
 
 

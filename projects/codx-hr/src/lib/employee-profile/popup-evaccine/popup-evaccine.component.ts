@@ -87,7 +87,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((formGroup) => {
         if (formGroup) {
           this.formGroup = formGroup;

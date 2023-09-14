@@ -388,7 +388,7 @@ export class CashreceiptsComponent extends UIComponent {
       (x: { functionID: string }) =>
         x.functionID == 'ACT041003' || // MF ghi sổ (PC)
         x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-        x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
+        x.functionID == 'ACT040104' || // MF gửi duyệt (PC)
         x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
         x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
         x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
@@ -397,7 +397,7 @@ export class CashreceiptsComponent extends UIComponent {
         x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
-        x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
+        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PC)
         x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
         x.functionID == 'ACT042901' // MF chuyển tiền điện tử
     );

@@ -1016,7 +1016,7 @@ export class CodxShareService {
     }
   }
 
-  changeMFApproval(data: any, value: object | any = null) {
+  changeMFApproval(data: any, value: object | any = null) {    
     var datas = value;
     if (datas) {
       var list = data.filter(
@@ -1095,10 +1095,10 @@ export class CodxShareService {
       (x: { functionID: string }) => x.functionID == 'SYS207'
     );
     bm[0].disabled = true;
-    if (datas.statusApproval != '3') {
+    if (datas?.statusApproval != '3') {
       var check = this.checkStatusApproval(
-        datas.approvalRecID,
-        datas.statusApproval
+        datas?.approvalRecID,
+        datas?.statusApproval
       );
       if (isObservable(check)) {
         check.subscribe((item) => {

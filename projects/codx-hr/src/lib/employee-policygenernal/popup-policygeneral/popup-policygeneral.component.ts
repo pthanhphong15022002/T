@@ -71,7 +71,7 @@ export class PopupPolicygeneralComponent
         if(formModel){
           this.formModel = formModel;
           this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
           .then((fg) => {
             if(fg) {
               this.formGroup = fg;
@@ -83,7 +83,7 @@ export class PopupPolicygeneralComponent
     }
     else{
       this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if(fg) {
           this.formGroup = fg;

@@ -4516,4 +4516,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.stepNew = null;
     // this.stepEdit = null;
   }
+
+  setNameTypeTask(taskType) {
+    let type = this.listTypeTask?.find((task) => task?.value == taskType);
+    return type?.text;
+  }
 }

@@ -190,7 +190,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       if (formModel) {
         this.formModel = formModel;
         this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;

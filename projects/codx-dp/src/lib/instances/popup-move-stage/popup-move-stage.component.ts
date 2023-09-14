@@ -137,6 +137,7 @@ export class PopupMoveStageComponent implements OnInit {
     if (this.applyFor == '0') {
       // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       //  this.listStepProccess = dt?.data?.listStepProccess;
+      this.instance = dt?.data?.instance;
       this.isDurationControl = dt?.data?.isDurationControl;
       //   this.getIdReason();
     } else if (this.applyFor != '0') {
@@ -145,11 +146,11 @@ export class PopupMoveStageComponent implements OnInit {
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
       this.isLoad = true;
     }
-    this.stepID = this.dataCM ? this.dataCM?.stepID : this.instance?.stepID;
+    this.stepID = this.dataCM ? this.dataCM?.stepID : dt?.data?.instance?.stepID;
     this.processID = this.dataCM
       ? this.dataCM?.processID
-      : this.instance?.processID;
-    this.recID = this.dataCM ? this.dataCM?.refID : this.instance?.recID;
+      : dt?.data?.instance?.processID;
+    this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
     this.ownerInstance = this.dataCM
       ? dt?.data?.deal?.owner
       : JSON.parse(JSON.stringify(dt?.data?.instance.owner));
@@ -191,6 +192,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage() {
+    debugger;
     var datas = [this.recID, this.processID, this.stepID, this.applyFor];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
@@ -450,12 +452,13 @@ export class PopupMoveStageComponent implements OnInit {
         this.notiService.notifyCode(messageCheckFormat);
         return;
       }
-      this.handleDataTask(this.listTaskDone);
+      this.handleDataTask(this.listTaskEvent);
       if (this.isCheckRequiredTask(this.listTaskDone)) {
         return;
       }
+      this.listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
     }
-    this.beforeSave();
+   this.beforeSave();
   }
   beforeSave() {
     if (!this.owner && this.isMoveNext) {
@@ -731,36 +734,12 @@ export class PopupMoveStageComponent implements OnInit {
   changeProgress(event) {
     // type A = all, D=default, R = required
     if (event) {
-      this.listTaskEvent = event.data;
-      // for (let item of event.data) {
-      //   if (item.taskID && item.type === 'T') {
-      //     var task = this.listTaskDone.find((x) => x.recID === item?.taskID);
-      //     var taskNew = {
-      //       progress: item?.progressTask,
-      //       actualEnd: item?.actualEnd,
-      //       isUpdate: item?.isUpdate,
-      //       note: item?.note,
-      //     };
-      //     this.updateDataTask(task, taskNew);
-      //   }
-      //   if (item?.groupTaskID && item.type === 'G') {
-      //     var group = this.listTaskGroupDone.find(
-      //       (x) => x.recID === item?.groupTaskID
-      //     );
-      //     var groupNew = {
-      //       progress: item?.progressGroupTask,
-      //       isUpdate: item?.isUpdate,
-      //       actualEnd: item?.actualEnd,
-      //       note: item?.note,
-      //     };
-      //     this.updateDataGroup(group, groupNew);
-      //   }
-      // }
+      this.listTaskEvent = event;
     }
   }
   handleDataTask(listTask: any) {
-    for (let item of listTask) {
-      if (item.taskID && item.type === 'T') {
+    if(listTask?.length > 0 && listTask) {
+      for (let item of listTask) {
         let task = this.listTaskDone.find((x) => x.recID === item?.taskID);
         let taskNew = {
           progress: item?.progressTask,
@@ -769,8 +748,9 @@ export class PopupMoveStageComponent implements OnInit {
           note: item?.note,
         };
         this.updateDataTask(task, taskNew);
-      }
     }
+    }
+
   }
   updateDataTask(taskNew: any, taskOld: any) {
     taskNew.actualEnd = taskOld?.actualEnd;

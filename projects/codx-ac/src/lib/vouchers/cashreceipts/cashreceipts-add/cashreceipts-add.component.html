@@ -36,7 +36,7 @@
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="'AC063'" [value]="formCashReceipt.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType'].referedValue" [value]="formCashReceipt.data.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="formCashReceipt.data?._isEdit && formCashReceipt.data?.status != '7'">
@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true"
+    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event,elementTabDetail)"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -101,21 +101,13 @@
             <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
-              <i *ngIf="
-              formCashReceipt.data?.subType == '2' ||
-                  formCashReceipt.data?.subType == '12' ||
-                  formCashReceipt.data?.subType == '3' ||
-                  formCashReceipt.data?.subType == '4'
-                " class="icon-format_list_numbered icon-18 me-2"></i>
+              <i *ngIf="formCashReceipt.data?.subType == '12'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="formCashReceipt.data?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
               <codx-label *ngIf="
-              formCashReceipt.data?.subType == '2' ||
-                  formCashReceipt.data?.subType == '3' ||
-                  formCashReceipt.data?.subType == '4'
-                " style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail2"
+              formCashReceipt.data?.subType == '12'" style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail2"
                 [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
               <codx-label *ngIf="formCashReceipt.data?.subType == '9'" style="font-size: 14px !important"
                 class="fw-bold" fiedName="lblDetail2" [formModel]="dialog.formModel"
@@ -126,7 +118,7 @@
             <ng-container *ngTemplateOutlet="TmpTabSettledInvoices"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-graph-up icon-18 me-2"></i>
@@ -301,7 +293,7 @@
                     [formModel]="formCashReceipt.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input #eleCbxPayee [Group]="formCashReceipt.formGroup" [formModel]="formCashReceipt.formModel"
+                    <codx-input #eleCbxPayor [Group]="formCashReceipt.formGroup" [formModel]="formCashReceipt.formModel"
                       field="payor" (valueChange)="valueChangeMaster($event)"></codx-input>
                   </div>
                 </div>
@@ -548,24 +540,19 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="
-  formCashReceipt.data?.subType == '1' ||
-  formCashReceipt.data?.subType == '9' ||
-      (formCashReceipt.data?.subType == '3' && subTypeAdv == '1') ||
-      (formCashReceipt.data?.subType == '4' && subTypeAdv == '1')
-    ">
+  <ng-container *ngIf="formCashReceipt.data?.subType == '11'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false"
-        [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
-        [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
-        entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
-        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true"
-        (gridInit)="beforeInitGridCashpayments($event)" rowNoField="rowNo"
-        (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
+      <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false"
+        [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
+        [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
+        entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
+        [templateMore]="TmpMFCashReceipts" service="AC" [editOnClick]="true"
+        (gridInit)="beforeInitGridCashReceipt($event)" rowNoField="rowNo"
+        (eventAction)="onActionGridCashReceipt($event)" (actionCompleted)="onActionGridCashReceipt($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formCashReceipt.data?.subType == '1' || formCashReceipt.data?.subType == '9'">
+          <div *ngIf="formCashReceipt.data?.subType == '11'">
             <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
@@ -594,11 +581,7 @@
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
   <ng-container *ngIf="
-  formCashReceipt.data?.subType == '2' ||
-      (formCashReceipt.data?.subType == '3' && subTypeAdv == '2') ||
-      (formCashReceipt.data?.subType == '4' && subTypeAdv == '2') ||
-      formCashReceipt.data?.subType == '9'
-    ">
+  formCashReceipt.data?.subType == '12'">
     <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
@@ -665,9 +648,9 @@
 </ng-template>
 <!-- End: Grid VATInvoices -->
 
-<!-- Start: More function Cashpayment -->
-<ng-template #TmpMFCashpayment let-data>
-  <codx-mfunc [formModel]="fmCashpaymentLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)"
+<!-- Start: More function CashReceipts -->
+<ng-template #TmpMFCashReceipts let-data>
+  <codx-mfunc [formModel]="fmCashReceiptsLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)"
     type="view"></codx-mfunc>
 </ng-template>
-<!-- End: More function Cashpayment -->
+<!-- End: More function CashReceipts -->

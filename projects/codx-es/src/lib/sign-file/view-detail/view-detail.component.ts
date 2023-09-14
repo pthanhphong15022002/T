@@ -10,6 +10,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -24,6 +25,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  UIDetailComponent,
   ViewsComponent,
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -38,9 +40,10 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   runMode: any;
   constructor(
+    inject: Injector,
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
@@ -48,13 +51,11 @@ export class ViewDetailComponent implements OnInit {
     private notify: NotificationsService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService,
-    private api: ApiHttpService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
+    super(inject);
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
-        this.runMode=func?.runMode;        
+        this.runMode=func?.runMode;
       }
     });
     this.user = this.authStore.get();
@@ -62,14 +63,12 @@ export class ViewDetailComponent implements OnInit {
 
   @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
-  @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
-
+  itemDetail: any;
   active = 1;
   openNav = false;
   canRequest;
@@ -103,16 +102,16 @@ export class ViewDetailComponent implements OnInit {
     // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
-
-  ngOnInit(): void {
+  override onInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
+    this.initForm();
     if (this.formModel) {
       this.cache
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((gv) => {
           if (gv) this.gridViewSetup = gv;
-          this.initForm();
+          //this.initForm();
         });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
@@ -122,7 +121,7 @@ export class ViewDetailComponent implements OnInit {
             .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
             .subscribe((gv) => {
               if (gv) this.gridViewSetup = gv;
-              this.initForm();
+              //this.initForm();
             });
         }
       });
@@ -132,14 +131,6 @@ export class ViewDetailComponent implements OnInit {
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.data &&
-      (changes.data?.previousValue?.recID !=
-        changes.data?.currentValue?.recID ||
-        changes.data?.currentValue?.recID == this.itemDetail?.recID)
-    ) {
-      this.data = changes.data?.currentValue;
-    }
     if (this.formModel) {
       this.initForm();
     } else {
@@ -183,36 +174,79 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
+    this.funcID = this.funcID || this.view?.funcID;
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;
+        this.detectorRef.detectChanges();
+      }
+    });
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
     this.cache.valueList('TM018').subscribe((res) => {});
-    if (this.itemDetail?.recID) {
-      this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+    if (this.recID) {
+      this.esService.getTask(this.recID).subscribe((res) => {
         this.taskViews = res;
         this.df.detectChanges();
       });
     }
-
-    if (this.itemDetail && this.itemDetail !== null) {
-      this.files = [];
-      this.df.detectChanges();
-      if (this.itemDetail?.files?.length > 0) {
-        this.esService
-          .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
-          .subscribe((res) => {
-            if (res) {
-              this.files = res;
-              this.df.detectChanges();
-            }
-          });
-      }
       this.esService
-        .getDetailSignFile(this.itemDetail?.recID)
+        .getViewDetailSignFile(this.recID,this.funcID)
         .subscribe((res) => {
           this.dataReferences = [];
           if (res) {
             this.itemDetail = res;
+            this.files = [];
+            this.df.detectChanges();
+            if (this.itemDetail?.files?.length > 0) {
+              this.esService
+                .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.df.detectChanges();
+                  }
+                });
+            }
+            this.transID = this.itemDetail.processID;
+            if (
+              this.itemDetail?.approveControl == '1' ||
+              this.itemDetail?.approveStatus == '0' ||
+              this.itemDetail?.approveStatus == '2' ||
+              this.itemDetail?.approveStatus == '3' ||
+              this.itemDetail?.approveStatus == '4' ||
+              this.itemDetail?.approveStatus == '5'
+            ) {
+              this.transID = this.itemDetail.recID;
+            }
+      
+            this.esService.getFormModel('EST04').then((res) => {
+              if (res) {
+                let fmApprovalStep = res;
+                let gridModels = new DataRequest();
+                gridModels.dataValue = this.transID;
+                gridModels.predicate = 'TransID=@0';
+                gridModels.funcID = fmApprovalStep.funcID;
+                gridModels.entityName = fmApprovalStep.entityName;
+                gridModels.gridViewName = fmApprovalStep.gridViewName;
+                // gridModels.pageSize = 20;
+                gridModels.pageLoading = false;
+      
+                if (gridModels.dataValue != null) {
+                  this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+                    if (res && res?.length >= 0) {
+                      this.lstStep = res;
+                    }
+                  });
+                }
+              }
+            });
+          if (this.itemDetail != null) {
+            this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
+          }
+          this.isAfterRender = true;
+            this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService
                 .getEntity(this.itemDetail?.refType)
@@ -277,44 +311,7 @@ export class ViewDetailComponent implements OnInit {
             this.df.detectChanges();
           }
         });
-      this.transID = this.itemDetail.processID;
-      if (
-        this.itemDetail?.approveControl == '1' ||
-        this.itemDetail?.approveStatus == '0' ||
-        this.itemDetail?.approveStatus == '2' ||
-        this.itemDetail?.approveStatus == '3' ||
-        this.itemDetail?.approveStatus == '4' ||
-        this.itemDetail?.approveStatus == '5'
-      ) {
-        this.transID = this.itemDetail.recID;
-      }
-
-      this.esService.getFormModel('EST04').then((res) => {
-        if (res) {
-          let fmApprovalStep = res;
-          let gridModels = new DataRequest();
-          gridModels.dataValue = this.transID;
-          gridModels.predicate = 'TransID=@0';
-          gridModels.funcID = fmApprovalStep.funcID;
-          gridModels.entityName = fmApprovalStep.entityName;
-          gridModels.gridViewName = fmApprovalStep.gridViewName;
-          // gridModels.pageSize = 20;
-          gridModels.pageLoading = false;
-
-          if (gridModels.dataValue != null) {
-            this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-              if (res && res?.length >= 0) {
-                this.lstStep = res;
-              }
-            });
-          }
-        }
-      });
-    }
-    if (this.itemDetail != null) {
-      this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
-    }
-    this.isAfterRender = true;
+     
     // this.setHeight();
   }
 
@@ -436,7 +433,7 @@ export class ViewDetailComponent implements OnInit {
         break;
       default:
         //Biến động , tự custom
-        var customData = 
+        var customData =
         {
           refID : "",
           refType : this.formModel?.entityName,

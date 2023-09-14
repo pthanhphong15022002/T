@@ -22,6 +22,7 @@ import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { DealsComponent } from '../deals.component';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -47,7 +48,8 @@ export class DealDetailComponent implements OnInit {
   tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
-
+  @ViewChild('loadContactDeal')
+  loadContactDeal: CodxListContactsComponent;
   formModelCustomer: FormModel;
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -88,6 +90,7 @@ export class DealDetailComponent implements OnInit {
   mergedList: any[] = [];
   listCategory = [];
   listRoles = [];
+  lstContacts = [];
 
   vllStatusQuotation: any;
   vllStatusContract: any;
@@ -95,7 +98,6 @@ export class DealDetailComponent implements OnInit {
   viewSettings: any;
   contactPerson: any;
   oCountFooter: any = {};
-
   isShow = false;
   isLoadOwner: boolean = true;
   constructor(
@@ -421,10 +423,32 @@ export class DealDetailComponent implements OnInit {
   }
   saveDataStep(e) {
     if (e) {
+      if(e?.fields != null && e?.fields?.length > 0){
+        for(var item of e?.fields){
+          if(item?.dataType == 'C' && item?.dataValue != null && item?.dataValue?.trim() != ''){
+            var lst = JSON.parse(item?.dataValue);
+            for(var contact of lst){
+              let idx = this.lstContacts?.findIndex(x => x.recID == contact?.recID);
+              if(idx != -1){
+                this.lstContacts[idx] = contact;
+              }else{
+                this.lstContacts.push(Object.assign({}, contact));
+              }
+            }
+          }
+        }
+        if(this.loadContactDeal){
+          this.loadContactDeal.loadListContact(this.lstContacts);
+        }
+      }
+      this.changeDetectorRef.detectChanges();
+
     }
+
     // this.listSteps = e;
     // this.outDataStep.emit(this.dataStep);
   }
+
   contactChange($event) {
     if ($event) {
       if ($event?.data) {
@@ -452,10 +476,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   lstContactEmit(e) {
-    // if(e != null && e?.length > 0){
-    //   var json = JSON.stringify(e);
-    //   this.codxCmService.updateFieldContacts(this.dataSelected?.refID, json, '').subscribe(res=>{});
-    // }
+    this.lstContacts = e ?? [];
   }
 
   async promiseAll(listInstanceStep) {

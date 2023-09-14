@@ -1,4 +1,3 @@
-
 import {
   FormModel,
   DialogRef,
@@ -7,13 +6,18 @@ import {
   CacheService,
   ApiHttpService,
   CallFuncService,
+  NotificationsService,
 } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 import { StepService } from '../step.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
-import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
+import {
+  DP_Instances_Steps,
+  DP_Instances_Steps_TaskGroups,
+  DP_Instances_Steps_Tasks,
+} from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'codx-view-task',
@@ -22,7 +26,7 @@ import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_T
 })
 export class CodxViewTaskComponent implements OnInit {
   //#region input
-  type = '';//P:step, G: group, task
+  type = ''; //P:step, G: group, task
   dataInput: any; // step or group or task
   isRoleAll = false;
   isOnlyView = false;
@@ -35,13 +39,13 @@ export class CodxViewTaskComponent implements OnInit {
   //#endregion
 
   title = ''; // tiêu đề
-  dataView: any; // data hien thi 
+  dataView: any; // data hien thi
   owner = []; //role type O
   person = []; //role
-  connection = '';// người liên quan => step
+  connection = ''; // người liên quan => step
   participant = []; //role type P
   listDataLink = []; //role type S
-  listTypeTask = []; 
+  listTypeTask = [];
   hideExtend = true;
   isShowUpdate = false;
   user: any;
@@ -51,7 +55,6 @@ export class CodxViewTaskComponent implements OnInit {
   frmModel: FormModel = {};
   groupTaskAdd: DP_Instances_Steps_TaskGroups;
   taskAdd: DP_Instances_Steps_Tasks;
-
   viewModelDetail = 'history'; // nằm ở phần mở rộng
   tabInstances = [
     { type: 'history', title: 'Lịch sử' },
@@ -59,7 +62,7 @@ export class CodxViewTaskComponent implements OnInit {
     { type: 'attachments', title: 'Đính kèm' },
     { type: 'assignTask', title: 'Giao việc' },
   ];
-  
+
   dateFomat = 'dd/MM/yyyy';
   formModelStep: FormModel;
   moreDefaut;
@@ -72,6 +75,7 @@ export class CodxViewTaskComponent implements OnInit {
     private callfc: CallFuncService,
     private stepService: StepService,
     private changeDetectorRef: ChangeDetectorRef,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -93,7 +97,7 @@ export class CodxViewTaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // nhận vào 1 instanceStep và dữ liệu cần xem chi tiết 
+    // nhận vào 1 instanceStep và dữ liệu cần xem chi tiết
     // nếu không có thì dựa vào dữ liệu cần xem để lấy instance từ DB để xử lý
     if (this.type == 'P') {
       this.getInstanceStepByRecID(this.dataInput?.recID);
@@ -101,44 +105,51 @@ export class CodxViewTaskComponent implements OnInit {
       this.getInstanceStepByRecID(this.dataInput?.stepID);
     }
     this.formModelStep = {
-      entityName:"DP_Instances_Steps_Tasks",
-      formName: "DPInstancesStepsTasks",
-      funcID: "DPT040102",
-      gridViewName: "grvDPInstancesStepsTasks",
-    }
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      funcID: 'DPT040102',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
   }
 
   closePopup() {
     //khi đóng thì nhận về progress để cập nhật nếu step và group thì có thêm group và task đã thêm
-    this.dialog.close({dataProgress: this.dataProgress, group: this.groupTaskAdd, task: this.taskAdd });
+    this.dialog.close({
+      dataProgress: this.dataProgress,
+      group: this.groupTaskAdd,
+      task: this.taskAdd,
+    });
   }
 
   //#region get data
   async getInstanceStepByRecID(recID) {
-    if(!this.instanceStep){
+    if (!this.instanceStep) {
       this.api
-      .exec<any>(
-        'DP',
-        'InstanceStepsBusiness',
-        'GetInstanceStepByRecIDAsync',
-        recID
-      )
-      .subscribe(async (res) => {
-        if (res) {
-          this.instanceStep = res;
-          this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
-          // this.checkRole();
-        }
-        await this.setDataView();
-        this.settingData();
-        this.changeDetectorRef.detectChanges();
-      });
-    }else{
+        .exec<any>(
+          'DP',
+          'InstanceStepsBusiness',
+          'GetInstanceStepByRecIDAsync',
+          recID
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            this.instanceStep = res;
+            this.isOnlyView =
+              this.instanceStep?.stepStatus == '1' ? true : false;
+            // this.checkRole();
+          }
+          await this.setDataView();
+          this.settingData();
+          this.changeDetectorRef.detectChanges();
+        });
+    } else {
       await this.setDataView();
       this.settingData();
       this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
-      this.isUpdateProgressGroup = this.instanceStep?.progressTaskGroupControl || false;
-      this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false;
+      this.isUpdateProgressGroup =
+        this.instanceStep?.progressTaskGroupControl || false;
+      this.isUpdateProgressStep =
+        this.instanceStep?.progressStepControl || false;
     }
   }
   getModeFunction() {
@@ -156,13 +167,17 @@ export class CodxViewTaskComponent implements OnInit {
   getIconTask(task) {
     let type = task?.taskType || this.type;
     let color = this.listTypeTask?.find((x) => x.value === type);
-    return type == 'P'? task?.icon : color?.icon;
+    return type == 'P' ? task?.icon : color?.icon;
   }
 
   getColor(task) {
     let type = task?.taskType || this.type;
     let color = this.listTypeTask?.find((x) => x.value === type);
-    return { 'background-color': type == 'P' ? task?.backgroundColor: color?.color, with: '40px', height: '40px' };
+    return {
+      'background-color': type == 'P' ? task?.backgroundColor : color?.color,
+      with: '40px',
+      height: '40px',
+    };
   }
 
   getColorTile(task) {
@@ -185,12 +200,11 @@ export class CodxViewTaskComponent implements OnInit {
       let taskView = this.instanceStep?.tasks?.find(
         (task) => task.recID == this.dataInput.recID
       );
-      if(taskView){
+      if (taskView) {
         this.dataView = taskView;
-      }else{
+      } else {
         this.dataView = this.dataInput;
       }
-      
     }
   }
   settingData() {
@@ -258,7 +272,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
   //#endregion
-  
+
   //#region progress
   async openPopupUpdateProgress(data, type) {
     let checkUpdate = this.checkUpdateProgress(data, type);
@@ -313,7 +327,7 @@ export class CodxViewTaskComponent implements OnInit {
     return check;
   }
   //#endregion
-  
+
   //#region more functions
   changeDataMFStep(event) {
     let isGroup = true;
@@ -337,12 +351,7 @@ export class CodxViewTaskComponent implements OnInit {
 
           case 'DP08': // Thêm công việc
             res.isbookmark = true;
-            if (
-              !(
-                this.isRoleAll &&
-                (this.type == 'P' || this.type == 'G')
-              )
-            ) {
+            if (!(this.isRoleAll && (this.type == 'P' || this.type == 'G'))) {
               res.disabled = true;
             }
             break;
@@ -368,22 +377,29 @@ export class CodxViewTaskComponent implements OnInit {
             break;
           case 'DP20': // tiến độ
             res.isbookmark = true;
-            if (!(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)) {
+            if (
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+            ) {
               res.disabled = true;
             }
             break;
-          case 'DP27':// đặt xe
+          case 'DP27': // đặt xe
             res.isbookmark = true;
             if (this.type != 'B') {
               res.disabled = true;
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if((this.dataView?.dependRule != "0" || this.dataView?.status != "1")){
+            if (
+              this.dataView?.dependRule != '0' ||
+              this.dataView?.status != '1'
+            ) {
               res.disabled = true;
-            }else if (!((this.isRoleAll || isGroup || isTask) && this.isOnlyView)) {
-                res.isblur = true;
-              }           
+            } else if (
+              !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
+            ) {
+              res.isblur = true;
+            }
             break;
         }
       });
@@ -393,28 +409,60 @@ export class CodxViewTaskComponent implements OnInit {
   async clickMFStep(event) {
     switch (event.functionID) {
       case 'DP13': //giao viec
-        this.stepService.assignTask(event.data, this.dataView,this.instanceStep);
+        this.stepService.assignTask(
+          event.data,
+          this.dataView,
+          this.instanceStep
+        );
         break;
       case 'DP08': //them task
         await this.chooseTypeTask();
         break;
       case 'DP20': // tien do
-        this.openPopupUpdateProgress(this.dataView, this.type)
+        this.openPopupUpdateProgress(this.dataView, this.type);
         break;
       case 'DP27': // đặt xe
-        await this.stepService.addBookingCar()
+        await this.stepService.addBookingCar();
         break;
-
+      case 'DP31': // bắt đầu ngay
+        this.startTask(this.dataView);
+        break;
     }
   }
   //#endregion
-
+  
+  //#region start task
+  startTask(task: DP_Instances_Steps_Tasks) {
+    // if (task?.taskType == 'Q') {
+    //   //báo giá
+    //   this.addQuotation();
+    // } else if (task?.taskType == 'CO') {
+    //   // hợp đồng
+    //   this.openPopupContract('add');
+    // }
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [
+        task?.stepID,
+        task?.recID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          let taskFind = this.instanceStep?.tasks?.find(t => t.recID == task?.recID);
+          taskFind.status = '2';
+          taskFind.actualStart = res;
+          taskFind.modifiedBy = this.user.userID;
+          taskFind.modifiedOn = new Date();
+          this.moreDefaut = { ...this.moreDefaut };;
+          this.notiService.notifyCode('SYS007');
+        }
+      });
+  }
   //#region CRUD
-  async chooseTypeTask(){
+  async chooseTypeTask() {
     let isAddGroup = this.type == 'P' ? true : false;
     let dataType = await this.stepService.chooseTypeTask(isAddGroup);
-    if(dataType){
-      if (dataType?.value == 'G') {          
+    if (dataType) {
+      if (dataType?.value == 'G') {
         await this.addGroup();
       } else {
         await this.addTask(dataType);
@@ -422,29 +470,39 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
 
-  async addGroup(){
+  async addGroup() {
     let groupOutput = await this.stepService.addGroupTask(this.instanceStep);
-    if(groupOutput?.groupTask){
+    if (groupOutput?.groupTask) {
       this.groupTaskAdd = groupOutput?.groupTask;
       this.instanceStep?.taskGroups?.push(groupOutput?.groupTask);
       this.changeDetectorRef.detectChanges();
     }
   }
 
-  async addTask(dataType){
-    let groupId = this.type == "G" ? this.dataView?.refID : null;
-    let taskOutput = await this.stepService.addTask('add','',null,dataType,this.instanceStep,groupId, true, null,'center');
-    if(taskOutput?.task){
+  async addTask(dataType) {
+    let groupId = this.type == 'G' ? this.dataView?.refID : null;
+    let taskOutput = await this.stepService.addTask(
+      'add',
+      '',
+      null,
+      dataType,
+      this.instanceStep,
+      groupId,
+      true,
+      null,
+      'center'
+    );
+    if (taskOutput?.task) {
       this.taskAdd = taskOutput?.task;
       this.instanceStep?.tasks?.push(taskOutput?.task);
-      if(this.type != "P"){
+      if (this.type != 'P') {
         this.listDataLink?.push(this.taskAdd);
       }
       this.changeDetectorRef.detectChanges();
     }
   }
   //#endregion
-  
+
   //#region check role
   checkRole() {
     if (this.listIdRoleInstance?.some((id) => id == this.user.userID)) {
@@ -457,7 +515,7 @@ export class CodxViewTaskComponent implements OnInit {
         ) || false;
     }
     this.isUpdateProgressGroup =
-    this.instanceStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
+      this.instanceStep?.progressTaskGroupControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm công việc
     this.isUpdateProgressStep = this.instanceStep?.progressStepControl || false; //Cho phép người phụ trách cập nhật tiến độ nhóm giai đoạn
   }
   //#endregion

@@ -811,6 +811,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
     this.customer.category = this.lead?.category;
+    this.customer.shortName = this.lead?.shortName;
   }
 
   setContact() {

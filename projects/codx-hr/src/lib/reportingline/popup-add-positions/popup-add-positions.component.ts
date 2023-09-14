@@ -78,7 +78,7 @@ export class PopupAddPositionsComponent implements OnInit {
     this.functionID = this.dialogData.funcID;
     this.formModel = this.dialogRef.formModel;
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;

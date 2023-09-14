@@ -119,7 +119,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    this.isStart = this.step || (this.step?.startDate && this.step?.startDate) ? false  : true;
+    this.isStart = this.step || (this.step?.startDate && this.step?.startDate) ? true  : false;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));

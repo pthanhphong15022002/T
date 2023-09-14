@@ -65,8 +65,6 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
 })
 export class ViewDetailComponent extends  UIDetailComponent implements OnChanges, AfterViewInit {
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  @Input() funcID: any;
-  @Input() recID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
@@ -121,8 +119,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   }
 
   override onInit(): void {
-    var a = this.dataUnbounds;
-    debugger
     this.active = 1;
     this.formModel = this.view?.formModel;
     //this.data = this.view.dataService.dataSelected;
@@ -189,8 +185,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       this.userID = this.authStore.get().userID;
       this.recID = changes.recID?.currentValue;
       if (!this.data) this.data = {};
-      this.getDtDis(this.recID, this.dataItem)
+
+      this.getDtDis(this.recID)
       this.getPermission(this.recID);
+
       this.detectorRef.detectChanges();
     }
     if (changes?.view?.currentValue != changes?.view?.previousValue)
@@ -211,19 +209,14 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
 
 
   //Hàm lấy thông tin chi tiết của công văn
-  getDtDis(id: any,data:any = null) {
+  getDtDis(id: any) {
     this.data = null;
     if (id) {
       this.odService
-        .getDetailDispatch(id, this.formModel.entityName , this.referType)
+        .getDetailDispatch(id, this.formModel.entityName , this.referType , false , this.funcID)
         .subscribe((item) => {
           if (item) {
             this.data = formatDtDis(item);
-            if(this.funcList.runMode == "1" )
-            {
-              if(this.dataUnbounds) this.data.unbounds = this.dataUnbounds;
-              else if(data) this.data.unbounds = data.unbounds;
-            }
           }
         });
     }
@@ -286,7 +279,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           this.gridViewSetup = gw;
           this.getDataValuelist();
         }
-        this.getDtDis(this.recID, this.dataItem)
+        this.getDtDis(this.recID)
       });
     } else {
       this.funcList = funcList;
@@ -297,7 +290,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
-      this.getDtDis(this.recID, this.dataItem)
+      this.getDtDis(this.recID)
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName
@@ -1294,7 +1287,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       default: {
 
         //Biến động , tự custom
-        var customData = 
+        var customData =
         {
           refID : "",
           refType : this.formModel?.entityName,
@@ -1396,7 +1389,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
 
   //Duyệt công văn
   documentApproval(datas: any) {
-    
+
     if (datas.bsCategory) {
       //Có thiết lập bước duyệt
       if (datas.bsCategory.approval) {
@@ -1473,7 +1466,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         this.data = e?.result[0];
         this.data.lstUserID = getListImg(e?.result[0].relations);
         this.data.listInformationRel = e?.result[1];
-        break; 
+        break;
       }
     }
   }
@@ -1486,7 +1479,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     shareBy: any,
     agencies = null
   ) {
-    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2')) 
+    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2'))
     {
       if (this.funcList?.defaultValue == '1') {
         var text = this.ms020?.customName;
@@ -1821,7 +1814,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             }
           });
           //this.callfc.openForm();
-        } 
+        }
         if (res2?.eSign == false)
         //xét duyệt
         this.release(datas, processID);
