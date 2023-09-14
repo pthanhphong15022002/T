@@ -1,8 +1,9 @@
 import { IncommingComponent } from "projects/codx-od/src/lib/incomming/incomming.component";
 import { RequestReviewComponent } from "./request-review/request-review.component";
 import { EmployeeContractComponent } from "projects/codx-hr/src/lib/employee-contract/employee-contract.component";
-import { ViewDetailComponent } from "projects/codx-od/src/lib/incomming/view-detail/view-detail.component";
+import { ViewDetailComponent  as OD_ViewDetail} from "projects/codx-od/src/lib/incomming/view-detail/view-detail.component";
 import { SignFileComponent } from "projects/codx-es/src/lib/sign-file/sign-file.component";
+import { ViewDetailComponent as ES_ViewDetail} from "projects/codx-es/src/lib/sign-file/view-detail/view-detail.component";
 
 //Routing component xét duyệt
 export var components = {
@@ -16,5 +17,7 @@ export var components = {
   };
 export var componentsDetail = {
   //Công văn
-  cpnDtDispatches: ViewDetailComponent,
+  cpnDtDispatches: OD_ViewDetail,
+  //Trình ký
+  cpnDtESSignFile: ES_ViewDetail,
 };

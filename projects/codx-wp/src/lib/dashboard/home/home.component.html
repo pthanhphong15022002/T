@@ -5,6 +5,7 @@
 </div> -->
 <codx-views #view 
   [views]="views" 
+  funcID="WP"
   [autoLoad]="false" 
   [idField]="'recID'">
 </codx-views>
@@ -15,7 +16,7 @@
       <div id="erm_content">
         <div class="d-flex">
           <div class="w-100 home-left">
-            <app-list-post [predicate]="predicatePortal" [dataValue]="dataValuePortal" [isShowCreate]="true"></app-list-post>
+            <app-list-post [formModel]="view.formModel" [predicate]="predicatePortal" [dataValue]="dataValuePortal" [isShowCreate]="true"></app-list-post>
           </div>
           <div class="w-350px min-w-350px ms-4 home-right">
             <div class="card card-custom card-myteam gutter-b form-myTeam">

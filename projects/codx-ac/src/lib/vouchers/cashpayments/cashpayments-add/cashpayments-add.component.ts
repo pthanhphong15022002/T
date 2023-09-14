@@ -484,6 +484,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   valueChangeLine(event: any) {
+    this.eleGridCashPayment.startProcess();
     let oLine = event.data;
     let oAccount = this.acService.getCacheValue('account',oLine.accountID);
     let oOffsetAccount = this.acService.getCacheValue('account',oLine.offsetAcctID);
@@ -512,6 +513,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         if (this.journal.entryMode == '2') {
           this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
         }
+        this.eleGridCashPayment.endProcess();
         break;
       case 'cr':
         if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
@@ -623,10 +625,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         if (res) {
           this.eleGridCashPayment.saveRow((res:any)=>{
             if(res){
-              
+              this.addRowDetailByType(typeBtn);
             }
           })
-          //this.addRowDetailByType(typeBtn);
         }
       });
   }
@@ -821,7 +822,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    */
   addLine() {
     let oLine = this.setDefaultLine();
-    this.eleGridCashPayment.endEdit();
     this.eleGridCashPayment.addRow(oLine,this.eleGridCashPayment.dataSource.length);
   }
 
