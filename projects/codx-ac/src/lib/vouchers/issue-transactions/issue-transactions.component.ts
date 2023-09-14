@@ -201,6 +201,10 @@ export class IssueTransactionsComponent extends UIComponent {
     });
   }
 
+  ngDoCheck(){
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.view.setRootNode('');
     this.onDestroy();
@@ -385,7 +389,7 @@ export class IssueTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data']?.data;
+                this.itemSelected = res.event['data'];
                 this.loadDatadetail(this.itemSelected);
               }
             }

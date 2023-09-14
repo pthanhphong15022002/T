@@ -1,0 +1,384 @@
+<codx-form
+  #form
+  [subHeader]="header"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [bodyCss]="'bgEDEDED pt-5'"
+  [body]="body"
+>
+</codx-form>
+<ng-template #header>
+  <div class="d-flex justify-content-between w-100">
+    <div>
+      <img
+        class="position-fixed"
+        src="../assets/themes/ac/default/img/advancedPayment_BG.jpg"
+      />
+      <div class="d-flex align-items-center" style="padding: 0px 70px">
+        <div style="margin-right: 20px">
+          <img src="../assets/themes/ac/default/img/IconDx.jpg" />
+        </div>
+        <div class="d-flex flex-column justify-content-between">
+          <div class="fs-5 fw-bold" [innerHTML]="company?.legalName"></div>
+          <div
+            class="text-gray-600"
+            style="font-size: 10px"
+            [innerHTML]="company?.street"
+          ></div>
+          <div
+            class="text-gray-600"
+            style="font-size: 10px"
+            [innerHTML]="company?.phone"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="d-flex justify-content-end align-items-center">
+        <codx-label class="me-2"
+          fiedName="VoucherNo"
+          [formModel]="form.formModel"
+          [setRequire]="false"
+          [cssClass]="'fs-4'"
+        >
+        </codx-label>
+        <span *ngIf="advancedPayment?.voucherNo" class="text-gray-600 voucherText"
+          style="font-size: 13px !important;">
+          {{ advancedPayment?.voucherNo }}
+        </span>
+        <span *ngIf="!advancedPayment?.voucherNo" class="text-gray-600 voucherText"
+          style="font-size: 13px !important;">
+          {{ ('AC0028' | mssg | async) }}
+        </span>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <codx-label class="me-2"
+          fiedName="VoucherDate"
+          [formModel]="form.formModel"
+          [setRequire]="false"
+          [cssClass]="'fs-4'"
+        >
+        </codx-label>
+        <span class="text-gray-600 voucherText"
+        style="font-size: 13px !important;"
+        >
+          {{ formatDate(advancedPayment?.voucherDate) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="d-flex h-100 w-100 bgEDEDED" style="padding: 0px 70px">
+    <div
+      class="bg-white rounded-2 d-flex justify-content-between flex-column h-100 w-100"
+    >
+      <!-- Thông tin chung -->
+      <div>
+        <div class="row text-center mt-2 text-primary fw-bold">
+          <codx-label style="font-size: 35px;" default="Đề nghị tạm ứng"></codx-label>
+        </div>
+        <div class="row">
+          <div>
+            <codx-label 
+              class="fw-bold" 
+              fiedName="ObjectID"
+              [formModel]="form.formModel">
+            </codx-label>
+            <codx-inplace
+              type="combobox"
+              [refValue]="form?.gridviewSetup?.ObjectID.referedValue"  
+              [refType]="form?.gridviewSetup?.ObjectID.referedType"
+              [emptyText]="form?.gridviewSetup?.ObjectID.headerText" 
+              field="objectID"
+              [value]="advancedPayment.objectID"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100 fs-4'"
+              (valueChange)="valueChange($event)"
+            ></codx-inplace>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="row align-items-start">
+              <div>
+                  <codx-label 
+                    class="fw-bold" 
+                    fiedName="TotalAmt"
+                    [formModel]="form.formModel">
+                  </codx-label>
+                  <div class="d-flex align-items-center">
+                    <codx-inplace
+                    type="text"
+                    [refValue]="form?.gridviewSetup?.TotalAmt.referedValue"  
+                    [refType]="form?.gridviewSetup?.TotalAmt.referedType"
+                    [emptyText]="form?.gridviewSetup?.TotalAmt.headerText"
+                    field="totalAmt"
+                    [value]="advancedPayment.totalAmt"
+                    [class]="'om-input w-auto'"
+                    [cssClass]="'om-input w-100 fs-4'"
+                    (valueChange)="valueChange($event)"
+                  >
+                  </codx-inplace>
+                  <span class="text-gray-600"
+                      style="font-size: 13px !important; padding-bottom: 5px;">
+                      {{ advancedPayment?.currencyID }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="row align-items-center">
+              <div>
+                <codx-label 
+                  class="fw-bold" 
+                  fiedName="PostedDate"
+                  [formModel]="form.formModel">
+                </codx-label>
+                <codx-inplace
+                  type="datetime"
+                  [refValue]="form?.gridviewSetup?.PostedDate.referedValue"  
+                  [refType]="form?.gridviewSetup?.PostedDate.referedType"
+                  [emptyText]="form?.gridviewSetup?.PostedDate.headerText"
+                  field="postedDate"
+                  [value]="advancedPayment.postedDate"
+                  [class]="'om-input w-100'"
+                  [cssClass]="'om-input w-100 fs-4'"
+                  (valueChange)="valueChange($event)"
+                ></codx-inplace>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="row align-items-start">
+              <div>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="PmtMethodID"
+                  [formModel]="form.formModel">
+                </codx-label>
+                <codx-inplace
+                  type="text"
+                  [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"  
+                  [refType]="form?.gridviewSetup?.PmtMethodID.referedType"
+                  [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
+                  field="pmtMethodID"
+                  [value]="advancedPayment.pmtMethodID"
+                  [class]="'om-input w-100 '"
+                  [cssClass]="'om-input w-100  fs-4'"
+                  (valueChange)="valueChange($event)"
+                ></codx-inplace>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <codx-label 
+              class="fw-bold" 
+              fiedName="ReasonID"
+              [formModel]="form.formModel">
+            </codx-label>
+            <codx-inplace
+              type="combobox"
+              [refValue]="form?.gridviewSetup?.ReasonID.referedValue"  
+              [refType]="form?.gridviewSetup?.ReasonID.referedType"
+              [emptyText]="form?.gridviewSetup?.ReasonID.headerText" 
+              field="reasonID"
+              [value]="advancedPayment.reasonID"
+              [class]="'om-input w-100 '"
+              [cssClass]="'om-input w-100  fs-4'"
+              (valueChange)="valueChange($event)"
+            ></codx-inplace>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <codx-label 
+              class="fw-bold" 
+              fiedName="Memo"
+              [formModel]="form.formModel">
+            </codx-label>
+            <codx-inplace
+              type="text"
+              [refValue]="form?.gridviewSetup?.Memo.referedValue"  
+              [refType]="form?.gridviewSetup?.Memo.referedType"
+              [emptyText]="form?.gridviewSetup?.Memo.headerText" 
+              [value]="advancedPayment.memo"
+              field="memo"
+              [class]="'om-input w-100 '"
+              [cssClass]="'om-input w-100  fs-4'"
+              (valueChange)="valueChange($event)"
+            ></codx-inplace>
+          </div>
+        </div>
+        <div class="mt-2 text-primary fw-bold fs-5">
+          <codx-label default="Chi tiết"></codx-label>
+        </div>
+      </div>
+      <!-- Header của Chi tiết -->
+      <div class="mt-5">
+        <div class="d-flex justify-content-start flex-column pb-3">
+          <div class="d-flex justify-content-start flex-column">
+            <div 
+            class="d-flex justify-content-between lign-items-center cursor-pointer w-100">
+              <div *ngFor="let item of columns;">
+                <div class="w-100 d-flex align-items-center ps-4">
+                  <div class="d-flex align-items-center w-100">
+                    <div
+                      class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
+                    >
+                      <codx-label
+                        class="w-100 fw-bold"
+                        [fiedName]="item.fieldName"
+                        [formModel]="fmAdvancedPaymentLines"
+                      >
+                      </codx-label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Nội dung của chi tiết -->
+      <div
+        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
+      >
+        <div class="flex-column d-flex justify-content-start px-9">
+          <div
+            class="d-flex justify-content-start flex-column"
+            *ngFor="let item of vendorData; let i = index"
+          >
+            <div class="d-flex justify-content-start flex-column pb-3 mt-2">
+              <div
+                class="d-flex align-items-center flex-row cursor-pointer w-100"
+              >
+                <div
+                  class="w-50 d-flex justify-content-start align-items-center"
+                >
+                  <div
+                    class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
+                  >
+                    <codx-inplace
+                      type="text"
+                      field="detailName"
+                      [class]="'om-input w-100'"
+                      [cssClass]="'om-input w-100 fs-4'"
+                      [value]="item?.detailName"
+                    ></codx-inplace>
+                  </div>
+                </div>
+
+                <div class="w-50 d-flex justify-content-start h-100">
+                  <div
+                    class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
+                  >
+                    <codx-inplace
+                      type="text"
+                      field="costPrice"
+                      [class]="'om-input w-100'"
+                      [cssClass]="'om-input w-100 fs-4'"
+                      [value]="item?.costPrice"
+                    ></codx-inplace>
+                  </div>
+                  <div
+                    class="w-10 d-flex align-items-center justify-content-start ps-2"
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-icon btn-sm btn-light-danger om-hover-mf"
+                      ngbTooltip="Xóa"
+                      (click)="onDelete(i)"
+                    >
+                      <i class="icon-close"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-100 h-100 flex-column d-flex justify-content-start">
+            <div
+              class="d-flex align-items-center cursor-pointer om-add-btn py-3 ps-8 w-fit"
+              (click)="addNewDetail()"
+            >
+              <i class="icon-add_circle_outline me-3 om-fs-3"></i>
+              <codx-label
+                class="text-gray-600"
+                default="Thêm kết quả chính"
+                fiedName="lblAddKR"
+              ></codx-label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Trường kế hoạch công tác -->
+      <div class="d-flex align-items-center">
+        <span
+          class="text-primary fw-bold"
+          style="margin-right: 15px"
+          [innerHTML]="'Kế hoạch công tác'"
+        ></span>
+        <span style="margin-right: 15px" [innerHTML]="'AR2023010001'"></span>
+        <i class="icon-link text-primary icon-30"></i>
+      </div>
+      <!-- Các button -->
+      <div class="d-flex justify-content-between my-5 px-9">
+        <button
+            style="border: 1px solid var(--primary-dark) !important"
+            type="button"
+            class="btn btn-md btn-light-primary me-2 rounded-15"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-cloud_upload icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblUpload"
+                default="Tệp đính kèm"
+              ></codx-label>
+            </div>
+          </button>
+        <div>
+          <button
+            style="border: 1px solid var(--primary-dark) !important"
+            type="button"
+            class="btn btn-md btn-light-primary me-2 rounded-15"
+            (keydown.enter)="onSave(false); 
+            $event.preventDefault()" 
+            (click)="onSave(false)"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-add_to_photos icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSaveAndClear"
+                default="Lưu & Gửi duyệt"
+              ></codx-label>
+            </div>
+          </button>
+          <button
+            id="save"
+            type="button"
+            class="btn btn-md btn-light-primary rounded-15"
+            style="border: 1px solid var(--primary-dark) !important"
+            (keydown.enter)="onSave(true); 
+            $event.preventDefault()" 
+            (click)="onSave(true)"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-save_alt icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSave"
+                default="Lưu"
+              ></codx-label>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

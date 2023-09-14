@@ -731,7 +731,10 @@ export class CmCustomerComponent
   }
 
   addressNameCMEmit(e) {
-    this.dataSelected.address = e;
+    this.dataSelected.address = e ? e?.adressName : null;
+    this.dataSelected.provinceID = e ? e?.provinceID : null;
+    this.dataSelected.districtID = e ? e?.districtID : null;
+    this.dataSelected.wardID = e ? e?.wrovinceID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
   }

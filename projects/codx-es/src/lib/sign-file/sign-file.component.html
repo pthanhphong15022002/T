@@ -32,8 +32,8 @@
 <ng-template #paneRight>
   <lib-view-detail
     #viewdetail
+    [recID]="itemDetail?.recID"
     [data]="lstSignfiles"
-    [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"

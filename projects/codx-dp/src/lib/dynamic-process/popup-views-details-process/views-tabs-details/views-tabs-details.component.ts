@@ -159,11 +159,11 @@ export class ViewsTabsDetailsComponent
     }
   }
   getObjectID(data) {
-    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+    return data.roles.find((x) => x.objectID == data?.owner)?.objectID;
   }
 
   getObjectName(data) {
-    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectName;
+    return data.roles.find((x) => x.objectID == data?.owner)?.objectName;
   }
 
   getRolesSteps(data) {

@@ -443,11 +443,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     var saveAsBlob = this.container.documentEditor.saveAsBlob('Docx');
     var fSaveAsBlob = from(saveAsBlob);
     return fSaveAsBlob.pipe(mergeMap((blob: Blob)=>{
-      var file = new File([blob], this.nameFile);
+      var file = new File([blob], this.nameFile || this.formModel.entityName);
       this.attachment1.isSaveSelected = '1';
       this.attachment1.fileUploadList = [];
       return this.attachment1.handleFileInputObservable([
-        { name: this.nameFile, rawFile: file, type: 'docx', size: file.size },
+        { name: this.nameFile || this.formModel.entityName, rawFile: file, type: 'docx', size: file.size },
       ]);
     }));
     //return of(null);

@@ -61,19 +61,28 @@ export class AppropvalNewsDetailComponent implements OnInit {
   
   // get data detail
   getPostInfor(objectID:string){
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "NewsBusiness",
-      "GetPostByApprovalAsync",
-      [this.objectID,this.funcID])
-      .subscribe((res:any) => {
-        this.data = JSON.parse(JSON.stringify(res));
-        this.imgOn = new DateTime();
-        if(this.data)
-          this.hideMFC = this.data.approveStatus == "5";            
-        this.dt.detectChanges();
-      });
+    if(objectID == null || objectID == "")
+    {
+      this.data = null;
+      this.dt.detectChanges();
+    }
+    else
+    {
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "GetPostByApprovalAsync",
+        [this.objectID,this.funcID])
+        .subscribe((res:any) => {
+          this.data = JSON.parse(JSON.stringify(res));
+          this.imgOn = new DateTime();
+          if(this.data)
+            this.hideMFC = this.data.approveStatus == "5";            
+          this.dt.detectChanges();
+        });
+    }
+    
   }
   //  click morefunction
   clickMF(event:any){
