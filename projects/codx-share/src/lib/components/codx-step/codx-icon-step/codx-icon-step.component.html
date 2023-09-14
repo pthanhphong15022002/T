@@ -9,7 +9,14 @@
   <span [ngClass]="icon" class="text-primary"></span>
 </div>
 
-<div class="d-flex align-items-center " *ngIf="!isStep">
+<div 
+  class="d-flex align-items-center " *ngIf="!isStep"
+  #typeTask="ngbPopover"
+  [ngbPopover]="task?.text"
+  [placement]="'top-left'"
+  (mouseenter)="typeTask.open()"
+  (mouseleave)="typeTask.close()"
+>
   <span
       class="me-3 cricle"
       [ngClass]="task?.icon + ' icon-' + sizeIcon"
