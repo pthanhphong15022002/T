@@ -37,7 +37,6 @@ export class MWPBookingStationeryComponent
   columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
-  funcID: string;
   service = 'EP';
   assemblyName = 'EP';
   entity = 'EP_Bookings';

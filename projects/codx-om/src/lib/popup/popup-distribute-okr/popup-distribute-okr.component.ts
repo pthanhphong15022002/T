@@ -61,7 +61,6 @@ export class PopupDistributeOKRComponent
   isAfterRender = false;
   dataOKR: any;
   isAdd: boolean;
-  funcID: '';
   radioKRCheck = true;
   radioOBCheck = false;
   distributeToType: any;

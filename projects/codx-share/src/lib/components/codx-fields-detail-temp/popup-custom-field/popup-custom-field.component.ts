@@ -24,6 +24,8 @@ export class PopupCustomFieldComponent implements OnInit {
   checkRequired = false;
   isSaving = false;
   isAddComplete: any = true;
+  objectIdParent: any;
+  customerID: any; //Khách hàng cơ hội
 
   constructor(
     private changeDetec: ChangeDetectorRef,
@@ -35,6 +37,8 @@ export class PopupCustomFieldComponent implements OnInit {
   ) {
     this.fiels = JSON.parse(JSON.stringify(dt.data.data));
     this.titleHeader = dt.data?.titleHeader;
+    this.objectIdParent = dt.data?.objectIdParent;
+    this.customerID = dt.data?.customerID;
     this.dialog = dialog;
   }
 

@@ -19,7 +19,6 @@ export class GiftTransComponent extends UIComponent {
     predicate: string = "";
     dataValue: string = "";
     entityName: string = "FD_GiftTrans";
-    funcID: string = "";
     //
     listGiftTran: any[] = [];
     selectedGiftID: string = "";

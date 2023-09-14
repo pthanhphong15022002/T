@@ -38,6 +38,9 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   @Output() actionSaveCF = new EventEmitter<any>();
   @Output() saveDataStep = new EventEmitter<any>();
   @Input() listFields!: any;
+  //dung cho co hoi
+  @Input() objectIdParent: any = '';
+  @Input() customerID: string = ''; //Khách hàng cơ hội
 
   viewsCrr: any;
   currentRate = 0;
@@ -154,7 +157,12 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     } else {
       list.push(data);
     }
-    var obj = { data: list, titleHeader: this.titleHeaderFormCF }; //lấy từ funra
+    var obj = {
+      data: list,
+      titleHeader: this.titleHeaderFormCF,
+      objectIdParent: this.objectIdParent,
+      customerID: this.customerID,
+    };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
       formName: 'DPInstancesStepsFields',

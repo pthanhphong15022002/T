@@ -34,7 +34,6 @@ export class PatternComponent extends UIComponent implements OnInit {
   dialog: any;
   views: Array<ViewModel> = [];
   functionList: any;
-  funcID: any;
   lstFile: any = new Array();
   REFER_TYPE = {
     IMAGE: 'image',

@@ -10,6 +10,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -28,7 +29,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //indexSelected;
   //lstDegrees;
   successFlag = false;
-  funcID: string;
   actionType;
   disabledInput = false;
 
@@ -46,7 +46,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   fieldHeaderTexts
   levelText: string;
   trainFieldText: string;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -307,6 +307,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     // }
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
 

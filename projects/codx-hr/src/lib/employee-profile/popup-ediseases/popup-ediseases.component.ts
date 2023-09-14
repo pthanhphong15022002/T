@@ -16,6 +16,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
  } from 'codx-core';
@@ -34,13 +35,12 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   indexSelected
   idField = 'RecID';
   disabledInput = false;
-  funcID;
   actionType: string;
   employeeId: string;
   isAfterRender = false;
   headerText: string;
   defaultFromDate: string = '0001-01-01T00:00:00';
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
   tabInfo: any[] = [
@@ -144,6 +144,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
     if (this.ediseasesObj.diseaseDate && this.ediseasesObj.diseaseDate > this.ediseasesObj.fromDate) {

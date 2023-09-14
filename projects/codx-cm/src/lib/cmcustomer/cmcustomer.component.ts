@@ -69,7 +69,6 @@ export class CmCustomerComponent
   button?: ButtonModel;
   dataSelected: any;
   //region Method
-  funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = '';

@@ -263,7 +263,7 @@
         </div>
     </div>
 
-    <div class="fs-5-sm fw-bold text-primary mt-6 mb-2">
+    <div class="fs-5-sm fw-bold text-primary mt-6 mb-2" *ngIf="benefitPolicyObj.attachments > 0">
         <codx-label
           name="lblAttachFile"
           [formModel]="formModel"

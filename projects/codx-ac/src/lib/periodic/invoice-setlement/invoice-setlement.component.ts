@@ -17,7 +17,6 @@ export class InvoiceSetlementComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any;
   entityName: any;
   mfFormName: any = 'InvoiceSetlement';
   mfGrvName: any = 'grvInvoiceSetlement';

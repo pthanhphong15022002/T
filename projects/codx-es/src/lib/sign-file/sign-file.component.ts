@@ -54,7 +54,7 @@ export class SignFileComponent extends UIComponent {
     private authStore: AuthStore
   ) {
     super(inject);
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.view?.formModel?.funcID ?? this.activedRouter.snapshot.params['funcID'] ;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;        
@@ -84,7 +84,6 @@ export class SignFileComponent extends UIComponent {
   resourceKanban?: ResourceModel;
   convertHtmlAgency = convertHtmlAgency;
 
-  funcID: string;
   formModel: FormModel;
   grvSetup: any = {};
 
@@ -362,7 +361,7 @@ export class SignFileComponent extends UIComponent {
     //   if (fm) {
     //   }
     // });
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = this.view?.formModel?.funcID ?? this.activedRouter.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;

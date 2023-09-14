@@ -64,7 +64,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
   dataListView: any = [];
   checkdataListView = false;
 
-  funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;

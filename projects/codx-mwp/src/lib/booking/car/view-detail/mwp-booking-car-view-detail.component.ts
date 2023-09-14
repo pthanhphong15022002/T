@@ -29,7 +29,6 @@ export class MWPBookingCarViewDetailComponent extends UIComponent implements OnC
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() data: any;
   @Input() hideMF = false;

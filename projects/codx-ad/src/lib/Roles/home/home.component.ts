@@ -41,7 +41,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   tenant: string;
   isLoad = true;
   index = 0;
-  funcID = '';
   views = [];
   button?: ButtonModel;
   dialog: DialogRef;

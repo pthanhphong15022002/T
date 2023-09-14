@@ -11,7 +11,6 @@ export class ReportsComponent extends UIComponent {
   @ViewChild('view') viewBase:ViewsComponent;
   views: Array<ViewModel> = [];
   viewType = ViewType;
-  funcID: string;
   button:ButtonModel = {
     id:'btnAdd',
 

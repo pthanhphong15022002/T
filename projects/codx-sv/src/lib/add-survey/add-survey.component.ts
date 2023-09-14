@@ -28,7 +28,6 @@ import { SharelinkComponent } from '../sharelink/sharelink.component';
 export class AddSurveyComponent extends UIComponent {
   dataSV: any;
   isModeAdd = true;
-  funcID = '';
   functionList: any;
   recID: any;
   views: Array<ViewModel> = [];

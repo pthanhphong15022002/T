@@ -829,4 +829,16 @@ export class CodxDpService {
       [recID]
     );
   }
+
+  //#region  API FOR CM
+  startDeal(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'StartDealAsync',
+      data
+    );
+  }
+  //#endregion
 }

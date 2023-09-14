@@ -49,7 +49,6 @@ export class CodxReportViewDetailComponent
   viewType = ViewType;
   mssgSYS043: string = '';
   mssgSYS044: string = '';
-  @Input() funcID: any;
   @Input() predicate: any = '';
   @Input() dataValue: any = '';
   @Input() print: any = 'false';

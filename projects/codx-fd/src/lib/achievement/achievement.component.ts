@@ -23,7 +23,6 @@ import {
   styleUrls: ['./achievement.component.scss'],
 })
 export class AchievementComponent extends UIComponent implements OnInit {
-  funcID: any;
   reloadTop = true;
   labels_empty: string[] = ['Empty'];
   colors_empty: string[] = ['#B7B7B7'];

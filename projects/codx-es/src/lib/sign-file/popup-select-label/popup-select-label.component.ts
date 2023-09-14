@@ -43,12 +43,13 @@ export class PopupSelectLabelComponent extends UIComponent {
   folderID = 'label';
   folderName = 'Nhãn đính kèm'; //chị Thương kêu gắn cứng đi em, chị lo
   parentID = 'EST011';
-  funcID = 'EST011';
+
   lstAddedFile = [];
   onInit(): void {
     this.title = this.data.title;
     this.defaultLabels = this.data.labels;
     this.getSelfLabels();
+    this.funcID = 'EST011';
     this.detectorRef.detectChanges();
   }
 

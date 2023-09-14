@@ -37,7 +37,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   autoNumField = '';
   employeeObj: any;
   headerText: '';
-  funcID: string;
   employeeSign;
   data: any;
   moment = moment;
@@ -189,6 +188,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.benefitObj.employeeID = this.employId;
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 
@@ -241,16 +241,14 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (p[0] != null) {
           this.notify.notifyCode('SYS007');
           if (this.useForQTNS) {
-            console.log(p);
+            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
 
-            p[0].emp = this.employeeObj;
             if (p[1]) {
-              p[1].emp = this.employeeObj;
+              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
             }
-
-            console.log(p);
             this.dialog && this.dialog.close(p);
           } else {
+            console.log(p);
             this.dialog && this.dialog.close(this.benefitObj);
           }
         }
@@ -335,6 +333,15 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           }
           break;
         }
+        case 'BenefitID':
+          this.benefitObj.benefitType =
+            event.component.comboBoxObject.itemData.BenefitType;
+          this.formGroup.patchValue({
+            benefitType: event.component.comboBoxObject.itemData.BenefitType,
+          });
+          break;
+        default:
+          break;
       }
 
       this.cr.detectChanges();

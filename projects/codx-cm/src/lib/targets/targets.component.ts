@@ -126,7 +126,6 @@ export class TargetsComponent
   scheduleModel: any;
   scheduleHeaderModel: any;
   //#region Exec
-  funcID = 'CM0601';
   service: string = 'CM';
   assemblyName: string = 'ERM.Business.CM';
   entityName: string = 'CM_Targets';
@@ -188,6 +187,7 @@ export class TargetsComponent
     super(inject);
     // if (!this.funcID)
     //   this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.funcID = "CM0601";
     this.language = this.auth.userValue?.language?.toLowerCase();
 
     this.heightWin = Util.getViewPort().height - 100;
