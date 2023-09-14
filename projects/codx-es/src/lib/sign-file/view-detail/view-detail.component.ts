@@ -245,6 +245,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           if (this.itemDetail != null) {
             this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
           }
+          this.isAfterRender = true;
             this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService

@@ -42,11 +42,16 @@ codx-cmcustomer-detail .codx-detail-main{
     //left: 20px;
     //right: 20px;
     background-color: var(--bg-body);
-    //border: 1px greenyellow solid;
+    
     .e-content{
       height: calc(100vh - 244px)!important;
       overflow: auto;
       padding: 0 10px;
+      
+      main.main-step{
+        height: calc(100vh - 294px)!important;
+      }
+     
       //border: 1px rgb(241, 29, 178) solid;
     }
   }
@@ -66,3 +71,4 @@ codx-cmcustomer-detail .codx-detail-main{
   //   margin-bottom: 50px;
   // }
 }
+
