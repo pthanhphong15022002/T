@@ -30,6 +30,7 @@ import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-o
 import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { RequestReviewComponent } from './approvals/request-review/request-review.component';
+import { AdvancePaymentComponent } from 'projects/codx-ac/src/lib/advance-payment/advance-payment.component';
 
 const routes: Routes = [
   {
@@ -105,6 +106,10 @@ const routes: Routes = [
         path: 'deals/:funcID',
         component: DealsComponent,
         // data: { noReuse: true },
+      },
+      {
+        path: 'requestsforadvances/:funcID',
+        component: AdvancePaymentComponent,
       },
       {
         path: '',

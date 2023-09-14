@@ -121,10 +121,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.dt.detectChanges();
   }
 
-  onAfterInit(){
+  onAfterInit() {
     //Loại bỏ requied khi VoucherNo tạo khi lưu
-    if(this.journal.assignRule == '2')
-    {
+    if (this.journal.assignRule == '2') {
       this.form.setRequire([{
         field: 'voucherNo',
         isDisable: false,
@@ -132,8 +131,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       }]);
     }
 
-    if(this.formType == 'add' || this.formType == 'copy')
-    {
+    if (this.formType == 'add' || this.formType == 'copy') {
       this.form.preData = new Vouchers;
     }
   }
@@ -153,7 +151,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //endregion Init Master
 
   //#region Init Line
-  gridInit(eleGrid:CodxGridviewV2Component) {
+  gridInit(eleGrid: CodxGridviewV2Component) {
     eleGrid.showHideColumns(this.hideFields);
     this.dt.detectChanges();
   }
@@ -266,12 +264,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       return;
     this.updateFromFrontEnd(e);
     this.updateFromBackEnd(e);
-    
+
   }
 
   /** Update từ Front End */
-  updateFromFrontEnd(e: any)
-  {
+  updateFromFrontEnd(e: any) {
     switch (e.field) {
       case 'costAmt':
         this.costAmt_Change(e.data);
@@ -286,8 +283,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   /** Update từ Back End */
-  updateFromBackEnd(e: any)
-  {
+  updateFromBackEnd(e: any) {
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -387,14 +383,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
      * isClose = false => Lưu và thêm mới
      */
 
-    if(this.form.validation())
+    if (this.form.validation())
       return;
     //this.checkTransLimit(true);
     // if (this.validate > 0) {
     //   this.validate = 0;
     //   return;
     // } else {
-      
+
     // }
     if (this.modeGrid == 1) {
       if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
@@ -409,84 +405,50 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   save(isclose: boolean) {
     if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
-      this.form.formGroup.patchValue({status: this.vouchers.status});
+      this.form.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    switch(this.formType)
-    {
-      case 'add':
-      case 'copy':
-        this.form.save(null, 0, '', 'SYS006', true)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res?.update?.error || res?.save?.error) {
-            this.vouchers.status = '7';
-            this.form.formGroup.patchValue({status: this.vouchers.status});
-            this.vouchers.unbounds.isAddNew = true;
-          }
-          if (isclose) {
-            if(res?.save?.data)
-            {
-              this.dialog.close({
-                update: true,
-                data: res.save,
-              });
-            }
-            if(res?.update?.data)
-            {
-              this.dialog.close({
-                update: true,
-                data: res.update,
-              });
-            }
-          }
-          else {
-            this.clearVouchers();
-            this.dialog.dataService.clear();
-            this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-              this.journalNo,
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-                if(res)
-                {
-                  this.vouchers = res.data;
-                  this.formType = 'add';
-                  this.form.formGroup.patchValue(this.vouchers);
-                  this.form.preData = { ...this.vouchers };
-                  this.detectorRef.detectChanges();
-                }
+    this.form.save(null, 0, '', 'SYS006', true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res?.update?.error || res?.save?.error) {
+          this.vouchers.status = '7';
+          this.form.formGroup.patchValue({ status: this.vouchers.status });
+          this.vouchers.unbounds.isAddNew = true;
+        }
+        if (isclose) {
+          if (res?.save?.data) {
+            this.dialog.close({
+              update: true,
+              data: res.save,
             });
           }
-          this.dt.detectChanges();
-        });
-        break;
-      case 'edit':
-        {
-          this.form.save(null, 0, '', '', true)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
-              if (res && res?.update?.data) {
-                this.dialog.close({
-                  update: true,
-                  data: res.update.data,
-                });
-                this.dt.detectChanges();
-              }
-              else
-              {
-                this.dialog.close({
-                  update: true,
-                  data: res,
-                });
-                this.dt.detectChanges();
-              }
-            }
-          });
+          if (res?.update?.data) {
+            this.dialog.close({
+              update: true,
+              data: res.update,
+            });
+          }
         }
-        break;
-    }
+        else {
+          this.clearVouchers();
+          this.dialog.dataService.clear();
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+            this.journalNo,
+          ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res) {
+                this.vouchers = res.data;
+                this.formType = 'add';
+                this.form.formGroup.patchValue(this.vouchers);
+                this.form.preData = { ...this.vouchers };
+                this.detectorRef.detectChanges();
+              }
+            });
+        }
+        this.dt.detectChanges();
+      });
   }
   //#endregion Method
 
@@ -568,17 +530,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if(this.form.validation())
+    if (this.form.validation())
       return;
     this.form
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved) )) {
-          if(!this.vouchers.voucherNo && res?.save?.data?.voucherNo)
-          {
+        if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved))) {
+          if (!this.vouchers.voucherNo && res?.save?.data?.voucherNo) {
             this.vouchers.voucherNo = res.save.data.voucherNo;
-            this.form.formGroup?.patchValue({voucherNo: this.vouchers.voucherNo});
+            this.form.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
           this.checkModeGridBeforeAddLine();
         }
