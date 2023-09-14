@@ -978,6 +978,15 @@ export class CodxEsService {
       [recID,request]
     );
   }
+  getViewDetailSignFile(recID,funcID): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetViewDetailAsync',
+      [recID,funcID]
+    );
+  }
 
   getSFByUserID(data) {
     return this.api.execSv(
