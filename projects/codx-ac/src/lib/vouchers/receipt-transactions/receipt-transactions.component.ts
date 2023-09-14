@@ -201,6 +201,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
     });
   }
 
+  ngDoCheck(){
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.view.setRootNode('');
     this.onDestroy();

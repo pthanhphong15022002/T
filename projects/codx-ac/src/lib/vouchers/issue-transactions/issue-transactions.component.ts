@@ -201,6 +201,10 @@ export class IssueTransactionsComponent extends UIComponent {
     });
   }
 
+  ngDoCheck(){
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.view.setRootNode('');
     this.onDestroy();
