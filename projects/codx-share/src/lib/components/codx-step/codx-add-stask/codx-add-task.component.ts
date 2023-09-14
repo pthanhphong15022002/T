@@ -691,14 +691,20 @@ export class CodxAddTaskComponent implements OnInit {
     } else {
       //edit
       if (this.isStart) {
-        if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
-          this.isShowDate = false;
-          this.isShowTime = false;
-          this.isAddTM = false;
-        } else {
-          this.isShowDate = true;
-          this.isShowTime = true;
-          this.isAddTM = true;
+        if(this.stepsTasks?.status == '3'){
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+        }else{
+          if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+          } else {
+            this.isShowDate = true;
+            this.isShowTime = true;
+            this.isAddTM = true;
+          }
         }
       } else {
         this.isShowDate = false;
