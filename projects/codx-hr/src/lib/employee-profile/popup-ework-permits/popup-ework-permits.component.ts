@@ -55,7 +55,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
 
   initForm() {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((item) => {
         if (item) {
           this.formGroup = item;
@@ -110,10 +110,13 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
           this.formModel = formModel;
+          console.log('formModel ne', this.formModel);
+          
           this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
+                debugger
                 this.formGroup = fg;
                 this.initForm();
               }
@@ -126,6 +129,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

@@ -70,7 +70,7 @@ export class PopupEmployeeJobsalaryComponent
 
   initForm() {
     this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((item) => {
         if (item) {
           this.formGroup = item;
