@@ -26,7 +26,6 @@ export class PopupEmployeeJobsalaryComponent
   dialog: DialogRef;
   idField = 'RecID';
   currentEJobSalaries: any;
-  funcID: string;
   lstJobSalaries;
   actionType: string;
   employeeId: string;

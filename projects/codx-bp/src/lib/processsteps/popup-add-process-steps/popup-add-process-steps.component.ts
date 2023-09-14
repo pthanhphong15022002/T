@@ -51,7 +51,6 @@ export class PopupAddProcessStepsComponent
   process: any;
   user: any;
   data: any;
-  funcID: any;
   title = '';
   action = '';
   recIdEmail = '';

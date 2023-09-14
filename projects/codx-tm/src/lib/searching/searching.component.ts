@@ -28,7 +28,6 @@ export class SearchingComponent
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
-  funcID = ''; //Đợi thiết lập
   service = 'TM';
   entityName = ''; //Đợi thiết lập
   formModel: any = {};

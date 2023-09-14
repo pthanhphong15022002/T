@@ -35,7 +35,6 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  funcID: string;
   actionType: string;
   employeeId: string;
   isAfterRender = false;

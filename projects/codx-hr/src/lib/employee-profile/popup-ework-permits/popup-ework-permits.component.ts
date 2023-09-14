@@ -27,7 +27,6 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   disabledInput = false;
   idField = 'RecID';
-  funcID: string;
   employId: string;
   isAfterRender = false;
   headerText: string = '';

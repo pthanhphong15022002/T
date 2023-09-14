@@ -95,7 +95,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     kr: null,
     skr: null,
   };
-  funcID: any;
   obFuncID: any;
   krFuncID: any;
   skrFuncID: any;

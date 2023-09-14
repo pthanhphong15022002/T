@@ -27,7 +27,6 @@ export class PopupSaveVersionComponent extends UIComponent {
   dialogRef: DialogRef;
   formModel: FormModel;
   data: any;
-  funcID: string;
 
   constructor(
     private injector: Injector,

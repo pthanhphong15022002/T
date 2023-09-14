@@ -30,7 +30,6 @@ export class ReceiptTransactionsLineAddComponent extends UIComponent implements 
   objectIdim: any;
   hideFields: any;
   itemName: any;
-  funcID: any;
   vouchersLine: VouchersLines;
   vouchers: Vouchers;
   objectVouchersLines: Array<VouchersLines> = [];

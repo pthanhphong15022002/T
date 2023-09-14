@@ -33,7 +33,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   fromdateVal: any;
   todateVal: any;
   idField = 'RecID';
-  funcID: string;
   employId: string;
   actionType: string;
   disabledInput = false;
@@ -152,6 +151,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue({toDate: this.data.toDate})
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
 

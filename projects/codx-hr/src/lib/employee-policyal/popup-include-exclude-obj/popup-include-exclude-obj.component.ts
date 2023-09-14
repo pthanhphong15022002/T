@@ -27,7 +27,6 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
   
   dialog: DialogRef;
   policyObj: any;
-  funcID: string;
   headerText: string;
   formModel: FormModel;
   lstOrgUnitID: any = []

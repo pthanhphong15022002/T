@@ -34,7 +34,6 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
   formName = 'FDParameters';
   gridViewName = 'grvFDParameters';
   views: Array<ViewModel> = [];
-  funcID: any;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 

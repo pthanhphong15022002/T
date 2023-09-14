@@ -17,7 +17,6 @@ export class RunPeriodicComponent extends UIComponent{
 
   button?: ButtonModel = { id: 'btnAdd' };
   dialog!: DialogRef;
-  funcID: any;
   entityName: any;
   mfFormName: any = 'RunPeriodic';
   mfGrvName: any = 'grvCalculatingTheCostPrice';

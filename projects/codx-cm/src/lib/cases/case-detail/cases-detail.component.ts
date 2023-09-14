@@ -30,7 +30,6 @@ implements OnInit, AfterViewInit {
   @Input() colorReasonFail: any;
   @Input() gridViewSetup: any;
   @Input() formModel: FormModel;
-  @Input() funcID: string; //True - Khách hàng; False - Liên hệ
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })

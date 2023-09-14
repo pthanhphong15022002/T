@@ -29,7 +29,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   headerText;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId;
   disabledInput = false;

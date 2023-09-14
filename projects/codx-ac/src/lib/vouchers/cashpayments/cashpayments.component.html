@@ -1,6 +1,6 @@
-<codx-views [ariaKeyShortcuts]="" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+<codx-views #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
-  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="changeItemSelected($event)" [isSubView]="true">
+  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 <!-- templateGrid -->
 <ng-template #templateGrid let-data>

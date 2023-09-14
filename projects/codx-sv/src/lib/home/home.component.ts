@@ -29,7 +29,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent extends UIComponent implements OnInit {
-  funcID = '';
   views: Array<ViewModel> = [];
   viewList : Array<ViewModel> = [];
   service = 'SV';

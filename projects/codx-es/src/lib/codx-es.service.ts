@@ -969,13 +969,13 @@ export class CodxEsService {
       [categoryID, null, true, null]
     );
   }
-  getDetailSignFile(recID): Observable<any> {
+  getDetailSignFile(recID,request=null): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetDetailAsync',
-      recID
+      [recID,request]
     );
   }
 

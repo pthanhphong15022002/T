@@ -40,7 +40,6 @@ export class PopupEProcessContractComponent
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  funcID: string;
   actionType: string;
   employeeId: string;
   idField = 'RecID';
@@ -93,8 +92,8 @@ export class PopupEProcessContractComponent
 
   dataCbxContractType: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  // @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  @ViewChild('form') form: LayoutAddComponent;
+  //@ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('tmpAddBenefit', { static: true })
   tmpAddBenefit: TemplateRef<any>;
 
@@ -483,6 +482,8 @@ export class PopupEProcessContractComponent
 
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
+
       return;
     }
 

@@ -1,12 +1,11 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  Injector,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -15,10 +14,7 @@ import {
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
-  ApiHttpService,
   AuthStore,
-  CacheService,
-  CallFuncService,
   DataRequest,
   DialogModel,
   DialogRef,
@@ -27,6 +23,7 @@ import {
   SidebarModel,
   Util,
   ViewsComponent,
+  UIDetailComponent
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -66,13 +63,8 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
-  active = 1;
-  checkUserPer: any;
-  userID: any;
-  referType = 'source';
+export class ViewDetailComponent extends  UIDetailComponent implements OnChanges, AfterViewInit {
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  @Input() pfuncID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
@@ -85,10 +77,16 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
   @ViewChild('tmpexport') tmpexport!: any;
-  tabControl: TabModel[] = [];
+
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency2;
   getIdUser = getIdUser;
+
+  tabControl: TabModel[] = [];
+  active = 1;
+  checkUserPer: any;
+  userID: any;
+  referType = 'source';
   dvlSecurity: any;
   dvlUrgency: any;
   dvlStatus: any;
@@ -110,16 +108,27 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   dataRq = new DataRequest();
   listPermission = [];
   constructor(
-    private api: ApiHttpService,
-    private cache: CacheService,
+    inject: Injector,
     private odService: DispatchService,
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
-    private callfunc: CallFuncService,
-    private ref: ChangeDetectorRef,
     private codxODService: CodxOdService,
     private shareService: CodxShareService
-  ) {}
+  ) {
+    super(inject);
+  }
+
+  override onInit(): void {
+    this.active = 1;
+    this.formModel = this.view?.formModel;
+    //this.data = this.view.dataService.dataSelected;
+    this.userID = this.authStore.get().userID;
+    this.dataRq.entityName = this.formModel?.entityName;
+    this.dataRq.formName = this.formModel?.formName;
+    this.dataRq.funcID = this.formModel?.funcID;
+    this.getGridViewSetup(this.funcID);
+  }
+
   ngAfterViewInit(): void {
     this.tabControl = [
       {
@@ -160,32 +169,33 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         icon: 'icon-i-clipboard-check',
       });
     }
+    this.setHeight();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.data &&
-      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-    ) {
-      this.userID = this.authStore.get().userID;
-      this.data = changes.data?.currentValue;
-      if (!this.data) this.data = {};
-      //this.getDataValuelist();
-      if (this.data.recID) {
-        this.getPermission(this.data.recID);
-      }
-      this.ref.detectChanges();
-    }
     if (
       changes?.dataItem &&
       changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
     )
       this.dataItem = changes?.dataItem?.currentValue;
+    if (
+      changes?.recID &&
+      changes.recID?.previousValue != changes.recID?.currentValue
+    ) {
+      this.userID = this.authStore.get().userID;
+      this.recID = changes.recID?.currentValue;
+      if (!this.data) this.data = {};
+
+      this.getDtDis(this.recID)
+      this.getPermission(this.recID);
+
+      this.detectorRef.detectChanges();
+    }
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
-    if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
-      this.pfuncID = changes?.pfuncID?.currentValue;
-      if (this.pfuncID) this.getGridViewSetup(this.pfuncID);
+    if (changes?.funcID?.currentValue != changes?.funcID?.previousValue) {
+      this.funcID = changes?.funcID?.currentValue;
+      if (this.funcID) this.getGridViewSetup(this.funcID);
     }
     if (
       changes?.gridViewSetup?.currentValue !=
@@ -197,17 +207,28 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.addPermission();
   }
 
-  ngOnInit(): void {
-    this.active = 1;
-    this.formModel = this.view?.formModel;
-    //this.data = this.view.dataService.dataSelected;
-    this.userID = this.authStore.get().userID;
-    this.dataRq.entityName = this.formModel?.entityName;
-    this.dataRq.formName = this.formModel?.formName;
-    this.dataRq.funcID = this.formModel?.funcID;
-    this.getGridViewSetup(this.pfuncID);
-  }
 
+  //Hàm lấy thông tin chi tiết của công văn
+  getDtDis(id: any) {
+    this.data = null;
+    if (id) {
+      var dataRequest = new DataRequest();
+      dataRequest.dataObj = id;
+      dataRequest.page = 1;
+      dataRequest.pageSize = 20;
+      dataRequest.entityName = this.formModel.entityName;
+      dataRequest.funcID = this.funcID;
+      dataRequest.predicate = "RecID=@0";
+      dataRequest.dataValue = id;
+      this.odService
+        .getDetailDispatch(id, this.formModel.entityName , this.referType , false , dataRequest)
+        .subscribe((item) => {
+          if (item) {
+            this.data = formatDtDis(item);
+          }
+        });
+    }
+  }
   setHeight() {
     let main = 0,
       header = 0;
@@ -223,6 +244,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     ) as HTMLCollectionOf<HTMLElement>;
     if (ele) {
       header = Array.from(eleheader)[0]?.offsetHeight;
+      header = (!header || header< 220) ? 220 : header;
     }
 
     let nodes = document.getElementsByClassName(
@@ -265,6 +287,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.gridViewSetup = gw;
           this.getDataValuelist();
         }
+        this.getDtDis(this.recID)
       });
     } else {
       this.funcList = funcList;
@@ -275,6 +298,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
+      this.getDtDis(this.recID)
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName
@@ -588,7 +612,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           datas.relations = this.data.relations
-          this.dialog = this.callfunc.openSide(
+          this.dialog = this.callfc.openSide(
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
@@ -610,7 +634,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           datas.relations = this.data.relations
-          this.dialog = this.callfunc.openSide(
+          this.dialog = this.callfc.openSide(
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
@@ -626,7 +650,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           );
           this.dialog.closed.subscribe((x) => {
             if (x.event) {
-              //this.ref.detectChanges();
+              //this.detectorRef.detectChanges();
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
               //this.view.dataService.update(x.event).subscribe();
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
@@ -687,7 +711,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           this.view.dataService.dataSelected.departmentID = res?.departmentID;
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
-          this.dialog = this.callfunc.openSide(
+          this.dialog = this.callfc.openSide(
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
@@ -723,7 +747,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         var data = datas;
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
+        this.dialog = this.callfc.openSide(
           ForwardComponent,
           {
             gridViewSetup: this.gridViewSetup,
@@ -753,7 +777,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         //if(this.checkOpenForm(funcID))
         var option = new DialogModel();
         option.FormModel = this.formModel;
-        this.callfunc
+        this.callfc
           .openForm(
             UpdateExtendComponent,
             null,
@@ -784,7 +808,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
 
-        this.dialog = this.callfunc.openSide(
+        this.dialog = this.callfc.openSide(
           SharingComponent,
           {
             gridViewSetup: this.gridViewSetup,
@@ -829,7 +853,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '850px';
-        this.dialog = this.callfunc.openSide(
+        this.dialog = this.callfc.openSide(
           AddLinkComponent,
           {
             headerText: val?.data?.customName,
@@ -853,7 +877,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT3006': {
         // if (this.checkOpenForm(funcID)) {
         // }
-        this.callfunc
+        this.callfc
           .openForm(this.tmpdeadline, null, 600, 400)
           .closed.subscribe((x) => {
             if (x.event) {
@@ -878,7 +902,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           ])
           .subscribe((item: any) => {
             if (item && item.length > 0) {
-              this.dialog = this.callfunc.openForm(
+              this.dialog = this.callfc.openForm(
                 UpdateVersionComponent,
                 '',
                 800,
@@ -904,8 +928,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT5209': {
         //  if(this.checkOpenForm(funcID))
         // {
-        // this.callfunc.openForm(FolderComponent, null, 600, 400);
-        this.callfunc.openForm(this.tmpFolderCopy, null, 600, 400);
+        // this.callfc.openForm(FolderComponent, null, 600, 400);
+        this.callfc.openForm(this.tmpFolderCopy, null, 600, 400);
         //}
         break;
       }
@@ -958,7 +982,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                       (x) => x.recID == item.data[1]
                     );
                     this.data.listInformationRel[index].reCall = true;
-                    this.ref.detectChanges();
+                    this.detectorRef.detectChanges();
                     //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
@@ -1033,7 +1057,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                               //trình ký
                               if (res2?.eSign == true) {
                                 this.cancelAproval(item);
-                                //this.callfunc.openForm();
+                                //this.callfc.openForm();
                               } else if (res2?.eSign == false) {
                                 this.shareService
                                   .codxCancel(
@@ -1113,7 +1137,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT5212': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
-        this.callfunc
+        this.callfc
           .openForm(
             CompletedComponent,
             null,
@@ -1138,7 +1162,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT5213': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
-        this.callfunc
+        this.callfc
           .openForm(
             RefuseComponent,
             null,
@@ -1165,7 +1189,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT5214': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
-        this.callfunc
+        this.callfc
           .openForm(
             RefuseComponent,
             null,
@@ -1199,7 +1223,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           res.dispatchType = '2';
           let option = new SidebarModel();
           option.DataService = obj;
-          this.dialog = this.callfunc.openSide(
+          this.dialog = this.callfc.openSide(
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
@@ -1240,7 +1264,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         option.Width = '550px';
-        let dialog = this.callfunc.openSide(
+        let dialog = this.callfc.openSide(
           AssignInfoComponent,
           assignModel,
           option
@@ -1497,7 +1521,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   changeDataMF(e: any, data: any) {
     var funcList = this.codxODService.loadFunctionList(
-      this.view.formModel.funcID
+      this.funcID
     );
     if (isObservable(funcList)) {
       funcList.subscribe((fc) => {
@@ -1507,6 +1531,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
+      debugger
       this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
@@ -1756,7 +1781,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           ap.funcID= this.view?.formModel?.funcID;
           ap.entityName= this.view?.formModel?.entityName;
           ap.module= 'OD';
-          let dialogApprove = this.callfunc.openForm(
+          let dialogApprove = this.callfc.openForm(
             PopupAddSignFileComponent,
             'Chỉnh sửa',
             700,
@@ -1796,7 +1821,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               this.addInternalIncoming(datas);
             }
           });
-          //this.callfunc.openForm();
+          //this.callfc.openForm();
         } 
         if (res2?.eSign == false)
         //xét duyệt
@@ -1865,7 +1890,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   addPermission() {
     this.listPermission = [];
-    if (this.dataItem.relations && this.dataItem.relations.length > 0) {
+    if (this.dataItem?.relations && this.dataItem?.relations.length > 0) {
       this.dataItem.relations.forEach((elm) => {
         if (elm.userID != this.userID) {
           var p = new Permission();

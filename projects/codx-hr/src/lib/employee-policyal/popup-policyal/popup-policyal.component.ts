@@ -140,7 +140,6 @@ export class PopupPolicyalComponent
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  funcID: string;
   actionType: string;
   idField = 'PolicyID';
   isAfterRender = false;

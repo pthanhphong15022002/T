@@ -65,7 +65,6 @@ export class CodxTasksComponent
   implements OnInit, AfterViewInit
 {
   //#region Constructor
-  @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() sessionID?: any;
   @Input() isResourceAssignSession = false; //resourec theo sessionID
@@ -807,7 +806,7 @@ export class CodxTasksComponent
       if (this.paramModule.ReOpenDays) {
         var time =
           moment(new Date()).toDate().getTime() -
-          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;
+          Number.parseFloat(this.paramModule.ReOpenDays) * (3600000*24);
         var timeCompletedOn = moment(new Date(taskAction.completedOn))
           .toDate()
           .getTime();

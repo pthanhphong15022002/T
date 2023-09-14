@@ -7,6 +7,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -18,7 +19,6 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./popup-eself-info.component.css'],
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   fieldHeaderTexts;
@@ -35,7 +35,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   action: '';
   trainFieldStr: '';
   trainLevelStr: '';
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
 
   tabInfo: any[] = [
     {
@@ -246,6 +246,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     debugger
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
     //Xu li validate thong tin ngay sinh nhan vien
