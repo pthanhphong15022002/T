@@ -137,6 +137,7 @@ export class PopupMoveStageComponent implements OnInit {
     if (this.applyFor == '0') {
       // this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data.listStepCbx));
       //  this.listStepProccess = dt?.data?.listStepProccess;
+      this.instance = dt?.data?.instance;
       this.isDurationControl = dt?.data?.isDurationControl;
       //   this.getIdReason();
     } else if (this.applyFor != '0') {
@@ -145,11 +146,11 @@ export class PopupMoveStageComponent implements OnInit {
       this.expectedClosed = dt?.data?.deal?.expectedClosed;
       this.isLoad = true;
     }
-    this.stepID = this.dataCM ? this.dataCM?.stepID : this.instance?.stepID;
+    this.stepID = this.dataCM ? this.dataCM?.stepID : dt?.data?.instance?.stepID;
     this.processID = this.dataCM
       ? this.dataCM?.processID
-      : this.instance?.processID;
-    this.recID = this.dataCM ? this.dataCM?.refID : this.instance?.recID;
+      : dt?.data?.instance?.processID;
+    this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
     this.ownerInstance = this.dataCM
       ? dt?.data?.deal?.owner
       : JSON.parse(JSON.stringify(dt?.data?.instance.owner));
@@ -191,6 +192,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage() {
+    debugger;
     var datas = [this.recID, this.processID, this.stepID, this.applyFor];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
