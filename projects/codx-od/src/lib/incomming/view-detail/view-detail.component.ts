@@ -65,8 +65,6 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
 })
 export class ViewDetailComponent extends  UIDetailComponent implements OnChanges, AfterViewInit {
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  @Input() funcID: any;
-  @Input() recID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;

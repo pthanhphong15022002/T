@@ -65,7 +65,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
@@ -220,7 +219,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
       dataRequest.gridViewName = this.view?.formModel?.gridViewName;
       dataRequest.entityName = this.view?.formModel?.entityName;
       dataRequest.funcID = this.view?.formModel?.funcID;
-      dataRequest.dataObj= this.itemDetail?.recID;
+      dataRequest.dataObj = this.itemDetail?.recID;
       dataRequest.predicate = "RecID=@0";
       dataRequest.dataValue = this.itemDetail?.recID;
       dataRequest.page = 1;
