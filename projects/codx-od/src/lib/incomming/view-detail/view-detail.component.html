@@ -1,13 +1,13 @@
 <ng-container *ngIf="formModel">
   <codx-detail-tmp
     [header]="header"
-    [dataItem]="dataItem"
+    [dataItem]="data"
     [formModel]="formModel"
     [body]="body"
     [footer]="!hideFooter ? footer : null"
     [hideMF]="hideMF"
     (clickMF)="openFormFuncID($event)"
-    (changeDataMF)="changeDataMF($event, dataItem)"
+    (changeDataMF)="changeDataMF($event, data)"
     class="h-100"
   >
     <ng-template #header>

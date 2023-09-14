@@ -167,6 +167,7 @@
     <div class="form-group row">
       <codx-label fiedName="BenefitID" [formModel]="formModel"></codx-label>
       <codx-input
+        (valueChange)="valueChange($event)"
         [disabled]="disabledInput"
         field="BenefitID"
         [formModel]="formModel"

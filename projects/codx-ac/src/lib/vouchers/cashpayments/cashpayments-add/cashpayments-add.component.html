@@ -36,7 +36,7 @@
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="'AC063'" [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashPayment?.gridviewSetup['SubType'].referedValue"  [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="formCashPayment.data?._isEdit && formCashPayment.data?.status != '7'">
@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true"
+    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event,elementTabDetail)"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -101,20 +101,12 @@
             <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
-              <i *ngIf="
-              formCashPayment.data?.subType == '2' ||
-                  formCashPayment.data?.subType == '12' ||
-                  formCashPayment.data?.subType == '3' ||
-                  formCashPayment.data?.subType == '4'
-                " class="icon-format_list_numbered icon-18 me-2"></i>
+              <i *ngIf="formCashPayment.data?.subType == '2' || formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="formCashPayment.data?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label *ngIf="
-              formCashPayment.data?.subType == '2' ||
-                  formCashPayment.data?.subType == '3' ||
-                  formCashPayment.data?.subType == '4'
+              <codx-label *ngIf="formCashPayment.data?.subType == '2' || formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'
                 " style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail2"
                 [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
               <codx-label *ngIf="formCashPayment.data?.subType == '9'" style="font-size: 14px !important"
@@ -126,7 +118,7 @@
             <ng-container *ngTemplateOutlet="TmpTabSettledInvoices"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-graph-up icon-18 me-2"></i>
@@ -576,11 +568,11 @@
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
-            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+            <!-- <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15"(click)="onSaveLine()">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Lưu dòng"></codx-label>
-            </button>
+            </button> -->
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"

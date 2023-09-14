@@ -230,6 +230,7 @@
                                     <img
                                       class="w-50 h-50 ratio ratio-1x1 rounded-3"
                                       [src]="qrBase64"
+                                      alt="/assets/codx/bg/qrCodx.png"
                                     />
                                     <div
                                       class="w-50 bg-secondary ratio ratio-1x1 position-absolute rounded-3"
@@ -262,12 +263,13 @@
                                     </div>
                                   </div>
                                   <ng-template #avatar></ng-template>
-                                  <div class="qr-codx-msg mt-3 text-center">
+                                  <!-- //nho xoa -->
+                                  <!-- <div class="qr-codx-msg mt-3 text-center">
                                     <codx-label
                                       class="fs-7 text-gray-600"
                                       default="Chỉ dùng đăng nhập CoDX trên máy tính"
                                     ></codx-label>
-                                    <!-- <button
+                                    <button
                                       type="button"
                                       (click)="testQR()"
                                       tabindex="-1"
@@ -278,8 +280,8 @@
                                         class="text-primary"
                                         default="Test QR"
                                       ></codx-label>
-                                    </button> -->
-                                  </div>
+                                    </button>
+                                  </div> -->
                                 </div>
                                 <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
                                   <codx-label
@@ -401,7 +403,6 @@
                           ></a>
                         </div>
                         <div class="form-group d-grid gap-2 mb-5">
-                          <!-- //nho xoa -->
                           <button
                             [disabled]="loginForm.invalid"
                             type="submit"

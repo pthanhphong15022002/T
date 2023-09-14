@@ -85,6 +85,7 @@ export class PopupEmployeePartyInfoComponent
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     this.hrService.saveEmployeeUnionAndPartyInfo(this.data).subscribe((p) => {

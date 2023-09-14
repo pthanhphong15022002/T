@@ -19,6 +19,7 @@
  }
  ::ng-deep .popover {
    box-shadow: 0 0px 5px 1px #a1a1a1;
+   z-index: 100 !important;
  }
  ::ng-deep .popover-arrow {
    transform: translate(10px, 0px) !important;

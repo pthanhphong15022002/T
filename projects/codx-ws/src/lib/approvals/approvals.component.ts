@@ -50,6 +50,11 @@ export class ApprovalsComponent extends WSUIComponent implements AfterViewInit {
         component = this.components.cpnEmployeeContract;
         break;
       }
+      case "ES":
+      {
+        funcID = "EST012";
+        component = this.components.cpnSignFile;
+      }
     }
     this.content.clear();
     this.loadContent(component,funcID)

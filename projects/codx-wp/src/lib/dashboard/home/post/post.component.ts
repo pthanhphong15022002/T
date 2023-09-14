@@ -22,21 +22,6 @@ export class PostComponent extends UIComponent {
     super(injector);
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        model: {
-          panelLeftRef: this.content
-        }
-      },
-    ];
-    this.dataService.predicates = this.view.dataService.predicates;
-    this.dataService.dataValues = this.view.dataService.dataValues;
-    this.detectorRef.detectChanges();
-  }
-
   onInit()
   {
     this.dataService = new CRUDService(this.injector);
@@ -50,6 +35,21 @@ export class PostComponent extends UIComponent {
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 10;
   }
+  
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        model: {
+          panelLeftRef: this.content
+        }
+      },
+    ];
+    
+  }
+
+  
 
 
 }
