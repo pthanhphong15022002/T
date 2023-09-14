@@ -53,7 +53,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private authStore: AuthStore,
   ) {
     super(inject);
-    this.funcID = this.view?.formModel?.funcID ?? this.router.snapshot.params['funcID'];
+    this.funcID = this.view?.funcID;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;
@@ -112,7 +112,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((gv) => {
           if (gv) this.gridViewSetup = gv;
-          this.initForm();
+          //this.initForm();
         });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
@@ -122,7 +122,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
             .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
             .subscribe((gv) => {
               if (gv) this.gridViewSetup = gv;
-              this.initForm();
+              //this.initForm();
             });
         }
       });
@@ -183,7 +183,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   }
 
   initForm() {
-    this.funcID = this.view?.formModel?.funcID;
+    this.funcID = this.view?.funcID;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;
@@ -214,17 +214,8 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
             }
           });
       }
-      let dataRequest = new DataRequest();
-      dataRequest.formName = this.view?.formModel?.formName;
-      dataRequest.gridViewName = this.view?.formModel?.gridViewName;
-      dataRequest.entityName = this.view?.formModel?.entityName;
-      dataRequest.funcID = this.view?.formModel?.funcID;
-      dataRequest.dataObj = this.itemDetail?.recID;
-      dataRequest.predicate = "RecID=@0";
-      dataRequest.dataValue = this.itemDetail?.recID;
-      dataRequest.page = 1;
       this.esService
-        .getDetailSignFile(this.itemDetail?.recID,dataRequest)
+        .getViewDetailSignFile(this.itemDetail?.recID,this.funcID)
         .subscribe((res) => {
           this.dataReferences = [];
           if (res) {
