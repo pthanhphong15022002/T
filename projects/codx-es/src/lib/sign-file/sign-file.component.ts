@@ -54,7 +54,6 @@ export class SignFileComponent extends UIComponent {
     private authStore: AuthStore
   ) {
     super(inject);
-    debugger
     this.funcID = this.view?.formModel?.funcID ?? this.activedRouter.snapshot.params['funcID'] ;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
