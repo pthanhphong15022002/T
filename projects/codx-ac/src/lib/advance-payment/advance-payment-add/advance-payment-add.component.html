@@ -221,31 +221,22 @@
       <div class="mt-5">
         <div class="d-flex justify-content-start flex-column pb-3">
           <div class="d-flex justify-content-start flex-column">
-            <div class="d-flex align-items-center cursor-pointer w-100">
-              <div class="w-50 d-flex align-items-center ps-4">
-                <div class="d-flex align-items-center w-100">
-                  <div
-                    class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
-                  >
-                    <codx-label
-                      class="w-100 fw-bold"
-                      default="Nội dung"
-                      name="detailName"
+            <div 
+            class="d-flex justify-content-between lign-items-center cursor-pointer w-100">
+              <div *ngFor="let item of columns;">
+                <div class="w-100 d-flex align-items-center ps-4">
+                  <div class="d-flex align-items-center w-100">
+                    <div
+                      class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
                     >
-                    </codx-label>
+                      <codx-label
+                        class="w-100 fw-bold"
+                        [fiedName]="item.fieldName"
+                        [formModel]="fmAdvancedPaymentLines"
+                      >
+                      </codx-label>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="w-50 d-flex justify-content-start">
-                <div
-                  class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
-                >
-                  <codx-label
-                    class="w-100 fw-bold"
-                    default="Số tiền"
-                    name="CostPrice"
-                  >
-                  </codx-label>
                 </div>
               </div>
             </div>
