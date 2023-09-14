@@ -42,10 +42,10 @@
       <div class="text-gray-600">
         <span
           *ngIf="
-            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
             else noOrgUnitName
           "
-          >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
+          >{{ itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName }}</span
         >
         <ng-template #noOrgUnitName>
           <span class="place-holder">{{
@@ -151,7 +151,7 @@
         <span
           class="fw-bold text-dark"
           [innerHTML]="
-            itemDetail.decisionNo
+            itemDetail?.decisionNo
               | formatvalue : view.formModel : 'decisionNo'
               | async
           "
@@ -169,7 +169,7 @@
         <span
           class="fw-bold text-dark"
           [innerHTML]="
-            itemDetail.signedDate
+            itemDetail?.signedDate
               | formatvalue : view.formModel : 'signedDate'
               | async
           "
@@ -190,7 +190,7 @@
         <span
           class="fw-bold text-dark"
           [innerHTML]="
-            itemDetail.benefitID
+            itemDetail?.benefitID
               | formatvalue : view.formModel : 'benefitID'
               | async
           "

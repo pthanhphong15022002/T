@@ -219,7 +219,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
       dataRequest.gridViewName = this.view?.formModel?.gridViewName;
       dataRequest.entityName = this.view?.formModel?.entityName;
       dataRequest.funcID = this.view?.formModel?.funcID;
-      dataRequest.dataObj= this.itemDetail?.recID;
+      dataRequest.dataObj = this.itemDetail?.recID;
       dataRequest.predicate = "RecID=@0";
       dataRequest.dataValue = this.itemDetail?.recID;
       dataRequest.page = 1;
