@@ -53,7 +53,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private authStore: AuthStore,
   ) {
     super(inject);
-    this.funcID = this.view?.funcID;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
         this.runMode=func?.runMode;
@@ -246,7 +245,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           if (this.itemDetail != null) {
             this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
           }
-          this.isAfterRender = true;
             this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService
