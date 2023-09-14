@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { AdvancePaymentAddComponent } from './advance-payment-add/advance-payment-add.component';
 
@@ -25,6 +25,12 @@ export class AdvancePaymentComponent extends UIComponent{
   funcName: any;
   gridViewSetup: any;
   company: any
+  grvSetupAdvancedPaymentLines: any;
+  fmAdvancedPaymentLines: FormModel = {
+    entityName: 'AC_AdvancedPaymentLines',
+    formName: 'AdvancedPaymentLines',
+    gridViewName: 'grvAdvancedPaymentLines',
+  }
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -42,6 +48,7 @@ export class AdvancePaymentComponent extends UIComponent{
         this.company = res[0];
       }
     });
+    this.loadSetupLines();
   }
 
   //End Constructor
@@ -122,6 +129,7 @@ export class AdvancePaymentComponent extends UIComponent{
             headerText: this.headerText,
             advancedPayment: res,
             company: this.company,
+            grvSetupAdvancedPaymentLines: this.grvSetupAdvancedPaymentLines,
           };
           let opt = new DialogModel();
           opt.FormModel = this.view.formModel;
@@ -158,6 +166,7 @@ export class AdvancePaymentComponent extends UIComponent{
           headerText: this.headerText,
           advancedPayment: data,
           company: this.company,
+          grvSetupAdvancedPaymentLines: this.grvSetupAdvancedPaymentLines,
         };
         let opt = new DialogModel();
         opt.FormModel = this.view.formModel;
@@ -197,6 +206,7 @@ export class AdvancePaymentComponent extends UIComponent{
           headerText: this.headerText,
           advancedPayment: data,
           company: this.company,
+          grvSetupAdvancedPaymentLines: this.grvSetupAdvancedPaymentLines,
         };
         let opt = new DialogModel();
         opt.FormModel = this.view.formModel;
@@ -243,6 +253,17 @@ export class AdvancePaymentComponent extends UIComponent{
 
   setDefault() {
     return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync');
+  }
+
+  loadSetupLines(){
+    this.cache.gridViewSetup(this.fmAdvancedPaymentLines.formName, this.fmAdvancedPaymentLines.gridViewName)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if(res)
+      {
+        this.grvSetupAdvancedPaymentLines = res;
+      }
+    })
   }
   //End Function
 }

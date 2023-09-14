@@ -274,6 +274,11 @@
                   [formModel]="form.formModel"
                   (valueChange)="valueChange($event)"
                   [disabled]="journal?.assignRule != '0'"
+                  [placeholder]="
+                        journal?.assignRule == '2'
+                          ? ('AC0028' | mssg | async)
+                          : ''
+                      "
                 >
                 </codx-input>
               </div>
