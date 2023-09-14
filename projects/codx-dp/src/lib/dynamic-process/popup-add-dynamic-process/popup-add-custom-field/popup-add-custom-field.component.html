@@ -174,13 +174,21 @@
             [default]="'Danh sách tùy chọn'"
           >
           </codx-label>
-          <codx-input
-            field="refType"
+          <!-- <codx-input
+            field="refType"  
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
           >
-          </codx-input>
+          </codx-input> -->
+          <codx-input
+            type="combobox"
+            field="refType"
+            refType="3"
+            refValue="DPComboboxList"
+            [crrValue]="field?.refType"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
         </div>
         <div class="form-group">
           <codx-label
