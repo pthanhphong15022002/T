@@ -134,17 +134,16 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   onAfterInitForm(event){
-    this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
     this.setValidateForm();
   }
 
-  onSaveLine(){
-    this.eleGridCashPayment.saveRow((res:any)=>{
-      if(res){
-        debugger
-      }
-    })
-
+  /**
+   * *Hàm khởi tạo các tab detail khi mở form(ẩn hiện tab theo loại chứng từ)
+   * @param event
+   * @param eleTab
+   */
+  createTabDetail(event: any, eleTab: TabComponent) {
+    this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
   }
 
   // /**
@@ -299,6 +298,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       });
     } else {
       this.formCashPayment.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+      this.detectorRef.detectChanges();
       if (this.elementTabDetail) {
         this.showHideTabDetail(this.formCashPayment?.data?.subType, this.elementTabDetail);
       }
@@ -620,8 +620,13 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     this.formCashPayment.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res && ((!res?.save?.error) || (!res?.update?.error))) {
-          this.addRowDetailByType(typeBtn);
+        if (res) {
+          this.eleGridCashPayment.saveRow((res:any)=>{
+            if(res){
+              
+            }
+          })
+          //this.addRowDetailByType(typeBtn);
         }
       });
   }
@@ -731,7 +736,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
                 ])
                 .subscribe((res: any) => {
                   if (res) {
-                    // this.formCashPayment.refreshData(res.data);
+                    this.formCashPayment.refreshData(res.data);
                     // this.formCashPayment.data = res.data;
                     // this.detectorRef.detectChanges();
                     // this.formCashPayment.formGroup.patchValue(
@@ -1303,9 +1308,21 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           element.focus();
         }, 100);
         break;
+      // case 'beginEdit':
+      //   this.eleGridCashPayment.saveValidator = this.validate;
+      //   break;
     }
   }
-
+  // validate(data:any){
+  //   let errField:any={};
+  //   if(data.dr ==0){
+  //     errField.field='dr';
+  //     errField.error='phải lớn hơn 0'
+  //     errField.value=0;
+  //     return [errField];
+  //   }
+  //   return []
+  // }
   /**
    * *Hàm các sự kiện của lưới VatInvoice
    * @param event

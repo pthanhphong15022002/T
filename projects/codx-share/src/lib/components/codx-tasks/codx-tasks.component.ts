@@ -65,7 +65,6 @@ export class CodxTasksComponent
   implements OnInit, AfterViewInit
 {
   //#region Constructor
-  @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() sessionID?: any;
   @Input() isResourceAssignSession = false; //resourec theo sessionID

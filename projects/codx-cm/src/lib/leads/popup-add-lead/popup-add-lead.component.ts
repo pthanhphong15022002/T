@@ -29,7 +29,7 @@ import { tmpInstances } from '../../models/tmpModel';
 import { recordEdited } from '@syncfusion/ej2-pivotview';
 import { environment } from 'src/environments/environment';
 import { T } from '@angular/cdk/keycodes';
-import { firstValueFrom } from 'rxjs';
+import {  filter, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -218,6 +218,8 @@ export class PopupAddLeadComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
+    this.tabInfo = [this.menuGeneralInfo];
+    this.tabContent = [this.tabGeneralInfoDetail];
     this.executeApiCalls();
   }
 
@@ -458,10 +460,10 @@ export class PopupAddLeadComponent
     if (check) {
       this.planceHolderAutoNumber = this.leadNoProcess;
       this.disabledShowInput = true;
-      // this.itemTab(true);
+      // this.itemTabsInput(true);
     } else {
       this.getAutoNumber();
-      // this.itemTab(false);
+      // this.itemTabsInput(false);
     }
 
     this.lead.applyProcess = check;
@@ -508,6 +510,7 @@ export class PopupAddLeadComponent
         this.isCategory = false;
         this.lead.category = '2';
       }
+      this.itemTabsInputContact(this.isCategory);
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -653,9 +656,10 @@ export class PopupAddLeadComponent
 
     if (!this.lead.applyProcess) {
       if (this.action !== this.actionEdit) this.getAutoNumber();
-      this.itemTab(false);
+      this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
     } else await this.getListInstanceSteps(this.lead.processID);
+    this.itemTabsInputContact(this.isCategory);
   }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];
@@ -677,7 +681,7 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
-        this.itemTab(this.ischeckFields(this.listInstanceSteps));
+        this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
@@ -752,31 +756,33 @@ export class PopupAddLeadComponent
       : this.listParticipants;
   }
   // an tat theo truong tuy chinh
-  itemTab(check: boolean): void {
-    if (check) {
-      this.tabInfo = [
-        this.menuGeneralInfo,
-        this.menuGeneralSystem,
-        this.menuGeneralContact,
-        this.menuInputInfo,
-      ];
-      this.tabContent = [
-        this.tabGeneralInfoDetail,
-        this.tabGeneralSystemDetail,
-        this.tabGeneralContactDetail,
-        this.tabCustomFieldDetail,
-      ];
-    } else {
-      this.tabInfo = [
-        this.menuGeneralInfo,
-        this.menuGeneralSystem,
-        this.menuGeneralContact,
-      ];
-      this.tabContent = [
-        this.tabGeneralInfoDetail,
-        this.tabGeneralSystemDetail,
-        this.tabGeneralContactDetail,
-      ];
+
+  itemTabsInput(check: boolean): void {
+    let menuInput = this.tabInfo.findIndex((item) => item === this.menuInputInfo);
+    let tabInput = this.tabContent.findIndex(
+      (item) => item === this.tabCustomFieldDetail
+    );
+    if (check && menuInput == -1 && tabInput == -1) {
+      this.tabInfo.splice(1, 0, this.menuInputInfo);
+      this.tabContent.splice(1, 0, this.tabCustomFieldDetail);
+    } else if (!check && menuInput != -1 && tabInput != -1) {
+      this.tabInfo.splice(menuInput, 1);
+      this.tabContent.splice(tabInput, 1);
+    }
+  }
+  itemTabsInputContact(check: boolean): void {
+    let menuContact = this.tabInfo.findIndex(
+      (item) => item === this.menuGeneralContact
+    );
+    let tabContact = this.tabContent.findIndex(
+      (item) => item === this.tabGeneralContactDetail
+    );
+    if (check && menuContact == -1 && tabContact == -1) {
+      this.tabInfo.splice(2, 0, this.menuGeneralContact);
+      this.tabContent.splice(2, 0, this.tabGeneralContactDetail);
+    } else if (!check && menuContact != -1 && tabContact != -1) {
+      this.tabInfo.splice(menuContact, 1);
+      this.tabContent.splice(tabContact, 1);
     }
   }
 
@@ -784,19 +790,14 @@ export class PopupAddLeadComponent
     if (steps?.length > 0) {
       if (this.action != 'edit') {
         if (steps[0].fields?.length > 0) return true;
-        return false;
-      }
-      let check = false;
 
-      if (this.idxCrr != -1) {
-        for (let i = 0; i <= this.idxCrr; i++) {
-          if (steps[i]?.fields?.length > 0) {
-            check = true;
-            break;
-          }
+      }
+      else {
+        let stepCurrent = steps.filter(x=>x.stepID == this.lead.stepID)[0];
+        if(stepCurrent) {
+          if (stepCurrent.fields?.length > 0) return true;
         }
       }
-      return check;
     }
     return false;
   }

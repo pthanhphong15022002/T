@@ -47,7 +47,7 @@ export class RequestReviewComponent
   routers: Router;
   allMFunc: any;
   vllApproval: any;
-
+  dataUnbounds:any;
   constructor(inject: Injector) {
     super(inject);
     this.routers = inject.get(Router);
@@ -105,12 +105,12 @@ export class RequestReviewComponent
     this.dataItem = dt?.data;
     let component:Type<any> = null;
     let funcID = null;
-    
     switch(dt?.data?.module)
     {
       case "ES":
       {
-        alert("a");
+        funcID = "EST012";
+        component = this.components.cpnDtESSignFile;
         break;
       }
       case "OD":
@@ -120,6 +120,7 @@ export class RequestReviewComponent
         break;
       }
     }
+  
     this.content.clear();
     this.loadContent(component,dt?.data?.transID,funcID)
   }

@@ -119,7 +119,7 @@ export class LeadDetailComponent implements OnInit {
   ngAfterViewInit(): void {}
   ngAfterViewChecked() {
     if (!this.hasRunOnce) {
-      this.resetTab(this.dataSelected.applyProcess);
+      this.resetTab(this.dataSelected?.applyProcess);
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -280,6 +280,9 @@ export class LeadDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.tmpDeal = res[0];
+        }
+        else {
+          this.tmpDeal = null;
         }
       });
   }

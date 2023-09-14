@@ -69,6 +69,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   @Input() dataValues: any;
   @Input() isShowCreate = true;
   @Input() moreFuncTmp: TemplateRef<any> = null;
+  @Input() formModel: FormModel = null;
+
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild("tmpCBBShare") CBBShare:TemplateRef<any>;
 
@@ -76,7 +78,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   dataService: CRUDService = null;
   function:any = null;
   sysMoreFunc:any = null;
-  formModel:FormModel = null;
   gridViewSetup: any = null;
   mssgPlaceHolder: string = '';
   mssgWP035: string = '';
@@ -122,7 +123,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService.dataValue = this.dataValue;
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
     this.dataService.setSort(arrSort);
-    this.dataService.pageSize = 20;
+    this.dataService.pageSize = 10;
     this.getSetting();
   }
 
@@ -140,30 +141,30 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.cache.message('WP038').subscribe((mssg: any) => {
       if (mssg?.customName) this.mssgWP038 = mssg.customName;
     });
-    // get function - formModel - gridviewSetup
-    this.cache.functionList('WP')
-    .subscribe((func) => {
-      if (func) 
-      {
-        this.function = func;
-        this.formModel = new FormModel();
-        this.formModel.funcID = func.functionID;
-        this.formModel.formName = func.formName;
-        this.formModel.gridViewName = func.gridViewName;
-        this.formModel.entityName = func.entityName;
-        this.cache.gridViewSetup(func.formName, func.gridViewName)
-        .subscribe((grd: any) => {
-          this.gridViewSetup = grd;
-        });
-        // get more funtion hệ thống
-        this.cache.moreFunction(func.formName,func.gridViewName)
-        .subscribe((mFuc:any) => {
-          this.sysMoreFunc = mFuc;
-        });
-      }
-    });
-
-    
+    // get function - formModel - gridviewSetup - more funtion WP
+    this.cache.functionList("WP")
+      .subscribe((func) => {
+        if (func)
+        {
+          this.function = func;
+          this.formModel = new FormModel();
+          if(this.formModel == null){
+            this.formModel.funcID = func.functionID;
+            this.formModel.formName = func.formName;
+            this.formModel.gridViewName = func.gridViewName;
+            this.formModel.entityName = func.entityName;
+          }
+          this.cache.gridViewSetup(func.formName, func.gridViewName)
+          .subscribe((grd: any) => {
+            this.gridViewSetup = grd;
+          });
+          this.cache.moreFunction(func.formName,func.gridViewName)
+          .subscribe((mFuc:any) => {
+            this.sysMoreFunc = mFuc;
+          });
+          this.dt.detectChanges();
+        }
+      });
   }
   // click moreFC
   clickMF(event: any, post: any) {
@@ -264,9 +265,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   
   // share bài viết
   sharePost(post: any) {
-    debugger
-    if (post) 
-    {
+    if (post){
       let data = new WP_Comments();
       let moreFuc = this.sysMoreFunc.find(x => x.functionID === "WP003");
       let obj = {

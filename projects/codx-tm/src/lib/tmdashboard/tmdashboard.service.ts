@@ -1,11 +1,15 @@
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
-import { BG_Charts } from './models/chart.model';
+import { TM_DashBoard } from './models/TM_DashBoard';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TMDashboardService {
+  dataset: BehaviorSubject<TM_DashBoard> = new BehaviorSubject<TM_DashBoard>(
+    null
+  );
   constructor(private api: ApiHttpService) {}
 
   getReportsByModule(moduleID: string) {
@@ -15,6 +19,16 @@ export class TMDashboardService {
       'ReportListBusiness',
       'GetReportsByModuleAsync',
       ['D', moduleID]
+    );
+  }
+
+  getReportSource(parameters) {
+    return this.api.execSv(
+      'rpttm',
+      'Codx.RptBusiness.TM',
+      'ReportBusiness',
+      'GetReportSourceAsync',
+      [parameters]
     );
   }
 

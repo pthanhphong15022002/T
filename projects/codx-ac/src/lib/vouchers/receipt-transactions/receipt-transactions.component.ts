@@ -294,7 +294,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data'];
+                this.itemSelected = res.event['data']?.data;
                 this.loadDatadetail(this.itemSelected);
               }
             }
@@ -337,7 +337,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data'];
+                this.itemSelected = res.event['data']?.data;
                 this.loadDatadetail(this.itemSelected);
               }
             }

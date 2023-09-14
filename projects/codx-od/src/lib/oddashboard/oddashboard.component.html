@@ -1,0 +1,594 @@
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  [funcID]="funcID"
+  (filterReportChange)="filterChange($event)"
+  (onActions)="onActions($event)"
+  [moreFuncs]="buttons"
+>
+</codx-views>
+
+<ng-template #template>
+  <div *ngIf="isLoaded">
+    <div *ngIf="reportID == 'ODD001'">
+      <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #dashboard1>
+  <codx-dashboard
+    [templates]="templates1"
+    [panels]="panels"
+    [datas]="datas"
+    [isEditMode]="isEditMode"
+    [cellSpacing]="[20, 20]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="1">
+    <div class="d-grid gap-3">
+      <div class="row">
+        <div class="col">
+          <div class="rounded" style="background-color: #eaf0ff">
+            <div class="w-100 h-100">
+              <div class="d-flex justify-content-start align-items-center">
+                <img
+                  [src]="'assets/themes/od/default/img/Congvanden.svg'"
+                  style="width: 30px; height: auto"
+                  class="svg-icon m-2"
+                />
+                <div class="fw-bold" style="font-size: 0.75vw">
+                  Công văn đến
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <div class="px-2">
+                  <div
+                    class="fw-bold"
+                    style="font-size: 1.25vw; color: #025fba"
+                  >
+                    23
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="rounded" style="background-color: #d8fff8">
+            <div class="w-100 h-100">
+              <div class="d-flex justify-content-start align-items-center">
+                <img
+                  [src]="'assets/themes/od/default/img/Congvandi.svg'"
+                  style="width: 30px; height: auto"
+                  class="svg-icon m-2"
+                />
+                <div class="fw-bold" style="font-size: 0.75vw">Công văn đi</div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <div class="px-2">
+                  <div
+                    class="fw-bold"
+                    style="font-size: 1.25vw; color: #07dcb7"
+                  >
+                    23
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="rounded" style="background-color: #fff4de">
+            <div class="w-100 h-100">
+              <div class="d-flex justify-content-start align-items-center">
+                <img
+                  [src]="'assets/themes/od/default/img/Noiboden.svg'"
+                  style="width: 30px; height: auto"
+                  class="svg-icon m-2"
+                />
+                <div class="fw-bold" style="font-size: 0.75vw">Nội bộ đến</div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <div class="px-2">
+                  <div
+                    class="fw-bold"
+                    style="font-size: 1.25vw; color: #f7bf32"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="rounded" style="background-color: #eee6fe">
+            <div class="w-100 h-100">
+              <div class="d-flex justify-content-start align-items-center">
+                <img
+                  [src]="'assets/themes/od/default/img/Noibodi.svg'"
+                  style="width: 30px; height: auto"
+                  class="svg-icon m-2"
+                />
+                <div class="fw-bold" style="font-size: 0.75vw">Nội bộ đi</div>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <div class="px-2">
+                  <div
+                    class="fw-bold"
+                    style="font-size: 1.25vw; color: #8651fe"
+                  >
+                    5
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="2">
+    <ejs-accumulationchart
+      #pie1
+      class="d-block"
+      style="height: 100%; width: 100%"
+      [centerLabel]="{
+        text: 23 + '<br>công văn'
+      }"
+      [legendSettings]="{ visible: true, position: 'Bottom' }"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          [dataSource]="data2"
+          xName="status"
+          yName="quantity"
+          startAngle="0"
+          innerRadius="80%"
+          radius="70%"
+          [explode]="true"
+          [explodeOffset]="'10%'"
+          [palettes]="['#005dc7', '#21b3d2', '#06ddb8', '#00f5e9', '#a6dff5']"
+          legendShape="Rectangle"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="3">
+    <ejs-treemap
+      id="treemap"
+      style="display: block"
+      height="350px"
+      [dataSource]="data3"
+      weightValuePath="percentage"
+      [leafItemSettings]="{
+      labelPath: 'moduleName',
+      labelStyle: {
+        color: '#fff'
+      },
+      labelFormat: '${moduleName}<br>${percentage} %',
+      templatePosition: 'Center',
+    }"
+      enableDrillDown="false"
+      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+    >
+    </ejs-treemap>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="4">
+    <div style="height: 10%">
+      <div class="d-flex justify-content-around align-items-center">
+        <div class="d-flex align-items-center">
+          <div class="bg-warning" style="width: 30px; height: 3px"></div>
+          <div class="ms-2">Công văn đến</div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="bg-success" style="width: 30px; height: 3px"></div>
+          <div class="ms-2">Công văn đi</div>
+        </div>
+      </div>
+    </div>
+    <div class="position-relative" style="height: 90%">
+      <div
+        class="scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
+        <div class="my-2">
+          <div class="fw-bold">Cơ quan nhà nước</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block w-100">
+              <div class="progress border">
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'30%'"
+                  [title]="'30%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'70%'"
+                  [title]="'70%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">346</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div class="fw-bold">Đảng</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block" style="width: 80%">
+              <div class="progress border">
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'34%'"
+                  [title]="'30%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'66%'"
+                  [title]="'60%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">266</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div class="fw-bold">Đoàn thể</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block" style="width: 40%">
+              <div class="progress border">
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'34%'"
+                  [title]="'10%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'66%'"
+                  [title]="'30%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">111</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div class="fw-bold">Tổ chức</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block" style="width: 40%">
+              <div class="progress border">
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'85%'"
+                  [title]="'35%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'15%'"
+                  [title]="'5%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">78</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div class="fw-bold">Doanh nghiệp</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block" style="width: 40%">
+              <div class="progress border">
+                <div
+                  class="progress-bar"
+                  [style.width]="'10%'"
+                  [title]="'10%'"
+                ></div>
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'85%'"
+                  [title]="'25%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'5%'"
+                  [title]="'5%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">78</span>
+            </div>
+          </div>
+        </div>
+        <div class="my-2">
+          <div class="fw-bold">Khác</div>
+          <div
+            class="d-flex flex-row justify-content-between align-items-center"
+          >
+            <div class="d-block" style="width: 40%">
+              <div class="progress border">
+                <div
+                  class="progress-bar"
+                  [style.width]="'10%'"
+                  [title]="'10%'"
+                ></div>
+                <div
+                  class="progress-bar bg-warning"
+                  [style.width]="'85%'"
+                  [title]="'25%'"
+                ></div>
+                <div
+                  class="progress-bar bg-success"
+                  [style.width]="'5%'"
+                  [title]="'5%'"
+                ></div>
+              </div>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">78</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="5">
+    <div class="h-50">
+      <div class="d-flex justify-content-between align-items-center">
+        <img
+          [src]="'assets/themes/od/default/img/Congvankhan.svg'"
+          style="width: 30px; height: auto"
+          class="svg-icon m-2"
+        />
+        <div>
+          <div class="fw-bold">Công văn khẩn</div>
+          <div class="fw-bold text-black-50">
+            Danh sách công văn đến có gắn nhãn khẩn/thượng khẩn
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="h-50">
+      <div class="d-flex justify-content-around align-items-center">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="fw-bold fs-1">10</div>
+          <div>Tổng số công văn</div>
+        </div>
+        <div class="vr"></div>
+        <div
+          class="d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="fw-bold fs-1">2</div>
+          <div>Chưa xử lý</div>
+        </div>
+        <div class="vr"></div>
+        <div
+          class="d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="fw-bold fs-1">1</div>
+          <div>Đang xử lý</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="6">
+    <div class="d-flex justify-content-center" style="height: 20%">
+      <div class="">
+        <div class="btn-group" role="group">
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnradio1"
+            autocomplete="off"
+            checked
+          />
+          <label
+            class="btn btn-outline-primary"
+            style="width: 100%"
+            for="btnradio1"
+            >Gửi</label
+          >
+
+          <input
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="btnradio2"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-primary" for="btnradio2">Nhận</label>
+        </div>
+      </div>
+    </div>
+    <div class="position-relative w-100" style="height: 80%">
+      <div
+        class="position-absolute scroll-hover"
+        style="max-height: 100%; width: 100%"
+      >
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">123</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'100%'"
+            [title]="'BTT UB Mặt trận Tổ quốc Việt Nam'"
+          >
+            <span>BTT UB Mặt trận Tổ quốc Việt Nam</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">100</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'90%'"
+            [title]="'Sở Thông tin và Truyền thông Tp.HCM'"
+          >
+            <span>Sở Thông tin và Truyền thông Tp.HCM</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">90</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'80%'"
+            [title]="'Cty TNHH TUV Rheinland Việt Nam'"
+          >
+            <span>Cty TNHH TUV Rheinland Việt Nam</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">80</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'70%'"
+            [title]="'Cty TNHH phần mềm FAST'"
+          >
+            <span>Cty TNHH phần mềm FAST</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">70</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'60%'"
+            [title]="'Văn phòng UBND TP.HCM'"
+          >
+            <span>Văn phòng UBND TP.HCM</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">60</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'50%'"
+            [title]="'Cty TNHH Tân Quang Việt'"
+          >
+            <span>Cty TNHH Tân Quang Việt</span>
+          </div>
+        </div>
+
+        <div
+          class="topchart-item d-flex align-items-center justify-content-end"
+        >
+          <div class="fw-bold me-2">50</div>
+          <div
+            class="topchart-user"
+            style="background-color: #1d1dcc; color: #fff"
+            [style.width]="'40%'"
+            [title]="'Sở Xây dựng TP.HCM'"
+          >
+            <span>Sở Xây dựng TP.HCM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #od_dashboard>
+  <div class="w-100 h-100" id="7">
+    <ejs-chart
+      id="chart-container"
+      [primaryXAxis]="{
+        valueType: 'Category',
+      }"
+      [primaryYAxis]="{}"
+      [legendSettings]="{
+        visible: true,
+        position: 'Top',
+        alignment: 'Far'
+      }"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="data7_1"
+          type="Column"
+          xName="orgUnitName"
+          yName="quantity"
+          name="Công văn đến"
+          columnWidth="0.25"
+          fill="#0079ff"
+          legendShape="Rectangle"
+        ></e-series>
+        <e-series
+          [dataSource]="data7_2"
+          type="Column"
+          xName="orgUnitName"
+          yName="quantity"
+          name="Công văn đi"
+          columnWidth="0.25"
+          fill="#05ddb8"
+          legendShape="Rectangle"
+        ></e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>

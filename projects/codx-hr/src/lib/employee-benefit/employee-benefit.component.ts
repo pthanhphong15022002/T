@@ -460,9 +460,6 @@ export class EmployeeBenefitComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res.event[0].emp?.emp) {
-        res.event[0].emp = res.event[0].emp.emp;
-      }
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
