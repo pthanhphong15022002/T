@@ -65,8 +65,6 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
 })
 export class ViewDetailComponent extends  UIDetailComponent implements OnChanges, AfterViewInit {
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  @Input() funcID: any;
-  @Input() recID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
@@ -1297,7 +1295,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       default: {
 
         //Biến động , tự custom
-        var customData = 
+        var customData =
         {
           refID : "",
           refType : this.formModel?.entityName,
@@ -1399,7 +1397,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
 
   //Duyệt công văn
   documentApproval(datas: any) {
-    
+
     if (datas.bsCategory) {
       //Có thiết lập bước duyệt
       if (datas.bsCategory.approval) {
@@ -1476,7 +1474,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         this.data = e?.result[0];
         this.data.lstUserID = getListImg(e?.result[0].relations);
         this.data.listInformationRel = e?.result[1];
-        break; 
+        break;
       }
     }
   }
@@ -1489,7 +1487,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     shareBy: any,
     agencies = null
   ) {
-    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2')) 
+    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2'))
     {
       if (this.funcList?.defaultValue == '1') {
         var text = this.ms020?.customName;
@@ -1824,7 +1822,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             }
           });
           //this.callfc.openForm();
-        } 
+        }
         if (res2?.eSign == false)
         //xét duyệt
         this.release(datas, processID);

@@ -56,7 +56,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     this.funcID = this.view?.formModel?.funcID ?? this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
-        this.runMode=func?.runMode;        
+        this.runMode=func?.runMode;
       }
     });
     this.user = this.authStore.get();
@@ -65,7 +65,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
@@ -187,8 +186,8 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     this.funcID = this.view?.formModel?.funcID;
     this.cache.functionList(this.funcID).subscribe(func=>{
       if(func){
-        this.runMode=func?.runMode;     
-        this.detectorRef.detectChanges();   
+        this.runMode=func?.runMode;
+        this.detectorRef.detectChanges();
       }
     });
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
@@ -229,7 +228,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         .subscribe((res) => {
           this.dataReferences = [];
           if (res) {
-            this.itemDetail = res;            
+            this.itemDetail = res;
             this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService
@@ -356,7 +355,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
 
   //#region MoreFunc viewDetai
   changeDataMF(e: any, data: any) {
-    if (this.runMode == '1') {      
+    if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(e, data?.unbounds);
     } else {
       var bookmarked = false;
@@ -454,7 +453,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         break;
       default:
         //Biến động , tự custom
-        var customData = 
+        var customData =
         {
           refID : "",
           refType : this.formModel?.entityName,
