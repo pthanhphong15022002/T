@@ -55,6 +55,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fileNameArr = [];
   refValueDataType = 'DP022';
 
+  //vll dang DPF..
+  listVll = [];
+  fieldsVll = { text: 'Note', value: 'listName' };
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
@@ -233,5 +237,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
     this.field.fieldName = format;
+  }
+
+  clickAddVll() {
+    // 'add vll'
   }
 }
