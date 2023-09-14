@@ -1980,11 +1980,14 @@ export class CodxHrService {
   //#endregion
 
   //#region Common
-  getFormGroup(formName, gridView): Promise<FormGroup> {
+  getFormGroup(formName, gridView, formModel): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         if (gv) {
           var arrgv = Object.values(gv) as any[];
+          arrgv = arrgv.sort(function (a: any, b: any) {
+            return a.columnOrder - b.columnOrder;
+          });
           const group: any = {};
           arrgv.forEach((element) => {
             var keytmp = Util.camelize(element.fieldName);
@@ -1993,6 +1996,20 @@ export class CodxHrService {
             if (type === 'bool') value = false;
             if (type === 'datetime') value = null;
             if (type === 'int' || type === 'decimal') value = 0;
+            if (element.isRequire && formModel) {
+              if (!value) {
+                var field = Util.camelize(element.fieldName);
+                if (formModel.fieldRequired == undefined)
+                  formModel.fieldRequired = '';
+
+                if (!formModel.fieldRequired)
+                  formModel.fieldRequired = field + ';';
+                else {
+                  if (!formModel.fieldRequired.includes(field))
+                    formModel.fieldRequired += field + ';';
+                }
+              }        
+            }
             group[keytmp] = element.isRequire
               ? new FormControl(value, Validators.required)
               : new FormControl(value);

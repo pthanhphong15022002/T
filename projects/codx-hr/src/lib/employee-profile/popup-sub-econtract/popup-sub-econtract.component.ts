@@ -47,7 +47,8 @@ export class PopupSubEContractComponent implements OnInit {
     this.hrService
       .getFormGroup(
         this.fmSubContract.formName,
-        this.fmSubContract.gridViewName
+        this.fmSubContract.gridViewName,
+        this.fmSubContract
       )
       .then((fg) => {
         if (fg) {

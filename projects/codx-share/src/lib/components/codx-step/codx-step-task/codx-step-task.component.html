@@ -458,7 +458,7 @@
         [vllData]="vllDataTask"
         [status]="data?.group ? data?.value?.status : setStatusGroup( data?.value)"
         #p="ngbPopover"
-        [ngbPopover]="'Cập nhật tiến độ'"
+        [ngbPopover]="isViewStep? 'Tiến độ công việc':'Cập nhật tiến độ'"
         (mouseenter)="p.open()"
         (mouseleave)="p.close()"
       ></codx-progressbar>

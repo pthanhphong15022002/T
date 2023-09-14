@@ -60,7 +60,8 @@ export class ViewDetailEbenefitComponent implements OnInit {
         this.hrService
           .getFormGroup(
             this.benefitFormModel.formName,
-            this.benefitFormModel.gridViewName
+            this.benefitFormModel.gridViewName,
+            this.benefitFormModel
           )
           .then((fg) => {
             if (fg) {
