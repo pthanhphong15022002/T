@@ -109,7 +109,8 @@ export class RequestReviewComponent
     {
       case "ES":
       {
-        alert("a");
+        funcID = "EST012";
+        component = this.components.cpnDtESSignFile;
         break;
       }
       case "OD":

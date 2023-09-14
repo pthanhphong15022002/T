@@ -1433,7 +1433,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           !this.isOnlyView ||
           !this.isStart ||
           this.isClose ||
-          this.isViewStep
+          this.isViewStep ||
+          (!data?.startDate && !data?.endDate)
         ) {
           return false;
         } else {
@@ -1708,6 +1709,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (dataOuput?.event?.task || dataOuput?.event?.group) {
           await this.getStepById();
         }
+        this.moreDefaut = {...this.moreDefaut};
       });
     }
   }
