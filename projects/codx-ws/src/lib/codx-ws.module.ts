@@ -31,12 +31,18 @@ import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.compo
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { RequestReviewComponent } from './approvals/request-review/request-review.component';
 import { AdvancePaymentComponent } from 'projects/codx-ac/src/lib/advance-payment/advance-payment.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
+import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+
+      //-----------Khai báo routing nghiệp vu---------------
       {
         path: 'workspace/:funcID',
         component: WorkspaceComponent,
@@ -111,6 +117,25 @@ const routes: Routes = [
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
       },
+      //-----------Khai báo routing nghiệp vu---------------
+      //-----------Khai báo routing báo cáo---------------
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
+      //-----------Khai báo routing báo cáo---------------
+      //-----------Khai báo routing Dashboard---------------
+      //OD
+      {
+        path: 'od/dashboard/:funcID',
+        component: ODDashboardComponent,
+      },
+      //DM
+      {
+        path: 'dm/dashboard/:funcID',
+        component: DMDashboardComponent,
+      },
+      //-----------Khai báo routing Dashboard---------------
       {
         path: '',
         redirectTo: 'home',
