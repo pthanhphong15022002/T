@@ -35,6 +35,7 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
+import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
 
 const routes: Routes = [
   {
@@ -134,6 +135,11 @@ const routes: Routes = [
       {
         path: 'dm/dashboard/:funcID',
         component: DMDashboardComponent,
+      },
+      //TM
+      {
+        path: 'tm/dashboard/:funcID',
+        component: TMDashboardComponent,
       },
       //-----------Khai báo routing Dashboard---------------
       {
