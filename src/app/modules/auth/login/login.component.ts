@@ -120,7 +120,8 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               this.sessionID = params.sk;
               this.email = res[0];
               this.mode = res[1];
-              dt.detectChanges();
+              // dt.detectChanges();
+              this.detectorRef.detectChanges();
               // if (
               //   res.msgBodyData[0].lastLogin == null ||
               //   (params.id && params.id == 'forget')
@@ -134,7 +135,9 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         this.mode = params.id;
         this.user = this.auth.get();
         this.email = this.user.email;
-        dt.detectChanges();
+        this.detectorRef.detectChanges();
+
+        // dt.detectChanges();
       } else {
         this.authService.checkUserStatus().subscribe((res) => {
           if (res) {
@@ -322,18 +325,18 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       .changepw(this.c.email.value, passOld, this.c.password.value)
       .pipe()
       .subscribe((data1) => {
-        if (!data1.isError) {
+        if (!data1.error) {
           const loginSubscr = this.authService
-            .login(this.c.email.value, this.c.password.value)
+            .login(this.c.email.value, this.c.password.value, '', true)
             .pipe()
             .subscribe((data) => {
               if (data) {
-                if (!data.isError) {
-                  if (this.returnUrl.indexOf(data.tenant) > 0)
+                if (!data.error) {
+                  if (this.returnUrl.indexOf(data.data.tenant) > 0)
                     this.navRouter.navigate([`${this.returnUrl}`]);
                   else
                     this.navRouter.navigate([
-                      `${data.tenant}/${this.returnUrl}`,
+                      `${data.data.tenant}/${this.returnUrl}`,
                     ]);
                 } else {
                   //$(this.error.nativeElement).html(data.error);

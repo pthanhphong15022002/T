@@ -74,7 +74,7 @@ export class LoginDefaultComponent extends UIComponent {
   enableCaptcha = 0;
   token = '';
   captChaValid = false;
-  enableMultiLogin = false;
+  enableMultiLogin = true;
   // private fields
 
   //#region OTP
@@ -339,5 +339,9 @@ export class LoginDefaultComponent extends UIComponent {
 
   closeScanQRGuid() {
     this.modal.hide();
+  }
+
+  test() {
+    console.log(this.changePassForm);
   }
 }
