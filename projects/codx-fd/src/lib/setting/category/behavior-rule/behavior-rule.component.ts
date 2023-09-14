@@ -35,7 +35,6 @@ import { AddBehaviorRuleComponent } from './add-behavior-rule/add-behavior-rule.
   styleUrls: ['./behavior-rule.component.scss'],
 })
 export class BehaviorRuleComponent extends UIComponent implements OnInit {
-  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;

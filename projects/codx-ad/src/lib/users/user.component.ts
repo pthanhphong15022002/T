@@ -50,7 +50,6 @@ export class UserComponent extends UIComponent {
   dialog!: DialogRef;
   button?: ButtonModel;
   user: any;
-  funcID: string;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,

@@ -48,7 +48,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   sfRecID = '';
   transRecID = null;
-  funcID;
   oApprovalTrans: any = {};
   canOpenSubPopup;
 

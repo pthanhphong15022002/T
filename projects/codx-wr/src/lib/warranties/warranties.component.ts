@@ -62,7 +62,6 @@ export class WarrantiesComponent
 
   // type any for view detail
   @Input() dataObj?: any;
-  @Input() funcID: any;
 
   // region LocalVariable
   viewMode = 1;

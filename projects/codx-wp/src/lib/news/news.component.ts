@@ -49,7 +49,6 @@ export class NewsComponent extends UIComponent {
     return 'bg-body h-100 news-main card-body scroll-y';
   }
   user: any = null;
-  funcID: string = '';
   posts: any[] = [];
   videos: any[] = [];
   views: Array<ViewModel> = [];

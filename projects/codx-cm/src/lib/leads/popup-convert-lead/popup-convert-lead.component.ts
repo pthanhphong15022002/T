@@ -689,7 +689,6 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-
   //#region Convert contact to field DP
   convertToFieldDp(contact, type) {
     if (contact != null) {
@@ -812,6 +811,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
     this.customer.category = this.lead?.category;
+    this.customer.shortName = this.lead?.shortName;
   }
 
   setContact() {
@@ -874,10 +874,32 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     }
   }
-  valueChangeCustomer(e) {
+  async valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
       this.nameAvt = e?.data?.trim();
+    }
+    if (e.field == 'address') {
+      if (e?.data != null && e?.data.trim() != '') {
+        let json = await firstValueFrom(
+          this.api.execSv<any>(
+            'BS',
+            'ERM.Business.BS',
+            'ProvincesBusiness',
+            'GetLocationAsync',
+            [e?.data, 3]
+          )
+        );
+        if (json != null && json.trim() != '') {
+          let lstDis = JSON.parse(json);
+          if (this.customer.provinceID != lstDis?.ProvinceID)
+            this.customer.provinceID = lstDis?.ProvinceID;
+          if (this.customer.districtID != lstDis?.DistrictID)
+            this.customer.districtID = lstDis?.DistrictID;
+          if (this.customer.wardID != lstDis?.WardID)
+            this.customer.wardID = lstDis?.WardID;
+        }
+      }
     }
   }
   valueTagChange(e) {

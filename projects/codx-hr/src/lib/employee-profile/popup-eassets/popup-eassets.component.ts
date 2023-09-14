@@ -29,7 +29,6 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
   actionType;
   successFlag = false;
   idField = 'RecID';
-  funcID;
   employeeId;
   isAfterRender = false;
   headerText: '';

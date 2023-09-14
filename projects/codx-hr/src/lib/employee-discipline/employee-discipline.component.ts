@@ -36,7 +36,6 @@ export class EmployeeDisciplineComponent extends UIComponent {
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus') templateUpdateStatus: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  funcID: string;
   editStatusObj: any;
   dataCategory;
   eDisciplineHeaderText;

@@ -26,7 +26,6 @@ export class CardTransComponent
   className = 'ResourceTransBusiness';
   method = 'GetListAsync';
   viewType = ViewType;
-  funcID: any;
   formModel: FormModel;
   columnGrids: any;
   views: any;

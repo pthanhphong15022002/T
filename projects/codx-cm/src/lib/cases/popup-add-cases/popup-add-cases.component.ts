@@ -118,7 +118,6 @@ export class PopupAddCasesComponent
   // load data form DP
   isLoading: boolean = false;
   processID: string = '';
-  funcID = '';
   applyProcess = false;
   idxCrr: any = -1;
 

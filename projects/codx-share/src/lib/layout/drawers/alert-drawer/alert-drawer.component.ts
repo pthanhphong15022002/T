@@ -13,7 +13,6 @@ export class AlertDrawerComponent extends UIComponent implements OnInit {
   lstAlerts:any[] = [];
   lstNewNotify:any[] = [];
   lstOldNotify:any[] = [];
-  funcID:string ="";
   entityName:string = "";
   tableName:String = "";
   constructor(

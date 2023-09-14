@@ -86,7 +86,6 @@ export class PortalComponent extends UIComponent {
   crrEContract: any;
   isRegular: string;
   lstContractType: any; //phân loại HĐ không xác định
-  funcID = '';
   service = '';
   assemblyName = '';
   entity = '';

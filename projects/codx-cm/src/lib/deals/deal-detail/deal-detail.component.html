@@ -767,7 +767,6 @@
                         </div>
                       </div>
                     </div>
-
                   </div>
 
                   <div class="row">
@@ -856,7 +855,13 @@
                         *ngIf="item?.fields?.length > 0"
                         [dataStep]="item"
                         [showColumnControl]="showColumnControl(item.stepID)"
-                        [isUpdate]="['1', '2'].includes(dataSelected.status) && dataSelected?.full && !dataSelected.closed"
+                        [isUpdate]="
+                          ['1', '2'].includes(dataSelected.status) &&
+                          dataSelected?.full &&
+                          !dataSelected.closed
+                        "
+                        [objectIdParent]="dataSelected.recID"
+                        [customerID]="dataSelected.customerID"
                         (saveDataStep)="saveDataStep($event)"
                       >
                       </codx-fields-detail-temp>

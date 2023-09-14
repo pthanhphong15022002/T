@@ -95,7 +95,6 @@ export class ProcessesComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID = 'BPT1';
   method = 'GetListProcessesAsync';
   itemSelected: any;
   dialogPopup: DialogRef;
@@ -158,6 +157,7 @@ export class ProcessesComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
+    this.funcID = "BPT1";
     this.user = this.authStore.get();
     if (this.user?.employee) this.employee = this.user?.employee;
     this.userGroupID = this.user?.groupID;

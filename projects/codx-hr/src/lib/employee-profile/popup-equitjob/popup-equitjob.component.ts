@@ -14,7 +14,6 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
   formGroup: FormGroup;
   dialog: DialogRef;
   quitJobObj: any;
-  funcID: string;
   actionType: string;
   crrEContract: any;
   employeeId: string;
@@ -42,8 +41,8 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
     },
   ]
 
-  @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  @ViewChild('form') form: LayoutAddComponent;
+  // @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
 
   constructor(
     private injector: Injector,
@@ -230,6 +229,7 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
 

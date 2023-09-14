@@ -69,7 +69,6 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   moreFunc: Array<ButtonModel> = [];
   fields: any;
   resourceField: any;
-  funcID: string;
   popupTitle = '';
   lstPined: any = [];
   reportUUID: any = 'TMR01';

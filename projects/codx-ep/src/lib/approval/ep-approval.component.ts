@@ -32,7 +32,6 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 })
 export class EPApprovalComponent extends UIComponent {
   //Input
-  @Input() funcID: string;
   @Input() queryParams: any;
   //list view
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
