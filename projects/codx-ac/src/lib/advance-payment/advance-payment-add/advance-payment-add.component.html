@@ -42,9 +42,13 @@
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span class="text-gray-600"
+        <span *ngIf="advancedPayment?.voucherNo" class="text-gray-600 voucherText"
           style="font-size: 13px !important;">
           {{ advancedPayment?.voucherNo }}
+        </span>
+        <span *ngIf="!advancedPayment?.voucherNo" class="text-gray-600 voucherText"
+          style="font-size: 13px !important;">
+          {{ ('AC0028' | mssg | async) }}
         </span>
       </div>
       <div class="d-flex justify-content-end align-items-center">
@@ -55,7 +59,7 @@
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span class="text-gray-600"
+        <span class="text-gray-600 voucherText"
         style="font-size: 13px !important;"
         >
           {{ formatDate(advancedPayment?.voucherDate) }}

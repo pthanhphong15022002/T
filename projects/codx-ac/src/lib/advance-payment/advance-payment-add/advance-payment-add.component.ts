@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, Injector, Optional, ViewChild } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-advance-payment-add',
   templateUrl: './advance-payment-add.component.html',
-  styleUrls: ['./advance-payment-add.component.css']
+  styleUrls: ['./advance-payment-add.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AdvancePaymentAddComponent extends UIComponent
 {
@@ -28,6 +29,11 @@ export class AdvancePaymentAddComponent extends UIComponent
       costPrice: 250000,
     },
   ];
+  fmAdvancedPaymentLines: FormModel = {
+    entityName: 'AC_AdvancedPaymentLines',
+    formName: 'AdvancedPaymentLines',
+    gridViewName: 'grvAdvancedPaymentLines',
+  }
   constructor(
     inject: Injector,
     private notification: NotificationsService,
