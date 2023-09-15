@@ -105,7 +105,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.dialogRef.dataService.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
@@ -146,22 +146,28 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.dialogRef.dataService.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.advancedPayment.status = '7';
           this.form.formGroup.patchValue({ status: this.advancedPayment.status });
         }
-        if (res?.save?.data) {
-          this.onRelease('', res.save.data);
+        else
+        {
+          if (res?.save?.data) {
+            this.onRelease('', res.save.data);
+          }
+          else if (res?.update?.data) {
+            this.onRelease('', res.update.data);
+          }
         }
       });
   }
   
   onRelease(text: any, data: any){
     this.acService
-      .getCategoryByEntityName(this.view.formModel.entityName)
+      .getCategoryByEntityName(this.form.formModel.entityName)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
@@ -170,8 +176,8 @@ export class AdvancePaymentAddComponent extends UIComponent
             'AC',
             data.recID,
             this.dataCategory.processID,
-            this.view.formModel.entityName,
-            this.view.formModel.funcID,
+            this.form.formModel.entityName,
+            this.form.formModel.funcID,
             '',
             '',
             ''
@@ -180,8 +186,8 @@ export class AdvancePaymentAddComponent extends UIComponent
           .subscribe((result: any) => {
             if (result?.msgCodeError == null && result?.rowCount) {
               data.status = result?.returnStatus;
-              this.view.dataService.updateDatas.set(data['_uuid'], data);
-              this.view.dataService
+              this.dialogRef.dataService.updateDatas.set(data['_uuid'], data);
+              this.dialogRef.dataService
                 .save(null, 0, '', '', false)
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res: any) => {
@@ -286,8 +292,10 @@ export class AdvancePaymentAddComponent extends UIComponent
     });
   }
 
-  @HostListener('click', ['$event'])
+  @HostListener('click', ['$event.target'])
   onClick(e) {
+    if(this.advancedPayment)
+      return;
     if (
       e.target.closest('.e-grid') == null &&
       e.target.closest('.e-popup') == null &&
