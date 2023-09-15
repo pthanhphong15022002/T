@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption, ImageViewerComponent } from 'codx-core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { PopupAddPostComponent } from '../../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
@@ -33,7 +33,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
-  functionName:string = "";
+  function:any = null;
   hideMFC:boolean = false;
   imgOn:DateTime = new DateTime();
   constructor(private api:ApiHttpService,
@@ -45,29 +45,31 @@ export class AppropvalNewsDetailComponent implements OnInit {
 
     ) { }
   ngOnInit(): void {
-    this.getPostInfor(this.objectID);
+    this.getDataDetail(this.objectID);
     this.cache.functionList(this.funcID)
-    .subscribe((func: any) => 
-      {
+      .subscribe((func: any) =>{
         if(func)
-          this.functionName = func.defaultName;
+        {
+          this.function = func;
+        }
       });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange)
-      this.getPostInfor(this.objectID);
+    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange){
+      this.getDataDetail(this.objectID);
+    }
   }
   
   // get data detail
-  getPostInfor(objectID:string){
+  getDataDetail(objectID:string){
     if(objectID == null || objectID == "")
     {
       this.data = null;
+      this.hideMFC = true;   
       this.dt.detectChanges();
     }
-    else
-    {
+    else{
       this.api.execSv(
         "WP",
         "ERM.Business.WP",
@@ -76,64 +78,23 @@ export class AppropvalNewsDetailComponent implements OnInit {
         [this.objectID,this.funcID])
         .subscribe((res:any) => {
           this.data = JSON.parse(JSON.stringify(res));
+          this.hideMFC = res?.approveStatus == "5";    
           this.imgOn = new DateTime();
-          if(this.data)
-            this.hideMFC = this.data.approveStatus == "5";            
           this.dt.detectChanges();
         });
     }
-    
   }
+
   //  click morefunction
   clickMF(event:any){
-    if(event?.functionID)
-    {
-      let headerText = event.text + " " + this.functionName;
+    if(event?.functionID){
+      let headerText = event.text + " " + this.function.customName;
       switch(event.functionID){
         case "SYS02": //delete
           this.deletedPost(this.data);
           break;
         case "SYS03": // edit
-          let option = new DialogModel();
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            if(this.funcID == "WPT0211" || this.funcID == "WPT0212")
-            {
-              option.IsFull = true;
-              let object = {
-                headerText: headerText,
-                data: this.data,
-                isAdd:false
-              }
-              this.callFuc.openForm(PopupAddComponent,"",0,0,this.funcID,object,'',option);
-            }
-            else 
-            {
-              this.api.execSv(
-                this.service,
-                this.assemblyName,
-                "CommentsBusiness",
-                "GetPostByIDAsync", 
-                [this.data.recID]).subscribe((res:any) => { 
-                  if(res) 
-                  {
-                    let obj = {
-                      post: res,
-                      status: 'edit',
-                      headerText: headerText,
-                    };
-                    let option = new DialogModel();
-                    option.DataService = this.dataService;
-                    option.FormModel = this.formModel;
-                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
-                      if (res?.event) 
-                      {
-                        this.dataService.update(res.event).subscribe();
-                      }
-                    });
-                  }
-              });
-            }
+          this.editPost(event,this.data);
           break;
         case "WPT02121": 
         case "WPT02131": // duyệt
@@ -222,4 +183,49 @@ export class AppropvalNewsDetailComponent implements OnInit {
     return true;
   }
 
+  //edit post
+  editPost(evt:any,data:any){
+    let headerText = evt.text + " " + this.function.customName;
+    let option = new DialogModel();
+    option.DataService = this.dataService;
+    option.FormModel = this.formModel;
+    if(this.funcID == "WPT0211" || this.funcID == "WPT0212")
+    {
+      option.IsFull = true;
+      let object = {
+        headerText: headerText,
+        data: this.data,
+        isAdd:false
+      }
+      this.callFuc.openForm(PopupAddComponent,"",0,0,this.funcID,object,'',option);
+    }
+    else 
+    {
+      this.api.execSv(
+        this.service,
+        this.assemblyName,
+        "CommentsBusiness",
+        "GetPostByIDAsync", 
+        [this.data.recID])
+        .subscribe((res:any) => { 
+          if(res) 
+          {
+            let obj = {
+              post: res,
+              status: 'edit',
+              headerText: headerText,
+            };
+            let option = new DialogModel();
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
+              if (res?.event) 
+              {
+                this.dataService.update(res.event).subscribe();
+              }
+            });
+          }
+      });
+    }
+  }
 }

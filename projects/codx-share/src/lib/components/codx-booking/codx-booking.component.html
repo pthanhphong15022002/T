@@ -99,11 +99,16 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [crrEntityName]="crrEntityName"
+    <codx-booking-view-detail #viewdetail [viewMode]="'1'" [itemDetail]="itemDetail" [funcID]="funcID" [crrEntityName]="crrEntityName"
     [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
     (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (reloadData)="reloadData($event)"
     (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)" (setAllocateStatus)="setAllocateStatus($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"></codx-booking-view-detail>
+    <!-- <codx-view-detail-booking #viewdetail [recID]="itemDetail?.recID" [funcID]="funcID" [crrEntityName]="crrEntityName" [itemDetail]="itemDetail"
+    [formModel]="formModel" [resourceType]="resourceType" (reschedule)="reschedule($event)" (cancel)="cancel($event)"
+    (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (reloadData)="reloadData($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"  (allocate)="allocate($event)" (setAllocateStatus)="setAllocateStatus($event)"
+    (setPopupTitleOption)="setPopupTitleOption($event)"></codx-view-detail-booking> -->
 </ng-template>
 
 <!----------------------------------Grid---------------------------------->

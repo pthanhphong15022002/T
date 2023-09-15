@@ -1,6 +1,6 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn && !changedInForm">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
