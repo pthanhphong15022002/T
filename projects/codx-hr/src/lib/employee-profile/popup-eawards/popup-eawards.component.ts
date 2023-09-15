@@ -287,6 +287,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   inYearSelect(event) {
     this.awardObj.inYear = new Date(event.value).getFullYear();
+    this.formGroup.patchValue(this.awardObj);
     console.log('cap nhat inyear', this.awardObj.inYear);
   }
 

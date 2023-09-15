@@ -147,10 +147,14 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     } else if (trainLev) {
       this.data.degreeName = this.trainLevelStr;
     }
+    else{
+      this.data.degreeName = '';
+    }
     this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   valChangeTrainFieldId(event){
+    debugger
     this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
 
     let trainFieldId = this.data.trainFieldID;
@@ -162,6 +166,9 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       this.data.degreeName = this.trainFieldStr;
     } else if (trainLev) {
       this.data.degreeName = this.trainLevelStr;
+    }
+    else{
+      this.data.degreeName = '';
     }
     this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
