@@ -1106,7 +1106,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     } else {
     }
   }
-
+  // test()
+  // {
+  //   var dataRequest = new DataRequest();
+  //   //dataRequest.
+  //   this.api
+  //   .execSv('DM', 'DM', 'FileBussiness', 'GetFiles_MobileAsync', )
+  //   .subscribe();
+  // }
   onSelectionChanged($data , noTree = false) {
     if(this.funcID == "DMT00" && $data.data.folderId == "DM") return;
     ScrollComponent.reinitialization();

@@ -647,7 +647,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP20': // tiến độ
             res.isbookmark = false;
             if (
-              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep) || this.isClose
             ) {
               res.disabled = true;
             }

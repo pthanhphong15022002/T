@@ -381,7 +381,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe((data) => {
         if (!data.error) {
-          this.login2FA = data?.data?.extends['Extends'] ?? '';
+          this.login2FA = data?.data?.extends?.Extends ?? '';
           let objData = {
             data: data,
             login2FA: this.login2FA,
