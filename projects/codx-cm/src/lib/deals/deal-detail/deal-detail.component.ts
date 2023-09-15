@@ -181,7 +181,6 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
-        this.lstStepsOld = this.listSteps;
       }
     }
   }
@@ -343,6 +342,9 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        if (this.listSteps) {
+          this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
+        }
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       }
@@ -425,9 +427,8 @@ export class DealDetailComponent implements OnInit {
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
-        debugger
-        var lstStepsOld = this.lstStepsOld;
-        this.lstStepsOld = this.listSteps;
+        debugger;
+        var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
         let lstOlds = [];
         if (lstStepsOld != null && lstStepsOld.length > 0) {
           for (var step of lstStepsOld) {
@@ -440,8 +441,8 @@ export class DealDetailComponent implements OnInit {
               );
               if (js != null && js?.dataValue != null) {
                 let lsJs = JSON.parse(js?.dataValue);
-                lsJs.forEach(element => {
-                  if(!lstOlds.some(x => x.recID == element?.recID)){
+                lsJs.forEach((element) => {
+                  if (!lstOlds.some((x) => x.recID == element?.recID)) {
                     lstOlds.push(element);
                   }
                 });
@@ -457,21 +458,20 @@ export class DealDetailComponent implements OnInit {
             item?.dataValue?.trim() != ''
           ) {
             var lst = JSON.parse(item?.dataValue);
-            if(lstOlds != null && lstOlds.length > 0){
+            if (lstOlds != null && lstOlds.length > 0) {
               let lstDelete = [];
-              if(lst != null && lst.length > 0){
+              if (lst != null && lst.length > 0) {
                 lstOlds.forEach((ele) => {
-                  if(!lst.some(x => x.recID == ele?.recID)){
-                    lstDelete.push(ele);
-                  }
-                })
-              }else{
+                  let isCheck = lst.some((x) => x.recID == ele?.recID);
+                  if (!isCheck) lstDelete.push(ele);
+                });
+              } else {
                 lstDelete = lstOlds;
               }
-              for(let i = 0; i < lstDelete.length; i++){
+              for (let i = 0; i < lstDelete.length; i++) {
                 let recID = lstDelete[i]?.recID;
-                var indx = this.lstContacts.findIndex(x => x.recID == recID);
-                if(indx != -1){
+                var indx = this.lstContacts.findIndex((x) => x.recID == recID);
+                if (indx != -1) {
                   this.lstContacts.splice(indx, 1);
                 }
               }
@@ -486,9 +486,9 @@ export class DealDetailComponent implements OnInit {
                 this.lstContacts.push(Object.assign({}, contact));
               }
             }
-
           }
         }
+        this.lstStepsOld = this.listSteps;
         if (this.loadContactDeal) {
           this.loadContactDeal.loadListContact(this.lstContacts);
         }
@@ -520,10 +520,38 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'delete' ? json : ''
             )
             .subscribe((res) => {});
+          if (this.listSteps != null && this.listSteps.length > 0) {
+            for (var step of this.listSteps) {
+              if (step?.fields != null && step?.fields?.length > 0) {
+                let idx = step?.fields?.findIndex(
+                  (x) =>
+                    x?.dataType == 'C' &&
+                    x?.dataValue != null &&
+                    x?.dataValue?.trim() != ''
+                );
+
+                if (idx != -1) {
+                  let lsJs = [];
+                  lsJs = JSON.parse(step?.fields[idx]?.dataValue) ?? [];
+                  var idxContactField = lsJs.findIndex(x => x.recID == data.recID);
+                  if(idxContactField != -1){
+                    if($event?.action == 'edit'){
+                      lsJs[idxContactField] = data;
+                    }else{
+                      lsJs.splice(idxContactField, 1);
+                    }
+                    step.fields[idx].dataValue = lsJs != null && lsJs?.length > 0 ? JSON.stringify(lsJs) : '';
+                  }
+
+                }
+              }
+            }
+          }
         }
         this.getContactPerson(data);
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   lstContactEmit(e) {

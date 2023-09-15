@@ -214,7 +214,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group" *ngIf="cases.caseType == '1'">
+      <div class="form-group" *ngIf="cases?.caseType == '1'">
         <codx-label
           fiedName="OccuredOn"
           [formModel]="form.formModel"
@@ -253,7 +253,7 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="form-group" *ngIf="cases.caseType == '1'">
+      <div class="form-group" *ngIf="cases?.caseType == '1'">
         <codx-label
           fiedName="DetectedOn"
           [formModel]="form.formModel"
@@ -278,6 +278,25 @@
           [Group]="form.formGroup"
         >
         </codx-label>
+        <!-- <div *ngIf="!lead.applyProcess; else ownerProcess">
+          <codx-input
+            field="owner"
+            [formModel]="form.formModel"
+            [crrValue]="owner"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #ownerProcess>
+          <ejs-combobox
+            [dataSource]="listParticipants"
+            (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+            [fields]="fieldCbxParticipants"
+            [placeholder]="gridViewSetup?.Owner?.description"
+            [allowFiltering]="true"
+            [value]="owner"
+          ></ejs-combobox>
+        </ng-template> -->
         <ejs-combobox
           [dataSource]="listParticipants"
           (valueChange)="valueChangeOwner($event)"
@@ -372,7 +391,7 @@
     <div>
       <codx-attachment
         #attachment
-        [objectId]="cases.recID"
+        [objectId]="cases?.recID"
         [objectType]="dialog.formModel.entityName"
         [referType]="'source'"
         hideFolder="1"
