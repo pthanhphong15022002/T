@@ -3,3 +3,25 @@
     text-overflow: ellipsis;
     max-width: 100px;
 }
+.btn-addline{
+    position: absolute;
+    right: 0;
+    top: -32px;
+}
+#gridViewV2.e-grid .e-summarycell {
+    border-width: 0;
+}
+#gridViewV2 {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#gridViewV2 .e-gridcontent {
+flex: 1;
+}
+#gridViewV2 .e-content {
+height: 100%;
+}
+.rounded-15{
+    border-radius: 15px !important;
+ }

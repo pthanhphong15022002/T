@@ -3,6 +3,7 @@
         <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
           *ngFor="let item of listDashboard"
           [style.backgroundColor]="item?.color"
+          (click)="selectedChange(item)"
         >
           <div class="d-flex flex-column h-100">
             <span class="fs-5-sm">{{item.customName}}</span>

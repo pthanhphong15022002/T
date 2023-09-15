@@ -1011,7 +1011,7 @@ export class DealsComponent
     return deal;
   }
   startDeal(data) {
-    this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+    this.codxCmService.startInstance([data.refID,'']).subscribe((resDP) => {
       if (resDP) {
         var datas = [data.recID, resDP[0]];
         this.codxCmService.startDeal(datas).subscribe((res) => {
