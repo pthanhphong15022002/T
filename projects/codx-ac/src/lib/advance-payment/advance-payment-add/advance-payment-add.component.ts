@@ -20,7 +20,6 @@ export class AdvancePaymentAddComponent extends UIComponent
   columns: Array<any> = [];
   dialogRef!: DialogRef;
   advancedPayment: AdvancedPayment;
-  grvSetupAdvancedPaymentLines: any;
   vendorData: Object[] = [
     {
       detailName: 'Maria ',
@@ -52,8 +51,6 @@ export class AdvancePaymentAddComponent extends UIComponent
     this.advancedPayment = dialogData.data?.advancedPayment;
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
-    this.grvSetupAdvancedPaymentLines = Object.values(dialogData.data?.grvSetupAdvancedPaymentLines);
-    this.loadColumnVisible();
   }
 
   onInit(): void {
@@ -147,15 +144,5 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   clearAdvancedPayment(){
 
-  }
-
-  loadColumnVisible()
-  {
-    this.grvSetupAdvancedPaymentLines.forEach((item: any) => {
-      if(item.isVisible == true)
-      {
-        this.columns.push(item);
-      }
-    });
   }
 }
