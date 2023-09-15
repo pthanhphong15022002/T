@@ -32,8 +32,8 @@
 <ng-template #paneRight>
   <lib-view-detail
     #viewdetail
+    [recID]="itemDetail?.recID"
     [data]="lstSignfiles"
-    [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
@@ -126,8 +126,6 @@
   [entityName]="entity"
   [className]="className"
   [method]="method"
-  [predicate]="'IsTemplate=@0'"
-  [dataValue]="false"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [idField]="idField"
@@ -136,7 +134,8 @@
   [moreFuncs]="moreFunc"
 >
 </codx-views>
-
+<!-- [predicate]="'IsTemplate=@0'"
+[dataValue]="false" -->
 <ng-template #baseHeaderRight let-data>
   <codx-vll
     class="badge"

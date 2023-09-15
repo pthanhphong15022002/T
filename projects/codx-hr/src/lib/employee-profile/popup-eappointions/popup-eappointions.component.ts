@@ -233,7 +233,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.eAppointionHeaderTexts = res;
     });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;

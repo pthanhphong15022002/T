@@ -141,7 +141,8 @@ export class EmployeeContractComponent extends UIComponent {
       this.hrService
         .getFormGroup(
           this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
         )
         .then((res) => {
           this.formGroup = res;

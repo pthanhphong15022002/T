@@ -125,19 +125,6 @@
       ></span>
     </div>
     <div class="d-flex align-items-center justify-content-start mb-1">
-      <i class="icon-add_shopping_cart icon-16 text-gray-500 me-2"></i>
-      <span
-        class="text-gray-500 line-clamp-menu"
-        #businessLineID
-        [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
-        [innerHTML]="
-          data?.businessLineID
-            | formatvalue : view.formModel : 'businessLineID' : businessLineID
-            | async
-        "
-      ></span>
-    </div>
-    <div class="d-flex align-items-center justify-content-start mb-1">
       <div>
         <div
           *ngIf="data.status != '1'"

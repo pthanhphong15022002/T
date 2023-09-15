@@ -189,13 +189,22 @@ export class PopupAddressComponent implements OnInit {
 
   async onSaveHanle() {
     this.data.isDefault = this.isDefault;
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
     let json = await firstValueFrom(
       this.api.execSv<any>(
         'BS',
         'ERM.Business.BS',
         'ProvincesBusiness',
         'GetLocationAsync',
-        [this.data.adressName, 3]
+        [this.data.adressName, lever]
       )
     );
     if (json != null && json.trim() != '') {
