@@ -1,0 +1,454 @@
+<codx-detail-tmp class="booking-main" #dataTemplate [formModel]="formModel" [dataItem]="data"
+  [header]="header" [body]="body" [footer]="footer" (clickMF)="childClickMF($event, data)"
+  (changeDataMF)="changeDataMF($event, data)">
+
+  <!----------------------------------Header---------------------------------->
+  <ng-template #header>
+    <div class="d-flex justify-content-between mt-2 mb-2">
+      <div class="fs-5 fw-bold text-dark">{{ data?.title }}</div>
+      <div class="d-flex justify-content-end">
+        <codx-vll [name]="'EP022'" [value]="this.runMode != '1' ? data?.approveStatus : data?.unbounds?.statusApproval" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-square badge-md fs-7 p-2">
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <codx-temp-full [title]="data?.requester" [titleCss]="'fs-6'" [subTitleTmp]="subTitleHeader" [imageId]="data?.createdBy"
+        imageObjType="AD_Users" [imageWidth]="35">
+      </codx-temp-full>
+    </div>
+
+    <ng-container *ngIf="resourceType == '1'">
+      <ng-container *ngTemplateOutlet="templateHeaderRoom"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="resourceType == '2'">
+      <ng-container *ngTemplateOutlet="templateHeaderCar"></ng-container>
+
+    </ng-container><ng-container *ngIf="resourceType == '6'">
+      <ng-container *ngTemplateOutlet="templateHeaderStationery"></ng-container>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #subTitleHeader>
+    <div class="d-flex flex-row">
+      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+        <span class="fw-bold" *ngIf="data?.positionName; else positionPlaceholder">
+          {{ data?.positionName }}
+        </span>
+        <ng-template #positionPlaceholder>
+          <codx-label name="lblPosition" default="Vị trí" class="text-gray-600"></codx-label>
+        </ng-template>
+      </div>
+
+      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+        <i class="icon-email icon-16 me-2"></i>
+        <span class="text-gray-700" *ngIf="data?.email; else emailPlaceholder">
+          {{ data?.email }}
+        </span>
+        <ng-template #emailPlaceholder>
+          <codx-label name="lblEmail" default="Email" class="text-gray-600"></codx-label>
+        </ng-template>
+      </div>
+
+      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+        <i class="icon-phone_android icon-16 me-1"></i>
+        <span class="text-gray-700" *ngIf="data?.phoneNumber; else phonePlaceholder">
+          {{ data?.phoneNumber }}
+        </span>
+        <ng-template #phonePlaceholder>
+          <codx-label name="lblPhone" default="Số điện thoại" class="text-gray-600"></codx-label>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #templateHeaderRoom>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblRoom" default="Phòng" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800 text-break">
+          {{ data?.resourceName }}
+          <span *ngIf="data?.agencyName!=null && data?.agencyName!=''">
+            <span class="mx-1"> - </span>
+            <span>{{data?.agencyName}}</span>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
+      <div class="d-flex me-6">
+        <codx-label name="lblDate" default="Ngày" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ data?.bookingOn | fmDT }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <codx-label name="lblTime" default="Thời gian" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ showHour(data?.startDate) }}
+        </span>
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1 text-gray-800">{{ "-" }}</span>
+        <span class="text-gray-800">
+          {{ showHour(data?.endDate) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2" *ngIf="grView?.reasonID?.allowPopup">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblReason" default="Lý do" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ data?.reasonID }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2" *ngIf="data?.onlineUrl">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblOnlineUrl" default="Họp trực tuyến" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span role="button" class="text-primary online-url" (click)="meetingNow()">
+          {{ data?.onlineUrl }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblHost" default="Người chủ trì" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ data?.host }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <div class="d-flex justify-content-end">
+          <codx-imgs [objectId]="data?.bookingAttendees" objectType="AD_Users" [numberImages]="6" [width]="30">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #templateHeaderCar>
+    <div class="d-flex">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblCar" default="Xe" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-800">
+          {{ data?.resourceName }}
+          <span *ngIf="data?.code != null">
+            - {{ data?.code }}</span>
+        </span>
+      </div>
+      <div class="d-flex mb-1 text-dark me-6">
+        <codx-label name="lblDriver" default="Tài xế" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+
+        <span *ngIf="data?.driverName != null">
+          <span class="text-gray-800">
+            {{ data?.driverName }}
+          </span>
+        </span>
+        <span *ngIf="data?.driverName == null">
+          <codx-label default="Không có tài xế" class="ms-1 text-gray-800" name="lblUnavailableDriver"></codx-label>
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label name="lblTime" default="Thời gian" class="fw-bold"></codx-label>
+      <span class="me-1 fw-bold">:</span>
+
+      <div *ngIf="!sameDayCheck(data?.startDate, data?.endDate)">
+        <div class="ms-1 text-gray-800">
+          <span>
+            {{ data?.startDate | fmDT : "dmy" : true }}
+          </span>
+          <span> - </span>
+          <span>
+            {{ data?.endDate | fmDT : "dmy" : true }}
+          </span>
+        </div>
+      </div>
+      <div *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
+        <div class="ms-1 text-gray-800">
+          <span>
+            {{ data?.startDate | fmDT }}
+          </span>
+          <span>
+            {{ showHour(data?.startDate) }} -
+            {{ showHour(data?.endDate) }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark">
+        <codx-label name="lblReason" default="Lý do" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="ms-1 text-gray-800">
+          {{ data?.reasonID }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark">
+        <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <div class="d-flex justify-content-end">
+          <codx-imgs [objectId]="data?.bookingAttendees" objectType="AD_Users" [numberImages]="6" [width]="30">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mb-2 text-dark me-6">
+      <codx-label name="lblUseCardHeader" default="Sử dụng thẻ" class="fw-bold"></codx-label>
+      <span class="me-1 fw-bold">:</span>
+
+      <span *ngIf=" data && !!data?.useCard">
+        <codx-label default="Dùng thẻ" class="badge badge-light-success" name="lblUseCard"></codx-label>
+      </span>
+      <span *ngIf=" data && !data?.useCard">
+        <codx-label default="Không dùng thẻ" class="badge badge-light-danger" name="lblNotUseCard"></codx-label>
+      </span>
+    </div>
+
+    <div class="mb-2">
+      <codx-label default="Nơi công tác" name="lblAddressHeader" class="fw-bold me-4 text-primary"></codx-label>
+    </div>
+
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label name="lblOrgUnitName" default="Đơn vị" class="fw-bold"></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ data?.agencyName }}
+      </span>
+    </div>
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label name="lblAddress" default="Địa chỉ" class="fw-bold"></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ data?.address }}
+      </span>
+    </div>
+    <div class="d-flex mb-1 text-dark me-6">
+      <codx-label name="lblRequester" default="Người liên hệ" class="fw-bold"></codx-label>
+      <span class="me-1 fw-bold">:</span>
+      <span class="ms-1 text-gray-800">
+        {{ data?.requester }}
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template #templateHeaderStationery>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblBUID" default="Đơn vị/Bộ phận" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600">
+          {{ data.orgUnitName ? data.orgUnitName : "" }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblCategory" default="Loại đăng kí" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600">
+          {{ data?.category | vll : "EP018" : "text" | async }}
+        </span>
+      </div>
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblEmpQty" default="Số lượng nhân viên" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600">
+          {{ data?.attendees !=0 ? data?.attendees : 1 }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label name="lblNote" default="Diễn giải" class="fw-bold"></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600">
+          {{ data?.note }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <!----------------------------------Body---------------------------------->
+  <ng-template #body>
+    <ng-container *ngIf="resourceType == '1'">
+      <ng-container *ngTemplateOutlet="templateBodyRoom"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="resourceType == '2'">
+      <ng-container *ngTemplateOutlet="templateBodyCar"></ng-container>
+    </ng-container>
+    
+    <ng-container *ngIf="resourceType == '6'">
+      <ng-container *ngTemplateOutlet="templateBodyStationery"></ng-container>
+    </ng-container>
+
+  </ng-template>
+
+  <ng-template #templateBodyRoom>
+    <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i class="icon-info me-2" [ngClass]="{ 'text-primary': active === 1 }"></i><span>
+                <codx-label default="Nội dung" name="lblMemo"></codx-label>
+              </span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            
+            <ng-container *ngIf="loadedData">
+              <div *ngIf="data?.memo != null">
+                <span [innerHTML]="data?.memo"></span>
+              </div>
+              <div *ngIf="data?.memo == null">
+                <ng-container *ngTemplateOutlet="defaulEmpty"> </ng-container>
+              </div>
+            </ng-container>
+            
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i class="icon-layers me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>
+                <codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label>
+              </span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="loadedData">
+              <div *ngIf="data?.bookingItems?.length > 0; else defaulEmpty">
+                <div *ngFor="let item of data?.bookingItems">
+                  <div class="d-flex justify-content-between w-100 pb-3">
+                    <div class="d-flex flex-row">
+                      <div class="me-2">
+                        <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
+                          [objectName]="item.itemName"></codx-img>
+                      </div>
+                      <div class="ms-2">
+                        <div class="">
+                          <span class="fw-bold">{{ item?.itemName }}</span>
+                        </div>
+                        <div class="d-flex flex-row flex-grow-1">
+                          <codx-label default="Đơn vị tính:" name="lblQuantity" class="text-gray-600"></codx-label>
+                          <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="d-flex align-items-center me-3">
+                      <codx-label default="Số lượng:" name="lblQuantity" class="text-gray-600"></codx-label>
+                      <span class="ms-2 fw-bold">{{ item?.quantity }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5 scroll-y booking-content"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #templateBodyCar>
+  </ng-template>
+
+  <ng-template #templateBodyStationery>
+    <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">        
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i class="icon-layers me-2" [ngClass]="{ 'text-primary': active === 1 }"></i><span>
+                <codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label>
+              </span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            
+            <ng-container *ngIf="loadedData">
+            <div *ngIf="data?.bookingItems?.length > 0; else defaulEmpty">
+              <div *ngFor="let item of data?.bookingItems">
+                <div class="d-flex justify-content-between w-100 pb-3">
+                  <div class="d-flex flex-row">
+                    <div class="me-2">
+                      <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
+                        [objectName]="item.itemName"></codx-img>
+                    </div>
+                    <div class="ms-2">
+                      <div class="">
+                        <span class="fw-bold">{{ item?.itemName }}</span>
+                      </div>
+                      <div class="d-flex flex-row flex-grow-1">
+                        <codx-label default="Đơn vị tính:" name="lblQuantity" class="text-gray-600"></codx-label>
+                        <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center me-3">
+                    <codx-label default="Số lượng:" name="lblQuantity" class="text-gray-600"></codx-label>
+                    <span class="ms-2 fw-bold">{{ item?.quantity }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </ng-container>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5 scroll-y booking-content"></div>
+    </div>
+  </ng-template>
+
+  <!----------------------------------Footer---------------------------------->
+  <ng-template #footer>
+    <codx-tabs #tabModel [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" 
+      [dataTree]="[]" [TabControl]="tabControl" [transID]="data?.recID" 
+      [approveStatus]="this.runMode != '1' ? data?.approveStatus : data?.unbounds?.statusApproval" [addPermissions]="listFilePermission" [referType]="'source'"
+      [isEdit]="allowUploadFile"></codx-tabs>
+  </ng-template>
+</codx-detail-tmp>
+
+<!----------------------------------Empty---------------------------------->
+<ng-template #defaulEmpty>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
