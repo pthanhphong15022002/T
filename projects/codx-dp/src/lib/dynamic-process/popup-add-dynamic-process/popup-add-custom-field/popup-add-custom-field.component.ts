@@ -306,6 +306,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     let user = this.authstore.get();
     var tempVll = new tempVllDP();
+    tempVll.listName = this.listName;
     tempVll.language = user?.language;
     tempVll.createdBy = user?.userID;
     tempVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
