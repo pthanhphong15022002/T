@@ -501,7 +501,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
         break;
       case 'dr':
-        this.eleGridCashPayment.startProcess();
+        // this.eleGridCashPayment.startProcess();
         if (oLine.dr != 0 && oLine.cR2 != 0) {
           oLine.cr = 0;
           oLine.cR2 = 0;
@@ -512,11 +512,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
           }
           this.detectorRef.detectChanges();
-          this.eleGridCashPayment.endProcess();
+          // this.eleGridCashPayment.endProcess();
         }, 100);
         break;
       case 'cr':
-        this.eleGridCashPayment.startProcess();
+        // this.eleGridCashPayment.startProcess();
         if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
           oLine.dr = 0;
           oLine.dR2 = 0;
@@ -527,7 +527,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
           }
           this.detectorRef.detectChanges();
-          this.eleGridCashPayment.endProcess();
+          // this.eleGridCashPayment.endProcess();
         }, 100);
         break;
       case 'dr2':
