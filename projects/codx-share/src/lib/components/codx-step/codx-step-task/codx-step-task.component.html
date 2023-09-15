@@ -57,7 +57,7 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="!isMoveStage && !isClose"
+        *ngIf="!isMoveStage"
       >
       </codx-mfunc>
     </div>
@@ -302,7 +302,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose && !isViewStep"
+      *ngIf="!isMoveStage && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -338,7 +338,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose && !isViewStep"
+      *ngIf="(!isMoveStage && !isViewStep && !isClose) || (isClose && !data?.task?.isTaskDefault)"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -396,7 +396,7 @@
     <div
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
-      [placement]="'top-left'"
+      [placement]="'top-left bottom-left'"
       (mouseenter)="openTooltip(popoverTooltip,data?.value)"
       (mouseleave)="popoverTooltip.close()"
     >
@@ -510,7 +510,7 @@
 </ng-template>
 
 <ng-template #tooltipDate let-data="value">
-  <div>
+  <div class="zindex-tooltip">
     <div *ngIf="dataTooltipDay?.startDate && dataTooltipDay?.endDate">
       <div>
         <codx-label
