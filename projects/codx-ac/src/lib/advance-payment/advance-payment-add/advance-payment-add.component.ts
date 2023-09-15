@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
@@ -80,6 +80,17 @@ export class AdvancePaymentAddComponent extends UIComponent
     return new Date(date).toLocaleDateString();
   }
 
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteLine(data);
+        break;
+      case 'SYS04':
+        this.copyLine(data);
+        break;
+    }
+  }
+
   onSave(){
     if (this.form.validation())
       return;
@@ -88,7 +99,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.dialogRef.dataService.save(null, 0, '', 'SYS006', true)
+    this.dialogRef.dataService.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
@@ -96,12 +107,14 @@ export class AdvancePaymentAddComponent extends UIComponent
           this.form.formGroup.patchValue({ status: this.advancedPayment.status });
         }
         if (res?.save?.data) {
+          this.notification.notifyCode('SYS006');
           this.dialogRef.close({
             update: true,
             data: res.save.data,
           });
         }
         else if (res?.update?.data) {
+          this.notification.notifyCode('SYS007');
           this.dialogRef.close({
             update: true,
             data: res.update.data,
@@ -109,6 +122,7 @@ export class AdvancePaymentAddComponent extends UIComponent
         }
         else
         {
+          this.notification.notifyCode('SYS007');
           this.dialogRef.close({
             update: true,
             data: res,
@@ -154,6 +168,28 @@ export class AdvancePaymentAddComponent extends UIComponent
       });
   }
 
+  copyLine(data){
+    let idx;
+    this.api
+      .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SetDefaultAsync', [
+        this.advancedPayment,
+        data,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          idx = this.grvAdvancedPaymentLines.dataSource.length;
+          res.rowNo = idx + 1;
+          res.recID = Util.uid();
+          this.grvAdvancedPaymentLines.addRow(res, idx);
+        }
+      });
+  }
+
+  deleteLine(data){
+    this.grvAdvancedPaymentLines.deleteRow(data)
+  }
+
   onEventAction(e: any) {
     switch (e.type) {
       case 'autoAdd':
@@ -176,6 +212,15 @@ export class AdvancePaymentAddComponent extends UIComponent
         }, 100);
         break;
     }
+  }
+
+  hideMF(event) {
+    var mf = event.filter(
+      (x) => x.functionID != 'SYS02' && x.functionID != 'SYS04'
+    );
+    mf.forEach((element) => {
+      element.disabled = true;
+    });
   }
 
   @HostListener('click', ['$event'])

@@ -420,12 +420,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         }
         if (isclose) {
           if (res?.save?.data) {
+            this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
               data: res.save.data,
             });
           }
           else if (res?.update?.data) {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res.update.data,
@@ -433,6 +435,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           }
           else
           {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res,
@@ -452,6 +455,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
+                this.notification.notifyCode('SYS006');
                 this.detectorRef.detectChanges();
               }
             });
