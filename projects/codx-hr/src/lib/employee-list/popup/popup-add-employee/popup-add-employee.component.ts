@@ -97,7 +97,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
-    this.getHRParameters();
+    //this.getHRParameters();
     if (this.action === 'edit') {
       this.api
         .execSv(
@@ -512,9 +512,9 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
 
 
-  getHRParameters(){
+  getHRParameters() {
     this.api.execSv("SYS", "ERM.Business.SYS", "SettingValuesBusiness", "GetHRParameterSetting", ["HRParameters", "1"])
-    .subscribe(res => console.log(res ));
+      .subscribe(res => console.log(JSON.parse(res.toString())));
   }
 
   // getOrgNote() {
