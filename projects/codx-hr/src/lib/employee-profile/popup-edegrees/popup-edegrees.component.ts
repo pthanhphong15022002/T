@@ -31,6 +31,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType;
   disabledInput = false;
+  changedInForm = false;
 
   employId;
   isAfterRender = false;
@@ -155,7 +156,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   ];
 
   async addFiles(evt){
+    this.changedInForm = true;
     this.degreeObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.degreeObj);
   }
 
   openFormUploadFile() {

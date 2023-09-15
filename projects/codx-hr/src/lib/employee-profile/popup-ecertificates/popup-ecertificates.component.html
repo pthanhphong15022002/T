@@ -452,7 +452,9 @@
     ></codx-label>
   </button>
 
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" 
+    [disabled]="!formModel.currentData.updateColumn && !changedInForm"
+    >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

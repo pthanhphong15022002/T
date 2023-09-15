@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -11,9 +12,12 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import {
   CacheService,
+  CallFuncService,
   CodxFormComponent,
   DialogData,
+  DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   Util,
 } from 'codx-core';
@@ -25,7 +29,9 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./popup-add-custom-field.component.css'],
 })
 export class PopupAddCustomFieldComponent implements OnInit {
+  ư;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('addVll') addVll: TemplateRef<any>;
 
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -59,10 +65,28 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listVll = [];
   fieldsVll = { text: 'Note', value: 'listName' };
 
+  datasVll = [];
+  fieldsResourceVll = { text: 'textValue', value: 'value' };
+  crrValue = '0';
+  indexEdit = -1;
+  showAddVll = true;
+
+  titleForm = 'Value List'; //tesst
+  dialogVll: DialogRef;
+  formModelVll: FormModel = {
+    formName: 'ValueList',
+    gridViewName: 'grvValueList',
+    entityName: 'SYS_ValueList',
+  };
+  listName: any;
+  fomartVll = 'DPF'; //format
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
     private notiService: NotificationsService,
+    private callfc: CallFuncService,
+    private changeDef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -241,5 +265,56 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   clickAddVll() {
     // 'add vll'
+    let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
+    option.zIndex = 3000;
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 500, '');
+  }
+
+  closeDialog() {}
+
+  getNameForm() {
+    //tisnh sau
+    return 'Value List';
+  }
+
+  saveVll() {}
+
+  onAddTextValue(e) {
+    if (!e.value || e.value.trim() == '') return;
+    let dataValue = {
+      textValue: e.value,
+      value: this.datasVll.length,
+    };
+    this.datasVll.push(dataValue);
+    e.focus();
+    e.value = '';
+    this.changeDef.detectChanges();
+  }
+
+  onEditTextValue(e, i) {
+    this.showAddVll = false;
+  }
+  // handelEdit(i) {
+  //   this.showAddVll = false;
+  // }
+
+  onChangeVll(e) {
+    if (!e.data || e.data.trim() == '') {
+      this.notiService.notifyCode('Tên value list không được để trống !');
+      return;
+    }
+    if (e.data.includes(' ')) {
+      this.notiService.notifyCode(
+        'Tên value list không được chứa khoảng trắng để trống !'
+      );
+      return;
+    }
+
+    if (e.data.substring(0, 2) == this.fomartVll) this.listName = e.data;
+    else
+      this.notiService.notifyCode(
+        "Tên value list phải có dạng format 'DPF...' !"
+      );
   }
 }

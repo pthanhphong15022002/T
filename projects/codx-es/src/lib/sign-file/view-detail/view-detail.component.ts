@@ -449,14 +449,6 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           this,
           customData
         );
-        // this.shareService.defaultMoreFunc(
-        //   val,
-        //   datas,
-        //   this.afterSaveTask,
-        //   this.view.formModel,
-        //   this.view.dataService,
-        //   that
-        // );
         break;
     }
   }
