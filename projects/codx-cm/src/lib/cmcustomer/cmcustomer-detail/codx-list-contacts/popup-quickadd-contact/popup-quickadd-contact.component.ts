@@ -146,6 +146,9 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   //#region save
   beforeSave(type) {
+    if(this.objectType == '4'){
+      this.data.refID = this.data.refID == null || this.data.refID?.trim() == '' ? Util.uid() : this.data.refID;
+    }
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
       this.data.isDefault = this.isDefault;
