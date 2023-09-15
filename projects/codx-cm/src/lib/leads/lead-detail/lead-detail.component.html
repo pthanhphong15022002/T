@@ -893,7 +893,7 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div class="mt-4">
+              <div class="mt-4" *ngIf="!dataSelected?.applyProcess; else stepsTask">
                 <step-task
                   [entityName]="'CM_Leads'"
                   [typeTask]="2"
@@ -903,9 +903,24 @@
                   (saveAssignTask)="saveAssign($event)"
                 ></step-task>
               </div>
+              <ng-template #stepsTask>
+                <div>
+                  <step-task
+                    [isDataLoading]="isDataLoading"
+                    [dataSelected]="dataSelected"
+                    [formModel]="formModel"
+                    [listInstanceStep]="listSteps"
+                    [applyFor]="'5'"
+                    (continueStep)="continueStep($event)"
+                    (saveAssignTask)="saveAssign($event)"
+                  ></step-task>
+                </div>
+              </ng-template>
+
+
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-more icon-16 me-2"></span>
@@ -918,19 +933,9 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div>
-                <step-task
-                  [isDataLoading]="isDataLoading"
-                  [dataSelected]="dataSelected"
-                  [formModel]="formModel"
-                  [listInstanceStep]="listSteps"
-                  [applyFor]="'5'"
-                  (continueStep)="continueStep($event)"
-                  (saveAssignTask)="saveAssign($event)"
-                ></step-task>
-              </div>
+
             </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top">
