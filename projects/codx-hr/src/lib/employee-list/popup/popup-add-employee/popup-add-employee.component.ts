@@ -69,8 +69,10 @@ export class PopupAddEmployeeComponent implements OnInit {
   oldEmployeeID: string = '';
 
   hasChangedData: boolean = false;
+  hasAutoFillJobLevel: boolean = false;
   oldAddress: string = '';
   oldTAddress: string = '';
+  settingValues: any;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -181,14 +183,14 @@ export class PopupAddEmployeeComponent implements OnInit {
         // case 'orgUnitID':
         // this.getOrgNote();
         // break;
-        case 'jobLevel':
-          if (value && this.hasChangedData) {
-            if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0) {
-              this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
-              return;
-            }
-          }
-          break;
+        //case 'jobLevel':
+          // if (value && this.hasChangedData) {
+          //   if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0) {
+          //     this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
+          //     return;
+          //   }
+          // }
+          // break;
         case 'issuedOn':
           if (!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
@@ -291,7 +293,8 @@ export class PopupAddEmployeeComponent implements OnInit {
       switch (event?.ControlName) {
         case 'address':
           if (this.oldAddress != this.data['address']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['address'], 3])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', 
+            [this.data['address'], this.settingValues.ControlInputAddress? this.settingValues.ControlInputAddress : 0])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -311,7 +314,8 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'tAddress':
           if (this.oldTAddress != this.data['tAddress']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['tAddress'], 3])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', 
+            [this.data['tAddress'], this.settingValues?.ControlInputAddress? this.settingValues.ControlInputAddress : 0])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -513,8 +517,10 @@ export class PopupAddEmployeeComponent implements OnInit {
 
 
   getHRParameters() {
-    this.api.execSv("SYS", "ERM.Business.SYS", "SettingValuesBusiness", "GetHRParameterSetting", ["HRParameters", "1"])
-      .subscribe(res => console.log(JSON.parse(res.toString())));
+    this.api.execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetHRParameterSetting")
+      .subscribe(res => { 
+        if (res) this.settingValues = JSON.parse(res.toString()) 
+      });
   }
 
   // getOrgNote() {
