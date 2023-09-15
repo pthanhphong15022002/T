@@ -75,7 +75,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  //---------------------------------------------------------------------------------//  
+  //---------------------------------------------------------------------------------//
   queryParams: any;
   resourceType: any;
 
@@ -92,7 +92,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   scheduleEvtModel: any;
   scheduleHeaderModel: any;
   popupBookingComponent: any;
-  curUser: import("codx-core").UserModel;
+  curUser: import('codx-core').UserModel;
   //---------------------------------------------------------------------------------//
   navigated = false;
   isAdmin = false;
@@ -100,50 +100,52 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   isAllocateStationery = false;
   allocateFuncID = EPCONST.FUNCID.S_Allocate;
   //---------------------------------------------------------------------------------//
-  lstWarehourse=[];
-  lstResourceOwner=[];
+  lstWarehourse = [];
+  lstResourceOwner = [];
   resourceOwner = null;
   //---------------------------------------------------------------------------------//
-  optionalData:any;
+  optionalData: any;
   itemDetail: any;
   //---------------------------------------------------------------------------------//
   crrViewMode: any;
   popupTitle = '';
-  funcIDName='';
+  funcIDName = '';
   categoryIDProcess = '';
   categoryID = '';
+  runMode: any;
   allocateStatus: string;
-  approvalRule= EPCONST.APPROVALRULE.Haved;
-  autoComfirm= EPCONST.APPROVALRULE.NotHaved;
+  approvalRule = EPCONST.APPROVALRULE.Haved;
+  autoComfirm = EPCONST.APPROVALRULE.NotHaved;
   stationeryAR = EPCONST.APPROVALRULE.Haved;
   autoApproveItem = EPCONST.APPROVALRULE.Haved;
-  crrEntityName=EPCONST.ENTITY.R_Bookings;
+  crrEntityName = EPCONST.ENTITY.R_Bookings;
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
     private codxBookingService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
-    super(injector);       
-    this.funcID = this.router.snapshot.params['funcID']; 
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
-    this.cache.functionList(this.funcID).subscribe(funcList=>{
-      if(funcList){
-        this.crrEntityName= funcList?.entityName;
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
+        this.runMode = funcList?.runMode;
+        this.crrEntityName = funcList?.entityName;
       }
     });
-    this.curUser =this.authStore.get();
-    if(this.curUser==null){
-      this.curUser= this.authService?.userValue;
+    this.curUser = this.authStore.get();
+    if (this.curUser == null) {
+      this.curUser = this.authService?.userValue;
     }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
-    
     this.getBaseVariable();
     this.roleCheck();
     this.getCache();
@@ -187,43 +189,46 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   {
                     field: 'bookingOn',
                     template: this.gridBookingOn,
-                    headerText: this.grView?.bookingOn?.headerText || 'BookingOn',
-                    isVisible : this.grView?.bookingOn?.isVisible,
-                    
+                    headerText:
+                      this.grView?.bookingOn?.headerText || 'BookingOn',
+                    isVisible: this.grView?.bookingOn?.isVisible,
                   },
                   {
                     field: 'resourceID',
                     template: this.gridResourceName,
-                    headerText: this.grView?.resourceID?.headerText || 'ResourceID',
-                    isVisible : this.grView?.resourceID?.isVisible,
+                    headerText:
+                      this.grView?.resourceID?.headerText || 'ResourceID',
+                    isVisible: this.grView?.resourceID?.isVisible,
                   },
                   {
                     field: 'title',
                     headerText: this.grView?.title?.headerText || 'Title',
-                    isVisible : this.grView?.title?.isVisible,
+                    isVisible: this.grView?.title?.isVisible,
                   },
                   {
                     field: 'owner',
                     template: this.gridOwner,
                     headerText: this.grView?.owner?.headerText || 'Owner',
-                    isVisible : this.grView?.owner?.isVisible,
+                    isVisible: this.grView?.owner?.isVisible,
                   },
                   {
                     field: 'startDate',
                     template: this.gridStartDate,
-                    headerText: this.grView?.startDate?.headerText || 'StartDate',
-                    isVisible : this.grView?.startDate?.isVisible,
+                    headerText:
+                      this.grView?.startDate?.headerText || 'StartDate',
+                    isVisible: this.grView?.startDate?.isVisible,
                   },
                   {
                     field: 'endDate',
                     template: this.gridEndDate,
                     headerText: this.grView?.endDate?.headerText || 'EndDate',
-                    isVisible : this.grView?.endDate?.isVisible,
+                    isVisible: this.grView?.endDate?.isVisible,
                   },
                   {
                     field: 'requester',
-                    headerText: this.grView?.requester?.headerText || 'Requester',
-                    isVisible : this.grView?.requester?.isVisible,
+                    headerText:
+                      this.grView?.requester?.headerText || 'Requester',
+                    isVisible: this.grView?.requester?.isVisible,
                   },
                   {
                     field: '',
@@ -231,7 +236,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     width: 120,
                     template: this.gridMF,
                     textAlign: 'center',
-                    isVisible : true,
+                    isVisible: true,
                   },
                 ];
                 this.views = [
@@ -294,26 +299,26 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
-  getCache(){
-    this.codxBookingService.getListWarehouse().subscribe((res:any)=>{
-      if(res){
-        this.lstWarehourse=res;
+  getCache() {
+    this.codxBookingService.getListWarehouse().subscribe((res: any) => {
+      if (res) {
+        this.lstWarehourse = res;
       }
     });
-    this.codxBookingService.getListRO().subscribe((res:any)=>{
-      if(res){
-        this.lstResourceOwner=res;
+    this.codxBookingService.getListRO().subscribe((res: any) => {
+      if (res) {
+        this.lstResourceOwner = res;
       }
     });
-    
   }
   getBaseVariable() {
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.funcID = this.funcID || this.view?.funcID;
     this.queryParams = this.router.snapshot.queryParams;
-    this.cache.functionList(this.funcID).subscribe(funcList=>{
-      if(funcList){
-        this.crrEntityName= funcList?.entityName;
-        this.funcIDName = funcList.customName.toString().toLowerCase();
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.crrEntityName = funcList?.entityName;
+        this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
+        this.runMode = funcList?.runMode;
         this.detectorRef.detectChanges();
       }
     });
@@ -337,46 +342,73 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.categoryIDProcess = 'ES_EP003';
         break;
       case EPCONST.ENTITY.S_Distribution:
-      this.resourceType = EPCONST.VLL.ResourceType.Stationery;
-      this.categoryIDProcess = 'ES_EP003';
-      this.isAllocateStationery = true;
-      break;
+        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+        this.categoryIDProcess = 'ES_EP003';
+        this.isAllocateStationery = true;
+        break;
     }
-    this.cache.viewSettingValues('EPParameters').subscribe(res=>{
-      if(res){
+    this.cache.viewSettingValues('EPParameters').subscribe((res) => {
+      if (res) {
         let listSetting = res;
-        let stationerySetting_1= listSetting.filter(x=>x.category =='1' && x.transType == EPCONST.PARAM.EPStationeryParameters);
-        if(stationerySetting_1?.length>0){
+        let stationerySetting_1 = listSetting.filter(
+          (x) =>
+            x.category == '1' &&
+            x.transType == EPCONST.PARAM.EPStationeryParameters
+        );
+        if (stationerySetting_1?.length > 0) {
           let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
-          //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP        
-          this.autoApproveItem = setting?.AutoApproveItem != null ? setting?.AutoApproveItem : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP khi đặt phòng
+          //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP
+          this.autoApproveItem =
+            setting?.AutoApproveItem != null
+              ? setting?.AutoApproveItem
+              : EPCONST.APPROVALRULE.NotHaved; //KTra tự duyệt và cấp phát VPP khi đặt phòng
         }
-        let epSetting_4= listSetting.filter(x=>x.category =='4' && x.tranType == null);
-        if(epSetting_4!=null){
+        let epSetting_4 = listSetting.filter(
+          (x) => x.category == '4' && x.tranType == null
+        );
+        if (epSetting_4 != null) {
           let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
-          let roomSetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Room);
-          let carSetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Car);
-          let stationerySetting_4= listEPSetting.filter(x=>x.FieldName == EPCONST.ES_CategoryID.Stationery);
-          this.stationeryAR = stationerySetting_4?.length>0 && stationerySetting_4[0]?.ApprovalRule!=null ? stationerySetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;
-          switch (this.resourceType){
+          let roomSetting_4 = listEPSetting.filter(
+            (x) => x.FieldName == EPCONST.ES_CategoryID.Room
+          );
+          let carSetting_4 = listEPSetting.filter(
+            (x) => x.FieldName == EPCONST.ES_CategoryID.Car
+          );
+          let stationerySetting_4 = listEPSetting.filter(
+            (x) => x.FieldName == EPCONST.ES_CategoryID.Stationery
+          );
+          this.stationeryAR =
+            stationerySetting_4?.length > 0 &&
+            stationerySetting_4[0]?.ApprovalRule != null
+              ? stationerySetting_4[0]?.ApprovalRule
+              : EPCONST.APPROVALRULE.Haved;
+          switch (this.resourceType) {
             case EPCONST.VLL.ResourceType.Room:
-              if(roomSetting_4?.length>0){
-                this.approvalRule = roomSetting_4[0]?.ApprovalRule !=null ? roomSetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;              
+              if (roomSetting_4?.length > 0) {
+                this.approvalRule =
+                  roomSetting_4[0]?.ApprovalRule != null
+                    ? roomSetting_4[0]?.ApprovalRule
+                    : EPCONST.APPROVALRULE.Haved;
               }
-            break;
+              break;
             case EPCONST.VLL.ResourceType.Car:
-              if(carSetting_4?.length>0){
-                this.approvalRule = carSetting_4[0]?.ApprovalRule !=null ? carSetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;              
+              if (carSetting_4?.length > 0) {
+                this.approvalRule =
+                  carSetting_4[0]?.ApprovalRule != null
+                    ? carSetting_4[0]?.ApprovalRule
+                    : EPCONST.APPROVALRULE.Haved;
               }
-            break;
+              break;
             case EPCONST.VLL.ResourceType.Stationery:
-              if(stationerySetting_4?.length>0){
-                this.approvalRule = stationerySetting_4[0]?.ApprovalRule !=null ? stationerySetting_4[0]?.ApprovalRule : EPCONST.APPROVALRULE.Haved;                             
+              if (stationerySetting_4?.length > 0) {
+                this.approvalRule =
+                  stationerySetting_4[0]?.ApprovalRule != null
+                    ? stationerySetting_4[0]?.ApprovalRule
+                    : EPCONST.APPROVALRULE.Haved;
               }
-            break;
+              break;
           }
         }
-        
       }
     });
     if (this.resourceType == '1') {
@@ -436,10 +468,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
-    this.cache.functionList(this.funcID).subscribe(funcList=>{
-      if(funcList){
-        this.crrEntityName= funcList?.entityName;
-        this.funcIDName = funcList.customName.toString().toLowerCase();
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.crrEntityName = funcList?.entityName;
+        this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
+        this.runMode = funcList?.runMode;
         this.detectorRef.detectChanges();
       }
     });
@@ -526,165 +559,169 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   changeDataMF(event, data: any) {
-    if (
-      event != null &&
-      data != null &&
-      this.crrEntityName != EPCONST.ENTITY.S_Distribution
-    ) {
-      if (data.approveStatus == EPCONST.A_STATUS.New) {
-        //Mới tạo
-        event.forEach((func) => {
-          if (
-            // Hiện: sửa - xóa - chép - gửi duyệt -
-            func.functionID == EPCONST.MFUNCID.Delete ||
-            func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.Copy ||
-            func.functionID == EPCONST.MFUNCID.R_Release ||
-            func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release
-          ) {
-            func.disabled = false;
-          }
-          if (
-            //Ẩn: dời - mời - hủy
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel ||
-            func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule
-          ) {
-            func.disabled = true;
-          }
-        });
-      } else if (data.approveStatus == EPCONST.A_STATUS.Released) {
-        //Gửi duyệt
-        event.forEach((func) => {
-          if (
-            //Hiện: dời - mời - chép - hủy
-            func.functionID == EPCONST.MFUNCID.Copy ||
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel ||
-            func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule
-          ) {
-            func.disabled = false;
-          }
-          if (
-            //Ẩn: sửa - xóa - gửi duyệt
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(event, data.unbounds);
+    } else {
+      if (
+        event != null &&
+        data != null &&
+        this.crrEntityName != EPCONST.ENTITY.S_Distribution
+      ) {
+        if (data.approveStatus == EPCONST.A_STATUS.New) {
+          //Mới tạo
+          event.forEach((func) => {
+            if (
+              // Hiện: sửa - xóa - chép - gửi duyệt -
+              func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.Edit ||
+              func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.R_Release ||
+              func.functionID == EPCONST.MFUNCID.C_Release ||
+              func.functionID == EPCONST.MFUNCID.S_Release
+            ) {
+              func.disabled = false;
+            }
+            if (
+              //Ẩn: dời - mời - hủy
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel ||
+              func.functionID == EPCONST.MFUNCID.R_Invite ||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data.approveStatus == EPCONST.A_STATUS.Released) {
+          //Gửi duyệt
+          event.forEach((func) => {
+            if (
+              //Hiện: dời - mời - chép - hủy
+              func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel ||
+              func.functionID == EPCONST.MFUNCID.R_Invite ||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule
+            ) {
+              func.disabled = false;
+            }
+            if (
+              //Ẩn: sửa - xóa - gửi duyệt
 
-            func.functionID == EPCONST.MFUNCID.Delete ||
-            func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.R_Release ||
-            func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release
-          ) {
-            func.disabled = true;
-          }
-        });
-      } else if (data.approveStatus == EPCONST.A_STATUS.Rejected) {
-        //Từ chối
+              func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.Edit ||
+              func.functionID == EPCONST.MFUNCID.R_Release ||
+              func.functionID == EPCONST.MFUNCID.C_Release ||
+              func.functionID == EPCONST.MFUNCID.S_Release
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data.approveStatus == EPCONST.A_STATUS.Rejected) {
+          //Từ chối
+          event.forEach((func) => {
+            if (
+              //Hiện: chép
+              func.functionID == EPCONST.MFUNCID.Copy
+            ) {
+              func.disabled = false;
+            }
+            if (
+              //Ẩn: còn lại
+              func.functionID == EPCONST.MFUNCID.Edit ||
+              func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel ||
+              func.functionID == EPCONST.MFUNCID.R_Release ||
+              func.functionID == EPCONST.MFUNCID.C_Release ||
+              func.functionID == EPCONST.MFUNCID.S_Release ||
+              func.functionID == EPCONST.MFUNCID.R_Invite ||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data?.approveStatus == EPCONST.A_STATUS.Approved) {
+          //Đã duyệt
+          event.forEach((func) => {
+            if (
+              // Hiện: Mời - dời - Chép
+              func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.R_Invite ||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule ||
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel
+            ) {
+              func.disabled = false;
+            }
+            if (
+              //Ẩn: sửa - xóa - duyệt - hủy
+              func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.Edit ||
+              func.functionID == EPCONST.MFUNCID.R_Release ||
+              func.functionID == EPCONST.MFUNCID.C_Release ||
+              func.functionID == EPCONST.MFUNCID.S_Release
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else {
+          event.forEach((func) => {
+            if (
+              //Hiện: chép
+              func.functionID == EPCONST.MFUNCID.Copy ||
+              func.functionID == EPCONST.MFUNCID.Delete ||
+              func.functionID == EPCONST.MFUNCID.Edit ||
+              func.functionID == EPCONST.MFUNCID.R_Release ||
+              func.functionID == EPCONST.MFUNCID.C_Release ||
+              func.functionID == EPCONST.MFUNCID.S_Release
+            ) {
+              func.disabled = false;
+            }
+            if (
+              //Ẩn: còn lại
+              func.functionID == EPCONST.MFUNCID.R_Cancel ||
+              func.functionID == EPCONST.MFUNCID.C_Cancel ||
+              func.functionID == EPCONST.MFUNCID.S_Cancel ||
+              func.functionID == EPCONST.MFUNCID.R_Invite ||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
+      } else if (
+        event != null &&
+        data != null &&
+        this.crrEntityName == EPCONST.ENTITY.S_Distribution
+      ) {
         event.forEach((func) => {
           if (
-            //Hiện: chép
+            func.functionID == EPCONST.MFUNCID.Delete ||
+            func.functionID == EPCONST.MFUNCID.Edit ||
             func.functionID == EPCONST.MFUNCID.Copy
           ) {
-            func.disabled = false;
-          }
-          if (
-            //Ẩn: còn lại
-            func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.Delete ||
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel ||
-            func.functionID == EPCONST.MFUNCID.R_Release ||
-            func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release ||
-            func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule
-          ) {
             func.disabled = true;
           }
-        });
-      } else if (data?.approveStatus == EPCONST.A_STATUS.Approved) {
-        //Đã duyệt
-        event.forEach((func) => {
           if (
-            // Hiện: Mời - dời - Chép
-            func.functionID == EPCONST.MFUNCID.Copy ||
-            func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule||
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel
+            data?.issueStatus == '1' &&
+            data?.approveStatus == '5' &&
+            (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+              func.functionID == EPCONST.MFUNCID.S_UnAllocate)
           ) {
             func.disabled = false;
-          }
-          if (
-            //Ẩn: sửa - xóa - duyệt - hủy
-            func.functionID == EPCONST.MFUNCID.Delete ||
-            func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.R_Release ||
-            func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release 
-          ) {
-            func.disabled = true;
-          }
-        });
-      } else {
-        event.forEach((func) => {
-          if (
-            //Hiện: chép
-            func.functionID == EPCONST.MFUNCID.Copy ||
-            func.functionID == EPCONST.MFUNCID.Delete ||
-            func.functionID == EPCONST.MFUNCID.Edit ||
-            func.functionID == EPCONST.MFUNCID.R_Release ||
-            func.functionID == EPCONST.MFUNCID.C_Release ||
-            func.functionID == EPCONST.MFUNCID.S_Release
-          ) {
-            func.disabled = false;
-          }
-          if (
-            //Ẩn: còn lại
-            func.functionID == EPCONST.MFUNCID.R_Cancel ||
-            func.functionID == EPCONST.MFUNCID.C_Cancel ||
-            func.functionID == EPCONST.MFUNCID.S_Cancel ||
-            func.functionID == EPCONST.MFUNCID.R_Invite ||
-            func.functionID == EPCONST.MFUNCID.R_Reschedule
+          } else if (
+            (data?.issueStatus != '1' || data?.approveStatus != '5') &&
+            (func.functionID == EPCONST.MFUNCID.S_Allocate ||
+              func.functionID == EPCONST.MFUNCID.S_UnAllocate)
           ) {
             func.disabled = true;
           }
         });
       }
-    } else if (
-      event != null &&
-      data != null &&
-      this.crrEntityName == EPCONST.ENTITY.S_Distribution
-    ) {
-      event.forEach((func) => {
-        if (
-          func.functionID == EPCONST.MFUNCID.Delete ||
-          func.functionID == EPCONST.MFUNCID.Edit ||
-          func.functionID == EPCONST.MFUNCID.Copy
-        ) {
-          func.disabled = true;
-        }
-        if (
-          data?.issueStatus == '1' &&
-          data?.approveStatus == '5' &&
-          (func.functionID == EPCONST.MFUNCID.S_Allocate ||
-            func.functionID == EPCONST.MFUNCID.S_UnAllocate)
-        ) {
-          func.disabled = false;
-        } else if (
-          (data?.issueStatus != '1' || data?.approveStatus != '5') &&
-          (func.functionID == EPCONST.MFUNCID.S_Allocate ||
-            func.functionID == EPCONST.MFUNCID.S_UnAllocate)
-        ) {
-          func.disabled = true;
-        }
-      });
     }
   }
 
@@ -769,27 +806,30 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   release(data: any) {
-    if (
-      this.curUser?.userID == data?.createdBy
-    ) {
-      if(this.resourceType== EPCONST.VLL.ResourceType.Room || this.resourceType== EPCONST.VLL.ResourceType.Car ){
-        this.resourceOwner=null;
-        let curRes = this.lstResourceOwner.filter(x=>x.resourceID == data.resourceID);
-        if(curRes?.length>0){
+    if (this.curUser?.userID == data?.createdBy) {
+      if (
+        this.resourceType == EPCONST.VLL.ResourceType.Room ||
+        this.resourceType == EPCONST.VLL.ResourceType.Car
+      ) {
+        this.resourceOwner = null;
+        let curRes = this.lstResourceOwner.filter(
+          (x) => x.resourceID == data.resourceID
+        );
+        if (curRes?.length > 0) {
           this.resourceOwner = new Approver();
           this.resourceOwner.roleID = curRes[0]?.owner;
         }
-      }
-      else{
-        this.resourceOwner=null;
-        let curWarehourse= this.lstWarehourse.filter(x=>x.warehouseID == data?.warehouseID);
-        if(curWarehourse?.length>0){
+      } else {
+        this.resourceOwner = null;
+        let curWarehourse = this.lstWarehourse.filter(
+          (x) => x.warehouseID == data?.warehouseID
+        );
+        if (curWarehourse?.length > 0) {
           this.resourceOwner = new Approver();
           this.resourceOwner.roleID = curWarehourse[0]?.owner;
-        }
-        else{
-          curWarehourse= this.lstWarehourse.filter(x=>x.isSystem == true);
-          if(curWarehourse?.length>0){
+        } else {
+          curWarehourse = this.lstWarehourse.filter((x) => x.isSystem == true);
+          if (curWarehourse?.length > 0) {
             this.resourceOwner = new Approver();
             this.resourceOwner.roleID = curWarehourse[0]?.owner;
           }
@@ -801,46 +841,56 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       //     autoRelease=true;
       //   }
       //   else{
-      //     if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+      //     if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){
       //       autoRelease=true;
       //     }
       //   }
       // }
       // else{
-      //   if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
+      //   if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){
       //     autoRelease=true;
       //   }
       // }
-        if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){            
-          autoRelease=true;
-        }
-      if (!autoRelease ) {
+      if (this.approvalRule == EPCONST.APPROVALRULE.NotHaved) {
+        autoRelease = true;
+      }
+      if (!autoRelease) {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
           .subscribe((category: any) => {
-            this.codxShareService
-            .codxReleaseDynamic(
+            this.codxShareService.codxReleaseDynamic(
               'EP',
               data,
               category,
               this.formModel.entityName,
               this.formModel?.funcID,
               data?.title,
-              (res:ResponseModel) => {
+              (res: ResponseModel) => {
                 if (res?.msgCodeError == null && res?.rowCount) {
-                  data.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
+                  data.approveStatus =
+                    res.returnStatus ?? EPCONST.A_STATUS.Released;
                   data.write = false;
                   data.delete = false;
                   this.view.dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS034');
-                  if(data?.approveStatus == EPCONST.A_STATUS.Approved && data.items?.length>0 && data?.resourceType==EPCONST.VLL.ResourceType.Room){
+                  if (
+                    data?.approveStatus == EPCONST.A_STATUS.Approved &&
+                    data.items?.length > 0 &&
+                    data?.resourceType == EPCONST.VLL.ResourceType.Room
+                  ) {
                     //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
-                    if(this.autoApproveItem=='1' || this.stationeryAR=='0'){
-                      this.codxBookingService.autoApproveStationery(null,data.recID).subscribe(result=>{});
+                    if (
+                      this.autoApproveItem == '1' ||
+                      this.stationeryAR == '0'
+                    ) {
+                      this.codxBookingService
+                        .autoApproveStationery(null, data.recID)
+                        .subscribe((result) => {});
+                    } else {
+                      this.codxBookingService
+                        .releaseStationeryOfRoom(null, data.recID, null)
+                        .subscribe((result) => {});
                     }
-                    else{
-                      this.codxBookingService.releaseStationeryOfRoom(null,data.recID,null).subscribe(result=>{})
-                    }                    
                   }
                 } else {
                   this.notificationsService.notifyCode(res?.msgCodeError);
@@ -848,22 +898,23 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               },
               data?.createdBy,
               [this.resourceOwner],
-              null,
-            )
+              null
+            );
           });
       } else {
-        this.codxBookingService.approvedManual(data?.recID).subscribe((approveData:any)=>{
-          if(approveData!=null){
-            data.approveStatus=approveData?.approveStatus;
-            data.write = false;
-            data.delete = false;
-            this.view.dataService.update(data).subscribe();
-            this.notificationsService.notifyCode('SYS034');
-          }
-          else{
-            return;
-          }
-        });
+        this.codxBookingService
+          .approvedManual(data?.recID)
+          .subscribe((approveData: any) => {
+            if (approveData != null) {
+              data.approveStatus = approveData?.approveStatus;
+              data.write = false;
+              data.delete = false;
+              this.view.dataService.update(data).subscribe();
+              this.notificationsService.notifyCode('SYS034');
+            } else {
+              return;
+            }
+          });
       }
     } else {
       this.notificationsService.notifyCode('SYS032');
@@ -877,7 +928,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
       this.codxShareService
-        .codxCancel('EP',data?.recID, this.formModel.entityName, null,null)
+        .codxCancel('EP', data?.recID, this.formModel.entityName, null, null)
         .subscribe((res: any) => {
           if (res && res?.msgCodeError == null) {
             this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
@@ -983,8 +1034,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           dialogStationery.closed.subscribe((returnData) => {
             if (returnData?.event) {
               //this.updateData(returnData?.event);
-            }
-            else{
+            } else {
               this.view.dataService.clear();
             }
           });
@@ -1001,8 +1051,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           dialogAdd.closed.subscribe((returnData) => {
             if (returnData?.event) {
               //this.updateData(returnData?.event);
-            }
-            else{
+            } else {
               this.view.dataService.clear();
             }
           });
@@ -1044,8 +1093,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   dialogStationery.closed.subscribe((returnData) => {
                     if (returnData?.event) {
                       //this.updateData(returnData?.event);
-                    }
-                    else{
+                    } else {
                       this.view.dataService.clear();
                     }
                   });
@@ -1067,8 +1115,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   dialogEdit.closed.subscribe((returnData) => {
                     if (returnData?.event) {
                       //this.updateData(returnData?.event);
-                    }
-                    else{
+                    } else {
                       this.view.dataService.clear();
                     }
                   });
@@ -1113,8 +1160,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     dialogStationery.closed.subscribe((returnData) => {
                       if (returnData?.event) {
                         //this.updateData(returnData?.event);
-                      }
-                      else{
+                      } else {
                         this.view.dataService.clear();
                       }
                     });
@@ -1131,8 +1177,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     dialogCopy.closed.subscribe((returnData) => {
                       if (returnData?.event) {
                         //this.updateData(returnData?.event);
-                      }
-                      else{
+                      } else {
                         this.view.dataService.clear();
                       }
                     });
@@ -1152,7 +1197,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //       this.view?.dataService.update(data).subscribe();
   //       this.detectorRef.detectChanges();
   //       if(this.approvalRule== EPCONST.APPROVALRULE.Haved && data?.resourceType==EPCONST.VLL.ResourceType.Room && data?.approveStatus==EPCONST.A_STATUS.Approved && data?.items?.length>0){
-  //         //Trường hợp đặc biệt khi đặt phòng có theo quy trình duyệt nhưng được duyệt tự động(người gửi == người duyệt : VPP chưa kịp tạo ra khi gửi duyệt)          
+  //         //Trường hợp đặc biệt khi đặt phòng có theo quy trình duyệt nhưng được duyệt tự động(người gửi == người duyệt : VPP chưa kịp tạo ra khi gửi duyệt)
   //         if(this.autoApproveItem ==EPCONST.APPROVALRULE.Haved ){
   //           //Tự duyệt & cấp phát Vpp của phòng họp
   //           this.codxBookingService.autoApproveStationery(null,data?.recID).subscribe();
@@ -1167,20 +1212,22 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   // }
 
   delete(data?) {
-    if ( this.curUser?.userID == data?.createdBy || this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin) ) {
+    if (
+      this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
       let deleteItem = this.view.dataService.dataSelected;
       if (data) {
         deleteItem = data;
       }
-      this.view.dataService.delete([deleteItem]).subscribe(() => {});      
-    }
-    else{
+      this.view.dataService.delete([deleteItem]).subscribe(() => {});
+    } else {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
   }
-  reloadData(data:any) {
-    if(data!=null){
+  reloadData(data: any) {
+    if (data != null) {
       this.view?.dataService.update(data).subscribe();
       this.detectorRef.detectChanges();
     }
@@ -1213,18 +1260,12 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           trans.map((item: any) => {
             if (item?.stepType === 'I') {
               this.codxShareService
-                .codxApprove(
-                  item?.recID, 
-                  this.allocateStatus,
-                  null,
-                  null,
-                  null,
-                )
+                .codxApprove(item?.recID, this.allocateStatus, null, null, null)
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {
                     this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                    
-                    data.issueStatus = this.allocateStatus =='5'? '3' :'4';
+
+                    data.issueStatus = this.allocateStatus == '5' ? '3' : '4';
                     this.view.dataService.update(data).subscribe();
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);

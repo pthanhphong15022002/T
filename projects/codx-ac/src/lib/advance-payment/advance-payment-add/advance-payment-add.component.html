@@ -217,8 +217,39 @@
           <codx-label default="Chi tiết"></codx-label>
         </div>
       </div>
+      <div class="position-relative h-100" style="margin-top: 32px;">
+        <codx-gridview-v2
+          #grvAdvancedPaymentLines
+          [formName]="fmAdvancedPaymentLines.formName"
+          [gridViewName]="fmAdvancedPaymentLines.gridViewName"
+          [entityName]="fmAdvancedPaymentLines.entityName"
+          [templateMore]="morefunction"
+          predicates="TransID=@0"
+          [dataValues]="advancedPayment.recID"
+          service="AC"
+          [showEmptyRecord]="false"
+          [showRowNumber]="true"
+          [editOnClick]="true"
+        ></codx-gridview-v2>
+
+        <div #btnRef class="btn-addline">
+          <button
+            style="border: 1px solid !important;"
+            id="btnadd"
+            type="button"
+            tab-index="7"
+            class="btn btn-sm btn-light-primary rounded-15"
+          >
+            <i class="icon-playlist_add icon-16"></i>
+            <codx-label
+              fiedName="lblSaveAndClear"
+              default="Thêm dòng"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
       <!-- Header của Chi tiết -->
-      <div class="mt-5">
+      <!-- <div class="mt-5">
         <div class="d-flex justify-content-start flex-column pb-3">
           <div class="d-flex justify-content-start flex-column">
             <div 
@@ -242,9 +273,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- Nội dung của chi tiết -->
-      <div
+      <!-- <div
         class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
       >
         <div class="flex-column d-flex justify-content-start px-9">
@@ -314,7 +345,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- Trường kế hoạch công tác -->
       <div class="d-flex align-items-center">
         <span
@@ -381,4 +412,13 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #morefunction let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="form.formModel"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>
