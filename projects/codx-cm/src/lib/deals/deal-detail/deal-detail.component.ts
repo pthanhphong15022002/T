@@ -342,7 +342,7 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        if(this.listSteps){
+        if (this.listSteps) {
           this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
         }
         this.isDataLoading = false;
@@ -428,7 +428,7 @@ export class DealDetailComponent implements OnInit {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
         debugger;
-        var lstStepsOld = this.lstStepsOld;
+        var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
         let lstOlds = [];
         if (lstStepsOld != null && lstStepsOld.length > 0) {
           for (var step of lstStepsOld) {
@@ -441,12 +441,11 @@ export class DealDetailComponent implements OnInit {
               );
               if (js != null && js?.dataValue != null) {
                 let lsJs = JSON.parse(js?.dataValue);
-                lsJs.forEach(element => {
-                  if(!lstOlds.some(x => x.recID == element?.recID)){
+                lsJs.forEach((element) => {
+                  if (!lstOlds.some((x) => x.recID == element?.recID)) {
                     lstOlds.push(element);
                   }
                 });
-
               }
             }
           }
@@ -489,6 +488,7 @@ export class DealDetailComponent implements OnInit {
             }
           }
         }
+        this.lstStepsOld = this.listSteps;
         if (this.loadContactDeal) {
           this.loadContactDeal.loadListContact(this.lstContacts);
         }
@@ -520,10 +520,38 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'delete' ? json : ''
             )
             .subscribe((res) => {});
+          if (this.listSteps != null && this.listSteps.length > 0) {
+            for (var step of this.listSteps) {
+              if (step?.fields != null && step?.fields?.length > 0) {
+                let idx = step?.fields?.findIndex(
+                  (x) =>
+                    x?.dataType == 'C' &&
+                    x?.dataValue != null &&
+                    x?.dataValue?.trim() != ''
+                );
+
+                if (idx != -1) {
+                  let lsJs = [];
+                  lsJs = JSON.parse(step?.fields[idx]?.dataValue) ?? [];
+                  var idxContactField = lsJs.findIndex(x => x.recID == data.recID);
+                  if(idxContactField != -1){
+                    if($event?.action == 'edit'){
+                      lsJs[idxContactField] = data;
+                    }else{
+                      lsJs.splice(idxContactField, 1);
+                    }
+                    step.fields[idx].dataValue = JSON.stringify(lsJs);
+                  }
+
+                }
+              }
+            }
+          }
         }
         this.getContactPerson(data);
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   lstContactEmit(e) {
