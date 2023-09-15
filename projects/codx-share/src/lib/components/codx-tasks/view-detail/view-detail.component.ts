@@ -121,7 +121,11 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID']) {
-      if (changes['taskID'].currentValue === this.id) return;
+      if (
+        changes['taskID'].currentValue === this.id ||
+        changes['taskID'].currentValue == null
+      )
+        return;
       this.id = changes['taskID'].currentValue;
       this.loadedHisPro = false;
       this.getTaskDetail();
@@ -129,7 +133,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
-  getChangeData() {}
+
   getTaskDetail() {
     this.viewTags = '';
     this.dataTree = [];
