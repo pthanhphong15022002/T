@@ -540,7 +540,7 @@ export class DealDetailComponent implements OnInit {
                     }else{
                       lsJs.splice(idxContactField, 1);
                     }
-                    step.fields[idx].dataValue = JSON.stringify(lsJs);
+                    step.fields[idx].dataValue = lsJs != null && lsJs?.length > 0 ? JSON.stringify(lsJs) : '';
                   }
 
                 }
