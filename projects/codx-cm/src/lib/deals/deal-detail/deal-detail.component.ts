@@ -342,7 +342,9 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        this.lstStepsOld = this.listSteps ?? [];
+        if(this.listSteps){
+          this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
+        }
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       }
@@ -425,9 +427,8 @@ export class DealDetailComponent implements OnInit {
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
-        debugger
+        debugger;
         var lstStepsOld = this.lstStepsOld;
-        this.lstStepsOld = this.listSteps;
         let lstOlds = [];
         if (lstStepsOld != null && lstStepsOld.length > 0) {
           for (var step of lstStepsOld) {
@@ -445,6 +446,7 @@ export class DealDetailComponent implements OnInit {
                     lstOlds.push(element);
                   }
                 });
+
               }
             }
           }
@@ -457,21 +459,20 @@ export class DealDetailComponent implements OnInit {
             item?.dataValue?.trim() != ''
           ) {
             var lst = JSON.parse(item?.dataValue);
-            if(lstOlds != null && lstOlds.length > 0){
+            if (lstOlds != null && lstOlds.length > 0) {
               let lstDelete = [];
-              if(lst != null && lst.length > 0){
+              if (lst != null && lst.length > 0) {
                 lstOlds.forEach((ele) => {
-                  if(!lst.some(x => x.recID == ele?.recID)){
-                    lstDelete.push(ele);
-                  }
-                })
-              }else{
+                  let isCheck = lst.some((x) => x.recID == ele?.recID);
+                  if (!isCheck) lstDelete.push(ele);
+                });
+              } else {
                 lstDelete = lstOlds;
               }
-              for(let i = 0; i < lstDelete.length; i++){
+              for (let i = 0; i < lstDelete.length; i++) {
                 let recID = lstDelete[i]?.recID;
-                var indx = this.lstContacts.findIndex(x => x.recID == recID);
-                if(indx != -1){
+                var indx = this.lstContacts.findIndex((x) => x.recID == recID);
+                if (indx != -1) {
                   this.lstContacts.splice(indx, 1);
                 }
               }
@@ -486,7 +487,6 @@ export class DealDetailComponent implements OnInit {
                 this.lstContacts.push(Object.assign({}, contact));
               }
             }
-
           }
         }
         if (this.loadContactDeal) {
