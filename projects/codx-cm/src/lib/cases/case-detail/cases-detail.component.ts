@@ -23,8 +23,10 @@ import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.com
   templateUrl: './cases-detail.component.html',
   styleUrls: ['./cases-detail.component.scss'],
 })
-export class CasesDetailComponent extends UIComponent
-implements OnInit, AfterViewInit {
+export class CasesDetailComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @Input() dataSelected: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
@@ -34,7 +36,8 @@ implements OnInit, AfterViewInit {
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @ViewChild('tabCaseDetailComponent') tabCaseDetailComponent: TabCasesDetailComponent;
+  @ViewChild('tabCaseDetailComponent')
+  tabCaseDetailComponent: TabCasesDetailComponent;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -79,16 +82,16 @@ implements OnInit, AfterViewInit {
   caseId: string = '';
 
   vllPriority = 'TM005';
-  casesType:string='';
-  oldRecId:string = '';
+  casesType: string = '';
+  oldRecId: string = '';
 
   contactPerson = new CM_Contacts();
-  isDataLoading:boolean = true;
+  isDataLoading: boolean = true;
 
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxCmService: CodxCmService,
+    private codxCmService: CodxCmService
   ) {
     super(inject);
     this.executeApiCalls();
@@ -100,16 +103,23 @@ implements OnInit, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
-
-      if (changes['dataSelected'].currentValue != null && changes['dataSelected'].currentValue?.recID) {
-        if(this.oldRecId !== changes['dataSelected'].currentValue?.recID){
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
-        this.dataSelected =this.dataSelected;
+        this.dataSelected = this.dataSelected;
         this.caseId = changes['dataSelected'].currentValue?.recID;
-        this.getContactByObjectID(this.dataSelected.contactID ,this.dataSelected.customerID);
-        this.id = this.dataSelected.applyProcess ? this.dataSelected?.refID : this.dataSelected?.recID;
+        this.getContactByObjectID(
+          this.dataSelected.contactID,
+          this.dataSelected.customerID
+        );
+        this.id = this.dataSelected?.applyProcess
+          ? this.dataSelected?.refID
+          : this.dataSelected?.recID;
         this.loadTree(this.id);
       }
     }
@@ -117,10 +127,10 @@ implements OnInit, AfterViewInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      this.dataSelected.applyProcess && await this.getListInstanceStep();
+      this.dataSelected?.applyProcess && (await this.getListInstanceStep());
     } catch (error) {}
   }
-  reloadListStep(listSteps:any) {
+  reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
     this.isDataLoading = false;
@@ -131,7 +141,7 @@ implements OnInit, AfterViewInit {
       this.dataSelected?.refID,
       this.dataSelected?.processID,
       this.dataSelected?.status,
-     this.dataSelected.caseType == "1" ? '2':'3'
+      this.dataSelected.caseType == '1' ? '2' : '3',
     ];
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
@@ -153,11 +163,11 @@ implements OnInit, AfterViewInit {
     listStep.pop();
   }
 
-
-  getContactByObjectID(contactId,customerID) {
-    var data = [customerID,contactId];
+  getContactByObjectID(contactId, customerID) {
+    var data = [customerID, contactId];
     this.codxCmService.getOneContactByObjectID(data).subscribe((res) => {
       if (res) {
+        console.log(res);
         this.contactPerson = res;
       }
     });
@@ -172,10 +182,9 @@ implements OnInit, AfterViewInit {
       e: e,
       data: data,
     });
-
   }
 
-  changeFooter(e){
+  changeFooter(e) {
     console.log(e);
   }
   //get tree giao viec theo quy trinh
@@ -188,11 +197,17 @@ implements OnInit, AfterViewInit {
   async executeApiCalls() {
     try {
       await this.getValueList();
-      this.dataSelected.applyProcess &&  await this.getListInstanceStep();
+      this.getCaseTypeByFuncID();
+      this.dataSelected?.applyProcess && (await this.getListInstanceStep());
     } catch (error) {
       console.error('Error executing API calls:', error);
     }
   }
+
+  getCaseTypeByFuncID() {
+    this.casesType = this.funcID == 'CM0401' ? '1' : '2';
+  }
+
   async getValueList() {
     this.cache.valueList('CRM010').subscribe((res) => {
       if (res.datas) {
@@ -255,17 +270,14 @@ implements OnInit, AfterViewInit {
   }
 
   loadTree(recID) {
-    if(!recID){
+    if (!recID) {
       this.treeTask = [];
       return;
     }
-    this.api.exec<any>(
-        'TM',
-        'TaskBusiness',
-        'GetListTaskTreeBySessionIDAsync',
-        recID
-      ).subscribe((res) => {
-        this.treeTask = res ? res : []; 
-    });
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
+        this.treeTask = res ? res : [];
+      });
   }
 }
