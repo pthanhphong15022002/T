@@ -2282,6 +2282,17 @@
                                 >
                                 </codx-label>
                               </div>
+                              <div *ngIf="task?.fieldID">
+                                <codx-label
+                                  class="text-gray-600 label-colon"
+                                  fiedName="fields"
+                                  [formModel]="formModelStep"
+                                >
+                                </codx-label>
+                                <span  class="text-gray-600">
+                                  {{getFieldInTask(task?.fieldID)}}
+                                </span>
+                              </div>
                             </div>
                           </div>
                           <codx-mfunc
