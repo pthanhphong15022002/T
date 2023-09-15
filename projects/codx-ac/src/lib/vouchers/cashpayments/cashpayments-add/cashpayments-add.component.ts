@@ -542,9 +542,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             } else {
               oLine.dr = this.roundService.amount(oLine.cR2 * this.formCashPayment.data.exchangeRate,this.formCashPayment.data.currencyID);
             }
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR'+';';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR'+';';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR2')) oLine.updateColumns += 'CR2'+';';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR2')) oLine.updateColumns += 'CR2;';
           }, 100);
         }
         break;
@@ -560,9 +560,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             } else {
               oLine.cr = this.roundService.amount(oLine.cR2 * this.formCashPayment.data.exchangeRate,this.formCashPayment.data.currencyID);
             }
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR'+';';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('DR2')) oLine.updateColumns += 'DR2'+';';
-            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR'+';';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR2')) oLine.updateColumns += 'DR2;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
           }, 100);
         }
         break;
@@ -1392,11 +1392,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       }
       if (line.dR2 != dDR2) {
         line.dR2 = dDR2;
-        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2'+';';
+        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
       }
       if (line.cR2 != 0) {
         line.cR2 = 0;
-        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2'+';';
+        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
       }
     } else {
       let dCR2 = 0;
@@ -1410,11 +1410,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       }
       if (line.cR2 != dCR2) {
         line.cR2 = dCR2;
-        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2'+';';
+        if(line.updateColumns && !line.updateColumns.includes('CR2')) line.updateColumns += 'CR2;';
       }
       if (line.dR2 != 0) {
         line.dR2 = 0;
-        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2'+';';
+        if(line.updateColumns && !line.updateColumns.includes('DR2')) line.updateColumns += 'DR2;';
       }
     }
     return line;
