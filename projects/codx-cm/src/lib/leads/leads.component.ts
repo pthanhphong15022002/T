@@ -1221,7 +1221,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
-        this.detailViewLead.resetTab(this.dataSelected.applyProcess);
+     //   this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }
