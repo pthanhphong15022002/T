@@ -15,7 +15,10 @@ import {
   AuthService,
   AuthStore,
   CallFuncService,
+  DialogModel,
   DialogRef,
+  NotificationsService,
+  SidebarModel,
   UIComponent,
   UIDetailComponent,
   Util,
@@ -27,6 +30,13 @@ import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import moment from 'moment';
 import { CodxShareService } from '../../../codx-share.service';
+import { CodxBookingService } from '../codx-booking.service';
+import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
+import { CodxRescheduleBookingRoomComponent } from '../codx-reschedule-booking-room/codx-reschedule-booking-room.component';
+import { CodxInviteRoomAttendeesComponent } from '../codx-invite-room-attendees/codx-invite-room-attendees.component';
+import { CodxAddBookingRoomComponent } from '../codx-add-booking-room/codx-add-booking-room.component';
+import { CodxAddBookingCarComponent } from '../codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingStationeryComponent } from '../codx-add-booking-stationery/codx-add-booking-stationery.component';
 @Component({
   selector: 'codx-view-detail-booking',
   templateUrl: 'codx-view-detail-booking.component.html',
@@ -46,6 +56,7 @@ export class CodxViewDetailBookingComponent
   @Input() view: ViewsComponent;
   @Input() viewMode = '1';
   @Input() transRecID;
+  @Input() itemDetail;
 
   //Output
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
@@ -58,24 +69,7 @@ export class CodxViewDetailBookingComponent
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
   //@ViewChild('codxBooking') codxBooking: CodxBookingComponent;
-  //MFunction Booking
-  @Output('reloadData') reloadData: EventEmitter<any> = new EventEmitter();
-  @Output('edit') edit: EventEmitter<any> = new EventEmitter();
-  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
-  @Output('release') release: EventEmitter<any> = new EventEmitter();
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
-  @Output('invite') invite: EventEmitter<any> = new EventEmitter();
-  @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
-  @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
-  @Output('setAllocateStatus') setAllocateStatus: EventEmitter<any> =
-    new EventEmitter();
-  @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
-    new EventEmitter();
-
-  //MFunction Approve
-  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =
-    new EventEmitter();
+  //MFunction Booking  
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
 
   firstLoad = true;
@@ -96,11 +90,35 @@ export class CodxViewDetailBookingComponent
   ];
   curUser: any;
   runMode: any;
+  
+  popupBookingComponent: any;
+  
+  funcIDName='';
+  popupTitle='';
+  allocateStatus: string;
+
+  lstWarehourse = [];
+  lstResourceOwner = [];
+  resourceOwner = null;
+
+  approvalRule = EPCONST.APPROVALRULE.Haved;
+  categoryIDProcess: string;
+  isAllocateStationery=false;
+  
+  stationeryAR = EPCONST.APPROVALRULE.Haved;
+  autoApproveItem = EPCONST.APPROVALRULE.Haved;
+  isAdmin: boolean;
+  optionalData: any;
+  
+  loadPermission=true;
+
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private codxBookingService: CodxBookingService,
     private codxShareService: CodxShareService,
     private callFuncService: CallFuncService,
+    private notiService: NotificationsService,
     private authService: AuthService,
     private authStore: AuthStore
   ) {
@@ -110,6 +128,13 @@ export class CodxViewDetailBookingComponent
       if (func) {
         this.runMode = func?.runMode;
         this.detectorRef.detectChanges();
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
+        this.runMode = funcList?.runMode;
+        this.crrEntityName = funcList?.entityName;
       }
     });
     this.curUser = this.authStore.get();
@@ -125,11 +150,20 @@ export class CodxViewDetailBookingComponent
     this.getCacheData();
     this.detectorRef.detectChanges();
     this.setHeight();
+    if (this.resourceType == '1') {
+      this.popupBookingComponent = CodxAddBookingRoomComponent;
+    } else if (this.resourceType == '2') {
+      this.popupBookingComponent = CodxAddBookingCarComponent;
+    } else if (this.resourceType == '6') {
+      this.popupBookingComponent = CodxAddBookingStationeryComponent;
+    }
   }
   ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.recID) {
+      
       this.getData(changes?.recID?.currentValue);
+
     }
     this.setHeight();
   }
@@ -152,6 +186,101 @@ export class CodxViewDetailBookingComponent
           this.detectorRef.detectChanges();
         }
       });
+      this.codxBookingService.getListWarehouse().subscribe((res: any) => {
+        if (res) {
+          this.lstWarehourse = res;
+        }
+      });
+      this.codxBookingService.getListRO().subscribe((res: any) => {
+        if (res) {
+          this.lstResourceOwner = res;
+        }
+      });
+      switch (this.crrEntityName) {
+        case EPCONST.ENTITY.R_Bookings:
+          this.resourceType = EPCONST.VLL.ResourceType.Room;
+          this.categoryIDProcess = 'ES_EP001';
+          break;
+        case EPCONST.ENTITY.C_Bookings:
+          this.resourceType = EPCONST.VLL.ResourceType.Car;
+          this.categoryIDProcess = 'ES_EP002';
+          break;
+  
+        case EPCONST.ENTITY.S_Bookings:
+          this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+          this.categoryIDProcess = 'ES_EP003';
+          break;
+        case EPCONST.ENTITY.S_Distribution:
+          this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+          this.categoryIDProcess = 'ES_EP003';
+          this.isAllocateStationery = true;
+          break;
+      }
+      this.cache.viewSettingValues('EPParameters').subscribe((res) => {
+        if (res) {
+          let listSetting = res;
+          let stationerySetting_1 = listSetting.filter(
+            (x) =>
+              x.category == '1' &&
+              x.transType == EPCONST.PARAM.EPStationeryParameters
+          );
+          if (stationerySetting_1?.length > 0) {
+            let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
+            //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP
+            this.autoApproveItem =
+              setting?.AutoApproveItem != null
+                ? setting?.AutoApproveItem
+                : EPCONST.APPROVALRULE.NotHaved; //KTra tự duyệt và cấp phát VPP khi đặt phòng
+          }
+          let epSetting_4 = listSetting.filter(
+            (x) => x.category == '4' && x.tranType == null
+          );
+          if (epSetting_4 != null) {
+            let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
+            let roomSetting_4 = listEPSetting.filter(
+              (x) => x.FieldName == EPCONST.ES_CategoryID.Room
+            );
+            let carSetting_4 = listEPSetting.filter(
+              (x) => x.FieldName == EPCONST.ES_CategoryID.Car
+            );
+            let stationerySetting_4 = listEPSetting.filter(
+              (x) => x.FieldName == EPCONST.ES_CategoryID.Stationery
+            );
+            this.stationeryAR =
+              stationerySetting_4?.length > 0 &&
+              stationerySetting_4[0]?.ApprovalRule != null
+                ? stationerySetting_4[0]?.ApprovalRule
+                : EPCONST.APPROVALRULE.Haved;
+            switch (this.resourceType) {
+              case EPCONST.VLL.ResourceType.Room:
+                if (roomSetting_4?.length > 0) {
+                  this.approvalRule =
+                    roomSetting_4[0]?.ApprovalRule != null
+                      ? roomSetting_4[0]?.ApprovalRule
+                      : EPCONST.APPROVALRULE.Haved;
+                }
+                break;
+              case EPCONST.VLL.ResourceType.Car:
+                if (carSetting_4?.length > 0) {
+                  this.approvalRule =
+                    carSetting_4[0]?.ApprovalRule != null
+                      ? carSetting_4[0]?.ApprovalRule
+                      : EPCONST.APPROVALRULE.Haved;
+                }
+                break;
+              case EPCONST.VLL.ResourceType.Stationery:
+                if (stationerySetting_4?.length > 0) {
+                  this.approvalRule =
+                    stationerySetting_4[0]?.ApprovalRule != null
+                      ? stationerySetting_4[0]?.ApprovalRule
+                      : EPCONST.APPROVALRULE.Haved;
+                }
+                break;
+            }
+          }
+        }
+      });
+      this.roleCheck();
   }
 
   //---------------------------------------------------------------------------------//
@@ -160,10 +289,14 @@ export class CodxViewDetailBookingComponent
   getData(recID) {
     this.recID = this.recID || recID;
     if (!this.recID) return;
+
     this.loadedData = false;
+    if(this.itemDetail?.unbounds !=null){
+      this.loadPermission=false;
+    }
     if (this.runMode == '1') {
       this.codxEpService
-        .getViewDetailBooking(this.recID, this.funcID)
+        .getViewDetailBooking(this.recID, this.funcID, this.loadPermission)
         .subscribe((data) => {
           if (data) {
             this.data = data;
@@ -175,7 +308,7 @@ export class CodxViewDetailBookingComponent
     } else {
       if (this.viewMode == '1') {
         this.codxEpService
-          .getViewDetailBooking(this.recID, this.funcID)
+          .getViewDetailBooking(this.recID, this.funcID, this.loadPermission)
           .subscribe((data) => {
             if (data) {
               this.data = data;
@@ -201,112 +334,161 @@ export class CodxViewDetailBookingComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
-  childClickMF(event, data) {
-    if (this.viewMode == '1') {
-      switch (event?.functionID) {
-        //System MF
-        case EPCONST.MFUNCID.Delete:
-          this.delete.emit(data);
-          break;
+  // clickMF(event :any, data :any =null) {
+  //   if(!data) data= this.data;
+  //   if (this.viewMode == '1') {
+  //     switch (event?.functionID) {
+  //       //System MF
+  //       case EPCONST.MFUNCID.Delete:
+  //         this.delete.emit(data);
+  //         break;
 
-        case EPCONST.MFUNCID.Edit:
-          this.setPopupTitle.emit(event?.text);
-          this.edit.emit(data);
-          break;
+  //       case EPCONST.MFUNCID.Edit:
+  //         this.setPopupTitle.emit(event?.text);
+  //         this.edit.emit(data);
+  //         break;
 
-        case EPCONST.MFUNCID.Copy:
-          this.setPopupTitle.emit(event?.text);
-          this.copy.emit(data);
-          break;
+  //       case EPCONST.MFUNCID.Copy:
+  //         this.setPopupTitle.emit(event?.text);
+  //         this.copy.emit(data);
+  //         break;
 
-        // Aproval Trans
-        case EPCONST.MFUNCID.R_Release: //Gửi duyệt
-        case EPCONST.MFUNCID.C_Release:
-        case EPCONST.MFUNCID.S_Release:
-          this.release.emit(data);
-          break;
-        case EPCONST.MFUNCID.R_Cancel: //Hủy gửi duyệt
-        case EPCONST.MFUNCID.C_Cancel:
-        case EPCONST.MFUNCID.S_Cancel:
-          this.cancel.emit(data);
-          break;
+  //       // Aproval Trans
+  //       case EPCONST.MFUNCID.R_Release: //Gửi duyệt
+  //       case EPCONST.MFUNCID.C_Release:
+  //       case EPCONST.MFUNCID.S_Release:
+  //         this.release.emit(data);
+  //         break;
+  //       case EPCONST.MFUNCID.R_Cancel: //Hủy gửi duyệt
+  //       case EPCONST.MFUNCID.C_Cancel:
+  //       case EPCONST.MFUNCID.S_Cancel:
+  //         this.cancel.emit(data);
+  //         break;
 
-        //Room
-        case EPCONST.MFUNCID.R_Reschedule: //Dời
-          this.setPopupTitleOption.emit(event?.text);
-          this.reschedule.emit(data);
-          break;
-        case EPCONST.MFUNCID.R_Invite: //Mời
-          this.setPopupTitleOption.emit(event?.text);
-          this.invite.emit(data);
-          break;
+  //       //Room
+  //       case EPCONST.MFUNCID.R_Reschedule: //Dời
+  //         this.setPopupTitleOption.emit(event?.text);
+  //         this.reschedule.emit(data);
+  //         break;
+  //       case EPCONST.MFUNCID.R_Invite: //Mời
+  //         this.setPopupTitleOption.emit(event?.text);
+  //         this.invite.emit(data);
+  //         break;
 
-        //Car
+  //       //Car
 
-        //Stationery
-        case EPCONST.MFUNCID.S_Allocate:
-          this.setAllocateStatus.emit(EPCONST.A_STATUS.Approved);
-          this.allocate.emit(data);
-          break;
-        case EPCONST.MFUNCID.S_Allocate:
-          this.setAllocateStatus.emit(EPCONST.A_STATUS.Rejected);
-          this.allocate.emit(data);
-          break;
-          default:
-        //Biến động , tự custom
-        var customData =
-        {
-          refID : "",
-          refType : this.formModel?.entityName,
-          dataSource: data,
-        }
+  //       //Stationery
+  //       case EPCONST.MFUNCID.S_Allocate:
+  //         this.setAllocateStatus.emit(EPCONST.A_STATUS.Approved);
+  //         this.allocate.emit(data);
+  //         break;
+  //       case EPCONST.MFUNCID.S_Allocate:
+  //         this.setAllocateStatus.emit(EPCONST.A_STATUS.Rejected);
+  //         this.allocate.emit(data);
+  //         break;
+  //         default:
+  //       //Biến động , tự custom
+  //       var customData =
+  //       {
+  //         refID : "",
+  //         refType : this.formModel?.entityName,
+  //         dataSource: data,
+  //       }
 
-        this.codxShareService.defaultMoreFunc(
-          event,
-          data,
-          null,
-          this.formModel,
-          this.view.dataService,
-          this,
-          customData
-        );
+  //       this.codxShareService.defaultMoreFunc(
+  //         event,
+  //         data,
+  //         null,
+  //         this.formModel,
+  //         this.view.dataService,
+  //         this,
+  //         customData
+  //       );
+  //       break;
+  //     }
+  //   } else if (this.viewMode == '2') {
+  //     let mfuncID = event?.functionID;
+  //     switch (mfuncID) {
+  //       case EPCONST.MFUNCID.R_Approval:
+  //       case EPCONST.MFUNCID.C_Approval:
+  //       case EPCONST.MFUNCID.S_Approval:
+  //         {
+  //           this.approve.emit(data);
+  //         }
+  //         break;
+  //       case EPCONST.MFUNCID.R_Reject:
+  //       case EPCONST.MFUNCID.C_Reject:
+  //       case EPCONST.MFUNCID.S_Reject:
+  //         {
+  //           this.reject.emit(data);
+  //         }
+  //         break;
+  //       case EPCONST.MFUNCID.R_Undo:
+  //       case EPCONST.MFUNCID.C_Undo:
+  //       case EPCONST.MFUNCID.S_Undo:
+  //         {
+  //           this.undo.emit(data);
+  //         }
+  //         break;
+
+  //       //Car
+  //       case EPCONST.MFUNCID.C_CardTrans:
+  //         this.setPopupTitleOption.emit(event?.text);
+  //         this.cardTrans.emit(data);
+  //         break;
+  //       case EPCONST.MFUNCID.C_DriverAssign:
+  //         this.setPopupTitleOption.emit(event?.text);
+  //         this.assignDriver.emit(data);
+  //         break;
+  //     }
+  //   }
+  // }
+  clickMF(event, data) {
+    this.popupTitle = event?.text + ' ' + this.funcIDName;
+    switch (event?.functionID) {
+      //System MF
+      case EPCONST.MFUNCID.Delete:
+        this.delete(data);
         break;
-      }
-    } else if (this.viewMode == '2') {
-      let mfuncID = event?.functionID;
-      switch (mfuncID) {
-        case EPCONST.MFUNCID.R_Approval:
-        case EPCONST.MFUNCID.C_Approval:
-        case EPCONST.MFUNCID.S_Approval:
-          {
-            this.approve.emit(data);
-          }
-          break;
-        case EPCONST.MFUNCID.R_Reject:
-        case EPCONST.MFUNCID.C_Reject:
-        case EPCONST.MFUNCID.S_Reject:
-          {
-            this.reject.emit(data);
-          }
-          break;
-        case EPCONST.MFUNCID.R_Undo:
-        case EPCONST.MFUNCID.C_Undo:
-        case EPCONST.MFUNCID.S_Undo:
-          {
-            this.undo.emit(data);
-          }
-          break;
+      case EPCONST.MFUNCID.Edit:
+        this.edit(data);
+        break;
+      case EPCONST.MFUNCID.Copy:
+        this.copy(data);
+        break;
+      // Aproval Trans
+      case EPCONST.MFUNCID.R_Release: //Gửi duyệt
+      case EPCONST.MFUNCID.C_Release:
+      case EPCONST.MFUNCID.S_Release:
+        this.release(data);
+        break;
+      case EPCONST.MFUNCID.R_Cancel: //Hủy gửi duyệt
+      case EPCONST.MFUNCID.C_Cancel:
+      case EPCONST.MFUNCID.S_Cancel:
+        this.cancel(data);
+        break;
 
-        //Car
-        case EPCONST.MFUNCID.C_CardTrans:
-          this.setPopupTitleOption.emit(event?.text);
-          this.cardTrans.emit(data);
-          break;
-        case EPCONST.MFUNCID.C_DriverAssign:
-          this.setPopupTitleOption.emit(event?.text);
-          this.assignDriver.emit(data);
-          break;
-      }
+      //Room
+      case EPCONST.MFUNCID.R_Reschedule: //Dời
+        this.popupTitle = event?.text;
+        this.reschedule(data);
+        break;
+      case EPCONST.MFUNCID.R_Invite: //Mời
+        this.popupTitle = event?.text;
+        this.invite(data);
+        break;
+
+      //Car
+
+      //Stationery
+      case EPCONST.MFUNCID.S_Allocate:
+        this.allocateStatus = '5';
+        this.allocate(data);
+        break;
+      case EPCONST.MFUNCID.S_UnAllocate:
+        this.allocateStatus = '4';
+        this.allocate(data);
+        break;
     }
   }
   changeDataMF(event, data: any) {
@@ -614,11 +796,26 @@ export class CodxViewDetailBookingComponent
       }
     }
   }
-
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate -------------------------------------//
+  //---------------------------------------------------------------------------------//
+  roleCheck() {
+    //Kiểm tra quyền admin
+    this.codxBookingService.roleCheck().subscribe((res) => {
+      if (res == true) {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+    });
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
   refeshData(res: any) {
+    if(this.loadPermission){
+      this.data.unbounds = this.itemDetail?.unbounds ?? this.data?.unbounds;
+    }
     this.listFilePermission = [];
     if (this.resourceType == '6') {
       let tmpPer = new Permission();
@@ -688,7 +885,6 @@ export class CodxViewDetailBookingComponent
   sameDayCheck(sDate: any, eDate: any) {
     return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
-
   showHour(date: any) {
     let temp = new Date(date);
     let time =
@@ -741,4 +937,475 @@ export class CodxViewDetailBookingComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+
+  release(data: any) {
+    if (this.curUser?.userID == data?.createdBy) {
+      if (
+        this.resourceType == EPCONST.VLL.ResourceType.Room ||
+        this.resourceType == EPCONST.VLL.ResourceType.Car
+      ) {
+        this.resourceOwner = null;
+        let curRes = this.lstResourceOwner.filter(
+          (x) => x.resourceID == data.resourceID
+        );
+        if (curRes?.length > 0) {
+          this.resourceOwner = new Approver();
+          this.resourceOwner.roleID = curRes[0]?.owner;
+        }
+      } else {
+        this.resourceOwner = null;
+        let curWarehourse = this.lstWarehourse.filter(
+          (x) => x.warehouseID == data?.warehouseID
+        );
+        if (curWarehourse?.length > 0) {
+          this.resourceOwner = new Approver();
+          this.resourceOwner.roleID = curWarehourse[0]?.owner;
+        } else {
+          curWarehourse = this.lstWarehourse.filter((x) => x.isSystem == true);
+          if (curWarehourse?.length > 0) {
+            this.resourceOwner = new Approver();
+            this.resourceOwner.roleID = curWarehourse[0]?.owner;
+          }
+        }
+      }
+      let autoRelease = false;
+      // if(data?.resourceType== EPCONST.VLL.ResourceType.Stationery){
+      //   if(this.autoComfirm==EPCONST.APPROVALRULE.Haved){
+      //     autoRelease=true;
+      //   }
+      //   else{
+      //     if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){
+      //       autoRelease=true;
+      //     }
+      //   }
+      // }
+      // else{
+      //   if(this.approvalRule==EPCONST.APPROVALRULE.NotHaved){
+      //     autoRelease=true;
+      //   }
+      // }
+      if (this.approvalRule == EPCONST.APPROVALRULE.NotHaved) {
+        autoRelease = true;
+      }
+      if (!autoRelease) {
+        this.codxBookingService
+          .getProcessByCategoryID(this.categoryIDProcess)
+          .subscribe((category: any) => {
+            this.codxShareService.codxReleaseDynamic(
+              'EP',
+              data,
+              category,
+              this.formModel.entityName,
+              this.formModel?.funcID,
+              data?.title,
+              (res: ResponseModel) => {
+                if (res?.msgCodeError == null && res?.rowCount) {
+                  data.approveStatus =
+                    res.returnStatus ?? EPCONST.A_STATUS.Released;
+                  data.write = false;
+                  data.delete = false;
+                  this.view.dataService.update(data).subscribe();
+                  this.notiService.notifyCode('SYS034');
+                  if (
+                    data?.approveStatus == EPCONST.A_STATUS.Approved &&
+                    data.items?.length > 0 &&
+                    data?.resourceType == EPCONST.VLL.ResourceType.Room
+                  ) {
+                    //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
+                    if (
+                      this.autoApproveItem == '1' ||
+                      this.stationeryAR == '0'
+                    ) {
+                      this.codxBookingService
+                        .autoApproveStationery(null, data.recID)
+                        .subscribe((result) => {});
+                    } else {
+                      this.codxBookingService
+                        .releaseStationeryOfRoom(null, data.recID, null)
+                        .subscribe((result) => {});
+                    }
+                  }
+                } else {
+                  this.notiService.notifyCode(res?.msgCodeError);
+                }
+              },
+              data?.createdBy,
+              [this.resourceOwner],
+              null
+            );
+          });
+      } else {
+        this.codxBookingService
+          .approvedManual(data?.recID)
+          .subscribe((approveData: any) => {
+            if (approveData != null) {
+              data.approveStatus = approveData?.approveStatus;
+              data.write = false;
+              data.delete = false;
+              this.view.dataService.update(data).subscribe();
+              this.notiService.notifyCode('SYS034');
+            } else {
+              return;
+            }
+          });
+      }
+    } else {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+  }
+
+  cancel(data: any) {
+    if (
+      this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      this.codxShareService
+        .codxCancel('EP', data?.recID, this.formModel.entityName, null, null)
+        .subscribe((res: any) => {
+          if (res && res?.msgCodeError == null) {
+            this.notiService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
+            data.approveStatus = EPCONST.A_STATUS.Cancel;
+            this.view.dataService.update(data).subscribe();
+          } else {
+            this.notiService.notifyCode(res?.msgCodeError);
+          }
+        });
+    } else {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+  }
+
+  reschedule(data: any) {
+    if (
+      this.curUser?.userID == data?.owner ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      let dialogReschedule = this.callfc.openForm(
+        CodxRescheduleBookingRoomComponent,
+        '',
+        550,
+        400,
+        this.funcID,
+        [data, this.formModel, this.popupTitle]
+      );
+      dialogReschedule.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.detectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    } else {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+  }
+
+  invite(data: any) {
+    if (
+      this.curUser?.userID == data?.owner ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      let dialogInvite = this.callfc.openForm(
+        CodxInviteRoomAttendeesComponent,
+        '',
+        800,
+        500,
+        this.funcID,
+        [data, this.formModel, this.popupTitle]
+      );
+      dialogInvite.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.detectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    } else {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+  }
+
+  addNew(evt?) {
+    if (evt != null) {
+      this.optionalData = evt;
+    } else {
+      this.optionalData = null;
+    }
+    if (true) {
+      this.view.dataService.addNew().subscribe((res) => {
+        if (this.resourceType == EPCONST.VLL.ResourceType.Stationery) {
+          let dModel = new DialogModel();
+          dModel.IsFull = true;
+          dModel.FormModel = this.formModel;
+          dModel.DataService = this.view?.dataService;
+          let dialogStationery = this.callfc.openForm(
+            this.popupBookingComponent,
+            '',
+            null,
+            null,
+            null,
+            [res, EPCONST.MFUNCID.Add, this.popupTitle],
+            '',
+            dModel
+          );
+          dialogStationery.closed.subscribe((returnData) => {
+            if (returnData?.event) {
+              //this.updateData(returnData?.event);
+            } else {
+              this.view.dataService.clear();
+            }
+          });
+        } else {
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '800px';
+          let dialogAdd = this.callfc.openSide(
+            this.popupBookingComponent,
+            [res, EPCONST.MFUNCID.Add, this.popupTitle, this.optionalData],
+            option
+          );
+          dialogAdd.closed.subscribe((returnData) => {
+            if (returnData?.event) {
+              //this.updateData(returnData?.event);
+            } else {
+              this.view.dataService.clear();
+            }
+          });
+        }
+      });
+    }
+  }
+
+  edit(data?) {
+    if (data) {
+      if (
+        this.curUser?.userID == data?.createdBy ||
+        this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+      ) {
+        this.codxBookingService
+          .getBookingByRecID(data?.recID)
+          .subscribe((booking) => {
+            if (booking) {
+              this.view.dataService.edit(booking).subscribe(() => {
+                if (this.resourceType == EPCONST.VLL.ResourceType.Stationery) {
+                  let dModel = new DialogModel();
+                  dModel.IsFull = true;
+                  dModel.FormModel = this.formModel;
+                  dModel.DataService = this.view?.dataService;
+                  let dialogStationery = this.callfc.openForm(
+                    this.popupBookingComponent,
+                    '',
+                    null,
+                    null,
+                    null,
+                    [
+                      this.view.dataService.dataSelected,
+                      EPCONST.MFUNCID.Edit,
+                      this.popupTitle,
+                    ],
+                    '',
+                    dModel
+                  );
+                  dialogStationery.closed.subscribe((returnData) => {
+                    if (returnData?.event) {
+                      //this.updateData(returnData?.event);
+                    } else {
+                      this.view.dataService.clear();
+                    }
+                  });
+                } else {
+                  let option = new SidebarModel();
+                  option.Width = '800px';
+                  this.view.dataService.dataSelected = booking;
+                  option.DataService = this.view?.dataService;
+                  option.FormModel = this.formModel;
+                  let dialogEdit = this.callfc.openSide(
+                    this.popupBookingComponent,
+                    [
+                      this.view.dataService.dataSelected,
+                      EPCONST.MFUNCID.Edit,
+                      this.popupTitle,
+                    ],
+                    option
+                  );
+                  dialogEdit.closed.subscribe((returnData) => {
+                    if (returnData?.event) {
+                      //this.updateData(returnData?.event);
+                    } else {
+                      this.view.dataService.clear();
+                    }
+                  });
+                }
+              });
+            }
+          });
+      } else {
+        this.notiService.notifyCode('SYS032');
+        return;
+      }
+    }
+  }
+
+  copy(evt?) {
+    if (evt) {
+      if (true) {
+        this.codxBookingService
+          .getBookingByRecID(evt?.recID)
+          .subscribe((booking) => {
+            if (booking) {
+              this.view.dataService.dataSelected = booking;
+              this.view.dataService.copy().subscribe((res) => {
+                if (res) {
+                  if (
+                    this.resourceType == EPCONST.VLL.ResourceType.Stationery
+                  ) {
+                    let dModel = new DialogModel();
+                    dModel.IsFull = true;
+                    dModel.FormModel = this.formModel;
+                    dModel.DataService = this.view?.dataService;
+                    let dialogStationery = this.callfc.openForm(
+                      this.popupBookingComponent,
+                      '',
+                      null,
+                      null,
+                      null,
+                      [res, EPCONST.MFUNCID.Copy, this.popupTitle],
+                      '',
+                      dModel
+                    );
+                    dialogStationery.closed.subscribe((returnData) => {
+                      if (returnData?.event) {
+                        //this.updateData(returnData?.event);
+                      } else {
+                        this.view.dataService.clear();
+                      }
+                    });
+                  } else {
+                    let option = new SidebarModel();
+                    option.Width = '800px';
+                    option.DataService = this.view?.dataService;
+                    option.FormModel = this.formModel;
+                    let dialogCopy = this.callfc.openSide(
+                      this.popupBookingComponent,
+                      [res, EPCONST.MFUNCID.Copy, this.popupTitle],
+                      option
+                    );
+                    dialogCopy.closed.subscribe((returnData) => {
+                      if (returnData?.event) {
+                        //this.updateData(returnData?.event);
+                      } else {
+                        this.view.dataService.clear();
+                      }
+                    });
+                  }
+                }
+              });
+            }
+          });
+      }
+    }
+  }
+
+
+  delete(data?) {
+    if (
+      this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
+    ) {
+      let deleteItem = this.view.dataService.dataSelected;
+      if (data) {
+        deleteItem = data;
+      }
+      this.view.dataService.delete([deleteItem]).subscribe(() => {});
+    } else {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+  }
+  reloadData(data: any) {
+    if (data != null) {
+      this.view?.dataService.update(data).subscribe();
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  viewDetail(data: any) {
+    if (data.resourceType == EPCONST.VLL.ResourceType.Stationery) {
+      return;
+    }
+    let option = new SidebarModel();
+    option.Width = '800px';
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.formModel;
+    let dialogview = this.callfc.openSide(
+      this.popupBookingComponent,
+      [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
+      option
+    );
+  }
+
+  allocate(data: any) {
+    if (data?.approverID != this.curUser?.userID) {
+      this.notiService.notifyCode('SYS032');
+      return;
+    }
+    if (data?.approval == '1') {
+      this.api
+        .exec('ES', 'ApprovalTransBusiness', 'GetByTransIDAsync', [data?.recID])
+        .subscribe((trans: any) => {
+          trans.map((item: any) => {
+            if (item?.stepType === 'I') {
+              this.codxShareService
+                .codxApprove(item?.recID, this.allocateStatus, null, null, null)
+                .subscribe((res: any) => {
+                  if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                    this.notiService.notifyCode('SYS034'); //đã duyệt
+
+                    data.issueStatus = this.allocateStatus == '5' ? '3' : '4';
+                    this.view.dataService.update(data).subscribe();
+                  } else {
+                    this.notiService.notifyCode(res?.msgCodeError);
+                  }
+                });
+            }
+          });
+        });
+    } else {
+      this.api
+        .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [data.recID])
+        .subscribe((dataItem: any) => {
+          if (dataItem) {
+            this.codxBookingService
+              .getBookingByRecID(dataItem?.recID)
+              .subscribe((booking) => {
+                this.view.dataService.update(booking).subscribe((res) => {
+                  if (res) {
+                    this.notiService.notifyCode('SYS034');
+                  }
+                });
+              });
+            this.detectorRef.detectChanges();
+          } else {
+            this.notiService.notifyCode('SYS001');
+          }
+        });
+    }
+  }
 }

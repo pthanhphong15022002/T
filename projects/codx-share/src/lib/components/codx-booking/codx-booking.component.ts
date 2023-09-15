@@ -240,28 +240,28 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   },
                 ];
                 this.views = [
-                  // {
-                  //   sameData: false,
-                  //   type: ViewType.schedule,
-                  //   active: true,
-                  //   request2: this.scheduleHeader,
-                  //   request: this.scheduleEvent,
-                  //   toolbarTemplate: this.footerButton,
-                  //   showSearchBar: false,
-                  //   showFilter: false,
-                  //   model: {
-                  //     //panelLeftRef:this.panelLeft,
-                  //     eventModel: this.scheduleEvtModel,
-                  //     resourceModel: this.scheduleHeaderModel, //resource
-                  //     template: this.cardTemplate,
-                  //     template4: this.resourceHeader,
-                  //     //template5: this.resourceTootip,//tooltip
-                  //     template6: this.mfButton, //header
-                  //     template8: this.contentTmp, //content
-                  //     //template7: this.footerButton,//footer
-                  //     statusColorRef: 'EP022',
-                  //   },
-                  // },
+                  {
+                    sameData: false,
+                    type: ViewType.schedule,
+                    active: true,
+                    request2: this.scheduleHeader,
+                    request: this.scheduleEvent,
+                    toolbarTemplate: this.footerButton,
+                    showSearchBar: false,
+                    showFilter: false,
+                    model: {
+                      //panelLeftRef:this.panelLeft,
+                      eventModel: this.scheduleEvtModel,
+                      resourceModel: this.scheduleHeaderModel, //resource
+                      template: this.cardTemplate,
+                      template4: this.resourceHeader,
+                      //template5: this.resourceTootip,//tooltip
+                      template6: this.mfButton, //header
+                      template8: this.contentTmp, //content
+                      //template7: this.footerButton,//footer
+                      statusColorRef: 'EP022',
+                    },
+                  },
                   {
                     type: ViewType.listdetail,
                     sameData: true,
@@ -766,15 +766,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           (scheduleEle as any).ej2_instances[0].selectedDate = new Date(date);
           this.navigated = true;
         }
-        //  if (
-        //   (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
-        //     .first.element.id == 'Schedule'
-        // ) {
-        //   (
-        //     this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
-        //   ).scheduleObj.first.selectedDate = new Date(date);
-        //   this.navigated = true;
-        // }
       }
     }
   }

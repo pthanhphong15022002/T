@@ -260,13 +260,13 @@ export class CodxEpService {
       resolve(obj);
     });
   }
-  getViewDetailBooking(recID: string, funcID: string) {
+  getViewDetailBooking(recID: string, funcID: string,loadPermission :boolean = true) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'GetViewDetailAsync',
-      [recID,funcID]
+      [recID,funcID,loadPermission]
     );
   }
   getListAvailableResource(resourceType: string, startTime: any, endTime: any) {
