@@ -748,7 +748,8 @@ export class InstancesComponent
   }
 
   startInstance(data) {
-    this.codxDpService.startInstance(data.recID).subscribe((res) => {
+    var datas = [data.recID,this.process?.applyFor];
+    this.codxDpService.startInstance(datas).subscribe((res) => {
       if (res) {
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
@@ -802,6 +803,7 @@ export class InstancesComponent
                     data: data,
                   });
                 }
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
                 this.detectorRef.detectChanges();
               }
             });

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { AdvancePaymentAddComponent } from './advance-payment-add/advance-payment-add.component';
 
@@ -24,7 +24,12 @@ export class AdvancePaymentComponent extends UIComponent{
   dialog: DialogRef;
   funcName: any;
   gridViewSetup: any;
-  company: any
+  company: any;
+  fmAdvancedPaymentLines: FormModel = {
+    entityName: 'AC_AdvancedPaymentLines',
+    formName: 'AdvancedPaymentLines',
+    gridViewName: 'grvAdvancedPaymentLines',
+  }
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,

@@ -836,6 +836,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  if (this.kanban) this.kanban.updateCard(this.detailViewDeal.dataSelected);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -888,6 +889,7 @@ export class DealsComponent
                   data: data,
                 });
               }
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
               this.detectorRef.detectChanges();
             }
           });
@@ -973,7 +975,9 @@ export class DealsComponent
               let money = data.dealValue * data.exchangeRate;
               this.renderTotal(data.stepID, 'add', money);
               this.renderTotal(this.crrStepID, 'minus', money);
+              if (this.kanban) this.kanban.updateCard(data);
               this.kanban.refresh();
+
             }
             this.detectorRef.detectChanges();
           }
@@ -1011,7 +1015,7 @@ export class DealsComponent
     return deal;
   }
   startDeal(data) {
-    this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+    this.codxCmService.startInstance([data.refID,'']).subscribe((resDP) => {
       if (resDP) {
         var datas = [data.recID, resDP[0]];
         this.codxCmService.startDeal(datas).subscribe((res) => {
@@ -1021,6 +1025,7 @@ export class DealsComponent
             this.detailViewDeal.reloadListStep(resDP[1]);
             this.notificationsService.notifyCode('SYS007');
             this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.detectorRef.detectChanges();
         });

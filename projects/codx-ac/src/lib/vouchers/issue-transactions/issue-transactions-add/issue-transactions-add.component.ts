@@ -58,12 +58,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     entityName: '',
   };
   gridHeight: number;
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -268,6 +262,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   /** Update từ Front End */
   updateFromFrontEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
         this.costAmt_Change(e.data);
@@ -279,10 +274,13 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         e.data.note = e.itemData.ReasonName;
         break;
     }
+    this.grvVouchersLine.endProcess();
   }
 
   /** Update từ Back End */
   updateFromBackEnd(e: any) {
+    this.grvVouchersLine.startProcess();
+    e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -320,10 +318,14 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+            this.grvVouchersLine.endProcess();
           }
         });
     }
-
+    else
+    {
+      this.grvVouchersLine.endProcess();
+    }
   }
 
   /** Nhận các event mà lưới trả về */
@@ -407,7 +409,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.form.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.form.save(null, 0, '', 'SYS006', true)
+    this.form.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
@@ -415,17 +417,27 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.form.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        if (isclose) {
+        else if (isclose) {
           if (res?.save?.data) {
+            this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
-              data: res.save,
+              data: res.save.data,
             });
           }
-          if (res?.update?.data) {
+          else if (res?.update?.data) {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
-              data: res.update,
+              data: res.update.data,
+            });
+          }
+          else
+          {
+            this.notification.notifyCode('SYS007');
+            this.dialog.close({
+              update: true,
+              data: res,
             });
           }
         }
@@ -442,6 +454,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
+                this.notification.notifyCode('SYS006');
                 this.detectorRef.detectChanges();
               }
             });

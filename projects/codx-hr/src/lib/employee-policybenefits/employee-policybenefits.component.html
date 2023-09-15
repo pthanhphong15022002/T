@@ -33,7 +33,7 @@
       </span>
     </div>
 
-    <div class="w-15 min-w-150px px-2">
+    <div class="w-15 min-w-150px px-2 d-flex justify-content-end">
       <span
         [innerHTML]="
           data?.fixedAmt | formatvalue : view.formModel : 'fixedAmt' | async
@@ -43,7 +43,7 @@
     </div>
 
     <div class="w-20 min-w-150px px-2">
-      <div class="d-flex align-items-center tooltip-benefits">
+      <div class="d-flex align-items-center justify-content-end tooltip-benefits">
         <span>{{ data.percentage }}</span>
         <div class="ms-2" *ngIf="data.hasIncludeBenefits == 1">
           <i class="text-hover-primary icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
@@ -52,7 +52,7 @@
     </div>
     <ng-template #toolTipBenefits>
     <div class="d-flex flex-column py-2 ps-2 min-w-350px bg-body">
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center d-flex justify-content-end">
         <codx-label class="text-dark fw-bold me-2"
         name="lblPercentageOnHover"
         [formModel]="view.formModel"
@@ -198,7 +198,7 @@
         [default]="'Chính sách'"
       ></codx-label>
     </div>
-    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
+    <div class="w-15 min-w-150px p-3 fw-bold text-dark text-right">
       <codx-label
         [formModel]="view.formModel"
         name="lblALStandard"
@@ -207,10 +207,13 @@
     </div>
     <div class="w-20 min-w-150px p-3 fw-bold text-dark">
       <codx-label
-        [formModel]="view.formModel"
-        name="lblPercentage"
-        [default]="'Tỷ lệ (%)'"
-      ></codx-label>
+          [formModel]="view.formModel"
+          name="lblPercentage"
+          [default]="'Tỷ lệ (%)'"
+        ></codx-label>
+      <!-- <div class="d-flex justify-content-end">
+        
+      </div> -->
     </div>
     <div class="w-25 min-w-300px p-3 fw-bold text-dark">
       <codx-label
