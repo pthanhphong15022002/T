@@ -121,37 +121,40 @@ export class LoginDefaultComponent extends UIComponent {
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
-            if (z.data.isLg2FA == '') {
-              this.authService.setLogin(z.data?.user);
-              this.realHub.stop();
-              window.location.href = z.data?.host + z.data?.tenant;
-            } else {
-              let user = JSON.parse(z.data.user);
-              let objData = {
-                data: {
-                  data: {
-                    email: user.Email,
-                    ...user,
-                  },
-                },
-                login2FA: z.data.isLg2FA,
-                hubConnectionID: this.hubConnectionID,
-              };
-
-              let lg2FADialog = this.callfc.openForm(
-                Login2FAComponent,
-                '',
-                400,
-                600,
-                '',
-                objData
-              );
-              lg2FADialog.closed.subscribe((lg2FAEvt) => {
+            if (z.data?.hubConnection == this.hubConnectionID) {
+              if (z.data.isLg2FA == '') {
                 this.authService.setLogin(z.data?.user);
                 this.realHub.stop();
                 window.location.href = z.data?.host + z.data?.tenant;
-              });
+              } else {
+                let user = JSON.parse(z.data.user);
+                let objData = {
+                  data: {
+                    data: {
+                      email: user.Email,
+                      ...user,
+                    },
+                  },
+                  login2FA: z.data.isLg2FA,
+                  hubConnectionID: this.hubConnectionID,
+                };
+  
+                let lg2FADialog = this.callfc.openForm(
+                  Login2FAComponent,
+                  '',
+                  400,
+                  600,
+                  '',
+                  objData
+                );
+                lg2FADialog.closed.subscribe((lg2FAEvt) => {
+                  this.authService.setLogin(z.data?.user);
+                  this.realHub.stop();
+                  window.location.href = z.data?.host + z.data?.tenant;
+                });
+              }
             }
+            
           }
         });
       }

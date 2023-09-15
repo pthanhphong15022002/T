@@ -160,7 +160,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
               res?.Role?.headerText ?? this.placeholderRole;
           });
 
-        let arrValue = JSON.parse(this.customField.dataValue);
+        let arrValue = '';
+        if (!this.customField.dataValue)
+          arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         this.codxShareSv.listContactBehavior.subscribe((element) => {
           if (element != null) {
