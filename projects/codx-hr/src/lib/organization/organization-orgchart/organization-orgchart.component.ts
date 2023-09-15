@@ -194,6 +194,7 @@ export class OrganizationOrgchartComponent {
   cursorItem: number | string = '';
 
   @Input() formModel: FormModel;
+  @Input() activeMFC;
   @Input() orgUnitID: string = '';
   @Input() itemAdded;
   @Input() formModelEmployee;
