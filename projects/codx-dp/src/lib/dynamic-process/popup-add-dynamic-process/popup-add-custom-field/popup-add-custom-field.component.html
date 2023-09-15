@@ -372,7 +372,8 @@
                 type="text"
                 name="textEditValue"
                 matInput
-                [value]="item.value"
+                autofocus
+                [value]="item.textValue"
                 (blur)="onEditTextValue(textEditValue, item.value)"
                 placeholder="Nhập giá trị value"
                 (keydown.enter)="onEditTextValue(textEditValue, item.value)"
@@ -385,10 +386,10 @@
             <input
               class="form-control no-border text-gray-600"
               #textAddValue
+              id="textAddValue"
               type="text"
               name="textAddValue"
               matInput
-              autofocus
               (blur)="onAddTextValue(textAddValue)"
               placeholder="Nhập giá trị value"
               (keydown.enter)="onAddTextValue(textAddValue)"

@@ -60,7 +60,7 @@ export class DP_Processes {
   delete: boolean = true;
   deleted: boolean = false;
   stepsColorMode: boolean;
-  instanceProgressControl: boolean ;
+  instanceProgressControl: boolean;
 }
 
 export class DP_Processes_Permission {
@@ -614,5 +614,30 @@ export class DP_Activities_Roles {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
+  modifiedBy: string;
+}
+
+export class tempVllDP {
+  createdBy: string;
+  createdOn: Date;
+  customize: string;
+  isUserDefined: boolean;
+  multiSelect: boolean;
+  version: string;
+  note: string;
+  rowSize: string;
+  displayRows: string;
+  displayColumns: string;
+  modifiedOn: Date;
+  columnWidth: string;
+  textColorSet: string;
+  colorSet: string;
+  iconSet: string;
+  customValues: string;
+  defaultValues: string;
+  listType: string;
+  listName: string;
+  language: string;
+  returnValue: string;
   modifiedBy: string;
 }
