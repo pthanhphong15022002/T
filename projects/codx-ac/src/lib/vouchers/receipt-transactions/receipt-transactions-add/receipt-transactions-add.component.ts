@@ -269,6 +269,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   /** Update từ Front End */
   updateFromFrontEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
         this.costAmt_Change(e.data);
@@ -280,10 +281,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         e.data.note = e.itemData.ReasonName;
         break;
     }
+    this.grvVouchersLine.endProcess();
   }
 
   /** Update từ Back End */
   updateFromBackEnd(e: any) {
+    this.grvVouchersLine.startProcess();
+    e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -321,10 +325,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+            this.grvVouchersLine.endProcess();
           }
         });
     }
-
+    else
+    {
+      this.grvVouchersLine.endProcess();
+    }
   }
 
   /** Nhận các event mà lưới trả về */
@@ -420,13 +428,20 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           if (res?.save?.data) {
             this.dialog.close({
               update: true,
-              data: res.save,
+              data: res.save.data,
             });
           }
-          if (res?.update?.data) {
+          else if (res?.update?.data) {
             this.dialog.close({
               update: true,
-              data: res.update,
+              data: res.update.data,
+            });
+          }
+          else
+          {
+            this.dialog.close({
+              update: true,
+              data: res,
             });
           }
         }

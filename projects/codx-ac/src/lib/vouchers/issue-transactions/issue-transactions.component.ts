@@ -298,7 +298,7 @@ export class IssueTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data']?.data;
+                this.itemSelected = res.event['data'];
                 this.loadDatadetail(this.itemSelected);
               }
             }
@@ -341,7 +341,7 @@ export class IssueTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data']?.data;
+                this.itemSelected = res.event['data'];
                 this.loadDatadetail(this.itemSelected);
               }
             }
@@ -389,7 +389,7 @@ export class IssueTransactionsComponent extends UIComponent {
           .subscribe((res) => {
             if (res.event != null) {
               if (res.event['update']) {
-                this.itemSelected = res.event['data']?.data;
+                this.itemSelected = res.event['data'];
                 this.loadDatadetail(this.itemSelected);
               }
             }

@@ -166,36 +166,58 @@
         >
         </codx-input>
       </div>
-      <ng-container *ngIf="field.dataType == 'L'">
+      <ng-container *ngIf="field.dataFormat == 'C' || field.dataFormat == 'V'">
         <div class="form-group">
-          <codx-label
-            fiedName="RefType"
-            [formModel]="form.formModel"
-            [default]="'Danh sách tùy chọn'"
-          >
-          </codx-label>
+          <div class="d-flex justify-content-between">
+            <div class="'justify-content-start">
+              <codx-label
+                fiedName="RefType"
+                [formModel]="form.formModel"
+                [default]="'Danh sách tùy chọn'"
+              >
+              </codx-label>
+            </div>
+            <div class="justify-content-end" *ngIf="field.dataFormat == 'V'">
+              <button
+                [ngbTooltip]="hoverAddVll"
+                placement="right left top bottom"
+                container="body"
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="clickAddVll()"
+              >
+                <i class="icon-add_box icon-16"></i>
+              </button>
+              <ng-template #hoverAddVll>
+                <codx-label
+                  name="bttAddVll"
+                  [formModel]="form.formModel"
+                  [default]="'Thêm vll tùy chọn'"
+                >
+                </codx-label>
+              </ng-template>
+            </div>
+          </div>
           <codx-input
+            *ngIf="field.dataFormat == 'C'"
+            type="combobox"
             field="refType"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            refType="3"
+            refValue="DPComboboxList"
+            [crrValue]="field?.refType"
             (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label
-            fiedName="RefValue"
-            [formModel]="form.formModel"
-            [default]="'Danh sách tùy chọn'"
-          >
-          </codx-label>
-          <codx-input
-            field="refValue"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+          ></codx-input>
+          <ng-container *ngIf="field.dataFormat == 'V'">
+            <ejs-combobox
+              [enabled]="enabled"
+              [dataSource]="listVll"
+              [fields]="fieldsVll"
+              [value]="field.refType"
+              [allowFiltering]="true"
+              [placeholder]="grvSetup['refType']?.description"
+              (valueChange)="cbxChange($event)"
+            ></ejs-combobox>
+          </ng-container>
         </div>
       </ng-container>
 
