@@ -47,4 +47,11 @@ export class DashboardComponent extends WSUIComponent{
       this.listDashboard = result;
     }
   }
+  selectedChange(data:any)
+  {
+    this.codxService.navigate("","/ws/"+data.moduleID.toLowerCase()+"/dashboard/"+data.reportID);
+    this.codxWsService.functionID = data.reportID;
+    data.functionID = data.reportID;
+    this.codxWsService.listBreadCumb.push(data);
+  }
 }
