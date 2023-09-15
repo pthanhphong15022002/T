@@ -97,6 +97,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    this.getHRParameters();
     if (this.action === 'edit') {
       this.api
         .execSv(
@@ -376,7 +377,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       }
     }
     if (this.data?.jobLevel) {
-      if (this.cbxJobLevel?.ComponentCurrent?.dataService?.data.findIndex(x => x.PositionID == this.data.positionID) < 0) {
+      if (this.cbxJobLevel?.ComponentCurrent?.dataService?.data.findIndex(x => x.JobLevel == this.data.jobLevel) < 0) {
         this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
         return false;
       }
@@ -508,6 +509,12 @@ export class PopupAddEmployeeComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+
+  getHRParameters(){
+    this.api.execSv("SYS", "ERM.Business.SYS", "SettingValuesBusiness", "GetHRParameterSetting", ["HRParameters", "1"])
+    .subscribe(res => console.log(res ));
   }
 
   // getOrgNote() {
