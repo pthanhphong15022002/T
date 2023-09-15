@@ -489,7 +489,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     let oOffsetAccount = this.acService.getCacheValue('account',oLine.offsetAcctID);
     switch (event.field.toLowerCase()) {
       case 'accountid':
-        this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
+        this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
         break;
       case 'offsetacctid':
         if (oOffsetAccount) {
@@ -498,7 +498,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           oLine.isBrigdeAcct =
             (oOffsetAccount as any).accountType == '5' ? true : false;
         }
-        this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
+        this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
         break;
       case 'dr':
         this.eleGridCashPayment.startProcess();
@@ -509,7 +509,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         setTimeout(() => {
           oLine = this.getValueByExchangeRate(this.formCashPayment.data, oLine, true);
           if (this.journal.entryMode == '2') {
-            this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
+            this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
           }
           this.detectorRef.detectChanges();
           this.eleGridCashPayment.endProcess();
@@ -524,7 +524,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         setTimeout(() => {
           oLine = this.getValueByExchangeRate(this.formCashPayment.data, oLine, false);
           if (this.journal.entryMode == '2') {
-            this.lockAndRequireFields(oLine, oAccount, oOffsetAccount);
+            this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAccount);
           }
           this.detectorRef.detectChanges();
           this.eleGridCashPayment.endProcess();
@@ -675,7 +675,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     data.index = this.eleGridCashPayment.dataSource.length;
     let oAccount = this.acService.getCacheValue('account', data.accountID);
     let oOffsetAccount = this.acService.getCacheValue('account',data.offsetAcctID);
-    this.lockAndRequireFields(data, oAccount, oOffsetAccount);
+    this.setConstraintGridCashPayment(data, oAccount, oOffsetAccount);
     this.eleGridCashPayment.addRow(data,this.eleGridCashPayment.dataSource.length);
   }
 
@@ -1067,7 +1067,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       oLine.dr = dRAmt;
       oLine = this.getValueByExchangeRate(this.formCashPayment.data,oLine,true);
     }
-    this.lockAndRequireFields(oLine, oAccount, oOffsetAcct);
+    //this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAcct);
     return oLine;
   }
 
@@ -1096,7 +1096,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param oOffsetAcct
    * @returns
    */
-  lockAndRequireFields(oLine, oAccount, oOffsetAcct) {
+  setConstraintGridCashPayment(oLine, oAccount, oOffsetAcct) {
     if ((oAccount == null && oOffsetAcct == null) || (this.journal.entryMode == '2' && oLine.dr == 0 && oLine.cr == 0)) {
       return;
     } else {
@@ -1444,9 +1444,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           element.focus();
         }, 100);
         break;
-      // case 'beginEdit':
-      //   this.eleGridCashPayment.saveValidator = this.validate;
-      //   break;
+      case 'beginEdit':
+        let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
+        let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
+        this.setConstraintGridCashPayment(event?.data,oAccount,oOffsetAccount);
+        break;
     }
   }
   // validate(data:any){
