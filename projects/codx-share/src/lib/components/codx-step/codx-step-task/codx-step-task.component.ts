@@ -2243,13 +2243,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let countTask = group?.task?.length;
     if (countTask > 0) {
       let sumProgress = 0;
-      let check = false;
       const processTask = (task) => {
         task.progress = 100;
         task.status = '3';
         task.actualEnd = new Date();
         progressData.push(this.setProgressOutput(task, null));
-        check = true;
       };
 
       if (isRequired) {
@@ -2266,7 +2264,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
           sumProgress += task.progress;
         });
-        if (check && group?.recID) {
+        if (group?.recID) {
           group.progress = Number((sumProgress / countTask).toFixed(2));
           progressData.push(this.setProgressOutput(null, group));
         }
