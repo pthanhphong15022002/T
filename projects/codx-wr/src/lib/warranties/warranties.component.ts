@@ -675,7 +675,7 @@ export class WarrantiesComponent
               this.updateStatus,
               '',
               500,
-              200
+              350
             );
             this.dialogStatus.closed.subscribe((ele) => {
               if (ele && ele?.event) {

@@ -2237,6 +2237,7 @@
                                 [width]="25"
                                 [objectId]="task?.owner"
                                 objectType="AD_Users"
+                                [objectName]="getRoleName(task)"
                               ></codx-img>
                               <!-- <codx-imgs 
                                 class="me-2 d-flex align-items-center"
@@ -2280,6 +2281,17 @@
                                   [default]="'Giờ'"
                                 >
                                 </codx-label>
+                              </div>
+                              <div *ngIf="task?.fieldID">
+                                <codx-label
+                                  class="text-gray-600 label-colon"
+                                  fiedName="fields"
+                                  [formModel]="formModelStep"
+                                >
+                                </codx-label>
+                                <span  class="text-gray-600">
+                                  {{getFieldInTask(task?.fieldID)}}
+                                </span>
                               </div>
                             </div>
                           </div>

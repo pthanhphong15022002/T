@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
+import { CodxAcService } from '../../codx-ac.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-advance-payment-add',
@@ -20,7 +22,8 @@ export class AdvancePaymentAddComponent extends UIComponent
   headerText: string = '';
   company: any;
   logosrc: any;
-  columns: Array<any> = [];
+  dataCategory: any;
+  formType: any;
   dialogRef!: DialogRef;
   advancedPayment: AdvancedPayment;
   fmAdvancedPaymentLines: FormModel = {
@@ -31,6 +34,8 @@ export class AdvancePaymentAddComponent extends UIComponent
   constructor(
     inject: Injector,
     private notification: NotificationsService,
+    private acService: CodxAcService,
+    private shareService: CodxShareService,
     private dt: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -40,6 +45,7 @@ export class AdvancePaymentAddComponent extends UIComponent
     this.advancedPayment = dialogData.data?.advancedPayment;
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
+    this.formType = dialogData.data?.formType;
   }
 
   onInit(): void {
@@ -80,6 +86,17 @@ export class AdvancePaymentAddComponent extends UIComponent
     return new Date(date).toLocaleDateString();
   }
 
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteLine(data);
+        break;
+      case 'SYS04':
+        this.copyLine(data);
+        break;
+    }
+  }
+
   onSave(){
     if (this.form.validation())
       return;
@@ -88,20 +105,22 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.dialogRef.dataService.save(null, 0, '', 'SYS006', true)
+    this.dialogRef.dataService.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.advancedPayment.status = '7';
           this.form.formGroup.patchValue({ status: this.advancedPayment.status });
         }
-        if (res?.save?.data) {
+        else if (res?.save?.data) {
+          this.notification.notifyCode('SYS006');
           this.dialogRef.close({
             update: true,
             data: res.save.data,
           });
         }
         else if (res?.update?.data) {
+          this.notification.notifyCode('SYS007');
           this.dialogRef.close({
             update: true,
             data: res.update.data,
@@ -109,12 +128,76 @@ export class AdvancePaymentAddComponent extends UIComponent
         }
         else
         {
+          this.notification.notifyCode('SYS007');
           this.dialogRef.close({
             update: true,
             data: res,
           });
         }
         this.dt.detectChanges();
+      });
+  }
+
+  onSaveAndRelease(){
+    if (this.form.validation())
+      return;
+    if (this.advancedPayment.status == '7') {
+      this.advancedPayment.status = '1';
+      this.form.formGroup.patchValue({ status: this.advancedPayment.status });
+    }
+
+    this.dialogRef.dataService.save(null, 0, '', '', true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res?.update?.error || res?.save?.error) {
+          this.advancedPayment.status = '7';
+          this.form.formGroup.patchValue({ status: this.advancedPayment.status });
+        }
+        else
+        {
+          if (res?.save?.data) {
+            this.onRelease('', res.save.data);
+          }
+          else if (res?.update?.data) {
+            this.onRelease('', res.update.data);
+          }
+        }
+      });
+  }
+  
+  onRelease(text: any, data: any){
+    this.acService
+      .getCategoryByEntityName(this.form.formModel.entityName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.dataCategory = res;
+        this.shareService
+          .codxRelease(
+            'AC',
+            data.recID,
+            this.dataCategory.processID,
+            this.form.formModel.entityName,
+            this.form.formModel.funcID,
+            '',
+            '',
+            ''
+          )
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((result: any) => {
+            if (result?.msgCodeError == null && result?.rowCount) {
+              data.status = result?.returnStatus;
+              this.dialogRef.dataService.updateDatas.set(data['_uuid'], data);
+              this.dialogRef.dataService
+                .save(null, 0, '', '', false)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res: any) => {
+                  if (res && !res.update.error) {
+                    this.notification.notifyCode('AC0029', 0, text);
+                    this.dialogRef.close();
+                  }
+                });
+            } else this.notification.notifyCode(result?.msgCodeError);
+          });
       });
   }
 
@@ -154,6 +237,28 @@ export class AdvancePaymentAddComponent extends UIComponent
       });
   }
 
+  copyLine(data){
+    let idx;
+    this.api
+      .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SetDefaultAsync', [
+        this.advancedPayment,
+        data,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          idx = this.grvAdvancedPaymentLines.dataSource.length;
+          res.rowNo = idx + 1;
+          res.recID = Util.uid();
+          this.grvAdvancedPaymentLines.addRow(res, idx);
+        }
+      });
+  }
+
+  deleteLine(data){
+    this.grvAdvancedPaymentLines.deleteRow(data)
+  }
+
   onEventAction(e: any) {
     switch (e.type) {
       case 'autoAdd':
@@ -178,8 +283,19 @@ export class AdvancePaymentAddComponent extends UIComponent
     }
   }
 
-  @HostListener('click', ['$event'])
+  hideMF(event) {
+    var mf = event.filter(
+      (x) => x.functionID != 'SYS02' && x.functionID != 'SYS04'
+    );
+    mf.forEach((element) => {
+      element.disabled = true;
+    });
+  }
+
+  @HostListener('click', ['$event.target'])
   onClick(e) {
+    if(this.advancedPayment)
+      return;
     if (
       e.target.closest('.e-grid') == null &&
       e.target.closest('.e-popup') == null &&

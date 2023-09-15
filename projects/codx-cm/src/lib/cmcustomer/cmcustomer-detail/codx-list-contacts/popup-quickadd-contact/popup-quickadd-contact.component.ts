@@ -146,6 +146,9 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   //#region save
   beforeSave(type) {
+    if(this.objectType == '4'){
+      this.data.refID = this.data.refID == null || this.data.refID?.trim() == '' ? Util.uid() : this.data.refID;
+    }
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
       this.data.isDefault = this.isDefault;
@@ -168,7 +171,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.dialog.formModel.funcID,
       this.dialog.formModel.entityName,
     ];
-    if(this.data?.role == null || this.data?.role?.trim() == ''){
+    if (this.data?.role == null || this.data?.role?.trim() == '') {
       this.data.role = null;
     }
     if (
@@ -202,9 +205,9 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectType = this.objectType;
       this.data.objectName = this.objectName;
       this.data.assign = true;
-			this.data.delete = true;
-			this.data.write = true;
-			this.data.share = true;
+      this.data.delete = true;
+      this.data.write = true;
+      this.data.share = true;
       if (type == 'save') {
         this.dialog.close(this.data);
       } else {
@@ -250,7 +253,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
-    if(this.data.contactName == null || this.data.contactName.trim() == ''){
+    if (this.data.contactName == null || this.data.contactName.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -402,12 +405,12 @@ export class PopupQuickaddContactComponent implements OnInit {
       } else {
         this.isDefault = true;
       }
-      if(this.isStep){
+      if (this.isStep) {
         this.codxShareSv.listContactBehavior.next({
           data: data,
           type: 'addAndSave',
         });
-      }else{
+      } else {
         this.cmSv.contactSubject.next(this.listContacts);
       }
       // this.contactTemp.lstContactEmit.emit(this.listContacts);
