@@ -463,6 +463,7 @@ export class EmployeeBenefitComponent extends UIComponent {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
         } else if (actionType == 'copy') {
+          console.log(res.event);
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});

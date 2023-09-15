@@ -188,7 +188,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.benefitObj.employeeID = this.employId;
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(false)
+      this.form.validation(false);
       return;
     }
 
@@ -219,10 +219,12 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (this.useForQTNS) {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            p[0].emp = this.employeeObj;
+            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
             if (p[1]) {
-              p[1].emp = this.employeeObj;
+              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
             }
+
+            console.log(p);
             this.dialog && this.dialog.close(p);
           }
         } else {
