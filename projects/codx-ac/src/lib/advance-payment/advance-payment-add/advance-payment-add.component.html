@@ -245,6 +245,8 @@
   <codx-mfunc
     [dataItem]="data"
     [formModel]="form.formModel"
+    (changeDataMF)="hideMF($event)"
+    (clickMF)="clickMF($event, data)"
     [isBookMark]="true"
     type="view"
   ></codx-mfunc>
