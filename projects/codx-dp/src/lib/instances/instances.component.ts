@@ -803,6 +803,7 @@ export class InstancesComponent
                     data: data,
                   });
                 }
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
                 this.detectorRef.detectChanges();
               }
             });

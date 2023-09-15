@@ -2894,6 +2894,7 @@
         </div>
         <div class="w-20px h-30px org-mfunc">
           <codx-mfunc
+            *ngIf="activeMFC"
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, itemConfig.context.data)"
             [isBookMark]="false"
