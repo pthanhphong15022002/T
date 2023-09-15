@@ -99,7 +99,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
-    //this.getHRParameters();
+    this.getHRParameters();
     if (this.action === 'edit') {
       this.api
         .execSv(
@@ -164,6 +164,7 @@ export class PopupAddEmployeeComponent implements OnInit {
               .subscribe((posInfo: any) => {
                 if (posInfo) {
                   if (posInfo.jobLevel) {
+                    this.hasAutoFillJobLevel = true;
                     this.data['jobLevel'] = posInfo.jobLevel;
                     this.form.formGroup.patchValue({
                       jobLevel: this.data.jobLevel,
@@ -183,14 +184,15 @@ export class PopupAddEmployeeComponent implements OnInit {
         // case 'orgUnitID':
         // this.getOrgNote();
         // break;
-        //case 'jobLevel':
-          // if (value && this.hasChangedData) {
-          //   if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0) {
-          //     this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
-          //     return;
-          //   }
-          // }
-          // break;
+        case 'jobLevel':
+          if (value && this.hasChangedData) {
+            if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0 && !this.hasAutoFillJobLevel) {
+              this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
+              return;
+            }
+            this.hasAutoFillJobLevel = false;
+          }
+          break;
         case 'issuedOn':
           if (!this.hasChangedData) break;
           if (this.data.issuedOn >= new Date().toJSON()) {
@@ -293,8 +295,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       switch (event?.ControlName) {
         case 'address':
           if (this.oldAddress != this.data['address']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', 
-            [this.data['address'], this.settingValues.ControlInputAddress? this.settingValues.ControlInputAddress : 0])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['address'], 1])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -307,6 +308,7 @@ export class PopupAddEmployeeComponent implements OnInit {
                     wardID: this.data['wardID'],
                   }
                   );
+                  this.validateAddress('address', this.settingValues.ControlInputAddress)
                 }
               })
             this.oldAddress = this.data['address'];
@@ -314,8 +316,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           break;
         case 'tAddress':
           if (this.oldTAddress != this.data['tAddress']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', 
-            [this.data['tAddress'], this.settingValues?.ControlInputAddress? this.settingValues.ControlInputAddress : 0])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['tAddress'], 1])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -326,8 +327,8 @@ export class PopupAddEmployeeComponent implements OnInit {
                     tProvinceID: this.data['tProvinceID'],
                     tDistrictID: this.data['tDistrictID'],
                     tWardID: this.data['tWardID'],
-                  }
-                  );
+                  });
+                  this.validateAddress('tAddress', this.settingValues.ControlInputAddress)
                 }
               })
             this.oldTAddress = this.data['tAddress'];
@@ -336,13 +337,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       }
     }
   }
-  // validate age > 18
-  validateBirthday(birthday: any) {
-    let ageDifMs = Date.now() - Date.parse(birthday);
-    let ageDate = new Date(ageDifMs);
-    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
-    return age >= 18;
-  }
+
   //click Button Save
   clickBtnSave() {
     if (this.checkValidate()) {
@@ -353,6 +348,73 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
 
   //check validate
+  validateAddress(fieldName: string, addressLevel = '0') {
+    switch (fieldName) {
+      case 'tAddress':
+        if (this.data['tAddress']?.length < 0 || this.data['tAddress'] == null) return true;
+        if (addressLevel == '0') {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '1' && !this.data['tProvinceID']) {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '2' && (!this.data['tProvinceID'] || !this.data['tDistrictID'])) {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '3' && (!this.data['tProvinceID'] || !this.data['tDistrictID'] || !this.data['tWardID'])) {
+          console.log(false);
+          return false;
+        };
+        return true;
+      case 'address':
+        if (this.data['address']?.length < 0 || this.data['address'] == null) return true
+        if (addressLevel == '0') {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '1' && !this.data['provinceID']) {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '2' && (!this.data['provinceID'] || !this.data['districtID'])) {
+          console.log(false);
+          return false;
+        };
+        if (addressLevel == '3' && (!this.data['provinceID'] || !this.data['districtID'] || !this.data['wardID'])) {
+          console.log(false);
+          return false;
+        };
+        return true;
+    }
+    return true;
+  }
+  validateEmail(email: string, fieldName) {
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
+    if (regex.test(email) == false) {
+      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
+      return false;
+    }
+    return true;
+  }
+  validatePhoneNumber(phone, fieldName) {
+    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    if (re.test(phone) == false) {
+      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
+      return false;
+    }
+    return true;
+  }
+  validateBirthday(birthday: any) {
+    let ageDifMs = Date.now() - Date.parse(birthday);
+    let ageDate = new Date(ageDifMs);
+    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age >= 18;
+  }
   checkValidate() {
     if (this.form.formGroup.invalid) {
       let arrFieldRequire = Object.values(this.grvSetUp).filter(
@@ -395,7 +457,12 @@ export class PopupAddEmployeeComponent implements OnInit {
       if (!this.validatePhoneNumber(this.data.mobile, 'Mobile'))
         return false;
     }
-
+    if (!this.validateAddress('address', this.settingValues.ControlInputAddress)){
+      return false
+    }
+    if (!this.validateAddress('tAddress', this.settingValues.ControlInputAddress)){
+      return false
+    }
     if (this.data?.email)
       if (!this.validateEmail(this.data.email, 'Email'))
         return false;
@@ -496,30 +563,12 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
-  validateEmail(email: string, fieldName) {
-    const regex = new RegExp(
-      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
-    );
-    if (regex.test(email) == false) {
-      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
-      return false;
-    }
-    return true;
-  }
-  validatePhoneNumber(phone, fieldName) {
-    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-    if (re.test(phone) == false) {
-      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
-      return false;
-    }
-    return true;
-  }
 
 
   getHRParameters() {
     this.api.execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetHRParameterSetting")
-      .subscribe(res => { 
-        if (res) this.settingValues = JSON.parse(res.toString()) 
+      .subscribe(res => {
+        if (res) this.settingValues = JSON.parse(res.toString())
       });
   }
 
