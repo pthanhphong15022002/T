@@ -45,7 +45,6 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true })
-
   templateUpdateStatus: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
@@ -199,6 +198,17 @@ export class EmployeeContractComponent extends UIComponent {
               ''
             )
             .subscribe();
+
+          //Update renewStatus
+          this.api
+            .execSv(
+              'HR',
+              'ERM.Business.HR',
+              'EContractsBusiness',
+              'UpdateRenewStatusAsync',
+              [data]
+            )
+            .subscribe();
         }
 
         //Render new data when update new status on view detail
@@ -308,6 +318,7 @@ export class EmployeeContractComponent extends UIComponent {
               res[1].inforEmployee = data?.inforEmployee;
               this.view.dataService.update(res[1]).subscribe();
             }
+            this.df.detectChanges();
           });
         break;
       case 'SYS04': //copy
@@ -360,7 +371,7 @@ export class EmployeeContractComponent extends UIComponent {
       headerText: moreFC.text,
       reportID: moreFC.functionID,
       parameters: parameters,
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     this.callfc.openForm(
       CodxListReportsComponent,
@@ -594,6 +605,17 @@ export class EmployeeContractComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
+          //Update renewStatus
+          this.api
+            .execSv(
+              'HR',
+              'ERM.Business.HR',
+              'EContractsBusiness',
+              'UpdateRenewStatusAsync',
+              [data]
+            )
+            .subscribe((res) => console.log(res));
+
           this.codxShareService
             .codxCancel(
               'HR',
