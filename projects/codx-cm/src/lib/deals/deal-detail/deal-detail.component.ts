@@ -181,7 +181,6 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
-        this.lstStepsOld = this.listSteps;
       }
     }
   }
@@ -343,6 +342,7 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        this.lstStepsOld = this.listSteps ?? [];
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       }
