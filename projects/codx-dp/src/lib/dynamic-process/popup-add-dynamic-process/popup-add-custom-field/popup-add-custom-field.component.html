@@ -166,7 +166,12 @@
         >
         </codx-input>
       </div>
-      <ng-container *ngIf="field.dataFormat == 'C' || field.dataFormat == 'V'">
+      <ng-container
+        *ngIf="
+          field.dataType == 'L' &&
+          (field.dataFormat == 'C' || field.dataFormat == 'V')
+        "
+      >
         <div class="form-group">
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">
@@ -192,7 +197,7 @@
                 <codx-label
                   name="bttAddVll"
                   [formModel]="form.formModel"
-                  [default]="'Thêm vll tùy chọn'"
+                  [default]="'Thêm tùy chọn'"
                 >
                 </codx-label>
               </ng-template>
@@ -202,11 +207,11 @@
             *ngIf="field.dataFormat == 'C'"
             type="combobox"
             field="refType"
-            refType="3"
-            refValue="DPComboboxList"
-            [crrValue]="field?.refType"
+            [crrValue]="''"
+            [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
           ></codx-input>
+
           <ng-container *ngIf="field.dataFormat == 'V'">
             <ejs-combobox
               [enabled]="enabled"
@@ -319,5 +324,109 @@
           default="Lưu"
         ></codx-label>
       </button>
-    </div> </ng-template
-></codx-form>
+    </div>
+  </ng-template>
+
+  <ng-template #addVll>
+    <codx-form
+      class="h-100"
+      [headerText]="titleForm"
+      [body]="bodyVll"
+      [footer]="footerVll"
+      [dialog]="dialogVll"
+    >
+    </codx-form>
+    <ng-template #bodyVll>
+      <div class="form-group">
+        <codx-label
+          name="ListName"
+          [formModel]="formModelVll"
+          default="Tên value list"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="listName"
+          [formModel]="formModelVll"
+          (valueChange)="onChangeVll($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="d-flex flex-column form-group mt-3">
+        <codx-label
+          name="inputDefautValue"
+          [formModel]="formModelVll"
+          default="Danh sách lựa chọn"
+        >
+        </codx-label>
+        <ng-container *ngFor="let item of datasVll; index as i">
+          <div class="cursor-pointer form-group">
+            <div class="d-flex text-center">
+              <span>
+                <span class="label-colon" [innerHTML]="i"></span>
+              </span>
+
+              <input
+                class="form-control no-border text-gray-600"
+                #textEditValue
+                type="text"
+                name="textEditValue"
+                matInput
+                [value]="item.value"
+                (blur)="onEditTextValue(textEditValue, item.value)"
+                placeholder="Nhập giá trị value"
+                (keydown.enter)="onEditTextValue(textEditValue, item.value)"
+              />
+            </div>
+          </div>
+        </ng-container>
+        <div *ngIf="showAddVll">
+          <div class="form-group">
+            <input
+              class="form-control no-border text-gray-600"
+              #textAddValue
+              type="text"
+              name="textAddValue"
+              matInput
+              autofocus
+              (blur)="onAddTextValue(textAddValue)"
+              placeholder="Nhập giá trị value"
+              (keydown.enter)="onAddTextValue(textAddValue)"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <codx-label
+            class="label-colon"
+            name="demoVll"
+            [formModel]="formModelVll"
+            default="Xem trước"
+            class="me-4"
+          >
+          </codx-label>
+          <ejs-combobox
+            [enabled]="enabled"
+            [dataSource]="datasVll"
+            [fields]="fieldsResourceVll"
+            [value]="crrValue"
+            [allowFiltering]="false"
+            [placeholder]=""
+          ></ejs-combobox>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #footerVll>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="saveVll()">
+            <codx-label
+              name="Save"
+              [formModel]="formModelVll"
+              default="Lưu"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</codx-form>
