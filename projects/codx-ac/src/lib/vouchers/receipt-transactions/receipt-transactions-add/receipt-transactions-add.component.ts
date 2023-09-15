@@ -418,7 +418,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.form.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        if (isclose) {
+        else if (isclose) {
           if (res?.save?.data) {
             this.notification.notifyCode('SYS006');
             this.dialog.close({

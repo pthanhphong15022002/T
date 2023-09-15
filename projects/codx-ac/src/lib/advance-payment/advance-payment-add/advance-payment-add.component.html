@@ -276,12 +276,13 @@
         </button>
       <div>
         <button
+          *ngIf="formType != 'edit'"
           style="border: 1px solid var(--primary-dark) !important"
           type="button"
           class="btn btn-md btn-light-primary me-2 rounded-15"
-          (keydown.enter)="onSave(); 
+          (keydown.enter)="onSaveAndRelease(); 
           $event.preventDefault()" 
-          (click)="onSave()"
+          (click)="onSaveAndRelease()"
         >
           <div class="d-flex align-items-center">
             <i class="icon-add_to_photos icon-16"></i>

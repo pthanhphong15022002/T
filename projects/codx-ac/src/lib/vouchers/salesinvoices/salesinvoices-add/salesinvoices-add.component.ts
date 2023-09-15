@@ -186,39 +186,31 @@ export class SalesinvoicesAddComponent
     }
   }
 
-  onAfterValidation(o): void {
-    if (
-      this.journal.transLimit &&
-      this.master.totalAmt > this.journal.transLimit
-    ) {
-      this.notiService.notifyCode('AC0016');
-      o.cancle = true;
-    }
-  }
-
   onClickSave(closeAfterSave: boolean): void {
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.master,
-      'AC',
-      'AC_SalesInvoices',
-      this.form,
-      this.form.data._isEdit,
-      () => {
-        this.form.formGroup.patchValue({ status: '1' });
-        this.form.save().subscribe((res: any) => {
-          if (res === false || res.save?.error || res.update?.error) {
+    this.form.formGroup.patchValue({ status: '1' });
+    this.form.save(null, null, null, null, false).subscribe((res: any) => {
+      if (res === false || res.save?.error || res.update?.error) {
+        return;
+      }
+
+      this.api
+        .exec('AC', 'SalesInvoicesBusiness', 'UpdateAsync', [
+          this.master,
+          this.journal,
+        ])
+        .subscribe((master) => {
+          if (!master) {
             return;
           }
 
           if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
             this.dialogRef.close();
           } else {
             this.resetForm();
           }
         });
-      }
-    );
+    });
   }
 
   onClickClose(): void {
@@ -236,52 +228,42 @@ export class SalesinvoicesAddComponent
   }
 
   onClickAddRow(): void {
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.master,
-      'AC',
-      'AC_SalesInvoices',
-      this.form,
-      this.form.data._isEdit,
-      () => {
-        // save master before adding a new row
-        this.form.save(null, null, null, null, false).subscribe((res) => {
-          if (res === false || res.save?.error || res.update?.error) {
-            return;
-          }
-
-          if (this.journal.addNewMode === '1') {
-            this.grid.addRow(
-              this.createNewSalesInvoiceLine(),
-              this.grid.dataSource.length
-            );
-          } else {
-            // const dialogModel = new DialogModel();
-            // dialogModel.FormModel = this.fmSalesInvoicesLines;
-            // dialogModel.DataService = this.detailService;
-            // this.callfc
-            //   .openForm(
-            //     SalesinvoiceslinesAddComponent,
-            //     'This param is not working',
-            //     500,
-            //     700,
-            //     '',
-            //     {
-            //       formType: 'add',
-            //       index: this.grid.dataSource.length,
-            //     },
-            //     '',
-            //     dialogModel
-            //   )
-            //   .closed.subscribe(({ event }) => {
-            //     if (event?.length > 0) {
-            //       this.tableLineDetail.grid.refresh();
-            //     }
-            //   });
-          }
-        });
+    // save master before adding a new row
+    this.form.save(null, null, null, null, false).subscribe((res) => {
+      if (res === false || res.save?.error || res.update?.error) {
+        return;
       }
-    );
+
+      if (this.journal.addNewMode === '1') {
+        this.grid.addRow(
+          this.createNewSalesInvoiceLine(),
+          this.grid.dataSource.length
+        );
+      } else {
+        // const dialogModel = new DialogModel();
+        // dialogModel.FormModel = this.fmSalesInvoicesLines;
+        // dialogModel.DataService = this.detailService;
+        // this.callfc
+        //   .openForm(
+        //     SalesinvoiceslinesAddComponent,
+        //     'This param is not working',
+        //     500,
+        //     700,
+        //     '',
+        //     {
+        //       formType: 'add',
+        //       index: this.grid.dataSource.length,
+        //     },
+        //     '',
+        //     dialogModel
+        //   )
+        //   .closed.subscribe(({ event }) => {
+        //     if (event?.length > 0) {
+        //       this.tableLineDetail.grid.refresh();
+        //     }
+        //   });
+      }
+    });
   }
 
   @HostListener('click', ['$event.target'])
@@ -443,6 +425,8 @@ export class SalesinvoicesAddComponent
       ...this.defaultLineData,
       ...(copiedData || {}),
       recID: Util.uid(),
+      lotID: Util.uid(),
+      idiMID: Util.uid(),
       idiM4: this.master.warehouseID,
       createdOn: new Date(),
     };
