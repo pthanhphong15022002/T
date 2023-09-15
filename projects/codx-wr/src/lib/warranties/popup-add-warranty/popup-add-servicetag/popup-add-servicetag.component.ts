@@ -61,6 +61,11 @@ export class PopupAddServicetagComponent implements OnInit {
   //#region onSave
   async onSave() {
     if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.ServiceTag?.headerText + '"'
+      );
       return;
     }
     let isExit = await firstValueFrom(

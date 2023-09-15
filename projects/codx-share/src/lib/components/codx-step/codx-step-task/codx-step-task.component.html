@@ -62,13 +62,26 @@
       </codx-mfunc>
     </div>
     <div class="d-flex align-items-center ms-5">
-      <span
-        class="date text-nowrap me-2 text-gray-700"
-        *ngIf="currentStep?.startDate && currentStep?.endDate"
+      <div
+        #popoverTooltip="ngbPopover"
+        [ngbPopover]="tooltipDate"
+        [placement]="'top-left bottom-left'"
+        (mouseenter)="openTooltip(popoverTooltip,currentStep)"
+        (mouseleave)="popoverTooltip.close()"
       >
-        {{ currentStep?.startDate | date : dateFomat }} -
-        {{ currentStep?.endDate | date : dateFomat }}</span
-      >
+        <span
+          class="date text-nowrap text-gray-500"
+          *ngIf="currentStep?.startDate && currentStep?.endDate && currentStep?.stepStatus != '3'"
+        >
+          {{ currentStep?.startDate | date : dateFomat }} -
+          {{ currentStep?.endDate | date : dateFomat }}</span
+        >
+        <span  
+          class="date text-nowrap text-gray-500"
+          *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'">
+            {{ currentStep?.actualEnd | date : dateFomat }}
+        </span>
+      </div>
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
