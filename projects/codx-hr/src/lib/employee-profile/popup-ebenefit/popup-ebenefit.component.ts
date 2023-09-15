@@ -87,7 +87,11 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       if (formModel) {
         this.formModel = formModel;
         this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+          .getFormGroup(
+            this.formModel.formName,
+            this.formModel.gridViewName,
+            this.formModel
+          )
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
@@ -223,8 +227,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
             if (p[1]) {
               p[1].emp = this.employeeObj.emp ?? this.employeeObj;
             }
-
-            console.log(p);
             this.dialog && this.dialog.close(p);
           }
         } else {
@@ -250,7 +252,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
             }
             this.dialog && this.dialog.close(p);
           } else {
-            console.log(p);
             this.dialog && this.dialog.close(this.benefitObj);
           }
         }

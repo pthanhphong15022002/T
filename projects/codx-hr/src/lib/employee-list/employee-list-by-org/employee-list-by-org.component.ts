@@ -166,7 +166,9 @@ export class EmployeeListByOrgComponent {
       }
       if (this.grid) {
         // this.grid.dataService.rowCount = null;
-        //this.grid.dataService.rowCount = 0;
+        this.grid.dataService.rowCount = 0;
+        this.grid.dataService.request.dataValues = this.orgUnitID;
+        this.grid.dataValues = this.orgUnitID;
         //clearInterval(ins);
         this.grid.refresh();
         //clearInterval(ins);
