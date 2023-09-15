@@ -1067,7 +1067,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       oLine.dr = dRAmt;
       oLine = this.getValueByExchangeRate(this.formCashPayment.data,oLine,true);
     }
-    //this.setConstraintGridCashPayment(oLine, oAccount, oOffsetAcct);
     return oLine;
   }
 
@@ -1648,18 +1647,23 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     this.formCashPayment.setRequire(lstDisable);
   }
 
-  // @HostListener('click', ['$event'])
-  // onClick(e) {
-  //   if (
-  //     e.target.closest('.e-grid') == null &&
-  //     e.target.closest('.e-popup') == null &&
-  //     e.target.closest('.edit-value') == null
-  //   ) {
-  //     if (this.eleGridCashPayment && this.eleGridCashPayment.gridRef.isEdit) {
-  //       this.eleGridCashPayment.autoAddRow = false;
-  //       this.eleGridCashPayment.endEdit();
-  //     }
-  //   }
-  // }
+  @HostListener('click', ['$event']) //? focus out grid
+  onClick(e) {
+    if (
+      e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null
+    ) {
+      if (this.eleGridCashPayment && this.eleGridCashPayment.gridRef.isEdit) {
+        this.eleGridCashPayment.endEdit();
+      }
+      if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.gridRef.isEdit) {
+        this.eleGridSettledInvoices.endEdit();
+      }
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices.gridRef.isEdit) {
+        this.eleGridVatInvoices.endEdit();
+      }
+    }
+  }
   //#endregion Function
 }
