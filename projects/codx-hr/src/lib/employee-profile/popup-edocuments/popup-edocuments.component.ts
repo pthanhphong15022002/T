@@ -151,7 +151,6 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt){
-    debugger
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.documentObj);

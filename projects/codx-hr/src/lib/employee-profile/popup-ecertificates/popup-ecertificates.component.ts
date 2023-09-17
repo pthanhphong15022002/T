@@ -41,6 +41,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   headerTextCalendar: any = [];
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
+  changedInForm = false;
   disabledInput = false;
 
 
@@ -288,7 +289,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt){
+    this.changedInForm = true;
     this.certificateObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.certificateObj);
   }
 
   setIssuedPlace() {

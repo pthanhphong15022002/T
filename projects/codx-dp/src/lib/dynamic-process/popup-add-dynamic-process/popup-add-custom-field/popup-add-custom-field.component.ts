@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -10,14 +11,19 @@ import {
   SliderTickRenderedEventArgs,
 } from '@syncfusion/ej2-angular-inputs';
 import {
+  ApiHttpService,
+  AuthStore,
   CacheService,
+  CallFuncService,
   CodxFormComponent,
   DialogData,
+  DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   Util,
 } from 'codx-core';
-import { DP_Steps_Fields } from '../../../models/models';
+import { DP_Steps_Fields, tempVllDP } from '../../../models/models';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -26,6 +32,7 @@ import { DP_Steps_Fields } from '../../../models/models';
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('addVll') addVll: TemplateRef<any>;
 
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -59,10 +66,30 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listVll = [];
   fieldsVll = { text: 'Note', value: 'listName' };
 
+  datasVll = [];
+  fieldsResourceVll = { text: 'textValue', value: 'value' };
+  crrValue = '0';
+  indexEdit = -1;
+  showAddVll = true;
+
+  titleForm = 'Value List'; //tesst
+  dialogVll: DialogRef;
+  formModelVll: FormModel = {
+    formName: 'ValueList',
+    gridViewName: 'grvValueList',
+    entityName: 'SYS_ValueList',
+  };
+  listName: any;
+  fomartVll = 'DPF'; //format
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
     private notiService: NotificationsService,
+    private callfc: CallFuncService,
+    private changeDef: ChangeDetectorRef,
+    private authstore: AuthStore,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -241,5 +268,128 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   clickAddVll() {
     // 'add vll'
+    let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
+    option.zIndex = 3000;
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 500, '');
+  }
+
+  closeDialog() {}
+
+  getNameForm() {
+    //tisnh sau
+    return 'Value List';
+  }
+
+  saveVll() {
+    if (!this.listName || this.listName.trim() == '') {
+      this.notiService.notifyCode('Tên value list không được để trống !');
+      return;
+    }
+    if (this.listName.includes(' ')) {
+      this.notiService.notifyCode(
+        'Tên value list không được chứa khoảng trắng để trống !'
+      );
+      return;
+    }
+
+    if (this.listName.substring(0, 3) != this.fomartVll) {
+      this.notiService.notifyCode(
+        "Tên value list phải có dạng format 'DPF...' !"
+      );
+      return;
+    }
+
+    if (!this.datasVll || this.datasVll?.length == 0) {
+      this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
+      return;
+    }
+    let user = this.authstore.get();
+    var tempVll = new tempVllDP();
+    tempVll.listName = this.listName;
+    tempVll.language = user?.language;
+    tempVll.createdBy = user?.userID;
+    tempVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+    tempVll.version = 'x00.01';
+    let vl = [];
+    if (tempVll.listType == '1') {
+      vl = this.datasVll.map((x) => {
+        return x.textValue;
+      });
+    } else {
+      this.datasVll.forEach((x) => {
+        vl.push(x.value);
+        vl.push(x.textValue);
+      });
+    }
+    tempVll.defaultValues = tempVll.customValues = vl.join(';');
+
+    this.api
+      .execSv(
+        'SYS',
+        'SYS',
+        'ValueListBusiness',
+        'AddValuelistCustormAsync',
+        tempVll
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('Add test Vll thanh cong !');
+          this.dialogVll.close();
+        }
+      });
+  }
+
+  onAddTextValue(e) {
+    if (!e.value || e.value.trim() == '') return;
+
+    let dataValue = {
+      textValue: e.value,
+      value: this.datasVll.length,
+    };
+
+    this.datasVll.push(dataValue);
+    e.value = '';
+    e.focus();
+    this.changeDef.detectChanges();
+  }
+
+  onEditTextValue(e, i) {
+    if (!e.value || e.value.trim() == '') return;
+    this.showAddVll = true;
+    let dataValue = {
+      textValue: e.value,
+      value: i,
+    };
+    this.datasVll[i] = dataValue;
+    let eleAdd = document.getElementById('textAddValue');
+    if (eleAdd) {
+      eleAdd.focus();
+      eleAdd.inputMode = '';
+    }
+    this.changeDef.detectChanges();
+  }
+  // handelEdit(i) {
+  //   this.showAddVll = false;
+  // }
+
+  onChangeVll(e) {
+    if (!e.data || e.data.trim() == '') {
+      this.notiService.notifyCode('Tên value list không được để trống !');
+      return;
+    }
+    if (e.data.includes(' ')) {
+      this.notiService.notifyCode(
+        'Tên value list không được chứa khoảng trắng để trống !'
+      );
+      return;
+    }
+
+    let fm = e.data.substring(0, 3);
+    if (fm == this.fomartVll) this.listName = e.data;
+    else
+      this.notiService.notifyCode(
+        "Tên value list phải có dạng format 'DPF...' !"
+      );
   }
 }

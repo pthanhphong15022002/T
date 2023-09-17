@@ -160,13 +160,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
               res?.Role?.headerText ?? this.placeholderRole;
           });
 
-        let arrValue = JSON.parse(this.customField.dataValue);
+        let arrValue = '';
+        if (!this.customField.dataValue)
+          arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         this.codxShareSv.listContactBehavior.subscribe((element) => {
           if (element != null) {
             var contact = element?.data;
             var type = element?.type;
-            contact.isDefault = false;
             if (this.listContacts != null && this.listContacts.length > 0) {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == contact?.recID
@@ -181,6 +182,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 if (type == 'addAndSave') {
                   this.listContacts.push(contact);
                 }
+              }
+
+              let idxDefault = -1;
+              if (contact?.isDefault) {
+                idxDefault = this.listContacts.findIndex(
+                  (x) => x.isDefault && x.recID != contact.recID
+                );
+              }
+              if (idxDefault != -1 && type != 'delete') {
+                this.listContacts[idxDefault].isDefault = false;
               }
             } else {
               this.listContacts.push(contact);

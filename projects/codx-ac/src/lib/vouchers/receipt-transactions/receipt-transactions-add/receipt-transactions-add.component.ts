@@ -59,12 +59,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     entityName: '',
   };
   gridHeight: number;
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -424,14 +418,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.form.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        if (isclose) {
+        else if (isclose) {
           if (res?.save?.data) {
+            this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
               data: res.save.data,
             });
           }
           else if (res?.update?.data) {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res.update.data,
@@ -439,6 +435,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           }
           else
           {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res,
@@ -458,6 +455,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
+                this.notification.notifyCode('SYS006');
                 this.detectorRef.detectChanges();
               }
             });

@@ -216,6 +216,7 @@ import { CodxNotesComponent } from './layout/drawers/note/codx-note/codx-notes.c
 import { CodxFilesAttachmentComponent } from './components/codx-files-attachment/codx-files-attachment.component';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
+import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -344,6 +345,7 @@ const T_Component: Type<any>[] = [
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
   CodxBookingViewDetailComponent,
+  CodxViewDetailBookingComponent,
   CountChartComponent,
   TopChartComponent,
   CodxMeetingOnlineComponent,

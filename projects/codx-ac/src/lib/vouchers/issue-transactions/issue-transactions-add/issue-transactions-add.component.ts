@@ -58,12 +58,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     entityName: '',
   };
   gridHeight: number;
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -415,7 +409,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.form.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.form.save(null, 0, '', 'SYS006', true)
+    this.form.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
@@ -423,14 +417,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.form.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        if (isclose) {
+        else if (isclose) {
           if (res?.save?.data) {
+            this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
               data: res.save.data,
             });
           }
           else if (res?.update?.data) {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res.update.data,
@@ -438,6 +434,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           }
           else
           {
+            this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res,
@@ -457,6 +454,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
+                this.notification.notifyCode('SYS006');
                 this.detectorRef.detectChanges();
               }
             });
