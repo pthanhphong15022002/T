@@ -3,7 +3,8 @@
 }
 
 .no-border {
-    border: none;
+    border: none !important;
     background-color: transparent;
     outline: none;
+    color: black;
   }

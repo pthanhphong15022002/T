@@ -11,14 +11,17 @@ import {
 import { AttachmentComponent } from '../attachment/attachment.component';
 import {
   AlertConfirmInputConfig,
+  ApiHttpService,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -89,13 +92,24 @@ export class CodxInputCustomFieldComponent implements OnInit {
       textColor: '#F54E60',
     },
   ];
+  //vll
+  // serviceTemp = 'SYS';
+  // assemblyNameTemp = 'SYS';
+  // classNameTemp = 'ValueListBusiness';
+  // methodTemp = 'GetVllCustormByFormatAsync';
+  // requestTemp = new DataRequest();
+  datasVll: any[];
+  user: any;
+  fieldsVll = { text: 'textValue', value: 'value' };
+  plancehoderVll: any;
 
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private codxShareSv: CodxShareService
+    private codxShareSv: CodxShareService,
+    private api: ApiHttpService
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
@@ -143,6 +157,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
       case 'R':
         this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
+        break;
+      case 'L':
+        if (this.customField.dataFormat == 'V') this.loadDataVll();
         break;
       case 'C':
         this.formModelContact = new FormModel();
@@ -519,5 +536,36 @@ export class CodxInputCustomFieldComponent implements OnInit {
   closePopper(p) {
     p.close();
     this.popoverCrr = p;
+  }
+  //vll custorm
+  loadDataVll() {
+    this.api
+      .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
+        this.user.languages,
+        this.customField.refValue,
+      ])
+      .subscribe((vl) => {
+        if (vl) {
+          this.plancehoderVll = vl?.note;
+          var defaultValues = vl?.defaultValues?.split(';');
+          if (!defaultValues || defaultValues?.length == 0) {
+            this.datasVll = [];
+            return;
+          }
+          if (vl.lineType == 1) {
+            this.datasVll = defaultValues.map((x) => {
+              return {
+                textValue: x,
+                value: x,
+              };
+            });
+          }
+
+          //chua lam 2
+        } else this.datasVll = [];
+      });
+  }
+  cbxChangeVll(value) {
+    this.customField.dataValue = value;
   }
 }

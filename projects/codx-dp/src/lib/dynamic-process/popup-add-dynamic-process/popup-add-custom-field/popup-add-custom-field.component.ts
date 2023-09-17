@@ -16,6 +16,7 @@ import {
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -24,6 +25,9 @@ import {
   Util,
 } from 'codx-core';
 import { DP_Steps_Fields, tempVllDP } from '../../../models/models';
+import { Observable, finalize, map } from 'rxjs';
+import { X } from '@angular/cdk/keycodes';
+import test from 'node:test';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -64,7 +68,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //vll dang DPF..
   listVll = [];
-  fieldsVll = { text: 'Note', value: 'listName' };
+  fieldsVll = { text: 'text', value: 'value' };
 
   datasVll = [];
   fieldsResourceVll = { text: 'textValue', value: 'value' };
@@ -82,6 +86,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listName: any;
   fomartVll = 'DPF'; //format
 
+  serviceTemp = 'SYS';
+  assemblyNameTemp = 'SYS';
+  classNameTemp = 'ValueListBusiness';
+  methodTemp = 'GetVllCustormByFormatAsync';
+  requestTemp = new DataRequest();
+  user: any;
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
@@ -94,6 +105,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.user = this.authstore.get();
     this.field = JSON.parse(JSON.stringify(dt?.data?.field));
     this.action = dt?.data?.action;
     this.enabled = dt?.data?.enabled;
@@ -126,8 +138,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if (!this.field.recID) this.field.recID = Util.uid();
-    // this.changdef.detectChanges();
+    // this.field.dataType = 'L';
+    // this.field.dataFormat = 'V';
+    // if ((this.field.dataFormat = 'V'))
+    // test
+    this.loadDataVll();
   }
 
   valueChangeCbx(e) {}
@@ -140,6 +155,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (e && e.data && e.field) this.field[e.field] = e.data;
     if (e.field == 'title' || e.field == 'fieldName')
       this.removeAccents(e.data);
+    if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
+      this.field.refType = e.data == 'C' ? '3' : '2';
+    }
     this.changdef.detectChanges();
   }
 
@@ -304,11 +322,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
       return;
     }
-    let user = this.authstore.get();
+
     var tempVll = new tempVllDP();
     tempVll.listName = this.listName;
-    tempVll.language = user?.language;
-    tempVll.createdBy = user?.userID;
+    tempVll.language = this.user?.language;
+    tempVll.createdBy = this.user?.userID;
     tempVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
     tempVll.version = 'x00.01';
     let vl = [];
@@ -349,14 +367,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     };
 
     this.datasVll.push(dataValue);
+    this.changeDef.detectChanges();
     e.value = '';
     e.focus();
-    this.changeDef.detectChanges();
+    // let element = document.getElementById('textAddValue');
+    // element.focus();
   }
 
   onEditTextValue(e, i) {
     if (!e.value || e.value.trim() == '') return;
-    this.showAddVll = true;
     let dataValue = {
       textValue: e.value,
       value: i,
@@ -369,9 +388,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     this.changeDef.detectChanges();
   }
-  // handelEdit(i) {
-  //   this.showAddVll = false;
-  // }
 
   onChangeVll(e) {
     if (!e.data || e.data.trim() == '') {
@@ -391,5 +407,52 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.notiService.notifyCode(
         "Tên value list phải có dạng format 'DPF...' !"
       );
+  }
+
+  loadDataVll() {
+    this.requestTemp.entityName = 'SYS_ValueList';
+    // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
+    // this.requestTemp.dataValue = this.user.language + ';DPF';
+    this.requestTemp.predicate = 'Language=@0 ';
+    this.requestTemp.dataValue = this.user.language;
+    this.requestTemp.pageLoading = false; //load all
+
+    this.fetch().subscribe((item) => {
+      this.listVll = [];
+      if (item && Array.isArray(item)) {
+        item.forEach((x) => {
+          if (x?.listName) {
+            this.listVll.push({
+              text: x?.listName,
+              value: x?.listName ?? '',
+            });
+          }
+        });
+      } else this.listVll = [];
+      this.changeDef.detectChanges();
+      // return this.listVll;
+    });
+  }
+  private fetch(): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        this.serviceTemp,
+        this.assemblyNameTemp,
+        this.classNameTemp,
+        this.methodTemp,
+        this.requestTemp
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response[0];
+        })
+      );
+  }
+  cbxChangeVll(value) {
+    if (value) this.field['refValue'] = value;
   }
 }
