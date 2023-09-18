@@ -49,8 +49,8 @@ export class PurchaseinvoicesDetailComponent
 
   @Input() data: IPurchaseInvoice;
   @Input() recID: string;
-  @Input() formModel: FormModel;
-  @Input() dataService: CRUDService;
+  @Input() formModel: FormModel; // required
+  @Input() dataService: CRUDService; // optional
 
   overflowed: boolean = false;
   expanding: boolean = false;
@@ -89,7 +89,7 @@ export class PurchaseinvoicesDetailComponent
   ) {
     super(injector);
 
-    this.journal = parentComponent.journal;
+    this.journal = parentComponent?.journal;
     this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
   }
   //#endregion
@@ -172,11 +172,14 @@ export class PurchaseinvoicesDetailComponent
     }
 
     if (!this.dataService && changes.formModel?.currentValue) {
-      this.dataService = this.acService.createCRUDService(
-        this.injector,
-        this.formModel,
-        'AC'
-      );
+      this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+        this.dataService = this.acService.createCRUDService(
+          this.injector,
+          this.formModel,
+          'AC',
+          gridView
+        );
+      });
     }
 
     if (changes.data?.currentValue) {
@@ -207,10 +210,10 @@ export class PurchaseinvoicesDetailComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
@@ -284,7 +287,7 @@ export class PurchaseinvoicesDetailComponent
     ]);
   }
 
-  edit(e, data): void {
+  edit(data): void {
     const copiedData = { ...data };
     this.dataService.dataSelected = copiedData;
     this.dataService.edit(copiedData).subscribe((res: any) => {
@@ -305,7 +308,7 @@ export class PurchaseinvoicesDetailComponent
     });
   }
 
-  copy(e, data): void {
+  copy(data): void {
     this.dataService.dataSelected = data;
     this.dataService
       .copy(() => this.getDefault())
