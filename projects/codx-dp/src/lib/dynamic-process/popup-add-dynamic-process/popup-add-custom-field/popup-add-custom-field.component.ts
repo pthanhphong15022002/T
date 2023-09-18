@@ -37,7 +37,6 @@ import test from 'node:test';
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('addVll') addVll: TemplateRef<any>;
-
   dialog: DialogRef;
   field: DP_Steps_Fields;
   grvSetup: any;
@@ -100,6 +99,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   datasVllCrr = [];
   fieldsCrrVll = { text: 'textValue', value: 'value' };
   crrValueFirst = '';
+  element: any;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -320,6 +320,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveVll() {
+    if (!this.crrVll.note || this.crrVll.note.trim() == '') {
+      this.notiService.notifyCode('Nội dung vll không được để trống !');
+      return;
+    }
     if (!this.crrVll.listName || this.crrVll.listName.trim() == '') {
       this.notiService.notifyCode('Tên value list không được để trống !');
       return;
@@ -330,8 +334,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-
-    if (this.crrVll.listName.substring(0, 3) != this.fomartVll) {
+    let fm = this.crrVll.listName.substring(0, 3);
+    if (fm != this.fomartVll) {
       this.notiService.notifyCode(
         "Tên value list phải có dạng format 'DPF...' !"
       );
@@ -482,7 +486,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
         })
       );
   }
-  cbxChangeVll(value) {
+  cbxChangeVll(value, elm) {
+    if (elm) this.element = elm;
+
     if (value) {
       this.field['refValue'] = value;
     }
@@ -523,17 +529,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
         text: vll?.note ?? vll?.listName,
         value: vll?.listName ?? '',
       };
+      if (this.element) {
+        this.element.listData =
+          this.element.selectData =
+          this.element.sortedData =
+            this.listVll;
+      }
     }
+    this.form.formGroup.patchValue(this.field);
+    this.changeDef.detectChanges();
   }
 
   changeFormVll() {
     var arr = this.crrVll.defaultValues.split(';');
     if (Array.isArray(arr) && arr?.length > 0) {
       if ((this.crrVll.listType = '1')) {
-        this.datasVll = arr.map((x) => {
+        this.datasVll = arr.map((x, index) => {
           return {
             textValue: x,
-            value: x,
+            value: index,
           };
         });
       }

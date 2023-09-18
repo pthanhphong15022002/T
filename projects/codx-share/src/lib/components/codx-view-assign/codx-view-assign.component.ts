@@ -132,42 +132,44 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
 
   // edit(e, data) {}
 
-  edit(moreFunc, data) {}
+  edit(moreFunc, data) {
+    //Thuong chưa mapping nên chưa làm
+  }
 
   delete(data: any) {
-    if (data.status == '90') {
-      this.notiService.notifyCode('TM017');
-      return;
-    }
-    if (data.category == '2') {
-      this.notiService.notifyCode('TM018');
-      return;
-    }
-
-    var isCanDelete = true;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTaskChildDetailAsync',
-        data.taskID
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCanDelete = false;
-              return;
-            }
-          });
-          if (!isCanDelete) {
-            this.notiService.notifyCode('TM001');
-          } else {
-            this.deleteConfirm(data);
-          }
-        }
-      });
+    //Thuong chưa mapping nên chưa làm
+    // if (data.status == '90') {
+    //   this.notiService.notifyCode('TM017');
+    //   return;
+    // }
+    // if (data.category == '2') {
+    //   this.notiService.notifyCode('TM018');
+    //   return;
+    // }
+    // var isCanDelete = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListTaskChildDetailAsync',
+    //     data.taskID
+    //   )
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       res.forEach((element) => {
+    //         if (element.status != '00' && element.status != '10') {
+    //           isCanDelete = false;
+    //           return;
+    //         }
+    //       });
+    //       if (!isCanDelete) {
+    //         this.notiService.notifyCode('TM001');
+    //       } else {
+    //         this.deleteConfirm(data);
+    //       }
+    //     }
+    //   });
   }
   deleteConfirm(data) {
     this.notiService.alertCode('TM003').subscribe((confirm) => {
