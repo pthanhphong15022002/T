@@ -175,17 +175,17 @@ export class PopupAddItemComponent
       this.fmItemsProduction.entityName
     );
 
-    this.itemsPurchaseService = acService.createCrudService(
+    this.itemsPurchaseService = acService.createCRUDService(
       injector,
       this.fmItemsPurchase,
       'IV'
     );
-    this.itemsSalesService = acService.createCrudService(
+    this.itemsSalesService = acService.createCRUDService(
       injector,
       this.fmItemsSales,
       'IV'
     );
-    this.itemsProductionService = acService.createCrudService(
+    this.itemsProductionService = acService.createCRUDService(
       injector,
       this.fmItemsProduction,
       'IV'
@@ -424,7 +424,7 @@ export class PopupAddItemComponent
     const options = new DataRequest();
     options.entityName = 'IV_DimGroups';
     options.pageLoading = false;
-    this.acService.loadDataAsync('IV', options).subscribe((dimGroups) => {
+    this.acService.loadData$('IV', options).subscribe((dimGroups) => {
       this.selectedDimGroup = dimGroups.find((d) => d.dimGroupID === e.data);
     });
   }
@@ -864,7 +864,7 @@ export class PopupAddItemComponent
     option.predicates = predicate;
     option.dataValues = dataValue;
     option.pageLoading = false;
-    this.acService.loadDataAsync(service, option).subscribe((res: any[]) => {
+    this.acService.loadData$(service, option).subscribe((res: any[]) => {
       if (first) {
         const formModel: string = 'fm' + toPascalCase(prop);
         const formGroup: string = 'fg' + toPascalCase(prop);

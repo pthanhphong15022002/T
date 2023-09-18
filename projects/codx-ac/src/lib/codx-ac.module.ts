@@ -87,7 +87,11 @@ import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.comp
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 import { AdvancePaymentComponent } from './advance-payment/advance-payment.component';
 import { AdvancePaymentAddComponent } from './advance-payment/advance-payment-add/advance-payment-add.component';
+<<<<<<< Updated upstream
 import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayment-detail.component';
+=======
+import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/purchaseinvoices-detail/purchaseinvoices-detail.component';
+>>>>>>> Stashed changes
 export const routes: Routes = [
   {
     path: '',
@@ -312,7 +316,11 @@ export const routes: Routes = [
     CashreceiptsAddComponent,
     AdvancePaymentComponent,
     AdvancePaymentAddComponent,
+<<<<<<< Updated upstream
     CashpaymentDetailComponent,
+=======
+    PurchaseinvoicesDetailComponent,
+>>>>>>> Stashed changes
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
