@@ -47,7 +47,7 @@
 <ng-template #body>
   <div class="card-form">
     <!-- Link group -->
-    <div class="form-group" *ngIf="step">
+    <div class="form-group" *ngIf="instanceStep">
       <div class="d-flex align-items-top">
         <codx-label
           class="text-primary me-2"
@@ -56,7 +56,7 @@
           default="Thuộc giai đoạn: "
         >
         </codx-label>
-        <codx-label [default]="step?.stepName"> </codx-label>
+        <codx-label [default]="instanceStep?.stepName"> </codx-label>
       </div>
     </div>
     <!--End Link group -->
@@ -99,7 +99,7 @@
       </div>
     </div>
     <div
-      *ngIf="step"
+      *ngIf="instanceStep"
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <div class="step-name w-100">

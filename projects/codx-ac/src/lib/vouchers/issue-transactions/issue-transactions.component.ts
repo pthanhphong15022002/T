@@ -59,6 +59,7 @@ export class IssueTransactionsComponent extends UIComponent {
   button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   funcName: any;
+  runmode: any;
   parentID: string;
   journalNo: string;
   totalacct: any = 0;
@@ -137,7 +138,12 @@ export class IssueTransactionsComponent extends UIComponent {
   ngAfterViewInit() {
 
     this.cache.functionList(this.view.funcID).pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      this.funcName = res.defaultName;
+      if(res)
+      {
+        this.funcName = res.defaultName;
+        this.runmode = res.runMode;
+        this.detectorRef.detectChanges();
+      }
     });
 
     this.views = [
@@ -175,8 +181,8 @@ export class IssueTransactionsComponent extends UIComponent {
     options2.dataValues = '1';
 
     combineLatest({
-      functionList: this.acService.loadDataAsync('SYS', options1),
-      journals: this.acService.loadDataAsync('AC', options2),
+      functionList: this.acService.loadData$('SYS', options1),
+      journals: this.acService.loadData$('AC', options2),
       vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
     }).subscribe(({ functionList, journals, vll077 }) => {
       console.log(journals);
@@ -299,7 +305,6 @@ export class IssueTransactionsComponent extends UIComponent {
             if (res.event != null) {
               if (res.event['update']) {
                 this.itemSelected = res.event['data'];
-                this.loadDatadetail(this.itemSelected);
               }
             }
           });
@@ -342,7 +347,8 @@ export class IssueTransactionsComponent extends UIComponent {
             if (res.event != null) {
               if (res.event['update']) {
                 this.itemSelected = res.event['data'];
-                this.loadDatadetail(this.itemSelected);
+                this.view.dataService.dataSelected = this.itemSelected;
+                this.detectorRef.detectChanges();
               }
             }
           });
@@ -390,7 +396,6 @@ export class IssueTransactionsComponent extends UIComponent {
             if (res.event != null) {
               if (res.event['update']) {
                 this.itemSelected = res.event['data'];
-                this.loadDatadetail(this.itemSelected);
               }
             }
           });
@@ -442,61 +447,18 @@ export class IssueTransactionsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
-
-  loadDatadetail(data) {
-    this.loading = true;
-    this.loadingAcct = true;
-    this.acctTrans = [];
-    this.api
-      .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
-        data.recID,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res)
-        {
-          this.vouchersLines = res;
-          this.loadTotal();
-        }
-        this.loading = false;
-        this.detectorRef.detectChanges();
-      });
-    this.api
-      .exec('AC', 'AcctTransBusiness', 'GetAccountingAsync', [data.recID])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res)
-        {
-          this.acctTrans = res;
-          this.loadAcctTransTotal();
-          this.isLoadDataAcct = false;
-        }
-        this.loadingAcct = false;
-        this.detectorRef.detectChanges();
-      });
-  }
   
   changeItemDetail(event) {
-    if (event?.data == null)
-      return;
-    if (event?.data.data || event?.data.error) {
-      return;
-    } else {
-      if (this.itemSelected && this.itemSelected.recID == event?.data.recID) {
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
         return;
       } else {
-        this.isLoadDataAcct = true;
         this.itemSelected = event?.data;
-        this.loadDatadetail(this.itemSelected);
+        this.detectorRef.detectChanges();
       }
     }
     this.expanding = false;
     this.detectorRef.detectChanges();
-  }
-
-  clickChange(data) {
-    this.itemSelected = data;
-    this.loadDatadetail(data);
   }
 
   formatDate(date) {

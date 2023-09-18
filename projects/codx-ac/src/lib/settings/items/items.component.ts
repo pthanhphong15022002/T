@@ -44,7 +44,7 @@ export class ItemsComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.acService
-      .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21300')
+      .getDefaultNameFromMoreFunctions$('Items', 'grvItems', 'ACS21300')
       .subscribe((res) => {
         this.functionName = toCamelCase(res);
       });
