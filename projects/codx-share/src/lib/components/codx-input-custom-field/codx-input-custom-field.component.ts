@@ -178,7 +178,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           });
 
         let arrValue = '';
-        if (!this.customField.dataValue)
+        if (this.customField.dataValue)
           arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         this.codxShareSv.listContactBehavior.subscribe((element) => {
