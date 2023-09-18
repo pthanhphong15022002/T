@@ -235,6 +235,7 @@
           >
           </codx-label>
           <ejs-combobox
+            #comboxView
             [enabled]="enabled"
             [dataSource]="datasVllCrr"
             [fields]="fieldsCrrVll"
@@ -385,6 +386,7 @@
           <codx-input
             type="text"
             field="listName"
+            [disabled]="crrVll.listName"
             [formModel]="formModelVll"
             [crrValue]="crrVll.listName"
             (valueChange)="onChangeVll($event)"
@@ -417,7 +419,12 @@
           >
           </codx-label>
           <ng-container *ngFor="let item of datasVll; index as i">
-            <div class="cursor-pointer form-group">
+            <div
+              class="cursor-pointer form-group has-action-menu"
+              [ngbTooltip]="toolDeleted"
+              placement="right left"
+              container="body"
+            >
               <!-- <div class="d-flex">
               <span>
                 <span class="label-colon" [innerHTML]="i"></span>
@@ -434,6 +441,15 @@
                 placeholder="Nhập giá trị value"
                 (keydown.enter)="onEditTextValue(textEditValue, item.value)"
               />
+              <ng-template #toolDeleted>
+                <div>
+                  <span
+                    (click)="deletedValue(item.value, i)"
+                    class="icon-16 me-2 icon-close"
+                    [style.color]="'#F54E60'"
+                  ></span>
+                </div>
+              </ng-template>
             </div>
             <!-- </div> -->
           </ng-container>
@@ -462,6 +478,7 @@
             >
             </codx-label>
             <ejs-combobox
+              #viewComboxForm
               [enabled]="enabled"
               [dataSource]="datasVll"
               [fields]="fieldsResourceVll"
