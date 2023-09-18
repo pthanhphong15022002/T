@@ -1,0 +1,18 @@
+:host ::ng-deep {
+  .codx-detail-main {
+    display: flex;
+    flex-direction: column;
+
+    .codx-detail-body {
+      flex: 1;
+    }
+  }
+
+  ejs-tab .e-content {
+    padding-left: 0 !important;
+  }
+}
+
+th {
+  text-align: center;
+}

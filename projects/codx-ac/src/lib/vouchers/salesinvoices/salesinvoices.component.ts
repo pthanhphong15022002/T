@@ -167,7 +167,7 @@ export class SalesinvoicesComponent
 
     this.emitDefault();
 
-    this.journalService.getJournal(this.journalNo).subscribe((journal) => {
+    this.journalService.getJournal$(this.journalNo).subscribe((journal) => {
       this.salesInvoiceService.journal = this.journal = journal;
     });
 

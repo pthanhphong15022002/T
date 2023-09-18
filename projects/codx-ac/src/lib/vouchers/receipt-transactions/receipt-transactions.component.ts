@@ -175,8 +175,8 @@ export class ReceiptTransactionsComponent extends UIComponent {
     options2.dataValues = '1';
 
     combineLatest({
-      functionList: this.acService.loadDataAsync('SYS', options1),
-      journals: this.acService.loadDataAsync('AC', options2),
+      functionList: this.acService.loadData$('SYS', options1),
+      journals: this.acService.loadData$('AC', options2),
       vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
     }).subscribe(({ functionList, journals, vll077 }) => {
       console.log(journals);

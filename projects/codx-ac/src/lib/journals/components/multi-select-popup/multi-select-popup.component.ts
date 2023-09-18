@@ -39,7 +39,7 @@ export class MultiSelectPopupComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.formTitle$ = this.acService.getDefaultNameFromMoreFunctions(
+    this.formTitle$ = this.acService.getDefaultNameFromMoreFunctions$(
       'DIM',
       'grvDIM',
       'ACT03'

@@ -56,7 +56,7 @@ export class JournalService {
       .subscribe((res) => console.log(res));
   }
 
-  getJournal(journalNo: string): Observable<IJournal> {
+  getJournal$(journalNo: string): Observable<IJournal> {
     return this.apiService.exec<any>(
       'AC',
       'JournalsBusiness',
@@ -91,7 +91,7 @@ export class JournalService {
         ? model.voucherNo
         : `${model.voucherNo};${model.recID}`;
       options.pageLoading = false;
-      this.acService.loadDataAsync(service, options).subscribe((res: any[]) => {
+      this.acService.loadData$(service, options).subscribe((res: any[]) => {
         if (res.length > 0) {
           this.apiService
             .exec(
@@ -220,7 +220,7 @@ export class JournalService {
     }
   }
 
-  hasVouchers(journal: IJournal): Observable<boolean> {
+  hasVouchers$(journal: IJournal): Observable<boolean> {
     const subject = new Subject<boolean>();
 
     this.cacheService
@@ -241,7 +241,7 @@ export class JournalService {
         options.predicates = 'JournalNo=@0';
         options.dataValues = journal.journalNo;
         options.pageLoading = false;
-        this.acService.loadDataAsync(service, options).subscribe((res) => {
+        this.acService.loadData$(service, options).subscribe((res) => {
           if (res.length > 0) {
             subject.next(true);
           } else {
@@ -255,16 +255,16 @@ export class JournalService {
       .pipe(tap((t) => console.log('hasVouchers', t)));
   }
 
-  getUserGroups(): Observable<any[]> {
-    return this.acService.loadComboboxData('Share_GroupUsers', 'AD');
+  getUserGroups$(): Observable<any[]> {
+    return this.acService.loadComboboxData$('Share_GroupUsers', 'AD');
   }
 
-  getUserRoles(): Observable<any[]> {
-    return this.acService.loadComboboxData('Share_UserRoles', 'AD');
+  getUserRoles$(): Observable<any[]> {
+    return this.acService.loadComboboxData$('Share_UserRoles', 'AD');
   }
 
-  getUsers(): Observable<any[]> {
-    return this.acService.loadComboboxData('Share_Users', 'AD');
+  getUsers$(): Observable<any[]> {
+    return this.acService.loadComboboxData$('Share_Users', 'AD');
   }
 
   setChildLinks(journalNo: string): void {
@@ -281,8 +281,8 @@ export class JournalService {
     options2.dataValues = '1';
 
     combineLatest({
-      functionList: this.acService.loadDataAsync('SYS', options1),
-      journals: this.acService.loadDataAsync('AC', options2),
+      functionList: this.acService.loadData$('SYS', options1),
+      journals: this.acService.loadData$('AC', options2),
       vll077: this.cacheService.valueList('AC077').pipe(map((v) => v.datas)),
     }).subscribe(({ functionList, journals, vll077 }) => {
       console.log(journals);
