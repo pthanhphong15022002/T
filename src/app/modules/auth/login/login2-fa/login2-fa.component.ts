@@ -241,7 +241,8 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       .login(
         this.loginFG.controls['email'].value,
         this.loginFG.controls['password'].value,
-        this.curLgType
+        this.curLgType,
+        true
       )
       .pipe()
       .subscribe((data) => {
