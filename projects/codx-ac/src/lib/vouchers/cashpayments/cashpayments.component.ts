@@ -36,6 +36,7 @@ import {
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
 import { X } from '@angular/cdk/keycodes';
+import { JournalService } from '../../journals/journals.service';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -82,7 +83,7 @@ export class CashPaymentsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private pageTitle: PageTitleService
+    private journalService: JournalService,
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -152,20 +153,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
-    let pageLink: Array<PageLink> = [
-      {
-        title: 'Test tè lè nhòe',
-        desc: 'Hiển cái này giúp',
-        path: 'ac/cashpayments/ACT0410?journalNo=ACJN230712003&parent=ACT',
-      },
-      {
-        title: 'Test bét tờ lơ to',
-        desc: 'Cái này nè',
-        path: 'ac/cashpayments/ACT0410?journalNo=ACJN230727001&parent=ACT',
-      },
-    ];
-
-    this.pageTitle.setChildren(pageLink);
+    this.journalService.setChildLinks(this.journalNo);
 
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;

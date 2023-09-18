@@ -191,9 +191,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       .subscribe((res: any) => {
         this.itemSelected = res;
         this.setTotalRecord();
+        this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
-    this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+    
   }
 
   /**
