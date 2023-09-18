@@ -1300,7 +1300,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           datas,
           this.afterSave,
           this.formModel,
-          this.view.dataService,
+          this.view?.dataService,
           this,
           customData
         );
