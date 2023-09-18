@@ -780,15 +780,12 @@ export class WarrantiesComponent
   }
 
   updateCommentWarranty(e, data) {
-    console.log(e);
-    console.log(data);
     this.dataSelected = data;
     this.titleAction = 'Cập nhật ghi chú';
     this.comment = data?.comment;
     this.dialogComment = this.callfc.openForm(this.itemComment, '', 400, 200);
     this.dialogComment.closed.subscribe((ele) => {
       if (ele && ele?.event) {
-        console.log(ele);
         this.dataSelected.comment = this.comment;
         this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
