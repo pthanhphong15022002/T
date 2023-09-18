@@ -52,9 +52,11 @@ export class WarrantiesComponent
   @ViewChild('viewDetail') viewDetail: ViewDetailWrComponent;
   @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
+  @ViewChild('itemComment') itemComment: TemplateRef<any>;
 
   dialogStatus: DialogRef;
   dialogPriority: DialogRef;
+  dialogComment: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -92,6 +94,7 @@ export class WarrantiesComponent
   cancelledNote = '';
   status = '';
   priority = '';
+  comment = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -263,6 +266,10 @@ export class WarrantiesComponent
 
   changeMoreMF(e) {
     this.changeDataMF(e.e, e.data);
+  }
+
+  updateComment(e) {
+    this.updateCommentWarranty(e.e, e.data);
   }
 
   clickMF(e, data) {
@@ -727,6 +734,9 @@ export class WarrantiesComponent
     if (type == 'status') {
       data = [this.dataSelected?.recID, this.status, this.cancelledNote];
       methodName = 'UpdateStatusWarrantyAsync';
+    } else if (type == 'comment') {
+      data = [this.dataSelected?.recID, this.comment];
+      methodName = 'UpdateCommentWarrantyAsync';
     } else {
       data = [this.dataSelected?.recID, this.priority];
       methodName = 'UpdatePriorityWarrantyAsync';
@@ -743,6 +753,8 @@ export class WarrantiesComponent
         if (res) {
           if (type == 'status') {
             this.dialogStatus.close(res);
+          } else if (type == 'comment') {
+            this.dialogComment.close(res);
           } else {
             this.dialogPriority.close(res);
           }
@@ -758,6 +770,23 @@ export class WarrantiesComponent
     this.dialogPriority.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  updateCommentWarranty(e, data) {
+    this.dataSelected = data;
+    this.titleAction = 'Cập nhật ghi chú';
+    this.comment = data?.comment;
+    this.dialogComment = this.callfc.openForm(this.itemComment, '', 400, 200);
+    this.dialogComment.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.comment = this.comment;
         this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();

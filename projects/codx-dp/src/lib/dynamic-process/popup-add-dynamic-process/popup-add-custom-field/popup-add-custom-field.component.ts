@@ -67,12 +67,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
   refValueDataType = 'DP022';
 
   //vll dang DPF..
+  listVllCus = [];
+
   listVll = [];
   fieldsVll = { text: 'text', value: 'value' };
 
   datasVll = [];
   fieldsResourceVll = { text: 'textValue', value: 'value' };
-  crrValue = '0';
+  crrValue = '';
   indexEdit = -1;
   showAddVll = true;
 
@@ -92,6 +94,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   methodTemp = 'GetVllCustormByFormatAsync';
   requestTemp = new DataRequest();
   user: any;
+  crrVll: tempVllDP;
+  crrDatasVll: any;
+  // view Crr
+  datasVllCrr = [];
+  fieldsCrrVll = { text: 'textValue', value: 'value' };
+  crrValueFirst = '';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -157,6 +165,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.removeAccents(e.data);
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       this.field.refType = e.data == 'C' ? '3' : '2';
+      if (this.action != 'edit' && !this.field.refValue) {
+        this.crrVll = new tempVllDP();
+        this.crrVll.language = this.user.language;
+        this.crrVll.createdBy = this.user.userID;
+        this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+        this.crrVll.version = 'x00.01';
+      } else {
+        this.crrVll = this.listVllCus.find(
+          (x) => x.listName == this.field.refValue
+        );
+        this.changeFormVll();
+      }
     }
     this.changdef.detectChanges();
   }
@@ -300,18 +320,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveVll() {
-    if (!this.listName || this.listName.trim() == '') {
+    if (!this.crrVll.listName || this.crrVll.listName.trim() == '') {
       this.notiService.notifyCode('Tên value list không được để trống !');
       return;
     }
-    if (this.listName.includes(' ')) {
+    if (this.crrVll.listName.includes(' ')) {
       this.notiService.notifyCode(
         'Tên value list không được chứa khoảng trắng để trống !'
       );
       return;
     }
 
-    if (this.listName.substring(0, 3) != this.fomartVll) {
+    if (this.crrVll.listName.substring(0, 3) != this.fomartVll) {
       this.notiService.notifyCode(
         "Tên value list phải có dạng format 'DPF...' !"
       );
@@ -323,14 +343,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    var tempVll = new tempVllDP();
-    tempVll.listName = this.listName;
-    tempVll.language = this.user?.language;
-    tempVll.createdBy = this.user?.userID;
-    tempVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-    tempVll.version = 'x00.01';
+    // this.crrVll.listName = this.listName;
+    // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+    // this.crrVll.version = 'x00.01';
     let vl = [];
-    if (tempVll.listType == '1') {
+    if (this.crrVll.listType == '1') {
       vl = this.datasVll.map((x) => {
         return x.textValue;
       });
@@ -340,19 +357,21 @@ export class PopupAddCustomFieldComponent implements OnInit {
         vl.push(x.textValue);
       });
     }
-    tempVll.defaultValues = tempVll.customValues = vl.join(';');
+    this.crrVll.defaultValues = this.crrVll.customValues = vl.join(';');
+
+    var checkEdit = this.listVllCus.some(
+      (x) => x.listName == this.crrVll.listName
+    );
+    let menthol = checkEdit
+      ? 'EditValuelistCustormAsync'
+      : 'AddValuelistCustormAsync';
 
     this.api
-      .execSv(
-        'SYS',
-        'SYS',
-        'ValueListBusiness',
-        'AddValuelistCustormAsync',
-        tempVll
-      )
+      .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('Add test Vll thanh cong !');
+          this.notiService.notifyCode(checkEdit ? 'SYS007' : 'SYS006');
+          this.beforeSaveVll(this.crrVll);
           this.dialogVll.close();
         }
       });
@@ -390,23 +409,32 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   onChangeVll(e) {
-    if (!e.data || e.data.trim() == '') {
-      this.notiService.notifyCode('Tên value list không được để trống !');
+    if (e.field == 'multiSelect') {
+      this.crrVll[e.field] = e.data;
       return;
     }
-    if (e.data.includes(' ')) {
-      this.notiService.notifyCode(
-        'Tên value list không được chứa khoảng trắng để trống !'
-      );
-      return;
+    if (e.field == 'listName') {
+      if (!e.data || e.data.trim() == '') {
+        this.notiService.notifyCode('Tên value list không được để trống !');
+        return;
+      }
+      if (e.data.includes(' ')) {
+        this.notiService.notifyCode(
+          'Tên value list không được chứa khoảng trắng để trống !'
+        );
+        return;
+      }
+
+      let fm = e.data.substring(0, 3);
+      if (fm != this.fomartVll) {
+        this.notiService.notifyCode(
+          "Tên value list phải có dạng format 'DPF...' !"
+        );
+        return;
+      }
     }
 
-    let fm = e.data.substring(0, 3);
-    if (fm == this.fomartVll) this.listName = e.data;
-    else
-      this.notiService.notifyCode(
-        "Tên value list phải có dạng format 'DPF...' !"
-      );
+    this.crrVll[e.field] = e.data;
   }
 
   loadDataVll() {
@@ -419,11 +447,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
     this.fetch().subscribe((item) => {
       this.listVll = [];
+      this.listVllCus = [];
       if (item && Array.isArray(item)) {
-        item.forEach((x) => {
+        this.listVllCus = item;
+        this.listVllCus.forEach((x) => {
           if (x?.listName) {
             this.listVll.push({
-              text: x?.listName,
+              text: x?.note ?? x?.listName,
               value: x?.listName ?? '',
             });
           }
@@ -453,6 +483,60 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
   }
   cbxChangeVll(value) {
-    if (value) this.field['refValue'] = value;
+    if (value) {
+      this.field['refValue'] = value;
+    }
+    this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
+
+    if (
+      this.crrDatasVll &&
+      this.crrDatasVll.listType == '1' &&
+      this.crrDatasVll.defaultValues
+    ) {
+      this.crrVll = this.crrDatasVll;
+      this.changeFormVll();
+      var arr = this.crrDatasVll.defaultValues.split(';');
+
+      if (Array.isArray(arr) && arr?.length > 0) {
+        this.datasVllCrr = arr.map((x) => {
+          return {
+            textValue: x,
+            value: x,
+          };
+        });
+        this.crrValueFirst = this.datasVllCrr[0].textValue;
+      }
+    }
+  }
+
+  beforeSaveVll(vll) {
+    var idx = this.listVllCus.findIndex((x) => x.listName == vll.listName);
+    if (idx == -1) {
+      this.listVllCus.push(vll);
+      this.listVll.push({
+        text: vll?.note ?? vll?.listName,
+        value: vll?.listName ?? '',
+      });
+    } else {
+      this.listVllCus[idx] = vll;
+      this.listVll[idx] = {
+        text: vll?.note ?? vll?.listName,
+        value: vll?.listName ?? '',
+      };
+    }
+  }
+
+  changeFormVll() {
+    var arr = this.crrVll.defaultValues.split(';');
+    if (Array.isArray(arr) && arr?.length > 0) {
+      if ((this.crrVll.listType = '1')) {
+        this.datasVll = arr.map((x) => {
+          return {
+            textValue: x,
+            value: x,
+          };
+        });
+      }
+    }
   }
 }

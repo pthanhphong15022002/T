@@ -20,7 +20,7 @@
           </codx-label>
         </div>
         <div class="d-flex justify-content-between">
-          <div class="col-10">
+          <div class="w-100">
             <codx-input
               #seriNo
               field="seriNo"
@@ -30,16 +30,15 @@
               (valueChange)="valueChangeCbx($event)"
             ></codx-input>
           </div>
-          <div class="col-2 ms-1">
+          <div class="ms-1">
             <button
-              style="width: 100% !important; height: 32px !important"
               type="button"
               [ngClass]="
                 action == 'edit'
                   ? 'disabled'
                   : ''
               "
-              class="btn btn-primary"
+              class="btn h-32px w-75px btn-primary"
               (click)="clickAddServiceTag()"
             >
               <codx-label

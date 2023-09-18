@@ -38,7 +38,6 @@ export class DashboardComponent extends WSUIComponent{
     var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
     if(isObservable(result))
     {
-      debugger
       result.subscribe((item:any)=>{
         if(item) this.listDashboard = item;
       })
