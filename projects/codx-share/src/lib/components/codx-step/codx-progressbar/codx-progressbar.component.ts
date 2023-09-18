@@ -122,6 +122,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
 
   setProgressLinear(){
     if(this.progress == 100) this.status = '3';
+    if(this.progress == 0 && this.status == '3') this.status = '2';
     let value = this.vllData?.find(vll => vll.value == this.status);
     if(!value){return;}
     if(this.isStep){

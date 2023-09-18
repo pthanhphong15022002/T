@@ -52,7 +52,6 @@ export class ViewCalendarComponent
 
   @ViewChild('popupChoiseTypeCM') popupChoiseTypeCM: TemplateRef<any>;
 
-  @Input() funcID: any;
   @Input() viewActiveType = '7';
   views: Array<ViewModel> = [];
   requestSchedule: ResourceModel;
@@ -120,6 +119,7 @@ export class ViewCalendarComponent
   listCustomer: CM_Customers[];
   listContract: CM_Contracts[];
 
+  actionName = '';
   disableButton = true;
   objectID = '';
   isActivitie = false;
@@ -131,14 +131,14 @@ export class ViewCalendarComponent
   assemblyName = 'ERM.Business.CM';
   methodLoadData = 'GetListContractsAsync';
   requestData = new DataRequest();
-
+  listTaskType = [];
 
   constructor(
     private inject: Injector,
     private authstore: AuthStore,
     private cmService: CodxCmService,
     private stepService: StepService,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
@@ -156,6 +156,11 @@ export class ViewCalendarComponent
   }
   onInit(): void {
     this.getDayOff();
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTaskType = res.datas;
+      }
+    });
   }
   ngAfterViewInit(): void {
     this.afterLoad();
@@ -325,10 +330,80 @@ export class ViewCalendarComponent
   //chua goi tho phan quyền -- đang full true
   changeDataMF(e, data) {}
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.actionName = e.text;
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteTask(data);
+        break;
+      case 'SYS03':
+        this.editTask(data);
+        break;
+      case 'SYS04':
+        console.log(data);
+        break;
+    }
+  }
 
   //------------------More Func-----------------//
 
+  async editTask(data) {
+    if (data) {
+      const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
+      let task = await this.getTask(data);
+      if (task) {
+        this.handleTask(type, 'edit', task);
+      } else {
+        this.notiService.notifyCode('');
+      }
+    }
+  }
+
+  async deleteTask(data){
+    if (data) {
+      let task = await this.getTask(data);
+      if (task) {
+        this.notiService.alertCode('SYS030').subscribe((x) => {
+          if (x.event && x.event.status == 'Y') {
+            this.notiService.notifyCode('SYS007');
+            // this.api
+            //   .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
+            //   .subscribe((data) => {
+            //   })
+          }
+        });
+      } else {
+        this.notiService.notifyCode('');
+      }
+    }
+  }
+
+  async getTask(data) {
+    let task;
+    if (data) {
+      const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
+      if (data?.entityName == 'DP_Instances_Steps_Tasks' && type) {
+        task = await firstValueFrom(
+          this.api.exec<any>(
+            'DP',
+            'InstanceStepsBusiness',
+            'GetTaskInCalendarAsync',
+            [data?.stepID, data?.recID]
+          )
+        );
+      } else if (data?.entityName == 'DP_Activities' && type) {
+        task = await firstValueFrom(
+          this.api.exec<any>(
+            'DP',
+            'ActivitiesBusiness',
+            'GetActivitieInCalendarAsync',
+            [data?.recID]
+          )
+        );
+      }
+    }
+    return task;
+  }
   //#region add task
   beforeAddTask() {
     let option = new DialogModel();
@@ -344,8 +419,8 @@ export class ViewCalendarComponent
       option
     );
   }
-   
-  closeBeforeAddTask(){
+
+  closeBeforeAddTask() {
     this.popupTypeCM.close();
     // this.isStepTask = false;
     // this.isActivitie = false;
@@ -366,26 +441,26 @@ export class ViewCalendarComponent
         this.getDatas(typeCM?.entityName, typeCM?.funcID, null, null);
         break;
       case 'CM_Customers':
-        if(event?.value){
+        if (event?.value) {
           this.objectID = event?.value;
           this.disableButton = false;
           this.isStepTask = false;
           this.isActivitie = true;
-        }else{
+        } else {
           this.disableButton = true;
         }
         break;
       case 'CM_Leads':
-        this.checkLeads(event?.itemData)
+        this.checkLeads(event?.itemData);
         break;
       case 'CM_Deals':
         this.checkDeal(event?.value);
         break;
       case 'CM_Contracts':
-        this.checkContracts(event?.itemData)
+        this.checkContracts(event?.itemData);
         break;
       case 'CM_Cases':
-        this.checkCases(event?.itemData)
+        this.checkCases(event?.itemData);
         break;
       case 'step':
         this.insStep = event?.itemData;
@@ -394,9 +469,9 @@ export class ViewCalendarComponent
     }
   }
 
-  checkLeads(lead) {   
-    console.log(lead); 
-    if(!lead?.applyProcess){
+  checkLeads(lead) {
+    console.log(lead);
+    if (!lead?.applyProcess) {
       this.objectID = lead?.recID;
       this.isStepTask = false;
       this.insStep = null;
@@ -404,22 +479,24 @@ export class ViewCalendarComponent
       this.disableButton = false;
       this.isStepTask = false;
       this.isActivitie = true;
-    }else{
+    } else {
       this.disableButton = true;
       var data = [lead?.refID, lead?.processID, lead?.status, '5'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
+          this.listStep = res?.filter(
+            (step) => !step?.isFailStep && !step?.isFailStep
+          );
           this.isStepTask = true;
           this.isActivitie = false;
         }
       });
     }
   }
-  
+
   checkContracts(contract) {
     console.log(contract);
-    if(!contract?.applyProcess){
+    if (!contract?.applyProcess) {
       this.objectID = contract?.recID;
       this.disableButton = false;
       this.isStepTask = false;
@@ -427,12 +504,14 @@ export class ViewCalendarComponent
       this.listStep = [];
       this.isStepTask = false;
       this.isActivitie = true;
-    }else{
+    } else {
       this.disableButton = true;
       var data = [contract?.refID, contract?.processID, contract?.status, '4'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
+          this.listStep = res?.filter(
+            (step) => !step?.isFailStep && !step?.isFailStep
+          );
           this.isStepTask = true;
           this.isActivitie = false;
         }
@@ -441,7 +520,7 @@ export class ViewCalendarComponent
   }
 
   checkCases(cases) {
-    if(!cases?.applyProcess){
+    if (!cases?.applyProcess) {
       this.objectID = cases?.recID;
       this.disableButton = false;
       this.isStepTask = false;
@@ -449,12 +528,19 @@ export class ViewCalendarComponent
       this.listStep = [];
       this.isStepTask = false;
       this.isActivitie = true;
-    }else{
+    } else {
       this.disableButton = true;
-      var data = [cases?.refID, cases?.processID, cases?.status,  cases.caseType == "1" ? '2':'3'];
+      var data = [
+        cases?.refID,
+        cases?.processID,
+        cases?.status,
+        cases.caseType == '1' ? '2' : '3',
+      ];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
+          this.listStep = res?.filter(
+            (step) => !step?.isFailStep && !step?.isFailStep
+          );
           this.isStepTask = true;
           this.isActivitie = false;
         }
@@ -469,7 +555,9 @@ export class ViewCalendarComponent
       var data = [deal?.refID, deal?.processID, deal?.status, '1'];
       this.cmService.getStepInstance(data).subscribe((res) => {
         if (res) {
-          this.listStep = res?.filter(step => !step?.isFailStep && !step?.isFailStep);
+          this.listStep = res?.filter(
+            (step) => !step?.isFailStep && !step?.isFailStep
+          );
           this.isStepTask = true;
           this.isActivitie = false;
         }
@@ -533,12 +621,22 @@ export class ViewCalendarComponent
   async chooseTypeTask() {
     this.taskType = await this.stepService.chooseTypeTask(false);
     if (this.taskType) {
-      await this.addTask(this.taskType);
+      await this.handleTask(this.taskType, 'add');
     }
   }
 
-  async addTask(dataType) {
-    let taskOutput = await this.stepService.addTask('add','',dataType,this.insStep,null,false,null,'right');
+  async handleTask(dataType, type, taskData = null) {
+    let taskOutput = await this.stepService.addTask(
+      type,
+      '',
+      taskData,
+      dataType,
+      this.insStep,
+      null,
+      false,
+      null,
+      'right'
+    );
     let task = taskOutput;
     if (task) {
       this.isActivitie && this.addActivitie(task);
@@ -573,20 +671,20 @@ export class ViewCalendarComponent
   addStepTask(task) {
     console.log(task);
     this.api
-    .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
-    .subscribe((res) => {
-      if (res) {
-        let task = res[0];
-        task.StartDate = task.ActualStart || task.StartDate;
-        task.EndDate = task.ActualEnd || task.EndDate;
-        task.isActual = task.ActualStart != null ? true : false;
-        task.EntityName = 'DP_Instances_Steps_Tasks';
-        this.view.dataService.add(task).subscribe();
-        this.isStepTask = false;
-        this.notiService.notifyCode('SYS006');
-        this.detectorRef.detectChanges();
-      }
-    });
+      .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
+      .subscribe((res) => {
+        if (res) {
+          let task = res[0];
+          task.StartDate = task.ActualStart || task.StartDate;
+          task.EndDate = task.ActualEnd || task.EndDate;
+          task.isActual = task.ActualStart != null ? true : false;
+          task.EntityName = 'DP_Instances_Steps_Tasks';
+          this.view.dataService.add(task).subscribe();
+          this.isStepTask = false;
+          this.notiService.notifyCode('SYS006');
+          this.detectorRef.detectChanges();
+        }
+      });
   }
-   //#endregion
+  //#endregion
 }

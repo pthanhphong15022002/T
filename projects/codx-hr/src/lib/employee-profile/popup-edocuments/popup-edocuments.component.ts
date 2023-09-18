@@ -23,9 +23,9 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  originDocumentTypeID : any;
   headerText: any;
-  funcID: any;
+  changedInForm = false;
   actionType: any;
   documentObj: any;
   fieldHeaderTexts;
@@ -49,6 +49,11 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     }
     this.employId = data?.data?.employeeId;
     this.documentObj = JSON.parse(JSON.stringify(data?.data?.documentObj));
+    console.log('data nhan vao', this.documentObj);
+    if(this.documentObj){
+      this.originDocumentTypeID = this.documentObj.documentTypeID;
+    }
+    
   }
 
     onInit(): void {
@@ -57,7 +62,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         if (formModel) {
           this.formModel = formModel;
           this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -68,7 +73,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       });
     else
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -146,7 +151,9 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt){
+    this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.documentObj);
   }
 
   popupUploadFile() {
@@ -156,8 +163,11 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
+    debugger
+
 
     if(
       this.attachment.fileUploadList &&
@@ -166,29 +176,40 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       this.attachment.objectId=this.documentObj?.recID;
       (await (this.attachment.saveFilesObservable())).subscribe(
       (item2:any)=>{
-            
+            debugger
           });
       }
       
 
-
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEmployeeVisaInfo(this.documentObj).subscribe((p) => {
-        if (p != null) {
-          this.documentObj.recID = p.recID;
-          this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(p);
-        } else this.notify.notifyCode('SYS023');
-      });
+      // this.hrService.AddEmployeeVisaInfo(this.documentObj).subscribe((p) => {
+      //   if (p != null) {
+      //     this.documentObj.recID = p.recID;
+      //     this.notify.notifyCode('SYS006');
+      //     this.dialog && this.dialog.close(p);
+      //   } else this.notify.notifyCode('SYS023');
+      // });
     } else {
-      this.hrService
-        .updateEmployeeVisaInfo(this.formModel.currentData)
+      if(this.originDocumentTypeID != this.documentObj.documentTypeID){
+        this.UpdateEDocumentIdEdited(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
             this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
+          } 
+          // else this.notify.notifyCode('SYS021');
         });
+      }
+      else{
+        this.UpdateEDocument(this.formModel.currentData)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              this.dialog && this.dialog.close(p);
+            } 
+            // else this.notify.notifyCode('SYS021');
+          });
+      }
     }
   }
 
@@ -208,8 +229,38 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       'HR',
       'HR',
       'EDocumentsBusiness',
-      'AddEDocumentAsync',
+      'AddEDocumentsAsync',
       [this.documentObj]
+    );
+  }
+
+  UpdateEDocument(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDocumentsBusiness',
+      'UpdateEDocumentsAsync',
+      data
+    );
+  }
+
+  UpdateEDocumentIdEdited(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDocumentsBusiness',
+      'UpdateEDocumentsIdEditedAsync',
+      data
+    );
+  }
+
+  DeleteEDocument(recId){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDocumentsBusiness',
+      'DeleteEDocumentsAsync',
+      recId
     );
   }
   //#endregion

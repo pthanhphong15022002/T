@@ -37,7 +37,6 @@ import { CodxFdService } from '../../../codx-fd.service';
   styleUrls: ['./behavior.component.scss'],
 })
 export class BehaviorComponent extends UIComponent implements OnInit {
-  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;

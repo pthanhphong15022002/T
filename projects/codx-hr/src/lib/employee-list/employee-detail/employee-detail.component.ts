@@ -154,7 +154,6 @@ export class EmployeeDetailComponent extends UIComponent {
   crrEContract: any;
   lstContractType: any; //phân loại HĐ không xác định
 
-  funcID = '';
   service = '';
   assemblyName = '';
   entity = '';

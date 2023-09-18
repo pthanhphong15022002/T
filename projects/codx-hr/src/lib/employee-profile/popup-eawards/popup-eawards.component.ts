@@ -27,7 +27,6 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   actionType;
   headerText: '';
-  funcID;
   idField = 'RecID';
   employId;
   empObj;
@@ -224,7 +223,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -246,6 +245,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue(this.formModel.currentData);
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 
@@ -287,6 +287,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   inYearSelect(event) {
     this.awardObj.inYear = new Date(event.value).getFullYear();
+    this.formGroup.patchValue(this.awardObj);
     console.log('cap nhat inyear', this.awardObj.inYear);
   }
 

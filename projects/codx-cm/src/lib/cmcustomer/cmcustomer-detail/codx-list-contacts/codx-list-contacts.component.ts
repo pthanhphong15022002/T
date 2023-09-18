@@ -169,6 +169,8 @@ export class CodxListContactsComponent implements OnInit {
           this.changeContacts(this.listContacts[0]);
           if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
+        if (this.objectType == '4' && this.type == 'formDetail')
+          this.lstContactEmit.emit(this.listContacts);
         this.loaded = true;
       });
     } else {
@@ -486,8 +488,10 @@ export class CodxListContactsComponent implements OnInit {
                 data: this.listContacts[index],
                 type: 'delete',
               });
-
-              this.listContacts.splice(index, 1);
+              var idxOld = this.listContacts.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idxOld != -1) this.listContacts.splice(idxOld, 1);
               lstDelete.push(data);
               if (this.listContacts != null && this.listContacts.length > 0)
                 this.changeContacts(this.listContacts[0]);

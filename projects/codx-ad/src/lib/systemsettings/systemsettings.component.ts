@@ -38,7 +38,6 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
   button?: ButtonModel;
-  funcID: any;
   user: any;
   moreFunc = [];
   gridViewSetup: any;

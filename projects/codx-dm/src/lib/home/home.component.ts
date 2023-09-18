@@ -91,7 +91,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //icon Sort
   itemSelected: any;
   dataFile: any;
-  funcID:any;
   visible: boolean = false;
   isScrollFolder = true;
   isScrollFile = true;
@@ -1107,9 +1106,19 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     } else {
     }
   }
-
+  // test()
+  // {
+  //   var dataRequest = new DataRequest();
+  //   dataRequest.funcID = "DMT00";
+  //   dataRequest.pageSize = 20,
+  //   dataRequest.page = 1;
+  //   var type = "All";
+  //   this.api
+  //   .execSv('DM', 'DM', 'FileBussiness', 'GetFiles_MobileAsync', [dataRequest,type])
+  //   .subscribe();
+  // }
   onSelectionChanged($data , noTree = false) {
-    if(this.funcID == "DMT00") return;
+    if(this.funcID == "DMT00" && $data.data.folderId == "DM") return;
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return

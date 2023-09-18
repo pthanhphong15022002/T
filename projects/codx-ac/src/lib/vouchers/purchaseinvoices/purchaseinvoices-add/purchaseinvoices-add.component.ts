@@ -209,77 +209,58 @@ export class PurchaseinvoicesAddComponent
     grid.setRequiredFields(requiredFields, true);
   }
 
-  onAfterValidation(o): void {
-    if (
-      this.journal.transLimit &&
-      this.master.totalAmt > this.journal.transLimit
-    ) {
-      this.notiService.notifyCode('AC0016');
-      o.cancle = true;
-    }
-  }
-
   onClickAddRow(): void {
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.master,
-      'AC',
-      'AC_PurchaseInvoices',
-      this.form,
-      this.form.data._isEdit,
-      () => {
-        this.form.save(null, null, null, null, false).subscribe((res) => {
-          if (res === false || res.save?.error || res.update?.error) {
-            return;
-          }
-
-          if (this.tab.selectedItem === 0) {
-            if (this.journal.addNewMode === '1') {
-              this.gridPurchaseInvoiceLines.addRow(
-                this.createNewPurchaseInvoiceLine(),
-                this.gridPurchaseInvoiceLines.dataSource.length
-              );
-            } else {
-              // later
-            }
-          } else {
-            if (this.journal.addNewMode === '1') {
-              this.gridVatInvoices.addRow(
-                this.createNewVatInvoice(),
-                this.gridVatInvoices.dataSource.length
-              );
-            } else {
-              // later
-            }
-          }
-        });
+    this.form.save(null, null, null, null, false).subscribe((res) => {
+      if (res === false || res.save?.error || res.update?.error) {
+        return;
       }
-    );
+
+      if (this.tab.selectedItem === 0) {
+        if (this.journal.addNewMode === '1') {
+          this.gridPurchaseInvoiceLines.addRow(
+            this.createNewPurchaseInvoiceLine(),
+            this.gridPurchaseInvoiceLines.dataSource.length
+          );
+        } else {
+          // later
+        }
+      } else {
+        if (this.journal.addNewMode === '1') {
+          this.gridVatInvoices.addRow(
+            this.createNewVatInvoice(),
+            this.gridVatInvoices.dataSource.length
+          );
+        } else {
+          // later
+        }
+      }
+    });
   }
 
   onClickSave(closeAfterSave: boolean): void {
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.master,
-      'AC',
-      'AC_PurchaseInvoices',
-      this.form,
-      this.form.data._isEdit,
-      () => {
-        this.master.status = '1';
-        this.form.save().subscribe((res: any) => {
-          if (res === false || res.save?.error || res.update?.error) {
+    this.form.save(null, null, null, null, false).subscribe((res: any) => {
+      if (res === false || res.save?.error || res.update?.error) {
+        return;
+      }
+
+      this.api
+        .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateAsync', [
+          this.master,
+          this.journal,
+        ])
+        .subscribe((master) => {
+          if (!master) {
             return;
           }
 
           if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
             this.dialog.close();
           } else {
             this.resetForm();
           }
         });
-      }
-    );
+    });
   }
 
   onClickClose(): void {
@@ -388,6 +369,7 @@ export class PurchaseinvoicesAddComponent
       'excisetaxamt',
     ];
     if (postFields.includes(field)) {
+      this.gridPurchaseInvoiceLines.startProcess();
       this.api
         .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
           field,
@@ -398,6 +380,7 @@ export class PurchaseinvoicesAddComponent
           this.prevLine = { ...line };
           Object.assign(e.data, line);
           this.detectorRef.markForCheck();
+          this.gridPurchaseInvoiceLines.endProcess();
         });
     }
   }
@@ -519,6 +502,8 @@ export class PurchaseinvoicesAddComponent
       ...this.defaultLineData,
       ...(copiedData || {}),
       recID: Util.uid(),
+      lotID: Util.uid(),
+      idiMID: Util.uid(),
       note: this.master.memo,
       idiM4: this.master.warehouseID,
       createdOn: new Date(),

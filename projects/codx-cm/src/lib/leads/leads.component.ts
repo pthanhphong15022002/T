@@ -77,7 +77,6 @@ export class LeadsComponent
   formModel: FormModel;
 
   // type any for view detail
-  funcID: any;
   dataObj?: any;
   kanban: any;
 
@@ -855,7 +854,7 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.detailViewLead.promiseAllLoad();
-            this.dataSelected = e.event;
+            this.dataSelected =  JSON.parse(JSON.stringify(e.event));
             this.view.dataService.update(this.dataSelected).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -1222,7 +1221,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
-        this.detailViewLead.resetTab(this.dataSelected.applyProcess);
+     //   this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }

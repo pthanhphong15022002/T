@@ -3,6 +3,7 @@
   [title]="headerText"
   [tabInfo]="tabInfo"
   [formModel]="formModel"
+  [group]="formGroup"
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialog"
@@ -145,7 +146,9 @@
     ></codx-input>
   </div>
 
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3"
+  *ngIf="degreeObj?.attachments > 0"
+  >
     <codx-label
       name="lblAttachFile"
       [formModel]="formModel"
@@ -587,7 +590,7 @@
     ></codx-label>
   </button>
 
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="!formModel.currentData.updateColumn && !changedInForm">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

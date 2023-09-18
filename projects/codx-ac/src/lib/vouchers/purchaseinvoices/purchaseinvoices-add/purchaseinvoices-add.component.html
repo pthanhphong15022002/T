@@ -9,7 +9,6 @@
   [openMore]="false"
   class="ac-dialog"
   (onAfterInit)="onAfterFormInit($event)"
-  (afterValidate)="onAfterValidation($event)"
 >
 </codx-form>
 
@@ -69,6 +68,7 @@
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -120,6 +120,7 @@
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (gridInit)="onGridInit($event)"
                 (cellChanged)="onCellChange2($event)"
                 (eventAction)="onActionEvent2($event)"
@@ -498,7 +499,7 @@
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
         (click)="onClickDiscard()"
-        *ngIf="masterService.hasSaved && master.status == '7'"
+        *ngIf="form.data._isEdit && master.status == '7'"
       >
         <i class="icon-cancel icon-16"></i>
         <codx-label

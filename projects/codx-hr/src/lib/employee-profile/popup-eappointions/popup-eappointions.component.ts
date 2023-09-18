@@ -31,7 +31,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   successFlag = false;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId: string;
   genderGrvSetup: any;
@@ -40,6 +39,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   decisionNoDisable: boolean = false;
   autoNumField: string;
   eAppointionHeaderTexts: any;
+  changedInForm = false;
+
   disabledInput = false;
   employeeSign;
   loaded: boolean = false;
@@ -234,7 +235,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.eAppointionHeaderTexts = res;
     });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -261,6 +262,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       delete this.employeeObj;
     }
   }
+
+  async addFiles(evt){
+    debugger
+    this.changedInForm = true;
+    this.EAppointionObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.EAppointionObj);
+  }
+
 
   onChangeOrgUnitID(event) {
     if (
@@ -519,6 +528,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 
@@ -532,6 +542,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         return;
       }
     }
+
+    this.EAppointionObj.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {

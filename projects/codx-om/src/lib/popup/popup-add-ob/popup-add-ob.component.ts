@@ -47,7 +47,6 @@ export class PopupAddOBComponent extends UIComponent {
   fGroupAddOB: FormGroup;
   oParentID: any;
   dialogTargets: DialogRef;
-  funcID: any;
   tempTarget: any;
   funcType: any;
   isSubKR: boolean;

@@ -767,7 +767,6 @@
                         </div>
                       </div>
                     </div>
-
                   </div>
 
                   <div class="row">
@@ -858,8 +857,11 @@
                         [showColumnControl]="showColumnControl(item.stepID)"
                         [isUpdate]="
                           ['1', '2'].includes(dataSelected.status) &&
-                          dataSelected?.roles?.isOnwer
+                          dataSelected?.full &&
+                          !dataSelected.closed
                         "
+                        [objectIdParent]="dataSelected.recID"
+                        [customerID]="dataSelected.customerID"
                         (saveDataStep)="saveDataStep($event)"
                       >
                       </codx-fields-detail-temp>

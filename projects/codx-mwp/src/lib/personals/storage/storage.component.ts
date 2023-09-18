@@ -46,7 +46,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   checkFormComment = false;
   dataSort: any = [];
   checkDetail = false;
-  funcID = '';
   views = [];
   modelResource: ResourceModel;
   dialog!: DialogRef;

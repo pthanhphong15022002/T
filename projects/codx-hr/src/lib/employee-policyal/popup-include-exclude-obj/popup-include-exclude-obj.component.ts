@@ -27,7 +27,6 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
   
   dialog: DialogRef;
   policyObj: any;
-  funcID: string;
   headerText: string;
   formModel: FormModel;
   lstOrgUnitID: any = []
@@ -58,7 +57,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -69,7 +68,7 @@ export class PopupIncludeExcludeObjComponent extends UIComponent {
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;

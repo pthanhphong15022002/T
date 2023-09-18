@@ -7,6 +7,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -18,7 +19,6 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./popup-eself-info.component.css'],
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   fieldHeaderTexts;
@@ -35,7 +35,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   action: '';
   trainFieldStr: '';
   trainLevelStr: '';
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
 
   tabInfo: any[] = [
     {
@@ -147,10 +147,14 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     } else if (trainLev) {
       this.data.degreeName = this.trainLevelStr;
     }
+    else{
+      this.data.degreeName = '';
+    }
     this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   valChangeTrainFieldId(event){
+    debugger
     this.trainFieldStr = event.component.itemsSelected[0]?.TrainFieldName;
 
     let trainFieldId = this.data.trainFieldID;
@@ -162,6 +166,9 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       this.data.degreeName = this.trainFieldStr;
     } else if (trainLev) {
       this.data.degreeName = this.trainLevelStr;
+    }
+    else{
+      this.data.degreeName = '';
     }
     this.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
@@ -177,7 +184,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
         if (formModel) {
           this.formModel = formModel;
           this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -190,7 +197,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -246,6 +253,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     debugger
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
     //Xu li validate thong tin ngay sinh nhan vien

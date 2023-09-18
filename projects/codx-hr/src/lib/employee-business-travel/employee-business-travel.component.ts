@@ -41,7 +41,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   itemDetail;
 
   views: Array<ViewModel> = [];
-  funcID: string;
   method = 'LoadDataEBTravelsAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -187,7 +186,8 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       this.hrService
         .getFormGroup(
           this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
         )
         .then((res) => {
           this.formGroup = res;
@@ -202,7 +202,6 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
         if (res != null) {
           this.notify.notifyCode('SYS007');
           res[0].emp = this.currentEmpObj;
-          this.view.formModel.entityName;
           this.hrService
             .addBGTrackLog(
               res[0].recID,
@@ -212,9 +211,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
               null,
               'EBusinessTravelsBusiness'
             )
-            .subscribe((res) => {
-              console.log('kq luu track log', res);
-            });
+            .subscribe();
           this.dialogEditStatus && this.dialogEditStatus.close(res);
         }
       });
@@ -495,4 +492,66 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
   }
 
   //#endregion
+
+  viewDetail(data) {
+    this.currentEmpObj = data?.emp;
+    this.HandleEBusinessTravel('Xem chi tiết', 'view', data);
+  }
+
+  handleMutipleUpdateStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.EditEBusinessTravelMoreFunc(data).subscribe((res) => {
+      if (res != null) {
+        res[0].emp = this.currentEmpObj;
+        this.view.dataService.update(res[0]).subscribe();
+
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EBusinessTravelsBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              res[0].recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+        this.df.detectChanges();
+      }
+    });
+  }
+
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
+  }
 }

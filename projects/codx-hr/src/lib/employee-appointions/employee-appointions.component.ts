@@ -216,7 +216,8 @@ export class EmployeeAppointionsComponent extends UIComponent {
       this.hrService
         .getFormGroup(
           this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
         )
         .then((res) => {
           this.formGroup = res;
@@ -484,4 +485,69 @@ export class EmployeeAppointionsComponent extends UIComponent {
   }
 
   //#endregion
+
+  viewDetail(data) {
+    this.HandleEAppoint('Xem chi tiết', 'view', data);
+  }
+
+  handleMutipleUpdateStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.UpdateEmployeeAppointionsInfo(data).subscribe((res) => {
+      if (res != null) {
+        let data = {
+          ...res,
+          emp: this.currentEmpObj,
+        };
+
+        this.view.dataService.update(data).subscribe();
+
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EAppointionsBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              res[0].recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+        this.df.detectChanges();
+      }
+    });
+  }
+
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
+  }
 }

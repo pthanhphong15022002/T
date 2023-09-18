@@ -7,7 +7,7 @@
   [footer]="footer"
   [dialog]="dialog"
   (setTitle)="setTitle($event)"
-
+  [group]="formGroup"
   [openMore]="true"
   [tabContent]="[cerOveralInf, cerMoreInf]"
   [data]="certificateObj"
@@ -154,7 +154,9 @@
     ></codx-input>
   </div>
 
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3"
+  *ngIf="certificateObj?.attachments > 0"
+  >
     <codx-label
       name="lblAttachFile"
       [formModel]="formModel"
@@ -450,7 +452,9 @@
     ></codx-label>
   </button>
 
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" 
+    [disabled]="!formModel.currentData.updateColumn && !changedInForm"
+    >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

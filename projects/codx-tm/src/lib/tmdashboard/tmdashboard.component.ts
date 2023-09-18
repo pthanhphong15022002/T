@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import { ChartSettings } from './models/chart.model';
 import { TMDashboardService } from './tmdashboard.service';
+import { TM_DashBoard } from './models/TM_DashBoard';
 
 export class GridModels {
   pageSize: number;
@@ -37,7 +38,7 @@ export class GridModels {
 }
 
 @Component({
-  selector: 'app-tmdashboard',
+  selector: 'tmdashboard',
   templateUrl: './tmdashboard.component.html',
   styleUrls: ['./tmdashboard.component.scss'],
 })
@@ -62,7 +63,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   viewType = ViewType;
   views: Array<ViewModel> = [];
   dashboard = [];
-  funcID: string = 'TMD';
   reportID: string = 'TMD001';
 
   templates: QueryList<any>;
@@ -413,6 +413,17 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     //       });
     //     });
     //   });
+    this.api
+      .execSv(
+        'rptrp',
+        'Codx.RptBusiness.RP',
+        'ReportListBusiness',
+        'GetByReportIDAsync',
+        [this.funcID]
+      )
+      .subscribe((res) => {
+        // this.tmDBService.getReportSource();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -526,24 +537,24 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  dataset: TM_DashBoard[] = [];
+
   filterChange(e: any) {
     this.isLoaded = false;
-    const { predicates, dataValues } = e[0];
-    const param = e[1];
+    const parameters = e[1];
 
-    switch (this.reportID) {
-      case 'TMD001':
-        this.getMyDashboardData(predicates, dataValues, param);
-        break;
-      case 'TMD002':
-        this.getTeamDashboardData(predicates, dataValues, param);
-        break;
-      case 'TMD003':
-        this.getAssignDashboardData(predicates, dataValues, param);
-        break;
-      default:
-        break;
-    }
+    this.api
+      .execSv(
+        'rpttm',
+        'Codx.RptBusiness.TM',
+        'TaskDataSetBusiness',
+        'GetReportSourceAsync',
+        [parameters]
+      )
+      .subscribe((res: TM_DashBoard[]) => {
+        this.dataset = res;
+        console.log(this.dataset);
+      });
 
     this.detectorRef.detectChanges();
   }
@@ -605,4 +616,22 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
     this.detectorRef.detectChanges();
   }
+
+  getTask1(status: string): number {
+    let result = 0;
+    this.dataset.filter((data: TM_DashBoard) => {
+      if (data.status === status) {
+        result = result + 1;
+      }
+    });
+    return result;
+  }
+
+  getTask2() {}
+
+  getTask3() {}
+
+  getTask4() {}
+
+  getData1() {}
 }

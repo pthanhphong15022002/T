@@ -27,6 +27,8 @@ import {
   CacheService,
   ExtendUser,
   NotificationsService,
+  RealHub,
+  RealHubService,
   TenantStore,
   UIComponent,
   UrlUtil,
@@ -69,6 +71,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   layoutCZ: any;
   sysSetting;
   login2FA = '';
+  hubConnectionID = '';
   // private fields
   unsubscribe: Subscription[] = [];
   iParams = '';
@@ -82,6 +85,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private routeActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
+    private realHub: RealHubService,
     private signalRService: SignalRService,
     private readonly authService: AuthService,
     // private readonly extendAuthService: SocialAuthService,
@@ -160,11 +164,13 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
-    // this.adService.getLoginSetting().subscribe((setting: any) => {
-    //   let t2FA = JSON.parse(setting?.dataValue)['2FA'];
-    //   this.login2FA = t2FA ?? '';
-    //   console.log('setting', this.login2FA);
-    // });
+    this.realHub.start('ad').then((x: RealHub) => {
+      let t = this;
+      x.hub.invoke('GetConnectionId').then(function (connectionId) {
+        t.realHub['hubConnectionID'] = connectionId;
+        t.hubConnectionID = connectionId;
+      });
+    });
   }
 
   // convenience getter for easy access to form fields
@@ -374,28 +380,35 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       .login(this.f.email.value, this.f.password.value, type)
       .pipe()
       .subscribe((data) => {
-        //this.login2FA = data?.data?.extends['Extends'] ?? '';
-        //nho xoa
-        // this.login2FA = '1';
-        let objData = {
-          data: data,
-          login2FA: this.login2FA,
-        };
-        if (this.login2FA != '') {
-          let lg2FADialog = this.callfc.openForm(
-            Login2FAComponent,
-            '',
-            400,
-            600,
-            '',
-            objData
-          );
-          lg2FADialog.closed.subscribe((lg2FAEvt) => {
-            console.log('close popup ', lg2FAEvt);
-            this.loginAfter(lg2FAEvt.event.data);
-          });
+        if (!data.error) {
+          this.login2FA = data?.data?.extends?.Extends ?? '';
+          let objData = {
+            data: data,
+            login2FA: this.login2FA,
+            hubConnectionID: this.hubConnectionID,
+          };
+
+          if (this.login2FA != '') {
+            let lg2FADialog = this.callfc.openForm(
+              Login2FAComponent,
+              '',
+              400,
+              600,
+              '',
+              objData
+            );
+            lg2FADialog.closed.subscribe((lg2FAEvt) => {
+              console.log('close popup ', lg2FAEvt);
+              if (lg2FAEvt.event.data.error) return;
+              this.authService.setLogin(data.data);
+
+              this.loginAfter(lg2FAEvt.event.data);
+            });
+          } else {
+            this.authService.setLogin(data.data);
+            this.loginAfter(data);
+          }
         } else {
-          this.authService.setLogin(data.data);
           this.loginAfter(data);
         }
       });

@@ -33,7 +33,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
   functionList: any;
   recID: any;
   repondID:any;
-  funcID: any;
   lstEditIV: any = [];
   REFER_TYPE = {
     IMAGE: 'image',

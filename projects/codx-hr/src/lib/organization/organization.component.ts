@@ -94,40 +94,40 @@ export class OrgorganizationComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ParentID';
 
-    if (this.funcIDCheck.includes('WP')) {
-      this.views = [
-        {
-          id: '1',
-          type: ViewType.list,
-          sameData: true,
-          model: {
-            template: this.templateList,
-          },
+    // if (this.funcIDCheck.includes('WP')) {
+    //   this.views = [
+    //     {
+    //       id: '1',
+    //       type: ViewType.list,
+    //       sameData: true,
+    //       model: {
+    //         template: this.templateList,
+    //       },
+    //     },
+    //   ];
+    // } else {
+    this.views = [
+      {
+        id: '2',
+        type: ViewType.listtree,
+        sameData: false,
+        request: this.request,
+        model: {
+          template: this.templateTree,
         },
-      ];
-    } else {
-      this.views = [
-        {
-          id: '2',
-          type: ViewType.listtree,
-          sameData: false,
-          request: this.request,
-          model: {
-            template: this.templateTree,
-          },
+      },
+      {
+        id: '3',
+        type: ViewType.tree_orgchart,
+        sameData: false,
+        request: this.request,
+        model: {
+          template: this.tempTree,
+          panelRightRef: this.tmpOrgChart,
         },
-        {
-          id: '3',
-          type: ViewType.tree_orgchart,
-          sameData: false,
-          request: this.request,
-          model: {
-            template: this.tempTree,
-            panelRightRef: this.tmpOrgChart,
-          },
-        },
-      ];
-    }
+      },
+    ];
+    // }
   }
 
   //loadEmployList
@@ -297,9 +297,10 @@ export class OrgorganizationComponent extends UIComponent {
           );
           popup.closed.subscribe((res: any) => {
             if (res.event) {
-              this.view.dataService.add(res.event, 0).subscribe();
               //Update view chart diagram
               this.itemAdded = res.event;
+
+              this.view.dataService.add(res.event).subscribe();
               // this.child.GetChartDiagram();
               this.flagLoaded = true;
             }
@@ -445,5 +446,4 @@ export class OrgorganizationComponent extends UIComponent {
   preventDedefault(e) {
     e.stopPropagation();
   }
-  
 }

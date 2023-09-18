@@ -118,9 +118,9 @@ export class LeadDetailComponent implements OnInit {
 
   ngAfterViewInit(): void {}
   ngAfterViewChecked() {
-    if (!this.hasRunOnce) {
-      this.resetTab(this.dataSelected.applyProcess);
-    }
+    // if (!this.hasRunOnce) {
+    //   this.resetTab(this.dataSelected?.applyProcess);
+    // }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -146,7 +146,7 @@ export class LeadDetailComponent implements OnInit {
           this.oldRecId
         ) {
           this.hasRunOnce = true;
-          this.resetTab(this.dataSelected.applyProcess);
+        //  this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
           this.isLoadOwner = true;
         }
@@ -181,18 +181,18 @@ export class LeadDetailComponent implements OnInit {
   }
 
   changeFooter(e) {}
-  resetTab(data) {
-    if (this.tabObj) {
-      this.isBool = data;
-      if (this.isBool) {
-        (this.tabObj as TabComponent).hideTab(1, true);
-        (this.tabObj as TabComponent).hideTab(2, false);
-      } else {
-        (this.tabObj as TabComponent).hideTab(1, false);
-        (this.tabObj as TabComponent).hideTab(2, true);
-      }
-    }
-  }
+  // resetTab(data) {
+  //   if (this.tabObj) {
+  //     this.isBool = data;
+  //     if (this.isBool) {
+  //       (this.tabObj as TabComponent).hideTab(1, true);
+  //       (this.tabObj as TabComponent).hideTab(2, false);
+  //     } else {
+  //       (this.tabObj as TabComponent).hideTab(1, false);
+  //       (this.tabObj as TabComponent).hideTab(2, true);
+  //     }
+  //   }
+  // }
 
   async promiseAllLoad() {
     this.seesionID = this.dataSelected.applyProcess
@@ -280,6 +280,9 @@ export class LeadDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.tmpDeal = res[0];
+        }
+        else {
+          this.tmpDeal = null;
         }
       });
   }

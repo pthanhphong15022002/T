@@ -689,7 +689,6 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
-
   //#region Convert contact to field DP
   convertToFieldDp(contact, type) {
     if (contact != null) {
@@ -716,6 +715,15 @@ export class PopupConvertLeadComponent implements OnInit {
           if (type != 'delete') {
             this.lstContactDeal.push(Object.assign({}, contact));
           }
+        }
+        let idxDefault = -1;
+        if (contact?.isDefault) {
+          idxDefault = this.lstContactDeal.findIndex(
+            (x) => x.isDefault && x.recID != contact.recID
+          );
+        }
+        if (idxDefault != -1 && type != 'delete') {
+          this.lstContactDeal[idxDefault].isDefault = false;
         }
       } else {
         if (type != 'delete') {
@@ -812,6 +820,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer.memo = this.lead?.memo ?? '';
     this.customer.owner = this.lead?.owner;
     this.customer.category = this.lead?.category;
+    this.customer.shortName = this.lead?.shortName;
   }
 
   setContact() {
@@ -874,10 +883,43 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     }
   }
-  valueChangeCustomer(e) {
+  async valueChangeCustomer(e) {
     this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
       this.nameAvt = e?.data?.trim();
+    }
+    if (e.field == 'address') {
+      if (e?.data != null && e?.data.trim() != '') {
+        var param = await firstValueFrom(
+          this.cache.viewSettingValues('CMParameters')
+        );
+        let lever = 0;
+        if (param?.length > 0) {
+          let dataParam = param.filter(
+            (x) => x.category == '1' && !x.transType
+          )[0];
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          lever = paramDefault['ControlInputAddress'] ?? 0;
+        }
+        let json = await firstValueFrom(
+          this.api.execSv<any>(
+            'BS',
+            'ERM.Business.BS',
+            'ProvincesBusiness',
+            'GetLocationAsync',
+            [e?.data, lever]
+          )
+        );
+        if (json != null && json.trim() != '') {
+          let lstDis = JSON.parse(json);
+          if (this.customer.provinceID != lstDis?.ProvinceID)
+            this.customer.provinceID = lstDis?.ProvinceID;
+          if (this.customer.districtID != lstDis?.DistrictID)
+            this.customer.districtID = lstDis?.DistrictID;
+          if (this.customer.wardID != lstDis?.WardID)
+            this.customer.wardID = lstDis?.WardID;
+        }
+      }
     }
   }
   valueTagChange(e) {

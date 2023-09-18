@@ -47,7 +47,7 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
   onInit(): void {
     if (this.formModel) {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((res) => {
           if (res) {
             this.formGroup = res;
@@ -62,6 +62,7 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {

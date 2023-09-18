@@ -1,9 +1,10 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel, AuthStore, CacheService } from 'codx-core';
+import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent, DialogModel, AuthStore, CacheService, NotificationsService } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -14,8 +15,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
   service: string = 'WP';
   assemblyName: string = 'ERM.Business.WP';
-  funcID: string = '';
-  functionName: string = '';
   user: any;
   acceptApprove: string = '5';
   cancelApprove: string = '4';
@@ -25,8 +24,8 @@ export class AppropvalNewsComponent extends UIComponent {
   dataSelected: any = null;
   itemSelected: any = null;
   selectedID: string = '';
-  vllWP004:any[] = [];
   hideMF:boolean = false;
+  function:any = null;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
@@ -64,7 +63,8 @@ export class AppropvalNewsComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private auth: AuthStore,
-    private callFuc: CallFuncService
+    private callFuc: CallFuncService,
+    private notifySvr:NotificationsService
   ) 
   {
     super(injector);
@@ -75,11 +75,11 @@ export class AppropvalNewsComponent extends UIComponent {
     this.router.params.subscribe((param) => {
       if (param['funcID']) {
         this.funcID = param['funcID'];
-        this.hideMF = this.funcID !== "WPT0211";
+        this.hideMF = this.funcID === "WPT0211";
         this.cache.functionList(this.funcID)
         .subscribe((func: any) => {
           if (func) {
-            this.functionName = func.customName;
+            this.function = func;
             this.cache
               .gridViewSetup(func.formName, func.gridViewName)
               .subscribe((grd: any) => {
@@ -87,14 +87,10 @@ export class AppropvalNewsComponent extends UIComponent {
               });
           }
         });
-        this.loadDataTab(this.funcID);
+        this.loadDataTab();
       }
+      this.detectorRef.detectChanges();
     });
-    this.cache.valueList("WP004")
-    .subscribe((vll:any)=> {
-      if(Array.isArray(vll?.datas))
-        vll.datas.forEach(e => this.vllWP004[e.value] = e);
-    })
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -112,31 +108,30 @@ export class AppropvalNewsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   // get data tab list
-  loadDataTab(funcID: string) {
-    if (funcID){
-      this.api
-        .execSv(
-          this.service,
-          this.assemblyName,
-          'NewsBusiness',
-          'GetDataTabApproAsync',
-          [funcID])
-        .subscribe((res: any[]) => {
-          if(res) 
-          {
-            this.tabAsside.map((tab: any) => {
-              tab.total = 0;
-              if(tab.value == "")
-                res.forEach(x => tab.total += x.Count);
-              else 
-              {
-                let ele = res.find(x => x.Status == tab.value);
-                tab.total = ele ? ele.Count : 0;
-              }
-            });
-          }
-          this.detectorRef.detectChanges();
-        });
+  loadDataTab() {
+    if (this.funcID){
+      this.api.execSv(
+        this.service,
+        this.assemblyName,
+        'NewsBusiness',
+        'GetDataTabApproAsync',
+        [this.funcID])
+      .subscribe((res: any[]) => {
+        if(res) 
+        {
+          this.tabAsside.map((tab: any) => {
+            tab.total = 0;
+            if(tab.value == "")
+              res.forEach(x => tab.total += x.Count);
+            else 
+            {
+              let ele = res.find(x => x.Status == tab.value);
+              tab.total = ele ? ele.Count : 0;
+            }
+          });
+        }
+        this.detectorRef.detectChanges();
+      });
     }
   }
   //selected change
@@ -148,9 +143,6 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
   
-  realoadData(event: any) {
-    this.loadDataTab(this.view.funcID);
-  }
   // click tab approval
   clickTabApprove(item) {
     let predicates = [item.value ? "ApproveStatus = @0" : ""];
@@ -163,7 +155,7 @@ export class AppropvalNewsComponent extends UIComponent {
   }
   // click moreFunc
   clickMF(event: any, data: any) {
-    this.itemSelected = data;
+    debugger
     switch (event.functionID) {
       case 'SYS02': //delete
         this.deletedPost(data);
@@ -173,8 +165,7 @@ export class AppropvalNewsComponent extends UIComponent {
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         // WP_News
-        if(this.view.funcID !== 'WPT0213') 
-        {
+        if(this.function.entityName !== "WP_AprovalComments"){
           option.IsFull = true;
           option.zIndex = 100;
           let obj = {
@@ -182,7 +173,7 @@ export class AppropvalNewsComponent extends UIComponent {
             isAdd:false,
             data: data
           };
-          let popup = this.callFuc.openForm(
+          this.callFuc.openForm(
             PopupAddComponent,
             '',
             0,
@@ -191,12 +182,13 @@ export class AppropvalNewsComponent extends UIComponent {
             obj,
             '',
             option
-          );
-          popup.closed.subscribe((res: any) => {
+          ).closed.subscribe((res: any) => {
             if (res?.event)
             {
               this.view.dataService.update(res.event).subscribe();
-              this.tmpDetail.getPostInfor(res.event.recID);
+              this.selectedID = event.data.recID;
+              this.itemSelected = data;
+              this.detectorRef.detectChanges();
             }
           });
         } 
@@ -210,17 +202,14 @@ export class AppropvalNewsComponent extends UIComponent {
               'CommentsBusiness',
               'GetPostByIDAsync',
               [data.recID])
-              .subscribe((res: any) => {
-              if (res) {
+              .subscribe((res1: any) => {
+              if (res1) {
                 let obj = {
-                  data: res,
+                  data: res1,
                   status: 'edit',
                   headerText: event.text,
                 };
-                let option = new DialogModel();
-                option.DataService = this.view.dataService;
-                option.FormModel = this.view.formModel;
-                let popup = this.callfc.openForm(
+                this.callfc.openForm(
                   PopupAddPostComponent,
                   event.text,
                   700,
@@ -229,19 +218,75 @@ export class AppropvalNewsComponent extends UIComponent {
                   obj,
                   '',
                   option
-                );
-                popup.closed.subscribe((res: any) => {
-                  if (res?.event) {
-                    this.view.dataService.update(res.event).subscribe();
-                    debugger;
+                ).closed.subscribe((res2:any) => {
+                  if (res2?.event) {
+                    this.view.dataService.update(res2.event).subscribe();
+                    this.selectedID = event.data.recID;
+                    this.itemSelected = data;
+                    this.detectorRef.detectChanges();
                   }
                 });
               }
             });
         }
         break;
-      default:
+      case "WPT02131": // duyệt
+          this.notifySvr.alertCode("WP004")
+          .subscribe((option:any) =>{
+            if(option?.event?.status == "Y")
+            {
+              this.approvalPost(data.recID, "5")
+              .subscribe((res:any) => {
+                if(res)
+                {
+                  data.approveStatus = "5";
+                  this.view.dataService.update(data).subscribe();
+                  this.loadDataTab();
+                  this.notifySvr.notifyCode("WP005");
+                }
+              });
+            }
+          });
         break;
+      case "WPT02122": // làm lại
+        this.notifySvr.alertCode("WP008")
+        .subscribe((option:any) =>{
+          if(option?.event?.status == "Y")
+          {
+            this.approvalPost(data.recID, "2")
+            .subscribe((res:any) => {
+                if(res)
+                {
+                  data.approveStatus = "2";
+                  this.view.dataService.update(data).subscribe();
+                  this.loadDataTab();
+                  this.notifySvr.notifyCode("WP009");
+                }
+              });
+          }
+        });
+        break;
+      case "WPT02123": // từ chối
+        this.notifySvr.alertCode("WP006")
+          .subscribe((option:any) =>{
+            if(option?.event?.status == "Y")
+            {
+              this.approvalPost(data.recID, "2")
+              .subscribe((res:any) => {
+                  if(res)
+                  {
+                    data.approveStatus = "2";
+                    this.view.dataService.update(data).subscribe();
+                    this.loadDataTab();
+                    this.notifySvr.notifyCode("WP007");
+                  }
+                });
+            }
+        });
+        break;
+
+      default:
+      break;
     }
   }
 
@@ -254,6 +299,7 @@ export class AppropvalNewsComponent extends UIComponent {
     return true;
   }
 
+  // delete Post
   deletedPost(data: any) {
     if (data?.recID)
     {
@@ -263,29 +309,28 @@ export class AppropvalNewsComponent extends UIComponent {
     }
   }
 
-  // set style icon
-  setStyles(value: string) {
-    let styles = {
-      backgroundColor: this.vllWP004[value].color,
-      color: this.vllWP004[value].textcolor,
-    };
-    return styles;
-  }
-  //set des
-  setDescription(data:any):string
-  {
-    if(data.category == "1" || data.category == "3" || data.category == "4")
-      return data.content;
-    else if(data.category == "companyinfo")
-      return data.contents.replace(/<[^>]*>/g, "");
-    else
-      return data.subject;
+  //change data moreFC
+  changeDataMF(evt:any[],item:any){
+    if(item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5"))
+    {
+      evt.map(x => {
+        if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+        {
+          x.disabled = true;
+        }
+      });
+    }
+    
   }
 
-  //
-  hideMFc(moreFC:any,data:any){
-    Array.from(moreFC).map((x:any) => {
-        x.disabled = true;
-    });
+  //xét duyệt bài viết
+  approvalPost(recID:string,approvalStatus)
+  {
+    return this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "ApprovalPostAsync",
+      [this.function.entityName,recID,approvalStatus]);
   }
 }

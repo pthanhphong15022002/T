@@ -24,7 +24,6 @@ export class PopupForeignWorkerComponent extends UIComponent implements OnInit{
   actionType: string;
   formGroup: FormGroup;
   idField = 'RecID';
-  funcID: string;
   employId: string;
   isAfterRender = false;
   headerText: string = '';
@@ -62,7 +61,7 @@ export class PopupForeignWorkerComponent extends UIComponent implements OnInit{
         if (formModel) {
           this.formModel = formModel;
           this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -73,7 +72,7 @@ export class PopupForeignWorkerComponent extends UIComponent implements OnInit{
       });
     } else {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -86,6 +85,7 @@ export class PopupForeignWorkerComponent extends UIComponent implements OnInit{
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     this.hrService.saveEmployeeForeignWorkerInfo(this.data).subscribe((p) => {

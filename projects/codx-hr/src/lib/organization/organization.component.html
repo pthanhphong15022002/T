@@ -36,6 +36,7 @@
 
 <ng-template #tmpOrgChart>
   <hr-organization-orgchart
+    [activeMFC]="activeMFC"
     [view]="view"
     [dataService]="view.dataService"
     [formModel]="view.formModel"
@@ -372,7 +373,7 @@
       </div>
     </div>
 
-    <div class="w-150px">
+    <div class="w-150px" *ngIf="activeMFC">
       <codx-mfunc
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
@@ -647,8 +648,13 @@
       aria-labelledby="dropdownMenuButton"
     >
       <div class="">
-        <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-        <span class="fw-bold">({{ item?.counts }})</span>
+        <codx-label
+          name="lblListEmployee"
+          [formModel]="view.formModel"
+          default="Danh sách nhân viên"
+          class="fw-bold"
+        ></codx-label>
+        <span class="fw-bold">: ({{ item?.counts }})</span>
       </div>
       <div class="py-2">
         <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar>

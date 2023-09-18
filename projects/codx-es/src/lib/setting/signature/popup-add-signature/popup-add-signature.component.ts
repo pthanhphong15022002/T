@@ -63,6 +63,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   subHeaderText = '';
   grvSetup: any = {};
   funcID = '';
+  esSetting: any;
 
   constructor(
     private cr: ChangeDetectorRef,
@@ -121,6 +122,15 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.grvSetup = res;
         }
       });
+      this.cache.viewSettingValues('ESParameters').subscribe(setting=>{
+        if(setting){
+          let setting_1 = setting.filter(x=>x.category=="1" && x.transType ==null);
+          if(setting_1?.length>0){
+            this.esSetting = JSON.parse(setting_1[0].dataValue);
+            this.data.password= this.esSetting?.PWDefault;
+          }
+        }
+      })
   }
 
   valueChange(event: any) {

@@ -35,11 +35,11 @@ export class PopupEProcessContractComponent
   extends UIComponent
   implements OnInit
 {
+  console = console;
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  funcID: string;
   actionType: string;
   employeeId: string;
   idField = 'RecID';
@@ -53,6 +53,7 @@ export class PopupEProcessContractComponent
 
   loaded: boolean = false;
   disabledInput = false;
+  changedInForm = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -92,8 +93,8 @@ export class PopupEProcessContractComponent
 
   dataCbxContractType: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  // @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  @ViewChild('form') form: LayoutAddComponent;
+  //@ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('tmpAddBenefit', { static: true })
   tmpAddBenefit: TemplateRef<any>;
 
@@ -177,7 +178,8 @@ export class PopupEProcessContractComponent
         this.hrSevice
           .getFormGroup(
             this.benefitFormModel.formName,
-            this.benefitFormModel.gridViewName
+            this.benefitFormModel.gridViewName,
+            this.benefitFormModel
           )
           .then((fg) => {
             if (fg) {
@@ -192,7 +194,7 @@ export class PopupEProcessContractComponent
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -203,7 +205,7 @@ export class PopupEProcessContractComponent
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -290,7 +292,9 @@ export class PopupEProcessContractComponent
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res?.event) {
+      this.changedInForm = true;
         if (actionType == 'add') {
           let index = this.tempBenefitArr.findIndex(
             (x: any) => x.BenefitID == res.event.benefitID
@@ -476,12 +480,21 @@ export class PopupEProcessContractComponent
     }
   }
 
+  async addFiles(evt){
+    debugger
+    this.changedInForm = true;
+    this.data.attachments = evt.data.length;
+    this.formGroup.patchValue(this.data);
+  }
+
   async onSaveForm() {
     if (this.data.payForm == null) this.data.payForm = '';
     if (this.data.benefits == null) this.data.benefits = '';
 
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
+
       return;
     }
 
@@ -519,6 +532,9 @@ export class PopupEProcessContractComponent
     this.data.divisionID = this.employeeObj?.divisionID;
     this.data.companyID = this.employeeObj?.companyID;
     this.data.positionID = this.employeeObj?.positionID;
+
+    this.data.attachments =
+      this.attachment.data.length + this.attachment.fileUploadList.length;
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
@@ -601,6 +617,18 @@ export class PopupEProcessContractComponent
     }
   }
 
+  renderChangePosition(event) {
+    if (
+      event.itemsSelected
+        ? event.itemsSelected[0].PositionName
+        : event.component.itemsSelected[0].PositionName
+    ) {
+      this.employeeObj.positionName = event.itemsSelected
+        ? event.itemsSelected[0].PositionName
+        : event.component.itemsSelected[0].PositionNam;
+    }
+  }
+
   valueChange(event) {
     if (!event.data) {
       this.data.signerPosition = '';
@@ -635,6 +663,8 @@ export class PopupEProcessContractComponent
           }
           break;
         }
+        default:
+          break;
       }
 
       this.cr.detectChanges();

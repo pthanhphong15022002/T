@@ -1,6 +1,6 @@
 
 <div class="f-flex flex-column w-100 h-100">
-  <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column py-4 px-6 scroll-y">
+  <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column pt-4 pb-60px px-6 scroll-y">
       <!-- begin content -->
         <ng-container *ngFor="let md of listReport">
           <div class="d-flex flex-column my-2">
@@ -13,6 +13,7 @@
               <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
                 *ngFor="let c of md.childs"
                 [style.backgroundColor]="c?.color"
+                (click)="selectedChange(c)"
               >
                 <div class="d-flex flex-column h-100">
                   <span class="fs-5-sm">{{c.customName}}</span>

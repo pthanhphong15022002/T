@@ -37,7 +37,6 @@ export class CodxReportViewsComponent
 
   views: ViewModel[];
   viewType = ViewType;
-  funcID: any;
   funcItem: any;
   button: ButtonModel = {
     id: 'btnAdd',

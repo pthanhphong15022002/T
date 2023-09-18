@@ -26,7 +26,6 @@ export class PopupEmployeeJobsalaryComponent
   dialog: DialogRef;
   idField = 'RecID';
   currentEJobSalaries: any;
-  funcID: string;
   lstJobSalaries;
   actionType: string;
   employeeId: string;
@@ -71,7 +70,7 @@ export class PopupEmployeeJobsalaryComponent
 
   initForm() {
     this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((item) => {
         if (item) {
           this.formGroup = item;

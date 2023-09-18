@@ -8,7 +8,6 @@
   [data]="master"
   class="ac-dialog"
   (onAfterInit)="onAfterFormInit($event)"
-  (afterValidate)="onAfterValidation($event)"
 >
 </codx-form>
 
@@ -427,6 +426,7 @@
                 predicates="TransID=@0"
                 [dataValues]="master.recID"
                 [showEmptyRecord]="false"
+                [editOnClick]="true"
                 (cellChanged)="onCellChange($event)"
                 (gridInit)="onGridInit($event)"
                 (eventAction)="onActionEvent($event)"
@@ -500,7 +500,7 @@
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
         (click)="onClickDiscard()"
-        *ngIf="masterService.hasSaved && master.status == '0'"
+        *ngIf="form.data._isEdit && master.status == '7'"
       >
         <i class="icon-cancel icon-16"></i>
         <codx-label
@@ -587,6 +587,7 @@
 
   <div class="mb-1" style="margin-left: 30px">
     <codx-dropdown-select
+      [showFooter]="false"
       cssClass="border-0 fw-bold w-350px"
       cssPopup="h-350px w-550px"
       [isMulti]="false"

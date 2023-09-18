@@ -2771,7 +2771,7 @@
 <div class="sample" (wheel)="onMouseWheel($event)">
   <org-diagram
     [cursorItem]="cursorItem"
-    [highlightItem]="0"
+    [highlightItem]="cursorItem"
     [navigationMode]="navigationMode"
     [items]="items"
     [annotations]="annotations"
@@ -2894,6 +2894,7 @@
         </div>
         <div class="w-20px h-30px org-mfunc">
           <codx-mfunc
+            *ngIf="activeMFC"
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, itemConfig.context.data)"
             [isBookMark]="false"

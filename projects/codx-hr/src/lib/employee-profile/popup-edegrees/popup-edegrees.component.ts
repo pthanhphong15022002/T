@@ -10,6 +10,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -28,9 +29,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //indexSelected;
   //lstDegrees;
   successFlag = false;
-  funcID: string;
   actionType;
   disabledInput = false;
+  changedInForm = false;
 
   employId;
   isAfterRender = false;
@@ -46,7 +47,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   fieldHeaderTexts
   levelText: string;
   trainFieldText: string;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -155,7 +156,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   ];
 
   async addFiles(evt){
+    this.changedInForm = true;
     this.degreeObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.degreeObj);
   }
 
   openFormUploadFile() {
@@ -198,7 +201,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         }
       });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((item) => {
         this.formGroup = item;
         if (this.actionType == 'add') {
@@ -307,6 +310,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     // }
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
 

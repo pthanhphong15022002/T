@@ -33,7 +33,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   fromdateVal: any;
   todateVal: any;
   idField = 'RecID';
-  funcID: string;
+  changedInForm = false;
   employId: string;
   actionType: string;
   disabledInput = false;
@@ -116,7 +116,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
@@ -152,6 +152,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue({toDate: this.data.toDate})
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
 
@@ -208,10 +209,16 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   }
 
   UpdateFromDate(e) {
+    if(new Date(this.fromdateVal).toJSON() != new Date(e).toJSON() && this.fromdateVal){
+      this.changedInForm = true;
+    }
     this.fromdateVal = e;
   }
 
   UpdateToDate(e) {
+    if(new Date(this.todateVal).toJSON() != new Date(e).toJSON() && this.todateVal){
+      this.changedInForm = true;
+    }
     this.todateVal = e;
   }
 

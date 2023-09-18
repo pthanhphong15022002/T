@@ -31,7 +31,6 @@ export class NewsDetailComponent extends UIComponent {
   entityName: string = 'WP_News';
   category: string = '';
   recID: string = '';
-  funcID: string = '';
   data: any;
   listViews = [];
   listTag = [];

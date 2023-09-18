@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, OnInit, Optional } from '@angular/core';
 import {
   DialogRef,
@@ -166,6 +167,9 @@ export class PopupAddressComponent implements OnInit {
               if (x.event && x.event?.status) {
                 if (x.event.status == 'Y') {
                   this.onSaveHanle();
+                } else {
+                  this.isDefault = false;
+                  this.onSaveHanle();
                 }
               }
             });
@@ -183,8 +187,34 @@ export class PopupAddressComponent implements OnInit {
     }
   }
 
-  onSaveHanle() {
+  async onSaveHanle() {
     this.data.isDefault = this.isDefault;
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    let json = await firstValueFrom(
+      this.api.execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'ProvincesBusiness',
+        'GetLocationAsync',
+        [this.data.adressName, lever]
+      )
+    );
+    if (json != null && json.trim() != '') {
+      let lstDis = JSON.parse(json);
+      if (this.data.provinceID != lstDis?.ProvinceID)
+        this.data.provinceID = lstDis?.ProvinceID;
+      if (this.data.districtID != lstDis?.DistrictID)
+        this.data.districtID = lstDis?.DistrictID;
+      if (this.data.wardID != lstDis?.WardID) this.data.wardID = lstDis?.WardID;
+    }
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
@@ -213,6 +243,7 @@ export class PopupAddressComponent implements OnInit {
       }
     }
   }
+
   clickRefesh() {
     this.setAdressName();
   }

@@ -135,7 +135,8 @@ export class EmployeeBenefitComponent extends UIComponent {
       this.hrService
         .getFormGroup(
           this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
         )
         .then((res) => {
           this.formGroup = res;
@@ -459,13 +460,11 @@ export class EmployeeBenefitComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res.event[0].emp?.emp) {
-        res.event[0].emp = res.event[0].emp.emp;
-      }
       if (res.event) {
         if (actionType == 'add') {
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
         } else if (actionType == 'copy') {
+          console.log(res.event);
           this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
         } else if (actionType == 'edit') {
           this.view.dataService.update(res.event[0]).subscribe((res) => {});
@@ -511,4 +510,66 @@ export class EmployeeBenefitComponent extends UIComponent {
   }
 
   //#endregion
+
+  handleMutipleUpdateStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.EditEBenefit(data).subscribe((res) => {
+      if (res != null) {
+        res[0].emp = this.currentEmpObj;
+        this.view.dataService.update(res[0]).subscribe();
+
+        if (res[1]) {
+          res[1].emp = this.currentEmpObj;
+          this.view.dataService.update(res[1]).subscribe();
+        }
+
+        this.hrService
+          .addBGTrackLog(
+            res[0].recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EBenefitsBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              res[0].recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+        this.df.detectChanges();
+      }
+    });
+  }
+
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
+  }
 }

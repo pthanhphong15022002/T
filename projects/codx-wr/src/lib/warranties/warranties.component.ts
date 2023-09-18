@@ -62,7 +62,6 @@ export class WarrantiesComponent
 
   // type any for view detail
   @Input() dataObj?: any;
-  @Input() funcID: any;
 
   // region LocalVariable
   viewMode = 1;
@@ -242,7 +241,7 @@ export class WarrantiesComponent
   }
 
   async getValueListRole() {
-    this.cache.valueList('CRM040').subscribe((res) => {
+    this.cache.valueList('WR005').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
@@ -676,7 +675,7 @@ export class WarrantiesComponent
               this.updateStatus,
               '',
               500,
-              200
+              350
             );
             this.dialogStatus.closed.subscribe((ele) => {
               if (ele && ele?.event) {

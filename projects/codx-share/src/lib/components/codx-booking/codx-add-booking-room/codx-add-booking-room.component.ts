@@ -65,7 +65,6 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   optionalData: any;
   dialogRef: DialogRef;
   formModel: FormModel;
-  funcID: string;
   user: any;
   attendeesNumber = 0;
   startTime: string;

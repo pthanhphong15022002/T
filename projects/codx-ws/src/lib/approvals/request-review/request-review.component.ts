@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, TemplateRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModel, CallFuncService, DialogModel, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
@@ -6,7 +6,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { environment } from 'src/environments/environment';
+import { componentsDetail } from '../routing';
 
 @Component({
   selector: 'lib-request-review',
@@ -19,11 +19,15 @@ export class RequestReviewComponent
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+  @ViewChild('content', { read: ViewContainerRef, static: false })
+  content!: ViewContainerRef;
+
   @Input() tmpHeader?: TemplateRef<any>;
   @Input() tmpBody?: TemplateRef<any>;
   @Input() tmpDetail?: TemplateRef<any>;
   @Output() selectedChange = new EventEmitter<any>();
-  funcID: any;
+
+  private components = componentsDetail;
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];
@@ -34,11 +38,7 @@ export class RequestReviewComponent
   lstDtDis: any;
   lstUserID: any;
   listApproveMF: any = [];
-
   tabControl: TabModel[] = [];
-  /**
-   *
-   */
   odService: DispatchService;
   codxShareService: CodxShareService;
   notifySvr: NotificationsService;
@@ -46,6 +46,8 @@ export class RequestReviewComponent
   esService: CodxEsService;
   routers: Router;
   allMFunc: any;
+  vllApproval: any;
+  dataUnbounds:any;
   constructor(inject: Injector) {
     super(inject);
     this.routers = inject.get(Router);
@@ -87,23 +89,43 @@ export class RequestReviewComponent
     this.detectorRef.detectChanges();
   }
 
-  click(e: any) {}
-  openFormFuncID(e: any) {}
-  valueChange(dt: any) {
-    this.dataItem = dt?.data;
-    switch(dt?.data?.functionID)
-    {
-      case "HRTPro01":
-      {
+  loadContent(cpn:any,transID:any,funcID:any)
+  {
+    let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
+    if(funcID) componentRef.instance.funcID = funcID;
+    if(transID) componentRef.instance.recID = transID;
+  }
 
+  click(e: any) {}
+
+  openFormFuncID(e: any) {}
+  
+  valueChange(dt: any) {
+
+    this.dataItem = dt?.data;
+    let component:Type<any> = null;
+    let funcID = null;
+    switch(dt?.data?.module)
+    {
+      case "ES":
+      {
+        funcID = "EST012";
+        component = this.components.cpnDtESSignFile;
+        break;
+      }
+      case "OD":
+      {
+        funcID = "ODT71";
+        component = this.components.cpnDtDispatches;
         break;
       }
     }
-    debugger
-    return ;
+  
+    this.content.clear();
+    this.loadContent(component,dt?.data?.transID,funcID)
   }
 
-  vllApproval: any;
+
 
   getGridViewSetup(funcID: any) {
     this.cache.valueList('SYS055').subscribe((result) => {
@@ -129,109 +151,111 @@ export class RequestReviewComponent
     return styles;
   }
   changeMF(data: any, value: object | any = null) {
-    var datas = this.dataItem;
-    this.allMFunc = this.allMFunc ?? data;
-    if (value) datas = value;
-    if (datas) {
-      var list = data.filter(
-        (x) => x.data != null && x.data.formName == 'Approvals'
-      );
-      for (var i = 0; i < list.length; i++) {
-        list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
-        {
-          list[i].disabled = true;
-          if (value.status == '5' || value.status == '2' || value.status == '4')
-            list[i].disabled = true;
-          else if (
-            ((datas?.stepType == 'S1' ||
-              datas?.stepType == 'S2' ||
-              datas?.stepType == 'S3' ||
-              datas?.stepType == 'S') &&
-              list[i].functionID == 'SYS202') ||
-            ((datas?.stepType == 'A1' ||
-              datas?.stepType == 'R' ||
-              datas?.stepType == 'C') &&
-              list[i].functionID == 'SYS203') ||
-            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
-            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
-          ) {
-            list[i].disabled = false;
-          }
-        } 
-        else if (
-          value.status == '5' ||
-          value.status == '2' ||
-          value.status == '4'
-        )
-        {
-          list[i].disabled = true;
-        }
-        else{
+    this.codxShareService.changeMFApproval(data, value?.unbounds);
+    // var datas = this.dataItem;
+    // this.allMFunc = this.allMFunc ?? data;
+    // if (value) datas = value;
+    // if (datas) {
+    //   var list = data.filter(
+    //     (x) => x.data != null && x.data.formName == 'Approvals'
+    //   );
+    //   for (var i = 0; i < list.length; i++) {
+    //     list[i].isbookmark = true;
+    //     if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
+    //     {
+    //       list[i].disabled = true;
+    //       if (value.status == '5' || value.status == '2' || value.status == '4')
+    //         list[i].disabled = true;
+    //       else if (
+    //         ((datas?.stepType == 'S1' ||
+    //           datas?.stepType == 'S2' ||
+    //           datas?.stepType == 'S3' ||
+    //           datas?.stepType == 'S') &&
+    //           list[i].functionID == 'SYS202') ||
+    //         ((datas?.stepType == 'A1' ||
+    //           datas?.stepType == 'R' ||
+    //           datas?.stepType == 'C') &&
+    //           list[i].functionID == 'SYS203') ||
+    //         (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
+    //         (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
+    //       ) {
+    //         list[i].disabled = false;
+    //       }
+    //     } 
+    //     else if (
+    //       value.status == '5' ||
+    //       value.status == '2' ||
+    //       value.status == '4'
+    //     )
+    //     {
+    //       list[i].disabled = true;
+    //     }
+    //     else{
           
-          list[i].disabled = false;
-        }
-      }
-      this.listApproveMF = list.filter(
-        (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
-      );
+    //       list[i].disabled = false;
+    //     }
+    //   }
+    //   this.listApproveMF = list.filter(
+    //     (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
+    //   );
 
-      if(datas?.eSign)
-      {
-        var listDis = data.filter(
-          (x) =>
-            x.functionID == 'SYS202' ||
-            x.functionID == 'SYS203' ||
-            x.functionID == 'SYS204' ||
-            x.functionID == 'SYS205' ||
-            x.functionID == 'SYS206' ||
-            x.functionID == 'SYS201'
+    //   if(datas?.eSign)
+    //   {
+    //     var listDis = data.filter(
+    //       (x) =>
+    //         x.functionID == 'SYS202' ||
+    //         x.functionID == 'SYS203' ||
+    //         x.functionID == 'SYS204' ||
+    //         x.functionID == 'SYS205' ||
+    //         x.functionID == 'SYS206' ||
+    //         x.functionID == 'SYS201'
             
-        );
-        for (var i = 0; i < listDis.length; i++) {
-          listDis[i].disabled = true;
-        }
+    //     );
+    //     for (var i = 0; i < listDis.length; i++) {
+    //       listDis[i].disabled = true;
+    //     }
 
-        var sys200 = data.filter(x=>x.functionID == "SYS200");
-        sys200[0].disabled = false;
-      }
-      //Ẩn thêm xóa sửa
-      var list2 = data.filter(
-        (x) =>
-          x.functionID == 'SYS02' ||
-          x.functionID == 'SYS01' ||
-          x.functionID == 'SYS03' ||
-          x.functionID == 'SYS04'
-      );
-      for (var i = 0; i < list2.length; i++) {
-        list2[i].disabled = true;
-      }
-    }
-    var bm = data.filter(
-      (x: { functionID: string }) => x.functionID == 'SYS207'
-    );
-    bm[0].disabled = true;
-    if (datas.status != '3') {
-      this.api
-        .execSv<any>(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'CheckRestoreAsync',
-          datas.recID
-        )
-        .subscribe((item) => {
-          var bm = data.filter(
-            (x: { functionID: string }) => x.functionID == 'SYS207'
-          );
-          bm[0].disabled = !item;
-          this.detectorRef.detectChanges();
-        });
-    }
+    //     var sys200 = data.filter(x=>x.functionID == "SYS200");
+    //     sys200[0].disabled = false;
+    //   }
+    //   //Ẩn thêm xóa sửa
+    //   var list2 = data.filter(
+    //     (x) =>
+    //       x.functionID == 'SYS02' ||
+    //       x.functionID == 'SYS01' ||
+    //       x.functionID == 'SYS03' ||
+    //       x.functionID == 'SYS04'
+    //   );
+    //   for (var i = 0; i < list2.length; i++) {
+    //     list2[i].disabled = true;
+    //   }
+    // }
+    // var bm = data.filter(
+    //   (x: { functionID: string }) => x.functionID == 'SYS207'
+    // );
+    // bm[0].disabled = true;
+    // if (datas.status != '3') {
+    //   this.api
+    //     .execSv<any>(
+    //       'ES',
+    //       'ERM.Business.ES',
+    //       'ApprovalTransBusiness',
+    //       'CheckRestoreAsync',
+    //       datas.recID
+    //     )
+    //     .subscribe((item) => {
+    //       var bm = data.filter(
+    //         (x: { functionID: string }) => x.functionID == 'SYS207'
+    //       );
+    //       bm[0].disabled = !item;
+    //       this.detectorRef.detectChanges();
+    //     });
+    // }
     this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
-    this.changeMF( this.allMFunc, data);
+    // this.codxShareService.c
+    //this.changeMF( this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
     if (data.eSign == true) {

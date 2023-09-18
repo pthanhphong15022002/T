@@ -29,7 +29,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   headerText;
   actionType;
   idField = 'RecID';
-  funcID;
   isAfterRender = false;
   employId;
   disabledInput = false;
@@ -63,7 +62,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         if (formModel) {
           this.formModel = formModel;
           this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -74,7 +73,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -130,6 +129,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
 

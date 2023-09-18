@@ -85,6 +85,9 @@ import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
 import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
+import { AdvancePaymentComponent } from './advance-payment/advance-payment.component';
+import { AdvancePaymentAddComponent } from './advance-payment/advance-payment-add/advance-payment-add.component';
+import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayment-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -307,6 +310,9 @@ export const routes: Routes = [
     IsObjectEmptyPipe,
     CashreceiptsComponent,
     CashreceiptsAddComponent,
+    AdvancePaymentComponent,
+    AdvancePaymentAddComponent,
+    CashpaymentDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

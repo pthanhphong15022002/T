@@ -83,7 +83,7 @@ export class CodxAddTaskComponent implements OnInit {
   isAddTM = false;
   startDayOld;
   endDayOld;
-
+  isOneRadio = true;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -119,7 +119,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    this.isStart = this.step || (this.step?.startDate && this.step?.startDate) ? false  : true;
+    this.isStart = !this.step || (this.step && this.step?.startDate && this.step?.startDate) ? true  : false;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
@@ -484,7 +484,9 @@ export class CodxAddTaskComponent implements OnInit {
     event.data.length;
   }
 
-  valueChangeRadio(event) {
+  valueChangeRadio(event) { 
+    if(!this.isOneRadio) return;
+    this.isOneRadio = false;
     this.stepsTasks.status = event?.field;
     this.stepsTasks.progress = event?.field == '3' ? 100 : 0;
     if (event?.field == '3') {
@@ -691,14 +693,20 @@ export class CodxAddTaskComponent implements OnInit {
     } else {
       //edit
       if (this.isStart) {
-        if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
-          this.isShowDate = false;
-          this.isShowTime = false;
-          this.isAddTM = false;
-        } else {
-          this.isShowDate = true;
-          this.isShowTime = true;
-          this.isAddTM = true;
+        if(this.stepsTasks?.status == '3'){
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+        }else{
+          if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+          } else {
+            this.isShowDate = true;
+            this.isShowTime = true;
+            this.isAddTM = true;
+          }
         }
       } else {
         this.isShowDate = false;

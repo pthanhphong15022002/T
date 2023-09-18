@@ -36,7 +36,7 @@
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="'AC063'" [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashPayment?.gridviewSetup['SubType'].referedValue"  [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="formCashPayment.data?._isEdit && formCashPayment.data?.status != '7'">
@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event, elementTabDetail)"
+    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event,elementTabDetail)"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -101,20 +101,12 @@
             <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
-              <i *ngIf="
-              formCashPayment.data?.subType == '2' ||
-                  formCashPayment.data?.subType == '12' ||
-                  formCashPayment.data?.subType == '3' ||
-                  formCashPayment.data?.subType == '4'
-                " class="icon-format_list_numbered icon-18 me-2"></i>
+              <i *ngIf="formCashPayment.data?.subType == '2' || formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="icon-format_list_numbered icon-18 me-2"></i>
               <i *ngIf="formCashPayment.data?.subType == '9'" class="icon-i-file-earmark-binary icon-18 me-2"></i>
-              <codx-label *ngIf="
-              formCashPayment.data?.subType == '2' ||
-                  formCashPayment.data?.subType == '3' ||
-                  formCashPayment.data?.subType == '4'
+              <codx-label *ngIf="formCashPayment.data?.subType == '2' || formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'
                 " style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail2"
                 [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
               <codx-label *ngIf="formCashPayment.data?.subType == '9'" style="font-size: 14px !important"
@@ -126,7 +118,7 @@
             <ng-container *ngTemplateOutlet="TmpTabSettledInvoices"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem tabIndex="-1" aria-hidden="true">
+        <e-tabitem>
           <ng-template #headerText>
             <div class="d-flex align-items-top me-2 mt-2">
               <i class="icon-i-graph-up icon-18 me-2"></i>
@@ -162,38 +154,32 @@
   <div style="display: grid !important" ngClass="collape"
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formCashPayment.data">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <ejs-tooltip position="BottomCenter" id='tooltip' target="#btncancle" content="Hủy bỏ (Alt+C)">
-        <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-          *ngIf="formCashPayment.data?.status == '7'" style="border: 1px solid" type="button"
-          class="btn btn-md btn-light-danger me-2 rounded-15"
-          (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
-          <div class="d-flex align-items-center">
-            <i class="icon-cancel icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
-          </div>
-        </button>
-      </ejs-tooltip>
-      <ejs-tooltip position="BottomCenter" id='tooltip' target="#btnsaveas" content="Lưu & Thêm (Alt+Shift+S)">
-        <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
-          style="border: 1px solid var(--primary-dark) !important" type="button"
-          class="btn btn-md btn-light-primary me-2 rounded-15"
-          (keydown.enter)="onSaveAddVoucher(); $event.preventDefault()" (click)="onSaveAddVoucher()">
-          <div class="d-flex align-items-center">
-            <i class="icon-add_to_photos icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-          </div>
-        </button>
-      </ejs-tooltip>
-      <ejs-tooltip position="BottomCenter" id='tooltip' target="#btnsave" content="Lưu (Alt+S)">
-        <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
-          class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
-          (keydown.enter)="onSaveVoucher(); $event.preventDefault()" (click)="onSaveVoucher()">
-          <div class="d-flex align-items-center">
-            <i class="icon-save_alt icon-16"></i>
-            <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-          </div>
-        </button>
-      </ejs-tooltip>
+      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
+        *ngIf="formCashPayment.data?.status == '7'" style="border: 1px solid" type="button"
+        class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
+        (click)="onDiscardVoucher()">
+        <div class="d-flex align-items-center">
+          <i class="icon-cancel icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+        </div>
+      </button>
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
+        style="border: 1px solid var(--primary-dark) !important" type="button"
+        class="btn btn-md btn-light-primary me-2 rounded-15" (keydown.enter)="onSaveAddVoucher(); $event.preventDefault()"
+        (click)="onSaveAddVoucher()">
+        <div class="d-flex align-items-center">
+          <i class="icon-add_to_photos icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+        </div>
+      </button>
+      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSaveVoucher(); $event.preventDefault()" (click)="onSaveVoucher()">
+        <div class="d-flex align-items-center">
+          <i class="icon-save_alt icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+        </div>
+      </button>
     </div>
     <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
       [objectID]="formCashPayment.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
@@ -576,6 +562,11 @@
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
+            <!-- <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+              class="btn btn-sm btn-light-primary rounded-15"(click)="onSaveLine()">
+              <i class="icon-playlist_add icon-16"></i>
+              <codx-label fiedName="lblSaveAndClear" default="Lưu dòng"></codx-label>
+            </button> -->
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"

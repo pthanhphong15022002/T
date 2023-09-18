@@ -42,7 +42,6 @@ import { PopupEProcessContractComponent } from 'projects/codx-hr/src/lib/employe
 })
 export class PopupViewAllComponent extends UIComponent implements OnInit {
   rowCount: any;
-  funcID: any;
   employeeId: any;
   sortModel: SortModel;
   headerText: any;
@@ -213,7 +212,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
 
   checkIsNewestDate(effectedDate, expiredDate) {
-    debugger
     if (effectedDate) {
       let eff = new Date(effectedDate).toLocaleDateString();
       let date = new Date().toLocaleDateString();

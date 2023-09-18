@@ -69,7 +69,6 @@ export class CmCustomerComponent
   button?: ButtonModel;
   dataSelected: any;
   //region Method
-  funcID = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   entityName = '';
@@ -157,8 +156,6 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-  }
-  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.listdetail,
@@ -187,6 +184,9 @@ export class CmCustomerComponent
         },
       },
     ];
+  }
+  ngAfterViewInit(): void {
+
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
@@ -444,7 +444,7 @@ export class CmCustomerComponent
               let lstAddress = e.event[2] ?? [];
               data.modifiedOn = new Date();
               this.dataSelected = JSON.parse(JSON.stringify(data));
-              // this.customerDetail.getOneCustomerDetail(this.dataSelected);
+              this.customerDetail.getOneCustomerDetail(this.dataSelected);
               this.customerDetail.onChangeContact(lstContact);
               this.customerDetail.onChangeAddress(lstAddress);
               this.view.dataService.update(data).subscribe();
@@ -731,7 +731,10 @@ export class CmCustomerComponent
   }
 
   addressNameCMEmit(e) {
-    this.dataSelected.address = e;
+    this.dataSelected.address = e ? e?.adressName : null;
+    this.dataSelected.provinceID = e ? e?.provinceID : null;
+    this.dataSelected.districtID = e ? e?.districtID : null;
+    this.dataSelected.wardID = e ? e?.wrovinceID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
   }

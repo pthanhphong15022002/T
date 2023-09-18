@@ -140,7 +140,6 @@ export class PopupPolicyalComponent
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  funcID: string;
   actionType: string;
   idField = 'PolicyID';
   isAfterRender = false;
@@ -397,7 +396,7 @@ export class PopupPolicyalComponent
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -408,7 +407,7 @@ export class PopupPolicyalComponent
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;

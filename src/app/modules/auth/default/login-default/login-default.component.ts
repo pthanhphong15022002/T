@@ -60,6 +60,7 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() c: any;
   @Input() fl: any;
   @Input() isNotADMode: boolean;
+  @Input() hubConnectionID: string;
 
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
@@ -81,7 +82,6 @@ export class LoginDefaultComponent extends UIComponent {
   //#endregion
 
   //#region QR
-  hubConnectionID: string;
   isFirstQR = true;
   connection: any;
   qrTimeout: number = 0;
@@ -89,7 +89,7 @@ export class LoginDefaultComponent extends UIComponent {
   qrBase64: string = '/assets/codx/bg/qrCodx.png';
   isScaned = false;
   modal;
-  testQRContent = '';
+  // testQRContent = '';
   //#endregion
 
   constructor(
@@ -118,66 +118,47 @@ export class LoginDefaultComponent extends UIComponent {
     }
 
     this.realHub.start('ad').then((x: RealHub) => {
-      let t = this;
-      x.hub.invoke('GetConnectionId').then(function (connectionId) {
-        t.hubConnectionID = connectionId;
-      });
-
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
-            if (z.data.isLg2FA == '') {
-              this.authService.setLogin(z.data?.user);
-              this.realHub.stop();
-              window.location.href = z.data?.host + z.data?.tenant;
-            } else {
-              let user = JSON.parse(z.data.user);
-              let objData = {
-                data: {
-                  data: {
-                    email: user.Email,
-                    ...user,
-                  },
-                },
-                login2FA: z.data.isLg2FA,
-              };
-
-              let lg2FADialog = this.callfc.openForm(
-                Login2FAComponent,
-                '',
-                400,
-                600,
-                '',
-                objData
-              );
-              lg2FADialog.closed.subscribe((lg2FAEvt) => {
+            if (z.data?.hubConnection == this.hubConnectionID) {
+              if (z.data.isLg2FA == '') {
                 this.authService.setLogin(z.data?.user);
                 this.realHub.stop();
                 window.location.href = z.data?.host + z.data?.tenant;
-              });
+              } else {
+                let user = JSON.parse(z.data.user);
+                let objData = {
+                  data: {
+                    data: {
+                      email: user.Email,
+                      ...user,
+                    },
+                  },
+                  login2FA: z.data.isLg2FA,
+                  hubConnectionID: this.hubConnectionID,
+                };
+  
+                let lg2FADialog = this.callfc.openForm(
+                  Login2FAComponent,
+                  '',
+                  400,
+                  600,
+                  '',
+                  objData
+                );
+                lg2FADialog.closed.subscribe((lg2FAEvt) => {
+                  this.authService.setLogin(z.data?.user);
+                  this.realHub.stop();
+                  window.location.href = z.data?.host + z.data?.tenant;
+                });
+              }
             }
+            
           }
         });
       }
     });
-
-    //   })
-    // if (
-    //   environment.saas == 1 &&
-    //   (environment.externalLogin.amazonId ||
-    //     environment.externalLogin.facebookId ||
-    //     environment.externalLogin.googleId ||
-    //     environment.externalLogin.microsoftId)
-    // ) {
-    //   this.externalLogin = true;
-    //   let iCol = 0;
-    //   if (environment.externalLogin.amazonId) iCol += 1;
-    //   if (environment.externalLogin.facebookId) iCol += 1;
-    //   if (environment.externalLogin.googleId) iCol += 1;
-    //   if (environment.externalLogin.microsoftId) iCol += 1;
-    //   this.externalLoginShowText = iCol <= 2;
-    //   this.externalLoginCol = 'col-md-' + (12/iCol);
-    // }
   }
 
   ngOnDestroy() {
@@ -299,6 +280,7 @@ export class LoginDefaultComponent extends UIComponent {
           )
           .subscribe((qrImg) => {
             if (qrImg) {
+              //nho xoa
               // this.testQRContent = qrImg;
               this.qrTimeout = 180;
               this.qrBase64 = 'data:image/png;base64,' + qrImg;

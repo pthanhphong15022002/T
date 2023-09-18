@@ -69,7 +69,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
   pageSize: number;
   reload = false;
   giftIDCurrentHover: string;
-  funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;

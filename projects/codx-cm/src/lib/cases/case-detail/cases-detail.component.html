@@ -156,8 +156,8 @@
                 <div class="mb-2">
                   <codx-label
                     fiedName="Severity"
-                    default="Mức độ nghiêm trọng"
-                    class="fs-6 fw-bold"
+                    default="Độ nghiêm trọng"
+                    class="fs-6 fw-bold label-colon"
                   ></codx-label>
                 </div>
                 <div class="d-flex flex-center">
@@ -202,7 +202,7 @@
                   <codx-label
                     fiedName="Priority"
                     default="Độ ưu tiên"
-                    class="fs-6 fw-bold"
+                    class="fs-6 fw-bold label-colon"
                   ></codx-label>
                 </div>
                 <div class="d-flex flex-center">
@@ -243,7 +243,7 @@
                 </div>
               </div>
               <div class="ms-20">
-                <div class="mb-2">
+                <div class="mb-1">
                   <codx-label
                     fiedName="Owner"
                     class="label-colon fw-bold"
@@ -322,7 +322,7 @@
               <span>
                 <codx-label
                   class="fw-bold"
-                  default="Thông tin chung"
+                  default="Chi tiết sự cố"
                   [formModel]="formModel"
                   name="lblInformation"
                 ></codx-label>
@@ -331,10 +331,10 @@
           </ng-template>
           <ng-template #content>
             <div class="d-flex flex-column">
-              <div class="text-dark text-primary fw-bold fs-6 mb-3">
+              <div class="text-dark fw-bold mb-1 mt-2">
                 <codx-label default="Thông tin chung"></codx-label>
               </div>
-              <div class="mb-3">
+              <div class="mb-1">
                 <div class="row py-2">
                   <div class="col-2">
                     <codx-label
@@ -489,9 +489,9 @@
                 </div>
               </div>
 
-              <div class="mt-5">
-                <div class="mb-3">
-                  <h2><codx-label default="Mô tả chi tiết"></codx-label></h2>
+              <div class="mt-1">
+                <div class="text-dark fw-bold mb-1 mt-1">
+                  <codx-label default="Mô tả chi tiết"></codx-label>
                 </div>
                 <div class="d-flex flex-column-reverse">
                   <div class="d-flex justify-content-start pb-2">
@@ -552,7 +552,7 @@
                   <div class="d-flex justify-content-start">
                     <div class="col-2">
                       <codx-label
-                        default="Mô tả chi tiết"
+                        default="Gợi ý biện pháp xử lý"
                         fieldName="Solution"
                       ></codx-label
                       >:
@@ -655,7 +655,6 @@
                 [applyFor]="'1'"
                 (continueStep)="continueStep($event)"
                 (saveAssignTask)="saveAssign($event)"
-                
               ></step-task>
             </div>
           </ng-template>

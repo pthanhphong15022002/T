@@ -166,36 +166,63 @@
         >
         </codx-input>
       </div>
-      <ng-container *ngIf="field.dataType == 'L'">
+      <ng-container
+        *ngIf="
+          field.dataType == 'L' &&
+          (field.dataFormat == 'C' || field.dataFormat == 'V')
+        "
+      >
         <div class="form-group">
-          <codx-label
-            fiedName="RefType"
-            [formModel]="form.formModel"
-            [default]="'Danh sách tùy chọn'"
-          >
-          </codx-label>
+          <div class="d-flex justify-content-between">
+            <div class="'justify-content-start">
+              <codx-label
+                fiedName="RefValue"
+                [formModel]="form.formModel"
+                [default]="'Danh sách tùy chọn'"
+              >
+              </codx-label>
+            </div>
+            <div class="justify-content-end" *ngIf="field.dataFormat == 'V'">
+              <button
+                [ngbTooltip]="hoverAddVll"
+                placement="right left top bottom"
+                container="body"
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="clickAddVll()"
+              >
+                <i class="icon-add_box icon-16"></i>
+              </button>
+              <ng-template #hoverAddVll>
+                <codx-label
+                  name="bttAddVll"
+                  [formModel]="form.formModel"
+                  [default]="'Thêm tùy chọn'"
+                >
+                </codx-label>
+              </ng-template>
+            </div>
+          </div>
           <codx-input
-            field="refType"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label
-            fiedName="RefValue"
-            [formModel]="form.formModel"
-            [default]="'Danh sách tùy chọn'"
-          >
-          </codx-label>
-          <codx-input
+            *ngIf="field.dataFormat == 'C'"
+            type="combobox"
             field="refValue"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [crrValue]="field.refValue"
+            [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
-          >
-          </codx-input>
+          ></codx-input>
+
+          <ng-container *ngIf="field.dataFormat == 'V'">
+            <ejs-combobox
+              [enabled]="enabled"
+              [dataSource]="listVll"
+              [fields]="fieldsVll"
+              [value]="field.refValue"
+              [allowFiltering]="true"
+              [placeholder]="grvSetup['refValue']?.description"
+              (valueChange)="cbxChangeVll($event)"
+            ></ejs-combobox>
+          </ng-container>
         </div>
       </ng-container>
 
@@ -297,5 +324,109 @@
           default="Lưu"
         ></codx-label>
       </button>
-    </div> </ng-template
-></codx-form>
+    </div>
+  </ng-template>
+
+  <ng-template #addVll>
+    <codx-form
+      class="h-100"
+      [headerText]="titleForm"
+      [body]="bodyVll"
+      [footer]="footerVll"
+      [dialog]="dialogVll"
+    >
+    </codx-form>
+    <ng-template #bodyVll>
+      <div class="form-group">
+        <codx-label
+          name="ListName"
+          [formModel]="formModelVll"
+          default="Tên value list"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="listName"
+          [formModel]="formModelVll"
+          (valueChange)="onChangeVll($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="d-flex flex-column form-group mt-3">
+        <codx-label
+          name="inputDefautValue"
+          [formModel]="formModelVll"
+          default="Danh sách lựa chọn"
+        >
+        </codx-label>
+        <ng-container *ngFor="let item of datasVll; index as i">
+          <div class="cursor-pointer form-group">
+            <!-- <div class="d-flex">
+              <span>
+                <span class="label-colon" [innerHTML]="i"></span>
+              </span> -->
+            <input
+              class="form-control no-border"
+              #textEditValue
+              type="text"
+              name="textEditValue"
+              matInput
+              autofocus
+              [value]="item.textValue"
+              (blur)="onEditTextValue(textEditValue, item.value)"
+              placeholder="Nhập giá trị value"
+              (keydown.enter)="onEditTextValue(textEditValue, item.value)"
+            />
+          </div>
+          <!-- </div> -->
+        </ng-container>
+
+        <div class="form-group">
+          <input
+            id="textAddValue"
+            class="form-control no-border"
+            #textAddValue
+            type="text"
+            name="textAddValue"
+            matInput
+            (blur)="onAddTextValue(textAddValue)"
+            placeholder="Nhập giá trị value"
+            (keydown.enter)="onAddTextValue(textAddValue)"
+          />
+        </div>
+
+        <div class="form-group">
+          <codx-label
+            class="label-colon"
+            name="demoVll"
+            [formModel]="formModelVll"
+            default="Xem trước"
+            class="me-4"
+          >
+          </codx-label>
+          <ejs-combobox
+            [enabled]="enabled"
+            [dataSource]="datasVll"
+            [fields]="fieldsResourceVll"
+            [value]="crrValue"
+            [allowFiltering]="false"
+            [placeholder]=""
+          ></ejs-combobox>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #footerVll>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="saveVll()">
+            <codx-label
+              name="Save"
+              [formModel]="formModelVll"
+              default="Lưu"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</codx-form>

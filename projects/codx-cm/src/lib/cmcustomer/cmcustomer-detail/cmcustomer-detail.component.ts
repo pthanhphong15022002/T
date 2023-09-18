@@ -112,7 +112,7 @@ export class CmCustomerDetailComponent implements OnInit {
     this.loaded = false;
     this.dataSelected = JSON.parse(JSON.stringify(dataSelected));
     // this.getListContactByObjectID(this.dataSelected?.recID);
-    this.addressNameCM = this.dataSelected?.address;
+    this.addressNameCM = this.dataSelected?.address ?? '';
     this.loadTag(this.dataSelected);
     // this.listTab(this.funcID);
     this.loaded = true;
@@ -206,31 +206,14 @@ export class CmCustomerDetailComponent implements OnInit {
     }
   }
 
-  getAdressNameByIsDefault(objectID, entityName) {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-      this.cmSv
-        .getAdressNameByIsDefault(objectID, entityName)
-        .subscribe((res) => {
-          if (res) {
-            this.addressNameCM = res?.adressName;
-          } else {
-            this.addressNameCM = null;
-          }
-        });
-    } else {
-      this.addressNameCM = this.dataSelected?.address;
-    }
-  }
-
-  getListAddress(entityName, recID) {
-    this.cmSv.getListAddress(entityName, recID).subscribe((res) => {
-      this.listAddress = res;
-    });
-  }
-
-  addressName(e) {
-    this.addressNameCM = e;
-    this.addressNameCMEmit.emit(this.addressNameCM);
+  addressDefault(e) {
+    this.addressNameCM = e ? e?.adressName : null;
+    this.dataSelected.address = e ? e?.adressName : null;
+    this.dataSelected.provinceID = e ? e?.provinceID : null;
+    this.dataSelected.districtID = e ? e?.districtID : null;
+    this.dataSelected.wardID = e ? e?.wrovinceID : null;
+    this.addressNameCMEmit.emit(e);
+    this.changeDetectorRef.detectChanges();
   }
 
   getNameCbx(recID, objectID) {
@@ -268,19 +251,20 @@ export class CmCustomerDetailComponent implements OnInit {
                     .subscribe((res) => {});
                 });
             }
-
           }
         });
       }
     }
   }
 
-  onChangeContact(lstContact){
-    this.codxListContact.loadListContact(lstContact);
-    this.changeDetectorRef.detectChanges();
+  onChangeContact(lstContact) {
+    if (this.codxListContact) {
+      this.codxListContact.loadListContact(lstContact);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
-  onChangeAddress(lstAddress){
+  onChangeAddress(lstAddress) {
     this.codxAddress.loadListAdress(lstAddress);
     this.changeDetectorRef.detectChanges();
   }

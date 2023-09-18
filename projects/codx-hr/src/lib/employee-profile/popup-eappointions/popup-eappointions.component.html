@@ -5,6 +5,7 @@
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
+  [group]="formGroup"
   [data]="EAppointionObj"
   *ngIf="isAfterRender"
 >
@@ -304,8 +305,9 @@
 
     <div class="d-flex flex-column mb-4">
       <div
+        *ngIf="EAppointionObj.attachments > 0"
         class="d-flex justify-content-between align-items-center mb-2 form-group"
-      >
+        >
         <codx-label
           default="File đính kèm"
           name="lblAttachments"
@@ -326,6 +328,7 @@
           type="inline"
           allowMultiFile="1"
           [formModel]="formModel"
+          (fileAdded)="addFiles($event)">
           displayThumb="full"
           showMessage="0"
         >
@@ -377,7 +380,7 @@
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
-      [disabled]="!formModel.currentData.updateColumn"
+      [disabled]="!formModel.currentData.updateColumn && !changedInForm"
     >
       <i class="icon-save"></i>
       <codx-label

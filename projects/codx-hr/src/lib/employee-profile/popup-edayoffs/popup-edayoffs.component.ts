@@ -35,7 +35,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   //lstDayoffs: any;
   idField = 'RecID';
   successFlag = false;
-  funcID: string;
   //indexSelected
   isnormalPregnant = false;
   isNotNormalPregnant = false;
@@ -110,7 +109,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -197,6 +196,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false)
       return;
     }
     if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {

@@ -30,7 +30,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   lstCertificates;
   indexSelected;
   actionType;
-  funcID;
   idField = 'RecID';
   employId;
   isAfterRender = false;
@@ -42,15 +41,16 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   headerTextCalendar: any = [];
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
+  changedInForm = false;
   disabledInput = false;
 
 
   displayForeignCert = false;
 
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  // @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   fieldHeaderTexts: any;
 
   constructor(
@@ -182,7 +182,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       if (formModel) {
         this.formModel = formModel;
         this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
@@ -202,6 +202,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
 
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false)
       return;
     }
 
@@ -288,7 +289,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt){
+    this.changedInForm = true;
     this.certificateObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.certificateObj);
   }
 
   setIssuedPlace() {

@@ -99,7 +99,6 @@ export class InstancesComponent
   entityName = 'DP_Instances';
   className = 'InstancesBusiness';
   idField = 'recID';
-  funcID = 'DPT04';
   method = 'GetListInstancesAsync';
   //end
   // data T
@@ -253,6 +252,7 @@ export class InstancesComponent
     @Optional() dt: DialogData
   ) {
     super(inject);
+    this.funcID = "DPT04";
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
@@ -748,7 +748,8 @@ export class InstancesComponent
   }
 
   startInstance(data) {
-    this.codxDpService.startInstance(data.recID).subscribe((res) => {
+    var datas = [data.recID,this.process?.applyFor];
+    this.codxDpService.startInstance(datas).subscribe((res) => {
       if (res) {
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
@@ -802,6 +803,7 @@ export class InstancesComponent
                     data: data,
                   });
                 }
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
                 this.detectorRef.detectChanges();
               }
             });
@@ -881,13 +883,13 @@ export class InstancesComponent
                 break;
               //Đóng nhiệm vụ = true
               case 'DP14':
-                if (data.closed || !data.permissionCloseInstances)
-                  res.isblur = true;
+                if (data.closed || !data.permissionCloseInstances )
+                  res.disabled = true;
                 break;
               //Mở nhiệm vụ = false
               case 'DP15':
-                if (!data.closed || !data.permissionCloseInstances) {
-                  res.isblur = true;
+                if (!data.closed || !data.permissionCloseInstances ) {
+                  res.disabled = true;
                 }
                 break;
               case 'DP02':
@@ -955,11 +957,12 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP02':
+              case 'DP22':
+              case 'DP14':
+              case 'DP15':
               case 'DP23':
                 mf.disabled = true;
                 break;
-              default:
-                mf.isblur = true;
             }
           });
         }

@@ -43,7 +43,6 @@ export class EmployeeJobSalaryComponent extends UIComponent {
   //#endregion
 
   views: Array<ViewModel> = [];
-  funcID: string;
   method = 'GetEJobSalariesListAsync';
   buttonAdd: ButtonModel = {
     id: 'btnAdd',
@@ -241,7 +240,8 @@ this.cache
       this.hrService
         .getFormGroup(
           this.view?.formModel?.formName,
-          this.view?.formModel?.gridViewName
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
         )
         .then((res) => {
           this.formGroup = res;

@@ -34,7 +34,6 @@ export class ViewsTabsDetailsComponent
   @Input() viewMode = '6';
   @Input() dataObj: any;
 
-  funcID: any = 'DPT06';
 
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
@@ -75,6 +74,8 @@ export class ViewsTabsDetailsComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
+
+    this.funcID = 'DPT06';
   }
 
   ngAfterViewInit(): void {
@@ -158,11 +159,11 @@ export class ViewsTabsDetailsComponent
     }
   }
   getObjectID(data) {
-    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectID;
+    return data.roles.find((x) => x.objectID == data?.owner)?.objectID;
   }
 
   getObjectName(data) {
-    return data.roles.filter((x) => x.roleType == 'O')[0]?.objectName;
+    return data.roles.find((x) => x.objectID == data?.owner)?.objectName;
   }
 
   getRolesSteps(data) {

@@ -59,7 +59,6 @@ export class CodxApprovalComponent
   @Input() tmpBody?: TemplateRef<any>;
   @Input() tmpDetail?: TemplateRef<any>;
   @Output() selectedChange = new EventEmitter<any>();
-  funcID: any;
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];

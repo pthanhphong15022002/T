@@ -15,6 +15,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   UIComponent,
  } from 'codx-core';
@@ -32,7 +33,6 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   healthTemp: any;
   //lstEHealth
   //indexSelected
-  funcID: string;
   actionType: string;
   employId: string;
   idField = 'RecID';
@@ -40,7 +40,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   disabledInput = false;
 
   headerText: string;
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('ultrasound') ultrasound: CodxListviewComponent;
   @ViewChild('bloodtest') bloodtest: CodxListviewComponent;
@@ -108,7 +108,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
@@ -169,6 +169,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
 

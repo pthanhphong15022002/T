@@ -1,4 +1,7 @@
-import { AssignTaskModel, tmpReferences } from './../../../../../codx-share/src/lib/models/assign-task.model';
+import {
+  AssignTaskModel,
+  tmpReferences,
+} from './../../../../../codx-share/src/lib/models/assign-task.model';
 import {
   Component,
   Input,
@@ -7,6 +10,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -21,6 +25,7 @@ import {
   NotificationsService,
   RequestOption,
   SidebarModel,
+  UIDetailComponent,
   ViewsComponent,
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -35,8 +40,10 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent extends UIDetailComponent implements OnInit {
+  runMode: any;
   constructor(
+    inject: Injector,
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
@@ -44,23 +51,24 @@ export class ViewDetailComponent implements OnInit {
     private notify: NotificationsService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService,
-    private api: ApiHttpService
   ) {
-    this.funcID = this.router.snapshot.params['funcID'];
+    super(inject);
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;
+      }
+    });
     this.user = this.authStore.get();
   }
 
   @Input() data: any = { category: 'Trình ký' };
   @Input() showApproveStatus: boolean = true;
-  @Input() itemDetail: any;
-  @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
-
+  itemDetail: any;
   active = 1;
   openNav = false;
   canRequest;
@@ -94,16 +102,16 @@ export class ViewDetailComponent implements OnInit {
     // { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
-
-  ngOnInit(): void {
+  override onInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
+    this.initForm();
     if (this.formModel) {
       this.cache
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((gv) => {
           if (gv) this.gridViewSetup = gv;
-          this.initForm();
+          //this.initForm();
         });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
@@ -113,24 +121,16 @@ export class ViewDetailComponent implements OnInit {
             .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
             .subscribe((gv) => {
               if (gv) this.gridViewSetup = gv;
-              this.initForm();
+              //this.initForm();
             });
         }
       });
     }
   }
 
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.data &&
-      (changes.data?.previousValue?.recID != changes.data?.currentValue?.recID || changes.data?.currentValue?.recID== this.itemDetail?.recID)
-    ) {
-      this.data = changes.data?.currentValue;
-    }
     if (this.formModel) {
       this.initForm();
     } else {
@@ -174,135 +174,144 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
+    this.funcID = this.funcID || this.view?.funcID;
+    this.cache.functionList(this.funcID).subscribe(func=>{
+      if(func){
+        this.runMode=func?.runMode;
+        this.detectorRef.detectChanges();
+      }
+    });
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
     this.cache.valueList('TM018').subscribe((res) => {});
-    if (this.itemDetail?.recID) {
-      this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+    if (this.recID) {
+      this.esService.getTask(this.recID).subscribe((res) => {
         this.taskViews = res;
         this.df.detectChanges();
       });
     }
-
-    if (this.itemDetail && this.itemDetail !== null) {
-      this.files=[];
-      this.df.detectChanges();
-      if (this.itemDetail?.files?.length > 0) {
-        this.esService
-          .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
-          .subscribe((res) => {
-            if (res) {
-              this.files = res;
-              this.df.detectChanges();
-            }
-          });
-      }
       this.esService
-        .getDetailSignFile(this.itemDetail?.recID)
-        .subscribe((res) => {          
+        .getViewDetailSignFile(this.recID,this.funcID)
+        .subscribe((res) => {
           this.dataReferences = [];
-          if (res) {            
+          if (res) {
             this.itemDetail = res;
+            this.files = [];
+            this.df.detectChanges();
+            if (this.itemDetail?.files?.length > 0) {
+              this.esService
+                .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+                .subscribe((res) => {
+                  if (res) {
+                    this.files = res;
+                    this.df.detectChanges();
+                  }
+                });
+            }
+            this.transID = this.itemDetail.processID;
+            if (
+              this.itemDetail?.approveControl == '1' ||
+              this.itemDetail?.approveStatus == '0' ||
+              this.itemDetail?.approveStatus == '2' ||
+              this.itemDetail?.approveStatus == '3' ||
+              this.itemDetail?.approveStatus == '4' ||
+              this.itemDetail?.approveStatus == '5'
+            ) {
+              this.transID = this.itemDetail.recID;
+            }
+      
+            this.esService.getFormModel('EST04').then((res) => {
+              if (res) {
+                let fmApprovalStep = res;
+                let gridModels = new DataRequest();
+                gridModels.dataValue = this.transID;
+                gridModels.predicate = 'TransID=@0';
+                gridModels.funcID = fmApprovalStep.funcID;
+                gridModels.entityName = fmApprovalStep.entityName;
+                gridModels.gridViewName = fmApprovalStep.gridViewName;
+                // gridModels.pageSize = 20;
+                gridModels.pageLoading = false;
+      
+                if (gridModels.dataValue != null) {
+                  this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+                    if (res && res?.length >= 0) {
+                      this.lstStep = res;
+                    }
+                  });
+                }
+              }
+            });
+          if (this.itemDetail != null) {
+            this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
+          }
+          this.isAfterRender = true;
+            this.detectorRef.detectChanges();
             if (res.refType != null) {
               this.esService
-              .getEntity(this.itemDetail?.refType)
-              .subscribe((oEntity) => {
-                if (oEntity!=null) {
-                  
-                  let tempRef= new tmpReferences();                  
-                  tempRef.refType = this.itemDetail?.refType;
-                  switch (oEntity?.entityName){
-                    case 'OD_Dispatches':
-                      this.esService
-                      .getod(this.itemDetail?.recID)
-                      .subscribe((ref) => {
-                        if(ref){
-                          tempRef.recIDReferences = ref?.recID;
-                          tempRef.createdOn = ref?.createdOn;
-                          tempRef.memo = ref?.title;
-                          tempRef.createdBy = ref?.createdBy;
-                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
-                            if(user){                              
-                              tempRef.createByName = user?.employeeName;
+                .getEntity(this.itemDetail?.refType)
+                .subscribe((oEntity) => {
+                  if (oEntity != null) {
+                    let tempRef = new tmpReferences();
+                    tempRef.refType = this.itemDetail?.refType;
+                    switch (oEntity?.entityName) {
+                      case 'OD_Dispatches':
+                        this.esService
+                          .getod(this.itemDetail?.recID)
+                          .subscribe((ref) => {
+                            if (ref) {
+                              tempRef.recIDReferences = ref?.recID;
+                              tempRef.createdOn = ref?.createdOn;
+                              tempRef.memo = ref?.title;
+                              tempRef.createdBy = ref?.createdBy;
+                              this.cache
+                                .getCompany(ref?.createdBy)
+                                .subscribe((user) => {
+                                  if (user) {
+                                    tempRef.createByName = user?.employeeName;
+                                  }
+                                });
+                              this.dataReferences = [];
+                              this.dataReferences.push(tempRef);
+                              this.df.detectChanges();
+
+                              // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
+                              // if (index < 0) this.dataReferences.push(ref);
+                              // this.df.detectChanges();
                             }
                           });
-                          this.dataReferences = [];
-                          this.dataReferences.push(tempRef);
-                          this.df.detectChanges();
+                        break;
 
-                          // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
-                          // if (index < 0) this.dataReferences.push(ref);
-                          // this.df.detectChanges();
-                        }
-                        
-                      });
-                    break;
-
-                    case 'ES_SignFiles':
-                      this.esService.getDetailSignFile(res?.refID).subscribe(ref=>{
-                        if(ref){
-                          tempRef.recIDReferences = ref?.recID;
-                          tempRef.createdOn = ref?.createdOn;
-                          tempRef.memo = ref?.title;
-                          tempRef.createdBy = ref?.createdBy;
-                          this.cache.getCompany(ref?.createdBy).subscribe(user=>{
-                            if(user){                              
-                              tempRef.createByName = user?.employeeName;
+                      case 'ES_SignFiles':
+                        this.esService
+                          .getDetailSignFile(res?.refID)
+                          .subscribe((ref) => {
+                            if (ref) {
+                              tempRef.recIDReferences = ref?.recID;
+                              tempRef.createdOn = ref?.createdOn;
+                              tempRef.memo = ref?.title;
+                              tempRef.createdBy = ref?.createdBy;
+                              this.cache
+                                .getCompany(ref?.createdBy)
+                                .subscribe((user) => {
+                                  if (user) {
+                                    tempRef.createByName = user?.employeeName;
+                                  }
+                                });
+                              this.dataReferences = [];
+                              this.dataReferences.push(tempRef);
+                              this.df.detectChanges();
                             }
                           });
-                          this.dataReferences = [];
-                          this.dataReferences.push(tempRef);
-                          this.df.detectChanges();
-                        }
-                      })
-                    break;
+                        break;
+                    }
                   }
-                  
-                }
-              });
+                });
             }
             this.df.detectChanges();
           }
         });
-      this.transID = this.itemDetail.processID;
-      if (
-        this.itemDetail?.approveControl == '1' ||
-        this.itemDetail?.approveStatus == '0' ||
-        this.itemDetail?.approveStatus == '2' ||
-        this.itemDetail?.approveStatus == '3' ||
-        this.itemDetail?.approveStatus == '4' ||
-        this.itemDetail?.approveStatus == '5'
-      ) {
-        this.transID = this.itemDetail.recID;
-      }
-
-      this.esService.getFormModel('EST04').then((res) => {
-        if (res) {
-          let fmApprovalStep = res;
-          let gridModels = new DataRequest();
-          gridModels.dataValue = this.transID;
-          gridModels.predicate = 'TransID=@0';
-          gridModels.funcID = fmApprovalStep.funcID;
-          gridModels.entityName = fmApprovalStep.entityName;
-          gridModels.gridViewName = fmApprovalStep.gridViewName;
-          // gridModels.pageSize = 20;
-          gridModels.pageLoading = false;
-
-          if (gridModels.dataValue != null) {
-            this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-              if (res && res?.length >= 0) {
-                this.lstStep = res;
-              }
-            });
-          }
-        }
-      });
-    }
-    if (this.itemDetail != null) {
-      this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
-    }
-    this.isAfterRender = true;
+     
     // this.setHeight();
   }
 
@@ -326,48 +335,58 @@ export class ViewDetailComponent implements OnInit {
 
   //#region MoreFunc viewDetai
   changeDataMF(e: any, data: any) {
-    var bookmarked = false;
-    let lstBookmark = data?.bookmarks;
-    if (lstBookmark) {
-      let isbookmark = lstBookmark.filter(
-        (p) => p.objectID == this.user.userID
-      );
-      if (isbookmark?.length > 0) {
-        bookmarked = true;
-      }
-    }
-    var bm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01103'
-    );
-    var unbm = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01104'
-    );
-    var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
-    var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
-    if (copy?.length) copy[0].disabled = true;
-    var release = e.filter(
-      (x: { functionID: string }) => x.functionID == 'EST01105'
-    );
-
-    if (bookmarked == true) {
-      if (bm?.length) bm[0].disabled = true;
-      if (unbm?.length) unbm[0].disabled = false;
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
     } else {
-      if (unbm?.length) unbm[0].disabled = true;
-      if (bm?.length) bm[0].disabled = false;
-    }
-
-    if (data?.approveStatus != 3) {
-      var cancel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'EST01101'
+      var bookmarked = false;
+      let lstBookmark = data?.bookmarks;
+      if (lstBookmark) {
+        let isbookmark = lstBookmark.filter(
+          (p) => p.objectID == this.user.userID
+        );
+        if (isbookmark?.length > 0) {
+          bookmarked = true;
+        }
+      }
+      var bm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01103'
       );
-      if (cancel?.length) cancel[0].disabled = true;
-    }
-    if (data?.approveStatus != 1 && data?.approveStatus != 2) {
-      if (edit?.length) edit[0].disabled = true;
-      if (release?.length) release[0].disabled = true;
-      if (del?.length) del[0].disabled = true;
+      var unbm = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01104'
+      );
+      var edit = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS03'
+      );
+      var del = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS02'
+      );
+      var copy = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS04'
+      );
+      if (copy?.length) copy[0].disabled = true;
+      var release = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01105'
+      );
+
+      if (bookmarked == true) {
+        if (bm?.length) bm[0].disabled = true;
+        if (unbm?.length) unbm[0].disabled = false;
+      } else {
+        if (unbm?.length) unbm[0].disabled = true;
+        if (bm?.length) bm[0].disabled = false;
+      }
+
+      if (data?.approveStatus != 3) {
+        var cancel = e.filter(
+          (x: { functionID: string }) => x.functionID == 'EST01101'
+        );
+        if (cancel?.length) cancel[0].disabled = true;
+      }
+      if (data?.approveStatus != 1 && data?.approveStatus != 2) {
+        if (edit?.length) edit[0].disabled = true;
+        if (release?.length) release[0].disabled = true;
+        if (del?.length) del[0].disabled = true;
+      }
     }
   }
 
@@ -411,6 +430,25 @@ export class ViewDetailComponent implements OnInit {
         break;
       case 'EST01106': //Tạo signfile từ signfile
         this.addSignFile(datas);
+        break;
+      default:
+        //Biến động , tự custom
+        var customData =
+        {
+          refID : "",
+          refType : this.formModel?.entityName,
+          dataSource: datas,
+        }
+
+        this.codxShareService.defaultMoreFunc(
+          val,
+          datas,
+          null,
+          this.formModel,
+          this.view.dataService,
+          this,
+          customData
+        );
         break;
     }
   }
@@ -461,7 +499,7 @@ export class ViewDetailComponent implements OnInit {
           option: option,
           headerText: mF?.text,
           moreFunction: this.mfRelease,
-          dataService :this.view?.dataService,
+          dataService: this.view?.dataService,
         },
         '',
         dialogModel
@@ -484,7 +522,7 @@ export class ViewDetailComponent implements OnInit {
     this.view.dataService.dataSelected = datas;
     this.view.dataService.addNew().subscribe((res: any) => {
       if (!res) return;
-      res.refID=datas.recID
+      res.refID = datas.recID;
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -502,7 +540,7 @@ export class ViewDetailComponent implements OnInit {
           isAddNew: true,
           formModel: this.view?.formModel,
           option: option,
-          refID:datas?.recID,
+          refID: datas?.recID,
         },
         '',
         dialogModel
@@ -584,7 +622,7 @@ export class ViewDetailComponent implements OnInit {
     // let mssgCode = 'ES015';
     // this.notify.alertCode(mssgCode).subscribe((x) => {
     //   if (x.event?.status == 'Y') {
-        
+
     //   }
     // });
     if (datas.approveStatus == '1') {
@@ -598,10 +636,7 @@ export class ViewDetailComponent implements OnInit {
             if (this.cancelControl == '0') {
             } else if (this.cancelControl == '1') {
               this.cancel(datas);
-            } else if (
-              this.cancelControl == '2' ||
-              this.cancelControl == '3'
-            ) {
+            } else if (this.cancelControl == '2' || this.cancelControl == '3') {
               this.oCancelSF = datas;
               this.callfunc.openForm(this.addCancelComment, '', 650, 380);
             }
@@ -734,16 +769,17 @@ export class ViewDetailComponent implements OnInit {
     //   return;
     // }
 
-    
     this.codxShareService
       .codxRelease(
         'ES',
         this.itemDetail?.recID,
-        this.itemDetail.approveControl == '1'? this.itemDetail?.recID: this.itemDetail?.processID,
+        this.itemDetail.approveControl == '1'
+          ? this.itemDetail?.recID
+          : this.itemDetail?.processID,
         this.formModel.entityName,
         this.formModel.funcID,
-        "",
-        this.itemDetail.title ,
+        '',
+        this.itemDetail.title,
         this.itemDetail?.refType
       )
       .subscribe((res) => {

@@ -276,7 +276,7 @@ export class CodxShareService {
                 null
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
-                  data.unbounds.statusApproval = status;
+                  data.unbounds.statusApproval = status ?? res2?.returnStatus;
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -293,7 +293,7 @@ export class CodxShareService {
               null
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
-                data.unbounds.statusApproval = status;
+                data.unbounds.statusApproval = status ?? res2?.returnStatus;
                 dataService.update(data).subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
@@ -306,11 +306,12 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (res) {
-              data.unbounds.statusApproval = res?.status;
+            if (!res?.msgCodeError && res?.rowCount>0) {
+              data.unbounds.statusApproval = res?.returnStatus;
               dataService.update(data).subscribe();
-              //this.notificationsService.notifyCode('SYS007');
+              this.notificationsService.notifyCode('SYS007');
             }
+            else this.notificationsService.notify(res?.msgCodeError);
           }
         );
         break;
@@ -1015,7 +1016,7 @@ export class CodxShareService {
     }
   }
 
-  changeMFApproval(data: any, value: object | any = null) {
+  changeMFApproval(data: any, value: object | any = null) {    
     var datas = value;
     if (datas) {
       var list = data.filter(
@@ -1094,10 +1095,10 @@ export class CodxShareService {
       (x: { functionID: string }) => x.functionID == 'SYS207'
     );
     bm[0].disabled = true;
-    if (datas.statusApproval != '3') {
+    if (datas?.statusApproval != '3') {
       var check = this.checkStatusApproval(
-        datas.approvalRecID,
-        datas.statusApproval
+        datas?.approvalRecID,
+        datas?.statusApproval
       );
       if (isObservable(check)) {
         check.subscribe((item) => {
@@ -1244,13 +1245,13 @@ export class CodxShareService {
       refType
     );
   }
-  getSignFileTemplateCateID(cateID) {
+  getTemplateSF(cateID,category) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'GetTemplateByCategoryIDAsync',
-      cateID
+      'GetTemplateSFAsync',
+      [cateID,category]
     );
   }
 
@@ -1435,8 +1436,9 @@ export class CodxShareService {
         case '2': //Export và tạo ES_SignFiles để gửi duyệt
         case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-          this.getSignFileTemplateCateID(
-            approveProcess?.category?.categoryID
+          this.getTemplateSF(
+            approveProcess?.category?.categoryID,
+            approveProcess?.category?.category
           ).subscribe((sfTemplates: any) => {
             if (sfTemplates?.length >= 1) {
               this.apGetTemplateSF(

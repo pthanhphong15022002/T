@@ -20,6 +20,7 @@ import {
   AlertConfirmInputConfig,
   ImageViewerComponent,
   Util,
+  CodxFormComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -46,11 +47,11 @@ import { CodxAddressCmComponent } from '../cmcustomer-detail/codx-address-cm/cod
 export class PopupAddCmCustomerComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
   @ViewChild('codxListAddress') codxListAddress: CodxAddressCmComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   @Output() loadData = new EventEmitter();
 
   @ViewChild('vllCbx') vllCbx;
-
   data: any;
   dialog: any;
   title = '';
@@ -428,9 +429,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeIndustries(e) {
-    if (e?.data != this.data?.industries) {
-      this.data[e.field] = e?.data;
+    this.data.industries = e?.data;
+    if (e?.data) {
+      this.data.owner = e?.component?.itemsSelected[0]?.Owner;
     }
+    this.form.formGroup.patchValue(this.data);
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region save
@@ -567,7 +571,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       return;
     }
     let check = false;
-    if(this.action != 'edit'){
+    if (this.action != 'edit') {
       check = await firstValueFrom(
         this.api.execSv<any>(
           'CM',
@@ -694,8 +698,36 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
   //#endregion
-  setAddress(name) {
+  async setAddress(name) {
     if (name != null && name != '') {
+      var tmp = new BS_AddressBook();
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      let lever = 0;
+      if (param?.length > 0) {
+        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        lever = paramDefault['ControlInputAddress'] ?? 0;
+      }
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [name, lever]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        if (this.data.provinceID != lstDis?.ProvinceID)
+          this.data.provinceID = lstDis?.ProvinceID;
+        if (this.data.districtID != lstDis?.DistrictID)
+          this.data.districtID = lstDis?.DistrictID;
+        if (this.data.wardID != lstDis?.WardID)
+          this.data.wardID = lstDis?.WardID;
+      }
       if (this.action != 'edit') {
         if (this.listAddress != null && this.listAddress.length > 0) {
           var index = this.listAddress.findIndex((x) => x.isDefault == true);
@@ -703,20 +735,24 @@ export class PopupAddCmCustomerComponent implements OnInit {
             this.listAddress[index].adressName = name?.trim();
             this.listAddress[index].isDefault = true;
           } else {
-            var tmp = new BS_AddressBook();
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
             tmp.adressName = this.data.address;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
             tmp.isDefault = true;
             this.tmpAddress = tmp;
             this.listAddress.push(tmp);
           }
         } else {
-          var tmp = new BS_AddressBook();
           tmp.recID = Util.uid();
           tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
           tmp.adressName = this.data.address;
           tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
           this.tmpAddress = tmp;
           this.listAddress.push(tmp);
         }
@@ -728,25 +764,36 @@ export class PopupAddCmCustomerComponent implements OnInit {
           if (index != -1) {
             this.listAddress[index].adressName = name?.trim();
           } else {
-            var tmp = new BS_AddressBook();
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
             tmp.adressName = this.data.address;
             tmp.isDefault = true;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
             this.tmpAddress = tmp;
             this.listAddress.push(tmp);
           }
         } else {
-          var tmp = new BS_AddressBook();
           tmp.recID = Util.uid();
           tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
           tmp.adressName = this.data.address;
           tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
           this.tmpAddress = tmp;
           this.listAddress.push(tmp);
         }
       }
     } else {
+      this.data.provinceID = null;
+      this.data.countryID = null;
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.regionID = null;
+      this.data.wardID = null;
+      this.data.address = null;
       if (this.listAddress != null && this.listAddress.length > 0) {
         var indexDelete = this.listAddress.findIndex(
           (x) => x.isDefault == true

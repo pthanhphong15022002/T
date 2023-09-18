@@ -6,6 +6,7 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialog"
+  [group]="formGroup"
   [openMore]="true"
   (setTitle)="setTitle($event)"
   [tabContent]="[contractInfo, workingInfo, empBenefit]"
@@ -50,18 +51,6 @@
           <span class="text-gray-700 fs-7" *ngIf="employeeObj?.orgUnitName">{{
             employeeObj?.orgUnitName
           }}</span>
-          <!-- <div
-            class="text-gray-700"
-            *ngIf="employeeObj?.orgUnitID || employeeObj?.inforEmployee?.orgUnitID"
-          >
-            <span
-              [innerHTML]="
-                employeeObj?.orgUnitID ?? employeeObj?.inforEmployee?.orgUnitID
-                  | formatvalue : formModel : 'orgUnitID'
-                  | async
-              "
-            ></span>
-          </div> -->
         </div>
       </div>
     </div>
@@ -220,6 +209,7 @@
         field="positionID"
         [formModel]="formModel"
         [Group]="formGroup"
+        (render)="renderChangePosition($event)"
       ></codx-input>
     </div>
   </div>
@@ -350,8 +340,9 @@
 
   <div class="d-flex flex-column mb-4">
     <div
+      *ngIf="data.attachments > 0"
       class="d-flex justify-content-between align-items-center mb-2 form-group text-primary fw-bold fs-6"
-    >
+      >
       <codx-label
         default="File đính kèm"
         name="lblAttachments"
@@ -372,6 +363,7 @@
         type="inline"
         allowMultiFile="1"
         [formModel]="formModel"
+        (fileAdded)="addFiles($event)"
         displayThumb="full"
         showMessage="0"
       >
@@ -644,7 +636,7 @@
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
-      [disabled]="!formModel.currentData.updateColumn"
+      [disabled]="!formModel.currentData.updateColumn && !changedInForm"
     >
       <i class="icon-save"></i>
       <codx-label

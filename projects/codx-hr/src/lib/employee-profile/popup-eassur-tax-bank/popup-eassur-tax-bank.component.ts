@@ -43,7 +43,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   onInit(): void {
     if (this.formModel) {
       this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
         .then((res) => {
           if (res) {
             this.formGroup = res;
@@ -65,6 +65,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
     
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
 

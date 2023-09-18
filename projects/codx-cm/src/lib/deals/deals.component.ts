@@ -98,7 +98,6 @@ export class DealsComponent
   formModel: FormModel;
 
   // type any for view detail
-  @Input() funcID: any;
   @Input() dataObj?: any;
   kanban: any;
 
@@ -380,11 +379,11 @@ export class DealsComponent
     };
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? data.closed || data.status == '0' : true;
+        data?.alloweStatus == '1' ? data.closed ||['1','0'].includes(data.status) : true;
     };
     let isOpened = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? !data.closed || data.status == '0' : true;
+        data?.alloweStatus == '1' ? !data.closed  || ['1','0'].includes(data.status): true;
     };
     let isStartDay = (eventItem, data) => {
       eventItem.disabled =
@@ -394,7 +393,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2'].includes(data.status) || data.closed
+        ? !['1', '2'].includes(data.status) || data.closed || ['1','0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -408,13 +407,13 @@ export class DealsComponent
         (data.processID && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
     };
-    let isUpdateBANT = (eventItem, data) => {
-      eventItem.disabled = data.write
-        ? (data.closed && data.status != '1') ||
-          data.status == '0' ||
-          this.checkMoreReason(data)
-        : true;
-    };
+    // let isUpdateBANT = (eventItem, data) => {
+    //   eventItem.disabled = data.write
+    //     ? (data.closed && data.status != '1') ||
+    //       data.status == '0' ||
+    //       this.checkMoreReason(data)
+    //     : true;
+    // };
     let isRejectApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
@@ -444,7 +443,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data.status != '2';
+      eventItem.disabled = data.status != '2' || data.closed;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -471,7 +470,7 @@ export class DealsComponent
       SYS03: isEdit,
       SYS04: isCopy,
       SYS02: isDelete,
-      CM0201_14: isUpdateBANT,
+      // CM0201_14: isUpdateBANT,
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
@@ -837,6 +836,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  if (this.kanban) this.kanban.updateCard(this.detailViewDeal.dataSelected);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -889,6 +889,7 @@ export class DealsComponent
                   data: data,
                 });
               }
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
               this.detectorRef.detectChanges();
             }
           });
@@ -974,7 +975,9 @@ export class DealsComponent
               let money = data.dealValue * data.exchangeRate;
               this.renderTotal(data.stepID, 'add', money);
               this.renderTotal(this.crrStepID, 'minus', money);
+              if (this.kanban) this.kanban.updateCard(data);
               this.kanban.refresh();
+
             }
             this.detectorRef.detectChanges();
           }
@@ -1012,7 +1015,7 @@ export class DealsComponent
     return deal;
   }
   startDeal(data) {
-    this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
+    this.codxCmService.startInstance([data.refID,'']).subscribe((resDP) => {
       if (resDP) {
         var datas = [data.recID, resDP[0]];
         this.codxCmService.startDeal(datas).subscribe((res) => {
@@ -1022,6 +1025,7 @@ export class DealsComponent
             this.detailViewDeal.reloadListStep(resDP[1]);
             this.notificationsService.notifyCode('SYS007');
             this.view.dataService.update(this.dataSelected).subscribe();
+            if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.detectorRef.detectChanges();
         });
@@ -1127,7 +1131,7 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer: this.dataSelected.categoryCustomer
+      categoryCustomer: action === 'add' ? '': this.dataSelected?.categoryCustomer
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1171,7 +1175,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected.categoryCustomer
+          categoryCustomer: this.dataSelected?.categoryCustomer,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,

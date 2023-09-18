@@ -8,6 +8,7 @@ import {
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
+import { toCamelCase } from '../../utils';
 
 @Component({
   selector: 'lib-items',
@@ -45,7 +46,7 @@ export class ItemsComponent extends UIComponent {
     this.acService
       .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21300')
       .subscribe((res) => {
-        this.functionName = this.acService.toCamelCase(res);
+        this.functionName = toCamelCase(res);
       });
   }
 

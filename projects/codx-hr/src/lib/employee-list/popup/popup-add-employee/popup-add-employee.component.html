@@ -105,8 +105,8 @@
           <div>
             <codx-label [formModel]="formModel" fiedName="PositionID">
             </codx-label>
-            <codx-input field="positionID" [formModel]="formModel" [Group]="form.formGroup"
-              (valueChange)="valueChange($event)">
+            <codx-input #cbxPosition field="positionID" [formModel]="formModel" [Group]="form.formGroup"
+              (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
             </codx-input>
           </div>
         </div>
@@ -115,8 +115,8 @@
           <div>
             <codx-label [formModel]="formModel" fiedName="JobLevel">
             </codx-label>
-            <codx-input field="jobLevel" [formModel]="formModel" [Group]="form.formGroup"
-              (valueChange)="valueChange($event)">
+            <codx-input #cbxJobLevel field="jobLevel" [formModel]="formModel" [Group]="form.formGroup"
+              (valueChange)="valueChange($event)" (controlBlur)="blurInput($event)">
             </codx-input>
           </div>
         </div>

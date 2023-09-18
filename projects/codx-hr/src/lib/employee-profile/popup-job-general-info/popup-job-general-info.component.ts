@@ -21,7 +21,6 @@ export class PopupJobGeneralInfoComponent
   extends UIComponent
   implements OnInit
 {
-  funcID;
   idField = 'RecID';
   formGroup: FormGroup;
   formModel: FormModel;
@@ -49,7 +48,7 @@ export class PopupJobGeneralInfoComponent
 
   initForm() {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -83,6 +82,7 @@ export class PopupJobGeneralInfoComponent
   onSaveForm() {
     if(this.formGroup.invalid){
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {

@@ -53,8 +53,6 @@ export class PopupAddCasesComponent
   // Data struct cases
   cases: CM_Cases = new CM_Cases();
 
-  test: CM_Cases = new CM_Cases();
-
   // array is null
   tabInfo: any[] = [];
   tabContent: any[] = [];
@@ -120,7 +118,6 @@ export class PopupAddCasesComponent
   // load data form DP
   isLoading: boolean = false;
   processID: string = '';
-  funcID = '';
   applyProcess = false;
   idxCrr: any = -1;
 
@@ -153,7 +150,7 @@ export class PopupAddCasesComponent
     } else {
       this.cases =
         this.action != this.actionAdd
-          ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
+          ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
           : this.cases;
     }
 
@@ -358,7 +355,8 @@ export class PopupAddCasesComponent
   onAdd() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
+      .subscribe(async (res) => {
+        console.log(res);
         this.attachment?.clearData();
         if (res) {
           this.dialog.close(res.save[0]);
