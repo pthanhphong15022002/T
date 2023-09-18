@@ -371,7 +371,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   //#region Login
   private login(type: string) {
     const loginSubscr = this.authService
-      .login(this.f.email.value, this.f.password.value, type, false)
+      .login(this.f.email.value, this.f.password.value, type)
       .pipe()
       .subscribe((data) => {
         //this.login2FA = data?.data?.extends['Extends'] ?? '';

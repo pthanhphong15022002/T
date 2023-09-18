@@ -1,6 +1,6 @@
 import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ApiHttpService, AuthStore } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore } from 'codx-core';
 
 @Component({
   selector: 'app-tenants',
@@ -11,7 +11,8 @@ export class TenantsComponent implements OnInit {
   constructor(
     private router: Router,
     private api: ApiHttpService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private authService: AuthService
   ) {
     this.user = this.authStore.get();
   }
@@ -22,6 +23,12 @@ export class TenantsComponent implements OnInit {
     // this.router.navigate(['/tester']);
     this.getTenants().subscribe((tenants: Array<any>) => {
       this.lstTenant = tenants;
+    });
+  }
+
+  navigate(tn) {
+    this.authService.createUserToken(tn).subscribe((res) => {
+      if (res) this.router.navigate(['/' + tn]);
     });
   }
 

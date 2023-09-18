@@ -199,8 +199,7 @@ export class Login2FAComponent extends UIComponent {
       .login(
         this.loginFG.controls['email'].value,
         this.loginFG.controls['password'].value,
-        this.curLgType,
-        true
+        this.curLgType
       )
       .pipe()
       .subscribe((data) => {
