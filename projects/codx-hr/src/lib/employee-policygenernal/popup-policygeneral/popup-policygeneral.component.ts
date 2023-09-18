@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, inject } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild, inject } from '@angular/core';
+import { ApiHttpService, CallFuncService, CodxFormComponent, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 
@@ -33,6 +33,8 @@ export class PopupPolicygeneralComponent
   autoNumField: any;
   loadedAutoField = false;
   
+  @ViewChild('form') form: CodxFormComponent;
+
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -140,7 +142,6 @@ export class PopupPolicygeneralComponent
           this.idField
         )
         .subscribe((res: any) => {
-          debugger
           if (res) {
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
@@ -155,7 +156,6 @@ export class PopupPolicygeneralComponent
         this.formModel.currentData = this.policyGeneralObj;
         if(this.policyGeneralObj.includeBenefits){
           this.lstBenefit = this.policyGeneralObj.includeBenefits.split(';');
-          console.log('lst benefit ne', this.lstBenefit);
         }
         this.cr.detectChanges();
         this.isAfterRender = true;
@@ -166,6 +166,7 @@ export class PopupPolicygeneralComponent
   onSaveForm(){
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.validation(false);
       return;
     }
     if( this.policyGeneralObj.hasIncludeBenefits == false){

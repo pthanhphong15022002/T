@@ -185,7 +185,7 @@ export class CodxAcService {
     return false;
   }
 
-  loadComboboxData(
+  loadComboboxData$(
     comboboxName: string,
     service: string,
     predicates?: string,
@@ -211,32 +211,33 @@ export class CodxAcService {
       );
   }
 
-  loadDataAsync(service: string, options: DataRequest): Observable<any[]> {
+  loadData$(service: string, options: DataRequest): Observable<any[]> {
     return this.api
       .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
-      .pipe(map((r) => r[0]));
+      .pipe(map((r) => r?.[0] ?? []));
   }
 
-  createCrudService(
+  createCRUDService(
     injector: Injector,
     formModel: FormModel,
-    service: string
+    service?: string,
+    gridView?: any,
   ): CRUDService {
-    const requestData = new DataRequest();
-    requestData.entityName = formModel.entityName;
-    requestData.entityPermission = formModel.entityPer;
-    requestData.formName = formModel.formName;
-    requestData.gridViewName = formModel.gridViewName;
-    requestData.pageLoading = false;
-
     const crudService = new CRUDService(injector);
-    crudService.service = service;
-    crudService.request = requestData;
-
+    if (service) {
+      crudService.service = service;
+    }
+    if (gridView) {
+      crudService.gridView = gridView;
+    }
+    crudService.request.entityName = formModel.entityName;
+    crudService.request.entityPermission = formModel.entityPer;
+    crudService.request.formName = formModel.formName;
+    crudService.request.gridViewName = formModel.gridViewName;
     return crudService;
   }
 
-  getDefaultNameFromMoreFunctions(
+  getDefaultNameFromMoreFunctions$(
     formName: string,
     gridViewName: string,
     functionId: string
@@ -251,8 +252,8 @@ export class CodxAcService {
   }
 
   /** @param objectType entityName */
-  deleteFile(objectId: string, objectType: string) {
-    return this.api
+  deleteFile(objectId: string, objectType: string): void {
+    this.api
       .execSv(
         'DM',
         'ERM.Business.DM',
@@ -263,7 +264,7 @@ export class CodxAcService {
       .subscribe();
   }
 
-  getACParameters(category: string = '1'): Observable<any> {
+  getACParameters$(category: string = '1'): Observable<any> {
     return this.cache.viewSettingValues('ACParameters').pipe(
       map((arr: any[]) => arr.find((a) => a.category === category)),
       map((data) => JSON.parse(data.dataValue))
