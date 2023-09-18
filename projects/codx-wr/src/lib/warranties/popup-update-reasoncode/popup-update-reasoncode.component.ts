@@ -66,6 +66,25 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
   ngOnInit(): void {
+    if (
+      this.data != null &&
+      this.data?.statusCode != null &&
+      this.data?.statusCode?.trim() != ''
+    ) {
+      this.api
+        .execSv<any>(
+          'WR',
+          'ERM.Business.WR',
+          'StatusCodesBusiness',
+          'GetOneAsync',
+          [this.data?.statusCode]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.setDataCommentAndDate(res?.dateControl, res?.commentControl, res?.comment);
+          }
+        });
+    }
   }
 
   //#region save
@@ -79,8 +98,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         this.notiService.notifyCode('WR003');
         return;
       }
-
-
     }
 
     this.data.attachments = this.edit
@@ -119,28 +136,11 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   async valueChange(e) {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
-      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-      if (this.dateControl != '0') {
-        this.gridViewSetup.ScheduleStart.isRequire =
-          this.dateControl == '2' ? true : false;
-        this.gridViewSetup.ScheduleTime.isRequire =
-        this.dateControl == '2' ? true : false;
-        this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
-      } else {
-        this.data.scheduleStart = null;
-        this.data.scheduleTime = '';
-        this.gridViewSetup.ScheduleStart.isRequire = false;
-        this.gridViewSetup.ScheduleTime.isRequire = false;
-      }
-      this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
-      if (this.commentControl != '0') {
-        this.gridViewSetup.Comment.isRequire =
-          this.dateControl == '2' ? true : false;
-        this.data.comment = e?.component?.itemsSelected[0]?.Comment;
-      } else {
-        this.gridViewSetup.Comment.isRequire = false;
-        this.data.comment = '';
-      }
+      this.setDataCommentAndDate(
+        e?.component?.itemsSelected[0]?.DateControl,
+        e?.component?.itemsSelected[0]?.CommentControl,
+        e?.component?.itemsSelected[0]?.Comment
+      );
       // if (e?.data) {
       //   let wordOrder = await firstValueFrom(
       //     this.api.execSv<any>(
@@ -164,6 +164,31 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       // }
     }
     this.detectorRef.detectChanges();
+  }
+
+  setDataCommentAndDate(dateControl, commentControl, comment) {
+    this.dateControl = dateControl;
+    if (this.dateControl != '0') {
+      this.gridViewSetup.ScheduleStart.isRequire =
+        this.dateControl == '2' ? true : false;
+      this.gridViewSetup.ScheduleTime.isRequire =
+        this.dateControl == '2' ? true : false;
+      this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
+    } else {
+      this.data.scheduleStart = null;
+      this.data.scheduleTime = '';
+      this.gridViewSetup.ScheduleStart.isRequire = false;
+      this.gridViewSetup.ScheduleTime.isRequire = false;
+    }
+    this.commentControl = commentControl;
+    if (this.commentControl != '0') {
+      this.gridViewSetup.Comment.isRequire =
+        this.dateControl == '2' ? true : false;
+      this.data.comment = comment;
+    } else {
+      this.gridViewSetup.Comment.isRequire = false;
+      this.data.comment = '';
+    }
   }
 
   //#region date schedule

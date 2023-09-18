@@ -427,7 +427,6 @@ export class DealDetailComponent implements OnInit {
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
-        debugger;
         var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
         let lstOlds = [];
         if (lstStepsOld != null && lstStepsOld.length > 0) {
@@ -449,7 +448,6 @@ export class DealDetailComponent implements OnInit {
               }
             }
           }
-          console.log(lstOlds);
         }
         for (var item of e?.fields) {
           if (
