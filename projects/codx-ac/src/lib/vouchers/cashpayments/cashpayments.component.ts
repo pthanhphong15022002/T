@@ -477,9 +477,6 @@ onSelectedItem(event) {
     return;
   }
 
-  
-
-  
   /**
    * *Hàm gửi duyệt chứng từ (xử lí cho MF gửi duyệt)
    * @param data

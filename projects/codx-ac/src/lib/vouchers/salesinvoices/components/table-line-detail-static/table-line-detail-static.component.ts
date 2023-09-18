@@ -48,6 +48,14 @@ export class TableLineDetailStaticComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.lines) {
+      const tableElement: HTMLElement = this.tableRef?.nativeElement;
+      if (tableElement) {
+        this.hasVerticalScrollbar =
+          tableElement.offsetHeight < tableElement.scrollHeight;
+      }
+    }
+
     // calculate totalRow
     if (!this.autoSum) {
       return;

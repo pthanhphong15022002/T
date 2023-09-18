@@ -205,6 +205,9 @@ input.e-input.codx-number{
   height: 30px !important;
   line-height: 30px;
 }
+.e-input.e-lib.e-keyboard{
+  height: 30px !important;
+}
 
 input.e-input::placeholder,
 textarea.e-input::placeholder,
@@ -3183,6 +3186,9 @@ codx-vll.vll-post{
     font-weight: 500;
     padding-top: 10px!important;
   }
+}
+.btn.h-32px{
+  height: 32px!important;
 }
 
 codx-toolbar-report{
