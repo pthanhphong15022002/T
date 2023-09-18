@@ -541,7 +541,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   loadDataVll() {
     this.api
       .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
-        this.user.languages,
         this.customField.refValue,
       ])
       .subscribe((vl) => {
