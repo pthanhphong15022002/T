@@ -4,12 +4,14 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  OnChanges,
   OnInit,
   Optional,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CodxHrService } from '../../codx-hr.service';
-import { Injector } from '@angular/core';
+import { Injector, AfterViewInit } from '@angular/core';
 import {
   CodxFormComponent,
   CodxListviewComponent,
@@ -28,7 +30,7 @@ import { CalendarView } from '@syncfusion/ej2-angular-calendars';
   templateUrl: './popup-efamilies.component.html',
   styleUrls: ['./popup-efamilies.component.css'],
 })
-export class PopupEFamiliesComponent extends UIComponent implements OnInit {
+export class PopupEFamiliesComponent extends UIComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('imageUpLoad') imageUpLoad: ImageViewerComponent;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
@@ -36,7 +38,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   fromdateVal: any;
   todateVal: any;
   deadMonthVal : any;
-
   formModel: FormModel;
   formGroup: FormGroup;
   employId: string;
@@ -44,6 +45,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   disabledInput = false;
   dialog: DialogRef;
   fieldHeaderTexts
+  changedInForm = false;
   // lstFamilyMembers;
   // indexSelected;
   isEmployee = false;
@@ -79,6 +81,20 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
       JSON.stringify(data?.data?.familyMemberObj)
     );
     this.formModel = dialog?.FormModel;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    debugger
+    if (
+      changes['deadMonthVal'] &&
+      changes['deadMonthVal']?.currentValue != changes['deadMonthVal']?.previousValue && changes['deadMonthVal']?.previousValue
+    ) {
+      this.changedInForm = true;
+    }
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   initForm() {
@@ -127,7 +143,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         this.deadMonthVal = this.familyMemberObj.deadMonth;
         this.isAfterRender = true;
         this.cr.detectChanges();
-        this.isAfterRender = true;
       }
     }
     // if(this.disabledInput == true){
@@ -136,6 +151,8 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     // }
   }
   onInit(): void {
+    console.log('chay oninit');
+
     if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
@@ -300,13 +317,23 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   // }
 
   UpdateRegisterFrom(e) {
+    if(new Date(this.fromdateVal).toJSON() != new Date(e).toJSON() && this.fromdateVal){
+      this.changedInForm = true;
+    }
     this.fromdateVal = e;
   }
   UpdateRegisterTo(e) {
+    if(new Date(this.todateVal).toJSON() != new Date(e).toJSON() && this.todateVal){
+      this.changedInForm = true;
+    }
+
     this.todateVal = e;
   }
 
   UpdateDeadMonth(e){
+    if(new Date(this.deadMonthVal).toJSON() != new Date(e).toJSON() && this.deadMonthVal){
+      this.changedInForm = true;
+    }
     this.deadMonthVal = e;
   }
 }

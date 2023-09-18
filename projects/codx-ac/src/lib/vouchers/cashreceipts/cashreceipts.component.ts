@@ -13,7 +13,7 @@ import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.co
 @Component({
   selector: 'lib-cashreceipts',
   templateUrl: './cashreceipts.component.html',
-  styleUrls: ['./cashreceipts.component.css']
+  styleUrls: ['./cashreceipts.component.css', '../../codx-ac.component.css']
 })
 export class CashreceiptsComponent extends UIComponent {
   //#region Constructor
@@ -237,11 +237,11 @@ export class CashreceiptsComponent extends UIComponent {
         break;
       case 'ACT041009':
       case 'ACT042902':
-        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT041003':
       case 'ACT042905':
-        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT041008':
       case 'ACT042906':
@@ -386,20 +386,19 @@ export class CashreceiptsComponent extends UIComponent {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ (PC)
+        x.functionID == 'ACT040106' || // MF ghi sổ (PT)
         x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-        x.functionID == 'ACT040104' || // MF gửi duyệt (PC)
+        x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
         x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
+        x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
         x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-        x.functionID == 'ACT041008' || // Mf khôi phục (PC)
+        x.functionID == 'ACT040107' || // Mf khôi phục (PT)
         x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
         x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // Mf in (PC)
+        x.functionID == 'ACT040108' || // Mf in (PT)
         x.functionID == 'ACT042907' || // Mf in (UNC)
-        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
+        x.functionID == 'ACT042902'    // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -410,7 +409,7 @@ export class CashreceiptsComponent extends UIComponent {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040103' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -420,7 +419,7 @@ export class CashreceiptsComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -428,7 +427,7 @@ export class CashreceiptsComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT040104' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -438,7 +437,7 @@ export class CashreceiptsComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040105' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -447,7 +446,7 @@ export class CashreceiptsComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -456,7 +455,7 @@ export class CashreceiptsComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040107' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -465,7 +464,7 @@ export class CashreceiptsComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -599,7 +598,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -621,7 +620,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -638,7 +637,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;

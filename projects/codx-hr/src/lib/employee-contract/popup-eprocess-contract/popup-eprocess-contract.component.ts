@@ -53,6 +53,7 @@ export class PopupEProcessContractComponent
 
   loaded: boolean = false;
   disabledInput = false;
+  changedInForm = false;
 
   //#region EBenefitInfo Declaration
   benefitFuncID = 'HRTEM0403';
@@ -291,7 +292,9 @@ export class PopupEProcessContractComponent
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res?.event) {
+      this.changedInForm = true;
         if (actionType == 'add') {
           let index = this.tempBenefitArr.findIndex(
             (x: any) => x.BenefitID == res.event.benefitID
@@ -475,6 +478,13 @@ export class PopupEProcessContractComponent
       this.isAfterRender = true;
       this.cr.detectChanges();
     }
+  }
+
+  async addFiles(evt){
+    debugger
+    this.changedInForm = true;
+    this.data.attachments = evt.data.length;
+    this.formGroup.patchValue(this.data);
   }
 
   async onSaveForm() {
