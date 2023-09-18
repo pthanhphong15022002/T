@@ -12,7 +12,7 @@
                         [class]="itemSelected?.journalType | vll : 'AC064' : 'icon' | async"></i>
                 </div>
                 <ng-template #content>
-                    <span>{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>
+                    <span>{{itemSelected?.subType | vll : 'AC065' : 'text' | async}}</span>
                 </ng-template>
             </ejs-tooltip>
             <span class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
@@ -51,17 +51,17 @@
     <ng-container *ngIf="itemSelected">
         <div class="d-flex justify-content-between flex-grow-1 mb-1">
           <div class="d-flex align-items-center">
-            <!-- Người nhận tiền (phiếu chi)   -->
-            <codx-label *ngIf="(formModel.funcID == 'ACT0410')" class="fw-bold label-colon text-nowrap" fiedName="Payee" [formModel]="formModel">
+            <!-- Người gửi tiền -->
+            <codx-label *ngIf="(formModel.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor" [formModel]="formModel">
             </codx-label>
-            <span *ngIf="formModel.funcID == 'ACT0410'" class="text-gray-600">{{itemSelected?.payName}}</span>
-            <!-- Người nhận tiền (phiếu chi)   -->
+            <span *ngIf="formModel.funcID == 'ACT0401'" class="text-gray-600">{{itemSelected?.payName}}</span>
+            <!-- Người gửi tiền -->
     
             <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
-            <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay"
+            <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay"
                 [formModel]="formModel" default="Tài khoản chi">
             </codx-label>
-            <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankPayname}}</span>
+            <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankPayname}}</span> -->
             <!-- Người nhận tiền (phiếu chi)   -->
           </div>
           <div class="d-flex align-self-center">
@@ -72,17 +72,17 @@
         </div>
         <div class="d-flex align-items-top mb-1">
            <!-- Sổ quỹ-->
-          <codx-label *ngIf="formModel.funcID == 'ACT0410'" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
+          <codx-label *ngIf="formModel.funcID == 'ACT0401'" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
             [formModel]="formModel" default="Sổ quỹ">
           </codx-label>
-          <span *ngIf="(formModel.funcID == 'ACT0410')" class="text-gray-600">{{itemSelected?.cashBookName}}</span>
+          <span *ngIf="(formModel.funcID == 'ACT0401')" class="text-gray-600">{{itemSelected?.cashBookName}}</span>
           <!-- Sổ quỹ -->
     
           <!-- Tài khoản nhận (ủy nhiệm chi) -->
-          <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
+          <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblCashBook"
             [formModel]="formModel" default="Tài khoản nhận">
           </codx-label>
-          <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankReceiveName}}</span>
+          <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankReceiveName}}</span> -->
           <!-- Tài khoản nhận (ủy nhiệm chi)-->
         </div>
         <div class="d-flex align-items-top mb-1">

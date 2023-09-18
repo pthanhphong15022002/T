@@ -43,8 +43,6 @@ declare var jsBh: any;
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  
-  
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
