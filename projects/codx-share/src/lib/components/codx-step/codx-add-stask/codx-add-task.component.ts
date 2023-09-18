@@ -197,7 +197,7 @@ export class CodxAddTaskComponent implements OnInit {
                 md.bought &&
                 md.boughtModule?.moduleID == 'TM1'
             );
-            this.stepsTasks.createTask = this.isBoughtTM;
+            this.stepsTasks.createTask = this.action == 'add' ? this.isBoughtTM : this.stepsTasks?.createTask ;
           }
         });
     }

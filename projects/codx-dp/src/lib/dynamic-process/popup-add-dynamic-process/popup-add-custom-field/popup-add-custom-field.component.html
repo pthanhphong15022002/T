@@ -221,8 +221,26 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
-            ></ejs-combobox>
-          </ng-container>
+            ></ejs-combobox
+          ></ng-container>
+        </div>
+        <div class="form-group" *ngIf="field.dataFormat == 'V'">
+          <codx-label
+            class="label-colon"
+            name="demoVll"
+            formName="SYS_ValueList"
+            default="Xem trước"
+            class="me-4"
+          >
+          </codx-label>
+          <ejs-combobox
+            [enabled]="enabled"
+            [dataSource]="datasVllCrr"
+            [fields]="fieldsCrrVll"
+            [value]="crrValueFirst"
+            [allowFiltering]="false"
+            [placeholder]=""
+          ></ejs-combobox>
         </div>
       </ng-container>
 
@@ -339,6 +357,21 @@
     <ng-template #bodyVll>
       <div class="form-group">
         <codx-label
+          [fiedName]="'Note'"
+          [formModel]="formModelVll"
+          default="Nội dung"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="note"
+          [formModel]="formModelVll"
+          (valueChange)="onChangeVll($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
           name="ListName"
           [formModel]="formModelVll"
           default="Tên value list"
@@ -351,6 +384,24 @@
           (valueChange)="onChangeVll($event)"
         >
         </codx-input>
+      </div>
+      <div class="form-group">
+        <!-- labelPosition="After"
+        label="Cho phép chọn nhiều giá trị" -->
+        <codx-input
+          type="checkbox"
+          field="multiselect"
+          (valueChange)="onChangeVll($event)"
+          [crrValue]="field?.multiselect"
+        ></codx-input>
+        <span>
+          <codx-label
+            class="me-2"
+            name="multiSelect"
+            [formName]="'SYS_ValueList'"
+            default="Cho phép chọn nhiều giá trị"
+          ></codx-label>
+        </span>
       </div>
       <div class="d-flex flex-column form-group mt-3">
         <codx-label
