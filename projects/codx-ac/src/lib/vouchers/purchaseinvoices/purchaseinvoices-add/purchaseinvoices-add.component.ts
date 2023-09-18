@@ -30,7 +30,11 @@ import { JournalService } from '../../../journals/journals.service';
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
-import { PurchaseInvoiceService } from '../purchaseinvoices.service';
+import {
+  PurchaseInvoiceService,
+  fmPurchaseInvoicesLines,
+  fmVATInvoices,
+} from '../purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
@@ -83,9 +87,8 @@ export class PurchaseinvoicesAddComponent
   ) {
     super(inject);
 
-    this.fmPurchaseInvoicesLines =
-      purchaseInvoiceService.fmPurchaseInvoicesLines;
-    this.fmVATInvoices = purchaseInvoiceService.fmVATInvoices;
+    this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
+    this.fmVATInvoices = fmVATInvoices;
     this.journal = purchaseInvoiceService.journal;
 
     this.masterService = dialog.dataService;
@@ -99,7 +102,7 @@ export class PurchaseinvoicesAddComponent
   onInit(): void {
     this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
-    this.acService.getACParameters().subscribe((res) => {
+    this.acService.getACParameters$().subscribe((res) => {
       this.acParams = res;
     });
 
