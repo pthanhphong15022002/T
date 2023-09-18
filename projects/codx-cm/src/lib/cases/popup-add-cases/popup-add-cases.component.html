@@ -222,10 +222,11 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
           field="occuredOn"
-          (valueChange)="valueChange($event)"
+          type="datetime"
+          format="d"
+          [crrValue]="cases?.occuredOn"
+          (valueChange)="valueChangeDate($event)"
         >
         </codx-input>
       </div>
@@ -240,8 +241,8 @@
         >
         </codx-label>
         <codx-input
-          type="datetime"
           field="endDate"
+          type="datetime"
           format="d"
           [crrValue]="cases?.endDate"
           (valueChange)="valueChangeDate($event)"
@@ -261,10 +262,11 @@
         >
         </codx-label>
         <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
           field="detectedOn"
-          (valueChange)="valueChange($event)"
+          type="datetime"
+          format="d"
+          [crrValue]="cases?.detectedOn"
+          (valueChange)="valueChangeDate($event)"
         >
         </codx-input>
       </div>
@@ -278,33 +280,25 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <!-- <div *ngIf="!lead.applyProcess; else ownerProcess">
+        <div *ngIf="!cases?.applyProcess; else ownerProcess">
           <codx-input
             field="owner"
             [formModel]="form.formModel"
             [crrValue]="owner"
-            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
+            (valueChange)="valueChangeOwner($event)"
           >
           </codx-input>
         </div>
         <ng-template #ownerProcess>
           <ejs-combobox
             [dataSource]="listParticipants"
-            (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+            (valueChange)="valueChangeOwner($event)"
             [fields]="fieldCbxParticipants"
-            [placeholder]="gridViewSetup?.Owner?.description"
             [allowFiltering]="true"
             [value]="owner"
+            [placeholder]="gridViewSetup?.Owner?.description"
           ></ejs-combobox>
-        </ng-template> -->
-        <ejs-combobox
-          [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event)"
-          [fields]="fieldCbxParticipants"
-          [allowFiltering]="true"
-          [value]="owner"
-          [placeholder]="'Chọn người phụ trách'"
-        ></ejs-combobox>
+        </ng-template>
       </div>
     </div>
   </div>
