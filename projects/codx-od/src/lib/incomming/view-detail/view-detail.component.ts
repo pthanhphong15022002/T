@@ -589,6 +589,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       funcID != 'recallUser' &&
       funcID != 'ODT201' &&
       funcID != 'SYS02' &&
+      this.view?.dataService?.dataSelected?.recID &&
       this.view.dataService.dataSelected.recID != datas.recID
     )
       this.view.dataService.onAction.next({ type: 'update', data: datas });
