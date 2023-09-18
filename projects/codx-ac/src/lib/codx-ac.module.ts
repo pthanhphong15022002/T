@@ -87,6 +87,7 @@ import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.comp
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
 import { AdvancePaymentComponent } from './advance-payment/advance-payment.component';
 import { AdvancePaymentAddComponent } from './advance-payment/advance-payment-add/advance-payment-add.component';
+import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayment-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -311,6 +312,7 @@ export const routes: Routes = [
     CashreceiptsAddComponent,
     AdvancePaymentComponent,
     AdvancePaymentAddComponent,
+    CashpaymentDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

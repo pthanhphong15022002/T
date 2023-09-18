@@ -1245,13 +1245,13 @@ export class CodxShareService {
       refType
     );
   }
-  getSignFileTemplateCateID(cateID) {
+  getTemplateSF(cateID,category) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'GetTemplateByCategoryIDAsync',
-      cateID
+      'GetTemplateSFAsync',
+      [cateID,category]
     );
   }
 
@@ -1436,8 +1436,9 @@ export class CodxShareService {
         case '2': //Export và tạo ES_SignFiles để gửi duyệt
         case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-          this.getSignFileTemplateCateID(
-            approveProcess?.category?.categoryID
+          this.getTemplateSF(
+            approveProcess?.category?.categoryID,
+            approveProcess?.category?.category
           ).subscribe((sfTemplates: any) => {
             if (sfTemplates?.length >= 1) {
               this.apGetTemplateSF(
