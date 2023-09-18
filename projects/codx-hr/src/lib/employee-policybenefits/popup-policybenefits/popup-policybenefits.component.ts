@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CRUDService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { CRUDService, CallFuncService, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, LayoutAddComponent, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { FormGroup } from '@angular/forms';
 import { PopupMultiselectvllComponent } from '../../employee-policyal/popup-multiselectvll/popup-multiselectvll.component';
@@ -24,7 +24,7 @@ implements OnInit{
       }
     }
   }
-
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('tmpGrid1Col1', { static: true })
   tmpGrid1Col1: TemplateRef<any>;
   @ViewChild('tmpGrid1Col2', { static: true })
@@ -1563,6 +1563,7 @@ implements OnInit{
   async onSaveForm(){
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
 
