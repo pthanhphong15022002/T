@@ -67,12 +67,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
   refValueDataType = 'DP022';
 
   //vll dang DPF..
+  listVllCus = [];
+
   listVll = [];
   fieldsVll = { text: 'text', value: 'value' };
 
   datasVll = [];
   fieldsResourceVll = { text: 'textValue', value: 'value' };
-  crrValue = '0';
+  crrValue = '';
   indexEdit = -1;
   showAddVll = true;
 
@@ -92,6 +94,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   methodTemp = 'GetVllCustormByFormatAsync';
   requestTemp = new DataRequest();
   user: any;
+  crrVll: tempVllDP;
+  crrDatasVll: any;
+  // view Crr
+  datasVllCrr = [];
+  fieldsCrrVll = { text: 'textValue', value: 'value' };
+  crrValueFirst = '';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -157,6 +165,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.removeAccents(e.data);
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       this.field.refType = e.data == 'C' ? '3' : '2';
+      if (this.action != 'edit') this.crrVll = new tempVllDP();
     }
     this.changdef.detectChanges();
   }
@@ -390,23 +399,32 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   onChangeVll(e) {
-    if (!e.data || e.data.trim() == '') {
-      this.notiService.notifyCode('Tên value list không được để trống !');
+    if (e.field == 'multiselect') {
+      this.crrVll[e.field] = e.data;
       return;
     }
-    if (e.data.includes(' ')) {
-      this.notiService.notifyCode(
-        'Tên value list không được chứa khoảng trắng để trống !'
-      );
-      return;
+    if (e.field == 'listName') {
+      if (!e.data || e.data.trim() == '') {
+        this.notiService.notifyCode('Tên value list không được để trống !');
+        return;
+      }
+      if (e.data.includes(' ')) {
+        this.notiService.notifyCode(
+          'Tên value list không được chứa khoảng trắng để trống !'
+        );
+        return;
+      }
+
+      let fm = e.data.substring(0, 3);
+      if (fm != this.fomartVll) {
+        this.notiService.notifyCode(
+          "Tên value list phải có dạng format 'DPF...' !"
+        );
+        return;
+      }
     }
 
-    let fm = e.data.substring(0, 3);
-    if (fm == this.fomartVll) this.listName = e.data;
-    else
-      this.notiService.notifyCode(
-        "Tên value list phải có dạng format 'DPF...' !"
-      );
+    this.crrVll[e.field] = e.data;
   }
 
   loadDataVll() {
@@ -419,11 +437,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
     this.fetch().subscribe((item) => {
       this.listVll = [];
+      this.listVllCus = [];
       if (item && Array.isArray(item)) {
-        item.forEach((x) => {
+        this.listVllCus = item;
+        this.listVllCus.forEach((x) => {
           if (x?.listName) {
             this.listVll.push({
-              text: x?.listName,
+              text: x?.note ?? x?.listName,
               value: x?.listName ?? '',
             });
           }
@@ -453,6 +473,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
   }
   cbxChangeVll(value) {
-    if (value) this.field['refValue'] = value;
+    if (value) {
+      this.field['refValue'] = value;
+    }
+    this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
+
+    if (
+      this.crrDatasVll &&
+      this.crrDatasVll.listType == '1' &&
+      this.crrDatasVll.defaultValues
+    ) {
+      var arr = this.crrDatasVll.defaultValues.split(';');
+      if (Array.isArray(arr) && arr?.length > 0) {
+        this.datasVllCrr = arr.map((x) => {
+          return {
+            textValue: x,
+            value: x,
+          };
+        });
+        this.crrValueFirst = this.datasVllCrr[0].textValue;
+      }
+    }
   }
 }
