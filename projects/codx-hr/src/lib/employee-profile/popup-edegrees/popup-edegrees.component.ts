@@ -142,6 +142,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue(this.degreeObj);
   }
 
+  ClickCalendar(event){
+    this.changedInForm = true;
+  }
+
   tabInfo: any[] = [
     {
       icon: 'icon-info',

@@ -813,7 +813,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //   if (this.funcID) {
   //     this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
-  //       debugger
   //       if (res && res[1] > 0) {
   //         this.lstFuncID = Array.from<any>(res[0]);
   //         if (this.lstFuncID?.length > 0) {
@@ -2643,7 +2642,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
                     this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
-                      debugger
                     })
                     // let i = this.lstCertificates.indexOf(data);
                     // if (i != -1) {
