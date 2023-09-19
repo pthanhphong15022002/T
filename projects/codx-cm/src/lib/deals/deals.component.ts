@@ -657,7 +657,10 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-
+    if( data?.alloweStatus != '1' || !data?.full ) {
+      this.notificationsService.notifyCode('CM027');
+      return;
+    }
     if (data.closed) {
       this.notificationsService.notifyCode('DP039');
       return;
