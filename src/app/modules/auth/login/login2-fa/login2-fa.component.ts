@@ -15,6 +15,7 @@ import { Modal } from 'bootstrap';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 
 @Component({
   selector: 'app-login2-fa',
@@ -40,13 +41,28 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.email = this.user.data.email;
     this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
+    if (dt?.data?.loginDevice) {
+      this.loginDevice = dt?.data?.loginDevice;
+      this.loginDevice.times = '2';
+    } else {
+      let dInfo = this.deviceInfo.getDeviceInfo();
+      this.loginDevice = {
+        name: dInfo.browser,
+        os: dInfo.os + ' ' + dInfo.osVersion,
+        ip: '',
+        imei: null,
+        trust: false,
+        times: '2',
+      };
+    }
+    console.log('login2fa device info', this.loginDevice);
   }
   user;
   dialog;
-
+  loginDevice: Device;
   // #region QR
   // testQRContent = '';
-
+  askState = false;
   isFirstQR = true;
   qrTimeout: number = 0;
   hubConnectionID: string;
@@ -137,7 +153,6 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     }
   }
   generateQR() {
-    let deviceInfo = this.deviceInfo.getDeviceInfo();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.api
@@ -148,8 +163,8 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
             'GenQRCodeAsync',
             [
               this.hubConnectionID,
-              deviceInfo.browser,
-              deviceInfo.os + ' ' + deviceInfo.osVersion,
+              this.loginDevice.name,
+              this.loginDevice.os,
               position.coords.accuracy +
                 ';' +
                 position.coords.latitude +
@@ -237,12 +252,14 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
 
   login2FAOTP() {
     this.loginFG.controls['password'].setValue(this.otpValues.join(''));
+    this.loginDevice.trust = this.askState;
     const login2FASubscr = this.authService
       .login(
         this.loginFG.controls['email'].value,
         this.loginFG.controls['password'].value,
         this.curLgType,
-        true
+        true,
+        JSON.stringify(this.loginDevice)
       )
       .pipe()
       .subscribe((data) => {
@@ -271,5 +288,11 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     //       .login('mannhi1601@gmail.com', qrInfo.session as string, 'qr')
     //       .subscribe((res) => {});
     //   });
+  }
+
+  changeAskState(evt) {
+    if (this.askState != evt.data) {
+      this.askState = evt.data;
+    }
   }
 }

@@ -181,7 +181,9 @@
                                       formModel=""
                                       default="Xác thực sẽ hết hạn sau "
                                     ></codx-label>
-                                    {{ otpTimeout / 1000 }}
+                                    <!-- {{ otpTimeout / 1000 }} -->
+                                    {{ otpMinutes }}:
+                                    {{ otpTimeout % 60 }}
                                   </div>
                                 </div>
                                 <div class="form-group d-grid gap-2 mb-5">
@@ -740,7 +742,7 @@
                           [disabled]="changePassForm.invalid"
                         >
                           {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                            "Đổi mật khẩu" | lang : "Login" : "btnLogin" | async
                           }}
                         </button>
                       </div>

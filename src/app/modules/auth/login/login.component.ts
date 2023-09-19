@@ -46,6 +46,11 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
+import { AngularDeviceInformationService } from 'angular-device-information';
+import {
+  Device,
+  UserLoginExtend,
+} from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 
 @Component({
   selector: 'app-login',
@@ -75,6 +80,8 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   // private fields
   unsubscribe: Subscription[] = [];
   iParams = '';
+  loginDevice: Device;
+
   constructor(
     private inject: Injector,
     private fb: FormBuilder,
@@ -90,7 +97,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService,
-    private adService: CodxAdService
+    private deviceInfo: AngularDeviceInformationService
   ) {
     super(inject);
     this.layoutCZ = environment.layoutCZ;
@@ -160,6 +167,16 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         });
       }
     });
+    let dInfo = this.deviceInfo.getDeviceInfo();
+    this.loginDevice = {
+      name: dInfo.browser,
+      os: dInfo.os + ' ' + dInfo.osVersion,
+      ip: '',
+      imei: null,
+      trust: false,
+      times: '1',
+    };
+    console.log('login device info', this.loginDevice);
   }
 
   onInit(): void {
@@ -379,16 +396,24 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   //#region Login
   private login(type: string) {
+    //nho xoa
     const loginSubscr = this.authService
-      .login(this.f.email.value, this.f.password.value, type, false)
+      .login(
+        this.f.email.value,
+        this.f.password.value,
+        type,
+        false,
+        JSON.stringify(this.loginDevice)
+      )
       .pipe()
       .subscribe((data) => {
         if (!data.error) {
-          this.login2FA = data?.data?.extends['Extends'] ?? '';
+          this.login2FA = data?.data?.extends?.Login2FA ?? '';
           let objData = {
             data: data,
             login2FA: this.login2FA,
             hubConnectionID: this.hubConnectionID,
+            loginDevice: this.loginDevice,
           };
 
           if (this.login2FA != '') {

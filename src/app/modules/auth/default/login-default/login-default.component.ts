@@ -31,6 +31,7 @@ import { environment } from 'src/environments/environment';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { Modal } from 'bootstrap';
 import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
+import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 
 @Component({
   selector: 'codx-login',
@@ -61,6 +62,7 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() fl: any;
   @Input() isNotADMode: boolean;
   @Input() hubConnectionID: string;
+  @Input() loginDevice: Device;
 
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
@@ -79,6 +81,7 @@ export class LoginDefaultComponent extends UIComponent {
 
   //#region OTP
   otpTimeout = 0;
+  otpMinutes = 0;
   //#endregion
 
   //#region QR
@@ -89,15 +92,13 @@ export class LoginDefaultComponent extends UIComponent {
   qrBase64: string = '/assets/codx/bg/qrCodx.png';
   isScaned = false;
   modal;
-  // testQRContent = '';
   //#endregion
 
   constructor(
     private injector: Injector,
     private df: ChangeDetectorRef,
     private realHub: RealHubService,
-    private authService: AuthService,
-    private deviceInfo: AngularDeviceInformationService
+    private authService: AuthService
   ) {
     super(injector);
 
@@ -108,6 +109,8 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
+    console.log('logindefault device info', this.loginDevice);
+
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
@@ -121,36 +124,44 @@ export class LoginDefaultComponent extends UIComponent {
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
-            if (z.data.isLg2FA == '') {
-              this.authService.setLogin(z.data?.user);
-              this.realHub.stop();
-              window.location.href = z.data?.host + z.data?.tenant;
-            } else {
-              let user = JSON.parse(z.data.user);
-              let objData = {
-                data: {
-                  data: {
-                    email: user.Email,
-                    ...user,
-                  },
-                },
-                login2FA: z.data.isLg2FA,
-                hubConnectionID: this.hubConnectionID,
-              };
-
-              let lg2FADialog = this.callfc.openForm(
-                Login2FAComponent,
-                '',
-                400,
-                600,
-                '',
-                objData
-              );
-              lg2FADialog.closed.subscribe((lg2FAEvt) => {
+            if (z.data?.hubConnection == this.hubConnectionID) {
+              if (z.data.isLg2FA == '') {
                 this.authService.setLogin(z.data?.user);
                 this.realHub.stop();
-                window.location.href = z.data?.host + z.data?.tenant;
-              });
+                setTimeout(() => {
+                  window.location.href = z.data?.host + z.data?.tenant;
+                }, 1000);
+              } else {
+                let user = JSON.parse(z.data.user);
+                let objData = {
+                  data: {
+                    data: {
+                      email: user.Email,
+                      ...user,
+                    },
+                  },
+                  login2FA: z.data.isLg2FA,
+                  hubConnectionID: this.hubConnectionID,
+                };
+
+                let lg2FADialog = this.callfc.openForm(
+                  Login2FAComponent,
+                  '',
+                  400,
+                  600,
+                  '',
+                  objData
+                );
+                lg2FADialog.closed.subscribe((lg2FAEvt) => {
+                  if (lg2FAEvt.event) {
+                    this.authService.setLogin(z.data?.user);
+                    this.realHub.stop();
+                    setTimeout(() => {
+                      window.location.href = z.data?.host + z.data?.tenant;
+                    }, 1000);
+                  }
+                });
+              }
             }
           }
         });
@@ -233,15 +244,14 @@ export class LoginDefaultComponent extends UIComponent {
       )
       .subscribe((success) => {
         if (success) {
-          this.otpTimeout = 30000;
-
+          this.otpTimeout = 180;
           let id = setInterval(
             () => {
-              this.otpTimeout -= 1000;
+              this.otpTimeout -= 1;
+              this.otpMinutes = Math.floor(this.otpTimeout / 60);
               this.df.detectChanges();
               if (this.otpTimeout === 0) {
                 clearInterval(id);
-                console.log('het gio');
               }
             },
             1000,
@@ -254,7 +264,6 @@ export class LoginDefaultComponent extends UIComponent {
   generateQR() {
     console.log('hub', this.hubConnectionID);
 
-    let deviceInfo = this.deviceInfo.getDeviceInfo();
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.api
@@ -265,8 +274,8 @@ export class LoginDefaultComponent extends UIComponent {
             'GenQRCodeAsync',
             [
               this.hubConnectionID,
-              deviceInfo.browser,
-              deviceInfo.os + ' ' + deviceInfo.osVersion,
+              this.loginDevice.name,
+              this.loginDevice.os,
               position.coords.accuracy +
                 ';' +
                 position.coords.latitude +
@@ -285,11 +294,9 @@ export class LoginDefaultComponent extends UIComponent {
                 () => {
                   this.qrTimeout -= 1;
                   this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
-
                   this.df.detectChanges();
                   if (this.qrTimeout === 0) {
                     clearInterval(id);
-                    console.log('het gio');
                   }
                 },
                 1000,
@@ -311,6 +318,23 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   testQR() {
+    // let objData = {
+    //   data: {
+    //     data: {
+    //       email: 'mannhi1601@gmail.com',
+    //     },
+    //   },
+    //   login2FA: '1',
+    //   hubConnectionID: this.hubConnectionID,
+    // };
+    // let lg2FADialog = this.callfc.openForm(
+    //   Login2FAComponent,
+    //   '',
+    //   400,
+    //   600,
+    //   '',
+    //   objData
+    // );
     // this.api
     //   .execSv<string>(
     //     'SYS',

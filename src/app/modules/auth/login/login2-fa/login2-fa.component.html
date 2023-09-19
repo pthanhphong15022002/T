@@ -55,6 +55,29 @@
       </ng-container>
       <ng-container *ngSwitchCase="'3'" [ngTemplateOutlet]="tmpOTP">
       </ng-container>
+      <ng-container *ngIf="clickQueue[clickQueue.length - 1] != '1'">
+        <div class="d-flex align-items-center my-2">
+          <div class="d-flex justify-content-start me-2">
+            <!--begin::Switch-->
+            <codx-input
+              type="checkbox"
+              labelPosition="After"
+              field=""
+              [crrValue]="askState"
+              (valueChange)="changeAskState($event)"
+            >
+            </codx-input>
+            <!--end::Switch-->
+          </div>
+          <div class="text-gray-800 text-nowrap">
+            <codx-label
+              name="lblLg2FAAsk"
+              default="Không hỏi lại trên thiết bị này"
+              class="fw-bold"
+            ></codx-label>
+          </div>
+        </div>
+      </ng-container>
     </ng-container>
   </div>
 </ng-container>
@@ -195,17 +218,6 @@
               (change)="changeOTP($event, 5)"
             />
           </div>
-          <!-- <div class="d-flex flex-column flex-grow-1">
-            <codx-input
-              type="password"
-              field="password"
-              placeholder="OTP"
-              formControlName="password"
-              [class]="'border-0'"
-              (valueChange)="changeOTP($event)"
-            >
-            </codx-input>
-          </div> -->
         </div>
       </div>
       <div class="otp-btn w-100">
