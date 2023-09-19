@@ -53,7 +53,6 @@
         </div>
         <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
     </div>
-    <div class="text-highlight" *ngFor="let item of data?.highLight" [innerHtml]="item"></div>
     <codx-thumbnail
       [files]="data?.dmFiles"
       displayThumb="simple"
@@ -61,6 +60,7 @@
       [hideMoreF]="'0'"
       >
     </codx-thumbnail>
+    <div class="text-highlight" *ngFor="let item of data?.highLight" [innerHtml]="item"></div>
   </div>
 </ng-template>
 
