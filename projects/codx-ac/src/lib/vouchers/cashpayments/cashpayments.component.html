@@ -16,6 +16,13 @@
     (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
+<ng-template #templateDetailRight>
+  <ng-container *ngIf="itemSelected">
+    <cashpayment-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
+      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
+      [legalName]="legalName" [hideFields]="hideFields" [dataDefault]="dataDefault"></cashpayment-detail>
+  </ng-container>
+</ng-template>
 <ng-template #titleTmp let-data>
   <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
     <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
@@ -91,14 +98,6 @@
     </div>
   </div>
 </ng-template>
-<ng-template #templateDetailRight>
-  <ng-container *ngIf="itemSelected">
-    <cashpayment-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
-      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
-      [legalName]="legalName" [hideFields]="hideFields" [dataDefault]="dataDefault"></cashpayment-detail>
-  </ng-container>
-</ng-template>
-
 <!-- template listdetail -->
 
 <!-- template list -->

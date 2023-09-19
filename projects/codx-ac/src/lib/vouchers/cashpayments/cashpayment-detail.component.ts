@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
 import { CodxAcService } from '../../codx-ac.service';
-import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent, Util } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
@@ -8,7 +8,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
-
+declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
   templateUrl: './cashpayment-detail.component.html',
@@ -40,6 +40,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
   dataCategory: any; //? data của category
   optionSidebar: SidebarModel = new SidebarModel();
+  bhLogin: boolean = false;
   tabInfo: TabModel[] = [
     //? danh sách các tab footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -79,7 +80,6 @@ export class CashpaymentDetailComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -168,7 +168,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        //this.call();
+        this.call();
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -191,9 +191,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       .subscribe((res: any) => {
         this.itemSelected = res;
         this.setTotalRecord();
+        this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
-    this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+    
   }
 
   /**
@@ -664,4 +665,25 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
   //#endregion Function
 
+  //#region Bankhub
+  call() {
+    jsBh.login('accNet', (o) => this.callback(o));
+  }
+
+  callback(o: any) {
+    if (o) {
+      this.bhLogin = true;
+      localStorage.setItem('bh_tk', o);
+      this.getbank();
+    }
+  }
+
+  getbank() {
+    this.acService
+      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+  //#endregion
 }

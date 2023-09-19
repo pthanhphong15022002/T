@@ -80,7 +80,6 @@ export class ReportComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    debugger
     this.codxService.navigate("","/ws/report/detail/"+data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;

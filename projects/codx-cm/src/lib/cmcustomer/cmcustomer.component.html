@@ -162,11 +162,14 @@
       <span *ngIf="!data?.allowEmail">{{ data.personalEmail }}</span>
     </div>
     <div
-      class="mb-1 d-flex align-items-top"
-      [ngbTooltip]="popupAddress"
+      class="mb-1 d-flex align-items-top text-hover-primary"
       *ngIf="data.address"
     >
-      <span class="icon-16 icon-place text-gray-700"> </span>
+      <span
+        class="icon-16 icon-place me-1 text-gray-700"
+        [ngbTooltip]="popupAddress"
+      >
+      </span>
       <span class="fs-7 text-gray-600">{{ data?.address }} </span>
       <ng-template #popupAddress>
         <codx-label

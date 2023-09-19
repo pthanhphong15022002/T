@@ -589,6 +589,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       funcID != 'recallUser' &&
       funcID != 'ODT201' &&
       funcID != 'SYS02' &&
+      this.view?.dataService?.dataSelected?.recID &&
       this.view.dataService.dataSelected.recID != datas.recID
     )
       this.view.dataService.onAction.next({ type: 'update', data: datas });
@@ -1300,7 +1301,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           datas,
           this.afterSave,
           this.formModel,
-          this.view.dataService,
+          this.view?.dataService,
           this,
           customData
         );
@@ -1523,7 +1524,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      debugger
       this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
