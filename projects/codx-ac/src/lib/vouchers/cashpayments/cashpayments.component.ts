@@ -157,6 +157,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
+    console.log(this.view);
 
   }
 
@@ -402,6 +403,7 @@ onSelectedItem(event) {
       }
       switch (data?.status) {
         case '7':
+        case '2':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
