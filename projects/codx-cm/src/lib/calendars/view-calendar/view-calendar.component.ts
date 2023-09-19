@@ -401,6 +401,9 @@ export class ViewCalendarComponent
             //   .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
             //   .subscribe((data) => {
             //   })
+            this.view.dataService.delete(data).subscribe();
+            this.view.currentView['schedule'].refresh();
+            this.detectorRef.detectChanges();
           }
         });
       } else {

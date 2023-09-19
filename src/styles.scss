@@ -135,7 +135,16 @@ codx-view-list-detail {
 .rounded-8 {
   border-radius: 2rem !important;
 }
-
+.icon-10 {
+  font-size: 10px !important;
+  height: 10px;
+  line-height: 10px;
+}
+.icon-8 {
+  font-size: 8px !important;
+  height: 8px;
+  line-height: 8px;
+}
 .icon-6 {
   font-size: 6px !important;
   height: 6px;
@@ -148,6 +157,9 @@ codx-view-list-detail {
 }
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
+}
+.w-16px {
+  width: 16px !important;
 }
 .w-10 {
   width: 10%;

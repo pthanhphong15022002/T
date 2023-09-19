@@ -28,7 +28,6 @@
 </ng-template>
 <ng-template #footer let-data>
     <div class="d-flex flex-column">
-        <div class="text-dark" [innerHtml]="data.highlight"></div>
         <codx-thumbnail
             [files]="data?.unbounds?.files"
             displayThumb="simple"
@@ -36,6 +35,7 @@
             [hideMoreF]="'0'"
         >
         </codx-thumbnail>
+        <div class="text-highlight" *ngFor="let item of data?.unbounds?.highLight?.content" [innerHtml]="item"></div>
     </div>
    
 </ng-template>

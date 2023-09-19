@@ -35,25 +35,39 @@
   <div class="mt-3" style="display: block">
     <ng-container *ngFor="let item of data; index as i">
       <div class="user-mini-nav" style="background-color: #f4f7ff">
-        <span>
-          <codx-img
-            [width]="25"
-            class="me-2"
-            [objectId]="item?.objectID"
-            objectType="AD_Users"
-            [objectName]="item?.roleType == 'Owner' ? 'Owner' : item?.objectName"
-          >
-          </codx-img>
-        </span>
-        <span class="text-dark fw-bold"> {{item?.roleType == 'Owner' ? 'Owner' : item?.objectName }} </span>
-        <span class="mt-1">
-          <a
-            (click)="onDeleteOwner(item?.objectID, data)"
-            style="cursor: pointer"
-          >
-            <span class="icon-close icon-16 text-danger ms-3"></span>
-          </a>
-        </span>
+         <div *ngIf="item?.roleType != 'Owner'" class="d-flex align-items-center">
+          <span>
+            <codx-img
+              [width]="25"
+              class="me-2"
+              [objectId]="item?.objectID"
+              objectType="AD_Users"
+              [objectName]="item?.objectName"
+            >
+            </codx-img>
+          </span>
+          <span class="text-dark fw-bold"> {{item?.objectName }} </span>
+          <span class="mt-1">
+            <a
+              (click)="onDeleteOwner(item?.objectID, data)"
+              style="cursor: pointer"
+            >
+              <span class="icon-close icon-16 text-danger ms-3"></span>
+            </a>
+          </span>
+        </div>
+        <div *ngIf="item?.roleType == 'Owner'" class="d-flex align-items-center">
+          <span class="e-avatar e-avatar-circle" style="width: 25px; height: 25px;">O</span>
+          <span class="text-dark fw-bold ms-1">Owner</span>
+          <span class="mt-1">
+            <a
+              (click)="onDeleteOwner(item?.objectID, data)"
+              style="cursor: pointer"
+            >
+              <span class="icon-close icon-16 text-danger ms-3"></span>
+            </a>
+          </span>
+        </div>
       </div>
     </ng-container>
   </div>
