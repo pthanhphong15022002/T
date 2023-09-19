@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
-import {
-  ApiHttpService,
-  CacheService,
-  FormModel
-} from 'codx-core';
+import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
+
+export const fmSalesInvoicesLines: FormModel = {
+  entityName: 'AC_SalesInvoicesLines',
+  formName: 'SalesInvoicesLines',
+  gridViewName: 'grvSalesInvoicesLines',
+  entityPer: 'AC_SalesInvoicesLines',
+  funcID: 'ACT0605',
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class SalesInvoiceService {
-  fmSalesInvoicesLines: FormModel = {
-    entityName: 'AC_SalesInvoicesLines',
-    formName: 'SalesInvoicesLines',
-    gridViewName: 'grvSalesInvoicesLines',
-    entityPer: 'AC_SalesInvoicesLines',
-    funcID: 'ACT0605',
-  };
   gvsSalesInvoicesLines: any;
   vats: any[];
   journal: IJournal;
@@ -29,8 +26,8 @@ export class SalesInvoiceService {
   ) {
     cacheService
       .gridViewSetup(
-        this.fmSalesInvoicesLines.formName,
-        this.fmSalesInvoicesLines.gridViewName
+        fmSalesInvoicesLines.formName,
+        fmSalesInvoicesLines.gridViewName
       )
       .subscribe((res) => {
         this.gvsSalesInvoicesLines = res;

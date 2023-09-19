@@ -285,7 +285,11 @@
 
     <div class="mt-4">
       <ng-container *ngIf="lstFile.length > 0">
-        <codx-thumbnail [files]="lstFile" displayThumb="simple">
+        <codx-thumbnail
+          [isFristVer]="itemDetail?.approveStatus != '5' ? true : false"
+          [files]="lstFile"
+          displayThumb="simple"
+        >
         </codx-thumbnail>
       </ng-container>
     </div>

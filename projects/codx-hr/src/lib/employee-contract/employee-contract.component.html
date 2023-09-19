@@ -202,6 +202,7 @@
       </div>
       <codx-attachment
         #attachment
+        [isFristVer]="data?.approveStatus != '5' ? true : false"
         [objectId]="data?.recID"
         [objectType]="view.formModel.entityName"
         hideFolder="1"

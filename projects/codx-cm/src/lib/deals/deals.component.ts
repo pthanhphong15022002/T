@@ -778,6 +778,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
+            isCallInstance: true
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -826,7 +827,6 @@ export class DealsComponent
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.probability,
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -923,7 +923,7 @@ export class DealsComponent
         this.detailViewDeal.dataSelected = JSON.parse(
           JSON.stringify(this.dataSelected)
         );
-        this.detailViewDeal.getContactByDeaID(this.dataSelected.recID);
+     //   this.detailViewDeal.getListContactByDealID(this.dataSelected.recID);
         this.changeDetectorRef.detectChanges();
       }
     });

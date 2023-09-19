@@ -9,7 +9,7 @@
       'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
       data?.icon
     "
-    [status]="data?.approveStatus "
+    [status]="runMode=='1' ? data?.unbounds?.statusApproval : data?.approveStatus "
     [icoStyle]="setStyles(data?.color)"
     [statusVll]="data?.isTemplate!=true ? lstReferValue?.ApproveStatus : ''"
     [date]="data?.createdOn"
@@ -33,7 +33,7 @@
   <lib-view-detail
     #viewdetail
     [recID]="itemDetail?.recID"
-    [data]="lstSignfiles"
+    [data]="itemDetail"
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"

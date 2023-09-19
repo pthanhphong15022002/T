@@ -2858,7 +2858,7 @@
 </div>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  <ng-container *ngFor="let item of dataVll" #items>
+  <ng-container *ngFor="let item of dataVll">
     <div
       *ngIf="itemConfig.context.orgUnitType === item.value"
       [style]="
@@ -2907,13 +2907,13 @@
       <ng-container class="px-2" *ngIf="!selectedTeam.includes('No')">
         <div
           class="d-flex flex-column flex-grow-1 align-items-center mt-5 position-relative"
-          (mouseleave)="
-            mouseLeave(itemConfig.context.employeeManager, itemConfig.id)
-          "
         >
           <codx-img
             (mouseenter)="
               mouseEnter(itemConfig.context.employeeManager, itemConfig.id)
+            "
+            (mouseleave)="
+              mouseLeave(itemConfig.context.employeeManager, itemConfig.id)
             "
             class="symbol symbol-35 symbol-circle"
             [width]="35"
