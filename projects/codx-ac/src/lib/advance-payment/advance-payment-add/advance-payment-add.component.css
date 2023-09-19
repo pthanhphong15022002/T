@@ -25,3 +25,12 @@ height: 100%;
 .rounded-15{
     border-radius: 15px !important;
  }
+.amount .e-editable-value{
+    justify-content: end;
+}
+.header-font-size .e-dlg-header, .e-dlg-header *{
+    font-size: 13px;
+}
+.height-attachments{
+    height: 12%;
+}

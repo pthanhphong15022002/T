@@ -107,6 +107,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   crrValueFirst = '';
   element: any;
   isOpenPopup = false;
+  loaded: boolean = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -155,9 +156,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   ngOnInit(): void {
     // this.field.dataType = 'L';
     // this.field.dataFormat = 'V';
-    // if ((this.field.dataFormat = 'V'))
-    // test
-    // this.loadDataVll();
+    if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
+      this.loadDataVll();
   }
 
   valueChangeCbx(e) {}
@@ -454,6 +454,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   loadDataVll() {
+    if (this.loaded) return;
     this.requestTemp.entityName = 'SYS_ValueList';
     // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
     // this.requestTemp.dataValue = this.user.language + ';DPF';
@@ -477,8 +478,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       } else this.listVll = [];
       if (this.datasVllCbx) this.datasVllCbx.refresh();
       this.changeDef.detectChanges();
+      this.loaded = true;
     });
   }
+
   private fetch(): Observable<any[]> {
     return this.api
       .execSv<Array<any>>(
