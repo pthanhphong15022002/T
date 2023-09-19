@@ -25,7 +25,6 @@
     'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
     data?.icon
   "
-  [status]="data?.approveStatus "
   [icoStyle]="setStyles(data?.color)"
   [titleLine]="2"
   [titleCss]="'fw-bold fs-6 mb-1'"
@@ -41,6 +40,14 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
+          <codx-vll
+            class="badge"
+            [name]="'ES003'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
           <i class="icon-access_alarm"></i>
           <span class="ms-2">{{data?.createdOn | date:'dd/MM/yyyy'}}</span>
         </div>
@@ -53,6 +60,7 @@
       [hideMoreF]="'0'"
       >
     </codx-thumbnail>
+    <div class="text-highlight" *ngFor="let item of data?.highLight" [innerHtml]="item"></div>
   </div>
 </ng-template>
 
