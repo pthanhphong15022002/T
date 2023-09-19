@@ -277,6 +277,10 @@ export class CodxShareService {
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                  //Cập nhật lại status duyệt 
+                  var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                  if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+                  
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -294,7 +298,12 @@ export class CodxShareService {
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                 //Cập nhật lại status duyệt 
+                 var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                 if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+
                 dataService.update(data).subscribe();
+               
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
@@ -306,8 +315,12 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (!res?.msgCodeError && res?.rowCount>0) {
-              data.unbounds.statusApproval = res?.returnStatus;
+            if (res) {
+              data.unbounds.statusApproval = res?.status;
+              //Cập nhật lại status duyệt 
+              var index = dataService.data.findIndex(x=>x.transID == data.recID);
+              if(index >= 0) dataService.data[index].unbounds.statusApproval =  res?.status;
+
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             }
