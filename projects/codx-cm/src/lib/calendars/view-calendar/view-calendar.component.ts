@@ -364,6 +364,8 @@ export class ViewCalendarComponent
           .subscribe((res) => {
             if (res) {
               this.view.dataService.update(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.detectChanges();
               this.notiService.notifyCode('SYS007');
             }
           });
@@ -376,6 +378,8 @@ export class ViewCalendarComponent
           .subscribe((res) => {
             if (res) {
               this.view.dataService.update(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.detectChanges();
               this.notiService.notifyCode('SYS007');
             }
           });
@@ -397,6 +401,9 @@ export class ViewCalendarComponent
             //   .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
             //   .subscribe((data) => {
             //   })
+            this.view.dataService.delete(data).subscribe();
+            this.view.currentView['schedule'].refresh();
+            this.detectorRef.detectChanges();
           }
         });
       } else {
@@ -692,7 +699,7 @@ export class ViewCalendarComponent
           res.StartDate = res.ActualStart ?? res.StartDate;
           res.EndDate = res.ActualEnd ?? res.EndDate;
           res.isActual = res.ActualStart != null ? true : false;
-          res.EntityName = 'DP_Activities';
+          res.entityName = 'DP_Activities';
           this.isActivitie = false;
           this.view.dataService.add(res).subscribe();
           this.notiService.notifyCode('SYS006');
@@ -717,6 +724,17 @@ export class ViewCalendarComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+  
+  convertDataCalendar(res){
+    res.StartDate = res.ActualStart ?? res.StartDate;
+    res.EndDate = res.ActualEnd ?? res.EndDate;
+    res.isActual = res.ActualStart != null ? true : false;
+    if(this.isStepTask){
+      res.entityName = 'DP_Instances_Steps_Tasks';
+    }else if(this.isActivitie){
+      res.entityName = 'DP_Activities';
+    }
   }
   //#endregion
 }

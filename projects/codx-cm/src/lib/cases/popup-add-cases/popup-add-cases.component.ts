@@ -337,7 +337,7 @@ export class PopupAddCasesComponent
   }
   valueChangeOwner($event) {
     if ($event) {
-      this.owner = $event;
+      this.owner = this.cases.applyProcess ? $event : $event.data;
       this.cases.owner = this.owner;
     }
   }

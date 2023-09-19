@@ -220,11 +220,15 @@ export class CodxAcService {
   createCRUDService(
     injector: Injector,
     formModel: FormModel,
-    service?: string
+    service?: string,
+    gridView?: any,
   ): CRUDService {
     const crudService = new CRUDService(injector);
     if (service) {
       crudService.service = service;
+    }
+    if (gridView) {
+      crudService.gridView = gridView;
     }
     crudService.request.entityName = formModel.entityName;
     crudService.request.entityPermission = formModel.entityPer;
