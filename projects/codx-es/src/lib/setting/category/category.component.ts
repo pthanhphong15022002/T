@@ -128,13 +128,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnsGrid = [
-            // {
-            //   field: '',
-            //   headerText: '',
-            //   width: 30,
-            //   template: this.itemAction,
-            //   textAlign: 'center',
-            // },
+            {
+              field: '',
+              headerText: '',
+              width: 15,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'categoryID',
               headerText:  gv['CategoryID']?.headerText || 'CategoryID',

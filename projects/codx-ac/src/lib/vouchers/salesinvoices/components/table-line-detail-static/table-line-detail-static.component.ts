@@ -31,7 +31,7 @@ export class TableLineDetailStaticComponent
 
   @ViewChild('myTable') tableRef: ElementRef<HTMLElement>;
 
-  hasVerticalScrollbar: boolean;
+  hasVerticalScrollbar: boolean = false;
 
   constructor(injector: Injector) {
     super(injector);

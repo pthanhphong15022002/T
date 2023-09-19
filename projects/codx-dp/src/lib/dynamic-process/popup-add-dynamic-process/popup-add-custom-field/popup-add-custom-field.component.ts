@@ -377,8 +377,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       (x) => x.listName == this.crrVll.listName
     );
     let menthol = checkEdit
-      ? 'EditValuelistCustormAsync'
-      : 'AddValuelistCustormAsync';
+      ? 'EditValuelistCustomsAsync'
+      : 'AddValuelistCustomsAsync';
 
     this.api
       .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
