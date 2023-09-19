@@ -189,7 +189,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn && !changedInForm">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
@@ -282,6 +282,7 @@
           [displayOption]="ops"
           cssClass="w-100 om-calendar"
           class="me-4"
+          (click)="ClickCalendar($event)"
           (change)="changeCalendar($event, 'FromDate')"
         >
         </codx-dropdown-calendar>
@@ -296,6 +297,7 @@
           [firstChange]="isNullTo"
           [selectedType]="toDateFormat"
           [displayOption]="ops"
+          (click)="ClickCalendar($event)"
           cssClass="w-100 om-calendar"
           class="me-4"
           (change)="changeCalendar($event, 'ToDate')"
