@@ -83,6 +83,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    this.oriData = this.data;
     this.funcID = this.routerActive.snapshot.params['funcID'];
 
     if (this.action === 'edit') {
@@ -106,7 +107,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           [this.data.employeeID]
         ).subscribe(res => {
           if (res) {
-            this.data = res;
+            this.data = JSON.parse(JSON.stringify(res));
             this.oriData = JSON.parse(JSON.stringify(res));
             this.form.formGroup.patchValue(this.data);
             this.hasChangedData = false;
