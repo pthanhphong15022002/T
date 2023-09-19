@@ -32,6 +32,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   @ViewChild('cbxJobLevel') cbxJobLevel: any;
 
   data: any = null;
+  oriData: any = null;
   headerText: string = '';
   action: string = '';
   formModel: FormModel = null;
@@ -106,13 +107,15 @@ export class PopupAddEmployeeComponent implements OnInit {
         ).subscribe(res => {
           if (res) {
             this.data = res;
+            this.oriData = JSON.parse(JSON.stringify(res));
             this.form.formGroup.patchValue(this.data);
             this.hasChangedData = false;
             this.oldAddress = this.data?.address;
             this.oldTAddress = this.data?.tAddress;
           }
         })
-    } else this.hasChangedData = true;
+    } else
+     this.hasChangedData = true;
   }
   ngAfterViewInit() {
     this.form.formGroup.patchValue({ joinedOn: null }); // fix tạm bằng cách gán cứng
@@ -138,7 +141,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     if (event) {
       let field = Util.camelize(event.field);
       let value = event.data;
-      if (this.data[field] !== value)
+      if (this.oriData[field] !== value)
         this.hasChangedData = true;
       this.data[field] = value;
 
