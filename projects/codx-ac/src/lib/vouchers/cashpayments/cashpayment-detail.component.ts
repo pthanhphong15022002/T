@@ -80,7 +80,6 @@ export class CashpaymentDetailComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);

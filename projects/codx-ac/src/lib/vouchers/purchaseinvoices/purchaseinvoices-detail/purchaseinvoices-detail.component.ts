@@ -18,7 +18,7 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { groupBy } from '../../../utils';
@@ -56,7 +56,6 @@ export class PurchaseinvoicesDetailComponent
   expanding: boolean = false;
   loading: boolean = false;
   acctLoading: boolean = false;
-  isFirstRun: boolean = true;
 
   journal: IJournal;
   viewData: IPurchaseInvoice;
@@ -91,6 +90,57 @@ export class PurchaseinvoicesDetailComponent
 
     this.journal = parentComponent?.journal;
     this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
+
+    this.columns = [
+      new TableColumn({
+        labelName: 'Num',
+        headerText: 'STT',
+      }),
+      new TableColumn({
+        labelName: 'Item',
+        headerText: 'Mặt hàng',
+        footerText: 'Tổng cộng',
+        footerClass: 'text-end',
+      }),
+      new TableColumn({
+        labelName: 'Quantity',
+        field: 'quantity',
+        headerText: 'Số lượng',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
+        hasSum: true,
+      }),
+      new TableColumn({
+        labelName: 'PurchasePrice',
+        field: 'purcPrice',
+        headerText: 'Đơn giá',
+        headerClass: 'text-end',
+      }),
+      new TableColumn({
+        labelName: 'NetAmt',
+        field: 'netAmt',
+        headerText: 'Thành tiền',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+      new TableColumn({
+        labelName: 'Vatid',
+        field: 'vatAmt',
+        headerText: 'Thuế GTGT',
+        headerClass: 'text-end pe-3',
+        footerClass: 'text-end pe-3',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+    ];
+
+    this.cache
+      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
+      .subscribe((gvs) => {
+        this.gvsAcctTrans = gvs;
+      });
   }
   //#endregion
 
@@ -109,68 +159,6 @@ export class PurchaseinvoicesDetailComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isFirstRun) {
-      this.cache
-        .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-        .subscribe((gvs) => {
-          this.gvsAcctTrans = gvs;
-        });
-
-      this.cache
-        .gridViewSetup(
-          this.fmPurchaseInvoicesLines.formName,
-          this.fmPurchaseInvoicesLines.gridViewName
-        )
-        .subscribe((grv) => {
-          this.columns = [
-            new TableColumn({
-              labelName: 'Num',
-              headerText: 'STT',
-            }),
-            new TableColumn({
-              labelName: 'Item',
-              headerText: grv?.ItemID?.headerText ?? 'Mặt hàng',
-              footerText: 'Tổng cộng',
-              footerClass: 'text-end',
-            }),
-            new TableColumn({
-              labelName: 'Quantity',
-              field: 'quantity',
-              headerText: grv?.Quantity?.headerText ?? 'Số lượng',
-              headerClass: 'text-end',
-              footerClass: 'text-end',
-              hasSum: true,
-            }),
-            new TableColumn({
-              labelName: 'PurchasePrice',
-              field: 'purcPrice',
-              headerText: grv?.PurcPrice?.headerText ?? 'Đơn giá',
-              headerClass: 'text-end',
-            }),
-            new TableColumn({
-              labelName: 'NetAmt',
-              field: 'netAmt',
-              headerText: grv?.NetAmt?.headerText ?? 'Thành tiền',
-              headerClass: 'text-end',
-              footerClass: 'text-end',
-              hasSum: true,
-              sumFormat: SumFormat.Currency,
-            }),
-            new TableColumn({
-              labelName: 'Vatid',
-              field: 'vatAmt',
-              headerText: grv?.VATID?.headerText ?? 'Thuế GTGT',
-              headerClass: 'text-end pe-3',
-              footerClass: 'text-end pe-3',
-              hasSum: true,
-              sumFormat: SumFormat.Currency,
-            }),
-          ];
-        });
-
-      this.isFirstRun = false;
-    }
-
     if (!this.dataService && changes.formModel?.currentValue) {
       this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
         this.dataService = this.acService.createCRUDService(

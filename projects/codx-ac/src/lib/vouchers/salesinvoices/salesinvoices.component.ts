@@ -1,36 +1,28 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   Component,
-  ElementRef,
   Injector,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   DataRequest,
-  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
-import { IAcctTran } from './interfaces/IAcctTran.interface';
-import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
-import { ISalesInvoicesLine } from './interfaces/ISalesInvoicesLine.interface';
-import { SumFormat, TableColumn } from './models/TableColumn.model';
-import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
-import { SalesInvoiceService } from './salesinvoices.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
-import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
-import { IPurchaseInvoice } from '../purchaseinvoices/interfaces/IPurchaseInvoice.inteface';
-import { groupBy, toCamelCase } from '../../utils';
+import { toCamelCase } from '../../utils';
+import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
+import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
+import { SalesInvoiceService } from './salesinvoices.service';
 
-enum MF {
+export enum MF {
   GuiDuyet = 'ACT060504',
   GhiSo = 'ACT060506',
   HuyYeuCauDuyet = 'ACT060505',
@@ -46,49 +38,23 @@ enum MF {
 })
 export class SalesinvoicesComponent
   extends UIComponent
-  implements AfterViewInit, AfterViewChecked
+  implements AfterViewInit
 {
   //#region Constructor
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('sider') sider?: TemplateRef<any>;
   @ViewChild('content') content?: TemplateRef<any>;
-  @ViewChild('memoContent', { read: ElementRef })
-  memoContent: ElementRef<HTMLElement>;
 
   views: Array<ViewModel> = [];
   btnAdd = {
     id: 'btnAdd',
   };
-  tabControl: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: false },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
   functionName: string;
   journalNo: string;
-  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
+  defaultSubject = new BehaviorSubject<ISalesInvoice>(null);
 
   journal: IJournal;
   master: ISalesInvoice;
-  lines: ISalesInvoicesLine[] = [];
-  acctTranLines: IAcctTran[][] = [[]];
-  columns: TableColumn[];
-
-  loading: boolean = false;
-  acctLoading: boolean = false;
-  overflowed: boolean = false;
-  expanding: boolean = false;
-
-  fmSalesInvoicesLines: FormModel;
-  fmAcctTrans: FormModel = {
-    entityName: 'AC_AcctTrans',
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityPer: 'AC_AcctTrans',
-  };
-  gvsSalesInvoicesLines: any;
-  gvsAcctTrans: any;
 
   constructor(
     inject: Injector,
@@ -101,70 +67,11 @@ export class SalesinvoicesComponent
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
-
-    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
-    this.gvsSalesInvoicesLines = salesInvoiceService.gvsSalesInvoicesLines;
   }
   //#endregion
 
   //#region Init
   onInit(): void {
-    this.columns = [
-      new TableColumn({
-        labelName: 'Num',
-        headerText: 'STT',
-      }),
-      new TableColumn({
-        labelName: 'Item',
-        headerText:
-          this.gvsSalesInvoicesLines?.ItemID?.headerText ?? 'Mặt hàng',
-        footerText: 'Tổng cộng',
-        footerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'Quantity',
-        field: 'quantity',
-        headerText:
-          this.gvsSalesInvoicesLines?.Quantity?.headerText ?? 'Số lượng',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-      }),
-      new TableColumn({
-        labelName: 'SalesPrice',
-        field: 'salesPrice',
-        headerText:
-          this.gvsSalesInvoicesLines?.SalesPrice?.headerText ?? 'Đơn giá',
-        headerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'NetAmt',
-        field: 'netAmt',
-        headerText:
-          this.gvsSalesInvoicesLines?.NetAmt?.headerText ?? 'Thành tiền',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-      new TableColumn({
-        labelName: 'Vatid',
-        field: 'vatAmt',
-        headerText:
-          this.gvsSalesInvoicesLines?.VATID?.headerText ?? 'Thuế GTGT',
-        headerClass: 'text-end pe-3',
-        footerClass: 'text-end pe-3',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-    ];
-
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
-
     this.emitDefault();
 
     this.journalService.getJournal$(this.journalNo).subscribe((journal) => {
@@ -200,61 +107,19 @@ export class SalesinvoicesComponent
       this.functionName = toCamelCase(res.defaultName);
     });
   }
-
-  ngAfterViewChecked(): void {
-    const element: HTMLElement = this.memoContent?.nativeElement;
-    this.overflowed = element?.scrollWidth > element?.offsetWidth;
-  }
-
-  ngOnDestroy() {}
   //#endregion
 
   //#region Event
-  onChange(e): void {
+  onSelectChange(e): void {
     console.log('onChange', e);
 
     if (e.data.error?.isError) {
       return;
     }
 
-    this.master = e.data.data ?? e.data;
-    if (!this.master) {
-      return;
+    if (e.data.data ?? e.data) {
+      this.master = e.data.data ?? e.data;
     }
-
-    this.expanding = false;
-
-    this.loading = true;
-    this.lines = [];
-    this.api
-      .exec(
-        'AC',
-        'SalesInvoicesLinesBusiness',
-        'GetLinesAsync',
-        this.master.recID
-      )
-      .subscribe((res: any) => {
-        this.lines = res;
-        this.loading = false;
-      });
-
-    this.acctLoading = true;
-    this.acctTranLines = [];
-    this.api
-      .exec(
-        'AC',
-        'AcctTransBusiness',
-        'GetAccountingAsync',
-        '8dfddc85-4d44-11ee-8552-d880839a843e'
-      )
-      .subscribe((res: any) => {
-        console.log(res);
-        if (res) {
-          this.acctTranLines = groupBy(res, 'entryID');
-        }
-
-        this.acctLoading = false;
-      });
   }
 
   onClickAdd(e): void {
@@ -289,7 +154,7 @@ export class SalesinvoicesComponent
       .unsubscribe();
   }
 
-  onClickMF(e, data) {
+  onClickMF(e, data): void {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -358,11 +223,6 @@ export class SalesinvoicesComponent
         mf.disabled = true;
       }
     }
-  }
-
-  onClickShowLess(): void {
-    this.expanding = !this.expanding;
-    this.detectorRef.detectChanges();
   }
   //#endregion
 
