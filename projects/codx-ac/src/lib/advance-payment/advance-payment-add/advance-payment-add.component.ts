@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-advance-payment-add',
@@ -15,6 +16,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class AdvancePaymentAddComponent extends UIComponent
 {
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   private destroy$ = new Subject<void>();
   headerText: string = '';
@@ -298,5 +300,13 @@ export class AdvancePaymentAddComponent extends UIComponent
       }
     }
     return null;
+  }
+
+  fileAdded(event: any) {
+    this.advancedPayment.attachments = event.data.length;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }
