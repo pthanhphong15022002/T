@@ -187,6 +187,8 @@ implements OnInit{
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.benefitPolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    console.log('benefit policy nhan vao', this.benefitPolicyObj);
+    debugger
     if(this.benefitPolicyObj && this.actionType == 'edit'){
       this.originPolicyId = this.benefitPolicyObj.policyID;
       this.originPolicyBenefitObj = JSON.parse(JSON.stringify(this.benefitPolicyObj));
@@ -273,6 +275,7 @@ implements OnInit{
   }
 
   addRowGrid1(){
+    debugger
     if(this.benefitPolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.benefitPolicyObj.policyID).subscribe((res) => {
         if(res[0] == true){

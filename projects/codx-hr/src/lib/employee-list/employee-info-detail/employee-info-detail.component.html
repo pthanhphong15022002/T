@@ -3305,35 +3305,39 @@
 
           <div #eDocument class="mb-1 mt-6" *ngIf="eInfoFormModel">
             <div *ngFor="let doc of lstEmpDocument">
-              <div class="has-action-menu">
-                <span *ngIf="doc?.isSubmitted == true">
-                  <codx-input
-                  [type]="'checkbox'"
-                  [checked]="true"
-                  [disabled]="true"
-                ></codx-input>
-                </span>
-  
-                <span *ngIf="doc?.isRequired == true" class="me-3">
-                Ngoi sao
-                </span>
-  
-                <span
-                [innerHTML]="
-                doc.documentTypeID | formatvalue : edocumentFormModel : 'documentTypeID' | async
-              "
-                >
-                </span>
-  
-                <span *ngIf="doc?.submittedDate" class="ms-5">
-                  {{doc?.submittedDate | fmDT}}
-                </span>
-  
-                    <ng-container *ngIf="doc?.lstFile && doc?.lstFile?.length > 0">
-                      <span>|</span>
-                      <codx-thumbnail [files]="doc?.lstFile" displayThumb="simple" [hideHover]="'0'">
-                      </codx-thumbnail>
-                    </ng-container>
+              <div class="has-action-menu d-flex align-items-center py-2 border-bottom border-gray-100 bg-hover">
+                <div class="w-100 d-flex align-items-center">
+                  <div class="issubcheck me-3 w-25px h-25px position-relative">
+                    <span class="icon-i-circle-fill icon-22 text-gray-300 position-absolute top-0 left-0"></span>
+                    <span class="position-absolute top-0 left-0" *ngIf="doc?.isSubmitted == true">
+                      <!-- <codx-input
+                        [type]="'checkbox'"
+                        [checked]="true"
+                        [disabled]="true"
+                      ></codx-input> -->
+                      <span class="icon-i-check-circle-fill icon-22 text-primary"></span>
+                    </span>
+                    <span *ngIf="doc?.isRequired == true" class="h-15px position-absolute end-0 bottom-0">
+                      <span class="icon-i-asterisk icon-10 text-danger"></span>
+                    </span>
+                  </div>
+                  
+                  <span class="text-dark fs-6 fw-bold"
+                    [innerHTML]="
+                    doc.documentTypeID | formatvalue : edocumentFormModel : 'documentTypeID' | async
+                    "
+                    >
+                  </span>
+                </div>
+                <div class="min-w-350px w-350px d-flex align-items-center">
+                  <div *ngIf="doc?.submittedDate" class="me-5 d-flex align-items-center">
+                    <span class="icon-date_range text-gray-600 icon-16 me-1"></span>
+                    <span>{{doc?.submittedDate | fmDT}}</span>
+                  </div>
+                  <ng-container *ngIf="doc?.lstFile && doc?.lstFile?.length > 0">
+                    <codx-thumbnail [files]="doc?.lstFile" displayThumb="simple" [hideHover]="'0'">
+                    </codx-thumbnail>
+                  </ng-container>
                     <!-- <div class="flex-nowrap">
                       <codx-attachment
                           #attachment
@@ -3355,14 +3359,15 @@
                       </codx-attachment>
                       </div>   -->
 
-                  <codx-mfunc
-                  [formModel]="edocumentFormModel"
-                  (clickMF)="clickMF($event, doc, 'eDocument')"
-                  type="hover"
-                  [dataItem]="doc"
-            (changeDataMF)="handleShowHideMF($event)"
-                >
-                </codx-mfunc>
+                    <codx-mfunc
+                    [formModel]="edocumentFormModel"
+                    (clickMF)="clickMF($event, doc, 'eDocument')"
+                    type="hover"
+                    [dataItem]="doc"
+                      (changeDataMF)="handleShowHideMF($event)"
+                    >
+                  </codx-mfunc>
+                </div>
               </div>
             </div>
           </div>

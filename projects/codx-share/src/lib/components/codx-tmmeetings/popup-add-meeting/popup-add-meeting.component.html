@@ -548,13 +548,16 @@
         <codx-label
           name="UploadFile"
           [formModel]="form.formModel"
-          formName="Tasks"
           default="Upload File"
         ></codx-label>
       </span>
     </button>
     <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
-      <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+      <codx-label
+        name="Save"
+        [formModel]="form.formModel"
+        default="Lưu"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
