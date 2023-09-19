@@ -940,11 +940,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
                 this.refreshGrid();
               }
             });
-        }else{
-          if(this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-          if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-          if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
         }
+        if(this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
+        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
+        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
       });
   }
 
