@@ -16,30 +16,27 @@ import {
   SidebarModel,
   UIComponent,
 } from 'codx-core';
+import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { groupBy } from '../../../utils';
-import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
-import {
-  SumFormat,
-  TableColumn,
-} from '../../salesinvoices/models/TableColumn.model';
-import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
-import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
-import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
-import { MF, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
-import { PurchaseinvoicesComponent } from '../purchaseinvoices.component';
 import { JournalService } from '../../../journals/journals.service';
+import { groupBy, toCamelCase } from '../../../utils';
+import { IAcctTran } from '../interfaces/IAcctTran.interface';
+import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
+import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
+import { SumFormat, TableColumn } from '../models/TableColumn.model';
+import { SalesinvoicesAddComponent } from '../salesinvoices-add/salesinvoices-add.component';
+import { MF, SalesinvoicesComponent } from '../salesinvoices.component';
+import { fmSalesInvoicesLines } from '../salesinvoices.service';
 
 @Component({
-  selector: 'lib-purchaseinvoices-detail',
-  templateUrl: './purchaseinvoices-detail.component.html',
-  styleUrls: ['./purchaseinvoices-detail.component.scss'],
+  selector: 'lib-salesinvoices-detail',
+  templateUrl: './salesinvoices-detail.component.html',
+  styleUrls: ['./salesinvoices-detail.component.scss'],
 })
-export class PurchaseinvoicesDetailComponent
+export class SalesinvoicesDetailComponent
   extends UIComponent
   implements AfterViewInit, AfterViewChecked, OnChanges
 {
@@ -47,7 +44,7 @@ export class PurchaseinvoicesDetailComponent
   @ViewChild('memoContent', { read: ElementRef })
   memoContent: ElementRef<HTMLElement>;
 
-  @Input() data: IPurchaseInvoice;
+  @Input() data: ISalesInvoice;
   @Input() recID: string;
   @Input() formModel: FormModel; // required
   @Input() dataService: CRUDService; // optional
@@ -58,12 +55,12 @@ export class PurchaseinvoicesDetailComponent
   acctLoading: boolean = false;
 
   journal: IJournal;
-  viewData: IPurchaseInvoice;
-  lines: IPurchaseInvoiceLine[] = [];
+  viewData: ISalesInvoice;
+  lines: ISalesInvoicesLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
   columns: TableColumn[] = [];
 
-  fmPurchaseInvoicesLines: FormModel;
+  fmSalesInvoicesLines: FormModel;
   fmAcctTrans: FormModel = {
     entityName: 'AC_AcctTrans',
     formName: 'AcctTrans',
@@ -72,9 +69,9 @@ export class PurchaseinvoicesDetailComponent
   };
   gvsAcctTrans: any;
 
-  funcName: string;
-  tabInfo: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  functionName: string;
+  tabControl: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
@@ -82,14 +79,14 @@ export class PurchaseinvoicesDetailComponent
 
   constructor(
     private injector: Injector,
-    parentComponent: PurchaseinvoicesComponent,
+    parentComponent: SalesinvoicesComponent,
     private acService: CodxAcService,
     private journalService: JournalService
   ) {
     super(injector);
 
     this.journal = parentComponent?.journal;
-    this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
+    this.fmSalesInvoicesLines = fmSalesInvoicesLines;
 
     this.columns = [
       new TableColumn({
@@ -111,8 +108,8 @@ export class PurchaseinvoicesDetailComponent
         hasSum: true,
       }),
       new TableColumn({
-        labelName: 'PurchasePrice',
-        field: 'purcPrice',
+        labelName: 'SalesPrice',
+        field: 'salesPrice',
         headerText: 'Đơn giá',
         headerClass: 'text-end',
       }),
@@ -149,7 +146,7 @@ export class PurchaseinvoicesDetailComponent
 
   ngAfterViewInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-      this.funcName = res.defaultName;
+      this.functionName = toCamelCase(res.defaultName);
     });
   }
 
@@ -175,7 +172,7 @@ export class PurchaseinvoicesDetailComponent
       this.loadDetailData();
     } else if (changes.recID?.currentValue) {
       const options = new DataRequest();
-      options.entityName = 'AC_PurchaseInvoices';
+      options.entityName = 'AC_SalesInvoices';
       options.predicates = 'RecID=@0';
       options.dataValues = this.recID;
       options.pageLoading = false;
@@ -209,7 +206,8 @@ export class PurchaseinvoicesDetailComponent
     }
   }
 
-  onInitMF(mfs: any, data: IPurchaseInvoice): void {
+  onInitMF(mfs: any, data: ISalesInvoice): void {
+    // console.log(mfs.filter((f) => !f.disabled));
     let disabledFuncs: MF[] = [
       MF.GuiDuyet,
       MF.GhiSo,
@@ -270,25 +268,31 @@ export class PurchaseinvoicesDetailComponent
 
   //#region Method
   getDefault(): Observable<any> {
-    return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
+    return this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
       this.journal.journalNo,
     ]);
   }
 
+  delete(data: ISalesInvoice): void {
+    this.dataService.delete([data], true).subscribe();
+  }
+
   edit(data): void {
+    console.log('edit', { data });
+
     const copiedData = { ...data };
     this.dataService.dataSelected = copiedData;
-    this.dataService.edit(copiedData).subscribe((res: any) => {
+    this.dataService.edit(copiedData).subscribe((res) => {
       let options = new SidebarModel();
       options.DataService = this.dataService;
       options.FormModel = this.formModel;
       options.isFull = true;
 
       this.callfc.openSide(
-        PurchaseinvoicesAddComponent,
+        SalesinvoicesAddComponent,
         {
           formType: 'edit',
-          formTitle: this.funcName,
+          formTitle: this.functionName,
         },
         options,
         this.formModel.funcID
@@ -297,31 +301,25 @@ export class PurchaseinvoicesDetailComponent
   }
 
   copy(data): void {
-    this.dataService.dataSelected = data;
-    this.dataService
-      .copy(() => this.getDefault())
-      .subscribe((res: any) => {
-        if (res) {
-          var obj = {
-            formType: 'add',
-            formTitle: this.funcName,
-          };
-          let option = new SidebarModel();
-          option.DataService = this.dataService;
-          option.FormModel = this.formModel;
-          option.isFull = true;
-          this.callfc.openSide(
-            PurchaseinvoicesAddComponent,
-            obj,
-            option,
-            this.formModel.funcID
-          );
-        }
-      });
-  }
+    console.log('copy', { data });
 
-  delete(data: IPurchaseInvoice): void {
-    this.dataService.delete([data], true).subscribe();
+    this.dataService.dataSelected = data;
+    this.dataService.copy().subscribe((res) => {
+      let options = new SidebarModel();
+      options.DataService = this.dataService;
+      options.FormModel = this.formModel;
+      options.isFull = true;
+
+      this.callfc.openSide(
+        SalesinvoicesAddComponent,
+        {
+          formType: 'add',
+          formTitle: this.functionName,
+        },
+        options,
+        this.formModel.funcID
+      );
+    });
   }
 
   export(data): void {
@@ -367,7 +365,7 @@ export class PurchaseinvoicesDetailComponent
     this.api
       .exec(
         'AC',
-        'PurchaseInvoicesLinesBusiness',
+        'SalesInvoicesLinesBusiness',
         'GetLinesAsync',
         this.viewData.recID
       )

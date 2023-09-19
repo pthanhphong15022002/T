@@ -3651,6 +3651,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return role?.objectName;
   }
 
+  checkOwner(task){
+    let taskFind = task?.roles.find((role) => role.objectID == task?.owner);
+    return taskFind?.roleType == 'Owner';
+  }
+
   checkOverflow(event: any, popup: any) {
     let parent = event.currentTarget.parentElement;
     let child = event.currentTarget;

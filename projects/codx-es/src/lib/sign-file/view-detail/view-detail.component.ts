@@ -50,12 +50,12 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     private router: ActivatedRoute,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     super(inject);
-    this.cache.functionList(this.funcID).subscribe(func=>{
-      if(func){
-        this.runMode=func?.runMode;
+    this.cache.functionList(this.funcID).subscribe((func) => {
+      if (func) {
+        this.runMode = func?.runMode;
       }
     });
     this.user = this.authStore.get();
@@ -68,6 +68,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   @Input() hideMF = false;
   @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
+  isFristVer=false;
   itemDetail: any;
   active = 1;
   openNav = false;
@@ -91,6 +92,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   gridViewSetup: any = {};
 
   mfRelease: any;
+  showFile=true;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -105,6 +107,12 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   override onInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
+    this.cache.functionList(this.funcID).subscribe((func) => {
+      if (func) {
+        this.runMode = func?.runMode;
+        this.detectorRef.detectChanges();
+      }
+    });
     this.initForm();
     if (this.formModel) {
       this.cache
@@ -175,143 +183,142 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
 
   initForm() {
     this.funcID = this.funcID || this.view?.funcID;
-    this.cache.functionList(this.funcID).subscribe(func=>{
-      if(func){
-        this.runMode=func?.runMode;
-        this.detectorRef.detectChanges();
-      }
-    });
+
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
-    this.cache.valueList('TM018').subscribe((res) => {});
     if (this.recID) {
       this.esService.getTask(this.recID).subscribe((res) => {
         this.taskViews = res;
         this.df.detectChanges();
       });
     }
-      this.esService
-        .getViewDetailSignFile(this.recID,this.funcID)
-        .subscribe((res) => {
-          this.dataReferences = [];
-          if (res) {
-            this.itemDetail = res;
-            this.files = [];
-            this.df.detectChanges();
-            if (this.itemDetail?.files?.length > 0) {
-              this.esService
-                .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
-                .subscribe((res) => {
-                  if (res) {
-                    this.files = res;
-                    this.df.detectChanges();
+    this.esService
+      .getViewDetailSignFile(this.recID, this.funcID)
+      .subscribe((res) => {
+        this.dataReferences = [];
+        if (res) {
+          this.itemDetail = res;
+          this.isFristVer = this.itemDetail?.approveStatus =='5'? true :false;
+          if(this.runMode!=1){
+            this.itemDetail.unbounds=this.data?.unbounds;
+            this.isFristVer = this.itemDetail?.unbounds?.statusApproval =='5'? true : false;
+          }
+          this.files = [];
+          this.df.detectChanges();
+          if (this.itemDetail?.files?.length > 0) {
+            this.esService
+              .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+              .subscribe((res) => {
+                if (res) {
+                  this.files = res;
+                  this.df.detectChanges();
+                }
+              });
+          }
+          this.transID = this.itemDetail.processID;
+          if (
+            this.itemDetail?.approveControl == '1' ||
+            this.itemDetail?.approveStatus == '0' ||
+            this.itemDetail?.approveStatus == '2' ||
+            this.itemDetail?.approveStatus == '3' ||
+            this.itemDetail?.approveStatus == '4' ||
+            this.itemDetail?.approveStatus == '5'
+          ) {
+            this.transID = this.itemDetail.recID;
+          }
+
+          this.esService.getFormModel('EST04').then((res) => {
+            if (res) {
+              let fmApprovalStep = res;
+              let gridModels = new DataRequest();
+              gridModels.dataValue = this.transID;
+              gridModels.predicate = 'TransID=@0';
+              gridModels.funcID = fmApprovalStep.funcID;
+              gridModels.entityName = fmApprovalStep.entityName;
+              gridModels.gridViewName = fmApprovalStep.gridViewName;
+              // gridModels.pageSize = 20;
+              gridModels.pageLoading = false;
+
+              if (gridModels.dataValue != null) {
+                this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+                  if (res && res?.length >= 0) {
+                    this.lstStep = res;
                   }
                 });
-            }
-            this.transID = this.itemDetail.processID;
-            if (
-              this.itemDetail?.approveControl == '1' ||
-              this.itemDetail?.approveStatus == '0' ||
-              this.itemDetail?.approveStatus == '2' ||
-              this.itemDetail?.approveStatus == '3' ||
-              this.itemDetail?.approveStatus == '4' ||
-              this.itemDetail?.approveStatus == '5'
-            ) {
-              this.transID = this.itemDetail.recID;
-            }
-      
-            this.esService.getFormModel('EST04').then((res) => {
-              if (res) {
-                let fmApprovalStep = res;
-                let gridModels = new DataRequest();
-                gridModels.dataValue = this.transID;
-                gridModels.predicate = 'TransID=@0';
-                gridModels.funcID = fmApprovalStep.funcID;
-                gridModels.entityName = fmApprovalStep.entityName;
-                gridModels.gridViewName = fmApprovalStep.gridViewName;
-                // gridModels.pageSize = 20;
-                gridModels.pageLoading = false;
-      
-                if (gridModels.dataValue != null) {
-                  this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                    if (res && res?.length >= 0) {
-                      this.lstStep = res;
-                    }
-                  });
-                }
               }
-            });
+            }
+          });
           if (this.itemDetail != null) {
             this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
           }
           this.isAfterRender = true;
-            this.detectorRef.detectChanges();
-            if (res.refType != null) {
-              this.esService
-                .getEntity(this.itemDetail?.refType)
-                .subscribe((oEntity) => {
-                  if (oEntity != null) {
-                    let tempRef = new tmpReferences();
-                    tempRef.refType = this.itemDetail?.refType;
-                    switch (oEntity?.entityName) {
-                      case 'OD_Dispatches':
-                        this.esService
-                          .getod(this.itemDetail?.recID)
-                          .subscribe((ref) => {
-                            if (ref) {
-                              tempRef.recIDReferences = ref?.recID;
-                              tempRef.createdOn = ref?.createdOn;
-                              tempRef.memo = ref?.title;
-                              tempRef.createdBy = ref?.createdBy;
-                              this.cache
-                                .getCompany(ref?.createdBy)
-                                .subscribe((user) => {
-                                  if (user) {
-                                    tempRef.createByName = user?.employeeName;
-                                  }
-                                });
-                              this.dataReferences = [];
-                              this.dataReferences.push(tempRef);
-                              this.df.detectChanges();
+          this.detectorRef.detectChanges();
+          if (res.refType != null) {
+            this.esService
+              .getEntity(this.itemDetail?.refType)
+              .subscribe((oEntity) => {
+                if (oEntity != null) {
+                  let tempRef = new tmpReferences();
+                  tempRef.refType = this.itemDetail?.refType;
+                  switch (oEntity?.entityName) {
+                    case 'OD_Dispatches':
+                      this.esService
+                        .getod(this.itemDetail?.recID)
+                        .subscribe((ref) => {
+                          if (ref) {
+                            tempRef.recIDReferences = ref?.recID;
+                            tempRef.createdOn = ref?.createdOn;
+                            tempRef.memo = ref?.title;
+                            tempRef.createdBy = ref?.createdBy;
+                            this.cache
+                              .getCompany(ref?.createdBy)
+                              .subscribe((user) => {
+                                if (user) {
+                                  tempRef.createByName = user?.employeeName;
+                                }
+                              });
+                            this.dataReferences = [];
+                            this.dataReferences.push(tempRef);
+                            this.df.detectChanges();
 
-                              // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
-                              // if (index < 0) this.dataReferences.push(ref);
-                              // this.df.detectChanges();
-                            }
-                          });
-                        break;
+                            // let index = this.dataReferences.findIndex(x=>x.recID == ref.recID);
+                            // if (index < 0) this.dataReferences.push(ref);
+                            // this.df.detectChanges();
+                          }
+                        });
+                      break;
 
-                      case 'ES_SignFiles':
-                        this.esService
-                          .getDetailSignFile(res?.refID)
-                          .subscribe((ref) => {
-                            if (ref) {
-                              tempRef.recIDReferences = ref?.recID;
-                              tempRef.createdOn = ref?.createdOn;
-                              tempRef.memo = ref?.title;
-                              tempRef.createdBy = ref?.createdBy;
-                              this.cache
-                                .getCompany(ref?.createdBy)
-                                .subscribe((user) => {
-                                  if (user) {
-                                    tempRef.createByName = user?.employeeName;
-                                  }
-                                });
-                              this.dataReferences = [];
-                              this.dataReferences.push(tempRef);
-                              this.df.detectChanges();
-                            }
-                          });
-                        break;
-                    }
+                    case 'ES_SignFiles':
+                      this.esService
+                        .getDetailSignFile(res?.refID)
+                        .subscribe((ref) => {
+                          if (ref) {
+                            tempRef.recIDReferences = ref?.recID;
+                            tempRef.createdOn = ref?.createdOn;
+                            tempRef.memo = ref?.title;
+                            tempRef.createdBy = ref?.createdBy;
+                            this.cache
+                              .getCompany(ref?.createdBy)
+                              .subscribe((user) => {
+                                if (user) {
+                                  tempRef.createByName = user?.employeeName;
+                                }
+                              });
+                            this.dataReferences = [];
+                            this.dataReferences.push(tempRef);
+                            this.df.detectChanges();
+                          }
+                        });
+                      break;
                   }
-                });
-            }
-            this.df.detectChanges();
+                }
+              });
           }
-        });
-     
+          this.df.detectChanges();
+        }
+      });
+
     // this.setHeight();
   }
 
@@ -433,12 +440,11 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         break;
       default:
         //Biến động , tự custom
-        var customData =
-        {
-          refID : "",
-          refType : this.formModel?.entityName,
+        var customData = {
+          refID: '',
+          refType: this.formModel?.entityName,
           dataSource: datas,
-        }
+        };
 
         this.codxShareService.defaultMoreFunc(
           val,
@@ -452,7 +458,12 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         break;
     }
   }
-
+  reloadFile(){
+    this.showFile=false;
+    this.detectorRef.detectChanges();
+    this.showFile=true;
+    this.detectorRef.detectChanges();
+  }
   assign(datas) {
     if (this.checkOpenForm(this.funcID)) {
       var task = new TM_Tasks();

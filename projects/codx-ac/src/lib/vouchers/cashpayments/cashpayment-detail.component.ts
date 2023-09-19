@@ -27,6 +27,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   @Input() hideFields: any;
   @Input() legalName: any;
   @Input() dataDefault: any;
+  @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
   itemSelected : any;
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
@@ -229,6 +230,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         });
       }
       switch (data?.status) {
+        case '2':
         case '7':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
