@@ -33,6 +33,7 @@ export class ViewDetailWrComponent implements OnInit {
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() updateComment = new EventEmitter<any>();
 
   user: any;
   treeTask = [];
@@ -90,6 +91,10 @@ export class ViewDetailWrComponent implements OnInit {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
+  }
+
+  updateCommentWarranty(e, data) {
+    this.updateComment.emit({ e: e, data: data });
   }
 
   listOrderUpdate(lstUpdate) {

@@ -59,12 +59,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     entityName: '',
   };
   gridHeight: number;
-  editSettings: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
-    allowDeleting: true,
-    mode: 'Normal',
-  };
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -123,13 +117,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   onAfterInit() {
     //Loại bỏ requied khi VoucherNo tạo khi lưu
-    if (this.journal.assignRule == '2') {
-      this.form.setRequire([{
-        field: 'voucherNo',
-        isDisable: false,
-        require: false
-      }]);
-    }
+    this.setFieldRequied();
 
     if (this.formType == 'add' || this.formType == 'copy') {
       this.form.preData = new Vouchers;
@@ -269,6 +257,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   /** Update từ Front End */
   updateFromFrontEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
         this.costAmt_Change(e.data);
@@ -280,10 +269,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         e.data.note = e.itemData.ReasonName;
         break;
     }
+    this.grvVouchersLine.endProcess();
   }
 
   /** Update từ Back End */
   updateFromBackEnd(e: any) {
+    this.grvVouchersLine.startProcess();
+    e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -321,10 +313,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+            this.grvVouchersLine.endProcess();
           }
         });
     }
-
+    else
+    {
+      this.grvVouchersLine.endProcess();
+    }
   }
 
   /** Nhận các event mà lưới trả về */
@@ -416,17 +412,27 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.form.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        if (isclose) {
+        else if (isclose) {
           if (res?.save?.data) {
+            // this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
-              data: res.save,
+              data: res.save.data,
             });
           }
-          if (res?.update?.data) {
+          else if (res?.update?.data) {
+            // this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
-              data: res.update,
+              data: res.update.data,
+            });
+          }
+          else
+          {
+            // this.notification.notifyCode('SYS007');
+            this.dialog.close({
+              update: true,
+              data: res,
             });
           }
         }
@@ -443,6 +449,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
+                // this.notification.notifyCode('SYS006');
+                this.setFieldRequied();
                 this.detectorRef.detectChanges();
               }
             });
@@ -486,6 +494,18 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   /** Xóa data lưới khi master thêm mới */
   clearVouchers() {
     this.grvVouchersLine.dataSource = [];
+  }
+
+  /** Xóa field requied của master */
+  setFieldRequied()
+  {
+    if (this.journal.assignRule == '2') {
+      this.form.setRequire([{
+        field: 'VoucherNo',
+        isDisable: false,
+        require: false
+      }]);
+    }
   }
 
   /** Đặt lại giá trị cho trường ghi chú */

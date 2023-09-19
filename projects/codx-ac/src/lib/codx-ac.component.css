@@ -9,6 +9,20 @@
 .table-ac{
     height: calc(100vh - 429px)!important;
 }
+
+.table-thead-ac{
+    position: sticky !important; 
+    top: 0 !important;
+    z-index: 15 !important;
+    background-color: white !important;
+}
+
+.table-footer-ac{
+    position: sticky !important;
+    bottom: 0 !important;
+    background-color:#f8f9fa !important;
+}
+
 .table-ac table tbody tr{
     border-bottom-width: 1px !important;
 }

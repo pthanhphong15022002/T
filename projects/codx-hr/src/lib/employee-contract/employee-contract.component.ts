@@ -45,7 +45,6 @@ export class EmployeeContractComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
   @ViewChild('templateUpdateStatus', { static: true })
-
   templateUpdateStatus: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
@@ -167,7 +166,8 @@ export class EmployeeContractComponent extends UIComponent {
 
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
-    this.currentEmpObj = data?.inforEmployee;
+    //this.currentEmpObj = data?.inforEmployee;
+
     this.formGroup.patchValue(this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -197,6 +197,17 @@ export class EmployeeContractComponent extends UIComponent {
               this.view.formModel.entityName,
               '',
               ''
+            )
+            .subscribe();
+
+          //Update renewStatus
+          this.api
+            .execSv(
+              'HR',
+              'ERM.Business.HR',
+              'EContractsBusiness',
+              'UpdateRenewStatusAsync',
+              [data]
             )
             .subscribe();
         }
@@ -308,6 +319,7 @@ export class EmployeeContractComponent extends UIComponent {
               res[1].inforEmployee = data?.inforEmployee;
               this.view.dataService.update(res[1]).subscribe();
             }
+            this.df.detectChanges();
           });
         break;
       case 'SYS04': //copy
@@ -360,7 +372,7 @@ export class EmployeeContractComponent extends UIComponent {
       headerText: moreFC.text,
       reportID: moreFC.functionID,
       parameters: parameters,
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     this.callfc.openForm(
       CodxListReportsComponent,
@@ -398,6 +410,15 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    // this.api
+    //   .execSv(
+    //     'HR',
+    //     'ERM.Business.HR',
+    //     'EContractsBusiness',
+    //     'AutoResignEContractAsync'
+    //   )
+    //   .subscribe();
+
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -594,6 +615,17 @@ export class EmployeeContractComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
+          //Update renewStatus
+          this.api
+            .execSv(
+              'HR',
+              'ERM.Business.HR',
+              'EContractsBusiness',
+              'UpdateRenewStatusAsync',
+              [data]
+            )
+            .subscribe((res) => console.log(res));
+
           this.codxShareService
             .codxCancel(
               'HR',

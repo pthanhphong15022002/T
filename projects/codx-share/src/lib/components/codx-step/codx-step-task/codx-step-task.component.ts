@@ -647,7 +647,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP20': // tiến độ
             res.isbookmark = false;
             if (
-              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep)
+              !(this.isRoleAll && this.isOnlyView && this.isUpdateProgressStep) || this.isClose
             ) {
               res.disabled = true;
             }
@@ -2243,13 +2243,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let countTask = group?.task?.length;
     if (countTask > 0) {
       let sumProgress = 0;
-      let check = false;
       const processTask = (task) => {
         task.progress = 100;
         task.status = '3';
         task.actualEnd = new Date();
         progressData.push(this.setProgressOutput(task, null));
-        check = true;
       };
 
       if (isRequired) {
@@ -2266,15 +2264,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           }
           sumProgress += task.progress;
         });
-        if (check && group?.recID) {
+        if (group?.recID) {
           group.progress = Number((sumProgress / countTask).toFixed(2));
-          progressData.push(this.setProgressOutput(null, group));
+          // progressData.push(this.setProgressOutput(null, group));
         }
       } else {
         group?.task?.forEach((task) => {processTask(task);});
         group.progress = 100;
         if (group?.recID) {
-          progressData.push(this.setProgressOutput(null, group));
+          // progressData.push(this.setProgressOutput(null, group));
         }
       }
     }

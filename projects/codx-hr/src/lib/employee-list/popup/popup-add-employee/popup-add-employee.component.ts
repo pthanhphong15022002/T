@@ -1,16 +1,12 @@
 import {
-  ChangeDetectorRef,
   Component,
   OnInit,
   Optional,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
-  CodxComboboxComponent,
-  CodxInputComponent,
   DialogData,
   DialogRef,
   FilesService,
@@ -19,7 +15,6 @@ import {
   LayoutAddComponent,
   NotificationsService,
   Util,
-  ValueListComponent,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -69,8 +64,10 @@ export class PopupAddEmployeeComponent implements OnInit {
   oldEmployeeID: string = '';
 
   hasChangedData: boolean = false;
+  hasAutoFillJobLevel: boolean = false;
   oldAddress: string = '';
   oldTAddress: string = '';
+  settingValues: any;
   constructor(
     private api: ApiHttpService,
     private notifySV: NotificationsService,
@@ -97,6 +94,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getGrvSetup(this.formModel.formName, this.formModel.gridViewName);
+    this.getHRParameters();
     if (this.action === 'edit') {
       this.api
         .execSv(
@@ -161,6 +159,7 @@ export class PopupAddEmployeeComponent implements OnInit {
               .subscribe((posInfo: any) => {
                 if (posInfo) {
                   if (posInfo.jobLevel) {
+                    this.hasAutoFillJobLevel = true;
                     this.data['jobLevel'] = posInfo.jobLevel;
                     this.form.formGroup.patchValue({
                       jobLevel: this.data.jobLevel,
@@ -182,10 +181,11 @@ export class PopupAddEmployeeComponent implements OnInit {
         // break;
         case 'jobLevel':
           if (value && this.hasChangedData) {
-            if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0) {
+            if (event?.component?.dataService?.data.findIndex(x => x.JobLevel == value) < 0 && !this.hasAutoFillJobLevel) {
               this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
               return;
             }
+            this.hasAutoFillJobLevel = false;
           }
           break;
         case 'issuedOn':
@@ -290,7 +290,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       switch (event?.ControlName) {
         case 'address':
           if (this.oldAddress != this.data['address']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['address'], 3])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['address'], 1])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -304,13 +304,14 @@ export class PopupAddEmployeeComponent implements OnInit {
                   }
                   );
                 }
+                this.validateAddress('address', this.settingValues.ControlInputAddress)
               })
             this.oldAddress = this.data['address'];
           }
           break;
         case 'tAddress':
           if (this.oldTAddress != this.data['tAddress']) {
-            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['tAddress'], 3])
+            this.api.execSv('BS', 'ERM.Business.BS', 'ProvincesBusiness', 'GetLocationAsync', [this.data['tAddress'], 1])
               .subscribe((res: any) => {
                 if (res) {
                   let result = JSON.parse(res);
@@ -321,9 +322,9 @@ export class PopupAddEmployeeComponent implements OnInit {
                     tProvinceID: this.data['tProvinceID'],
                     tDistrictID: this.data['tDistrictID'],
                     tWardID: this.data['tWardID'],
-                  }
-                  );
+                  });
                 }
+                this.validateAddress('tAddress', this.settingValues.ControlInputAddress)
               })
             this.oldTAddress = this.data['tAddress'];
           }
@@ -331,13 +332,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       }
     }
   }
-  // validate age > 18
-  validateBirthday(birthday: any) {
-    let ageDifMs = Date.now() - Date.parse(birthday);
-    let ageDate = new Date(ageDifMs);
-    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
-    return age >= 18;
-  }
+
   //click Button Save
   clickBtnSave() {
     if (this.checkValidate()) {
@@ -348,7 +343,77 @@ export class PopupAddEmployeeComponent implements OnInit {
   }
 
   //check validate
+  validateAddress(fieldName: string, addressLevel = '0') {
+    let addrLevel = Number.parseInt(addressLevel)
+    let unFillFields = '';
+    switch (fieldName) {
+      case 'tAddress':
+        if (this.data['tAddress']?.length < 1 || this.data['tAddress'] == null) return true;
+        if (addressLevel == '0') {
+          return false;
+        };
+        if (!(this.data['tProvinceID']?.length > 0)) {
+          unFillFields += this.grvSetUp['TProvinceID']['headerText'];
+        }
+        if (!(this.data['tDistrictID']?.length > 0) && addrLevel >= 2) {
+          unFillFields += ' ' + this.grvSetUp['TDistrictID']['headerText'];
+        }
+        if (!(this.data['tWardID']?.length > 0) && addrLevel >= 3) {
+          unFillFields += ' ' + this.grvSetUp['TWardID']['headerText'];
+        }
+        if (unFillFields.length > 0) {
+          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['TAddress']?.headerText]);
+          return false;
+        }
+        return true;
+      case 'address':
+        if (this.data['address']?.length < 1 || this.data['address'] == null) return true
+        if (addressLevel == '0') {
+          return false;
+        };
+        if (!(this.data['provinceID']?.length > 0)) {
+          unFillFields += this.grvSetUp['ProvinceID']['headerText'];
+        }
+        if (!(this.data['districtID']?.length > 0) && addrLevel >= 2) {
+          unFillFields += ' ' + this.grvSetUp['DistrictID']['headerText'];
+        }
+        if (!(this.data['wardID']?.length > 0) && addrLevel >= 3) {
+          unFillFields += ' ' + this.grvSetUp['WardID']['headerText'];
+        }
+        if (unFillFields.length > 0) {
+          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['Address']?.headerText]);
+          return false;
+        }
+        return true;
+    }
+    return true;
+  }
+  validateEmail(email: string, fieldName) {
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
+    if (regex.test(email) == false) {
+      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
+      return false;
+    }
+    return true;
+  }
+  validatePhoneNumber(phone, fieldName) {
+    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    if (re.test(phone) == false) {
+      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
+      return false;
+    }
+    return true;
+  }
+  validateBirthday(birthday: any) {
+    let ageDifMs = Date.now() - Date.parse(birthday);
+    let ageDate = new Date(ageDifMs);
+    let age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age >= 18;
+  }
   checkValidate() {
+    let result = true;
     if (this.form.formGroup.invalid) {
       let arrFieldRequire = Object.values(this.grvSetUp).filter(
         (x: any) => x.isRequire
@@ -365,67 +430,89 @@ export class PopupAddEmployeeComponent implements OnInit {
         });
         if (strFieldUnValid) {
           this.notifySV.notifyCode('SYS009', 0, strFieldUnValid);
-          return false;
+          result = false;
+          // return false;
         }
       }
     }
     if (this.data?.positionID) {
       if (this.cbxPosition?.ComponentCurrent?.dataService?.data.findIndex(x => x.PositionID == this.data.positionID) < 0) {
         this.notifySV.notifyCode('HR022', 0, this.grvSetUp['PositionID']['headerText']);
-        return false;
+        result = false;
+        // return false;
       }
     }
     if (this.data?.jobLevel) {
-      if (this.cbxJobLevel?.ComponentCurrent?.dataService?.data.findIndex(x => x.PositionID == this.data.positionID) < 0) {
+      if (this.cbxJobLevel?.ComponentCurrent?.dataService?.data.findIndex(x => x.JobLevel == this.data.jobLevel) < 0) {
         this.notifySV.notifyCode('HR022', 0, this.grvSetUp['JobLevel']['headerText']);
-        return false;
+        result = false;
+        // return false;
       }
     }
     if (this.data?.phone) {
       if (!this.validatePhoneNumber(this.data.phone, 'Phone'))
-        return false;
+        result = false;
+      // return false;
     }
 
     if (this.data?.mobile) {
       if (!this.validatePhoneNumber(this.data.mobile, 'Mobile'))
-        return false;
+        result = false;
+      // return false;
     }
-
+    if (!this.validateAddress('address', this.settingValues.ControlInputAddress)) {
+      result = false;
+      // return false;
+    }
+    if (!this.validateAddress('tAddress', this.settingValues.ControlInputAddress)) {
+      result = false;
+      // return false;
+    }
     if (this.data?.email)
-      if (!this.validateEmail(this.data.email, 'Email'))
-        return false;
+      if (!this.validateEmail(this.data.email, 'Email')) {
+        result = false;
+        // return false;
+      }
     if (this.data?.personalEmail)
-      if (!this.validateEmail(this.data.personalEmail, 'PersonalEmail'))
-        return false;
+      if (!this.validateEmail(this.data.personalEmail, 'PersonalEmail')) {
+        result = false;
+        // return false;
+      }
 
     let today = new Date().toJSON();
     if (this.data.issuedOn && this.data.issuedOn >= today) {
       this.notifySV.notifyCode('HR012');
-      return false;
+      result = false;
+      // return false;
     }
     if (this.data.idExpiredOn && this.data.issuedOn && this.data.idExpiredOn < this.data.issuedOn) {
       this.notifySV.notifyCode('HR002');
-      return false;
+      result = false;
+      // return false;
     }
     if (this.data.birthday) {
       if (!this.validateBirthday(this.data.birthday)) {
         this.notifySV.notifyCode('HR001');
-        return false;
+        result = false;
+        // return false;
       }
     }
     if (this.data.joinedOn && this.data.joinedOn > today) {
       this.notifySV.notifyCode('HR014', 0, this.grvSetUp['JoinedOn']['headerText']);
-      return false;
+      result = false;
+      // return false;
     }
     if (this.data.pitIssuedOn && this.data.pitIssuedOn > today) {
       this.notifySV.notifyCode('HR014', 0, this.grvSetUp['PITIssuedOn']['headerText']);
-      return false;
+      result = false;
+      // return false;
     }
     if (this.data.siRegisterOn && this.data.siRegisterOn > today) {
       this.notifySV.notifyCode('HR014', 0, this.grvSetUp['SIRegisterOn']['headerText']);
-      return false;
+      result = false;
+      // return false;
     }
-    return true;
+    return result;
   }
 
   //save data
@@ -491,23 +578,13 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.codxModifiedOn = new Date();
     this.fileSV.dataRefreshImage.next({ userID: this.data.employeeID });
   }
-  validateEmail(email: string, fieldName) {
-    const regex = new RegExp(
-      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
-    );
-    if (regex.test(email) == false) {
-      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
-      return false;
-    }
-    return true;
-  }
-  validatePhoneNumber(phone, fieldName) {
-    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-    if (re.test(phone) == false) {
-      this.notifySV.notifyCode('HR022', 0, this.grvSetUp[fieldName]?.headerText);
-      return false;
-    }
-    return true;
+
+
+  getHRParameters() {
+    this.api.execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetHRParameterSetting")
+      .subscribe(res => {
+        if (res) this.settingValues = JSON.parse(res.toString())
+      });
   }
 
   // getOrgNote() {

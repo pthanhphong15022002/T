@@ -320,39 +320,6 @@ export class PopupAddDealComponent
       }
     }
   }
-  contactEvent(e) {
-    if (e.data) {
-      var findIndex = this.lstContactDeal.findIndex(
-        (x) => x.recID == e.data?.recID
-      );
-      if (e.action == 'edit') {
-        if (findIndex != -1) {
-          var isDefault = this.lstContactDeal[findIndex]?.isDefault;
-          var role = this.lstContactDeal[findIndex]?.role;
-          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
-          this.lstContactDeal[findIndex] = JSON.parse(JSON.stringify(e.data));
-          this.lstContactDeal[findIndex].isDefault = isDefault;
-          this.lstContactDeal[findIndex].role = role;
-        }
-      } else {
-        this.lstContactDelete.push(Object.assign({}, e?.data));
-        if (findIndex != -1) {
-          this.lstContactDeal.splice(findIndex, 1);
-        }
-      }
-      this.changeDetectorRef.detectChanges();
-    }
-  }
-  lstContactEmit(e) {
-    this.lstContactDeal = e;
-
-    this.changeDetectorRef.detectChanges();
-    // if (!this.isCheckContact) this.isCheckContact = true;
-  }
-
-  lstContactDeleteEmit(e) {
-    this.lstContactDelete = e;
-  }
 
   getListContactByObjectID(objectID) {
     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
@@ -551,7 +518,10 @@ export class PopupAddDealComponent
             (x) => x.recID == contact.recID
           );
         }
-
+        let idxDefault = -1;
+        if(contact?.isDefault){
+          idxDefault = this.lstContactDeal.findIndex(x => x.isDefault && x.recID != contact.recID);
+        }
         if (index != -1) {
           if (type != 'delete') {
             this.lstContactDeal[index] = contact;
@@ -563,6 +533,9 @@ export class PopupAddDealComponent
             this.lstContactDeal.push(Object.assign({}, contact));
           }
         }
+        if(idxDefault != -1 && type != 'delete'){
+          this.lstContactDeal[idxDefault].isDefault = false;
+        }
       } else {
         if (type != 'delete') {
           let lst = [];
@@ -570,10 +543,24 @@ export class PopupAddDealComponent
           this.lstContactDeal = lst;
         }
       }
-      this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
+      if(this.loadContactDeal){
+        this.loadContactDeal.loadListContact(this.lstContactDeal);
+      }
+      // this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
       this.changeDetectorRef.detectChanges();
     }
   }
+
+  lstContactEmit(e) {
+    this.lstContactDeal = e;
+    this.changeDetectorRef.detectChanges();
+    // if (!this.isCheckContact) this.isCheckContact = true;
+  }
+
+  lstContactDeleteEmit(e) {
+    this.lstContactDelete = e;
+  }
+
   //#endregion
 
   // Add permission form DP

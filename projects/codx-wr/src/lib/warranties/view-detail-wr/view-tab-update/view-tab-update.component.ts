@@ -45,8 +45,9 @@ export class ViewTabUpdateComponent implements OnInit {
   @ViewChild('headerEngineerID') headerEngineerID: TemplateRef<any>;
   @ViewChild('tempEngineerID') tempEngineerID: TemplateRef<any>;
   @ViewChild('headerCreatedBy') headerCreatedBy: TemplateRef<any>;
-  @ViewChild('createdBy') tempCreatedBy: TemplateRef<any>;
-
+  @ViewChild('tempCreatedBy') tempCreatedBy: TemplateRef<any>;
+  @ViewChild('headerAttachment') headerAttachment: TemplateRef<any>;
+  @ViewChild('tempAttachment') tempAttachment: TemplateRef<any>;
   @ViewChild('grid') grid: CodxGridviewV2Component;
 
   formModel: FormModel = {
@@ -131,24 +132,24 @@ export class ViewTabUpdateComponent implements OnInit {
           width: 400,
         },
         {
-          headerTemplate: this.headerScheduleStart,
-          template: this.tempScheduleStart,
-          width: 100,
-        },
-        {
           headerTemplate: this.headerScheduleTime,
           template: this.tempScheduleTime,
-          width: 200,
+          width: 250,
         },
         {
           headerTemplate: this.headerEngineerID,
           template: this.tempEngineerID,
-          width: 200,
+          width: 150,
         },
         {
           headerTemplate: this.headerCreatedBy,
           template: this.tempCreatedBy,
-          width: 200,
+          width: 150,
+        },
+        {
+          headerTemplate: this.headerAttachment,
+          template: this.tempAttachment,
+          width: 80,
         },
       ];
       this.wrSv.listOrderUpdateSubject.next({

@@ -56,6 +56,7 @@ import {
 import { CodxHrService } from '../../codx-hr.service';
 import { DataVll } from '../../model/HR_OrgChart.model';
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
+import { LCA, Tree } from 'basicprimitives';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -194,6 +195,7 @@ export class OrganizationOrgchartComponent {
   cursorItem: number | string = '';
 
   @Input() formModel: FormModel;
+  @Input() activeMFC;
   @Input() orgUnitID: string = '';
   @Input() itemAdded;
   @Input() formModelEmployee;
@@ -1588,45 +1590,114 @@ export class OrganizationOrgchartComponent {
       });
   }
 
-  removeNode(id: string) {
-    var children = this.items.filter((x) => x.parent === id);
-    if (children.length > 0) {
-      children.forEach((e) => {
-        let index = this.items.findIndex((p) => p.id == e.id);
-        this.items.splice(index, 1);
+  // removeNode(id: string) {
+  //   var children = this.items.filter((x) => x.parent === id);
+  //   if (children.length > 0) {
+  //     children.forEach((e) => {
+  //       let index = this.items.findIndex((p) => p.id == e.id);
+  //       this.items.splice(index, 1);
 
-        //delete this.items[index];
-        if (e.id) {
-          this.removeNode(String(e.id));
-        } else {
-          return;
-        }
-      });
+  //       if (e.id) {
+  //         this.removeNode(String(e.id));
+  //       } else {
+  //         return;
+  //       }
+  //     });
+  //   }
+  // }
+
+  getDeletedItems(
+    items: Array<OrgItemConfig> = [],
+    deletedItems: Array<string> = [],
+    id
+  ) {
+    const tree = this.getTree(items, id);
+    const hash: { [id: string]: boolean } = {};
+    deletedItems.forEach((itemId) => {
+      hash[itemId] = true;
+    });
+    const cursorParent = this.getDeletedItemsParent(tree, deletedItems, hash);
+    const result: Array<OrgItemConfig> = [];
+    tree.loopLevels(this, (nodeId: string, node: OrgItemConfig) => {
+      if (hash[nodeId]) {
+        return tree.SKIP;
+      }
+      result.push(node);
+    });
+
+    return {
+      items: result,
+      cursorItem: cursorParent,
+    };
+  }
+
+  getDeletedItemsParent(
+    tree: any,
+    deletedItems: Array<string>,
+    deletedHash: { [id: string]: boolean }
+  ) {
+    let result: string | null = null;
+    const lca = LCA(tree);
+    result = deletedItems.reduce((agg: string | null, itemId: string) => {
+      if (agg == null) {
+        agg = itemId;
+      } else {
+        agg = lca.getLowestCommonAncestor(agg, itemId);
+      }
+      return agg;
+    }, null);
+
+    if (deletedHash[result!]) {
+      result = tree.parentid(result);
     }
+    return result;
+  }
+
+  getTree(items: Array<OrgItemConfig> = [], nodeId) {
+    const tree = Tree();
+
+    // rebuild tree
+    for (let index = 0; index < items.length; index += 1) {
+      if (items[index].id == nodeId && items[index].parent != nodeId) {
+        items[index].context.loadChildrent = false;
+      }
+      const item = items[index];
+      tree.add(item.parent, item.id, item);
+    }
+    return tree;
   }
 
   //Load more icon add
   loadDataChild(node: any, element: HTMLElement) {
-    let result = [];
-    //var items = [];
+    this.cursorItem = node.id;
+    //let result = [];
     if (node.context.loadChildrent) {
-      result = this.items.filter((e) => e.parent != node.id);
-      if (result.length > 0) {
-        this.items.forEach((element) => {
-          if (element.id == node.id && element.parent != node.id) {
-            element.context.loadChildrent = false;
-          }
-        });
-        this.removeNode(node.id);
-      }
+      const findId = this.items
+        .filter((item) => item.parent === node.id)
+        .map((item: any) => item.id)
+        .join(',');
+      var arrID = findId.split(',');
+
+      const { items, cursorItem } = this.getDeletedItems(
+        this.items,
+        arrID,
+        node.id
+      );
+
+      this.items = items;
+
+      //Old function when remove node
+      // result = this.items.filter((e) => e.parent != node.id);
+      // if (result.length > 0) {
+      //   this.items.forEach((element) => {
+      //     if (element.id == node.id && element.parent != node.id) {
+      //       element.context.loadChildrent = false;
+      //     }
+      //   });
+      //   this.removeNode(node.id);
+      // }
     } else {
       if (node.id) {
-        // let listPos = [];
-        // this.items.forEach(function (object) {
-        //   var posID = object.id;
-        //   listPos.push(posID);
-        // });
-
         this.api
           .execSv(
             'HR',
@@ -1637,40 +1708,40 @@ export class OrganizationOrgchartComponent {
           )
           .subscribe((res: any) => {
             if (res) {
-              this.items.forEach((e) => {
+              this.items.map((e) => {
                 if (e.id == node.id) {
                   e.context.loadChildrent = true;
+                  return;
                 }
-                // items.push(e);
               });
+
               res.map((item) => {
-                this.items.push(
-                  new OrgItemConfig({
-                    id: item.orgUnitID,
-                    parent: item.parentID,
-                    title: item.orgUnitName,
-                    description: item.positionName,
-                    label: item.orgUnitName,
-                    templateName: 'contactTemplate',
-                    itemTitleColor: String(this.getColorItem(item.orgUnitType)),
-                    context: {
-                      employeeID: item.employeeID,
-                      employeeName: item.employeeName,
-                      employeeManager: item.employeeManager,
-                      orgUnitType: item.orgUnitType,
-                      data: item,
-                      isChildren: item.isChildren,
-                      loadChildrent: item.loadChildrent,
-                    },
-                  })
-                );
+                var tmp;
+                tmp = new OrgItemConfig({
+                  id: item.orgUnitID,
+                  parent: item.parentID || null,
+                  title: item.orgUnitName,
+                  description: item.positionName,
+                  label: item.orgUnitName,
+                  templateName: 'contactTemplate',
+                  itemTitleColor: String(this.getColorItem(item.orgUnitType)),
+                  context: {
+                    employeeID: item.employeeID,
+                    employeeName: item.employeeName,
+                    employeeManager: item.employeeManager,
+                    orgUnitType: item.orgUnitType,
+                    data: item,
+                    isChildren: item.isChildren,
+                    loadChildrent: item.loadChildrent,
+                  },
+                });
+
+                this.items = [...this.items, tmp];
               });
             }
-            //  else {
-            //   result = this.items;
-            // }
-            // this.items = items;
           });
+
+        // this.mouseenter1();
       }
     }
   }

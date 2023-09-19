@@ -38,7 +38,6 @@ export class DashboardComponent extends WSUIComponent{
     var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
     if(isObservable(result))
     {
-      debugger
       result.subscribe((item:any)=>{
         if(item) this.listDashboard = item;
       })
@@ -46,5 +45,12 @@ export class DashboardComponent extends WSUIComponent{
     else  {
       this.listDashboard = result;
     }
+  }
+  selectedChange(data:any)
+  {
+    this.codxService.navigate("","/ws/"+data.moduleID.toLowerCase()+"/dashboard/"+data.reportID);
+    this.codxWsService.functionID = data.reportID;
+    data.functionID = data.reportID;
+    this.codxWsService.listBreadCumb.push(data);
   }
 }

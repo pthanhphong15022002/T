@@ -195,7 +195,7 @@ export class PopupPolicyalComponent
     },
   ];
 
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   
@@ -951,9 +951,9 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
-    debugger
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      this.form.form.validation(false);
       return;
     }
 
@@ -1278,7 +1278,6 @@ DeletePolicyAL(data){
         (this.gridView2.gridRef.dataSource as any).splice(index, 1);
         this.gridView2.refresh();
       }, 200);
-      // this.gridView2.refresh();
       return;
     }
     evt.policyID = this.alpolicyObj.policyID;
@@ -1300,7 +1299,6 @@ DeletePolicyAL(data){
   }
 
   onEditGrid2(evt){
-    
     let index = this.gridView2.dataSource.findIndex(v => v.recID == evt.recID)
     this.UpdatePolicyDetail(evt).subscribe((res) => {
       if(res && res.oldData){

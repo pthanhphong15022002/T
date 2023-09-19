@@ -9,8 +9,7 @@
   [assemblyName]="'ES'"
   [service]="'ES'"
   [className]="'ApprovalTransBusiness'"
-  [funcID]="'EST011'"
-  [selectedFirst]="true"
+  [funcID]="'WS0051'"
   [predicate]="'Approver=@0'"
   [dataValue]="'[UserID]'"
   idField="recID"
@@ -25,7 +24,7 @@
     [icoStyle]="setStyles((data?.unbounds?.color) ? (data?.unbounds?.color) : (vllApproval ? vllApproval[data.processType]?.color : dvlApproval?.color))"
     [desc]="data?.htmlView"
     [statusVll]="'ES030'"
-    [status]="data?.status + data?.stepType"
+    [status]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
     [titleLine]="2"
     [date]="data.createdOn"
     [resources]="data?.createdBy"
@@ -48,7 +47,7 @@
 <ng-template #baseHeaderRight let-data>
   <codx-vll
     [name]="'ES002'"
-    [value]="data?.stepType"
+    [value]="data?.unbounds?.stepType"
     [showText]="true"
     [showBgColor]="true"
     [isBorder]="true"

@@ -4521,4 +4521,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let type = this.listTypeTask?.find((task) => task?.value == taskType);
     return type?.text;
   }
+  checkExitsParentID(taskList, task): string {
+    if (task?.requireCompleted) {
+      return 'text-red';
+    }
+    let check = 'd-none';
+    if (task?.taskGroupID) {
+      taskList?.forEach((taskItem) => {
+        if (taskItem?.parentID?.includes(task?.recID)) {
+          check = 'text-orange';
+        }
+      });
+    } else {
+      this.taskList?.forEach((taskItem) => {
+        if (taskItem?.parentID?.includes(task?.recID)) {
+          check = 'text-orange';
+        }
+      });
+    }
+    return check;
+  }
+  getFieldInTask(strFieldID){
+    let fieldTile = this.step?.fields?.filter(field => strFieldID?.includes(field?.recID));
+    return fieldTile?.map(f => f.title)?.join(', ') || '';
+  }
 }
