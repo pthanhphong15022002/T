@@ -37,7 +37,6 @@ import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
 import { SosComponent } from '@pages/sos/sos.component';
-import { CashreceiptsAddComponent } from './cashreceipts-add.component';
 
 registerLocaleData(localeVi);
 
@@ -88,8 +87,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     FileComponent,
     SosComponent,
-    LayoutTenantComponent,
-    CashreceiptsAddComponent,
+    LayoutTenantComponent
   ],
   imports: [
     BrowserModule,
