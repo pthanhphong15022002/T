@@ -763,6 +763,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
           );
           if (index != -1) {
             this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
+
           } else {
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
