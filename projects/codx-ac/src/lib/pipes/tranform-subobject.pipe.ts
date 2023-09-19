@@ -19,13 +19,7 @@ export class TranformSubobjectPipe implements PipeTransform {
     if (osub) {
       return (osub as any).objectName;
     }else{
-      this.cache.gridViewSetup(formModel.formName,formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          headerText = res['ObjectID'].headerText;
-        }
-      });
-      return Util.stringFormat(html, 'place-holder', headerText);;
+      return '';
     }
   }
 

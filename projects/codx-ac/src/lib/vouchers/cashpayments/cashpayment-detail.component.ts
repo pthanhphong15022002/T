@@ -27,6 +27,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   @Input() hideFields: any;
   @Input() legalName: any;
   @Input() dataDefault: any;
+  @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
   itemSelected : any;
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
