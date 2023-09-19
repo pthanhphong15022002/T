@@ -255,6 +255,7 @@
         [displayOption]="ops"
         cssClass="w-100 om-calendar"
         class="me-4"
+        (click)="ClickCalendar($event)"
         (change)="changeCalendar($event, 'FromDate')"
       >
       </codx-dropdown-calendar>
@@ -272,6 +273,7 @@
       [displayOption]="ops"
       cssClass="w-100 om-calendar"
       class="me-4"
+      (click)="ClickCalendar($event)"
       (change)="changeCalendar($event, 'ToDate')"
     >
     </codx-dropdown-calendar>
@@ -452,7 +454,9 @@
     ></codx-label>
   </button>
 
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm()" 
+    [disabled]="!formModel.currentData.updateColumn && !changedInForm"
+    >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

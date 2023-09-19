@@ -738,6 +738,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eDisciplineHeaderText;
   eDiseasesHeaderText;
   eAccidentHeaderText;
+  eFamilyHeaderText;
   //#endregion
 
   pageNum: number = 0;
@@ -812,7 +813,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //   if (this.funcID) {
   //     this.hrService.getFunctionList(this.funcID).subscribe((res: any[]) => {
-  //       debugger
   //       if (res && res[1] > 0) {
   //         this.lstFuncID = Array.from<any>(res[0]);
   //         if (this.lstFuncID?.length > 0) {
@@ -2642,7 +2642,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
                     this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
-                      debugger
                     })
                     // let i = this.lstCertificates.indexOf(data);
                     // if (i != -1) {
@@ -3058,6 +3057,10 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.hrService.getFunctionList(this.crrFuncTab).subscribe((res)=>{
       switch(this.crrFuncTab){
         case this.curriculumVitaeFuncID:
+          this.hrService.getHeaderText(this.eFamiliesFuncID).then((res) => {
+            this.eFamilyHeaderText = res;
+          })
+
           this.lstFuncCurriculumVitae = res;
           this.lstBtnAdd = []
           for(let i = 0; i < res.length; i++){

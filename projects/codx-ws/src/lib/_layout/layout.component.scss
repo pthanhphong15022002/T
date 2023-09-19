@@ -26,3 +26,14 @@ codx-view-list-detail .codx-detail-footer {
         }
     }
 }
+.ws-body{
+    height: calc(100vh - 55px);
+
+    codx-views>.container-fluid {
+        height: calc(100% - 64px)!important;
+    }
+    .pin-bar .my-2.w-100{
+        margin-top:0!important;
+        margin-bottom:0!important;
+    }
+}

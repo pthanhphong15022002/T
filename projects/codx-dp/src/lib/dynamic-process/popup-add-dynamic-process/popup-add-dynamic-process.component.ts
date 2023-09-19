@@ -4541,4 +4541,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return check;
   }
+  getFieldInTask(strFieldID){
+    let fieldTile = this.step?.fields?.filter(field => strFieldID?.includes(field?.recID));
+    return fieldTile?.map(f => f.title)?.join(', ') || '';
+  }
 }

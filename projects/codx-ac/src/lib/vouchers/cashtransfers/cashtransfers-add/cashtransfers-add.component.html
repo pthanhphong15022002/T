@@ -530,7 +530,7 @@
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
         (click)="onClickDiscard()"
-        *ngIf="masterService.hasSaved && cashTransfer.status == '0'"
+        *ngIf="form.data._isEdit && cashTransfer.status == '7'"
       >
         <i class="icon-cancel icon-16"></i>
         <codx-label

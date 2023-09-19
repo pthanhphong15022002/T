@@ -328,6 +328,7 @@
           type="inline"
           allowMultiFile="1"
           [formModel]="formModel"
+          (fileAdded)="addFiles($event)">
           displayThumb="full"
           showMessage="0"
         >
@@ -379,7 +380,7 @@
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
-      [disabled]="!formModel.currentData.updateColumn"
+      [disabled]="!formModel.currentData.updateColumn && !changedInForm"
     >
       <i class="icon-save"></i>
       <codx-label

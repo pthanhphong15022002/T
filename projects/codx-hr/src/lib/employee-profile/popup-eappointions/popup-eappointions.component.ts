@@ -39,6 +39,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   decisionNoDisable: boolean = false;
   autoNumField: string;
   eAppointionHeaderTexts: any;
+  changedInForm = false;
+
   disabledInput = false;
   employeeSign;
   loaded: boolean = false;
@@ -260,6 +262,14 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       delete this.employeeObj;
     }
   }
+
+  async addFiles(evt){
+    debugger
+    this.changedInForm = true;
+    this.EAppointionObj.attachments = evt.data.length;
+    this.formGroup.patchValue(this.EAppointionObj);
+  }
+
 
   onChangeOrgUnitID(event) {
     if (

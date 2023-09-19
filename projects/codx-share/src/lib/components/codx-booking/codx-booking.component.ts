@@ -560,7 +560,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   changeDataMF(event, data: any) {
     if (this.runMode == '1') {
-      this.codxShareService.changeMFApproval(event, data.unbounds);
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else {
       if (
         event != null &&
@@ -766,15 +766,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           (scheduleEle as any).ej2_instances[0].selectedDate = new Date(date);
           this.navigated = true;
         }
-        //  if (
-        //   (this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
-        //     .first.element.id == 'Schedule'
-        // ) {
-        //   (
-        //     this.ngCmp.ng.getComponent(ele) as CodxScheduleComponent
-        //   ).scheduleObj.first.selectedDate = new Date(date);
-        //   this.navigated = true;
-        // }
       }
     }
   }

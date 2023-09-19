@@ -53,7 +53,7 @@ export class SearchingComponent implements OnInit {
   }
 
   onSelected(e: any) {
-    alert(JSON.stringify(e));
+    //alert(JSON.stringify(e));
   }
 
   isBookmark(data) {

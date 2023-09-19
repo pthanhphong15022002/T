@@ -1,10 +1,11 @@
 <div class="h-100 bg-white w-100 rounded-3 d-flex">
+  
   <div class="d-flex flex-column border-right overflow-auto h-100 p-5" [style.width.px]="widthLeft">
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
         <codx-label [default]="item.headerText" [fiedName]="'lbl'+item?.fieldName" [formName]="'SearchFullText'" class="fw-bold text-dark"></codx-label>
-        <ng-container [ngSwitch]="item?.dataType">
+        <ng-container [ngSwitch]="item?.dataType" *ngIf="item?.referedValue != 'Users'">
           <ng-container *ngSwitchCase="'String'">
             <div class="w-100">
               <codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input>
@@ -27,6 +28,21 @@
               <codx-input type="number" (valueChange)="changeValueText(item?.view , $event)"></codx-input>
             </div>
           </ng-container>
+        </ng-container>
+        <ng-container *ngIf="item?.referedValue == 'Users'">
+          <div class="border border-gray-150">
+            <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"
+                refType="P" field="popup" (valueChange)="changeValueUser(item?.view,$event)">
+            </codx-input>
+          </div>
+          <!-- <codx-input
+            type="combobox"
+            [refType]="'P'"
+            refValue="Share_Users"
+            [showInput]="true"
+            (valueChange)="changeValueUser(item?.view,$event)"
+            >
+          </codx-input> -->
         </ng-container>
         <ng-container *ngIf="item?.data">
           <ng-container *ngIf="!modeDropDown ; else dropdown">

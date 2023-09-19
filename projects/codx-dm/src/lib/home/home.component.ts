@@ -1109,9 +1109,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   // test()
   // {
   //   var dataRequest = new DataRequest();
-  //   //dataRequest.
+  //   dataRequest.funcID = "DMT00";
+  //   dataRequest.pageSize = 20,
+  //   dataRequest.page = 1;
+  //   var type = "All";
   //   this.api
-  //   .execSv('DM', 'DM', 'FileBussiness', 'GetFiles_MobileAsync', )
+  //   .execSv('DM', 'DM', 'FileBussiness', 'GetFiles_MobileAsync', [dataRequest,type])
   //   .subscribe();
   // }
   onSelectionChanged($data , noTree = false) {

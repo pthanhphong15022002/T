@@ -277,6 +277,10 @@ export class CodxShareService {
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                  //Cập nhật lại status duyệt 
+                  var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                  if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+                  
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -294,7 +298,12 @@ export class CodxShareService {
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                 //Cập nhật lại status duyệt 
+                 var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                 if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+
                 dataService.update(data).subscribe();
+               
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
@@ -306,8 +315,12 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (!res?.msgCodeError && res?.rowCount>0) {
-              data.unbounds.statusApproval = res?.returnStatus;
+            if (res) {
+              data.unbounds.statusApproval = res?.status;
+              //Cập nhật lại status duyệt 
+              var index = dataService.data.findIndex(x=>x.transID == data.recID);
+              if(index >= 0) dataService.data[index].unbounds.statusApproval =  res?.status;
+
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             }
@@ -1245,13 +1258,13 @@ export class CodxShareService {
       refType
     );
   }
-  getSignFileTemplateCateID(cateID) {
+  getTemplateSF(cateID,category) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
-      'GetTemplateByCategoryIDAsync',
-      cateID
+      'GetTemplateSFAsync',
+      [cateID,category]
     );
   }
 
@@ -1436,8 +1449,9 @@ export class CodxShareService {
         case '2': //Export và tạo ES_SignFiles để gửi duyệt
         case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-          this.getSignFileTemplateCateID(
-            approveProcess?.category?.categoryID
+          this.getTemplateSF(
+            approveProcess?.category?.categoryID,
+            approveProcess?.category?.category
           ).subscribe((sfTemplates: any) => {
             if (sfTemplates?.length >= 1) {
               this.apGetTemplateSF(

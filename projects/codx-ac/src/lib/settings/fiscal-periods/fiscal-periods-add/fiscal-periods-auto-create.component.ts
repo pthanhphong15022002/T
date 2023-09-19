@@ -203,7 +203,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   getListFiscalYear()
   {
     this.acService
-      .loadComboboxData('FiscalPeriods', 'AC')
+      .loadComboboxData$('FiscalPeriods', 'AC')
       .subscribe((periods) => {
         this.listFiscalYear = [
           ...new Set(periods.map((p) => Number(p.FiscalYear))),

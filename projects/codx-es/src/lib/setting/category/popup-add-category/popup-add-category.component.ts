@@ -38,7 +38,6 @@ import { CodxEsService, GridModels } from '../../../codx-es.service';
 //import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
 import { PopupAddSignFileComponent } from '../../../sign-file/popup-add-sign-file/popup-add-sign-file.component';
-import { ES_SignFile } from '../../../codx-es.model';
 @Component({
   selector: 'popup-add-category',
   templateUrl: './popup-add-category.component.html',
@@ -717,9 +716,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             sfDialog
           );
           dialogSF.closed.subscribe(res=>{
-            if(res?.event){
-              this.getSFTemplate();
-            }
+            this.getSFTemplate();            
           })
           break; 
       }

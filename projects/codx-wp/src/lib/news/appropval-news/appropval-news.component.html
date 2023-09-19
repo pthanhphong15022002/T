@@ -24,26 +24,25 @@
 <ng-template #itemTemplate let-data>
   <div>
     <codx-temp-full 
-        [dataItem]="data" 
-        (clickMF)="clickMF($event,data)"
-        [hideMF]="hideMF"
-        [formModel]="view.formModel"
-        [icoFld]="data.category"
-        [icoVll]="'WP004'"
-        [imgCss]="'d-flex justify-content-center align-items-center w-40px h-40px fs-4 symbol rounded-circle me-3'"
-        [showIcoBgColor]="true"
-        [showIcoText]="false"
-        [title]="vllWP004[data.category].text"
-        [desc]="data.subject"
-        [descLine]="2" 
-        [date]="data.createdOn"
-        [status]="data.approveStatus" 
-        [statusVll]="'CO003'" 
-        [bookmark]="false"
-        [typeMF]="'hover'" 
-        cardCss="card-template border-bottom p-4"
-        >
-      </codx-temp-full>
+      [formModel]="view.formModel"
+      [dataItem]="data" 
+      [icoFld]="data.category"
+      icoVll="WP004"
+      imgCss="d-flex justify-content-center align-items-center w-40px h-40px fs-4 symbol rounded-circle me-3"
+      [showIcoBgColor]="true"
+      [showIcoText]="false"
+      [title]="data.title"
+      [desc]="data.descriptions"
+      descLine="2" 
+      [date]="data.createdOn"
+      [status]="data.approveStatus" 
+      statusVll="CO003" 
+      [bookmark]="false"
+      cardCss="card-template border-bottom p-4"
+      typeMF="hover" 
+      (changeDataMF)="changeDataMF($event,data)"
+      (clickMF)="clickMF($event,data)">
+    </codx-temp-full>
   </div>
 </ng-template>
 <ng-template #panelRightRef>
@@ -52,7 +51,7 @@
     [objectID]="selectedID" 
     [dataService]="view.dataService"
     [funcID]="view.funcID" 
-    (evtUpdateApproval)="realoadData($event)" 
+    (evtUpdateApproval)="loadDataTab()" 
     [formModel]="view.formModel">
   </wp-appropval-news-detail>
 </ng-template>

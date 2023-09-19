@@ -47,6 +47,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   headerTextCalendar: any = [];
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
+  changedInForm = false;
 
   isAfterRender = false;
   @ViewChild('form') form: LayoutAddComponent;
@@ -203,6 +204,10 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     if (e.isSwiped) {
       e.cancel = true;
     }
+  }
+
+  ClickCalendar(event){
+    this.changedInForm = true;
   }
 
   save() {

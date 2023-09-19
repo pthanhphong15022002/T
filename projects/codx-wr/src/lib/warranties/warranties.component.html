@@ -190,6 +190,7 @@
     [listRoles]="listRoles"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeMoreMF)="changeMoreMF($event)"
+    (updateComment)="updateComment($event)"
   ></codx-view-detail-wr>
 </ng-template>
 
@@ -267,6 +268,49 @@
           type="button"
           class="btn btn-primary"
           (click)="onSave('priority')"
+        >
+          <codx-label
+            name="lblSuscess"
+            [formModel]="view.formModel"
+            default="Đồng ý"
+          ></codx-label>
+        </button>
+      </div>
+    </ng-template>
+  </codx-form>
+</ng-template>
+
+<ng-template #itemComment>
+  <codx-form
+    [headerText]="titleAction"
+    [body]="bodyComment"
+    [footer]="footerComment"
+    [dialog]="dialogComment"
+  >
+    <ng-template #bodyComment>
+      <div class="mt-5">
+        <div class="form-group">
+          <codx-label
+            fiedName="Comment"
+            [formModel]="view.formModel"
+          ></codx-label>
+          <codx-input
+            field="comment"
+            [formModel]="view.formModel"
+            [crrValue]="comment"
+            (valueChange)="changValueStatus($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #footerComment>
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onSave('comment')"
         >
           <codx-label
             name="lblSuscess"

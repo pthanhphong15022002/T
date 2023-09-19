@@ -352,7 +352,38 @@ export class ViewCalendarComponent
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
       let task = await this.getTask(data);
       if (task) {
-        this.handleTask(type, 'edit', task);
+        let dataEdit = await this.handleTask(type, 'edit', task);
+        let taskEdit = dataEdit?.task;
+        let fields = taskEdit.fields;
+        if(this.isStepTask){
+          this.api
+          .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
+            taskEdit,
+            fields,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.update(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.detectChanges();
+              this.notiService.notifyCode('SYS007');
+            }
+          });
+        }
+        if(this.isActivitie){
+          this.api
+          .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
+            taskEdit
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.update(res).subscribe();
+              this.view.currentView['schedule'].refresh();
+              this.detectorRef.detectChanges();
+              this.notiService.notifyCode('SYS007');
+            }
+          });
+        }
       } else {
         this.notiService.notifyCode('');
       }
@@ -391,6 +422,8 @@ export class ViewCalendarComponent
             [data?.stepID, data?.recID]
           )
         );
+        this.isStepTask = true;
+        this.isActivitie = false;
       } else if (data?.entityName == 'DP_Activities' && type) {
         task = await firstValueFrom(
           this.api.exec<any>(
@@ -400,6 +433,8 @@ export class ViewCalendarComponent
             [data?.recID]
           )
         );
+        this.isStepTask = false;
+        this.isActivitie = true;
       }
     }
     return task;
@@ -638,10 +673,11 @@ export class ViewCalendarComponent
       'right'
     );
     let task = taskOutput;
-    if (task) {
+    if (task && type == 'add') {
       this.isActivitie && this.addActivitie(task);
       this.isStepTask && this.addStepTask(task);
     }
+   return task;
   }
   addActivitie(task) {
     task['progress'] = 0;
@@ -660,7 +696,7 @@ export class ViewCalendarComponent
           res.StartDate = res.ActualStart ?? res.StartDate;
           res.EndDate = res.ActualEnd ?? res.EndDate;
           res.isActual = res.ActualStart != null ? true : false;
-          res.EntityName = 'DP_Activities';
+          res.entityName = 'DP_Activities';
           this.isActivitie = false;
           this.view.dataService.add(res).subscribe();
           this.notiService.notifyCode('SYS006');
@@ -685,6 +721,17 @@ export class ViewCalendarComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+  
+  convertDataCalendar(res){
+    res.StartDate = res.ActualStart ?? res.StartDate;
+    res.EndDate = res.ActualEnd ?? res.EndDate;
+    res.isActual = res.ActualStart != null ? true : false;
+    if(this.isStepTask){
+      res.entityName = 'DP_Instances_Steps_Tasks';
+    }else if(this.isActivitie){
+      res.entityName = 'DP_Activities';
+    }
   }
   //#endregion
 }

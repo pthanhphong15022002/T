@@ -166,7 +166,8 @@ export class EmployeeContractComponent extends UIComponent {
 
     this.hrService.handleUpdateRecordStatus(funcID, data);
     this.editStatusObj = data;
-    this.currentEmpObj = data?.inforEmployee;
+    //this.currentEmpObj = data?.inforEmployee;
+
     this.formGroup.patchValue(this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -409,6 +410,15 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    // this.api
+    //   .execSv(
+    //     'HR',
+    //     'ERM.Business.HR',
+    //     'EContractsBusiness',
+    //     'AutoResignEContractAsync'
+    //   )
+    //   .subscribe();
+
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;

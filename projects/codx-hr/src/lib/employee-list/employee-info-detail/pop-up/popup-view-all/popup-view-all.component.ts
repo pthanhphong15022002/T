@@ -212,7 +212,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
 
   checkIsNewestDate(effectedDate, expiredDate) {
-    debugger
     if (effectedDate) {
       let eff = new Date(effectedDate).toLocaleDateString();
       let date = new Date().toLocaleDateString();

@@ -18,7 +18,7 @@ import {
 } from 'codx-core';
 import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
 import { SalesinvoiceslinesAddComponent } from '../../salesinvoiceslines-add/salesinvoiceslines-add.component';
-import { SalesInvoiceService } from '../../salesinvoices.service';
+import { SalesInvoiceService, fmSalesInvoicesLines } from '../../salesinvoices.service';
 
 @Component({
   selector: 'lib-table-line-detail',
@@ -44,7 +44,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
 
   constructor(injector: Injector, salesInvoiceService: SalesInvoiceService) {
     super(injector);
-    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
+    this.fmSalesInvoicesLines = fmSalesInvoicesLines;
     this.vats = salesInvoiceService.vats;
   }
   //#endregion

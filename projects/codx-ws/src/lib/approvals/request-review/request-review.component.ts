@@ -94,6 +94,7 @@ export class RequestReviewComponent
     let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
     if(funcID) componentRef.instance.funcID = funcID;
     if(transID) componentRef.instance.recID = transID;
+    componentRef.instance.view = this.view;
   }
 
   click(e: any) {}
@@ -302,6 +303,7 @@ export class RequestReviewComponent
           if (x.event?.rowCount>0 && x.event?.msgCodeError==null) {
             //return ResponseModel            
             data.status = x.event?.returnStatus;
+            data.unbounds.statusApproval = x.event?.returnStatus;
             this.view.dataService.update(data).subscribe();
             this.esService.setupChange.next(true);
             this.esService.isStatusChange.subscribe((res) => {
@@ -310,6 +312,7 @@ export class RequestReviewComponent
                   this.view.dataService.remove(data).subscribe();
                 } else {
                   data.status = res;
+                  data.unbounds.statusApproval = res;
                   this.view.dataService.update(data).subscribe();
                 }
               }
@@ -369,6 +372,7 @@ export class RequestReviewComponent
                   this.view.dataService.remove(data).subscribe();
                 } else {
                   data.status = status;
+                  data.unbounds.statusApproval = status;
                   this.view.dataService.update(data).subscribe();
                   this.esService.setupChange.next(true);
                 }
@@ -393,6 +397,7 @@ export class RequestReviewComponent
                   this.view.dataService.remove(data).subscribe();
                 } else {
                   data.status = status;
+                  data.unbounds.statusApproval = status;
                   this.view.dataService.update(data).subscribe();
                   this.esService.setupChange.next(true);
                 }
@@ -403,8 +408,10 @@ export class RequestReviewComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.codxShareService.codxUndo(data?.recID,null).subscribe((res) => {
+      this.codxShareService.codxUndo(data?.recID,null).subscribe((res:any) => {
         if (res != null) {
+          res.unbounds = data.unbounds;
+          res.unbounds.statusApproval = res.status;
           data = res;
           this.view.dataService.update(data).subscribe();
           this.esService.setupChange.next(true);

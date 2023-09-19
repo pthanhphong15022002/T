@@ -147,7 +147,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
 
       this.assignVllToProp2('AC087', 'notAllowEditingFields087');
 
-      this.journalService.hasVouchers(this.journal).subscribe((res) => {
+      this.journalService.hasVouchers$(this.journal).subscribe((res) => {
         this.hasVouchers = res;
       });
 
@@ -157,7 +157,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       options.dataValues = this.journal.journalNo;
       options.pageLoading = false;
       this.acService
-        .loadDataAsync('AC', options)
+        .loadData$('AC', options)
         .subscribe(async (journalPermissions: IJournalPermission[]) => {
           this.createrPermissions = await Promise.all(
             journalPermissions
@@ -246,7 +246,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => (this.templateProps127 = res));
 
     this.acService
-      .loadComboboxData('FiscalPeriods', 'AC')
+      .loadComboboxData$('FiscalPeriods', 'AC')
       .subscribe((periods) => {
         this.fiscalYears = [
           ...new Set(periods.map((p) => Number(p.FiscalYear))),
@@ -375,7 +375,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       return;
     }
 
-    this.journalService.getJournal(e.data).subscribe((journal: IJournal) => {
+    this.journalService.getJournal$(e.data).subscribe((journal: IJournal) => {
       const patchObject: any = this.templateProps127.reduce(
         (prev, cur) => ({ ...prev, [cur]: journal[cur] }),
         {}
@@ -823,7 +823,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
   ): Promise<string> {
     if (objectType === 'U') {
       const users = await lastValueFrom(
-        this.acService.loadComboboxData(
+        this.acService.loadComboboxData$(
           'Share_Users',
           'AD',
           'UserID=@0',
@@ -833,7 +833,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       return users[0]?.UserName;
     } else if (objectType === 'UG') {
       const userGroups = await lastValueFrom(
-        this.acService.loadComboboxData(
+        this.acService.loadComboboxData$(
           'Share_GroupUsers',
           'AD',
           'GroupID=@0',
@@ -843,7 +843,7 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       return userGroups[0]?.GroupName;
     } else if (objectType === 'R') {
       const userRoles = await lastValueFrom(
-        this.acService.loadComboboxData(
+        this.acService.loadComboboxData$(
           'Share_UserRoles',
           'AD',
           'RoleID=@0',
