@@ -59,13 +59,13 @@
                 [formModel]="formModel"
             ></codx-label>
             <span>: </span>
-            <span
-            [innerHTML]="
-            documentObj.submitWhen
-                | formatvalue : formModel : 'submitWhen'
-                | async
-            "
-        ></span>
+            <span class="text-gray-600"
+                [innerHTML]="
+                documentObj.submitWhen
+                    | formatvalue : formModel : 'submitWhen'
+                    | async
+                "
+            ></span>
             <!-- <codx-input
             [disabled]="disabledInput"
                 field="submitWhen"
@@ -108,7 +108,7 @@
                 ></codx-input>
             </div>
             <div>
-                <!-- <codx-label
+                <!-- <codx-label class="fw-normal text-gray-600"
                     fiedName="SubmittedDate"
                     [formModel]="formModel"
                 ></codx-label> -->
@@ -130,7 +130,7 @@
                     [formModel]="formModel"
                 ></codx-label>
             </div>
-            <div>
+            <div class="mt-2">
                 <codx-input
                 [disabled]="disabledInput"
                     field="hasReturn"
@@ -141,7 +141,7 @@
         </div>
 
         <div class="col-6">
-            <div>
+            <div class="d-flex align-items-center justify-content-between">
                 <codx-label
                     fiedName="IsReturned"
                     [formModel]="formModel"
@@ -153,21 +153,20 @@
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
-                </div>
-
-                <div>
-                    <codx-label
-                        fiedName="ReturnedDate"
-                        [formModel]="formModel"
-                    ></codx-label>
-                    <codx-input
-                    [disabled]="disabledInput || disabledReturnedDate"
-                        field="returnedDate"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
-                    </div>
             </div>
+            <div>
+                <!-- <codx-label
+                    fiedName="ReturnedDate"
+                    [formModel]="formModel"
+                ></codx-label> -->
+                <codx-input
+                    [disabled]="disabledInput || disabledReturnedDate"
+                    field="returnedDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
     </div>
 
     <div class="form-group row">
