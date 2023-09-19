@@ -255,6 +255,7 @@
         [displayOption]="ops"
         cssClass="w-100 om-calendar"
         class="me-4"
+        (click)="ClickCalendar($event)"
         (change)="changeCalendar($event, 'FromDate')"
       >
       </codx-dropdown-calendar>
@@ -272,6 +273,7 @@
       [displayOption]="ops"
       cssClass="w-100 om-calendar"
       class="me-4"
+      (click)="ClickCalendar($event)"
       (change)="changeCalendar($event, 'ToDate')"
     >
     </codx-dropdown-calendar>

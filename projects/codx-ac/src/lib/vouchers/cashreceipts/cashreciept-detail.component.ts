@@ -1,21 +1,20 @@
-import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
-import { CodxAcService } from '../../codx-ac.service';
+import { Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations/src/tab/tab.component';
 import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent, Util } from 'codx-core';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService } from '../../codx-ac.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.component';
 declare var jsBh: any;
 @Component({
-  selector: 'cashpayment-detail',
-  templateUrl: './cashpayment-detail.component.html',
-  styleUrls: ['./cashpayment-detail.component.css', '../../codx-ac.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'cashreciept-detail',
+  templateUrl: './cashreciept-detail.component.html',
+  styleUrls: ['./cashreciept-detail.component.css', '../../codx-ac.component.css']
 })
-export class CashpaymentDetailComponent extends UIComponent {
+export class CashrecieptDetailComponent extends UIComponent {
   //#region Constructor
   @Input() recID: any;
   @Input() dataItem: any;
@@ -124,8 +123,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   createTab(e: any, ele: TabComponent) {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
-
-  //#endregion
+  //#endregion region
 
   //#region Event
   /**
@@ -179,14 +177,13 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Event
 
   //#region Function
-  
   /**
    * *Hàm get data chi tiết 
    * @param data
    */
   getDataDetail(dataItem,recID) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [dataItem,recID])
+      .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [dataItem,recID])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
@@ -207,20 +204,19 @@ export class CashpaymentDetailComponent extends UIComponent {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
-        x.functionID == 'ACT041003' || // MF ghi sổ (PC)
+        x.functionID == 'ACT040106' || // MF ghi sổ (PT)
         x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-        x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
+        x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
         x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-        x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
+        x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
         x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-        x.functionID == 'ACT041008' || // Mf khôi phục (PC)
+        x.functionID == 'ACT040107' || // Mf khôi phục (PT)
         x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
         x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT041010' || // Mf in (PC)
+        x.functionID == 'ACT040108' || // Mf in (PT)
         x.functionID == 'ACT042907' || // Mf in (UNC)
-        x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
+        x.functionID == 'ACT042902'    // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -231,7 +227,7 @@ export class CashpaymentDetailComponent extends UIComponent {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040103' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -241,7 +237,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -249,7 +245,7 @@ export class CashpaymentDetailComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
+              if ((element.functionID == 'ACT040104' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -259,7 +255,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040105' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -268,7 +264,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -277,7 +273,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040107' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -286,7 +282,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -312,20 +308,20 @@ export class CashpaymentDetailComponent extends UIComponent {
     if (ele) {
       ele.hideTab(0, false);
       switch (type) {
-        case '1':
-        case '3':
-        case '4':
+        case '11':
+        //case '3':
+        //case '4':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
-        case '2':
+        case '12':
           ele.hideTab(1, false);
           ele.hideTab(2, true);
           break;
-        case '9':
-          ele.hideTab(1, false);
-          ele.hideTab(2, false);
-          break;
+        // case '9':
+        //   ele.hideTab(1, false);
+        //   ele.hideTab(2, false);
+        //   break;
       }
     }
   }
@@ -400,7 +396,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           legalName: this.legalName, //? tên company
         };
         let dialog = this.callfc.openSide(
-          CashPaymentAddComponent,
+          CashreceiptsAddComponent,
           data,
           this.optionSidebar,
           this.formModel.funcID
@@ -427,7 +423,7 @@ export class CashpaymentDetailComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
+            CashreceiptsAddComponent,
             data,
             this.optionSidebar,
             this.formModel.funcID
@@ -651,7 +647,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @returns
    */
   setDefault(data) {
-    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+    return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
     ]);
@@ -685,5 +681,5 @@ export class CashpaymentDetailComponent extends UIComponent {
         console.log(res);
       });
   }
-  //#endregion
+  //endregion Function
 }
