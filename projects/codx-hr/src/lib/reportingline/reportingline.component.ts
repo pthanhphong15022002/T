@@ -1,4 +1,3 @@
-import { concat } from 'rxjs';
 import {
   Component,
   Injector,
@@ -6,7 +5,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  ButtonModel, CodxTreeviewComponent,
+  ButtonModel, CodxSearchBarComponent, CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -36,7 +35,7 @@ export class ReportinglineComponent extends UIComponent {
   @ViewChild('tmpOrgchart') tmpOrgchart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('orgChart') orgChart: ReportinglineOrgChartComponent;
-
+  @ViewChild('searchBar') searchBar: CodxSearchBarComponent;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   dialog!: DialogRef;
@@ -45,7 +44,6 @@ export class ReportinglineComponent extends UIComponent {
   itemSelected: any;
   ListViewService: CRUDService;
   detailComponent: any = null;
-  dataSelected: any = null;
   positionID: string = '';
   request: ResourceModel;
   codxTreeView: CodxTreeviewComponent = null;
@@ -57,6 +55,11 @@ export class ReportinglineComponent extends UIComponent {
   posEmpPageSize: number = 5;
   posEmpPageIndex: number = 2;
   viewEmpPosition: string = '';
+  searchText: string = "";
+
+  empList = [];
+  empListLength = 0;
+  currentChartData: any = null;
   constructor(
     inject: Injector,
     private adService: CodxAdService,
@@ -68,8 +71,6 @@ export class ReportinglineComponent extends UIComponent {
 
   onInit(): void {
     this.funcID = this.router.snapshot.params['funcID'];
-    this.request = new ResourceModel();
-    this.request.service = 'HR';
     this.adService.getListCompanySettings()
       .subscribe((res) => {
         if (res) {
@@ -96,6 +97,14 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   ngAfterViewInit(): void {
+    this.request = new ResourceModel();
+    this.request.service = 'HR';
+    this.request.assemblyName = 'ERM.Business.HR';
+    this.request.className = 'PositionsBusiness';
+    this.request.method = 'GetPositionsAsync';
+    this.request.autoLoad = false;
+    this.request.parentIDField = 'ReportTo';
+
     this.button = {
       id: 'btnAdd',
     };
@@ -103,7 +112,6 @@ export class ReportinglineComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.list,
-        //active: true,
         sameData: true,
         model: {
           template: this.tmpList,
@@ -112,18 +120,16 @@ export class ReportinglineComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.tree_orgchart,
-        //active: false,
         sameData: false,
         request: this.request,
         model: {
-          resizable: false,
+          // resizable: false,
           template: this.tmpTree,
           panelRightRef: this.tmpOrgchart,
-          resourceModel: { parentIDField: 'ReportTo' },
+          // resourceModel: { parentIDField: 'ReportTo' },
         },
       },
     ];
-    //this.view.dataService.parentIdField = 'ReportTo';
     this.detectorRef.detectChanges();
   }
 
@@ -133,15 +139,14 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   viewChanging(event: any) {
-    if (event?.view?.id === '2' || event?.id === '2') {
-      this.view.dataService.parentIdField = 'ReportTo';
-    } else if (event?.view?.id === '1' || event?.id === '1') {
-      this.view.dataService.parentIdField = '';
-    }
+    // if (event?.view?.id === '2' || event?.id === '2') {
+    //   this.view.dataService.parentIdField = 'ReportTo';
+    // } else if (event?.view?.id === '1' || event?.id === '1') {
+    //   this.view.dataService.parentIdField = '';
+    // }
   }
   viewChanged(event) {
     if (this.hasChangedDataChart || this.hasChangedDataList) {
-      // if (this.viewActive !== event.view.id && this.flagLoaded) {
       if (event?.view?.id === '1' || event?.id === '1') {
         this.view.dataService.page = 0;
         this.view.dataService.data = [];
@@ -156,6 +161,7 @@ export class ReportinglineComponent extends UIComponent {
     }
     this.hasChangedDataChart = false;
     this.hasChangedDataList = false;
+    this.currentChartData = null;
   }
   // btn add toolbar click
   btnClick(event: any) {
@@ -174,7 +180,6 @@ export class ReportinglineComponent extends UIComponent {
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             funcID: this.funcID,
@@ -186,11 +191,14 @@ export class ReportinglineComponent extends UIComponent {
             PopupAddPositionsComponent,
             object,
             option,
+            this.view.formModel.funcID
           );
           form.closed.subscribe((res: any) => {
             if (res?.event) {
-              let node = res.event;
-              this.codxTreeView.setNodeTree(node);
+              this.view.dataService.add(res.event).subscribe();
+              if (this.views[1].active) {
+                this.currentChartData = res.event;
+              }
               this.detectorRef.detectChanges();
               this.hasChangedDataList = true;
             }
@@ -238,7 +246,6 @@ export class ReportinglineComponent extends UIComponent {
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             funcID: this.funcID,
@@ -268,7 +275,6 @@ export class ReportinglineComponent extends UIComponent {
           option.FormModel = this.view.formModel;
           option.Width = '800px';
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
             funcID: this.funcID,
@@ -278,9 +284,8 @@ export class ReportinglineComponent extends UIComponent {
           this.callfc.openSide(PopupAddPositionsComponent, object, option, this.funcID)
             .closed.subscribe((res) => {
               if (res?.event) {
+                this.view.dataService.add(res.event).subscribe();
                 this.hasChangedDataList = true;
-                let node = res.event;
-                this.codxTreeView.setNodeTree(node);
                 this.detectorRef.detectChanges();
               }
             });
@@ -308,8 +313,6 @@ export class ReportinglineComponent extends UIComponent {
           this.hasChangedDataList = true;
           this.notiService.notifyCode('SYS008')
           this.detectorRef.detectChanges();
-        } else {
-          //this.notiService.notifyCode('HR021', 0, this.view.dataService?.dataSelected?.positionName);
         }
       });
 
@@ -317,10 +320,14 @@ export class ReportinglineComponent extends UIComponent {
   // selected data
   onSelectionChanged(event) {
     if (this.view) {
-      // let viewActive = this.view.views.find((e) => e.active == true);
-      // if (viewActive?.id == '1') return;
-      this.dataSelected = event.data;
-      this.positionID = event.data.positionID;
+      // this.dataSelected = event.data;
+      if (this.views[1].active && this.currentChartData != null) {
+        this.positionID = this.currentChartData.positionID;
+        this.view.dataService.setDataSelected(event);
+      } else {
+        this.positionID = event.data.positionID;
+      }
+      this.currentChartData = null;
       this.detectorRef.detectChanges();
     }
   }
@@ -333,6 +340,8 @@ export class ReportinglineComponent extends UIComponent {
   changedDataFromChart(event: any) {
     if (event) {
       this.hasChangedDataChart = event?.hasChanged;
+      this.currentChartData = event?.data;
+      this.onSelectionChanged(this.currentChartData);
     }
   }
   doubleClickItem(data: any) {
@@ -353,8 +362,6 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
-  // search employee in popup view list employee
-  searchText: string = "";
   searchUser(event: any, positionId: string) {
     this.searchText = event;
     var index = this.view.dataService.data.findIndex(x => x.positionID == positionId)
@@ -405,7 +412,6 @@ export class ReportinglineComponent extends UIComponent {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    
     //var totalScroll = ele.offsetHeight + ele.scrollTop;
     var totalScroll = ele.clientHeight + ele.scrollTop;
     if (this.scrolling && (totalScroll == ele.scrollHeight)) {
@@ -435,6 +441,4 @@ export class ReportinglineComponent extends UIComponent {
       this.scrolling = false;
     }
   }
-
-  
 }
