@@ -256,6 +256,7 @@ onSelectedItem(event) {
   addNewVoucher() {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
           if(this.dataDefault == null) this.dataDefault = {...res};
@@ -282,6 +283,7 @@ onSelectedItem(event) {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -309,8 +311,10 @@ onSelectedItem(event) {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
       .copy((o) => this.setDefault(dataCopy))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
           let data = {

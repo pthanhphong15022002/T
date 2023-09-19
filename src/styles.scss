@@ -3161,8 +3161,8 @@ codx-vll.vll-post{
 /*TBChung thêm á đừng xóa tội em*/
 .text-highlight >em
 {
-  color: #1A73EC;
-  color: var(--primary);
+  font-style: normal;
+  font-weight: 600;
 }
 .ws-accordion {
   .e-acrdn-item

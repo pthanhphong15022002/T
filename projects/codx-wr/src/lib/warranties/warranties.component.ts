@@ -269,7 +269,7 @@ export class WarrantiesComponent
   }
 
   updateComment(e) {
-    this.updateCommentWarranty(e.e, e.data);
+    this.updateCommentWarranty(e.data);
   }
 
   clickMF(e, data) {
@@ -336,6 +336,7 @@ export class WarrantiesComponent
             case 'WR0101_4':
             case 'WR0101_5':
             case 'WR0101_6':
+            case 'WR0101_7':
               res.disabled = true;
               break;
             default:
@@ -350,6 +351,7 @@ export class WarrantiesComponent
               case 'WR0101_2':
               case 'WR0101_4':
               case 'WR0101_6':
+              case 'WR0101_7':
                 res.disabled = true;
                 break;
               default:
@@ -358,6 +360,7 @@ export class WarrantiesComponent
           } else {
             switch (res.functionID) {
               case 'WR0101_5':
+              case 'WR0101_7':
                 res.disabled = true;
                 break;
             }
@@ -779,11 +782,12 @@ export class WarrantiesComponent
     });
   }
 
-  updateCommentWarranty(e, data) {
+  updateCommentWarranty(data) {
     this.dataSelected = data;
-    this.titleAction = 'Cập nhật ghi chú';
-    this.comment = data?.comment;
-    this.dialogComment = this.callfc.openForm(this.itemComment, '', 400, 200);
+    this.comment = this.dataSelected.comment;
+    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
+    this.titleAction = event.description;
+    this.dialogComment = this.callfc.openForm(this.itemComment, '', 600, 400);
     this.dialogComment.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.comment = this.comment;
