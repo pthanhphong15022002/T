@@ -31,6 +31,7 @@ codx-view-list-detail .codx-detail-footer {
 
     codx-views>.container-fluid {
         height: calc(100% - 64px)!important;
+        overflow: auto;
     }
     .pin-bar .my-2.w-100{
         margin-top:0!important;
