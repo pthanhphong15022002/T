@@ -230,6 +230,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         });
       }
       switch (data?.status) {
+        case '2':
         case '7':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
