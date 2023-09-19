@@ -466,10 +466,14 @@
     >
       <ng-container *ngFor="let perm of data?.data.roles; index as i">
         <div
-          *ngIf="perm.roleType == data?.roleType"
+          *ngIf="
+            perm.objectID == data?.data?.owner ||
+            perm.roleType == data?.roleType
+          "
           class="d-flex align-items-center"
         >
           <codx-imgs
+            *ngIf="perm?.roleType == 'Users' || perm?.roleType == 'Owner'"
             class="me-2 d-flex align-items-center"
             [width]="25"
             ojectType="AD_Users"
@@ -479,6 +483,29 @@
             [objectName]="perm.objectName"
           >
           </codx-imgs>
+          <div
+            *ngIf="perm?.roleType != 'Users' && perm?.roleType != 'Owner'"
+            class="mx-3"
+            #popoverTooltip="ngbPopover"
+            [ngbPopover]="tooltipImg"
+            [placement]="'top left'"
+            (mouseenter)="popoverTooltip.open()"
+            (mouseleave)="popoverTooltip.close()"
+          >
+            <ng-template #tooltipImg let-data="value">
+              <codx-img
+                [width]="25"
+                [objectId]="perm?.objectID"
+                objectType="AD_Users"
+              ></codx-img>
+              <span class="ms-1 fw-bold">{{perm?.objectName}}</span>
+            </ng-template>
+            <codx-img
+              [width]="25"
+              [objectId]="perm?.objectID"
+              objectType="AD_Users"
+            ></codx-img>
+          </div>
         </div>
       </ng-container>
     </div>

@@ -36,6 +36,7 @@
 
 <ng-template #tmpOrgChart>
   <hr-organization-orgchart
+    [activeMFC]="activeMFC"
     [view]="view"
     [dataService]="view.dataService"
     [formModel]="view.formModel"
@@ -372,7 +373,7 @@
       </div>
     </div>
 
-    <div class="w-150px">
+    <div class="w-150px" *ngIf="activeMFC">
       <codx-mfunc
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"

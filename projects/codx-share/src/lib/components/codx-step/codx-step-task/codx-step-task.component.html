@@ -57,18 +57,31 @@
         [dataItem]="moreDefaut"
         (changeDataMF)="changeDataMFStep($event, currentStep)"
         (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="!isMoveStage && !isClose"
+        *ngIf="!isMoveStage"
       >
       </codx-mfunc>
     </div>
     <div class="d-flex align-items-center ms-5">
-      <span
-        class="date text-nowrap me-2 text-gray-700"
-        *ngIf="currentStep?.startDate && currentStep?.endDate"
+      <div
+        #popoverTooltip="ngbPopover"
+        [ngbPopover]="tooltipDate"
+        [placement]="'top-left bottom-left'"
+        (mouseenter)="openTooltip(popoverTooltip,currentStep)"
+        (mouseleave)="popoverTooltip.close()"
       >
-        {{ currentStep?.startDate | date : dateFomat }} -
-        {{ currentStep?.endDate | date : dateFomat }}</span
-      >
+        <span
+          class="date text-nowrap text-gray-500"
+          *ngIf="currentStep?.startDate && currentStep?.endDate && currentStep?.stepStatus != '3'"
+        >
+          {{ currentStep?.startDate | date : dateFomat }} -
+          {{ currentStep?.endDate | date : dateFomat }}</span
+        >
+        <span  
+          class="date text-nowrap text-gray-500"
+          *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'">
+            {{ currentStep?.actualEnd | date : dateFomat }}
+        </span>
+      </div>
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
@@ -302,7 +315,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose && !isViewStep"
+      *ngIf="!isMoveStage && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -338,7 +351,7 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="!isMoveStage && !isClose && !isViewStep"
+      *ngIf="(!isMoveStage && !isViewStep && !isClose) || (isClose && !data?.task?.isTaskDefault)"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -393,33 +406,26 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <span
-      class="date text-nowrap text-gray-500"
-      *ngIf="data?.value?.startDate && data?.value?.endDate && data?.value?.status != '3'"
-    >
-      {{ data?.value?.startDate | date : dateFomat }} -
-      {{ data?.value?.endDate | date : dateFomat }}</span
-    >
-    <span 
+    <div
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
-      [placement]="'top-left'"
+      [placement]="'top-left bottom-left'"
       (mouseenter)="openTooltip(popoverTooltip,data?.value)"
       (mouseleave)="popoverTooltip.close()"
     >
       <span
-      class="date text-nowrap text-gray-500"
-      *ngIf="data?.value?.actualStart && data?.value?.status == '3'"
-    >
-      {{ data?.value?.actualStart | date : dateFomat }} -
-      
-    </span>
-    <span  
-      class="date text-nowrap text-gray-500"
-      *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
-        {{ data?.value?.actualEnd | date : dateFomat }}
-    </span>
-    </span>
+        class="date text-nowrap text-gray-500"
+        *ngIf="data?.value?.startDate && data?.value?.endDate && data?.value?.status != '3'"
+      >
+        {{ data?.value?.startDate | date : dateFomat }} -
+        {{ data?.value?.endDate | date : dateFomat }}</span
+      >
+      <span  
+        class="date text-nowrap text-gray-500"
+        *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
+          {{ data?.value?.actualEnd | date : dateFomat }}
+      </span>
+    </div>
     
     <span class="d-flex align-items-center">
       <codx-imgs
@@ -517,16 +523,74 @@
 </ng-template>
 
 <ng-template #tooltipDate let-data="value">
-  <div>
-    <div>
-      <span>Dự kiến:</span>
-      <span>{{ dataTooltipDay?.startDate | date : dateFomat }} -</span>
-      <span>{{ dataTooltipDay?.endDate | date : dateFomat }}</span>
+  <div class="zindex-tooltip">
+    <div *ngIf="dataTooltipDay?.startDate && dataTooltipDay?.endDate">
+      <div>
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="startDate"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            dataTooltipDay?.startDate
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="endDate"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          [innerHTML]="
+            dataTooltipDay?.endDate
+              | formatvalue : grvMoreFunction : 'EndDate'
+              | async
+          "
+        ></span>
+      </div>
     </div>
-    <div> 
-      <span>Thực tế:</span>
-      <span>{{ dataTooltipDay?.actualStart | date : dateFomat }} -</span>
-      <span>{{ dataTooltipDay?.actualEnd | date : dateFomat }}</span>
+    <div>
+      <div>
+        <codx-label
+          *ngIf="dataTooltipDay?.actualStart"
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="actualStart"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          *ngIf="dataTooltipDay?.actualStart"
+          [innerHTML]="
+            dataTooltipDay?.actualStart
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
+      <div>
+        <codx-label
+          *ngIf="dataTooltipDay?.actualEnd"
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="actualEnd"
+          [formModel]="grvMoreFunction"
+          [setRequire]="false"
+        ></codx-label>
+        <span
+          *ngIf="dataTooltipDay?.actualEnd"
+          [innerHTML]="
+            dataTooltipDay?.actualEnd
+              | formatvalue : grvMoreFunction : 'StartDate'
+              | async
+          "
+        ></span>
+      </div>
     </div>
   </div>
 </ng-template>

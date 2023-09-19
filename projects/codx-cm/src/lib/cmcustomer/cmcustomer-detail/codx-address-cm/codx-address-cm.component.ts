@@ -36,7 +36,7 @@ export class CodxAddressCmComponent implements OnInit {
   @Input() isConvertLeadToCus = false;
   @Output() lstAddressEmit = new EventEmitter<any>();
   @Output() lstAddressDeleteEmit = new EventEmitter<any>();
-  @Output() addressName = new EventEmitter<any>();
+  @Output() addressDefault = new EventEmitter<any>();
   @Output() convertAddress = new EventEmitter<any>();
   @Input() listAddress = [];
   @Input() selectAll: boolean = false;
@@ -234,10 +234,10 @@ export class CodxAddressCmComponent implements OnInit {
                 );
                 var checkIsDefault = this.listAddress.some((x) => x.isDefault);
                 if (!checkIsDefault) {
-                  this.addressName.emit(null);
+                  this.addressDefault.emit(null);
                 } else {
                   if (this.type == 'formDetail' && e?.event?.isDefault) {
-                    this.addressName.emit(e?.event?.adressName);
+                    this.addressDefault.emit(e?.event);
                   }
                 }
                 var index = this.listAddress.findIndex(
@@ -273,7 +273,7 @@ export class CodxAddressCmComponent implements OnInit {
                 this.cmSv.loadList(data, this.listAddress, 'delete')
               );
               if (data.isDefault) {
-                this.addressName.emit(null);
+                this.addressDefault.emit(null);
               }
               this.notiService.notifyCode('SYS008');
               this.changeAddress(this.listAddress[0]);

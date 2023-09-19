@@ -7,7 +7,7 @@
     [body]="body"
     [dataItem]="dataSelected"
     [hideMF]="true"
-    [footer]="tabs"
+    [footer]="footer"
     (changeDataMF)="changeDataMF($event, dataSelected)"
     (clickMF)="clickMF($event, dataSelected)"
   >
@@ -32,7 +32,7 @@
         </div>
         <div class="toolbar-detail">
           <codx-mfunc
-            [hideMF]="dataSelected?.status == '11'"
+          *ngIf="dataSelected?.status != '11'"
             [dataItem]="dataSelected"
             [formModel]="formModel"
             (changeDataMF)="changeDataMF($event, dataSelected)"
@@ -369,7 +369,7 @@
               class="d-flex align-items-top justify-content-between mt-2 mb-2"
             >
               <div class="d-flex flex-wrap align-items-top w-100">
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column"    *ngIf="dataSelected?.category == '1'">
                   <div class="mb-1">
                     <codx-label
                       class="text-dark fw-bold"
@@ -384,6 +384,7 @@
                         [objectName]="dataSelected?.contactName"
                         [imgOn]="dataSelected?.modifiedOn"
                         [objectType]="formModel?.entityName"
+                        [referType]="'avt'"
                         [width]="40"
                       >
                       </codx-img>
@@ -539,7 +540,7 @@
         </div>
       </div>
     </ng-template>
-    <ng-template #tabs let-data>
+    <ng-template #footer let-data>
       <codx-tabs
         [entityName]="formModel.entityName"
         [formModel]="formModel"
@@ -892,7 +893,7 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div class="mt-4">
+              <div class="mt-4" *ngIf="!dataSelected?.applyProcess; else stepsTask">
                 <step-task
                   [entityName]="'CM_Leads'"
                   [typeTask]="2"
@@ -902,9 +903,24 @@
                   (saveAssignTask)="saveAssign($event)"
                 ></step-task>
               </div>
+              <ng-template #stepsTask>
+                <div>
+                  <step-task
+                    [isDataLoading]="isDataLoading"
+                    [dataSelected]="dataSelected"
+                    [formModel]="formModel"
+                    [listInstanceStep]="listSteps"
+                    [applyFor]="'5'"
+                    (continueStep)="continueStep($event)"
+                    (saveAssignTask)="saveAssign($event)"
+                  ></step-task>
+                </div>
+              </ng-template>
+
+
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-more icon-16 me-2"></span>
@@ -917,19 +933,9 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div>
-                <step-task
-                  [isDataLoading]="isDataLoading"
-                  [dataSelected]="dataSelected"
-                  [formModel]="formModel"
-                  [listInstanceStep]="listSteps"
-                  [applyFor]="'5'"
-                  (continueStep)="continueStep($event)"
-                  (saveAssignTask)="saveAssign($event)"
-                ></step-task>
-              </div>
+
             </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top">

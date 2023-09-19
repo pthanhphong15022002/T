@@ -11,14 +11,17 @@ import {
 import { AttachmentComponent } from '../attachment/attachment.component';
 import {
   AlertConfirmInputConfig,
+  ApiHttpService,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
+import { Observable, finalize, map } from 'rxjs';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -89,13 +92,24 @@ export class CodxInputCustomFieldComponent implements OnInit {
       textColor: '#F54E60',
     },
   ];
+  //vll
+  // serviceTemp = 'SYS';
+  // assemblyNameTemp = 'SYS';
+  // classNameTemp = 'ValueListBusiness';
+  // methodTemp = 'GetVllCustormByFormatAsync';
+  // requestTemp = new DataRequest();
+  datasVll: any[];
+  user: any;
+  fieldsVll = { text: 'textValue', value: 'value' };
+  plancehoderVll: any;
 
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private codxShareSv: CodxShareService
+    private codxShareSv: CodxShareService,
+    private api: ApiHttpService
   ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
@@ -144,6 +158,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'R':
         this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
         break;
+      case 'L':
+        if (this.customField.dataFormat == 'V') this.loadDataVll();
+        break;
       case 'C':
         this.formModelContact = new FormModel();
         this.formModelContact.formName = 'CMContacts';
@@ -160,13 +177,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
               res?.Role?.headerText ?? this.placeholderRole;
           });
 
-        let arrValue = JSON.parse(this.customField.dataValue);
+        let arrValue = '';
+        if (this.customField.dataValue)
+          arrValue = JSON.parse(this.customField.dataValue);
         this.listContacts = Array.isArray(arrValue) ? arrValue : [];
         this.codxShareSv.listContactBehavior.subscribe((element) => {
           if (element != null) {
             var contact = element?.data;
             var type = element?.type;
-            contact.isDefault = false;
             if (this.listContacts != null && this.listContacts.length > 0) {
               var index = this.listContacts.findIndex(
                 (x) => x.recID == contact?.recID
@@ -181,6 +199,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 if (type == 'addAndSave') {
                   this.listContacts.push(contact);
                 }
+              }
+
+              let idxDefault = -1;
+              if (contact?.isDefault) {
+                idxDefault = this.listContacts.findIndex(
+                  (x) => x.isDefault && x.recID != contact.recID
+                );
+              }
+              if (idxDefault != -1 && type != 'delete') {
+                this.listContacts[idxDefault].isDefault = false;
               }
             } else {
               this.listContacts.push(contact);
@@ -508,5 +536,35 @@ export class CodxInputCustomFieldComponent implements OnInit {
   closePopper(p) {
     p.close();
     this.popoverCrr = p;
+  }
+  //vll custorm
+  loadDataVll() {
+    this.api
+      .execSv<any>('SYS', 'SYS', 'ValueListBusiness', 'GetAsync', [
+        this.customField.refValue,
+      ])
+      .subscribe((vl) => {
+        if (vl) {
+          this.plancehoderVll = vl?.note;
+          var defaultValues = vl?.defaultValues?.split(';');
+          if (!defaultValues || defaultValues?.length == 0) {
+            this.datasVll = [];
+            return;
+          }
+          if (vl.lineType == 1) {
+            this.datasVll = defaultValues.map((x) => {
+              return {
+                textValue: x,
+                value: x,
+              };
+            });
+          }
+
+          //chua lam 2
+        } else this.datasVll = [];
+      });
+  }
+  cbxChangeVll(value) {
+    this.customField.dataValue = value;
   }
 }

@@ -85,8 +85,9 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         })
   }
 
+
   onChangeSwitch(evt, fieldName){
-    let res 
+    let res = evt.data;
     if(res == true){
       if(fieldName == 'isSubmitted'){
         this.documentObj.submittedDate = new Date();
@@ -151,7 +152,6 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt){
-    debugger
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.documentObj);

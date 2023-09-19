@@ -51,7 +51,7 @@
                     class="fw-bold"
                     style="font-size: 1.25vw; color: #025fba"
                   >
-                    23
+                    {{ getDispatchsByType("1") }}
                   </div>
                 </div>
               </div>
@@ -76,7 +76,7 @@
                     class="fw-bold"
                     style="font-size: 1.25vw; color: #07dcb7"
                   >
-                    23
+                    {{ getDispatchsByType("2") }}
                   </div>
                 </div>
               </div>
@@ -103,7 +103,7 @@
                     class="fw-bold"
                     style="font-size: 1.25vw; color: #f7bf32"
                   >
-                    0
+                    {{ getDispatchsByType("4") }}
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@
                     class="fw-bold"
                     style="font-size: 1.25vw; color: #8651fe"
                   >
-                    5
+                    {{ getDispatchsByType("3") }}
                   </div>
                 </div>
               </div>
@@ -147,14 +147,14 @@
       class="d-block"
       style="height: 100%; width: 100%"
       [centerLabel]="{
-        text: 23 + '<br>công văn'
+        text: dataset.length + '<br>công văn'
       }"
       [legendSettings]="{ visible: true, position: 'Bottom' }"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
-          [dataSource]="data2"
-          xName="status"
+          [dataSource]="groupByStatus('statusName')"
+          xName="statusName"
           yName="quantity"
           startAngle="0"
           innerRadius="80%"
@@ -393,21 +393,23 @@
         <div
           class="d-flex flex-column justify-content-center align-items-center"
         >
-          <div class="fw-bold fs-1">10</div>
+          <div class="fw-bold fs-1">
+            {{ getUrgencyDispatch() - getUrgencyDispatch("3") }}
+          </div>
           <div>Tổng số công văn</div>
         </div>
         <div class="vr"></div>
         <div
           class="d-flex flex-column justify-content-center align-items-center"
         >
-          <div class="fw-bold fs-1">2</div>
+          <div class="fw-bold fs-1">{{ getUrgencyDispatch() }}</div>
           <div>Chưa xử lý</div>
         </div>
         <div class="vr"></div>
         <div
           class="d-flex flex-column justify-content-center align-items-center"
         >
-          <div class="fw-bold fs-1">1</div>
+          <div class="fw-bold fs-1">{{ getUrgencyDispatch("3") }}</div>
           <div>Đang xử lý</div>
         </div>
       </div>
@@ -457,11 +459,11 @@
           <div class="fw-bold me-2">123</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #005dc7; color: #fff"
             [style.width]="'100%'"
             [title]="'BTT UB Mặt trận Tổ quốc Việt Nam'"
           >
-            <span>BTT UB Mặt trận Tổ quốc Việt Nam</span>
+            <span class="fw-bold">BTT UB Mặt trận Tổ quốc Việt Nam</span>
           </div>
         </div>
 
@@ -471,11 +473,11 @@
           <div class="fw-bold me-2">100</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #0078ff; color: #fff"
             [style.width]="'90%'"
             [title]="'Sở Thông tin và Truyền thông Tp.HCM'"
           >
-            <span>Sở Thông tin và Truyền thông Tp.HCM</span>
+            <span class="fw-bold">Sở Thông tin và Truyền thông Tp.HCM</span>
           </div>
         </div>
 
@@ -485,11 +487,11 @@
           <div class="fw-bold me-2">90</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #3699ff; color: #fff"
             [style.width]="'80%'"
             [title]="'Cty TNHH TUV Rheinland Việt Nam'"
           >
-            <span>Cty TNHH TUV Rheinland Việt Nam</span>
+            <span class="fw-bold">Cty TNHH TUV Rheinland Việt Nam</span>
           </div>
         </div>
 
@@ -499,11 +501,11 @@
           <div class="fw-bold me-2">80</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #d3e7ff"
             [style.width]="'70%'"
             [title]="'Cty TNHH phần mềm FAST'"
           >
-            <span>Cty TNHH phần mềm FAST</span>
+            <span class="fw-bold">Cty TNHH phần mềm FAST</span>
           </div>
         </div>
 
@@ -513,11 +515,11 @@
           <div class="fw-bold me-2">70</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #eaf0ff"
             [style.width]="'60%'"
             [title]="'Văn phòng UBND TP.HCM'"
           >
-            <span>Văn phòng UBND TP.HCM</span>
+            <span class="fw-bold">Văn phòng UBND TP.HCM</span>
           </div>
         </div>
 
@@ -527,11 +529,11 @@
           <div class="fw-bold me-2">60</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #56ebff"
             [style.width]="'50%'"
             [title]="'Cty TNHH Tân Quang Việt'"
           >
-            <span>Cty TNHH Tân Quang Việt</span>
+            <span class="fw-bold">Cty TNHH Tân Quang Việt</span>
           </div>
         </div>
 
@@ -541,11 +543,11 @@
           <div class="fw-bold me-2">50</div>
           <div
             class="topchart-user"
-            style="background-color: #1d1dcc; color: #fff"
+            style="background-color: #a6f8ff"
             [style.width]="'40%'"
             [title]="'Sở Xây dựng TP.HCM'"
           >
-            <span>Sở Xây dựng TP.HCM</span>
+            <span class="fw-bold">Sở Xây dựng TP.HCM</span>
           </div>
         </div>
       </div>
@@ -569,7 +571,7 @@
     >
       <e-series-collection>
         <e-series
-          [dataSource]="data7_1"
+          [dataSource]="groupByOrgUnit('orgUnitName', '2')"
           type="Column"
           xName="orgUnitName"
           yName="quantity"
@@ -579,7 +581,7 @@
           legendShape="Rectangle"
         ></e-series>
         <e-series
-          [dataSource]="data7_2"
+          [dataSource]="groupByOrgUnit('orgUnitName', '1')"
           type="Column"
           xName="orgUnitName"
           yName="quantity"

@@ -337,7 +337,7 @@ export class PopupAddCasesComponent
   }
   valueChangeOwner($event) {
     if ($event) {
-      this.owner = $event;
+      this.owner = this.cases.applyProcess ? $event : $event.data;
       this.cases.owner = this.owner;
     }
   }
@@ -356,7 +356,6 @@ export class PopupAddCasesComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
-        console.log(res);
         this.attachment?.clearData();
         if (res) {
           this.dialog.close(res.save[0]);

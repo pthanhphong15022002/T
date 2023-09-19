@@ -189,7 +189,7 @@
           <ng-container *ngIf="data.roles?.length > 0">
             <codx-img
               [width]="25"
-              [objectId]="getObjectID(data)"
+              [objectId]="data?.owner"
               objectType="AD_Users"
             >
             </codx-img>

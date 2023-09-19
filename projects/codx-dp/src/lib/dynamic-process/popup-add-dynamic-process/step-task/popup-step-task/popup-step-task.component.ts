@@ -495,10 +495,8 @@ export class PopupJobComponent implements OnInit {
     let listUser = e || [];
     let listRole = [];
     for (let role of listUser) {
-      if (
-        roleType == 'P' &&
-        this.owner.some((ownerFind) => ownerFind.objectID == role.objectID)
-      ) {
+      if (roleType == 'P' && this.owner.some((ownerFind) => ownerFind.objectID == role.objectID))
+      {
         continue;
       }
       listRole.push({
@@ -512,6 +510,8 @@ export class PopupJobComponent implements OnInit {
     if (roleType == 'O') {
       this.owner = listRole;
       this.stepsTasks.owner = this.owner[0]?.objectID;
+      let index = this.participant?.findIndex(role => role?.objectID == this.stepsTasks.owner);
+      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index,1);
     }
     if (roleType == 'P') {
       this.participant = listRole;

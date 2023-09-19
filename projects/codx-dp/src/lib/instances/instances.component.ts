@@ -235,6 +235,7 @@ export class InstancesComponent
   };
   // For CM
   categoryCustomer: any = '';
+  instanceCM:any;
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -748,7 +749,8 @@ export class InstancesComponent
   }
 
   startInstance(data) {
-    this.codxDpService.startInstance(data.recID).subscribe((res) => {
+    var datas = [data.recID,this.process?.applyFor];
+    this.codxDpService.startInstance(datas).subscribe((res) => {
       if (res) {
         data.status = '2';
         data.startDate = res?.length > 0 ? res[0].startDate : null;
@@ -802,6 +804,7 @@ export class InstancesComponent
                     data: data,
                   });
                 }
+                if (this.kanban) this.kanban.updateCard(this.dataSelected);
                 this.detectorRef.detectChanges();
               }
             });
@@ -1293,69 +1296,96 @@ export class InstancesComponent
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
-          var stepReason = {
+          let stepReason = {
             isUseFail: this.isUseFail,
             isUseSuccess: this.isUseSuccess,
           };
-          var obj = {
-            formModel: formMD,
-            instance: data,
-            listStepCbx: listStepCbx,
-            stepIdClick: this.stepIdClick,
-            stepReason: stepReason,
-            headerTitle: dataMore.defaultName,
-            listStepProccess: this.process.steps,
-            lstParticipants: this.lstOrg,
-            isDurationControl: this.checkDurationControl(data.stepID),
-            applyFor: this.process.applyFor,
-          };
-          var dialogMoveStage = this.callfc.openForm(
-            PopupMoveStageComponent,
-            '',
-            850,
-            900,
-            '',
-            obj
-          );
-          dialogMoveStage.closed.subscribe((e) => {
-            this.isClick = true;
-            this.stepIdClick = '';
-            if (!e || !e.event) {
-              data.stepID = this.crrStepID;
-              this.changeDetectorRef.detectChanges();
-            }
-            if (e && e.event != null) {
-              //xu ly data đổ về
-              data = e.event.instance;
-              this.listStepInstances = e.event.listStep;
-              if (e.event.isReason != null) {
-                this.moveReason(null, data, e.event.isReason);
+          if (this.process.applyFor != '0') {
+            let datas = [ data.recID, this.process.applyFor ];
+            this.codxDpService.getOneDeal(datas).subscribe((res) => {
+              if (res) {
+                let dataCM = {
+                  refID: data?.recID,
+                  processID:  this.process.recID,
+                  stepID: data?.stepID,
+                  nextStep: this.stepIdClick ? this.stepIdClick : '',
+                  isCallInstance: false
+                  // listStepCbx: this.lstStepInstances,
+                };
+                this.instanceCM = res[0];
+                this.openPoupMoveStage(data,formMD,null,stepReason,dataMore.defaultName,dataCM);
               }
-              this.view.dataService.update(data).subscribe();
-              if (this.kanban) this.kanban.updateCard(data);
-              this.dataSelected = data;
-
-              if (this.detailViewInstance) {
-                this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.listSteps = this.listStepInstances;
-                this.detailViewInstance.loadChangeData();
+              else {
+                this.notificationsService.notifyCode('SYS001');
               }
-              if (this.detailViewPopup) {
-                this.detailViewPopup.dataSelect = this.dataSelected;
-                this.detailViewPopup.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData();
-              }
-
-              this.detectorRef.detectChanges();
-            }
-          });
+            });
+          } else {
+            this.openPoupMoveStage(data,formMD,listStepCbx,stepReason,dataMore.defaultName,null);
+          }
         });
       // });
+    });
+  }
+  openPoupMoveStage(data,formMD,listStepCbx,stepReason,headerTitle,dataCM){
+    let obj = {
+      formModel: formMD,
+      instance: data,
+      listStepCbx: listStepCbx,
+      stepIdClick: this.stepIdClick,
+      stepReason: stepReason,
+      headerTitle: headerTitle,
+      listStepProccess: this.process.steps,
+      lstParticipants: this.lstOrg,
+      isDurationControl: this.checkDurationControl(data.stepID),
+      applyFor: this.process.applyFor,
+      deal:this.instanceCM,
+      dataCM:dataCM
+    };
+
+    var dialogMoveStage = this.callfc.openForm(
+      PopupMoveStageComponent,
+      '',
+      850,
+      900,
+      '',
+      obj
+    );
+    dialogMoveStage.closed.subscribe((e) => {
+      this.isClick = true;
+      this.stepIdClick = '';
+      if (!e || !e.event) {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
+      if (e && e.event != null) {
+        //xu ly data đổ về
+        data = e.event.instance;
+        this.listStepInstances = e.event.listStep;
+        if (e.event.isReason != null) {
+          this.moveReason(null, data, e.event.isReason);
+        }
+        this.view.dataService.update(data).subscribe();
+        if (this.kanban) this.kanban.updateCard(data);
+        this.dataSelected = data;
+
+        if (this.detailViewInstance) {
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.loadChangeData();
+        }
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.listSteps = this.listStepInstances;
+          this.detailViewPopup.loadChangeData();
+        }
+
+        this.detectorRef.detectChanges();
+      }
     });
   }
 

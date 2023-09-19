@@ -62,11 +62,11 @@ export class PopupAddItemSizeComponent
     }
 
     const functionName1$ = this.acService
-      .getDefaultNameFromMoreFunctions('Items', 'grvItems', 'ACS21301')
+      .getDefaultNameFromMoreFunctions$('Items', 'grvItems', 'ACS21301')
       .pipe(map((res) => toCamelCase(res)));
 
     const functionName2$ = this.acService
-      .getDefaultNameFromMoreFunctions('ItemSizes', 'grvItemSizes', 'ACS21304')
+      .getDefaultNameFromMoreFunctions$('ItemSizes', 'grvItemSizes', 'ACS21304')
       .pipe(map((res) => toCamelCase(res)));
 
     combineLatest({

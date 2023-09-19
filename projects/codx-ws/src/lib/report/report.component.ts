@@ -77,4 +77,12 @@ export class ReportComponent extends WSUIComponent{
   removeDuplicates(arr:any) {
     return [...new Set(arr)];
   }
+
+  selectedChange(data:any)
+  {
+    this.codxService.navigate("","/ws/report/detail/"+data.recID);
+    this.codxWsService.functionID = data.reportID;
+    data.functionID = data.reportID;
+    this.codxWsService.listBreadCumb.push(data);
+  }
 }

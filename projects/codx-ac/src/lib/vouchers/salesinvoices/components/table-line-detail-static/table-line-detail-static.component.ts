@@ -31,7 +31,7 @@ export class TableLineDetailStaticComponent
 
   @ViewChild('myTable') tableRef: ElementRef<HTMLElement>;
 
-  hasVerticalScrollbar: boolean;
+  hasVerticalScrollbar: boolean = false;
 
   constructor(injector: Injector) {
     super(injector);
@@ -48,6 +48,14 @@ export class TableLineDetailStaticComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.lines) {
+      const tableElement: HTMLElement = this.tableRef?.nativeElement;
+      if (tableElement) {
+        this.hasVerticalScrollbar =
+          tableElement.offsetHeight < tableElement.scrollHeight;
+      }
+    }
+
     // calculate totalRow
     if (!this.autoSum) {
       return;

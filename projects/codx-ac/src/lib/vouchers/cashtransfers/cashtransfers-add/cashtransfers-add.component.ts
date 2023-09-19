@@ -92,7 +92,7 @@ export class CashtransferAddComponent extends UIComponent {
 
     this.fmVATInvoice = cashTransferService.fmVATInvoice;
     this.fgVatInvoice = cashTransferService.fgVatInvoice;
-    this.invoiceService = acService.createCrudService(
+    this.invoiceService = acService.createCRUDService(
       injector,
       this.fmVATInvoice,
       'AC'
@@ -125,7 +125,7 @@ export class CashtransferAddComponent extends UIComponent {
           }
 
           this.acService
-            .loadComboboxData(
+            .loadComboboxData$(
               gvs.CashBookID.referedValue,
               'AC',
               predicates,
@@ -157,7 +157,7 @@ export class CashtransferAddComponent extends UIComponent {
     });
 
     this.journalService
-      .getJournal(this.cashTransfer.journalNo)
+      .getJournal$(this.cashTransfer.journalNo)
       .subscribe((res) => {
         this.journal = res;
 
@@ -195,7 +195,7 @@ export class CashtransferAddComponent extends UIComponent {
           options.pageLoading = false;
           options.predicates = 'TransID=@0';
           options.dataValues = this.cashTransfer.recID;
-          this.acService.loadDataAsync('AC', options).subscribe((res: any) => {
+          this.acService.loadData$('AC', options).subscribe((res: any) => {
             if (res) {
               this.hasInvoice = true;
               this.detectorRef.markForCheck();

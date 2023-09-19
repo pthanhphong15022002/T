@@ -2110,7 +2110,13 @@
                         <i class="icon-horizontal_rule icon-18"></i>
                       </button>
                     </span>
+                    <ng-container
+                      *ngIf="checkOwner(taskList)"
+                      [ngTemplateOutlet]="avata"
+                      [ngTemplateOutletContext]="{taskList}"
+                    ></ng-container>
                     <div
+                      *ngIf="!checkOwner(taskList)"
                       class="mx-3"
                       #popoverTooltip="ngbPopover"
                       [ngbPopover]="tooltipImg"
@@ -2133,16 +2139,6 @@
                         [objectId]="taskList?.owner"
                         objectType="AD_Users"
                       ></codx-img>
-                      <!-- <codx-imgs 
-                                class="me-2 d-flex align-items-center"
-                                [width]="25"
-                                ojectType="AD_Users"
-                                [numberImages]="1"
-                                [isToolTip]="true"
-                                [objectId]="task?.owner"
-                                [objectName]="getRoleName(task)"
-                              >
-                              </codx-imgs> -->
                     </div>
                     <div class="steplist-hearder">
                       <div class="text-dark fw-bold fs-6">
@@ -2215,7 +2211,13 @@
                               [isStep]="false"
                               [size]="30"
                             ></codx-icon-step>
+                            <ng-container
+                              *ngIf="checkOwner(task)"
+                              [ngTemplateOutlet]="avata"
+                              [ngTemplateOutletContext]="{task}"
+                            ></ng-container>
                             <div
+                              *ngIf="!checkOwner(task)"
                               class="mx-3"
                               #popoverTooltip="ngbPopover"
                               [ngbPopover]="tooltipImg"
@@ -2237,24 +2239,18 @@
                                 [width]="25"
                                 [objectId]="task?.owner"
                                 objectType="AD_Users"
-                              ></codx-img>
-                              <!-- <codx-imgs 
-                                class="me-2 d-flex align-items-center"
-                                [width]="25"
-                                ojectType="AD_Users"
-                                [numberImages]="1"
-                                [isToolTip]="true"
-                                [objectId]="task?.owner"
                                 [objectName]="getRoleName(task)"
-                              >
-                              </codx-imgs> -->
+                              ></codx-img>
                             </div>
+
                             <div class="steplist-hearder">
                               <div class="text-dark fw-bold fs-6">
                                 <span>{{ task?.taskName?.trim() }}</span>
                                 <span
-                                  *ngIf="task?.requireCompleted"
-                                  class="text-danger fw-bold"
+                                  [ngClass]="
+                                    checkExitsParentID(taskList?.task, task)
+                                  "
+                                  class="ms-1"
                                   >*</span
                                 >
                               </div>
@@ -2280,6 +2276,17 @@
                                   [default]="'Giờ'"
                                 >
                                 </codx-label>
+                              </div>
+                              <div *ngIf="task?.fieldID">
+                                <codx-label
+                                  class="text-gray-600 label-colon"
+                                  fiedName="fields"
+                                  [formModel]="formModelStep"
+                                >
+                                </codx-label>
+                                <span class="text-gray-600">
+                                  {{ getFieldInTask(task?.fieldID) }}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -3710,5 +3717,22 @@
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #avata let-data="task">
+  <div
+    class="mx-3"
+    #popoverTooltip="ngbPopover"
+    [ngbPopover]="tooltipImg"
+    [placement]="'top left'"
+    (mouseenter)="popoverTooltip.open()"
+    (mouseleave)="popoverTooltip.close()"
+  >
+    <ng-template #tooltipImg let-data="value">
+      <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px;">O</span>
+      <span class="ms-1 fw-bold">Owner</span>
+    </ng-template>
+    <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px;">O</span>
   </div>
 </ng-template>

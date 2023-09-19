@@ -47,7 +47,7 @@
 <ng-template #body>
   <div class="card-form">
     <!-- Link group -->
-    <div class="form-group" *ngIf="step">
+    <div class="form-group" *ngIf="instanceStep">
       <div class="d-flex align-items-top">
         <codx-label
           class="text-primary me-2"
@@ -56,12 +56,12 @@
           default="Thuộc giai đoạn: "
         >
         </codx-label>
-        <codx-label [default]="step?.stepName"> </codx-label>
+        <codx-label [default]="instanceStep?.stepName"> </codx-label>
       </div>
     </div>
     <!--End Link group -->
     <div 
-      *ngIf="(this.action == 'add' || this.action == 'copy') && isStart" 
+      *ngIf="isStart" 
       class="form-group d-flex align-item-center"
     >
       <codx-label
@@ -78,8 +78,9 @@
           style="width: 100%"
           field="1"
           [label]="'Mới'"
-          [checked]="isStatusNew"
+          [checked]="stepsTasks?.status == '1'"
           (valueChange)="valueChangeRadio($event)"
+          [disabled]="action == 'edit'"
         >
         </codx-input>
       </div>
@@ -89,15 +90,16 @@
           type="radio"
           [name]="'status'"
           field="3"
-          [checked]="!isStatusNew"
+          [checked]="stepsTasks?.status == '3'"
           [label]="'Hoàn thành'"
           (valueChange)="valueChangeRadio($event)"
+          [disabled]="action == 'edit'"
         >
         </codx-input>
       </div>
     </div>
     <div
-      *ngIf="step"
+      *ngIf="instanceStep"
       class="form-group d-flex justify-content-between align-item-center w-100"
     >
       <div class="step-name w-100">
@@ -239,7 +241,7 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="!isShowDate">
+    <div class="form-group" *ngIf="!isShowDate && isStart">
       <codx-label
         fiedName="actualEnd"
         [formModel]="dialog?.formModel"

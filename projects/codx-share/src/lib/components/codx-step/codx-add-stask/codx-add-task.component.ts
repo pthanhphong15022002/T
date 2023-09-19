@@ -47,7 +47,7 @@ export class CodxAddTaskComponent implements OnInit {
   dialog!: DialogRef;
   endDateParent: Date;
   startDateParent: Date;
-  step: DP_Instances_Steps;
+  instanceStep: DP_Instances_Steps;
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
 
@@ -83,7 +83,7 @@ export class CodxAddTaskComponent implements OnInit {
   isAddTM = false;
   startDayOld;
   endDayOld;
-
+  isOneRadio = true;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -107,19 +107,19 @@ export class CodxAddTaskComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.step = dt?.data?.step;
+    this.instanceStep = dt?.data?.instanceStep;
     this.action = dt?.data?.action;
-    // this.isStart = dt?.data?.isStart;
     this.typeTask = dt?.data?.taskType;
     this.ownerParent = dt?.data?.owner; // owner of Parent
-    this.listTask = dt?.data?.listTask || this.step?.tasks;
+    this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
     this.stepsTasks = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    this.isStart = this.step || (this.step?.startDate && this.step?.startDate) ? true  : false;
+    // this.isStart = dt?.data?.isStart;
+    this.isStart = !this.instanceStep || (this.instanceStep && this.instanceStep?.startDate && this.instanceStep?.startDate) ? true  : false;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
@@ -128,7 +128,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.listGroup?.splice(index, 1);
       }
     }else{
-      this.listGroup = JSON.parse(JSON.stringify(this.step?.taskGroups || []));
+      this.listGroup = JSON.parse(JSON.stringify(this.instanceStep?.taskGroups || []));
     }
   }
 
@@ -137,8 +137,8 @@ export class CodxAddTaskComponent implements OnInit {
     this.roles = this.stepsTasks['roles'] || [];
 
     if (!this.stepsTasks?.taskGroupID) {
-      this.startDateParent = new Date(this.step?.startDate || new Date());
-      this.endDateParent = this.step?.endDate ? new Date(this.step?.endDate) : null;
+      this.startDateParent = new Date(this.instanceStep?.startDate || new Date());
+      this.endDateParent = this.instanceStep?.endDate ? new Date(this.instanceStep?.endDate) : null;
     } else {
       this.groupTask = this.listGroup.find(
         (x) => x.refID === this.stepsTasks?.taskGroupID
@@ -171,9 +171,9 @@ export class CodxAddTaskComponent implements OnInit {
       startDays.setDate(startDays?.getDate() + 1);
       this.stepsTasks.endDate = startDays;
     }
-    if (this.step?.fields?.length > 0 && this.stepsTasks?.fieldID) {
+    if (this.instanceStep?.fields?.length > 0 && this.stepsTasks?.fieldID) {
       let fieldID = this.stepsTasks?.fieldID;
-      this.listFieldCopy = JSON.parse(JSON.stringify(this.step?.fields));
+      this.listFieldCopy = JSON.parse(JSON.stringify(this.instanceStep?.fields));
       this.listField = this.listFieldCopy?.filter((field) =>
         fieldID?.includes(field?.recID)
       );
@@ -197,7 +197,7 @@ export class CodxAddTaskComponent implements OnInit {
                 md.bought &&
                 md.boughtModule?.moduleID == 'TM1'
             );
-            this.stepsTasks.createTask = this.isBoughtTM;
+            this.stepsTasks.createTask = this.action == 'add' ? this.isBoughtTM : this.stepsTasks?.createTask ;
           }
         });
     }
@@ -246,8 +246,8 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     } else {
       this.groupTask = this.listGroup.find((x) => x.recID === null);
-      this.startDateParent = new Date(this.step['startDate']);
-      this.endDateParent = new Date(this.step['endDate']);
+      this.startDateParent = new Date(this.instanceStep['startDate']);
+      this.endDateParent = new Date(this.instanceStep['endDate']);
       this.stepsTasks['startDate'] = this.startDateParent || new Date();
       this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
     }
@@ -263,7 +263,7 @@ export class CodxAddTaskComponent implements OnInit {
 
   changeValueDateExpected(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
-    if (this.step) {
+    if (this.instanceStep) {
       if (this.isLoadDate) {
         this.isLoadDate = !this.isLoadDate;
         return;
@@ -383,13 +383,13 @@ export class CodxAddTaskComponent implements OnInit {
         switch (role?.roleType) {
           case 'Departments':
           case 'OrgHierarchy':
-            data = [role?.objectID, this.step?.instanceID, this.ownerParent];
+            data = [role?.objectID, this.instanceStep?.instanceID, this.ownerParent];
             break;
           case 'Roles':
           case 'Positions':
             data = [
               role?.objectID,
-              this.step?.instanceID,
+              this.instanceStep?.instanceID,
               this.ownerParent,
               role?.objectType,
             ];
@@ -484,7 +484,9 @@ export class CodxAddTaskComponent implements OnInit {
     event.data.length;
   }
 
-  valueChangeRadio(event) {
+  valueChangeRadio(event) { 
+    if(!this.isOneRadio) return;
+    this.isOneRadio = false;
     this.stepsTasks.status = event?.field;
     this.stepsTasks.progress = event?.field == '3' ? 100 : 0;
     if (event?.field == '3') {
@@ -599,7 +601,7 @@ export class CodxAddTaskComponent implements OnInit {
         ])
         .subscribe((res) => {
           if (res) {
-            this.step.fields = this.listFieldCopy;
+            this.instanceStep.fields = this.listFieldCopy;
             this.dialog.close({
               task: res,
               progressGroup: null,
@@ -608,7 +610,7 @@ export class CodxAddTaskComponent implements OnInit {
           }
         });
     } else {
-      this.dialog.close(task);
+      this.dialog.close({task,fields: this.listField});
     }
   }
   //#endregion
@@ -635,7 +637,7 @@ export class CodxAddTaskComponent implements OnInit {
       if (index != -1) {
         this.listField[index].dataValue = result;
       }
-      let a = this.step?.fields;
+      let a = this.instanceStep?.fields;
     }
   }
 
@@ -691,14 +693,20 @@ export class CodxAddTaskComponent implements OnInit {
     } else {
       //edit
       if (this.isStart) {
-        if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
-          this.isShowDate = false;
-          this.isShowTime = false;
-          this.isAddTM = false;
-        } else {
-          this.isShowDate = true;
-          this.isShowTime = true;
-          this.isAddTM = true;
+        if(this.stepsTasks?.status == '3'){
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+        }else{
+          if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
+            this.isShowDate = false;
+            this.isShowTime = false;
+            this.isAddTM = false;
+          } else {
+            this.isShowDate = true;
+            this.isShowTime = true;
+            this.isAddTM = true;
+          }
         }
       } else {
         this.isShowDate = false;

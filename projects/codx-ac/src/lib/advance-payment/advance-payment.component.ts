@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { AdvancePaymentAddComponent } from './advance-payment-add/advance-payment-add.component';
 
@@ -14,6 +14,9 @@ export class AdvancePaymentComponent extends UIComponent{
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+
   private destroy$ = new Subject<void>();
   views: Array<ViewModel> = [];
   button: ButtonModel = {
@@ -24,7 +27,13 @@ export class AdvancePaymentComponent extends UIComponent{
   dialog: DialogRef;
   funcName: any;
   gridViewSetup: any;
-  company: any
+  company: any;
+  itemSelected: any;
+  fmAdvancedPaymentLines: FormModel = {
+    entityName: 'AC_AdvancedPaymentLines',
+    formName: 'AdvancedPaymentLines',
+    gridViewName: 'grvAdvancedPaymentLines',
+  }
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -59,6 +68,15 @@ export class AdvancePaymentComponent extends UIComponent{
         sameData: true,
         model: {
           template2: this.templateMore,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
       },
     ];
@@ -243,6 +261,18 @@ export class AdvancePaymentComponent extends UIComponent{
 
   setDefault() {
     return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync');
+  }
+
+  changeItemDetail(event) {
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.detectorRef.detectChanges();
+      }
+    }
+    this.detectorRef.detectChanges();
   }
   //End Function
 }

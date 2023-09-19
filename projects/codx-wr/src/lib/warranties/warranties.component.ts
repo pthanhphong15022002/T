@@ -52,9 +52,11 @@ export class WarrantiesComponent
   @ViewChild('viewDetail') viewDetail: ViewDetailWrComponent;
   @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
+  @ViewChild('itemComment') itemComment: TemplateRef<any>;
 
   dialogStatus: DialogRef;
   dialogPriority: DialogRef;
+  dialogComment: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -92,6 +94,7 @@ export class WarrantiesComponent
   cancelledNote = '';
   status = '';
   priority = '';
+  comment = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -265,6 +268,10 @@ export class WarrantiesComponent
     this.changeDataMF(e.e, e.data);
   }
 
+  updateComment(e) {
+    this.updateCommentWarranty(e.data);
+  }
+
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
@@ -329,6 +336,7 @@ export class WarrantiesComponent
             case 'WR0101_4':
             case 'WR0101_5':
             case 'WR0101_6':
+            case 'WR0101_7':
               res.disabled = true;
               break;
             default:
@@ -343,6 +351,7 @@ export class WarrantiesComponent
               case 'WR0101_2':
               case 'WR0101_4':
               case 'WR0101_6':
+              case 'WR0101_7':
                 res.disabled = true;
                 break;
               default:
@@ -351,6 +360,7 @@ export class WarrantiesComponent
           } else {
             switch (res.functionID) {
               case 'WR0101_5':
+              case 'WR0101_7':
                 res.disabled = true;
                 break;
             }
@@ -675,7 +685,7 @@ export class WarrantiesComponent
               this.updateStatus,
               '',
               500,
-              200
+              350
             );
             this.dialogStatus.closed.subscribe((ele) => {
               if (ele && ele?.event) {
@@ -727,6 +737,9 @@ export class WarrantiesComponent
     if (type == 'status') {
       data = [this.dataSelected?.recID, this.status, this.cancelledNote];
       methodName = 'UpdateStatusWarrantyAsync';
+    } else if (type == 'comment') {
+      data = [this.dataSelected?.recID, this.comment];
+      methodName = 'UpdateCommentWarrantyAsync';
     } else {
       data = [this.dataSelected?.recID, this.priority];
       methodName = 'UpdatePriorityWarrantyAsync';
@@ -743,6 +756,8 @@ export class WarrantiesComponent
         if (res) {
           if (type == 'status') {
             this.dialogStatus.close(res);
+          } else if (type == 'comment') {
+            this.dialogComment.close(res);
           } else {
             this.dialogPriority.close(res);
           }
@@ -758,6 +773,24 @@ export class WarrantiesComponent
     this.dialogPriority.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  updateCommentWarranty(data) {
+    this.dataSelected = data;
+    this.comment = this.dataSelected.comment;
+    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
+    this.titleAction = event.description;
+    this.dialogComment = this.callfc.openForm(this.itemComment, '', 600, 400);
+    this.dialogComment.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.comment = this.comment;
         this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();

@@ -540,14 +540,12 @@
               class="d-flex mb-1"
               *ngIf="loadParam && param?.ProjectControl != '0'"
             >
-              <span class="fw-bold">
-                <codx-label
-                  class="label-colon"
-                  fiedName="projectID"
-                  [formModel]="formModel"
-                  default="Dự án"
-                ></codx-label>
-              </span>
+              <codx-label
+                class="label-colon"
+                name="projectNameTasks"
+                [formModel]="formModel"
+                default="Dự án"
+              ></codx-label>
               <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{
                 itemSelected?.projectName
               }}</span>
@@ -565,11 +563,25 @@
                     | async
                 "
               ></span>
+              <!-- <span class="fw-bold">
+                <codx-label
+                  class="label-colon"
+                  fiedName="projectID"
+                  [formModel]="formModel"
+                  default="Mã dự án"
+                ></codx-label>
+              </span>  -->
               <!-- <span
-                #projectName
+                class="text-gray-700"
+                #projectID
                 [innerHTML]="
                   itemSelected?.projectID
-                    | formatvalue : formModel : 'projectID'
+                    | formatvalue
+                      : formModel
+                      : 'projectID'
+                      : projectID
+                      : 'Projects'
+                      : 'grvProjects'
                     | async
                 "
               ></span> -->

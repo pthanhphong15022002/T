@@ -345,7 +345,11 @@
       (change)="changeMode($event)"
     /> -->
     <label class="mx-2 form-check-label" for="isOrgUnitID">
-      Xem data theo phòng ban
+      <codx-label
+        fiedName="isLoadOrgUnitID"
+        [formModel]="formModel"
+        default="Xem data theo phòng ban"
+      ></codx-label>
     </label>
   </div>
 
@@ -381,7 +385,13 @@
     </div>
 
     <div class="card-body scroll-y h-100 pt-4">
-      <div class="text-dark fw-bold mt-5 mb-3">Căn trang</div>
+      <div class="text-dark fw-bold mt-5 mb-3">
+        <codx-label
+          fiedName="pageFit"
+          [formModel]="formModel"
+          default="Căn trang"
+        ></codx-label>
+      </div>
       <div class="form-check my-2 mx-3">
         <input
           ngDefaultControl
@@ -438,7 +448,13 @@
         </label>
       </div>
 
-      <div class="text-dark fw-bold mt-5 mb-3">Định hướng sơ đồ</div>
+      <div class="text-dark fw-bold mt-5 mb-3">
+        <codx-label
+          fiedName="orientation"
+          [formModel]="formModel"
+          default="Định hướng"
+        ></codx-label>
+      </div>
       <div class="form-check my-2 mx-3">
         <input
           ngDefaultControl
@@ -465,7 +481,13 @@
         <label class="form-check-label" for="orientationLeft">Bên trái </label>
       </div>
 
-      <div class="text-dark fw-bold mt-5 mb-3">Vị trí cấp con</div>
+      <div class="text-dark fw-bold mt-5 mb-3">
+        <codx-label
+          fiedName="childrenPlacement"
+          [formModel]="formModel"
+          default="Vị trí cấp con"
+        ></codx-label>
+      </div>
       <div class="form-check my-2 mx-3">
         <input
           ngDefaultControl
@@ -496,7 +518,13 @@
         </label>
       </div>
 
-      <div class="text-dark fw-bold mt-5 mb-3">Thông tin thẻ đơn vị</div>
+      <div class="text-dark fw-bold mt-5 mb-3">
+        <codx-label
+          fiedName="inforOrgchart"
+          [formModel]="formModel"
+          default="Thông tin thẻ đơn vị"
+        ></codx-label>
+      </div>
       <select
         id="teams"
         class="form-select"
@@ -517,7 +545,13 @@
         </option>
       </select>
 
-      <div class="text-dark fw-bold mt-5 mb-3">Xem theo cấp</div>
+      <div class="text-dark fw-bold mt-5 mb-3">
+        <codx-label
+          fiedName="viewLevel"
+          [formModel]="formModel"
+          default="Xem theo cấp"
+        ></codx-label>
+      </div>
       <select
         id="level"
         class="form-select"
@@ -2858,7 +2892,7 @@
 </div>
 
 <ng-template #contactTemplate let-itemConfig="context" let-isCursor="isCursor">
-  <ng-container *ngFor="let item of dataVll" #items>
+  <ng-container *ngFor="let item of dataVll">
     <div
       *ngIf="itemConfig.context.orgUnitType === item.value"
       [style]="
@@ -2894,6 +2928,7 @@
         </div>
         <div class="w-20px h-30px org-mfunc">
           <codx-mfunc
+            *ngIf="activeMFC"
             [formModel]="view.formModel"
             (clickMF)="clickMF($event, itemConfig.context.data)"
             [isBookMark]="false"
@@ -2906,13 +2941,13 @@
       <ng-container class="px-2" *ngIf="!selectedTeam.includes('No')">
         <div
           class="d-flex flex-column flex-grow-1 align-items-center mt-5 position-relative"
-          (mouseleave)="
-            mouseLeave(itemConfig.context.employeeManager, itemConfig.id)
-          "
         >
           <codx-img
             (mouseenter)="
               mouseEnter(itemConfig.context.employeeManager, itemConfig.id)
+            "
+            (mouseleave)="
+              mouseLeave(itemConfig.context.employeeManager, itemConfig.id)
             "
             class="symbol symbol-35 symbol-circle"
             [width]="35"

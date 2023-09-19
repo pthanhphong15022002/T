@@ -63,7 +63,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'orgchartportal',
+    path: 'orgchart',
     component: LayoutNoAsideComponent,
     children: [
       {

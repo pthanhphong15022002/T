@@ -531,16 +531,10 @@ export class ResourcesComponent extends UIComponent {
         option
       );
       dialog.closed.subscribe((x) => {
-        if (!x.event) this.view.dataService.clear();
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.detectorRef.detectChanges();
-            });
-        else if (x.event) {
+        if (!x?.event) this.view.dataService.clear();
+        if (x?.event != null) {
           x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
+          this.view.dataService.add(x?.event).subscribe();
         }
       });
     });
@@ -581,7 +575,7 @@ export class ResourcesComponent extends UIComponent {
     if (obj) {
       this.view.dataService.dataSelected = obj;
       this.view.dataService
-        .copy(this.view.dataService.dataSelected)
+        .copy()
         .subscribe((res) => {
           let option = new SidebarModel();
           option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';

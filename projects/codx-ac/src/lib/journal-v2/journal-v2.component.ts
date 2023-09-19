@@ -156,16 +156,16 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.assignVllToProp2('AC138', 'journalTypes138');
 
     combineLatest({
-      users: this.journalService.getUsers(),
-      userGroups: this.journalService.getUserGroups(),
-      userRoles: this.journalService.getUserRoles(),
+      users: this.journalService.getUsers$(),
+      userGroups: this.journalService.getUserGroups$(),
+      userRoles: this.journalService.getUserRoles$(),
       random: this.randomSubject.asObservable(),
     }).subscribe(({ users, userGroups, userRoles }) => {
       const options = new DataRequest();
       options.entityName = 'AC_JournalsPermission';
       options.pageLoading = false;
       this.acService
-        .loadDataAsync('AC', options)
+        .loadData$('AC', options)
         .subscribe((journalPermissions: IJournalPermission[]) => {
           let createrMap: Map<string, string[]> = new Map();
           let posterMap: Map<string, string[]> = new Map();
@@ -422,7 +422,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   delete(data): void {
-    this.journalService.hasVouchers(data).subscribe((hasVouchers) => {
+    this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
       if (hasVouchers) {
         this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
         return;

@@ -33,6 +33,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   headerText: '';
   ops = ['d','m', 'y'];
   result;
+  changedInForm = false;
+
   fromDateFormat;
   toDateFormat;
   headerTextCalendar: any = [];
@@ -108,6 +110,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       }
     }
 
+  }
+
+  ClickCalendar(event){
+    this.changedInForm = true;
   }
 
   onInit(): void {

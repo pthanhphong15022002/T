@@ -166,13 +166,22 @@ export class PopupAddWarrantyComponent implements OnInit {
   async addCustomer() {
     let lstAddress = [];
     if (this.data?.address != null && this.data?.address?.trim() != '') {
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      let lever = 0;
+      if (param?.length > 0) {
+        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        lever = paramDefault['ControlInputAddress'] ?? 0;
+      }
       let json = await firstValueFrom(
         this.api.execSv<any>(
           'BS',
           'ERM.Business.BS',
           'ProvincesBusiness',
           'GetLocationAsync',
-          [this.data.address, 3]
+          [this.data.address, lever]
         )
       );
       var tmp = {};

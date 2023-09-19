@@ -16,6 +16,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { OD_DispatchDashBoard } from './models/OD_DispatchDashBoard';
+import { AccumulationChartComponent } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'oddashboard',
@@ -25,6 +27,7 @@ import {
 export class ODDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChildren('od_dashboard') templates1: QueryList<any>;
+  @ViewChild('pie1') pie1: AccumulationChartComponent;
   @Input() panels: any;
   @Input() datas: any;
   views: Array<ViewModel> = [];
@@ -34,35 +37,13 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
   arrReport: any = [];
   isEditMode = false;
   isLoaded = false;
-
-  data2 = [
-    { status: 'Mới tạo', quantity: 8 },
-    { status: 'Đang xử lý', quantity: 8 },
-    { status: 'Hoàn tất', quantity: 4 },
-    { status: 'Quá hạn chưa hoàn tất', quantity: 3 },
-  ];
+  dataset: OD_DispatchDashBoard[] = [];
 
   data3 = [
     { moduleName: 'Quản lý công việc', percentage: 50 },
     { moduleName: 'Công văn', percentage: 25 },
     { moduleName: 'Trình ký', percentage: 15 },
     { moduleName: 'Khác', percentage: 10 },
-  ];
-
-  data7_1 = [
-    { orgUnitName: 'Phòng kế toán', quantity: 25 },
-    { orgUnitName: 'Phòng nhân sự', quantity: 10 },
-    { orgUnitName: 'Ban giám đốc', quantity: 15 },
-    { orgUnitName: 'Phòng hành chính', quantity: 5 },
-    { orgUnitName: 'Phòng phát triển', quantity: 2 },
-  ];
-
-  data7_2 = [
-    { orgUnitName: 'Phòng kế toán', quantity: 12 },
-    { orgUnitName: 'Phòng nhân sự', quantity: 5 },
-    { orgUnitName: 'Ban giám đốc', quantity: 25 },
-    { orgUnitName: 'Phòng hành chính', quantity: 12 },
-    { orgUnitName: 'Phòng phát triển', quantity: 3 },
   ];
 
   constructor(
@@ -119,10 +100,10 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
               'GetReportSourceAsync',
               []
             )
-            .subscribe((res) => {
-              console.log(res);
+            .subscribe((res: OD_DispatchDashBoard[]) => {
+              this.dataset = res;
+              this.isLoaded = true;
             });
-          this.isLoaded = true;
         }
       }
     });
@@ -142,7 +123,7 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
     //     break;
     // }
 
-    alert('OK');
+    this.isLoaded = true;
 
     this.detectorRef.detectChanges();
   }
@@ -180,5 +161,67 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
 
   toFixed(value: number) {
     return value % 1 === 0 ? value : value.toFixed(2);
+  }
+
+  groupByStatus(field: string) {
+    const lstField = [...new Set(this.dataset.map((item) => item[field]))];
+
+    let result = [];
+
+    for (let i = 0; i < lstField.length; i++) {
+      let quantity = this.dataset.filter((data: OD_DispatchDashBoard) => {
+        return data[field] === lstField[i];
+      }).length;
+
+      result.push({
+        statusName: lstField[i],
+        quantity: quantity,
+      });
+    }
+
+    console.log(result);
+
+    return result;
+  }
+
+  groupByOrgUnit(field: string = 'orgUnitName', type: string) {
+    const lstField = [...new Set(this.dataset.map((item) => item[field]))];
+
+    let result = [];
+
+    for (let i = 0; i < lstField.length; i++) {
+      let quantity = this.dataset.filter((data: OD_DispatchDashBoard) => {
+        return data[field] === lstField[i] && data['dispatchType'] === type;
+      }).length;
+
+      result.push({
+        orgUnitName: lstField[i],
+        quantity: quantity,
+      });
+    }
+
+    console.log(result);
+
+    return result;
+  }
+
+  getDispatchsByType(type: string) {
+    return this.dataset.filter((data: OD_DispatchDashBoard) => {
+      return data.dispatchType === type;
+    }).length;
+  }
+
+  getUrgencyDispatch(status: string = '') {
+    return this.dataset.filter((data: OD_DispatchDashBoard) => {
+      if (status === '3') {
+        return (
+          (data.urgency === '5' || data.urgency === '7') && data.status === '3'
+        );
+      } else {
+        return (
+          (data.urgency === '5' || data.urgency === '7') && data.status !== '3'
+        );
+      }
+    }).length;
   }
 }

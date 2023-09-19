@@ -35,28 +35,41 @@
     </div>
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-end align-items-center">
-        <codx-label class="me-2"
+        <codx-label
+          class="me-2 header-font-size"
           fiedName="VoucherNo"
           [formModel]="form.formModel"
           [setRequire]="false"
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span class="text-gray-600"
-          style="font-size: 13px !important;">
+        <span
+          *ngIf="advancedPayment?.voucherNo"
+          class="text-gray-600 voucherText"
+          style="font-size: 12px !important"
+        >
           {{ advancedPayment?.voucherNo }}
+        </span>
+        <span
+          *ngIf="!advancedPayment?.voucherNo"
+          class="text-gray-600 voucherText"
+          style="font-size: 12px !important"
+        >
+          {{ "AC0028" | mssg | async }}
         </span>
       </div>
       <div class="d-flex justify-content-end align-items-center">
-        <codx-label class="me-2"
+        <codx-label
+          class="me-2 header-font-size"
           fiedName="VoucherDate"
           [formModel]="form.formModel"
           [setRequire]="false"
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span class="text-gray-600"
-        style="font-size: 13px !important;"
+        <span
+          class="text-gray-600 voucherText"
+          style="font-size: 12px !important"
         >
           {{ formatDate(advancedPayment?.voucherDate) }}
         </span>
@@ -72,20 +85,24 @@
       <!-- Thông tin chung -->
       <div>
         <div class="row text-center mt-2 text-primary fw-bold">
-          <codx-label style="font-size: 35px;" default="Đề nghị tạm ứng"></codx-label>
+          <codx-label
+            style="font-size: 35px"
+            default="Đề nghị tạm ứng"
+          ></codx-label>
         </div>
         <div class="row">
           <div>
-            <codx-label 
-              class="fw-bold" 
+            <codx-label
+              class="fw-bold"
               fiedName="ObjectID"
-              [formModel]="form.formModel">
+              [formModel]="form.formModel"
+            >
             </codx-label>
             <codx-inplace
               type="combobox"
-              [refValue]="form?.gridviewSetup?.ObjectID.referedValue"  
+              [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
               [refType]="form?.gridviewSetup?.ObjectID.referedType"
-              [emptyText]="form?.gridviewSetup?.ObjectID.headerText" 
+              [emptyText]="form?.gridviewSetup?.ObjectID.headerText"
               field="objectID"
               [value]="advancedPayment.objectID"
               [class]="'om-input w-100'"
@@ -95,46 +112,65 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-4">
+          <div class="col-3">
             <div class="row align-items-start">
               <div>
-                  <codx-label 
-                    class="fw-bold" 
-                    fiedName="TotalAmt"
-                    [formModel]="form.formModel">
-                  </codx-label>
-                  <div class="d-flex align-items-center">
-                    <codx-inplace
-                    type="text"
-                    [refValue]="form?.gridviewSetup?.TotalAmt.referedValue"  
-                    [refType]="form?.gridviewSetup?.TotalAmt.referedType"
-                    [emptyText]="form?.gridviewSetup?.TotalAmt.headerText"
-                    field="totalAmt"
-                    [value]="advancedPayment.totalAmt"
-                    [class]="'om-input w-auto'"
-                    [cssClass]="'om-input w-100 fs-4'"
-                    (valueChange)="valueChange($event)"
-                  >
-                  </codx-inplace>
-                  <span class="text-gray-600"
-                      style="font-size: 13px !important; padding-bottom: 5px;">
-                      {{ advancedPayment?.currencyID }}
-                  </span>
-                </div>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="TotalAmt"
+                  [formModel]="form.formModel"
+                >
+                </codx-label>
+                <codx-inplace
+                  type="text"
+                  [refValue]="form?.gridviewSetup?.TotalAmt.referedValue"
+                  [refType]="form?.gridviewSetup?.TotalAmt.referedType"
+                  [emptyText]="form?.gridviewSetup?.TotalAmt.headerText"
+                  field="totalAmt"
+                  [value]="advancedPayment.totalAmt"
+                  [class]="'om-input w-auto amount'"
+                  [cssClass]="'om-input w-100 fs-4'"
+                  (valueChange)="valueChange($event)"
+                >
+                </codx-inplace>
               </div>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-2">
             <div class="row align-items-center">
               <div>
-                <codx-label 
-                  class="fw-bold" 
+                <codx-label
+                  class="fw-bold"
+                  fiedName="CurrencyID"
+                  [formModel]="form.formModel"
+                >
+                </codx-label>
+                <codx-inplace
+                  type="combobox"
+                  [refValue]="form?.gridviewSetup?.CurrencyID.referedValue"
+                  [refType]="form?.gridviewSetup?.CurrencyID.referedType"
+                  [emptyText]="form?.gridviewSetup?.CurrencyID.headerText"
+                  field="currencyID"
+                  [value]="advancedPayment.currencyID"
+                  [class]="'om-input w-100'"
+                  [cssClass]="'om-input w-100 fs-4'"
+                  (valueChange)="valueChange($event)"
+                ></codx-inplace>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row align-items-center">
+              <div>
+                <codx-label
+                  class="fw-bold"
                   fiedName="PostedDate"
-                  [formModel]="form.formModel">
+                  [formModel]="form.formModel"
+                >
                 </codx-label>
                 <codx-inplace
                   type="datetime"
-                  [refValue]="form?.gridviewSetup?.PostedDate.referedValue"  
+                  [refValue]="form?.gridviewSetup?.PostedDate.referedValue"
                   [refType]="form?.gridviewSetup?.PostedDate.referedType"
                   [emptyText]="form?.gridviewSetup?.PostedDate.headerText"
                   field="postedDate"
@@ -152,11 +188,12 @@
                 <codx-label
                   class="fw-bold"
                   fiedName="PmtMethodID"
-                  [formModel]="form.formModel">
+                  [formModel]="form.formModel"
+                >
                 </codx-label>
                 <codx-inplace
                   type="text"
-                  [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"  
+                  [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
                   [refType]="form?.gridviewSetup?.PmtMethodID.referedType"
                   [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
                   field="pmtMethodID"
@@ -171,16 +208,17 @@
         </div>
         <div class="row">
           <div>
-            <codx-label 
-              class="fw-bold" 
+            <codx-label
+              class="fw-bold"
               fiedName="ReasonID"
-              [formModel]="form.formModel">
+              [formModel]="form.formModel"
+            >
             </codx-label>
             <codx-inplace
               type="combobox"
-              [refValue]="form?.gridviewSetup?.ReasonID.referedValue"  
+              [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
               [refType]="form?.gridviewSetup?.ReasonID.referedType"
-              [emptyText]="form?.gridviewSetup?.ReasonID.headerText" 
+              [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
               field="reasonID"
               [value]="advancedPayment.reasonID"
               [class]="'om-input w-100 '"
@@ -189,18 +227,19 @@
             ></codx-inplace>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div>
-            <codx-label 
-              class="fw-bold" 
+            <codx-label
+              class="fw-bold"
               fiedName="Memo"
-              [formModel]="form.formModel">
+              [formModel]="form.formModel"
+            >
             </codx-label>
             <codx-inplace
               type="text"
-              [refValue]="form?.gridviewSetup?.Memo.referedValue"  
+              [refValue]="form?.gridviewSetup?.Memo.referedValue"
               [refType]="form?.gridviewSetup?.Memo.referedType"
-              [emptyText]="form?.gridviewSetup?.Memo.headerText" 
+              [emptyText]="form?.gridviewSetup?.Memo.headerText"
               [value]="advancedPayment.memo"
               field="memo"
               [class]="'om-input w-100 '"
@@ -208,14 +247,14 @@
               (valueChange)="valueChange($event)"
             ></codx-inplace>
           </div>
-        </div>
+        </div> -->
         <div class="mt-2 text-primary fw-bold fs-5">
           <codx-label default="Chi tiết"></codx-label>
         </div>
       </div>
       <!-- Header của Chi tiết -->
-      <div class="mt-5">
-        <div class="d-flex justify-content-start flex-column pb-3">
+      <div class="mt-1">
+        <div class="d-flex justify-content-start flex-column">
           <div class="d-flex justify-content-start flex-column">
             <div class="d-flex align-items-center cursor-pointer w-100">
               <div class="w-50 d-flex align-items-center ps-4">
@@ -224,9 +263,9 @@
                     class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
                   >
                     <codx-label
-                      class="w-100 fw-bold"
-                      default="Nội dung"
-                      name="detailName"
+                      class="fw-bold"
+                      fiedName="Note"
+                      [formModel]="fmAdvancedPaymentLines"
                     >
                     </codx-label>
                   </div>
@@ -237,9 +276,9 @@
                   class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
                 >
                   <codx-label
-                    class="w-100 fw-bold"
-                    default="Số tiền"
-                    name="CostPrice"
+                    class="fw-bold"
+                    fiedName="DR"
+                    [formModel]="fmAdvancedPaymentLines"
                   >
                   </codx-label>
                 </div>
@@ -252,15 +291,18 @@
       <div
         class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
       >
-        <div class="flex-column d-flex justify-content-start px-9">
+        <div class="flex-column d-flex justify-content-start px-6">
           <div
             class="d-flex justify-content-start flex-column"
-            *ngFor="let item of vendorData; let i = index"
+            *ngFor="let item of advancedPaymentLines; let i = index"
           >
             <div class="d-flex justify-content-start flex-column pb-3 mt-2">
               <div
                 class="d-flex align-items-center flex-row cursor-pointer w-100"
               >
+                <span
+                  class="icon-brightness_1 fs-12 d-flex align-items-center text-warning mr-2"
+                ></span>
                 <div
                   class="w-50 d-flex justify-content-start align-items-center"
                 >
@@ -269,10 +311,11 @@
                   >
                     <codx-inplace
                       type="text"
-                      field="detailName"
+                      field="note"
                       [class]="'om-input w-100'"
                       [cssClass]="'om-input w-100 fs-4'"
-                      [value]="item?.detailName"
+                      [value]="item?.note"
+                      (valueChange)="lineChange($event, i)"
                     ></codx-inplace>
                   </div>
                 </div>
@@ -283,10 +326,11 @@
                   >
                     <codx-inplace
                       type="text"
-                      field="costPrice"
-                      [class]="'om-input w-100'"
+                      field="dr"
+                      [class]="'om-input w-100 amount'"
                       [cssClass]="'om-input w-100 fs-4'"
-                      [value]="item?.costPrice"
+                      [value]="item?.dr"
+                      (valueChange)="lineChange($event, i)"
                     ></codx-inplace>
                   </div>
                   <div
@@ -296,7 +340,7 @@
                       type="button"
                       class="btn btn-icon btn-sm btn-light-danger om-hover-mf"
                       ngbTooltip="Xóa"
-                      (click)="onDelete(i)"
+                      (click)="deleteLine(i)"
                     >
                       <i class="icon-close"></i>
                     </button>
@@ -308,7 +352,7 @@
           <div class="w-100 h-100 flex-column d-flex justify-content-start">
             <div
               class="d-flex align-items-center cursor-pointer om-add-btn py-3 ps-8 w-fit"
-              (click)="addNewDetail()"
+              (click)="addLine()"
             >
               <i class="icon-add_circle_outline me-3 om-fs-3"></i>
               <codx-label
@@ -321,7 +365,7 @@
         </div>
       </div>
       <!-- Trường kế hoạch công tác -->
-      <div class="d-flex align-items-center">
+      <!-- <div class="d-flex align-items-center">
         <span
           class="text-primary fw-bold"
           style="margin-right: 15px"
@@ -329,31 +373,47 @@
         ></span>
         <span style="margin-right: 15px" [innerHTML]="'AR2023010001'"></span>
         <i class="icon-link text-primary icon-30"></i>
+      </div> -->
+
+      <!-- Các tệp đính kèm -->
+      <div class="d-flex flex-column height-attachments">
+        <div class="d-flex justify-content-between align-items-center mb-2 form-group">
+          <codx-label default="Tài liệu tham khảo" name="lblAttachments" [formModel]="form.formModel">
+          </codx-label>
+        </div>
+        <div class="AttachmentFile-group flex-nowrap">
+          <codx-attachment #attachment [objectType]="form?.formModel?.entityName" hideBtnSave="1" hideFolder="1"
+            hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
+            [objectId]="advancedPayment?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
+            (fileAdded)="fileAdded($event)">
+          </codx-attachment>
+        </div>
       </div>
+
       <!-- Các button -->
       <div class="d-flex justify-content-between my-5 px-9">
         <button
-            style="border: 1px solid var(--primary-dark) !important"
-            type="button"
-            class="btn btn-md btn-light-primary me-2 rounded-15"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-cloud_upload icon-16"></i>
-              <codx-label
-                class="fw-normal"
-                fiedName="lblUpload"
-                default="Tệp đính kèm"
-              ></codx-label>
-            </div>
-          </button>
+          style="border: 1px solid var(--primary-dark) !important"
+          type="button"
+          class="btn btn-md btn-light-primary me-2 rounded-15"
+          (click)="popupUploadFile()"
+        >
+          <div class="d-flex align-items-center">
+            <i class="icon-cloud_upload icon-16"></i>
+            <codx-label
+              class="fw-normal"
+              fiedName="lblUpload"
+              default="Tệp đính kèm"
+            ></codx-label>
+          </div>
+        </button>
         <div>
           <button
             style="border: 1px solid var(--primary-dark) !important"
             type="button"
             class="btn btn-md btn-light-primary me-2 rounded-15"
-            (keydown.enter)="onSave(false); 
-            $event.preventDefault()" 
-            (click)="onSave(false)"
+            (keydown.enter)="onSave(); $event.preventDefault()"
+            (click)="onSave()"
           >
             <div class="d-flex align-items-center">
               <i class="icon-add_to_photos icon-16"></i>
@@ -369,9 +429,8 @@
             type="button"
             class="btn btn-md btn-light-primary rounded-15"
             style="border: 1px solid var(--primary-dark) !important"
-            (keydown.enter)="onSave(true); 
-            $event.preventDefault()" 
-            (click)="onSave(true)"
+            (keydown.enter)="onSave(); $event.preventDefault()"
+            (click)="onSave()"
           >
             <div class="d-flex align-items-center">
               <i class="icon-save_alt icon-16"></i>
@@ -386,4 +445,13 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #morefunction let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="form.formModel"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
 </ng-template>

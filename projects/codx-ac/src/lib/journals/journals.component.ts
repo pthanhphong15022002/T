@@ -98,16 +98,16 @@ export class JournalsComponent extends UIComponent {
     // dùng tạm, chỉnh sau 😐
     // get data for permission column
     combineLatest({
-      users: this.journalService.getUsers(),
-      userGroups: this.journalService.getUserGroups(),
-      userRoles: this.journalService.getUserRoles(),
+      users: this.journalService.getUsers$(),
+      userGroups: this.journalService.getUserGroups$(),
+      userRoles: this.journalService.getUserRoles$(),
       random: this.randomSubject.asObservable(),
     }).subscribe(({ users, userGroups, userRoles }) => {
       const options = new DataRequest();
       options.entityName = 'AC_JournalsPermission';
       options.pageLoading = false;
       this.acService
-        .loadDataAsync('AC', options)
+        .loadData$('AC', options)
         .subscribe((journalPermissions: IJournalPermission[]) => {
           let createrMap: Map<string, string[]> = new Map();
           let posterMap: Map<string, string[]> = new Map();
@@ -339,7 +339,7 @@ export class JournalsComponent extends UIComponent {
   }
 
   delete(data): void {
-    this.journalService.hasVouchers(data).subscribe((hasVouchers) => {
+    this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
       if (hasVouchers) {
         this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
         return;

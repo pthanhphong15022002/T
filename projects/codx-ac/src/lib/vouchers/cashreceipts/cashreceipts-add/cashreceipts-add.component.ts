@@ -21,7 +21,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('eleGridCashReceipt') eleGridCashReceipt: CodxGridviewV2Component; //? element codx-grv2 lưới CashReceipt
   @ViewChild('eleGridSettledInvoices') eleGridSettledInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới SettledInvoices
-  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
   @ViewChild('formCashReceipt') public formCashReceipt: CodxFormComponent; //? element codx-form của CashReceipt
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn công nợ,hóa đơn GTGT)
   @ViewChild('eleCbxReasonID') eleCbxReasonID: any; //? element codx-input cbx của lý do chi
@@ -224,8 +223,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   changeSubType(event?: any) {
     if (event && event.data[0] && ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length > 0)
-    || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0)
-    || (this.eleGridVatInvoices && this.eleGridVatInvoices.dataSource.length > 0))) {
+    || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length > 0))) {
       this.notification.alertCode('AC0014', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           let obj = {
@@ -574,7 +572,22 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.addRowDetailByType(typeBtn);
+          if (this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) { //? nếu lưới CashReceipt có active hoặc đang edit
+            this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.addRowDetailByType(typeBtn);
+              }
+            })
+            return;
+          }
+          if (this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) { //? nếu lưới SettledInvoices có active hoặc đang edit
+            this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.addRowDetailByType(typeBtn);
+              }
+            })
+            return;
+          }
         }
       });
   }
@@ -639,20 +652,46 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.api
-          .exec('AC', 'CashReceiptsBusiness', 'UpdateVoucherAsync', [
-            this.formCashReceipt.data,
-            this.journal
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res?.update) {
-              this.dialog.dataService.update(res.data).subscribe();
-              this.onDestroy();
-              this.dialog.close();
-              this.notification.notifyCode('SYS006');
+        if (this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) { //? nếu lưới CashReceipt có active hoặc đang edit
+          this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.saveVoucher();
             }
-          });
+          })
+          return;
+        }
+        if (this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) { //? nếu lưới SettledInvoices có active hoặc đang edit
+          this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.saveVoucher();
+            }
+          })
+          return;
+        }
+        
+      }
+    });
+  }
+
+  /**
+   * lưu chứng từ
+   */
+  saveVoucher(){
+    this.api
+    .exec('AC', 'CashReceiptsBusiness', 'UpdateVoucherAsync', [
+      this.formCashReceipt.data,
+      this.journal,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res?.update) {
+        this.dialog.dataService.update(res.data).subscribe();
+        this.onDestroy();
+        if(this.formCashReceipt.data._isEdit && this.formCashReceipt.data?.status == '7')
+          this.notification.notifyCode('SYS006');
+        else
+          this.notification.notifyCode('SYS007');
+        this.dialog.close();
       }
     });
   }
@@ -666,42 +705,57 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
-        this.api
-          .exec('AC', 'CashReceiptsBusiness', 'UpdateVoucherAsync', [
-            this.formCashReceipt.data,
-            this.journal
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res?.update) {
-              this.dialog.dataService.update(res.data).subscribe();
-              this.api
-                .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
-                  null,
-                  this.journal.journalNo,
-                ])
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.formCashReceipt.refreshData(res.data);
-                    // this.formCashPayment.data = res.data;
-                    // this.detectorRef.detectChanges();
-                    // this.formCashPayment.formGroup.patchValue(
-                    //   this.formCashPayment.data,
-                    //   {
-                    //     onlySelf: true,
-                    //     emitEvent: false,
-                    //   }
-                    // );
-                    // this.formCashPayment.preData = { ...this.formCashPayment.data };
-                    this.detectorRef.detectChanges();
-                    this.refreshGrid();
-                    this.notification.notifyCode('SYS006');
-                  }
-                });
+        if (this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) { //? nếu lưới CashReceipt có active hoặc đang edit
+          this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.saveAddVoucher();
             }
-          });
+          })
+          return;
+        }
+        if (this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) { //? nếu lưới SettledInvoices có active hoặc đang edit
+          this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.saveAddVoucher();
+            }
+          })
+          return;
+        }
       }
     });
+  }
+
+  /**
+   * lưu & thêm chứng từ
+   */
+  saveAddVoucher(){
+    this.api
+      .exec('AC', 'CashReceiptsBusiness', 'UpdateVoucherAsync', [
+        this.formCashReceipt.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          this.api
+            .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
+              null,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                if (this.formCashReceipt.data._isEdit && this.formCashReceipt.data?.status == '7')
+                  this.notification.notifyCode('SYS006');
+                else 
+                  this.notification.notifyCode('SYS007');
+                this.formCashReceipt.refreshData(res.data);
+                this.detectorRef.detectChanges();
+                this.refreshGrid();
+              }
+            });
+        }
+      });
   }
 
   /**
@@ -753,9 +807,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         break;
       case '3':
         this.openFormSettledInvoices();
-        break;
-      case '4':
-        this.addLineVatInvoices();
         break;
     }
   }
@@ -1061,16 +1112,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm thêm dòng hóa đơn GTGT
-   */
-  addLineVatInvoices() {
-    let data:any  = new VATInvoices();
-    data.transID = this.formCashReceipt.data.recID;
-    data.lineID = this.eleGridCashReceipt?.rowDataSelected?.recID;
-    this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
-  }
-
-  /**
    * *Hàm ẩn hiện các tab detail theo loại chứng từ
    * @param type
    * @param eleTab
@@ -1256,127 +1297,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm các sự kiện của lưới VatInvoice
-   * @param event
-   */
-  onActionGridVatInvoice(event: any) {
-    switch (event.type) {
-      case 'autoAdd':
-        this.onAddLine('4');
-        break;
-      case 'add':
-        this.api
-          .execAction(
-            'AC_CashPaymentsLines',
-            this.eleGridCashReceipt.dataSource,
-            !this.eleGridCashReceipt.rowDataSelected
-              ? 'SaveAsync'
-              : 'UpdateAsync',
-            true
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (!res.error) {
-              this.eleGridCashReceipt.refresh(); //? => refresh lại lưới
-            }
-          });
-        break;
-      case 'update':
-        this.api
-          .execAction(
-            'AC_CashPaymentsLines',
-            this.eleGridCashReceipt.dataSource,
-            'UpdateAsync',
-            true
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (!res.error) {
-              this.eleGridCashReceipt.refresh(); //? => refresh lại lưới
-            }
-          });
-        break;
-      case 'endEdit':
-        if (!this.eleGridCashReceipt.rowDataSelected) {
-          this.addLineBeforeSaveVatInvoices(event.rowData);
-        }else{
-          this.updateLineBeforeSaveVatInvoices(event.rowData);
-        }
-        break;
-    }
-  }
-
-  /**
-   * *Hàm tạo hạch toán trước khi lưu hóa đơn GTGT
-   * @param data
-   */
-  addLineBeforeSaveVatInvoices(data) {
-    let totalVatAtm = 0;
-    this.eleGridVatInvoices.dataSource.forEach((item) => {
-      totalVatAtm += item.vatAmt;
-    });
-    if (this.journal.entryMode == '1') {
-      let oLine = this.setDefaultLine();
-      oLine.dr = totalVatAtm;
-      if (this.vatAccount) {
-        oLine.accountID = this.vatAccount;
-      }
-      data.lineID = oLine.recID;
-      this.eleGridCashReceipt.dataSource.push(oLine);
-    } else {
-      for (let index = 1; index <= 2; index++) {
-        let oLine = this.setDefaultLine();
-        if (index == 1) {
-          oLine.dr = totalVatAtm;
-          if (this.vatAccount) {
-            oLine.accountID = this.vatAccount;
-          }
-          this.eleGridCashReceipt.dataSource.push(oLine);
-          data.lineID = oLine.recID;
-        } else {
-          oLine.accountID = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID;
-          oLine.cr = totalVatAtm;
-          this.eleGridCashReceipt.dataSource.push(oLine);
-        }
-      }
-    }
-  }
-
-  /**
-   * *Hàm update hạch toán trước khi lưu hóa đơn GTGT
-   * @param data
-   */
-  updateLineBeforeSaveVatInvoices(data) {
-    let totalVatAtm = 0;
-    this.eleGridVatInvoices.dataSource.forEach((item) => {
-      totalVatAtm += item.vatAmt;
-    });
-    if (this.journal.entryMode == '1') {
-      let idx = this.eleGridCashReceipt.dataSource.findIndex((x) => x.recID == data.lineID);
-      if (idx > -1) {
-        this.eleGridCashReceipt.dataSource[idx].dr = totalVatAtm;
-        if (this.vatAccount) {
-          this.eleGridCashReceipt.dataSource[idx].accountID = this.vatAccount;
-        }
-      }
-    } else {
-      let l1 = this.eleGridCashReceipt.dataSource.findIndex((x) => x.recID == data.lineID);
-      if (l1 > -1) {
-        this.eleGridCashReceipt.dataSource[l1].dr = totalVatAtm;
-        if (this.vatAccount) {
-          this.eleGridCashReceipt.dataSource[l1].accountID = this.vatAccount;
-        }
-      }
-      let l2 = this.eleGridCashReceipt.dataSource.findIndex(
-        (x) => x.rowNo == this.eleGridCashReceipt.dataSource[l1].rowNo + 1
-      );
-      if (l2 > -1) {
-        this.eleGridCashReceipt.dataSource[l2].cr = totalVatAtm;
-      }
-    }
-  }
-
-  /**
    * *Hàm refresh tất cả dữ liệu chi tiết của tab detail
    */
   refreshGrid() {
@@ -1387,10 +1307,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     if(this.eleGridSettledInvoices){
       this.eleGridSettledInvoices.dataSource = [];
       this.eleGridSettledInvoices.refresh();
-    }
-    if(this.eleGridVatInvoices){
-      this.eleGridVatInvoices.dataSource = [];
-      this.eleGridVatInvoices.refresh();
     }
   }
 
