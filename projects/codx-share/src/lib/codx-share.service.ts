@@ -245,6 +245,7 @@ export class CodxShareService {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
+              that?.reloadFile();
             }
           });
         } else {
