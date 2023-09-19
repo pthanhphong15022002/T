@@ -19,13 +19,12 @@
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
     <cashpayment-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
-      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
+      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText" [gridViewSetup]="view?.gridViewSetup"
       [legalName]="legalName" [hideFields]="hideFields" [dataDefault]="dataDefault"></cashpayment-detail>
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
   <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
-    <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
     <div id="tipsub" style="background-color: var(--primary-dark)"
       class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
       <i style="font-size: 16px !important;" class="text-white"
@@ -33,8 +32,6 @@
     </div>
     <ng-template #content>
       <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063'
-        : 'text' | async}}</span>
-      <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065'
         : 'text' | async}}</span>
     </ng-template>
   </ejs-tooltip>
@@ -56,23 +53,21 @@
     </div>
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <ejs-tooltip position="BottomCenter" id='tooltip' target="#tipmemo">
-          <span id="tipmemo" class="line-clamp line-clamp-2" #memo [innerHTML]="
-          data?.memo
-            | formatvalue : view.formModel : 'memo' : memo
-            | async
-        "></span>
+        <ejs-tooltip *ngIf="data?.memo" id='tooltip' target="#tipmemo">
+          <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{data?.memo}}</span>
           <ng-template #content>
-            <span>{{data?.memo}}</span>
+            <span id="tipmemo">{{data?.memo}}</span>
           </ng-template>
         </ejs-tooltip>
+        <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{view?.gridViewSetup['Memo'].headerText}}</span>
       </div>
     </div>
     <div style="height: 18px !important;" class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
+        <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
           data?.objectID | tranformSubobject : view.formModel
         "></span>
+        <span *ngIf="(data?.objectID == '' || data?.objectID == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1">{{view?.gridViewSetup['ObjectID'].headerText}}</span>
       </div>
     </div>
     <div style="height: 35px !important;" class="d-flex justify-content-between align-items-center">

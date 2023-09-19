@@ -27,7 +27,7 @@ import {
 import { JournalService } from '../../../journals/journals.service';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { SalesInvoiceService } from '../salesinvoices.service';
+import { SalesInvoiceService, fmSalesInvoicesLines } from '../salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -72,7 +72,7 @@ export class SalesinvoicesAddComponent
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
-    this.fmSalesInvoicesLines = salesInvoiceService.fmSalesInvoicesLines;
+    this.fmSalesInvoicesLines = fmSalesInvoicesLines;
     this.journal = salesInvoiceService.journal;
 
     this.masterService = dialogRef.dataService;

@@ -39,13 +39,11 @@
     *ngIf="isAfterRender"
 >
 <ng-template #body>
-    <div class="form-group row mt-5">
-            <codx-label
-                fiedName="DocumentTypeID"
-                [formModel]="formModel"
-            ></codx-label>
-    </div>
-    <div class="form-group row">
+    <div class="form-group mt-5">
+        <codx-label
+            fiedName="DocumentTypeID"
+            [formModel]="formModel"
+        ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="documentTypeID"
@@ -53,10 +51,9 @@
             [Group]="formGroup"
             (valueChange)="onChangeDocumentType($event)"
         ></codx-input>
-        </div>   
-
+    </div>
     <div class="form-group row">
-        <div class="col-6" *ngIf="documentObj.submitWhen != null">
+        <div class="col-12" *ngIf="documentObj.submitWhen != null">
             <codx-label
                 fiedName="SubmitWhen"
                 [formModel]="formModel"
@@ -68,7 +65,7 @@
                 | formatvalue : formModel : 'submitWhen'
                 | async
             "
-          ></span>
+        ></span>
             <!-- <codx-input
             [disabled]="disabledInput"
                 field="submitWhen"
@@ -76,151 +73,150 @@
                 [Group]="formGroup"
             ></codx-input> -->
         </div>   
-        </div>
+    </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <div>
-                    <codx-label
-                        fiedName="IsRequired"
-                        [formModel]="formModel"
-                    ></codx-label>
-                </div>
-                <div>
-                    <codx-input
-                    [disabled]="disabledInput"
-                        field="isRequired"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
-                    </div>
-            </div>
-
-            <div class="col-6">
-                <div>
-                    <codx-label
-                        fiedName="IsSubmitted"
-                        [formModel]="formModel"
-                    ></codx-label>
-                    <codx-input
-                    [disabled]="disabledInput"
-                        field="isSubmitted"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                        (valueChange)="onChangeSwitch($event, 'isSubmitted')"
-                    ></codx-input>
-                    </div>
-
-                    <div>
-                        <codx-label
-                            fiedName="SubmittedDate"
-                            [formModel]="formModel"
-                        ></codx-label>
-                        <codx-input
-                        [disabled]="disabledInput || disabledSubmittedDate"
-                            field="submittedDate"
-                            [formModel]="formModel"
-                            [Group]="formGroup"
-                        ></codx-input>
-                        </div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <div>
-                    <codx-label
-                        fiedName="HasReturn"
-                        [formModel]="formModel"
-                    ></codx-label>
-                </div>
-                <div>
-                    <codx-input
-                    [disabled]="disabledInput"
-                        field="hasReturn"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
-                </div>
-            </div>
-
-            <div class="col-6">
-                <div>
-                    <codx-label
-                        fiedName="IsReturned"
-                        [formModel]="formModel"
-                    ></codx-label>
-                    <codx-input
-                    [disabled]="disabledInput"
-                        field="isReturned"
-                        (valueChange)="onChangeSwitch($event, 'isReturned')"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
-                    </div>
-
-                    <div>
-                        <codx-label
-                            fiedName="ReturnedDate"
-                            [formModel]="formModel"
-                        ></codx-label>
-                        <codx-input
-                        [disabled]="disabledInput || disabledReturnedDate"
-                            field="returnedDate"
-                            [formModel]="formModel"
-                            [Group]="formGroup"
-                        ></codx-input>
-                        </div>
-                </div>
-        </div>
-
-        <div class="form-group row">
+    <div class="form-group row">
+        <div class="col-6">
+            <div class="">
                 <codx-label
-                    fiedName="Note"
+                    fiedName="IsRequired"
+                    [formModel]="formModel"
+                ></codx-label>
+            </div>
+            <div class="mt-2">
+                <codx-input
+                [disabled]="disabledInput"
+                    field="isRequired"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+                </div>
+        </div>
+
+        <div class="col-6">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-label
+                    fiedName="IsSubmitted"
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
                 [disabled]="disabledInput"
-                    field="note"
+                    field="isSubmitted"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    (valueChange)="onChangeSwitch($event, 'isSubmitted')"
+                ></codx-input>
+            </div>
+            <div>
+                <!-- <codx-label
+                    fiedName="SubmittedDate"
+                    [formModel]="formModel"
+                ></codx-label> -->
+                <codx-input
+                [disabled]="disabledInput || disabledSubmittedDate"
+                    field="submittedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+            <div>
+                <codx-label
+                    fiedName="HasReturn"
+                    [formModel]="formModel"
+                ></codx-label>
+            </div>
+            <div>
+                <codx-input
+                [disabled]="disabledInput"
+                    field="hasReturn"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
         </div>
 
-        <div class="fs-5-sm fw-bold text-primary mt-6 mb-1" *ngIf="documentObj?.attachments > 0">
-            <codx-label
-              name="lblAttachFile"
-              [formModel]="formModel"
-              [default]="'File đính kèm'"
-            >
-            </codx-label>
-          </div>
+        <div class="col-6">
+            <div>
+                <codx-label
+                    fiedName="IsReturned"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                [disabled]="disabledInput"
+                    field="isReturned"
+                    (valueChange)="onChangeSwitch($event, 'isReturned')"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+                </div>
 
-          <div class="flex-nowrap">
-            <codx-attachment
-                #attachment
-                [objectType]="formModel?.entityName"
-                showMessage="0"
-                hideBtnSave="1"
-                hideFolder="1"
-                hideUploadBtn="1"
-                hideDes="1"
-                hideImageUpload="0"
-                hideImageThumb="0"
-                [objectId]="documentObj?.recID"
-                [allowMultiFile]="1"
-                [idBrowse]="'add'"
-                displayThumb="full"
-                [functionID]="funcID"
-                (fileAdded)="addFiles($event)">
-                [referType]="'source'"
-                >
-                <!-- [formModel]="formModel"
-                [idField]="'RecID'" -->
-            <!-- (fileDelete)="handleDelete($event)"
-            (fileCount)="getfileCount($event)"
-            (fileGet)="getfileCount($event)" -->
-            </codx-attachment>
-            </div>  
+                <div>
+                    <codx-label
+                        fiedName="ReturnedDate"
+                        [formModel]="formModel"
+                    ></codx-label>
+                    <codx-input
+                    [disabled]="disabledInput || disabledReturnedDate"
+                        field="returnedDate"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    </div>
+            </div>
+    </div>
+
+    <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+            [disabled]="disabledInput"
+                field="note"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+    </div>
+
+    <div class="fs-5-sm fw-bold text-primary mt-6 mb-1" *ngIf="documentObj?.attachments > 0">
+        <codx-label
+            name="lblAttachFile"
+            [formModel]="formModel"
+            [default]="'File đính kèm'"
+        >
+        </codx-label>
+    </div>
+
+    <div class="flex-nowrap">
+        <codx-attachment
+            #attachment
+            [objectType]="formModel?.entityName"
+            showMessage="0"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            [objectId]="documentObj?.recID"
+            [allowMultiFile]="1"
+            [idBrowse]="'add'"
+            displayThumb="full"
+            [functionID]="funcID"
+            (fileAdded)="addFiles($event)">
+            [referType]="'source'"
+            >
+            <!-- [formModel]="formModel"
+            [idField]="'RecID'" -->
+        <!-- (fileDelete)="handleDelete($event)"
+        (fileCount)="getfileCount($event)"
+        (fileGet)="getfileCount($event)" -->
+        </codx-attachment>
+    </div>  
 </ng-template>
 </codx-form>

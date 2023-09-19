@@ -1524,7 +1524,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   }
   changeDataMFBefore(e: any, data: any, fc: any) {
     if (fc.runMode == '1') {
-      debugger
       this.shareService.changeMFApproval(e, data.unbounds);
     } else {
       //Bookmark
