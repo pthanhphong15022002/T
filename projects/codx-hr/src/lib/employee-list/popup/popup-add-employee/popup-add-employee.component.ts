@@ -32,6 +32,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   @ViewChild('cbxJobLevel') cbxJobLevel: any;
 
   data: any = null;
+  oriData: any = null;
   headerText: string = '';
   action: string = '';
   formModel: FormModel = null;
@@ -82,6 +83,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    this.oriData = this.data;
     this.funcID = this.routerActive.snapshot.params['funcID'];
 
     if (this.action === 'edit') {
@@ -105,14 +107,16 @@ export class PopupAddEmployeeComponent implements OnInit {
           [this.data.employeeID]
         ).subscribe(res => {
           if (res) {
-            this.data = res;
+            this.data = JSON.parse(JSON.stringify(res));
+            this.oriData = JSON.parse(JSON.stringify(res));
             this.form.formGroup.patchValue(this.data);
             this.hasChangedData = false;
             this.oldAddress = this.data?.address;
             this.oldTAddress = this.data?.tAddress;
           }
         })
-    } else this.hasChangedData = true;
+    } else
+     this.hasChangedData = true;
   }
   ngAfterViewInit() {
     this.form.formGroup.patchValue({ joinedOn: null }); // fix tạm bằng cách gán cứng
@@ -138,7 +142,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     if (event) {
       let field = Util.camelize(event.field);
       let value = event.data;
-      if (this.data[field] !== value)
+      if (this.oriData[field] !== value)
         this.hasChangedData = true;
       this.data[field] = value;
 

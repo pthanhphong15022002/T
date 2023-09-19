@@ -46,6 +46,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   hideN = true;
   page = 1;
   userID:any;
+  listCbb = [];
   //template
   @Input() tempMenu: TemplateRef<any>;
 
@@ -109,6 +110,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           (grd[key[i]]?.referedType == '2' ||
           grd[key[i]]?.referedType == '3')
         ) {
+          this.listCbb.push(grd[key[i]]?.fieldName);
           var obj = {
             referedType: grd[key[i]]?.referedType,
             headerText: grd[key[i]]?.headerText,
@@ -136,7 +138,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     }
   }
   getDataByRefValue(type: any, refValue: any, data: any, key: any) {
-    debugger
     let a = new DataRequest();
     a.comboboxName = refValue;
     a.page = 1;
@@ -210,7 +211,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         this.assemblyName,
         this.className,
         this.method,
-        {
+        [{
           query: this.txtSearch,
           filter: this.filter,
           functionID: this.funcID,
@@ -218,7 +219,9 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           entityName: this.entityName,
           page: this.page,
           pageSize: this.pageSize,
-        }
+        },
+        this.listCbb
+        ]
       )
       .subscribe((item) => {
         if (item) {

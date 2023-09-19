@@ -1011,7 +1011,8 @@ export class OrganizationOrgchartComponent {
                 new OrgItemConfig({
                   id: item.orgUnitID,
                   parent: item.parentID || null,
-                  title: item.orgUnitName,
+                  title:
+                    item?.employeeManager?.orgUnitName ?? item.positionName,
                   description: item.positionName,
                   label: item.orgUnitName,
                   templateName: 'contactTemplate',
@@ -1165,7 +1166,8 @@ export class OrganizationOrgchartComponent {
                     new OrgItemConfig({
                       id: item.orgUnitID,
                       parent: item.parentID,
-                      title: item.orgUnitName,
+                      title:
+                        item?.employeeManager?.orgUnitName ?? item.positionName,
                       description: item.positionName,
                       label: item.orgUnitName,
                       templateName: 'contactTemplate',
@@ -1720,7 +1722,8 @@ export class OrganizationOrgchartComponent {
                 tmp = new OrgItemConfig({
                   id: item.orgUnitID,
                   parent: item.parentID || null,
-                  title: item.orgUnitName,
+                  title:
+                    item?.employeeManager?.orgUnitName ?? item.positionName,
                   description: item.positionName,
                   label: item.orgUnitName,
                   templateName: 'contactTemplate',

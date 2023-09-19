@@ -157,6 +157,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
+    console.log(this.view);
 
   }
 
@@ -255,6 +256,7 @@ onSelectedItem(event) {
   addNewVoucher() {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
           if(this.dataDefault == null) this.dataDefault = {...res};
@@ -281,6 +283,7 @@ onSelectedItem(event) {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -308,8 +311,10 @@ onSelectedItem(event) {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
       .copy((o) => this.setDefault(dataCopy))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
           let data = {
@@ -402,6 +407,7 @@ onSelectedItem(event) {
       }
       switch (data?.status) {
         case '7':
+        case '2':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
