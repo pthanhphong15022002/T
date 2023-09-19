@@ -1234,6 +1234,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     for (let i = 0; i < evt.length; i++) {
       if (evt[i].functionID == 'SYS04') {
         evt[i].disabled = true;
+        break;
       }
     }
   }
@@ -1407,10 +1408,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       case this.eExperienceFuncID:
         this.handlEmployeeExperiences('Xem chi tiết', 'view', data);
         break;
+      case this.eNeedToSubmitProfileFuncID:
+        this.HandleEDocumentInfo('Xem chi tiết', 'view', data);
+        break;
     }
   }
 
-  //chua dung
   navChange(evt: any, index: number = -1, btnClick) {
     let containerList = document.querySelectorAll('.pw-content')
     let lastDivList = document.querySelectorAll('.div_final')
@@ -1485,24 +1488,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   initEmpKnowledge() {
-    // if (this.employeeID) {
-    //   //HR_ESkills
-    //   if (!this.lstESkill) {
-    //     let rqESkill = new DataRequest();
-    //     rqESkill.entityName = 'HR_ESkills';
-    //     rqESkill.dataValues = this.employeeID;
-    //     rqESkill.predicates = 'EmployeeID=@0';
-    //     rqESkill.page = 1;
-    //     rqESkill.pageSize = 20;
-    //     // this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
-    //     //   if (res) {
-    //     //     this.lstESkill = res;
-    //     //   }
-    //     // });
-    //   }
-    //   this.df.detectChanges();
-    // }
-    
     if (!this.eDegreeColumnsGrid) {
       this.hrService.getHeaderText(this.eDegreeFuncID).then((res) => {
         this.eDegreeHeaderText = res;

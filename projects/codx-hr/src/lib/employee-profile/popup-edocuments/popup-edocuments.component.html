@@ -114,7 +114,7 @@
                     [formModel]="formModel"
                 ></codx-label> -->
                 <codx-input
-                [disabled]="disabledInput || disabledSubmittedDate"
+                [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
                     field="submittedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -161,7 +161,7 @@
                     [formModel]="formModel"
                 ></codx-label> -->
                 <codx-input
-                    [disabled]="disabledInput || disabledReturnedDate"
+                    [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
                     field="returnedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
