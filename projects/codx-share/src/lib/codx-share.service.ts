@@ -1322,6 +1322,24 @@ export class CodxShareService {
       listPositionID
     );
   }
+  getCompanyApprover(companyID,roleType) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetCompanyApproverAsync',
+      [companyID,roleType]
+    );
+  }
+  viewApprovalStep(transID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'ViewApprovalStepAsync',
+      [transID]
+    );
+  }
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
 

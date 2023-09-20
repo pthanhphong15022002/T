@@ -510,7 +510,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
-      'GetReportFileAsync',
+      'GetReportFileRootAsync',
       [this.data.recID])
       .subscribe((res:any)=>{
         let linkSource = res;

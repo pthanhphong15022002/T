@@ -64,7 +64,7 @@ export class AdvancePaymentComponent extends UIComponent{
     this.views = [
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template2: this.templateMore,
@@ -154,12 +154,6 @@ export class AdvancePaymentComponent extends UIComponent{
             '',
             opt
           );
-          dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-            }
-          });
         }
       });
   }
@@ -190,12 +184,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -229,12 +217,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -264,15 +246,10 @@ export class AdvancePaymentComponent extends UIComponent{
   }
 
   changeItemDetail(event) {
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
+    if (event?.data) {
+      this.itemSelected = event?.data;
+      this.detectorRef.detectChanges();
     }
-    this.detectorRef.detectChanges();
   }
   //End Function
 }

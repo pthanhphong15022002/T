@@ -103,7 +103,6 @@ export class IssueTransactionsDetailComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
