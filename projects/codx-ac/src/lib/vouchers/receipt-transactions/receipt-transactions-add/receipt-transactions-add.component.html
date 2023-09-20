@@ -1,5 +1,5 @@
 <codx-form
-  #form
+  #formVoucherReceipt
   [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
@@ -14,7 +14,7 @@
 </codx-form>
 <!-- Start: Sub header -->
 <ng-template #subHeader>
-  <ng-container *ngIf="form?.formGroup"> </ng-container>
+  <ng-container *ngIf="formVoucherReceipt?.formGroup"> </ng-container>
 </ng-template>
 <!-- End: Sub header -->
 
@@ -69,7 +69,7 @@
     <div class="row">
       <div class="col-7">
         <div
-          *ngIf="form.formGroup"
+          *ngIf="formVoucherReceipt.formGroup"
           id="ac-column-def"
           class="d-flex align-items-center cursor-pointer w-fit ac-refdoc"
         >
@@ -78,9 +78,9 @@
             tab-index="8"
             style="width: 100%"
             class="fw-bold border-0"
-            [Group]="form.formGroup"
+            [Group]="formVoucherReceipt.formGroup"
             field="memo"
-            [formModel]="form.formModel"
+            [formModel]="formVoucherReceipt.formModel"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -93,19 +93,19 @@
 
 <!-- Start: Tab Basic -->
 <ng-template #tabBasic>
-  <ng-container *ngIf="form?.formGroup">
+  <ng-container *ngIf="formVoucherReceipt?.formGroup">
     <div class="row mt-5 ac-form-master">
       <div class="col-7 ac-left">
         <div class="mw-750px">
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="WarehouseID" [formModel]="form.formModel">
+                <codx-label fiedName="WarehouseID" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="warehouseID"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
@@ -113,12 +113,12 @@
             </div>
             <div class="col-3">
               <div class="form-group">
-                <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+                <codx-label fiedName="ReasonID" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="reasonID"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
@@ -128,12 +128,12 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="DIM1" [formModel]="form.formModel">
+                <codx-label fiedName="DIM1" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="diM1"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
@@ -141,12 +141,12 @@
             </div>
             <div class="col-3">
               <div class="form-group">
-                <codx-label fiedName="DIM2" [formModel]="form.formModel">
+                <codx-label fiedName="DIM2" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="diM2"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
@@ -154,12 +154,12 @@
             </div>
             <div class="col-3">
               <div class="form-group">
-                <codx-label fiedName="DIM3" [formModel]="form.formModel">
+                <codx-label fiedName="DIM3" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="diM3"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                 >
                 </codx-input>
@@ -253,11 +253,11 @@
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+                <codx-label fiedName="VoucherDate" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
-                  [formModel]="form.formModel"
+                  [Group]="formVoucherReceipt.formGroup"
+                  [formModel]="formVoucherReceipt.formModel"
                   field="voucherDate"
                   (valueChange)="valueChange($event)"
                 >
@@ -266,12 +266,12 @@
             </div>
             <div class="col-6">
               <div class="form-group">
-                <codx-label [setRequire]="journal.assignRule === '2' ? false : true" fiedName="VoucherNo" [formModel]="form.formModel">
+                <codx-label [setRequire]="journal.assignRule === '2' ? false : true" fiedName="VoucherNo" [formModel]="formVoucherReceipt.formModel">
                 </codx-label>
                 <codx-input
-                  [Group]="form.formGroup"
+                  [Group]="formVoucherReceipt.formGroup"
                   field="voucherNo"
-                  [formModel]="form.formModel"
+                  [formModel]="formVoucherReceipt.formModel"
                   (valueChange)="valueChange($event)"
                   [disabled]="journal?.assignRule != '0'"
                   [placeholder]="
@@ -702,7 +702,7 @@
 <ng-template #morefunction let-data>
   <codx-mfunc
     [dataItem]="data"
-    [formModel]="form.formModel"
+    [formModel]="formVoucherReceipt.formModel"
     (changeDataMF)="hideMF($event)"
     (clickMF)="clickMF($event, data)"
     [isBookMark]="true"
@@ -751,8 +751,8 @@
         tab-index="10"
         type="button"
         class="btn btn-md btn-light-primary me-2 rounded-15"
-        (keydown.enter)="onSave(false); $event.preventDefault()"
-        (click)="onSave(false)"
+        (keydown.enter)="onSaveAdd(); $event.preventDefault()"
+        (click)="onSaveAdd()"
       >
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
@@ -769,8 +769,8 @@
         type="button"
         class="btn btn-md btn-light-primary rounded-15"
         style="border: 1px solid var(--primary-dark) !important"
-        (keydown.enter)="onSave(true); $event.preventDefault()"
-        (click)="onSave(true)"
+        (keydown.enter)="onSave(); $event.preventDefault()"
+        (click)="onSave()"
       >
         <div class="d-flex align-items-center">
           <i class="icon-save_alt icon-16"></i>
@@ -790,10 +790,10 @@
 <!-- Start: Tab Referen -->
 <ng-template #tabRef>
   <codx-tabs
-    [entityName]="form.formModel.entityName"
-    [formModel]="form.formModel"
+    [entityName]="formVoucherReceipt.formModel.entityName"
+    [formModel]="formVoucherReceipt.formModel"
     [objectID]="vouchers.recID"
-    [funcID]="form.formModel.funcID"
+    [funcID]="formVoucherReceipt.formModel.funcID"
     [TabControl]="tabInfo"
   ></codx-tabs>
 </ng-template>
@@ -814,11 +814,11 @@
         >
           {{ headerText }}
         </div>
-        <div class="input-circle input-sm" *ngIf="form?.formGroup">
+        <div class="input-circle input-sm" *ngIf="formVoucherReceipt?.formGroup">
           <span class="me-2">
             <codx-vll
               [name]="'AC040'"
-              [formModel]="form.formModel"
+              [formModel]="formVoucherReceipt.formModel"
               [field]="'Status'"
               [value]="vouchers?.status"
               [showText]="true"
@@ -866,7 +866,7 @@
       >
         <codx-vll
           [name]=""
-          [formModel]="form.formModel"
+          [formModel]="formVoucherReceipt.formModel"
           [field]="'SubType'"
           [value]="vouchers?.subType"
           [showText]="true"
