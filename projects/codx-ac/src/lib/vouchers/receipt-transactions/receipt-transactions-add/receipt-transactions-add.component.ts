@@ -232,6 +232,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onClose() {
+    this.onDestroy();
     this.dialog.close();
   }
   //#endregion Event Master

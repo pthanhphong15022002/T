@@ -231,6 +231,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   onClose() {
+    this.onDestroy();
     this.dialog.close();
   }
   //#endregion Event Master
