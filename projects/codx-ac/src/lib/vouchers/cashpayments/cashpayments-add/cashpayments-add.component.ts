@@ -841,8 +841,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           this.dialog.close();
         }else{
           if(this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-          if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-          if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
+          if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+          if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
         }
       });
   }
@@ -942,8 +942,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             });
         }
         if(this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
+        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
       });
   }
 
