@@ -359,7 +359,7 @@
     >
     </codx-form>
     <ng-template #bodyVll>
-      <div class="card-body">
+      <div class="">
         <div class="form-group">
           <codx-label
             [fiedName]="'Note'"
@@ -397,6 +397,7 @@
           <!-- labelPosition="After"
         label="Cho phép chọn nhiều giá trị" -->
           <codx-input
+            class="me-2"
             type="checkbox"
             field="multiSelect"
             (valueChange)="onChangeVll($event)"
@@ -404,7 +405,7 @@
           ></codx-input>
           <span>
             <codx-label
-              class="me-3"
+              class=""
               name="multiSelect"
               [formName]="'SYS_ValueList'"
               default="Cho phép chọn nhiều giá trị"
@@ -419,15 +420,27 @@
           >
           </codx-label>
           <ng-container *ngFor="let item of datasVll; index as i">
-            <div class="cursor-pointer form-group has-action-menu">
-              <!-- <div class="d-flex">
+            <div class="cursor-pointer ms-5 mb-2 has-action-menu d-flex">
+              <span
+                class="no-border"
+                *ngIf="i != idxEdit"
+                (click)="handelTextValue(i)"
+                [innerText]="item?.textValue ?? ''"
+              >
+              </span>
+              <!-- 
+                  [ngbPopover]="toolDeleted"
+                #p="ngbPopover"
+                (mouseenter)="showPopoverDeleted(p, i)"
+                autoClose="outside"
+                placement="right left"
+                <div class="d-flex">
               <span>
                 <span class="label-colon" [innerHTML]="i"></span>
               </span> -->
               <input
-                [ngbTooltip]="toolDeleted"
-                placement="right left"
-                class="form-control no-border"
+                *ngIf="i == idxEdit"
+                class="no-border"
                 #textEditValue
                 type="text"
                 name="textEditValue"
@@ -438,15 +451,13 @@
                 placeholder="Nhập giá trị value"
                 (keydown.enter)="onEditTextValue(textEditValue, item.value)"
               />
-              <ng-template #toolDeleted>
-                <div>
-                  <span
-                    (click)="deletedValue(item.value, i)"
-                    class="icon-16 me-2 icon-close"
-                    [style.color]="'#F54E60'"
-                  ></span>
-                </div>
-              </ng-template>
+
+              <div class="action-menu-deleted">
+                <span
+                  class="icon-close icon-16 text-danger me-1"
+                  (click)="deletedValue()"
+                ></span>
+              </div>
             </div>
             <!-- </div> -->
           </ng-container>
@@ -497,6 +508,15 @@
           ></codx-label>
         </button>
       </div>
+    </ng-template>
+
+    <ng-template #toolDeleted>
+      <ng-container>
+        <span
+          class="icon-close icon-16 text-danger me-1"
+          (click)="deletedValue()"
+        ></span>
+      </ng-container>
     </ng-template>
   </ng-template>
 </codx-form>

@@ -8,3 +8,14 @@
     outline: none;
     color: black;
   }
+
+  .action-menu-deleted {
+    position: absolute;
+    width: 18px;
+    z-index: 99;
+    opacity: 0;
+  }
+  
+  .has-action-menu:hover .action-menu-deleted {
+    opacity: 1;
+  }
