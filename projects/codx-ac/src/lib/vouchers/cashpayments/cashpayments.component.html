@@ -27,8 +27,8 @@
   <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
     <div id="tipsub" style="background-color: var(--primary-dark)"
       class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-      <i style="font-size: 16px !important;" class="text-white kkkk"
-        [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
+      <i style="font-size: 16px !important;" class="text-white"
+        [class]="data?.subType | vll : 'AC100' : 'icon' | async"></i>
     </div>
     <ng-template #content>
       <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063'
