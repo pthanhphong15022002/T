@@ -2992,16 +2992,15 @@
               data-bs-placement="top"
               [title]="
                 departmentField1.scrollHeight > departmentField1.clientHeight
-                  ? itemConfig.context.employeeManager &&
-                    itemConfig.context.employeeManager.positionName
+                  ? itemConfig.context.employeeManager?.positionName ??
+                    itemConfig.context.data?.positionName
                   : 'Chức vụ'
               "
             >
               <span #departmentField1 class="line-clamp line-clamp-1">
                 {{
-                  (itemConfig.context.employeeManager &&
-                    itemConfig.context.employeeManager.positionName) ||
-                    "Chức vụ"
+                  (itemConfig.context.employeeManager?.positionName ??
+                    itemConfig.context.data?.positionName) || "Chức vụ"
                 }}
               </span>
               <!-- <codx-label
@@ -3050,7 +3049,7 @@
                 <span
                   class="fs-8"
                   [innerHTML]="
-                    dataManager?.email
+                    dataManager?.email ?? itemConfig.data.email
                       | formatvalue : formModelEmployee : 'email'
                       | async
                   "

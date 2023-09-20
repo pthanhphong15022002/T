@@ -61,6 +61,7 @@ export class ViewAwardDetailComponent {
   itemDetailStt;
   itemDetailDataStt;
   gridViewSetup: any = {};
+  formModelEmployee;
 
   ngOnInit(): void {
     // this.itemDetailStt = 1;
@@ -72,6 +73,12 @@ export class ViewAwardDetailComponent {
           if (res) this.gridViewSetup = res;
         });
     }
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
   ngAfterViewInit() {
     this.tabControl = [

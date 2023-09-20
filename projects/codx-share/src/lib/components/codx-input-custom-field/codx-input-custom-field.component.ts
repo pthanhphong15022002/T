@@ -96,7 +96,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   // serviceTemp = 'SYS';
   // assemblyNameTemp = 'SYS';
   // classNameTemp = 'ValueListBusiness';
-  // methodTemp = 'GetVllCustormByFormatAsync';
+  // methodTemp = 'GetVllCustomsByFormatAsync';
   // requestTemp = new DataRequest();
   datasVll: any[];
   user: any;
