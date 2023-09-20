@@ -15,13 +15,13 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-3 border-bottom w-100">
-    <div class="w-15 min-w-150px p-1">
-      <span
+    <div class="w-20 min-w-200px p-1">
+      <div class="line-clamp line-clamp-1" 
         [innerHTML]="
           data?.benefitID | formatvalue : view.formModel : 'benefitID' | async
         "
       >
-      </span>
+      </div>
     </div>
 
     <div class="w-25 min-w-150px px-2">
@@ -33,7 +33,7 @@
       </span>
     </div>
 
-    <div class="w-15 min-w-150px px-2 d-flex justify-content-end">
+    <div class="w-15 min-w-150px px-2">
       <span
         [innerHTML]="
           data?.fixedAmt | formatvalue : view.formModel : 'fixedAmt' | async
@@ -43,7 +43,7 @@
     </div>
 
     <div class="w-20 min-w-150px px-2">
-      <div class="d-flex align-items-center justify-content-end tooltip-benefits">
+      <div class="d-flex align-content-center tooltip-benefits">
         <span>{{ data.percentage }}</span>
         <div class="ms-2" *ngIf="data.hasIncludeBenefits == 1">
           <i class="text-hover-primary icon-add_box" [ngbTooltip]="toolTipBenefits"></i>
@@ -184,7 +184,7 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 ps-2 pe-4">
-    <div class="w-15 min-w-150px p-3 fw-bold text-dark">
+    <div class="w-20 min-w-200px p-3 fw-bold text-dark">
       <codx-label
         [formModel]="view.formModel"
         name="lblALObj"

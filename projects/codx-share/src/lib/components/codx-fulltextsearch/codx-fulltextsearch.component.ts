@@ -46,6 +46,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   hideN = true;
   page = 1;
   userID:any;
+  listCbb = [];
   //template
   @Input() tempMenu: TemplateRef<any>;
 
@@ -105,9 +106,11 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
       if (grd[key[i]]?.fullTextSearch) {
         //vll && cbb
         if (
-          grd[key[i]]?.referedType == '2' ||
-          grd[key[i]]?.referedType == '3'
+          grd[key[i]]?.referedValue != "Users" &&
+          (grd[key[i]]?.referedType == '2' ||
+          grd[key[i]]?.referedType == '3')
         ) {
+          this.listCbb.push(grd[key[i]]?.fieldName);
           var obj = {
             referedType: grd[key[i]]?.referedType,
             headerText: grd[key[i]]?.headerText,
@@ -125,6 +128,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
             dataType: grd[key[i]]?.dataType,
             headerText: grd[key[i]]?.headerText,
             fieldName : grd[key[i]]?.fieldName,
+            referedValue : grd[key[i]]?.referedValue,
             view: key[i],
           };
           objn.headerText = grd[key[i]]?.headerText;
@@ -174,7 +178,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     if(data) this.filter[view] = [data];
     else if(e?.component?.type == "text") delete this.filter[view];
     this.searchText();
-   
   }
   changeValueCbb(id: any = '', view: any, e: any) {
     var data = e?.data;
@@ -190,6 +193,11 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     //
     this.searchText();
   }
+  changeValueUser(view: any, e: any) {
+    if (!(view in this.filter)) this.filter[view] = [];
+    this.filter[view] = e?.data?.value;
+    this.searchText();
+  }
   changeValueDate(view: any, e: any) {
     if(e?.data?.fromDate) this.filter[view] = [e?.data?.fromDate];
     else delete this.filter[view];
@@ -203,7 +211,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         this.assemblyName,
         this.className,
         this.method,
-        {
+        [{
           query: this.txtSearch,
           filter: this.filter,
           functionID: this.funcID,
@@ -211,7 +219,9 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           entityName: this.entityName,
           page: this.page,
           pageSize: this.pageSize,
-        }
+        },
+        this.listCbb
+        ]
       )
       .subscribe((item) => {
         if (item) {

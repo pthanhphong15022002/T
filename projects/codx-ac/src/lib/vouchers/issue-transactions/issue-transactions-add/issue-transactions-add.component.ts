@@ -116,13 +116,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   onAfterInit() {
     //Loại bỏ requied khi VoucherNo tạo khi lưu
-    if (this.journal.assignRule == '2') {
-      this.form.setRequire([{
-        field: 'voucherNo',
-        isDisable: false,
-        require: false
-      }]);
-    }
+    this.setFieldRequied();
 
     if (this.formType == 'add' || this.formType == 'copy') {
       this.form.preData = new Vouchers;
@@ -419,14 +413,14 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         }
         else if (isclose) {
           if (res?.save?.data) {
-            this.notification.notifyCode('SYS006');
+            // this.notification.notifyCode('SYS006');
             this.dialog.close({
               update: true,
               data: res.save.data,
             });
           }
           else if (res?.update?.data) {
-            this.notification.notifyCode('SYS007');
+            // this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res.update.data,
@@ -434,7 +428,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           }
           else
           {
-            this.notification.notifyCode('SYS007');
+            // this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res,
@@ -454,7 +448,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
                 this.formType = 'add';
                 this.form.formGroup.patchValue(this.vouchers);
                 this.form.preData = { ...this.vouchers };
-                this.notification.notifyCode('SYS006');
+                // this.notification.notifyCode('SYS006');
+                this.setFieldRequied();
                 this.detectorRef.detectChanges();
               }
             });
@@ -498,6 +493,18 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   /** Xóa data lưới khi master thêm mới */
   clearVouchers() {
     this.grvVouchersLine.dataSource = [];
+  }
+
+  /** Xóa field requied của master */
+  setFieldRequied()
+  {
+    if (this.journal.assignRule == '2') {
+      this.form.setRequire([{
+        field: 'VoucherNo',
+        isDisable: false,
+        require: false
+      }]);
+    }
   }
 
   /** Đặt lại giá trị cho trường ghi chú */

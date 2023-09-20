@@ -23,6 +23,7 @@ import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { DealsComponent } from '../deals.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'codx-deal-detail',
@@ -50,6 +51,7 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('loadContactDeal')
   loadContactDeal: CodxListContactsComponent;
+  @ViewChild('tabObj') tabObj: TabComponent;
   formModelCustomer: FormModel;
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
@@ -98,8 +100,10 @@ export class DealDetailComponent implements OnInit {
   viewSettings: any;
   contactPerson: any;
   oCountFooter: any = {};
-  isShow = false;
-  isLoadOwner: boolean = true;
+
+  isShow: boolean = false;
+  isCategoryCustomer: boolean = false;
+  hasRunOnce: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -174,10 +178,10 @@ export class DealDetailComponent implements OnInit {
         };
         this.tabControl.push(references);
         this.getTags(this.dataSelected);
-        this.isLoadOwner = false;
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
-          this.isLoadOwner = true;
+          this.hasRunOnce = true;
+          this.resetTab(this.dataSelected.categoryCustomer);
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
@@ -190,7 +194,7 @@ export class DealDetailComponent implements OnInit {
     try {
       await this.getListInstanceStep();
       await this.getTree(); //ve cay giao viec
-      await this.getContactByDeaID(this.dataSelected.recID);
+      await this.getListContactByDealID(this.dataSelected.recID,this.dataSelected?.categoryCustomer);
       await this.getHistoryByDeaID();
     } catch (error) {}
   }
@@ -200,6 +204,23 @@ export class DealDetailComponent implements OnInit {
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
   }
+  ngAfterViewChecked() {
+    if (!this.hasRunOnce) {
+      this.resetTab(this.dataSelected?.categoryCustomer);
+    }
+  }
+
+    resetTab(data) {
+    if (this.tabObj) {
+      this.isCategoryCustomer = data == '1' ;
+      if (this.isCategoryCustomer) {
+        (this.tabObj as TabComponent).hideTab(1, false);
+      } else {
+        (this.tabObj as TabComponent).hideTab(1, true);
+      }
+    }
+  }
+
 
   listTab() {
     this.tabDetail = [
@@ -302,14 +323,33 @@ export class DealDetailComponent implements OnInit {
       });
     }
   }
-  async getContactByDeaID(recID) {
-    this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
-      if (res) {
-        this.contactPerson = res;
-      } else {
-        this.contactPerson = null;
-      }
-    });
+  // async getContactByDeaID(recID) {
+  //   this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
+  //     if (res) {
+  //       this.contactPerson = res;
+  //     } else {
+  //       this.contactPerson = null;
+  //     }
+  //   });
+  // }
+  async getListContactByDealID(objectID,categoryCustomer) {
+    if(categoryCustomer == '1') {
+      this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
+        if (res && res?.length > 0) {
+          let contactMain = res.filter((res) => res.isDefault)[0];
+          this.contactPerson =  contactMain?contactMain:null;
+          this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
+       //   this.lstContactDeal = res;
+          // if (this.action === this.actionEdit && this.isLoad) {
+          //   this.lstContactOld = JSON.parse(JSON.stringify(res));
+          //   this.isLoad = false;
+          // }
+        }
+      });
+    }
+    else {
+      this.contactPerson  = null;
+    }
   }
   //load giao việc
   async getTree() {
@@ -427,7 +467,6 @@ export class DealDetailComponent implements OnInit {
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {
-        debugger;
         var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
         let lstOlds = [];
         if (lstStepsOld != null && lstStepsOld.length > 0) {
@@ -449,7 +488,6 @@ export class DealDetailComponent implements OnInit {
               }
             }
           }
-          console.log(lstOlds);
         }
         for (var item of e?.fields) {
           if (

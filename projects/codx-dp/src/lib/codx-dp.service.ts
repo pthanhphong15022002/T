@@ -831,12 +831,21 @@ export class CodxDpService {
   }
 
   //#region  API FOR CM
-  startDeal(data) {
+  // startDeal(data) {
+  //   return this.api.execSv<any>(
+  //     'CM',
+  //     'ERM.Business.CM',
+  //     'DealsBusiness',
+  //     'StartDealAsync',
+  //     data
+  //   );
+  // }
+  moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
       'DealsBusiness',
-      'StartDealAsync',
+      'MoveStageDealAsync',
       data
     );
   }

@@ -52,6 +52,7 @@ export class CodxApproveStepsComponent
   @Input() isTemplate = false; //signFile của template mẫu  
   @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
   @Input() vllShare = null;
+  @Input() isSettingMode = true;
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -209,7 +210,7 @@ export class CodxApproveStepsComponent
       //Nhấn nút lưu
       if (this.data) {
         this.data.countStep = this.lstStep.length;
-        this.model.patchValue({ countStep: this.lstStep.length });
+        this.model?.patchValue({ countStep: this.lstStep.length });
       }
       // Thảo cần danh sách này để trả về danh sách Approver để view ở DP-Thảo sửa ngày 19/04/2023- va goi save từ bên DP
       if (this.isRequestListStep) {

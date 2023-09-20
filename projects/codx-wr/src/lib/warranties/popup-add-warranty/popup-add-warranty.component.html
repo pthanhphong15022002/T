@@ -20,7 +20,7 @@
           </codx-label>
         </div>
         <div class="d-flex justify-content-between">
-          <div class="col-10">
+          <div class="w-100">
             <codx-input
               #seriNo
               field="seriNo"
@@ -30,16 +30,15 @@
               (valueChange)="valueChangeCbx($event)"
             ></codx-input>
           </div>
-          <div class="col-2 ms-1">
+          <div class="ms-1">
             <button
-              style="width: 100% !important; height: 32px !important"
               type="button"
               [ngClass]="
                 action == 'edit'
                   ? 'disabled'
                   : ''
               "
-              class="btn btn-primary"
+              class="btn h-32px w-75px btn-primary"
               (click)="clickAddServiceTag()"
             >
               <codx-label
@@ -50,7 +49,7 @@
             </button>
           </div>
         </div>
-        <div class="d-flex align-items-top w-100 mt-2" *ngIf="data?.serviceTag">
+        <div class="d-flex align-items-top w-100 mt-3" *ngIf="data?.serviceTag">
           <div class="me-4">
             <codx-img
               [objectId]="data?.serviceTag"
@@ -100,7 +99,7 @@
               ></div> -->
             </div>
             <div
-              class="text-gray-600 fs-7 mb-1"
+              class="text-gray-500 fs-7 mb-1"
               [innerHTML]="
                 data?.productDesc
                   | formatvalue : form.formModel : 'ProductDesc'
@@ -110,7 +109,7 @@
             <div class="d-flex align-items-center">
               <span
                 [ngbTooltip]="popupExpi"
-                class="icon-date_range icon-16 me-1 text-gray-900 fs-7"
+                class="icon-date_range icon-14 me-1"
                 ><ng-template #popupExpi>
                   <codx-label
                     fiedName="WarrantyExpired"
@@ -119,12 +118,12 @@
                 </ng-template>
               </span>
               <codx-label
-                class="text-gray-600 me-1 label-colon"
+                class="text-gray-600 me-1"
                 fiedName="WarrantyExpired"
                 [formModel]="form.formModel"
               ></codx-label>
               <span
-                class="fw-bold me-1"
+                class="me-1"
                 [innerHTML]="
                   data?.warrantyExpired
                     | formatvalue : form.formModel : 'warrantyExpired'
@@ -133,7 +132,7 @@
               >
               </span>
               <span *ngIf="data?.warrantyExpired && !data.oow" class="me-1"
-                >-</span
+                > - </span
               >
               <span
                 *ngIf="data?.warrantyExpired"
@@ -177,8 +176,8 @@
               </button>
             </div>
           </div>
-          <div class="d-flex w-100" *ngIf="data?.customerID">
-            <div class="me-3 d-flex align-items-center">
+          <div class="d-flex align-items-top w-100" *ngIf="data?.customerID">
+            <div class="me-3">
               <codx-img
                 [objectId]="data?.customerID"
                 [objectName]="data?.customerName"
@@ -190,19 +189,20 @@
             </div>
             <div class="d-flex flex-column">
               <div
-                class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od"
               >
-                <div class="d-flex mb-2">
+                <div class="d-flex align-content-center w-100 mb-2">
                   <div
-                    class="fw-bold fs-6 text-dark me-3"
+                    class="fw-bold fs-6 text-dark"
                     [innerHTML]="
                       data?.customerName
                         | formatvalue : form.formModel : 'customerName'
                         | async
                     "
                   ></div>
+                  <span class="text-gray-400 mx-1">-</span>
                   <div
-                    class=""
+                    class="text-gray-600"
                     [innerHTML]="
                       data?.custGroupID
                         | formatvalue : form.formModel : 'custGroupID'
@@ -218,13 +218,13 @@
                   <i class="icon-close text-danger icon-16"></i>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-2">
-                <div class="me-3 d-flex align-items-center" *ngIf="data?.phone">
+              <div class="d-flex flex-wrap mb-1">
+                <div class="me-3 d-flex align-items-center text-gray-700" *ngIf="data?.phone">
                   <span
-                    class="icon-16 text-primary me-2 text-hover-primary text-gray-700"
+                    class="icon-14 me-1"
                   ></span>
                   <span
-                    class="text-gray-600 text-primary text-hover-primary"
+                    class="text-gray-600"
                     [innerHTML]="
                       data?.phone
                         | formatvalue : form.formModel : 'phone'
@@ -233,12 +233,12 @@
                   >
                   </span>
                 </div>
-                <div class="d-flex align-items-center" *ngIf="data?.email">
+                <div class="d-flex align-items-center text-gray-700" *ngIf="data?.email">
                   <span
-                    class="text-primary me-2 text-hover-primary icon-16 text-gray-700"
+                    class="me-1 icon-14"
                   ></span>
                   <span
-                    class="text-gray-900 text-primary"
+                    class="text-gray-600"
                     [innerHTML]="
                       data?.email
                         | formatvalue : form.formModel : 'Email'

@@ -25,21 +25,45 @@
     'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
     data?.icon
   "
-  [status]="data?.approveStatus "
   [icoStyle]="setStyles(data?.color)"
-  [date]="data?.createdOn"
-  [resources]="data?.createdBy != undefined ? data?.createdBy : ''"
-  [resourceObjType]="'AD_Users'"
   [titleLine]="2"
   [titleCss]="'fw-bold fs-6 mb-1'"
-  [icoDateCss]="'icon-access_alarm'"
   [dataItem]="data"
   [formModel]="true ? view.formModel : null"
   typeMF="hover"
   [dataItem]="data"
   [bookmark]="isBookmark(data)"
+  [footer]="footer"
 >
 </codx-temp-full>
+<ng-template #footer>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <codx-vll
+            class="badge"
+            [name]="'ES003'"
+            [value]="data?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+          >
+          </codx-vll>
+          <i class="icon-access_alarm"></i>
+          <span class="ms-2">{{data?.createdOn | date:'dd/MM/yyyy'}}</span>
+        </div>
+        <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
+    </div>
+    <codx-thumbnail
+      [files]="data?.dmFiles"
+      displayThumb="simple"
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+      >
+    </codx-thumbnail>
+    <div class="text-highlight" *ngFor="let item of data?.highLight" [innerHtml]="item"></div>
+  </div>
+</ng-template>
+
 </ng-template>
 
 <ng-template #rightTmp>

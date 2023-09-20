@@ -148,6 +148,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     }
   }
 
+  ClickCalendar(event){
+    this.changedInForm = true;
+  }
+
   setTitle(evt: any){
     this.headerText += " " +  evt;
     this.cr.detectChanges();

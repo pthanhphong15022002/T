@@ -2266,13 +2266,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         });
         if (group?.recID) {
           group.progress = Number((sumProgress / countTask).toFixed(2));
-          progressData.push(this.setProgressOutput(null, group));
+          // progressData.push(this.setProgressOutput(null, group));
         }
       } else {
         group?.task?.forEach((task) => {processTask(task);});
         group.progress = 100;
         if (group?.recID) {
-          progressData.push(this.setProgressOutput(null, group));
+          // progressData.push(this.setProgressOutput(null, group));
         }
       }
     }

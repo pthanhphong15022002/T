@@ -135,7 +135,16 @@ codx-view-list-detail {
 .rounded-8 {
   border-radius: 2rem !important;
 }
-
+.icon-10 {
+  font-size: 10px !important;
+  height: 10px;
+  line-height: 10px;
+}
+.icon-8 {
+  font-size: 8px !important;
+  height: 8px;
+  line-height: 8px;
+}
 .icon-6 {
   font-size: 6px !important;
   height: 6px;
@@ -148,6 +157,9 @@ codx-view-list-detail {
 }
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
+}
+.w-16px {
+  width: 16px !important;
 }
 .w-10 {
   width: 10%;
@@ -204,6 +216,9 @@ input.e-input {
 input.e-input.codx-number{
   height: 30px !important;
   line-height: 30px;
+}
+.e-input.e-lib.e-keyboard{
+  height: 30px !important;
 }
 
 input.e-input::placeholder,
@@ -1875,9 +1890,9 @@ codx-listview.card .card-header {
   min-height: 26px;
 }
 
-textarea.codx-textarea {
-  height: auto !important;
-}
+// textarea.codx-textarea {
+//   height: auto !important;
+// }
 
 .btn.btn-icon.btn-sm,
 .btn-group-sm > .btn.btn-icon {
@@ -3146,8 +3161,8 @@ codx-vll.vll-post{
 /*TBChung thêm á đừng xóa tội em*/
 .text-highlight >em
 {
-  color: #1A73EC;
-  color: var(--primary);
+  font-style: normal;
+  font-weight: 600;
 }
 .ws-accordion {
   .e-acrdn-item
@@ -3183,6 +3198,9 @@ codx-vll.vll-post{
     font-weight: 500;
     padding-top: 10px!important;
   }
+}
+.btn.h-32px{
+  height: 32px!important;
 }
 
 codx-toolbar-report{
@@ -3845,4 +3863,8 @@ app-setting .e-tab-header{
   .container-fluid{
     height: auto!important;
   }
+}
+
+app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
+  border-color:transparent;
 }

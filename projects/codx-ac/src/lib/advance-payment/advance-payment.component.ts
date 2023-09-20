@@ -14,6 +14,9 @@ export class AdvancePaymentComponent extends UIComponent{
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+
   private destroy$ = new Subject<void>();
   views: Array<ViewModel> = [];
   button: ButtonModel = {
@@ -25,6 +28,7 @@ export class AdvancePaymentComponent extends UIComponent{
   funcName: any;
   gridViewSetup: any;
   company: any;
+  itemSelected: any;
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
@@ -64,6 +68,15 @@ export class AdvancePaymentComponent extends UIComponent{
         sameData: true,
         model: {
           template2: this.templateMore,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
       },
     ];
@@ -248,6 +261,18 @@ export class AdvancePaymentComponent extends UIComponent{
 
   setDefault() {
     return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync');
+  }
+
+  changeItemDetail(event) {
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.detectorRef.detectChanges();
+      }
+    }
+    this.detectorRef.detectChanges();
   }
   //End Function
 }

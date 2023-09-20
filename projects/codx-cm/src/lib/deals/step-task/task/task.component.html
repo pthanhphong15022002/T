@@ -113,7 +113,7 @@
       [ngbPopover]="tooltipDate"
       [placement]="'top-left'"
       (mouseenter)="openTooltip(popoverTooltip, data?.value)"
-  
+      (mouseleave)="popoverTooltip.close()"
     >
       <div
         class="date text-nowrap mx-2"
