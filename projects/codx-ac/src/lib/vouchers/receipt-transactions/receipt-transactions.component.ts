@@ -299,15 +299,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-              }
-            }
-          });
         }
       });
   }
@@ -341,17 +332,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-                this.view.dataService.dataSelected = this.itemSelected;
-                this.detectorRef.detectChanges();
-              }
-            }
-          });
         }
       });
   }
@@ -390,15 +370,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-              }
-            }
-          });
         }
       });
   }

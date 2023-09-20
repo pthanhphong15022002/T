@@ -56,7 +56,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
   @ViewChild('addCancelComment') addCancelComment;
 
   tabControl: TabModel[] = [];
-
+  formModelEmployee;
   user: any;
   itemDetailStt;
   itemDetailDataStt;
@@ -80,6 +80,12 @@ export class ViewDayOffDetailComponent implements OnChanges {
     //       if (res) this.gridViewSetup = res;
     //     });
     // }
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
   ngAfterViewInit() {
     this.tabControl = [

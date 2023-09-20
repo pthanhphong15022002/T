@@ -332,6 +332,7 @@ export class EmployeeContractComponent extends UIComponent {
         break;
       case this.actionAddAppendix:
         this.currentEmpObj = data.inforEmployee;
+        console.log(event);
         this.handleSubContract(event.text, 'add');
         break;
       default: {

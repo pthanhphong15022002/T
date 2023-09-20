@@ -98,7 +98,7 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <codx-inplace
+            <!-- <codx-inplace
               type="combobox"
               [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
               [refType]="form?.gridviewSetup?.ObjectID.referedType"
@@ -108,7 +108,23 @@
               [class]="'om-input w-100'"
               [cssClass]="'om-input w-100 fs-4'"
               (valueChange)="valueChange($event)"
-            ></codx-inplace>
+            ></codx-inplace> -->
+            <div class="dropdown-input">
+              <codx-dropdown-select
+                #CbxObjectID
+                [showFooter]="false"
+                [isToolbar]="false"
+                [cssClass]="'rounded-pill border-0'"
+                cssPopup="h-350px w-100 fs-4"
+                [isMulti]="false"
+                type="combobox"
+                field="objectID"
+                [value]="advancedPayment.objectID"
+                [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
+                [emptyText]="form?.gridviewSetup?.ObjectID.headerText"
+                (valueChange)="dropdownChange($event)"
+              ></codx-dropdown-select>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -214,7 +230,7 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <codx-inplace
+            <!-- <codx-inplace
               type="combobox"
               [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
               [refType]="form?.gridviewSetup?.ReasonID.referedType"
@@ -224,7 +240,23 @@
               [class]="'om-input w-100 '"
               [cssClass]="'om-input w-100  fs-4'"
               (valueChange)="valueChange($event)"
-            ></codx-inplace>
+            ></codx-inplace> -->
+            <div class="dropdown-input">
+              <codx-dropdown-select
+                #CbxReasonID
+                [showFooter]="false"
+                [isToolbar]="false"
+                [cssClass]="'rounded-pill border-0'"
+                cssPopup="h-350px w-100 fs-4"
+                [isMulti]="false"
+                type="combobox"
+                field="reasonID"
+                [value]="advancedPayment.reasonID"
+                [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
+                [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
+                (valueChange)="dropdownChange($event)"
+              ></codx-dropdown-select>
+            </div>
           </div>
         </div>
         <!-- <div class="row">

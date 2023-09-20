@@ -324,8 +324,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.crrVll.defaultValues) this.changeFormVll();
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
-    option.zIndex = 3000;
-    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 500, '');
+    option.zIndex = 1099;
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 600, '');
   }
 
   closeDialog() {}
@@ -592,10 +592,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
 
-  deletedValue() {
-    if (this.idxDeleted == -1) return;
-    this.datasVll.splice(this.idxDeleted, 1);
-    this.idxDeleted = -1;
+  deletedValue(i) {
+    if (i == -1) return;
+    this.datasVll.splice(i, 1);
+    // this.idxDeleted = -1;
     if (this.viewComboxForm) this.viewComboxForm.refresh();
   }
 
@@ -609,5 +609,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.popover && this.popover.isOpen()) this.popover.close();
     p.open();
     this.popover = p;
+  }
+
+  clickDeletedVll() {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res?.event && res?.event?.status == 'Y') {
+        this.api
+          .execSv(
+            'SYS',
+            'SYS',
+            'ValueListBusiness',
+            'DeletedValuelistCustomsAsync',
+            this.crrVll.listName
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.notiService.notifyCode('SYS008');
+              if (this.comboxView) this.comboxView.refresh();
+            } else this.notiService.notifyCode('SYS022');
+          });
+      }
+    });
   }
 }
