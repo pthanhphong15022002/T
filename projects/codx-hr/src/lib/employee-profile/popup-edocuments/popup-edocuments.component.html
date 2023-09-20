@@ -39,7 +39,8 @@
     *ngIf="isAfterRender"
 >
 <ng-template #body>
-    <div class="form-group mt-5">
+    <div class="form-group row mt-5">
+       <div class="form-group mt-5">
         <codx-label
             fiedName="DocumentTypeID"
             [formModel]="formModel"
@@ -113,7 +114,7 @@
                     [formModel]="formModel"
                 ></codx-label> -->
                 <codx-input
-                [disabled]="disabledInput || disabledSubmittedDate"
+                [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
                     field="submittedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -160,7 +161,7 @@
                     [formModel]="formModel"
                 ></codx-label> -->
                 <codx-input
-                    [disabled]="disabledInput || disabledReturnedDate"
+                    [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
                     field="returnedDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -217,5 +218,3 @@
         (fileGet)="getfileCount($event)" -->
         </codx-attachment>
     </div>  
-</ng-template>
-</codx-form>

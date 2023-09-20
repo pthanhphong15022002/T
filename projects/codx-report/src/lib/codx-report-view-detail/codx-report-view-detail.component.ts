@@ -41,20 +41,23 @@ export class CodxReportViewDetailComponent
   extends UIComponent
   implements OnInit, AfterViewInit, OnChanges, OnDestroy
 {
+  @Input() predicate: any = '';
+  @Input() dataValue: any = '';
+  @Input() print: any = 'false';
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!: ElementRef<any>;
 
   views: ViewModel[];
   viewType = ViewType;
+  reportID: string;
   mssgSYS043: string = '';
   mssgSYS044: string = '';
-  @Input() predicate: any = '';
-  @Input() dataValue: any = '';
-  @Input() print: any = 'false';
-  reportID: string;
+  reload: boolean = false;
+  isRunMode = false;
   _paramString: any = '';
   _labelString: any = '';
+  _formatString: any = '';
   orgReportList: any = [];
   moreFc: any = [
     {
@@ -88,6 +91,9 @@ export class CodxReportViewDetailComponent
         this.getReport(this.reportID);
       }
     });
+    let objFormat: any = {};
+    objFormat["timeZone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this._formatString = JSON.stringify(objFormat);
     this.getMessageDefault();
   }
 
@@ -232,6 +238,7 @@ export class CodxReportViewDetailComponent
       if (mssg.defaultName) this.mssgSYS044 = mssg.defaultName;
     });
   }
+
   onActions(e: any) {
     if (e.id == 'btnViewDs' && this.data) {
       let dialog = new DialogModel();
@@ -264,7 +271,8 @@ export class CodxReportViewDetailComponent
         break;
     }
   }
-  reload: boolean = false;
+
+  
 
   editReport() {
     if (this.data) {
@@ -286,29 +294,42 @@ export class CodxReportViewDetailComponent
       );
     }
   }
-  isRunMode = false;
+
   filterReportChange(e: any) {
     if (this.isRunMode) this.isRunMode = false;
     if (e == null) return;
     let objParam: any = {};
     let objLabel: any = {};
+    let objFormat: any = {};
+    // parameters
     if (e[1]) {
-      for (let key in e[1]) {
+      Object.keys(e[1]).map(key => {
         objParam[key] = e[1][key];
-      }
-
+      });
       this._paramString = JSON.stringify(objParam);
     }
+    // labels
     if (e[2]) {
-      for (let key in e[2]) {
+      Object.keys(e[2]).map(key => {
         objLabel[key] = e[2][key];
-      }
+      });
       this._labelString = JSON.stringify(objLabel);
+    } 
+    // formats
+    if(e[4])
+    {
+      Object.keys(e[4]).map(key => {
+        objFormat[key] = e[4][key];
+      });
+      this._formatString = JSON.stringify(objFormat);
     }
-    if (this.data.displayMode == '3' || this.data.displayMode == '4') {
+    // get report PDF
+    if (this.data.displayMode == '3' || this.data.displayMode == '4')
+    {
       this.getReportPDF(this.data.recID);
     }
   }
+
   itemSelect(e: any) {
     if (e) {
       this.data = e;
@@ -321,6 +342,7 @@ export class CodxReportViewDetailComponent
       );
     }
   }
+
   homeClick() {
     this.codxService.navigate(
       '',

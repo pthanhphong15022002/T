@@ -52,6 +52,7 @@ export class ViewDetailEbenefitComponent implements OnInit {
   active = 1;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
+  formModelEmployee;
 
   ngOnInit(): void {
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
@@ -68,6 +69,12 @@ export class ViewDetailEbenefitComponent implements OnInit {
               this.benefitFormGroup = fg;
             }
           });
+      }
+    });
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
       }
     });
   }

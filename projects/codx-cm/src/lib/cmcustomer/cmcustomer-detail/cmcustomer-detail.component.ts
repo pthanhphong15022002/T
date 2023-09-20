@@ -265,8 +265,10 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   onChangeAddress(lstAddress) {
-    this.codxAddress.loadListAdress(lstAddress);
-    this.changeDetectorRef.detectChanges();
+    if (this.codxAddress) {
+      this.codxAddress.loadListAdress(lstAddress);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
   listTab(funcID) {

@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
   AuthService,
+  AuthStore,
   ButtonModel,
   DataRequest,
   DialogModel,
@@ -174,6 +175,7 @@ export class TargetsComponent
   probability = '1';
   formModel: any;
   isButton = false;
+  userID: any;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -182,14 +184,16 @@ export class TargetsComponent
     private changeDetec: ChangeDetectorRef,
     private cmSv: CodxCmService,
     private auth: AuthService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private authStore: AuthStore,
+
   ) {
     super(inject);
     // if (!this.funcID)
     //   this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.funcID = "CM0601";
     this.language = this.auth.userValue?.language?.toLowerCase();
-
+    this.userID = this.authStore?.get()?.userID;
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
   }

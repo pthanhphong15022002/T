@@ -1,40 +1,19 @@
-<codx-layout-add
-  *ngIf="isAfterRender"
-  [title]="header1"
-  [tabInfo]="tabInfo"
-  [formModel]="dialog.formModel"
-  [subHeader]="subHeader"
-  [dialog]="dialog"
-  [openMore]="true"
+<codx-layout-add *ngIf="isAfterRender" [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel"
+  [subHeader]="subHeader" [dialog]="dialog" [openMore]="true"
   [tabContent]="this.hideTabQuery? [tabInfo0, tabEmail, tabAnother] : [tabInfo0, tabQuery, tabEmail, tabAnother]"
-  (setTitle)="setTitle($event)"
-  (buttonClick)="buttonClick($event)"
-  [footer]="footer"
-  [openMore]="false"
-  [data]="data"
-  (tabChange)="buttonClick($event)"
->
+  (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false" [data]="data"
+  (tabChange)="buttonClick($event)">
 </codx-layout-add>
 
 <ng-template #subHeader>
   <div class="dropdown" id="tag_toggle">
-    <div
-      class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md"
-    >
+    <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md">
       <div class="quick-search quick-search-dropdown" id="tag_dropdown">
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Tag..." />
           <div class="input-group-append">
-            <button
-              class="btn btn-secondary"
-              type="button"
-              (click)="onSaveForm()"
-            >
-              <codx-label
-                name="lblSave"
-                default="Lưu"
-                [formModel]="formModel"
-              ></codx-label>
+            <button class="btn btn-secondary" type="button" (click)="onSaveForm()">
+              <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
             </button>
           </div>
         </div>
@@ -47,29 +26,16 @@
     <div class="col-5">
       <div class="form-group">
         <codx-label fiedName="StepType" [formModel]="formModel"> </codx-label>
-        <codx-input
-          field="stepType"
-          type="valuelist"
-          [crrValue]="this.data.stepType"
-          [refValue]="eSign == true ? 'ES002' : 'ES026'"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input field="stepType" type="valuelist" [crrValue]="this.data.stepType"
+          [refValue]="eSign == true ? 'ES002' : 'ES026'" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
     <div class="col-3">
       <div class="form-group">
         <codx-label fiedName="Leadtime" [formModel]="formModel"> </codx-label>
-        <codx-input
-          class="text-right"
-          type="number"
-          field="leadtime"
-          [min]="0"
-          placeholder="0"
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          [showSpinButton]="false"
-        >
+        <codx-input class="text-right" type="number" field="leadtime" [min]="0" placeholder="0" [formModel]="formModel"
+          [Group]="dialogApprovalStep" [showSpinButton]="false">
         </codx-input>
       </div>
     </div>
@@ -77,157 +43,66 @@
       <div class="form-group">
         <codx-label fiedName="SignatureType" [formModel]="formModel">
         </codx-label>
-        <codx-input
-          field="signatureType"
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-        >
+        <codx-input field="signatureType" [formModel]="formModel" [Group]="dialogApprovalStep">
         </codx-input>
       </div>
     </div>
   </div>
   <div class="form-group">
     <codx-label fiedName="StepName" [formModel]="formModel"> </codx-label>
-    <codx-input
-      type="text"
-      ControlName="stepName"
-      [formModel]="formModel"
-      [Group]="dialogApprovalStep"
-    ></codx-input>
+    <codx-input type="text" ControlName="stepName" [formModel]="formModel" [Group]="dialogApprovalStep"></codx-input>
   </div>
   <div class="d-flex flex-column">
     <div class="d-flex flex-stack mb-4">
-      <codx-label
-        class="text-primary fw-bold fs-6"
-        fiedName="Approvers"
-        [formModel]="formModel"
-      >
+      <codx-label class="text-primary fw-bold fs-6" fiedName="Approvers" [formModel]="formModel">
       </codx-label>
-      <button type="button"
-        class="btn btn-icon btn-sm btn-light-primary"
-        (click)="testdata(controlShare)"
-      >
-      <i class="icon-person_add_alt_1 icon-18"></i>
-    </button>
+      <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="testdata(controlShare)">
+        <i class="icon-person_add_alt_1 icon-18"></i>
+      </button>
     </div>
-    <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop1($event)">
-      <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
-    </div> -->
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <div *ngFor="let item of lstApprover; let index = index" cdkDrag>
-        <div
-          class="d-flex align-items-center w-100"
-        >
-          
-          <!--Type User-->
-          <codx-temp-full
-            cardCss="card-template mb-4"
-            *ngIf="item?.roleType=='U' "
-            [imageId]=" item?.approver"
-            [title]="item?.name"
-            [subTitle]="item?.position ?? positionDefault"
-            [imageObjType]="'AD_Users'"
-            [imageWidth]="35"
-            [titleLine]="3"
-            [formModel]="formModel"
-            (clickMF)="MFClick($event, item, index)"
-            [dataItem]="item"
-            typeMF="hover"
-          >
+        <div class="w-100">
+            
+            <codx-temp-full cardCss="card-template mb-4 w-100"  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
+            [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver | vll : 'ES014' : 'text' | async" [subTitle]="item?.position ? item?.position: item?.approver | vll : 'ES014' : 'text' | async" [imageObjType]="'AD_Users'"
+            [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
+            [dataItem]="item" typeMF="hover" 
+            [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
-          <!--Type P-->
-          <codx-temp-full
-            cardCss="card-template mb-4"
-            *ngIf="item?.roleType=='P' "
-        [imageId]=" item?.userID"
-        
-            [title]="item?.name"
-            [subTitle]="item?.userName "
-            [imageObjType]="'AD_Users'"
-            [imageWidth]="35"
-            [titleLine]="3"
-            [formModel]="formModel"
-            (clickMF)="MFClick($event, item, index)"
-            [dataItem]="item"
-            typeMF="hover"
-          >
-          </codx-temp-full>
-          
-        <!--Type còn lại-->
-        <codx-temp-full
-        cardCss="card-template mb-4"
-        *ngIf="item?.roleType!='U' && item?.roleType!='P'"
-        [imageSrc]="
-          './assets/themes/sys/default/img/' +
-          (item?.icon ? item?.icon : 'share_default.svg')
-        "
-        [imageWidth]="20"
-        imgCss="w-30px p-3 me-3 user-mini-icon"
-        [imageWidth]="30"
-        [subTitle]="item?.approver | vll : 'ES014' : 'text' | async"
-        [title]="
-          item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
-        "
-        [subTitle]="
-          item?.position ??
-          (item?.approver | vll : 'ES014' : 'text' | async) ??
-          positionDefault
-        "
-        [titleLine]="3"
-        [formModel]="formModel"
-        (clickMF)="MFClick($event, item, index)"
-        [dataItem]="item"
-        typeMF="hover"
-      >
-      </codx-temp-full>
-        </div>
-        <!-- <div
-                class="card-survey"
-                [id]="'card-survey-question-' + item?.recID"
-                
-              >
-                <div
-                  class="col-lg-8 control-section inplace-editor-control-section form-layout"
-                  id="inplace-editor-control"
-                >
-                  <div
-                    [ngClass]="
-                    item?.active
-                        ? 'content-wrapper b-l'
-                        : 'content-wrapper'
-                    "
-                  >
-                  </div>
-                </div>
-              </div> -->
-      </div>
-    </div>
-    <!-- <ng-container *ngFor="let item of lstApprover; let index = index">
-      <div class="d-flex align-items-center w-100">
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType?.length == 1" [imageId]="item?.approver"
+          <template>
+            <!--Type User-->
+          <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType=='U' " [imageId]=" item?.approver"
           [title]="item?.name" [subTitle]="item?.position ?? positionDefault" [imageObjType]="'AD_Users'"
           [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
           [dataItem]="item" typeMF="hover">
         </codx-temp-full>
-
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType?.length > 1" [imageSrc]="
-            './assets/themes/sys/default/img/' +
-            (item?.icon ? item?.icon : 'share_default.svg')
-          " [imageWidth]="20" imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="30"
-          [subTitle]="item?.approver | vll : 'ES014' : 'text' | async" [title]="
-            item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
-          " [subTitle]="
-            item?.position ??
-            (item?.approver | vll : 'ES014' : 'text' | async) ??
-            positionDefault
-          " [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
+        <!--Type P-->
+        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType=='P' " [imageId]=" item?.userID"
+          [title]="item?.name" [subTitle]="item?.userName " [imageObjType]="'AD_Users'" [imageWidth]="35"
+          [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
           typeMF="hover">
         </codx-temp-full>
+
+        <!--Type còn lại-->
+        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType!='U' && item?.roleType!='P'" [imageSrc]="
+        './assets/themes/sys/default/img/' +
+        (item?.icon ? item?.icon : 'share_default.svg')
+      "  imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="30"
+          [subTitle]="item?.approver | vll : 'ES014' : 'text' | async" [title]="
+        item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
+      " [subTitle]="
+        item?.position ??
+        (item?.approver | vll : 'ES014' : 'text' | async) ??
+        positionDefault
+      " [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
+          typeMF="hover">
+        </codx-temp-full>
+          </template>
+          
+        </div>
       </div>
-    </ng-container> -->
+    </div>
   </div>
 
   <div class="d-flex flex-column mb-4" *ngIf="lstApprover?.length > 1 && data.stepType != 'I'">
@@ -235,31 +110,17 @@
       <ng-container *ngFor="let item of lstApproveMode; let index = index">
         <div class="col-3" *ngIf="data.approveMode == item?.value">
           <div class="d-flex align-items-center">
-            <codx-input
-              type="radio"
-              [checked]="true"
-              [label]="item?.text"
-              [crrValue]="data.approveMode == item?.value ? true : false"
-              name="radio"
-              field="approveMode"
-              class="test-switch"
-              (valueChange)="valueModeChange($event, item)"
-            >
+            <codx-input type="radio" [checked]="true" [label]="item?.text"
+              [crrValue]="data.approveMode == item?.value ? true : false" name="radio" field="approveMode"
+              class="test-switch" (valueChange)="valueModeChange($event, item)">
             </codx-input>
           </div>
         </div>
 
         <div class="col-3" *ngIf="data.approveMode != item?.value">
           <div class="d-flex align-items-center">
-            <codx-input
-              type="radio"
-              [label]="item?.text"
-              [crrValue]="data.approveMode == item?.value ? true : false"
-              name="radio"
-              field="approveMode"
-              class="test-switch"
-              (valueChange)="valueModeChange($event, item)"
-            >
+            <codx-input type="radio" [label]="item?.text" [crrValue]="data.approveMode == item?.value ? true : false"
+              name="radio" field="approveMode" class="test-switch" (valueChange)="valueModeChange($event, item)">
             </codx-input>
           </div>
         </div>
@@ -272,16 +133,9 @@
       <ng-container *ngFor="let item of lstApproveMode; let index = index">
         <div class="col-3" *ngIf="data.approveMode == item?.value">
           <div class="d-flex align-items-center">
-            <codx-input
-              type="radio"
-              [checked]="true"
-              [label]="item?.text"
-              [crrValue]="data.approveMode == item?.value ? true : false"
-              name="radio"
-              field="approveMode"
-              class="test-switch"
-              (valueChange)="valueModeChange($event, item)"
-            >
+            <codx-input type="radio" [checked]="true" [label]="item?.text"
+              [crrValue]="data.approveMode == item?.value ? true : false" name="radio" field="approveMode"
+              class="test-switch" (valueChange)="valueModeChange($event, item)">
             </codx-input>
           </div>
         </div>
@@ -291,75 +145,40 @@
 
   <div class="row mb-4">
     <div class="d-flex align-items-center col-4" *ngIf="eSign == true">
-      <codx-input
-        #checkbox
-        type="switch"
-        id="switch"
-        [checked]="allowEditAreas"
-        labelPosition="After"
-        field="allowEditAreas"
-        class="test-switch"
-        (valueChange)="valueChange($event)"
-      >
+      <codx-input #checkbox type="switch" id="switch" [checked]="allowEditAreas" labelPosition="After"
+        field="allowEditAreas" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label
-          fiedName="AllowEditAreas"
-          [formModel]="formModelCustom"
-        ></codx-label>
+        <codx-label fiedName="AllowEditAreas" [formModel]="formModelCustom"></codx-label>
       </label>
     </div>
 
     <div class="d-flex align-items-center col-4" *ngIf="eSign == true">
-      <codx-input
-        #checkbox
-        type="switch"
-        id="switch"
-        [checked]="confirmControl == '1'"
-        labelPosition="After"
-        field="confirmControl"
-        class="test-switch"
-        (valueChange)="changeConfirm($event)"
-      >
+      <codx-input #checkbox type="switch" id="switch" [checked]="confirmControl == '1'" labelPosition="After"
+        field="confirmControl" class="test-switch" (valueChange)="changeConfirm($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label
-          fiedName="ConfirmControl"
-          [formModel]="formModelCustom"
-        ></codx-label>
+        <codx-label fiedName="ConfirmControl" [formModel]="formModelCustom"></codx-label>
       </label>
     </div>
   </div>
 
   <div class="d-flex flex-column mb-4">
     <div class="fw-bold fs-6 d-block mb-2">
-      <codx-label
-        class="text-primary"
-        name="lblTitleComment"
-        default="Đóng góp ý kiến"
-        [formModel]="formModel"
-      >
+      <codx-label class="text-primary" name="lblTitleComment" default="Đóng góp ý kiến" [formModel]="formModel">
       </codx-label>
     </div>
     <div class="row">
       <div class="form-group col-6">
         <codx-label fiedName="ApproveControl" [formModel]="formModel">
         </codx-label>
-        <codx-input
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          field="approveControl"
-        >
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="approveControl">
         </codx-input>
       </div>
       <div class="form-group col-6">
         <codx-label fiedName="RejectControl" [formModel]="formModel">
         </codx-label>
-        <codx-input
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          field="rejectControl"
-        >
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="rejectControl">
         </codx-input>
       </div>
     </div>
@@ -367,21 +186,13 @@
       <div class="form-group col-6">
         <codx-label fiedName="CancelControl" [formModel]="formModel">
         </codx-label>
-        <codx-input
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          field="cancelControl"
-        >
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="cancelControl">
         </codx-input>
       </div>
       <div class="form-group col-6">
         <codx-label fiedName="RedoControl" [formModel]="formModel">
         </codx-label>
-        <codx-input
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          field="redoControl"
-        >
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="redoControl">
         </codx-input>
       </div>
     </div>
@@ -389,50 +200,30 @@
 </ng-template>
 <ng-template #tabQuery>
   <div class="w-100">
-    <codx-query-builder *ngIf="!this.hideTabQuery" #queryBuilder [isPopup]="false" [isAdvance]="true" (change)="saveFilterChange($event)" [filters]="qbFilter" [funcID]="formModel?.funcID"></codx-query-builder>
+    <codx-query-builder *ngIf="!this.hideTabQuery" #queryBuilder [isPopup]="false" [isAdvance]="true"
+      (change)="saveFilterChange($event)" [filters]="qbFilter" [funcID]="formModel?.funcID"></codx-query-builder>
   </div>
 </ng-template>
 <ng-template #tabEmail>
   <ng-container *ngFor="let item of data.emailTemplates">
-    <div
-      class="d-flex justify-content-between align-items-center"
-      *ngIf="item?.emailType == '11'"
-    >
+    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '11'">
       <div class="fw-bolder d-block mb-4">
-        <codx-label
-          class="text-primary"
-          default="Thiết lập mẫu email duyệt"
-          [formModel]="formModel"
-          name="lblEmailSubmit"
-        >
+        <codx-label class="text-primary" default="Thiết lập mẫu email duyệt" [formModel]="formModel"
+          name="lblEmailSubmit">
         </codx-label>
       </div>
     </div>
-    <div
-      class="d-flex justify-content-between align-items-center"
-      *ngIf="item?.emailType == '21'"
-    >
+    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '21'">
       <div class="fw-bolder d-block mb-4 mt-5">
-        <codx-label
-          class="text-primary"
-          default="Email yêu cầu hủy kết quả duyệt/yêu cầu"
-          [formModel]="formModel"
-          name="lblEmailReject"
-        >
+        <codx-label class="text-primary" default="Email yêu cầu hủy kết quả duyệt/yêu cầu" [formModel]="formModel"
+          name="lblEmailReject">
         </codx-label>
       </div>
     </div>
-    <div
-      class="d-flex justify-content-between align-items-center"
-      *ngIf="item?.emailType == '31'"
-    >
+    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '31'">
       <div class="fw-bolder d-block mb-4 mt-5">
-        <codx-label
-          class="text-primary"
-          default="Thiết email cảnh báo quá hạn duyệt"
-          [formModel]="formModel"
-          name="lblEmailAlert"
-        >
+        <codx-label class="text-primary" default="Thiết email cảnh báo quá hạn duyệt" [formModel]="formModel"
+          name="lblEmailAlert">
         </codx-label>
       </div>
     </div>
@@ -446,39 +237,21 @@
         <div class="col-6">
           <div class="row">
             <div class="col-6">
-              <codx-input
-                type="checkbox"
-                label="Thông báo"
-                labelPosition="after"
-                field="isAlert"
-                class="test-check"
-                (valueChange)="valueEmailChange($event, item)"
-                [crrValue]="item?.isAlert == '1'"
-              >
+              <codx-input type="checkbox" label="Thông báo" labelPosition="after" field="isAlert" class="test-check"
+                (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isAlert == '1'">
               </codx-input>
             </div>
             <div class="col-4">
-              <codx-input
-                type="checkbox"
-                label="Email"
-                labelPosition="after"
-                field="isEmail"
-                class="test-check"
-                (valueChange)="valueEmailChange($event, item)"
-                [crrValue]="item?.isEmail == '1'"
-              >
+              <codx-input type="checkbox" label="Email" labelPosition="after" field="isEmail" class="test-check"
+                (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isEmail == '1'">
               </codx-input>
             </div>
             <div class="col-2">
-              <button
-                class="btn btn-sm btn-icon"
-                [ngClass]="
+              <button class="btn btn-sm btn-icon" [ngClass]="
                   item?.isEmail == '1' ? 'btn-light-primary' : 'btn-light'
-                "
-                (click)="openSetupEmail(item)"
-              >
-              <i class="icon-email icon-16"></i>
-            </button>
+                " (click)="openSetupEmail(item)">
+                <i class="icon-email icon-16"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -491,25 +264,14 @@
     <div class="form-group col-6">
       <codx-label fiedName="OverdueControl" [formModel]="formModel">
       </codx-label>
-      <codx-input
-        [formModel]="formModel"
-        [Group]="dialogApprovalStep"
-        field="overdueControl"
-        (valueChange)="valueChange($event)"
-      >
+      <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="overdueControl"
+        (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group col-4">
       <codx-label fiedName="Loops" [formModel]="formModel"> </codx-label>
-      <codx-input
-        [formModel]="formModel"
-        [Group]="dialogApprovalStep"
-        [min]="0"
-        placeholder="0"
-        field="loops"
-        [showSpinButton]="false"
-        [disabled]="data.overdueControl != '3'"
-      >
+      <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" [min]="0" placeholder="0" field="loops"
+        [showSpinButton]="false" [disabled]="data.overdueControl != '3'">
       </codx-input>
     </div>
   </div>
@@ -530,22 +292,13 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <a class="btn btn-primary fw-bold" (click)="beforeSave()">
-      <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="formModel"
-      ></codx-label>
+      <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
     </a>
   </div>
 </ng-template>
 
 <ng-template #controlShare let-dialog>
-  <codx-share
-    [dialog]="dialog"
-    [multiple]="true"
-    (eventApply)="applyShare($event)"
-    [listName]="vllShare"
-  >
+  <codx-share [dialog]="dialog" [multiple]="true" (eventApply)="applyShare($event)" [listName]="vllShare">
   </codx-share>
 </ng-template>
 
