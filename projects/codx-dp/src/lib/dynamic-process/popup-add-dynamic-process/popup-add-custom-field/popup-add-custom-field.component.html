@@ -363,183 +363,163 @@
       </button>
     </div>
   </ng-template>
-
-  <!-- //form Add VLL -->
-  <ng-template #addVll>
-    <codx-form
-      class="h-100"
-      [headerText]="titleForm"
-      [body]="bodyVll"
-      [footer]="footerVll"
-      [dialog]="dialogVll"
-      [data]="crrVll"
-    >
-    </codx-form>
-    <ng-template #bodyVll>
-      <div class="">
-        <div class="form-group">
-          <codx-label
-            [fiedName]="'Note'"
-            [formModel]="formModelVll"
-            default="Nội dung"
-          >
-          </codx-label>
-          <codx-input
-            type="text"
-            field="note"
-            [formModel]="formModelVll"
-            [crrValue]="crrVll.note"
-            (valueChange)="onChangeVll($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label
-            name="ListName"
-            [formModel]="formModelVll"
-            default="Tên value list"
-          >
-          </codx-label>
-          <codx-input
-            type="text"
-            field="listName"
-            [disabled]="crrVll.listName"
-            [formModel]="formModelVll"
-            [crrValue]="crrVll.listName"
-            (valueChange)="onChangeVll($event)"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <!-- labelPosition="After"
-        label="Cho phép chọn nhiều giá trị" -->
-          <codx-input
-            class="me-2"
-            type="checkbox"
-            field="multiSelect"
-            (valueChange)="onChangeVll($event)"
-            [crrValue]="crrVll?.multiSelect"
-          ></codx-input>
-          <span>
-            <codx-label
-              class=""
-              name="multiSelect"
-              [formName]="'SYS_ValueList'"
-              default="Cho phép chọn nhiều giá trị"
-            ></codx-label>
-          </span>
-        </div>
-        <div class="d-flex flex-column form-group mt-3">
-          <codx-label
-            name="inputDefautValue"
-            [formModel]="formModelVll"
-            default="Danh sách lựa chọn"
-          >
-          </codx-label>
-          <ng-container *ngFor="let item of datasVll; index as i">
-            <div
-              class="cursor-pointer ms-5 mb-2 has-action-menu d-flex position-relative"
-            >
-              <div>
-                <span
-                  class="no-border"
-                  *ngIf="i != idxEdit"
-                  (click)="handelTextValue(i)"
-                  [innerText]="item?.textValue ?? ''"
-                ></span>
-
-                <!-- 
-                  [ngbPopover]="toolDeleted"
-                #p="ngbPopover"
-                (mouseenter)="showPopoverDeleted(p, i)"
-                autoClose="outside"
-                placement="right left"
-                <div class="d-flex">
-              <span>
-                <span class="label-colon" [innerHTML]="i"></span>
-              </span> -->
-                <input
-                  *ngIf="i == idxEdit"
-                  class="no-border"
-                  #textEditValue
-                  type="text"
-                  name="textEditValue"
-                  matInput
-                  autofocus
-                  [value]="item.textValue"
-                  (blur)="onEditTextValue(textEditValue, item.value)"
-                  placeholder="Nhập giá trị value"
-                  (keydown.enter)="onEditTextValue(textEditValue, item.value)"
-                />
-              </div>
-              <div
-                *ngIf="i != idxEdit"
-                class="action-menu-deleted d-flex justify-content-end"
-              >
-                <span
-                  class="icon-close icon-16 text-danger me-1"
-                  (click)="deletedValue(i)"
-                ></span>
-              </div>
-            </div>
-            <!-- </div> -->
-          </ng-container>
-
-          <div class="form-group">
-            <input
-              id="textAddValue"
-              class="form-control no-border"
-              #textAddValue
-              type="text"
-              name="textAddValue"
-              matInput
-              (blur)="onAddTextValue(textAddValue)"
-              placeholder="Nhập giá trị value"
-              (keydown.enter)="onAddTextValue(textAddValue)"
-            />
-          </div>
-
-          <div class="form-group">
-            <codx-label
-              class="label-colon"
-              name="demoVll"
-              [formModel]="formModelVll"
-              default="Xem trước"
-              class="me-4"
-            >
-            </codx-label>
-            <ejs-combobox
-              #viewComboxForm
-              [enabled]="enabled"
-              [dataSource]="datasVll"
-              [fields]="fieldsResourceVll"
-              [value]="crrValue"
-              [allowFiltering]="false"
-              [placeholder]=""
-            ></ejs-combobox>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #footerVll>
-      <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="saveVll()">
-          <codx-label
-            name="Save"
-            [formModel]="formModelVll"
-            default="Lưu"
-          ></codx-label>
-        </button>
-      </div>
-    </ng-template>
-
-    <!-- <ng-template #toolDeleted>
-      <ng-container>
-        <span
-          class="icon-close icon-16 text-danger me-1"
-          (click)="deletedValue()"
-        ></span>
-      </ng-container>
-    </ng-template> -->
-  </ng-template>
 </codx-form>
+
+<!-- //form Add VLL -->
+<ng-template #addVll>
+  <codx-form
+    class="h-100"
+    [headerText]="titleForm"
+    [body]="bodyVll"
+    [footer]="footerVll"
+    [dialog]="dialogVll"
+    [data]="crrVll"
+  >
+  </codx-form>
+  <ng-template #bodyVll>
+    <div class="">
+      <div class="form-group">
+        <codx-label
+          [fiedName]="'Note'"
+          [formModel]="formModelVll"
+          default="Nội dung"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="note"
+          [formModel]="formModelVll"
+          [crrValue]="crrVll.note"
+          (valueChange)="onChangeVll($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="ListName"
+          [formModel]="formModelVll"
+          default="Tên value list"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          field="listName"
+          [disabled]="crrVll.listName"
+          [formModel]="formModelVll"
+          [crrValue]="crrVll.listName"
+          (valueChange)="onChangeVll($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <!-- labelPosition="After"
+      label="Cho phép chọn nhiều giá trị" -->
+        <codx-input
+          class="me-2"
+          type="checkbox"
+          field="multiSelect"
+          (valueChange)="onChangeVll($event)"
+          [crrValue]="crrVll?.multiSelect"
+        ></codx-input>
+        <span>
+          <codx-label
+            class=""
+            name="multiSelect"
+            [formName]="'SYS_ValueList'"
+            default="Cho phép chọn nhiều giá trị"
+          ></codx-label>
+        </span>
+      </div>
+      <div class="d-flex flex-column form-group mt-3 class-value-vll">
+        <codx-label
+          name="inputDefautValue"
+          [formModel]="formModelVll"
+          default="Danh sách lựa chọn"
+        >
+        </codx-label>
+        <ng-container *ngFor="let item of datasVll; index as i">
+          <div
+            class="cursor-pointer ms-5 mb-2 has-action-menu d-flex position-relative"
+          >
+            <div class="crr-value-vll">
+              <span
+                class="no-border"
+                *ngIf="i != idxEdit"
+                (click)="handelTextValue(i)"
+                [innerText]="item?.textValue ?? ''"
+              ></span>
+              <input
+                *ngIf="i == idxEdit"
+                class="no-border"
+                #textEditValue
+                type="text"
+                name="textEditValue"
+                matInput
+                autofocus
+                [value]="item.textValue"
+                (blur)="onEditTextValue(textEditValue, item.value)"
+                placeholder="Nhập giá trị value"
+                (keydown.enter)="onEditTextValue(textEditValue, item.value)"
+              />
+            </div>
+            <div
+              *ngIf="i != idxEdit"
+              class="action-menu-deleted d-flex justify-content-end"
+            >
+              <span
+                class="icon-close icon-16 text-danger me-1"
+                (click)="deletedValue(i)"
+              ></span>
+            </div>
+          </div>
+          <!-- </div> -->
+        </ng-container>
+
+        <div class="form-group">
+          <input
+            id="textAddValue"
+            class="form-control no-border"
+            #textAddValue
+            type="text"
+            name="textAddValue"
+            matInput
+            (blur)="onAddTextValue(textAddValue)"
+            placeholder="Nhập giá trị value"
+            (keydown.enter)="onAddTextValue(textAddValue)"
+          />
+        </div>
+
+        <div class="form-group">
+          <codx-label
+            class="label-colon"
+            name="demoVll"
+            [formModel]="formModelVll"
+            default="Xem trước"
+            class="me-4"
+          >
+          </codx-label>
+          <ejs-combobox
+            #viewComboxForm
+            [enabled]="enabled"
+            [dataSource]="datasVll"
+            [fields]="fieldsResourceVll"
+            [value]="crrValue"
+            [allowFiltering]="false"
+            [placeholder]=""
+          ></ejs-combobox>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footerVll>
+    <div class="flex-stack flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="saveVll()">
+        <codx-label
+          name="Save"
+          [formModel]="formModelVll"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</ng-template>

@@ -325,7 +325,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 1099;
-    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 700, '');
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 600, '');
   }
 
   closeDialog() {}
