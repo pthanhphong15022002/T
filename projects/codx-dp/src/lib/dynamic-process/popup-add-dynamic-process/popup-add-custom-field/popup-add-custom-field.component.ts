@@ -285,6 +285,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
+    // if (this.field.dataType == 'L' && !this.field.refType) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.grvSetup['RefType']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+
+    if (this.field.dataType == 'L' && !this.field.refValue) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RefValue']?.headerText + '"'
+      );
+      return;
+    }
+
     if (
       (this.field.note == null || this.field.note.trim() == '') &&
       this.grvSetup['Note']?.isRequire
@@ -321,7 +339,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   clickAddVll() {
     // 'add vll'
-    if (this.crrVll.defaultValues) this.changeFormVll();
+    if (!this.crrVll) {
+      this.crrVll = new tempVllDP();
+      this.crrVll.language = this.user.language;
+      this.crrVll.createdBy = this.user.userID;
+      this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+      this.crrVll.version = 'x00.01';
+    }
+    if (this.crrVll?.defaultValues) this.changeFormVll();
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 1099;
@@ -511,6 +536,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   cbxChangeVll(value, elm) {
     if (elm) this.element = elm;
+    this.field['refValue'] = value;
     if (!value) {
       //data form
       this.crrVll = new tempVllDP();
@@ -526,7 +552,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.field['refValue'] = value;
     this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
 
     if (
@@ -624,8 +649,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
           )
           .subscribe((res) => {
             if (res) {
-              this.notiService.notifyCode('SYS008');
+              var idxDeleted = this.listVll.findIndex(
+                (x) => x.value == this.crrVll.listName
+              );
+              if (idxDeleted != -1) {
+                this.listVll.splice(idxDeleted, 1);
+                //data crrVll
+              }
+              this.field.refValue = '';
+              this.datasVllCrr = [];
+              this.crrValueFirst = null;
+              this.crrVll = null;
               if (this.comboxView) this.comboxView.refresh();
+              if (this.datasVllCbx) this.comboxView.refresh();
+              this.notiService.notifyCode('SYS008');
             } else this.notiService.notifyCode('SYS022');
           });
       }
