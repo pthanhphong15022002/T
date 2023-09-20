@@ -85,7 +85,6 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 

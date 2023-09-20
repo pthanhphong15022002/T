@@ -56,6 +56,16 @@ export class ViewDetailDisciplinesComponent {
   // benefitFormModel : FormModel;
   benefitFormGroup: FormGroup;
   active = 1;
+  formModelEmployee;
+
+  ngOnInit(): void {
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     // if (
     //   changes?.itemDetail &&

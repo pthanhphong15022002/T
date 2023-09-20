@@ -29,7 +29,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   @ViewChild('grvVouchersLine')
   public grvVouchersLine: CodxGridviewV2Component;
-  @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('formVoucherIssue') public formVoucherIssue: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
 
   private destroy$ = new Subject<void>();
@@ -110,17 +110,13 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.vouchers);
+    this.formVoucherIssue.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
 
   onAfterInit() {
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     this.setFieldRequied();
-
-    if (this.formType == 'add' || this.formType == 'copy') {
-      this.form.preData = new Vouchers;
-    }
   }
 
   ngOnDestroy() {
@@ -155,7 +151,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           {
             this.vouchers.warehouseID = e.data;
             this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
-            this.form.formGroup.patchValue({
+            this.formVoucherIssue.formGroup.patchValue({
               warehouseName: this.vouchers.warehouseName,
             });
           }
@@ -212,15 +208,26 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   onDiscard() {
-    this.dialog.dataService
-      .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
+    if (this.formVoucherIssue && this.formVoucherIssue.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.formVoucherIssue.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
         }
       });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
+    }
   }
 
   onClose() {
@@ -369,90 +376,59 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   //   }
   // }
 
-  /** Lưu và đóng form 
-   * Hoặc
-   * Lưu và thêm mới
-  */
-  onSave(isClose: any) {
-    /** isClose = true => Lưu và đóng form
-     * isClose = false => Lưu và thêm mới
-     */
-
-    if (this.form.validation())
-      return;
-    //this.checkTransLimit(true);
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-
-    // }
-    if (this.modeGrid == 1) {
-      if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
-        this.save(isClose);
-    }
-    else {
-      this.save(isClose);
-    }
-  }
-
   /** Hàm lưu master */
-  save(isclose: boolean) {
+  onSave() {
     if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
-      this.form.formGroup.patchValue({ status: this.vouchers.status });
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.vouchers.status = '7';
-          this.form.formGroup.patchValue({ status: this.vouchers.status });
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        else if (isclose) {
-          if (res?.save?.data) {
-            // this.notification.notifyCode('SYS006');
-            this.dialog.close({
-              update: true,
-              data: res.save.data,
-            });
-          }
-          else if (res?.update?.data) {
-            // this.notification.notifyCode('SYS007');
-            this.dialog.close({
-              update: true,
-              data: res.update.data,
-            });
-          }
-          else
-          {
-            // this.notification.notifyCode('SYS007');
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
-          }
-        }
         else {
-          this.clearVouchers();
+          this.dialog.close();
+        }
+        this.dt.detectChanges();
+      });
+  }
+
+  /** Hàm lưu và thêm master */
+  onSaveAdd()
+  {
+    if (this.vouchers.status == '7') {
+      this.vouchers.status = '1';
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
+    }
+
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res?.update?.error || res?.save?.error) {
+          this.vouchers.status = '7';
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
+          this.vouchers.unbounds.isAddNew = true;
+        }
+        else
+        {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-            this.journalNo,
-          ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res) {
-                this.vouchers = res.data;
-                this.formType = 'add';
-                this.form.formGroup.patchValue(this.vouchers);
-                this.form.preData = { ...this.vouchers };
-                // this.notification.notifyCode('SYS006');
-                this.setFieldRequied();
-                this.detectorRef.detectChanges();
-              }
-            });
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            if (res) {
+              this.formType = 'add';
+              this.formVoucherIssue.refreshData(res.data);
+              this.detectorRef.detectChanges();
+              this.refreshGrid();
+              // this.notification.notifyCode('SYS006');
+              this.setFieldRequied();
+            }
+          });
         }
         this.dt.detectChanges();
       });
@@ -491,15 +467,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  clearVouchers() {
+  refreshGrid() {
     this.grvVouchersLine.dataSource = [];
+    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */
   setFieldRequied()
   {
     if (this.journal.assignRule == '2') {
-      this.form.setRequire([{
+      this.formVoucherIssue.setRequire([{
         field: 'VoucherNo',
         isDisable: false,
         require: false
@@ -524,7 +501,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.vouchers,
       this.reason
     );
-    this.form.formGroup.patchValue({
+    this.formVoucherIssue.formGroup.patchValue({
       memo: this.vouchers.memo,
     });
   }
@@ -549,16 +526,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if (this.form.validation())
+    if (this.formVoucherIssue.validation())
       return;
-    this.form
+    this.formVoucherIssue
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved))) {
           if (!this.vouchers.voucherNo && res?.save?.data?.voucherNo) {
             this.vouchers.voucherNo = res.save.data.voucherNo;
-            this.form.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
+            this.formVoucherIssue.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
           this.checkModeGridBeforeAddLine();
         }
