@@ -354,7 +354,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       case 'tAddress':
         if (this.data['tAddress']?.length < 1 || this.data['tAddress'] == null) return true;
         if (addressLevel == '0') {
-          return false;
+          return true;
         };
         if (!(this.data['tProvinceID']?.length > 0)) {
           unFillFields += this.grvSetUp['TProvinceID']['headerText'];
@@ -366,14 +366,14 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['TWardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['TAddress']?.headerText]);
+          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['TAddress']?.headerText);
           return false;
         }
         return true;
       case 'address':
         if (this.data['address']?.length < 1 || this.data['address'] == null) return true
         if (addressLevel == '0') {
-          return false;
+          return true;
         };
         if (!(this.data['provinceID']?.length > 0)) {
           unFillFields += this.grvSetUp['ProvinceID']['headerText'];
@@ -385,7 +385,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['WardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['Address']?.headerText]);
+          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['Address']?.headerText);
           return false;
         }
         return true;
