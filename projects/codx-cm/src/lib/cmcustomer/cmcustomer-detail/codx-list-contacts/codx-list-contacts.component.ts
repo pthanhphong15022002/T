@@ -169,8 +169,7 @@ export class CodxListContactsComponent implements OnInit {
           this.changeContacts(this.listContacts[0]);
           if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
-        if (this.objectType == '4' && this.type == 'formDetail')
-          this.lstContactEmit.emit(this.listContacts);
+        this.lstContactEmit.emit(this.listContacts);
         this.loaded = true;
       });
     } else {

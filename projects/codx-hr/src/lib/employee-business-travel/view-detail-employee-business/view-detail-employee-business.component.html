@@ -27,19 +27,34 @@
           >' '</span
         >
         <span
+          [innerHTML]="
+            itemDetail?.emp?.email ?? itemDetail?.emp.email
+              | formatvalue : formModelEmployee : 'email'
+              | async
+          "
+        ></span>
+        <!-- <span
           class="me-4 d-flex align-items-center"
           *ngIf="itemDetail?.emp?.email"
         >
           <i class="icon-email icon-16 me-2"></i>
           {{ itemDetail?.emp?.email }}
-        </span>
+        </span> -->
         <span
+          class="ms-3"
+          [innerHTML]="
+            itemDetail?.emp?.mobile ?? itemDetail?.emp.mobile
+              | formatvalue : formModelEmployee : 'mobile'
+              | async
+          "
+        ></span>
+        <!-- <span
           class="me-3 d-flex align-items-center"
           *ngIf="itemDetail?.emp?.mobile"
         >
           <i class="icon-phone_android icon-16 me-2"></i>
           {{ itemDetail?.emp?.mobile }}
-        </span>
+        </span> -->
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
@@ -104,7 +119,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.registeredDate
             | formatvalue : formModel : 'registeredDate'
@@ -120,7 +135,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.registeredBy
             | formatvalue : formModel : 'registeredBy'
@@ -138,7 +153,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.beginDate | formatvalue : formModel : 'beginDate' | async
         "
@@ -146,7 +161,7 @@
       </span>
       <span class="mx-2">-</span>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
         "
@@ -161,7 +176,7 @@
       </codx-label>
 
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.days | formatvalue : formModel : 'days' | async
         "
@@ -179,7 +194,7 @@
       </codx-label>
 
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.businessPlace
             | formatvalue : formModel : 'businessPlace'
@@ -190,7 +205,7 @@
 
       <span class="mx-2">-</span>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.address | formatvalue : formModel : 'address' | async
         "
@@ -207,7 +222,7 @@
       </codx-label>
 
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.businessPurpose
             | formatvalue : formModel : 'businessPurpose'
@@ -230,7 +245,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.transportType
             | formatvalue : formModel : 'transportType'
@@ -247,7 +262,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.chargeObject
             | formatvalue : formModel : 'chargeObject'
@@ -264,7 +279,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.country | formatvalue : formModel : 'country' | async
         "
@@ -279,7 +294,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.note | formatvalue : formModel : 'note' | async
         "

@@ -60,10 +60,7 @@
       </div>
     </div>
     <!--End Link group -->
-    <div 
-      *ngIf="isStart" 
-      class="form-group d-flex align-item-center"
-    >
+    <div *ngIf="isStart" class="form-group d-flex align-item-center">
       <codx-label
         class="label-colon"
         fiedName="status"
@@ -258,7 +255,7 @@
       >
       </codx-input>
     </div>
-    
+
     <div class="form-group" *ngIf="isShowTime">
       <div class="d-flex justify-content-between row">
         <div class="col-6">
@@ -280,17 +277,20 @@
                 min="0"
               >
               </codx-input>
-              <div class="position-absolute text-gray-400" style="top:8px; right: 14px;">
-                <codx-label
-                name="titleDate"
-                [formModel]="form?.formModel"
-                default="Ngày"
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 8px; right: 14px"
               >
-              </codx-label>
+                <codx-label
+                  name="titleDate"
+                  [formModel]="form?.formModel"
+                  default="Ngày"
+                >
+                </codx-label>
               </div>
             </div>
 
-            <div class="col-6 position-relative ">
+            <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
                 [formModel]="dialog?.formModel"
@@ -301,15 +301,17 @@
                 [disabled]="isStart"
               >
               </codx-input>
-              <div class="position-absolute text-gray-400" style="top:8px; right: 14px;">
-                <codx-label
-                name="titleHour"
-                [formModel]="form?.formModel"
-                default="Giờ"
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 8px; right: 14px"
               >
-              </codx-label>
+                <codx-label
+                  name="titleHour"
+                  [formModel]="form?.formModel"
+                  default="Giờ"
+                >
+                </codx-label>
               </div>
-             
             </div>
           </div>
         </div>
@@ -358,7 +360,9 @@
         *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
-        [default]="typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'"
+        [default]="
+          typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'
+        "
         [dataSource]="owner"
         [icon]="'icon-connection-point'"
         [style]="{ 'justify-content': 'space-between' }"
@@ -389,13 +393,13 @@
     <div class="form-group">
       <ng-container *ngFor="let item of listField">
         <codx-input-custom-field
-        [customField]="item"
-        [objectId]="item.recID"
-        [objectType]="dialog.formModel.entityName"
-        [formModel]="dialog.formModel"
-        (valueChangeCustom)="valueChangeCustom($event)"
-        (addFileCompleted)="addFileCompleted($event)"
-      ></codx-input-custom-field>
+          [customField]="item"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        ></codx-input-custom-field>
       </ng-container>
     </div>
 
@@ -421,7 +425,10 @@
       </codx-input>
     </div>
 
-    <div class="form-group d-flex align-item-center" *ngIf="isBoughtTM && isAddTM">
+    <div
+      class="form-group d-flex align-item-center"
+      *ngIf="isBoughtTM && isAddTM"
+    >
       <codx-input
         type="switch"
         class="test-check"
@@ -498,18 +505,29 @@
       ></codx-label>
     </span>
   </button>
-  <button type="button" class="btn btn-primary" (click)="beforeSave(true)" *ngIf="typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')">
-    <codx-label name="Save" formName="Sprints" default="Lưu và tạo cuộc họp"></codx-label>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="beforeSave(true)"
+    *ngIf="
+      typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')
+    "
+  >
+    <codx-label
+      name="Save"
+      formName="Sprints"
+      default="Lưu và tạo cuộc họp"
+    ></codx-label>
   </button>
   <button type="button" class="btn btn-primary" (click)="beforeSave()">
     <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
   </button>
 </ng-template>
 
- <!-- End cuoc hop -->
-      <!-- Gui mail -->
-      <!-- TODO: mail chưa có tài liệu -->
-      <!-- <div
+<!-- End cuoc hop -->
+<!-- Gui mail -->
+<!-- TODO: mail chưa có tài liệu -->
+<!-- <div
         *ngIf="typeTask?.value === 'E' || typeTask?.value === 'Q'"
         class=""
         style="flex-basis: 10%"
@@ -534,8 +552,8 @@
           </button>
         </div>
       </div> -->
-      <!-- End gui mail -->
-       <!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
+<!-- End gui mail -->
+<!-- <div class="form-group" *ngIf="typeTask?.value == 'Q'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label name="Reference" default="Tên khảo sát"></codx-label>
         <a class="d-flex justify-content-end align-items-center cursor-pointer">
@@ -556,7 +574,7 @@
       <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
     </div> -->
 
-    <!-- <div class="form-group" *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'">
+<!-- <div class="form-group" *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'">
       <codx-role
         [fiedName]="'roles'"
         [formModel]="form?.formModel"
