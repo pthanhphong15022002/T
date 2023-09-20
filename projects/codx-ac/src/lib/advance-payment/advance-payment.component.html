@@ -40,14 +40,14 @@
 </ng-template>
 <ng-template #templateDetail>
   <ng-container *ngIf="itemSelected">
-    <lib-issue-transactions-detail
+    <lib-advance-payment-detail
     [formModel]="view.formModel"
     [dataService]="this.view.dataService"
     [dataItem]="itemSelected"
     [recID]="itemSelected?.recID"
-    [funcName]="funcName"
+    [company]="company"
   >
-  </lib-issue-transactions-detail>
+  </lib-advance-payment-detail>
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>

@@ -9,6 +9,6 @@
 .header-font-size .e-dlg-header, .e-dlg-header *{
     font-size: 13px;
 }
-.height-attachments .mh-200px {
-    max-height: 75px !important;
+.height-attachments .overflow-auto {
+    max-height: 75px;
 }
