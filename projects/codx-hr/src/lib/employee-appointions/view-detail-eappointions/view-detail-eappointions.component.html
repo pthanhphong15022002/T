@@ -61,7 +61,7 @@
       <div class="text-gray-600 fs-7">
         <span
           *ngIf="
-            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
             else noOrgUnitName
           "
           >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
@@ -98,6 +98,7 @@
       </codx-temp-full>
     </div>
     <codx-vll
+      class="fw-bold"
       name="HR014"
       [value]="itemDetail?.appoint"
       [showText]="true"
@@ -290,7 +291,7 @@
               | async
           "
         ></div>
-        <span *ngIf="itemDetail.oldJobLevel; else noOldJobLevel">{{
+        <span *ngIf="itemDetail?.oldJobLevel; else noOldJobLevel">{{
           itemDetail.oldJobLevel
         }}</span>
         <ng-template #noOldJobLevel>
