@@ -412,28 +412,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.vouchers.unbounds.isAddNew = true;
         }
         else if (isclose) {
-          if (res?.save?.data) {
-            // this.notification.notifyCode('SYS006');
-            this.dialog.close({
-              update: true,
-              data: res.save.data,
-            });
-          }
-          else if (res?.update?.data) {
-            // this.notification.notifyCode('SYS007');
-            this.dialog.close({
-              update: true,
-              data: res.update.data,
-            });
-          }
-          else
-          {
-            // this.notification.notifyCode('SYS007');
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
-          }
+          this.dialog.close();
         }
         else {
           this.clearVouchers();
