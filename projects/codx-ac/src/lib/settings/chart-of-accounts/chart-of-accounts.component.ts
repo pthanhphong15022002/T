@@ -69,7 +69,7 @@ export class ChartOfAccountsComponent extends UIComponent {
         model: {
           resources: this.columnsGrid,
           template2: this.templateMore,
-          
+
         },
       },
     ];
@@ -176,6 +176,15 @@ export class ChartOfAccountsComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true).subscribe((res: any) => {});
+  }
+
+  onActions(e:any){
+    if(e.type=='add'){
+
+    }
+    if(e.type=='edit'){
+
+    }
   }
   //#endregion
 }

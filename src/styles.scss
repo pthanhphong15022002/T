@@ -3864,3 +3864,7 @@ app-setting .e-tab-header{
     height: auto!important;
   }
 }
+
+app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
+  border-color:transparent;
+}
