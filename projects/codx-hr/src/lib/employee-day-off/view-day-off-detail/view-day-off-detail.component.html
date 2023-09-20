@@ -36,19 +36,34 @@
                 >' '</span
               >
               <span
+                [innerHTML]="
+                  itemDetail?.emp?.email ?? itemDetail?.emp.email
+                    | formatvalue : formModelEmployee : 'email'
+                    | async
+                "
+              ></span>
+              <!-- <span
                 class="me-4 d-flex align-items-center"
                 *ngIf="itemDetail?.emp?.email"
               >
                 <i class="icon-email icon-16 me-2"></i>
                 {{ itemDetail?.emp?.email }}
-              </span>
+              </span> -->
               <span
+                class="ms-3"
+                [innerHTML]="
+                  itemDetail?.emp?.mobile ?? itemDetail?.emp.mobile
+                    | formatvalue : formModelEmployee : 'mobile'
+                    | async
+                "
+              ></span>
+              <!-- <span
                 class="me-3 d-flex align-items-center"
                 *ngIf="itemDetail?.emp?.mobile"
               >
                 <i class="icon-phone_android icon-16 me-2"></i>
                 {{ itemDetail?.emp?.mobile }}
-              </span>
+              </span> -->
             </div>
             <!-- 2 -->
             <div class="text-gray-600 fs-7">
@@ -107,7 +122,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.registeredDate
               | formatvalue : formModel : 'registeredDate'
@@ -126,7 +141,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.registeredBy
               | formatvalue : formModel : 'registeredBy'
@@ -140,7 +155,7 @@
         <codx-label default="Ngày nghỉ" class="text-gray-600 label-colon">
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.beginDate
               | formatvalue : formModel : 'beginDate'
@@ -151,16 +166,16 @@
         <span
           class="px-1"
           *ngIf="
-            itemDetail.endDate && itemDetail?.beginDate != itemDetail.endDate
+            itemDetail?.endDate && itemDetail?.beginDate != itemDetail?.endDate
           "
         >
           -
         </span>
         <span
           *ngIf="
-            itemDetail.endDate && itemDetail?.beginDate != itemDetail.endDate
+            itemDetail?.endDate && itemDetail?.beginDate != itemDetail?.endDate
           "
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.endDate | formatvalue : formModel : 'endDate' | async
           "
@@ -176,9 +191,9 @@
           class="text-gray-600 label-colon"
         >
         </codx-label>
-        <!-- <span class="fw-bold text-dark" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
+        <!-- <span class=" text-dark" [innerHTML]="itemDetail?.inYear | formatvalue : formModel : 'inYear'| async"> -->
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.totalDaysOff
               | formatvalue : formModel : 'totalDaysOff'
@@ -186,9 +201,7 @@
           "
         >
         </span>
-        <span class="fw-bold text-dark" *ngIf="itemDetail?.totalDaysOff"
-          >ngày</span
-        >
+        <span class="text-dark" *ngIf="itemDetail?.totalDaysOff">ngày</span>
       </div>
 
       <div class="d-flex align-items-top flex-wrap mb-1 me-4 col-12">
@@ -200,7 +213,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark text-break"
+          class="text-dark text-break"
           [innerHTML]="
             itemDetail?.reason | formatvalue : formModel : 'reason' | async
           "
@@ -217,7 +230,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.note | formatvalue : formModel : 'note' | async
           "

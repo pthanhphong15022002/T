@@ -68,4 +68,6 @@ export interface ISalesInvoice {
   sendMail: string;
   sendSMS: string;
   channelID: string;
+
+  unbounds?: any;
 }

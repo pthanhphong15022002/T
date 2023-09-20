@@ -41,6 +41,7 @@ export class ViewDetailEappointionsComponent {
   console = console;
   isLoaded: boolean = false;
   userID: any;
+  formModelEmployee;
   //Using render file
   services: string = 'DM';
   assamplyName: string = 'ERM.Business.DM';
@@ -65,6 +66,12 @@ export class ViewDetailEappointionsComponent {
 
   ngOnInit(): void {
     this.userID = this.authStore.get().userID;
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
 
   ngOnChanges() {

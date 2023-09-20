@@ -19,6 +19,7 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxAcService } from '../../../codx-ac.service';
 import {
   IJournal,
   Vll067,
@@ -27,7 +28,10 @@ import {
 import { JournalService } from '../../../journals/journals.service';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
-import { SalesInvoiceService, fmSalesInvoicesLines } from '../salesinvoices.service';
+import {
+  SalesInvoiceService,
+  fmSalesInvoicesLines,
+} from '../salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -49,7 +53,7 @@ export class SalesinvoicesAddComponent
   masterService: CRUDService;
 
   fmSalesInvoicesLines: FormModel;
-  baseCurr: string;
+  acParams: any;
   journal: IJournal;
   hiddenFields: string[] = [];
   tabs: TabModel[] = [
@@ -67,6 +71,7 @@ export class SalesinvoicesAddComponent
     injector: Injector,
     salesInvoiceService: SalesInvoiceService,
     private journalService: JournalService,
+    private acService: CodxAcService,
     private notiService: NotificationsService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
@@ -86,8 +91,8 @@ export class SalesinvoicesAddComponent
 
   //#region Init
   override onInit(): void {
-    this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res[0]?.baseCurr;
+    this.acService.getACParameters$().subscribe((res) => {
+      this.acParams = res;
     });
 
     this.hiddenFields = this.journalService.getHiddenFields(this.journal);
@@ -204,7 +209,6 @@ export class SalesinvoicesAddComponent
           }
 
           if (closeAfterSave) {
-            this.masterService.update(master).subscribe();
             this.dialogRef.close();
           } else {
             this.resetForm();
@@ -302,25 +306,28 @@ export class SalesinvoicesAddComponent
     }
 
     const field: string = e.field.toLowerCase();
+    if (
+      field === 'exchangerate' &&
+      this.acParams.BaseCurr === this.acParams.TaxCurr
+    ) {
+      this.notiService.alertCode('AC0022').subscribe(({ event }) => {
+        this.master.unbounds = {
+          requiresTaxUpdate: event.status === 'Y',
+        };
+        this.changeMaster(field);
+      });
+
+      return;
+    }
+
     const postFields: string[] = [
       'objectid',
       'currencyid',
-      'exchangerate',
+      'taxexchrate',
       'voucherdate',
     ];
     if (postFields.includes(field)) {
-      this.api
-        .exec('AC', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
-          field,
-          this.master,
-        ])
-        .subscribe((res: any) => {
-          console.log(res);
-
-          Object.assign(this.master, res);
-          this.prevMaster = { ...this.master };
-          this.form.formGroup.patchValue(res);
-        });
+      this.changeMaster(field);
     } else {
       this.prevMaster = { ...this.master };
     }
@@ -356,6 +363,7 @@ export class SalesinvoicesAddComponent
       'costprice',
     ];
     if (postFields.includes(field)) {
+      this.grid.startProcess();
       this.api
         .exec('AC', 'SalesInvoicesLinesBusiness', 'ValueChangeAsync', [
           field,
@@ -366,6 +374,7 @@ export class SalesinvoicesAddComponent
           this.prevLine = { ...line };
           Object.assign(e.data, line);
           this.detectorRef.markForCheck();
+          this.grid.endProcess();
         });
     }
   }
@@ -388,6 +397,21 @@ export class SalesinvoicesAddComponent
   //#endregion
 
   //#region Method
+  changeMaster(field: string): void {
+    this.api
+      .exec('AC', 'SalesInvoicesBusiness', 'ValueChangeAsync', [
+        field,
+        this.master,
+      ])
+      .subscribe((res: any) => {
+        console.log(res);
+
+        Object.assign(this.master, res);
+        this.prevMaster = { ...this.master };
+        this.form.formGroup.patchValue(res);
+      });
+  }
+
   resetForm(): void {
     this.masterService
       .addNew(() =>

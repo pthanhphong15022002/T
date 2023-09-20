@@ -90,19 +90,20 @@
           itemDetail?.inforEmployee?.positionName
         }}</span>
         <span
-          class="me-4 d-flex align-items-center"
-          *ngIf="itemDetail?.inforEmployee?.email"
-        >
-          <i class="icon-email icon-16 me-2"></i>
-          {{ itemDetail?.inforEmployee?.email }}
-        </span>
+          [innerHTML]="
+            itemDetail?.inforEmployee?.email ?? itemDetail?.inforEmployee.email
+              | formatvalue : formModelEmployee : 'email'
+              | async
+          "
+        ></span>
         <span
-          class="me-3 d-flex align-items-center"
-          *ngIf="itemDetail?.inforEmployee?.phone"
-        >
-          <i class="icon-phone_android icon-16 me-2"></i>
-          {{ itemDetail?.inforEmployee?.phone }}
-        </span>
+          class="ms-3"
+          [innerHTML]="
+            itemDetail?.inforEmployee?.phone ?? itemDetail?.inforEmployee.phone
+              | formatvalue : formModelEmployee : 'phone'
+              | async
+          "
+        ></span>
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
@@ -173,7 +174,7 @@
           >
           </codx-label>
           <span
-            class="text-dark fw-bold"
+            class="text-dark"
             [innerHTML]="
               itemDetail?.limitMonths
                 | formatvalue : formModel : 'limitMonths'
@@ -191,7 +192,7 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="fw-bold text-dark">
+          <span class="text-dark">
             {{ itemDetail?.contractNo }}
           </span>
         </div>
@@ -203,7 +204,7 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span class="text-dark fw-bold">
+          <span class="text-dark">
             {{ itemDetail?.effectedDate | fmDT }}
             <span *ngIf="itemDetail?.expiredDate">
               - {{ itemDetail?.expiredDate | fmDT }}
@@ -219,7 +220,7 @@
           >
           </codx-label>
           <span
-            class="text-dark fw-bold"
+            class="text-dark"
             class="me-4"
             [ngbTooltip]="grvSetup?.SignedDate?.headerText"
             [innerHTML]="
@@ -241,7 +242,7 @@
           >
           </codx-label>
           <span
-            class="text-dark fw-bold"
+            class="text-dark"
             *ngIf="
               itemDetail?.orgUnitName || itemDetail?.inforEmployee?.orgUnitName;
               else noOrgUnitName
@@ -265,7 +266,7 @@
           </codx-label>
 
           <span
-            class="text-dark fw-bold"
+            class="text-dark"
             [innerHTML]="
               itemDetail?.positionID
                 | formatvalue : formModel : 'positionID'
