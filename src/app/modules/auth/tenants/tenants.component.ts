@@ -84,7 +84,7 @@ export class TenantsComponent implements OnInit {
             });
           } else {
             this.authService.setLogin(res);
-            this.loginService.loginAfter(res);
+            this.loginService.loginAfter({ data: res });
           }
         }
         return res;
