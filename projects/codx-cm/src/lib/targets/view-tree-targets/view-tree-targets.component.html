@@ -17,7 +17,7 @@
 </div>
 
 <ng-template #templateTree let-item>
-  <div (click)="clickTreeNode($event)">
+  <div (click)="clickTreeNode($event)" *ngIf="item.isAdmin || checkPerm(item)">
     <div
       class="d-flex justify-content-between align-items-center w-100"
       *ngIf="viewCurrent == '1'"
@@ -71,9 +71,11 @@
           *ngIf="item?.parentID == null"
         >
           <codx-imgs
-            *ngIf="item?.owner != null && item?.owner.trim() != ''"
+            *ngIf="
+              item?.salespersonID != null && item?.salespersonID.trim() != ''
+            "
             [width]="30"
-            [objectId]="item?.owner"
+            [objectId]="item?.salespersonID"
             objectType="AD_Users"
             [numberImages]="5"
             class=""
@@ -138,6 +140,7 @@
           </span>  -->
           <span class="target-mfunc">
             <codx-mfunc
+              *ngIf="item.isAdmin"
               [ngStyle]="
                 item?.parentID == null ? { top: '0px' } : { top: '0px' }
               "
