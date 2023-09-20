@@ -306,6 +306,7 @@
 
   <ng-template #descTmp>
     <span
+      class="fw-bold"
       [ngbTooltip]="grvSetup?.KowID?.headerText"
       [innerHTML]="data?.kowID | formatvalue : view.formModel : 'kowID' | async"
     ></span>

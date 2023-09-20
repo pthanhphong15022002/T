@@ -99,12 +99,22 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   valueChange(e: any){
     this.advancedPayment[e.field] = e.data;
-    if(e.field == 'reasonID')
+  }
+
+  dropdownChange(e: any)
+  {
+    switch(e.field)
     {
-      if (e.itemData.ReasonID) {
-        let text = e.itemData.ReasonName;
-        this.setMemo(e.field.toLowerCase(), text, 0);
-      }
+      case 'objectID':
+        this.advancedPayment[e.field] = e.data[0];
+        break;
+      case 'reasonID':
+        this.advancedPayment[e.field] = e.data[0];
+        if (e.itemData[0].ReasonID) {
+          let text = e.itemData[0].ReasonName;
+          this.setMemo(e.field.toLowerCase(), text, 0);
+        }
+        break;
     }
   }
 
