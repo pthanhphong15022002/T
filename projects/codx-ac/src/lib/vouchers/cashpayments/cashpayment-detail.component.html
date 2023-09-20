@@ -8,8 +8,8 @@
             <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
                 <div id="tipsub" style="background-color: var(--primary-dark)"
                     class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-                    <i style="font-size: 16px !important;" class="text-white"
-                        [class]="itemSelected?.journalType | vll : 'AC064' : 'icon' | async"></i>
+                    <i style="font-size: 13px !important;" class="text-white"
+                        [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
                 </div>
                 <ng-template #content>
                     <span>{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>

@@ -29,6 +29,7 @@ export class AdvancePaymentComponent extends UIComponent{
   gridViewSetup: any;
   company: any;
   itemSelected: any;
+  parent: any;
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
@@ -49,6 +50,18 @@ export class AdvancePaymentComponent extends UIComponent{
     .subscribe((res: any) => {
       if (res.length > 0) {
         this.company = res[0];
+      }
+    });
+
+    this.routerActive.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((params) => {
+      if (params?.parent) {
+        this.cache.functionList(params.parent)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) this.parent = res;
+        });
       }
     });
   }
@@ -86,6 +99,8 @@ export class AdvancePaymentComponent extends UIComponent{
     .subscribe((res: any) => {
       this.funcName = res.defaultName;
     });
+
+    this.view.setRootNode(this.parent?.customName);
   }
 
   ngOnDestroy() {
