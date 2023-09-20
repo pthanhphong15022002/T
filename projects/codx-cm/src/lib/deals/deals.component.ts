@@ -657,7 +657,10 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-
+    if( data?.alloweStatus != '1' || !data?.full ) {
+      this.notificationsService.notifyCode('CM027');
+      return;
+    }
     if (data.closed) {
       this.notificationsService.notifyCode('DP039');
       return;
@@ -778,6 +781,7 @@ export class DealsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
+            isCallInstance: true
             // listStepCbx: this.lstStepInstances,
           };
           var obj = {
@@ -826,7 +830,6 @@ export class DealsComponent
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.probability,
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -923,7 +926,7 @@ export class DealsComponent
         this.detailViewDeal.dataSelected = JSON.parse(
           JSON.stringify(this.dataSelected)
         );
-        this.detailViewDeal.getContactByDeaID(this.dataSelected.recID);
+     //   this.detailViewDeal.getListContactByDealID(this.dataSelected.recID);
         this.changeDetectorRef.detectChanges();
       }
     });

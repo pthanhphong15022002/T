@@ -11,11 +11,6 @@
   >
 </codx-views>
 <ng-template #report>
-  <!-- <report-viewer [reportUUID]="reportUUID"[parameters]="param" [print]="print"></report-viewer> -->
-  <!-- <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
-
-  </iframe> -->
-  <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
   <ng-container *ngIf="data">
     <ng-container *ngIf="isRunMode ; else tmpElse">
       <div class="d-flex align-items-center justify-content-center w-100 h-100">
@@ -33,7 +28,7 @@
         <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true"></lib-pdf>
       </ng-container>
       <ng-template #reportBolder>
-        <codx-report-iframe [service]="data.service" [funcID]="data.recID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe>
+        <codx-report-iframe [service]="data.service" [funcID]="data.recID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" [format]="_formatString" ></codx-report-iframe>
       </ng-template>
     </ng-template>
   </ng-container>

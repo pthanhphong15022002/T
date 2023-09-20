@@ -43,6 +43,8 @@ declare var jsBh: any;
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+
+
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -99,7 +101,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
-        
+
       });
   }
   //#endregion
@@ -146,6 +148,15 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
+        subModel:{
+          gridviewName:'grvCashPaymentsLines',
+          formName:'CashPaymentsLines',
+          entityName:'AC_CashPaymentsLines',
+          service:'AC',
+          predicates:'TransID=@0',
+          rowNoField:'rowNo',
+
+        },
         model: {
           template2: this.templateGrid,
         },
@@ -157,6 +168,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
+    console.log(this.view);
 
   }
 
@@ -255,6 +267,7 @@ onSelectedItem(event) {
   addNewVoucher() {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
           if(this.dataDefault == null) this.dataDefault = {...res};
@@ -281,6 +294,7 @@ onSelectedItem(event) {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -308,8 +322,10 @@ onSelectedItem(event) {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
       .copy((o) => this.setDefault(dataCopy))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
           let data = {
@@ -402,6 +418,7 @@ onSelectedItem(event) {
       }
       switch (data?.status) {
         case '7':
+        case '2':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
@@ -620,7 +637,7 @@ onSelectedItem(event) {
       this.journal,
     ]);
   }
-  
+
   /**
    * *Hàm in chứng từ (xử lí cho MF In)
    * @param data
@@ -676,7 +693,7 @@ onSelectedItem(event) {
     );
   }
 
-  
+
 
   /**
    * *Hàm hủy các obsevable subcrible

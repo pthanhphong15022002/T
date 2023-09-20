@@ -36,6 +36,7 @@ export class OrgorganizationComponent extends UIComponent {
   templateActive: number = 0;
   isCorporation: boolean = false;
   request: any = null;
+  requestTitle: any = null;
   viewActive: string = '';
   count: any;
   buttonAdd: ButtonModel;
@@ -86,13 +87,32 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    var objectRequest = {
+      service: 'HR',
+      assemblyName: 'ERM.Business.HR',
+      className: 'OrganizationUnitsBusiness',
+      method: 'GetDataOrgAsync',
+      autoLoad: false,
+      parentIDField: 'ParentID',
+    };
+
     this.request = new ResourceModel();
-    this.request.service = 'HR';
-    this.request.assemblyName = 'ERM.Business.HR';
-    this.request.className = 'OrganizationUnitsBusiness';
-    this.request.method = 'GetDataOrgAsync';
-    this.request.autoLoad = false;
-    this.request.parentIDField = 'ParentID';
+    this.request.service = objectRequest.service;
+    this.request.assemblyName = objectRequest.assemblyName;
+    this.request.className = objectRequest.className;
+    this.request.method = objectRequest.method;
+    this.request.autoLoad = objectRequest.autoLoad;
+    this.request.parentIDField = objectRequest.parentIDField;
+
+    this.requestTitle = new ResourceModel();
+    this.requestTitle.service = objectRequest.service;
+    this.requestTitle.assemblyName = objectRequest.assemblyName;
+    this.requestTitle.className = objectRequest.className;
+    this.requestTitle.method = objectRequest.method;
+    this.requestTitle.autoLoad = objectRequest.autoLoad;
+    this.requestTitle.parentIDField = objectRequest.parentIDField;
+    //gridModel.DataObj Check mode chart not get employee
+    this.requestTitle.dataObj = 'NoEmployee';
 
     // if (this.funcIDCheck.includes('WP')) {
     //   this.views = [
@@ -120,10 +140,11 @@ export class OrgorganizationComponent extends UIComponent {
         id: '3',
         type: ViewType.tree_orgchart,
         sameData: false,
-        request: this.request,
+        request: this.requestTitle,
         model: {
           template: this.tempTree,
           panelRightRef: this.tmpOrgChart,
+          collapsed: true,
         },
       },
     ];
@@ -319,7 +340,6 @@ export class OrgorganizationComponent extends UIComponent {
       } else {
         this.view.dataService.parentIdField = 'ParentID';
       }
-
       if (
         this.view.currentView.dataService &&
         this.view.currentView.dataService.currentComponent

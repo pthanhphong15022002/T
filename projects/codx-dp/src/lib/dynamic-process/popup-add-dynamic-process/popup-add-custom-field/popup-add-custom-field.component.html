@@ -419,17 +419,14 @@
           >
           </codx-label>
           <ng-container *ngFor="let item of datasVll; index as i">
-            <div
-              class="cursor-pointer form-group has-action-menu"
-              [ngbTooltip]="toolDeleted"
-              placement="right left"
-              container="body"
-            >
+            <div class="cursor-pointer form-group has-action-menu">
               <!-- <div class="d-flex">
               <span>
                 <span class="label-colon" [innerHTML]="i"></span>
               </span> -->
               <input
+                [ngbTooltip]="toolDeleted"
+                placement="right left"
                 class="form-control no-border"
                 #textEditValue
                 type="text"
