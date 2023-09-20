@@ -257,7 +257,6 @@ export class PurchaseinvoicesAddComponent
           }
 
           if (closeAfterSave) {
-            this.masterService.update(master).subscribe();
             this.dialog.close();
           } else {
             this.resetForm();
