@@ -103,7 +103,6 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
