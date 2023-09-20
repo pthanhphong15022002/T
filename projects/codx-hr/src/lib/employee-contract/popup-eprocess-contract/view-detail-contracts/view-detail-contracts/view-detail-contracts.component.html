@@ -90,19 +90,20 @@
           itemDetail?.inforEmployee?.positionName
         }}</span>
         <span
-          class="me-4 d-flex align-items-center"
-          *ngIf="itemDetail?.inforEmployee?.email"
-        >
-          <i class="icon-email icon-16 me-2"></i>
-          {{ itemDetail?.inforEmployee?.email }}
-        </span>
+          [innerHTML]="
+            itemDetail?.inforEmployee?.email ?? itemDetail?.inforEmployee.email
+              | formatvalue : formModelEmployee : 'email'
+              | async
+          "
+        ></span>
         <span
-          class="me-3 d-flex align-items-center"
-          *ngIf="itemDetail?.inforEmployee?.phone"
-        >
-          <i class="icon-phone_android icon-16 me-2"></i>
-          {{ itemDetail?.inforEmployee?.phone }}
-        </span>
+          class="ms-3"
+          [innerHTML]="
+            itemDetail?.inforEmployee?.phone ?? itemDetail?.inforEmployee.phone
+              | formatvalue : formModelEmployee : 'phone'
+              | async
+          "
+        ></span>
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
