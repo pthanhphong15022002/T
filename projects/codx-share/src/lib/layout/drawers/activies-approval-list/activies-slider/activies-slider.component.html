@@ -3,8 +3,8 @@
 </codx-form>
 <ng-template #subheader>
   <div class="codx-approval-filter" ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
-    <button class="btn btn-sm btn-light-primary" *ngIf="valueSelected">
-      <span class="w-20px" [class]="valueSelected.icon"></span>
+    <button type="button" class="btn btn-sm btn-light-primary" *ngIf="valueSelected">
+      <i class="icon-14" [class]="valueSelected.icon"></i>
       <span>
         {{valueSelected.text}}
       </span>
@@ -12,9 +12,9 @@
     <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle" id="noti-dropdownPopup" class="dropdown-menu">
       <div ngbDropdownMenu>
         <ng-container *ngFor="let item of datas">
-          <button (click)="valueChange(item)" ngbDropdownItem>
-            <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
-            </span>
+          <button type="button" (click)="valueChange(item)" ngbDropdownItem>
+            <i class="me-2 text-gray-700 icon-16" [class]="item.icon">
+            </i>
             <span>
               {{item.text}}
             </span>

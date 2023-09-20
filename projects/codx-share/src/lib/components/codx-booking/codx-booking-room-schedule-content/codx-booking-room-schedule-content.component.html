@@ -7,13 +7,13 @@
     </span>
   </div>
 
-  <div class="d-flex mt-2 w-100 fs-7">
+  <div class="d-flex mt-1 w-100 fs-7 text-gray-600">
     <i class="icon-person icon-16 me-1"></i>
     <span class="text-break">
       {{ data?.requester }}
     </span>
   </div>
-  <div class="d-flex mt-1 w-100 fs-7">
+  <div class="d-flex w-100 fs-7 text-gray-600">
     <i class="icon-location_on icon-16 me-1"></i>
     <span class="text-break">
       <span>
@@ -26,7 +26,7 @@
     </span>
   </div>
 
-  <div class="d-flex mt-1 w-100 position-relative">
+  <div class="d-flex w-100 position-relative">
     <div class="d-flex align-items-center me-4">
       <i class="icon-calendar_today icon-16 me-1"></i>
       <span *ngIf="data?.startDate && data?.endDate" class="">
@@ -52,9 +52,8 @@
       <codx-label default="Họp ngay" name="lblMeeting" class=""></codx-label>
     </span> -->
   </div>
-
-  <hr />
-  <div class="d-flex mt-1 mb-2 me-6" *ngIf="data?.onlineUrl">
+<hr />
+  <div class="d-flex mb-1 me-6" *ngIf="data?.onlineUrl">
     <codx-label
       default="Họp trực tuyến"
       name="lblOnlineUrl"
@@ -159,7 +158,7 @@
             <codx-img
               [objectId]="item?.resourceRecID"
               imageType="circle"
-              width="35"
+              width="25"
               objectType="EP_Resources"
               [objectName]="item?.itemName"
             ></codx-img>
