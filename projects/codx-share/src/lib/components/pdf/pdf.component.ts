@@ -767,8 +767,26 @@ export class PdfComponent
       let ngxService: NgxExtendedPdfViewerService =
         new NgxExtendedPdfViewerService();
 
-      if (this.isSignMode) {
-        if (this.curPage == 1) {
+      //trinh ky
+      if (!this.isSignMode) {
+        if (this.curPage == 1 && this.needSuggest) {
+          this.curPage = this.pageMax;
+        }
+      } else {
+        let firstAreaOfSigner = null;
+        if (this.lstAreas?.length > 0) {
+          firstAreaOfSigner = this.lstAreas?.reduce((prev, curr) => {
+            if (curr.signer != this.curSignerID) return null;
+            else {
+              return prev.location.pageNumber < curr.location.pageNumber
+                ? prev
+                : curr;
+            }
+          });
+        }
+        if (firstAreaOfSigner != null) {
+          this.curPage = firstAreaOfSigner.location.pageNumber + 1;
+        } else if (this.curPage == 1 && this.needSuggest) {
           this.curPage = this.pageMax;
         }
       }
