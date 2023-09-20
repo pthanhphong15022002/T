@@ -180,7 +180,6 @@ export class CmCustomerComponent
         active: false,
         model: {
           template2: this.templateMore,
-          resources: this.columnGrids,
         },
       },
     ];

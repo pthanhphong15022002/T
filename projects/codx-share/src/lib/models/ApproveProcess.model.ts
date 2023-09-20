@@ -58,6 +58,7 @@ export const ShareType = {
   
   //Hiện data động - lưu giá trị tham chiếu tĩnh
   Position: 'P', //	Chức danh công việc  
+  
   AC: 'AC', //	Thư ký Giám đốc công ty  
   DC: 'DC', //	Phó Giám đốc công ty
   CEO: 'CEO', //	Giám đốc công ty
