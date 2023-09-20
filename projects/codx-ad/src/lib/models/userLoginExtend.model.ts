@@ -10,5 +10,6 @@ export class Device {
   public imei: string;
   public trust: boolean;
   public times: string;
+  public tenantID: string;
   public createdOn?: Date;
 }

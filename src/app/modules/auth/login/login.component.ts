@@ -1,3 +1,4 @@
+import { LoginService } from './login.service';
 import { environment } from 'src/environments/environment';
 import {
   Component,
@@ -81,7 +82,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   unsubscribe: Subscription[] = [];
   iParams = '';
   loginDevice: Device;
-
+  tenant;
   constructor(
     private inject: Injector,
     private fb: FormBuilder,
@@ -97,11 +98,12 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService,
-    private deviceInfo: AngularDeviceInformationService
+    private deviceInfo: AngularDeviceInformationService,
+    private loginService: LoginService
   ) {
     super(inject);
     this.layoutCZ = environment.layoutCZ;
-    const tenant = this.tenantStore.getName();
+    this.tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 
     this.cache.systemSetting().subscribe((res) => {
@@ -162,7 +164,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               } else {
                 document.location.href = this.returnUrl;
               }
-            } else this.navRouter.navigate([`/${tenant}`]);
+            } else this.navRouter.navigate([`/${this.tenant}`]);
           }
         });
       }
@@ -174,6 +176,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       ip: '',
       imei: null,
       trust: false,
+      tenantID: this.tenant,
       times: '1',
     };
     console.log('login device info', this.loginDevice);
@@ -384,7 +387,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             .login(this.fl.email.value, this.fl.password.value)
             .pipe()
             .subscribe((data) => {
-              this.loginAfter(data);
+              this.loginService.loginAfter(data);
             });
           this.unsubscribe.push(loginSubscr);
         } else {
@@ -430,14 +433,14 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               if (lg2FAEvt.event.data.error) return;
               this.authService.setLogin(data.data);
 
-              this.loginAfter(lg2FAEvt.event.data);
+              this.loginService.loginAfter(lg2FAEvt.event.data);
             });
           } else {
             this.authService.setLogin(data.data);
-            this.loginAfter(data);
+            this.loginService.loginAfter(data);
           }
         } else {
-          this.loginAfter(data);
+          this.loginService.loginAfter(data);
         }
       });
     this.unsubscribe.push(loginSubscr);
@@ -447,45 +450,45 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     var id = '';
   }
 
-  private loginAfter(data: any) {
-    if (!data.error) {
-      const user = data.data;
-      if (this.signalRService.logOut) {
-        this.signalRService.createConnection();
-      }
-      this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-      if (this.returnUrl) {
-        this.returnUrl = decodeURIComponent(this.returnUrl);
-      }
+  // private loginAfter(data: any) {
+  //   if (!data.error) {
+  //     const user = data.data;
+  //     if (this.signalRService.logOut) {
+  //       this.signalRService.createConnection();
+  //     }
+  //     this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+  //     if (this.returnUrl) {
+  //       this.returnUrl = decodeURIComponent(this.returnUrl);
+  //     }
 
-      if (
-        this.returnUrl.indexOf('http://') == 0 ||
-        this.returnUrl.indexOf('https://') == 0
-      ) {
-        this.iParams = UrlUtil.getUrl('i') || '';
+  //     if (
+  //       this.returnUrl.indexOf('http://') == 0 ||
+  //       this.returnUrl.indexOf('https://') == 0
+  //     ) {
+  //       this.iParams = UrlUtil.getUrl('i') || '';
 
-        if (this.iParams.toLocaleLowerCase() == 'hcs') {
-          this.shareService.redirect(this.iParams, this.returnUrl);
-        } else window.location.href = this.returnUrl;
-      } else {
-        if (this.returnUrl.indexOf(user.tenant) > 0)
-          return this.navRouter.navigate([`${this.returnUrl}`]);
-        else if (environment.saas == 1) {
-          if (!user.tenant) return this.navRouter.navigate(['/tenants']);
-          else
-            return this.navRouter.navigate([
-              `${this.returnUrl ? this.returnUrl : user.tenant}`,
-            ]);
-        }
-        window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
-      }
-    } else {
-      if (data.error.errorCode === 'AD027')
-        return this.navRouter.navigate(['/']);
-      // this.notificationsService.notify(data.error.errorMessage);
-    }
-    return false;
-  }
+  //       if (this.iParams.toLocaleLowerCase() == 'hcs') {
+  //         this.shareService.redirect(this.iParams, this.returnUrl);
+  //       } else window.location.href = this.returnUrl;
+  //     } else {
+  //       if (this.returnUrl.indexOf(user.tenant) > 0)
+  //         return this.navRouter.navigate([`${this.returnUrl}`]);
+  //       else if (environment.saas == 1) {
+  //         if (!user.tenant) return this.navRouter.navigate(['/tenants']);
+  //         else
+  //           return this.navRouter.navigate([
+  //             `${this.returnUrl ? this.returnUrl : user.tenant}`,
+  //           ]);
+  //       }
+  //       window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
+  //     }
+  //   } else {
+  //     if (data.error.errorCode === 'AD027')
+  //       return this.navRouter.navigate(['/']);
+  //     // this.notificationsService.notify(data.error.errorMessage);
+  //   }
+  //   return false;
+  // }
   //#endregion
 
   ngOnDestroy() {

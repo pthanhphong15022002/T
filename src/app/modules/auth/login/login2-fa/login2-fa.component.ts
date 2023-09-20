@@ -53,6 +53,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         imei: null,
         trust: false,
         times: '2',
+        tenantID: '',
       };
     }
     console.log('login2fa device info', this.loginDevice);
@@ -78,6 +79,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
 
   //#region OTP
   otpTimeout = 0;
+  otpMinutes = 0;
   otpValues = ['', '', '', '', '', ''];
   //#endregion
 
@@ -215,11 +217,12 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       )
       .subscribe((success) => {
         if (success) {
-          this.otpTimeout = 30000;
+          this.otpTimeout = 180;
 
           let id = setInterval(
             () => {
-              this.otpTimeout -= 1000;
+              this.otpTimeout -= 1;
+              this.otpMinutes = Math.floor(this.otpTimeout / 60);
               this.detectorRef.detectChanges();
               if (this.otpTimeout === 0) {
                 clearInterval(id);
