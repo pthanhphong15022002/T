@@ -14,6 +14,9 @@ export class AdvancePaymentComponent extends UIComponent{
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
+
   private destroy$ = new Subject<void>();
   views: Array<ViewModel> = [];
   button: ButtonModel = {
@@ -25,6 +28,8 @@ export class AdvancePaymentComponent extends UIComponent{
   funcName: any;
   gridViewSetup: any;
   company: any;
+  itemSelected: any;
+  parent: any;
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
@@ -47,6 +52,18 @@ export class AdvancePaymentComponent extends UIComponent{
         this.company = res[0];
       }
     });
+
+    this.routerActive.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((params) => {
+      if (params?.parent) {
+        this.cache.functionList(params.parent)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
+    });
   }
 
   //End Constructor
@@ -60,10 +77,19 @@ export class AdvancePaymentComponent extends UIComponent{
     this.views = [
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template2: this.templateMore,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
       },
     ];
@@ -73,6 +99,8 @@ export class AdvancePaymentComponent extends UIComponent{
     .subscribe((res: any) => {
       this.funcName = res.defaultName;
     });
+
+    this.view.setRootNode(this.parent?.customName);
   }
 
   ngOnDestroy() {
@@ -141,12 +169,6 @@ export class AdvancePaymentComponent extends UIComponent{
             '',
             opt
           );
-          dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-            }
-          });
         }
       });
   }
@@ -177,12 +199,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -216,12 +232,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -248,6 +258,13 @@ export class AdvancePaymentComponent extends UIComponent{
 
   setDefault() {
     return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync');
+  }
+
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.itemSelected = event?.data;
+      this.detectorRef.detectChanges();
+    }
   }
   //End Function
 }

@@ -83,6 +83,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     this.action = dialogData?.data?.action;
     this.headerText = dialogData?.data?.text;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
+    this.oriData = this.data;
     this.funcID = this.routerActive.snapshot.params['funcID'];
 
     if (this.action === 'edit') {
@@ -106,7 +107,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           [this.data.employeeID]
         ).subscribe(res => {
           if (res) {
-            this.data = res;
+            this.data = JSON.parse(JSON.stringify(res));
             this.oriData = JSON.parse(JSON.stringify(res));
             this.form.formGroup.patchValue(this.data);
             this.hasChangedData = false;
@@ -353,7 +354,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       case 'tAddress':
         if (this.data['tAddress']?.length < 1 || this.data['tAddress'] == null) return true;
         if (addressLevel == '0') {
-          return false;
+          return true;
         };
         if (!(this.data['tProvinceID']?.length > 0)) {
           unFillFields += this.grvSetUp['TProvinceID']['headerText'];
@@ -365,14 +366,14 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['TWardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['TAddress']?.headerText]);
+          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['TAddress']?.headerText);
           return false;
         }
         return true;
       case 'address':
         if (this.data['address']?.length < 1 || this.data['address'] == null) return true
         if (addressLevel == '0') {
-          return false;
+          return true;
         };
         if (!(this.data['provinceID']?.length > 0)) {
           unFillFields += this.grvSetUp['ProvinceID']['headerText'];
@@ -384,7 +385,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['WardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, [unFillFields, this.grvSetUp['Address']?.headerText]);
+          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['Address']?.headerText);
           return false;
         }
         return true;

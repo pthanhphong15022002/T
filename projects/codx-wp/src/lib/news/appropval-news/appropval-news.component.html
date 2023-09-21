@@ -1,10 +1,13 @@
 <codx-views #view 
+  *ngIf="function"
   [views]="views" 
+  [funcID]="function.functionID"
+  [entityName]="function.entityName"
   idField="recID" 
-  [service]="'WP'"
-  [assemblyName]="'ERM.Business.WP'"
-  [className]="'NewsBusiness'"
-  [method]="'GetDataApproAsync'"
+  service="WP"
+  assemblyName="ERM.Business.WP"
+  className="NewsBusiness"
+  method="GetDataApproAsync"
   [selectedFirst]="true" 
   (selectedChange)="selectedChange($event)">
 </codx-views>
@@ -46,13 +49,13 @@
   </div>
 </ng-template>
 <ng-template #panelRightRef>
-  <wp-appropval-news-detail 
+  <wp-appropval-detail
     #tmpDetail
     [objectID]="selectedID" 
+    [function]="function" 
     [dataService]="view.dataService"
-    [funcID]="view.funcID" 
-    (evtUpdateApproval)="loadDataTab()" 
-    [formModel]="view.formModel">
-  </wp-appropval-news-detail>
+    [formModel]="view.formModel"
+    (evtApprovalPost)="changeApproSatusPost($event)">
+  </wp-appropval-detail>
 </ng-template>
 

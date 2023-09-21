@@ -7,12 +7,12 @@
           <div (dblclick)="openFile(item.data)" class="cursor-pointer">
             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
             <ng-template #simple>
-              <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
+              <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-16px me-2 cursor-pointer"
                 title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})" [descLine]="1">
               </codx-temp-full>
             </ng-template>
             <ng-template #full>
-              <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
+              <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-16px me-2 cursor-pointer"
                 title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
                 subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}" [descLine]="1">
               </codx-temp-full>
@@ -167,12 +167,12 @@
             <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
           </ng-container>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-26px me-2 cursor-pointer"
               title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1" (click)="openFile(item)">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-26px me-2 cursor-pointer"
               title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
               subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1" (click)="openFile(item)">
             </codx-temp-full>

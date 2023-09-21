@@ -149,7 +149,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     this.posEmpPageIndex = 0;
     this.scrolling = true;
     this.currentViewPosEmp = { countEmp: 0, employees: [] }
-    if (changes.positionID.currentValue != changes.positionID.previousValue) {
+    if (changes.positionID?.currentValue && changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.haveHighLight = true;
       // if(this.addedData.positionID != null){
@@ -344,7 +344,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           option.FormModel = this.view.formModel;
           option.Width = '800px';
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
             funcID: this.funcID,
@@ -376,7 +375,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             funcID: this.funcID,
@@ -481,7 +479,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    //var totalScroll = ele.offsetHeight + ele.scrollTop;
     var totalScroll = ele.clientHeight + ele.scrollTop;
     if (this.scrolling && totalScroll == ele.scrollHeight) {
       this.getEmpListPaging(positionID);
@@ -543,7 +540,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   hasOpenEmpList(positionID: string, event: Event) {
     event.stopPropagation();
-    // event.preventDefault();
     if (this.viewEmpPosition !== positionID) { //change position
       this.posEmpPageIndex = 1;
       this.scrolling = true;

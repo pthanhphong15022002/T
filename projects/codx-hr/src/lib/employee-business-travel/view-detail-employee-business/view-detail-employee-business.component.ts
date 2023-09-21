@@ -60,6 +60,7 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
   benefitFormGroup: FormGroup;
   active = 1;
   dataOldSalary;
+  formModelEmployee;
   console = console;
 
   ngOnInit(): void {
@@ -77,6 +78,12 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
               this.benefitFormGroup = fg;
             }
           });
+      }
+    });
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
       }
     });
   }

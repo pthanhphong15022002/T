@@ -358,6 +358,7 @@ export class StepService {
     task['stepID'] = instanceStep ? instanceStep?.recID : task?.stepID;
     task['progress'] = 0;
     task['taskGroupID'] = groupID || null;
+    task['recID'] = Util.uid();
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';

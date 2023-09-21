@@ -22,6 +22,7 @@ import {
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
 import { Observable, finalize, map } from 'rxjs';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -54,6 +55,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect
 
   addSuccess = true;
   errorMessage = '';
@@ -96,12 +98,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   // serviceTemp = 'SYS';
   // assemblyNameTemp = 'SYS';
   // classNameTemp = 'ValueListBusiness';
-  // methodTemp = 'GetVllCustormByFormatAsync';
+  // methodTemp = 'GetVllCustomsByFormatAsync';
   // requestTemp = new DataRequest();
   datasVll: any[];
   user: any;
   fieldsVll = { text: 'textValue', value: 'value' };
   plancehoderVll: any;
+  mutiSelectVll = false;
 
   constructor(
     private cache: CacheService,
@@ -545,13 +548,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
       ])
       .subscribe((vl) => {
         if (vl) {
+          this.mutiSelectVll = vl?.multiSelect;
           this.plancehoderVll = vl?.note;
           var defaultValues = vl?.defaultValues?.split(';');
           if (!defaultValues || defaultValues?.length == 0) {
             this.datasVll = [];
             return;
           }
-          if (vl.lineType == 1) {
+          if (vl.listType == 1) {
             this.datasVll = defaultValues.map((x) => {
               return {
                 textValue: x,
@@ -559,11 +563,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
               };
             });
           }
-
           //chua lam 2
         } else this.datasVll = [];
+        if (this.comboxValue) this.comboxValue.refresh();
       });
   }
+
   cbxChangeVll(value) {
     this.customField.dataValue = value;
   }

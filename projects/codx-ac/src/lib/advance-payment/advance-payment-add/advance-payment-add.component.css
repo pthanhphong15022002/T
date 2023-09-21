@@ -1,27 +1,23 @@
 .voucherText{
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100px;
 }
-.btn-addline{
-    position: absolute;
-    right: 0;
-    top: -32px;
+.amount .e-editable-value{
+    justify-content: end;
 }
-#gridViewV2.e-grid .e-summarycell {
-    border-width: 0;
+.header-font-size .e-dlg-header, .e-dlg-header *{
+    font-size: 13px;
 }
-#gridViewV2 {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.height-attachments .mh-200px {
+    max-height: 75px !important;
 }
-#gridViewV2 .e-gridcontent {
-flex: 1;
-}
-#gridViewV2 .e-content {
-height: 100%;
-}
-.rounded-15{
-    border-radius: 15px !important;
+.dropdown-input .text-truncate{
+    text-align: left !important;
+    font-weight: normal !important;
+ }
+ .dropdown-input .icon-keyboard_arrow_down{
+    display: none;
+ }
+ .dropdown-input .text-muted{
+    color: #212529 !important;
  }

@@ -1,0 +1,14 @@
+.voucherText{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+.amount .e-editable-value{
+    justify-content: end;
+}
+.header-font-size .e-dlg-header, .e-dlg-header *{
+    font-size: 13px;
+}
+.height-attachments .overflow-auto {
+    max-height: 75px;
+}

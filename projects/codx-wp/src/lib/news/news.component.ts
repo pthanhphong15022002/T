@@ -169,11 +169,15 @@ export class NewsComponent extends UIComponent {
         pageIndex,
       ])
       .subscribe((res: any[]) => {
+        debugger
         let data = res[0];
         let total = res[1];
-        if (data.length > 0) {
+        if (data.length > 0) 
+        {
+          debugger
           this.page = Math.ceil(total / 6);
-          if (this.scrolled) {
+          if (this.scrolled) 
+          {
             this.videos = this.videos.concat(data);
             this.scrolled = false;
             this.carousel.pause();
@@ -183,10 +187,10 @@ export class NewsComponent extends UIComponent {
               this.slides[slideIndex] = data.slice(index, index + 3);
               slideIndex++;
             }
-            this.scrolled = false;
-            this.detectorRef.detectChanges();
-          } else {
-            this.videos = JSON.parse(JSON.stringify(data));
+          } 
+          else 
+          {
+            this.videos = data;
             let slide = 0;
             for (let index = 0; index < this.videos.length; index += 3) {
               this.slides[slide] = [];
@@ -194,16 +198,29 @@ export class NewsComponent extends UIComponent {
               slide++;
             }
             this.showNavigation = total > 3 ? true : false;
+            
           }
           this.pageIndex += 1;
-        } else {
+        } 
+        else 
+        {
           this.videos = [];
           this.slides = [];
           this.page = 0;
           this.pageIndex = 0;
           this.showNavigation = false;
-          this.detectorRef.detectChanges();
         }
+        if(this.showNavigation)
+        {
+          let ins = setInterval(() => {
+            if (this.carousel) 
+            {
+              this.carousel.pause();
+              clearInterval(ins);
+            }
+          },500);
+        }
+        this.detectorRef.detectChanges();
       });
   }
   // slideChange
