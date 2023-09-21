@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, CacheService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, CacheService, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { tmpInstancesStepsRoles } from '../../models/tmpModel';
 import { CM_Permissions } from '../../models/cm_model';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-assgin-deal',
@@ -25,6 +26,9 @@ employeeName: any;
 gridViewSetup: any;
 applyProcess: boolean = false;
 
+@ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
+@ViewChild('form') form: CodxFormComponent;
+
 recID: any;
 stepID: any;
 refID: any;
@@ -42,7 +46,7 @@ orgUnitName: string = '';
 positionName: string = '';
 
 listParticipants = [];
-
+data:any;
 listUser: any[] = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID: string = 'ViewBUID';
@@ -62,6 +66,7 @@ constructor(
   this.user = this.authStore.get();
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
+  this.data = dialogData?.data.data;
   if (this.applyProcess) {
     this.refID = dialogData?.data?.refID;
     (this.stepID = dialogData?.data?.stepID),
@@ -242,6 +247,13 @@ deleteOrg() {
   this.orgUnitName = null;
   this.positionName = null;
   this.owner = null;
+ if(this.cbxOwner) {
+  (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =
+  [];
+  this.cbxOwner.crrValue =  this.owner ;
+ }
+ this.form.formGroup.patchValue(this.data);
+ this.data.owner = this.owner;
 }
 
 onSaveForm() {

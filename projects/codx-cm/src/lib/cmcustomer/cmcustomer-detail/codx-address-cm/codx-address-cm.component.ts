@@ -108,6 +108,7 @@ export class CodxAddressCmComponent implements OnInit {
         this.loaded = true;
 
         this.listAddress = this.cmSv.bringDefaultContactToFront(item);
+        this.lstAddressEmit.emit(this.listAddress);
         if (this.listAddress != null && this.listAddress.length > 0) {
           if (this.isConvertLeadToCus) {
             for (var i = 0; i < this.listAddress.length; i++) {

@@ -79,6 +79,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
     if (data?.data?.dayoffObj) {
       this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
+      if (data?.data?.actionType === 'add') {
+        this.dayoffObj.kowID = '';
+      }
     } else {
       this.dayoffObj = {};
     }
@@ -177,6 +180,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             this.dayoffObj.employeeID = this.employId;
             this.dayoffObj.periodType = '1';
             this.dayoffObj.totalSubDays = 0;
+            console.log(this.dayoffObj);
             this.formModel.currentData = this.dayoffObj;
             this.formGroup.patchValue(this.dayoffObj);
             this.isAfterRender = true;
@@ -465,12 +469,14 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.dayoffObj['kowID']) {
       this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
-
         this.groupKowTypeView[i].isShow = this.groupKowTypeView[
           i
         ].value.includes(this.dayoffObj['kowID']);
 
-        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])== true ) {
+        if (
+          this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID']) ==
+          true
+        ) {
           this.showInfoDayoffType = true;
         }
 
