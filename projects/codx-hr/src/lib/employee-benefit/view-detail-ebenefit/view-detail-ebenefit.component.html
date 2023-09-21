@@ -24,19 +24,34 @@
           >' '</span
         >
         <span
+          [innerHTML]="
+            itemDetail?.emp?.email ?? itemDetail?.emp.email
+              | formatvalue : formModelEmployee : 'email'
+              | async
+          "
+        ></span>
+        <!-- <span
           class="me-4 d-flex align-items-center"
           *ngIf="itemDetail?.emp?.email"
         >
           <i class="icon-email icon-16 me-1"></i>
           {{ itemDetail?.emp?.email }}
-        </span>
+        </span> -->
         <span
+          class="ms-3"
+          [innerHTML]="
+            itemDetail?.emp?.mobile ?? itemDetail?.emp.mobile
+              | formatvalue : formModelEmployee : 'mobile'
+              | async
+          "
+        ></span>
+        <!-- <span
           class="me-3 d-flex align-items-center"
           *ngIf="itemDetail?.emp?.mobile"
         >
           <i class="icon-phone_android icon-16 me-1"></i>
           {{ itemDetail?.emp?.mobile }}
-        </span>
+        </span> -->
       </div>
       <!-- 2 -->
       <div class="text-gray-600">
@@ -149,7 +164,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.decisionNo
               | formatvalue : view.formModel : 'decisionNo'
@@ -167,7 +182,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.signedDate
               | formatvalue : view.formModel : 'signedDate'
@@ -206,7 +221,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.benefitAmt
               | formatvalue : view.formModel : 'benefitAmt'
@@ -227,7 +242,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.effectedDate
               | formatvalue : formModel : 'effectedDate'
@@ -245,7 +260,7 @@
         >
         </codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.expiredDate
               | formatvalue : formModel : 'expiredDate'
@@ -264,7 +279,7 @@
       >
       </codx-label>
       <span
-        class="fw-bold text-dark"
+        class="text-dark"
         [innerHTML]="
           itemDetail?.note | formatvalue : formModel : 'note' | async
         "

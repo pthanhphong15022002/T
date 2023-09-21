@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SliderComponent } from '@syncfusion/ej2-angular-inputs';
-import { CodxTreeviewComponent, FormModel } from 'codx-core';
+import { AuthStore, CodxTreeviewComponent, FormModel } from 'codx-core';
 
 @Component({
   selector: 'codx-view-tree-targets',
@@ -24,6 +24,7 @@ export class ViewTreeTargetsComponent implements OnInit {
   @Input() formModel: FormModel;
   @Input() viewCurrent: any;
   @Input() hidenMF = false;
+  @Input() userID: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() eventClickShow = new EventEmitter<any>();
@@ -33,9 +34,7 @@ export class ViewTreeTargetsComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this;
-  }
+  ngOnInit(): void {}
 
   clickTreeNode(evt: any) {
     evt.stopPropagation();
@@ -77,5 +76,9 @@ export class ViewTreeTargetsComponent implements OnInit {
 
   async delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  checkPerm(item) {
+    return item?.salespersonID?.split(';')?.includes(this.userID);
   }
 }

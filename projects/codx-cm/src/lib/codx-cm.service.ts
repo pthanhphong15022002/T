@@ -783,15 +783,7 @@ export class CodxCmService {
       data
     );
   }
-  startCases(data) {
-    return this.api.execSv<any>(
-      'CM',
-      'ERM.Business.CM',
-      'CasesBusiness',
-      'StartCasesAsync',
-      data
-    );
-  }
+
   startLead(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1244,6 +1236,16 @@ export class CodxCmService {
       'InstancesBusiness',
       'GetInstanceByRecIDAsync',
       recID
+    );
+  }
+
+  startCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'StartCasesAsync',
+      data
     );
   }
 

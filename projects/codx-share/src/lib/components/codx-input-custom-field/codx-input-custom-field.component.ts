@@ -96,12 +96,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   // serviceTemp = 'SYS';
   // assemblyNameTemp = 'SYS';
   // classNameTemp = 'ValueListBusiness';
-  // methodTemp = 'GetVllCustormByFormatAsync';
+  // methodTemp = 'GetVllCustomsByFormatAsync';
   // requestTemp = new DataRequest();
   datasVll: any[];
   user: any;
   fieldsVll = { text: 'textValue', value: 'value' };
   plancehoderVll: any;
+  mutiSelectVll = false;
 
   constructor(
     private cache: CacheService,
@@ -545,6 +546,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       ])
       .subscribe((vl) => {
         if (vl) {
+          this.mutiSelectVll = vl?.multiSelect;
           this.plancehoderVll = vl?.note;
           var defaultValues = vl?.defaultValues?.split(';');
           if (!defaultValues || defaultValues?.length == 0) {
@@ -564,6 +566,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         } else this.datasVll = [];
       });
   }
+
   cbxChangeVll(value) {
     this.customField.dataValue = value;
   }

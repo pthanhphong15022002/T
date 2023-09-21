@@ -767,8 +767,26 @@ export class PdfComponent
       let ngxService: NgxExtendedPdfViewerService =
         new NgxExtendedPdfViewerService();
 
-      if (this.isSignMode) {
-        if (this.curPage == 1) {
+      //trinh ky
+      if (!this.isSignMode) {
+        if (this.curPage == 1 && this.needSuggest) {
+          this.curPage = this.pageMax;
+        }
+      } else {
+        let firstAreaOfSigner = null;
+        if (this.lstAreas?.length > 0) {
+          firstAreaOfSigner = this.lstAreas?.reduce((prev, curr) => {
+            if (curr.signer != this.curSignerID) return null;
+            else {
+              return prev.location.pageNumber < curr.location.pageNumber
+                ? prev
+                : curr;
+            }
+          });
+        }
+        if (firstAreaOfSigner != null) {
+          this.curPage = firstAreaOfSigner.location.pageNumber + 1;
+        } else if (this.curPage == 1 && this.needSuggest) {
           this.curPage = this.pageMax;
         }
       }
@@ -1500,6 +1518,12 @@ export class PdfComponent
           let imgFixW = 200;
           let imgFixH = 200;
 
+          //yeu cau ngay 12/09 chu ky nhay se nho hon 1/2 so voi chu ky chinh
+
+          if (labelType == 'S2') {
+            imgFixW = imgFixW / 2;
+            imgFixH = imgFixH / 2;
+          }
           let scaleW = imgFixW / img.width;
           let scaleH = scaleW * (img.height / img.width) * this.yScale;
           if (img.width < imgFixW) {
@@ -1774,7 +1798,10 @@ export class PdfComponent
             // scale = Math.min(curImgEle.width, curImgEle.height) / min;
             let imgFixW = 200;
             let imgFixH = 200;
-
+            if (curArea.labelType == 'S2') {
+              imgFixW = imgFixW / 2;
+              imgFixH = imgFixH / 2;
+            }
             scaleW = imgFixW / curImgEle.width;
             scaleH =
               scaleW * (curImgEle.height / curImgEle.width) * this.yScale;

@@ -114,7 +114,7 @@
         <div class="d-flex flex-row mb-2">
           <div [ngbTooltip]="grvSetup?.AwardID?.headerText" class="me-3">
             <span
-              class="text-primary fw-bold fs-6"
+              class="fw-bold fs-6"
               [innerHTML]="
                 data?.awardID | formatvalue : view.formModel : 'awardID' | async
               "
@@ -131,15 +131,23 @@
         </div>
         <div class="d-flex flex-row">
           <div [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText">
-            <span
-              class="text-primary fw-bold"
+            <codx-vll
+              class="fw-bold"
+              [formModel]="view.formModel"
+              [value]="data?.awardFormCategory"
+              [showText]="true"
+              [showBgColor]="false"
+              [ngbTooltip]="grvSetup?.AwardFormCategory?.headerText"
+            ></codx-vll>
+            <!-- <span
+              class="text-primary"
               [innerHTML]="
                 data?.awardFormCategory
                   | formatvalue : view.formModel : 'awardFormCategory'
                   | async
               "
             >
-            </span>
+            </span> -->
           </div>
         </div>
         <div class="d-flex flex-column">

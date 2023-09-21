@@ -4,9 +4,8 @@
   <div class="codx-notification-filter">
     <div class="overflow-hidden me-1">
       <div ngbDropdown container="body">
-        <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
-          <span class="w-20px" [class]="type.icon">
-          </span>
+        <button type="button" ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
+          <i class="icon-14" [class]="type.icon"></i>
           <span>
             {{type.text}}
           </span>
@@ -14,7 +13,7 @@
         <div ngbDropdownMenu>
           <ng-container *ngFor="let item of vllType">
             <button (click)="typeChange(item)" ngbDropdownItem>
-              <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+              <span class="me-2 text-gray-600 icon-16" [class]="item.icon">
               </span>
               <span>
                 {{item.text}}
