@@ -8,6 +8,7 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, CacheService, DataRequest } from 'codx-core';
@@ -22,7 +23,7 @@ import { Observable } from 'rxjs';
   templateUrl: './codx-fulltextsearch.component.html',
   styleUrls: ['./codx-fulltextsearch.component.scss'],
 })
-export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
+export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit , OnDestroy {
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
@@ -77,9 +78,15 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   ) {
     this.userID = this.auth.get();
   }
-  ngAfterViewInit(): void {
-    //
+
+  ngOnDestroy(): void {
+    this.removeStyle();
   }
+  
+  ngAfterViewInit(): void {
+    this.setStyle();
+  }
+  
   ngOnInit(): void {
     if (!this.funcID)
       this.router.params.subscribe((params) => {
@@ -88,7 +95,31 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
       });
     if (!this.tempMenu) this.getGridViewSetup();
   }
+
+  setStyle()
+  {
+    var elements = document.getElementsByClassName('wrapper');
+    for (var i = 0; i < elements.length; i++) {
+      (elements[i] as HTMLElement).style["padding-top"] = "50px"
+    }
+    var elements2 = document.getElementsByTagName('codx-wrapper');
+    for (var i = 0; i < elements2.length; i++) {
+      (elements2[i] as HTMLElement).style["height"] = "100%"
+    }
+  }
+  removeStyle()
+  {
+    var elements = document.getElementsByClassName('wrapper');
+    for (var i = 0; i < elements.length; i++) {
+      (elements[i] as HTMLElement).removeAttribute('style');
+    }
+    var elements2 = document.getElementsByTagName('codx-wrapper');
+    for (var i = 0; i < elements2.length; i++) {
+      (elements2[i] as HTMLElement).removeAttribute('style');
+    }
+  }
   ngOnChanges(changes: SimpleChanges): void {}
+  
   getGridViewSetup() {
     this.cache.functionList(this.funcID).subscribe((fuc) => {
       this.cache
@@ -99,6 +130,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         });
     });
   }
+  
   formatGridView(grd: any) {
     var key = Object.keys(grd);
 
@@ -137,6 +169,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
       }
     }
   }
+  
   getDataByRefValue(type: any, refValue: any, data: any, key: any) {
     let a = new DataRequest();
     a.comboboxName = refValue;
@@ -173,12 +206,14 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
       });
     }
   }
+  
   changeValueText(view: any, e: any) {
     var data = e?.data;
     if(data) this.filter[view] = [data];
     else if(e?.component?.type == "text") delete this.filter[view];
     this.searchText();
   }
+  
   changeValueCbb(id: any = '', view: any, e: any) {
     var data = e?.data;
 
@@ -193,16 +228,19 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     //
     this.searchText();
   }
+  
   changeValueUser(view: any, e: any) {
     if (!(view in this.filter)) this.filter[view] = [];
     this.filter[view] = e?.data?.value;
     this.searchText();
   }
+  
   changeValueDate(view: any, e: any) {
     if(e?.data?.fromDate) this.filter[view] = [e?.data?.fromDate];
     else delete this.filter[view];
     this.searchText();
   }
+  
   searchText(changePage = false) {
     if (changePage == false) this.page = 1;
     this.api
