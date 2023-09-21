@@ -258,7 +258,7 @@ export class ViewCalendarComponent
           // template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
           //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content  nội dung chính
@@ -279,7 +279,7 @@ export class ViewCalendarComponent
           template4: this.resourceHeader, //temp ressources
           template6: this.headerTempContent, //header // more
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate, //lấy event của temo
+          // template: this.eventTemplate, //lấy event của temo
           //template2: this.headerTemp,
           template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
@@ -728,7 +728,7 @@ export class ViewCalendarComponent
                   data: rec,
                 });
                 // this.view.dataService.remove(rec).subscribe();
-                this.view.currentView['schedule']?.remove(rec);
+                this.view.currentView['schedule'].datas?.remove(rec);
                 this.detectorRef.detectChanges();
                 this.notiService.notifyCode('SYS007');
               })
