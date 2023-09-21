@@ -41,7 +41,7 @@ export class DealDetailComponent implements OnInit {
   @Input() checkMoreReason = true;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @Output() saveAssign = new EventEmitter<any>();
+  // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
@@ -723,7 +723,8 @@ export class DealDetailComponent implements OnInit {
     return fields.some((x) => !x.dataValue && x.isRequired);
   }
   saveAssignTask(e) {
-    if (e) this.saveAssign.emit(e);
+    // if (e) this.saveAssign.emit(e);
+    if (e) this.getTree();
   }
   getNameCategory(categoryId: string) {
     return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
