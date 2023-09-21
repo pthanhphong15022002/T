@@ -208,7 +208,7 @@ export class AddContractsComponent implements OnInit {
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
-      case "add":
+      case 'add':
         this.contracts = data ? data : new CM_Contracts();
         this.contracts.paidAmt = 0;
         this.contracts.status = '1';
@@ -221,8 +221,12 @@ export class AddContractsComponent implements OnInit {
         this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
-        this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
+        this.contracts.pmtStatus = this.contracts.pmtStatus
+          ? this.contracts.pmtStatus
+          : '0';
+        this.contracts.contractType = this.contracts.contractType
+          ? this.contracts.contractType
+          : '1';
         await this.getSettingContract();
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
@@ -232,7 +236,7 @@ export class AddContractsComponent implements OnInit {
           this.disabledShowInput = true;
         }
         break;
-      case "edit":
+      case 'edit':
         this.contracts = data;
         this.getQuotationsLinesInContract(
           this.contracts?.recID,
@@ -241,7 +245,7 @@ export class AddContractsComponent implements OnInit {
         this.getPayMentByContractID(this.contracts?.recID);
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
-      case "copy":
+      case 'copy':
         this.contracts = data;
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
@@ -977,6 +981,7 @@ export class AddContractsComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
       }
@@ -1014,8 +1019,8 @@ export class AddContractsComponent implements OnInit {
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.contracts.currencyID = dataValue?.DefaultCurrency ;
-      this.contracts.applyProcess = dataValue?.ProcessContract == '1';;
+      this.contracts.currencyID = dataValue?.DefaultCurrency;
+      this.contracts.applyProcess = dataValue?.ProcessContract == '1';
     }
   }
 
@@ -1109,5 +1114,4 @@ export class AddContractsComponent implements OnInit {
   // checkSpace(text: string) {
   //   return text.includes(' ');
   // }
-
 }
