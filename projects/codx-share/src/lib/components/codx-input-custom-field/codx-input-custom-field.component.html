@@ -127,14 +127,14 @@
       </ng-container>
       <ng-container *ngIf="mutiSelectVll">
         <ejs-multiselect
-          #comboxValue
+          #comboxValueMutilSelect
           [dataSource]="datasVll"
           [mode]="'Default'"
           [fields]="fieldsVll"
-          [value]=""
+          [value]="crrValueVll"
           [showDropDownIcon]="true"
           [placeholder]="plancehoderVll"
-          (valueChange)="cbxChangeVll($event)"
+          (valueChange)="cbxChangeVllMutilSelect($event)"
           [enabled]="!disable"
         ></ejs-multiselect>
       </ng-container>
