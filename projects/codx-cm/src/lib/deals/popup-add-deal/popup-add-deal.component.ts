@@ -290,7 +290,7 @@ export class PopupAddDealComponent
     }
   }
   addOwner(owner, ownerName, roleType, objectType) {
-    var permission = new CM_Permissions();
+    let permission = new CM_Permissions();
     permission.objectID = owner;
     permission.objectName = ownerName;
     permission.objectType = objectType;
@@ -309,14 +309,10 @@ export class PopupAddDealComponent
 
     this.deal.permissions.push(permission);
   }
-  addPermission(processID) {
-    var result = this.checkProcessInList(processID);
-    if (result) {
-      let permissionsDP = result?.permissionRoles;
-      if (permissionsDP.length > 0 && permissionsDP) {
-        for (let item of permissionsDP) {
-          this.deal.permissions.push(this.copyPermission(item));
-        }
+  addPermission(permissionDP) {
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        this.deal.permissions.push(this.copyPermission(item));
       }
     }
   }
@@ -409,10 +405,10 @@ export class PopupAddDealComponent
       );
       return;
     }
-    var ischeck = true;
-    var ischeckFormat = true;
-    var title = '';
-    var messageCheckFormat = '';
+    let ischeck = true;
+    let ischeckFormat = true;
+    let title = '';
+    let messageCheckFormat = '';
 
     for (let items of this.listInstanceSteps) {
       for (let item of items.fields) {
@@ -443,7 +439,7 @@ export class PopupAddDealComponent
 
   async executeSaveData() {
     if (this.action !== this.actionEdit) {
-      this.addPermission(this.deal.processID);
+
       await this.insertInstance();
     } else {
       await this.editInstance();
@@ -458,8 +454,8 @@ export class PopupAddDealComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
+      let result = event.e?.data;
+      let field = event.data;
       switch (field.dataType) {
         case 'D':
           result = event.e?.data.fromDate;
@@ -471,12 +467,12 @@ export class PopupAddDealComponent
           break;
         case 'C':
           result = event?.e;
-          var type = event?.type ?? '';
-          var contact = event?.result ?? '';
+          let type = event?.type ?? '';
+          let contact = event?.result ?? '';
           this.convertToFieldDp(contact, type);
           break;
       }
-      var index = this.listInstanceSteps.findIndex(
+      let index = this.listInstanceSteps.findIndex(
         (x) => x.recID == field.stepID
       );
       if (index != -1) {
@@ -581,7 +577,7 @@ export class PopupAddDealComponent
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
-    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.allowUpdateStatus = '0';
     // permission.createdOn = new Date();
     // permission.createdBy = this.user.userID;
     return permission;
@@ -662,7 +658,7 @@ export class PopupAddDealComponent
       });
   }
   beforeSave(option: RequestOption) {
-    var datas = [];
+    let datas = [];
     if (this.action !== this.actionEdit) {
       datas = [this.deal, this.lstContactDeal];
     } else {
@@ -674,8 +670,7 @@ export class PopupAddDealComponent
       ];
     }
 
-    option.methodName =
-      this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
+    option.methodName = this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
     option.data = datas;
     option.service = 'CM';
@@ -754,17 +749,17 @@ export class PopupAddDealComponent
       });
   }
   async getListInstanceSteps(processId: any) {
-    var data = [processId, this.deal?.refID, this.action, '1'];
+    let data = [processId, this.deal?.refID, this.action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
-        var obj = {
+        let obj = {
           id: processId,
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
           permissionRoles: res[3],
         };
-        var isExist = this.listMemorySteps.some((x) => x.id === processId);
+        let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
@@ -781,7 +776,7 @@ export class PopupAddDealComponent
             this.action != this.actionEdit ? null : this.deal.createdOn
           );
           if (this.listParticipants.length > 0 && this.listParticipants) {
-            var index = this.listParticipants.findIndex(
+            let index = this.listParticipants.findIndex(
               (x) => x.userID === this.user.userID
             );
             this.owner = index != -1 ? this.user.userID : null;
@@ -799,18 +794,19 @@ export class PopupAddDealComponent
   }
 
   async insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+    let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
         this.deal.datas = instance.datas;
+        this.addPermission(instance.permissions);
         !this.isLoading && this.onAdd();
         this.isLoading && this.addDealForDP();
       }
     });
   }
   async editInstance() {
-    var data = [this.instance, this.listCustomFile];
+    let data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
@@ -822,7 +818,7 @@ export class PopupAddDealComponent
   }
 
   async addDealForDP() {
-    var datas = [this.deal, this.lstContactDeal];
+    let datas = [this.deal, this.lstContactDeal];
     this.codxCmService.addDeal(datas).subscribe((deal) => {
       if (deal) {
         this.dialog.close(this.instanceRes);
@@ -830,7 +826,7 @@ export class PopupAddDealComponent
     });
   }
   async editDealForDP() {
-    var datas = [
+    let datas = [
       this.deal,
       this.customerIDOld,
       this.lstContactDeal,
@@ -951,7 +947,7 @@ export class PopupAddDealComponent
   }
 
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;

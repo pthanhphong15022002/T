@@ -750,7 +750,7 @@ export class PopupAddLeadComponent
   }
 
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;

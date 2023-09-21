@@ -96,6 +96,10 @@ export class DynamicFormComponent extends UIComponent {
         },
       },
     ];
+
+    // console.log('view ne', this.views);
+    // console.log('view base ne', this.viewBase);
+    
     this.detectorRef.detectChanges();
   }
 
@@ -316,6 +320,7 @@ export class DynamicFormComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
+      debugger
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
         {
