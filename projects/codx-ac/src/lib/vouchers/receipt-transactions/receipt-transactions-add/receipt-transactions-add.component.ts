@@ -90,7 +90,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.journal = dialogData.data?.journal;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
+    this.vouchers = {...dialogData.data?.oData};
+    // this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
 
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
@@ -394,7 +395,17 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          this.dialog.close();
+          if(this.formType == 'edit')
+          {
+            this.dialog.close({
+              update: true,
+              data: res,
+            });
+          }
+          else
+          {
+            this.dialog.close();
+          }
         }
         this.dt.detectChanges();
       });
@@ -419,16 +430,18 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         else
         {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
-              this.formType = 'add';
-              this.formVoucherReceipt.refreshData(res.data);
-              this.detectorRef.detectChanges();
-              this.refreshGrid();
-              // this.notification.notifyCode('SYS006');
-              this.setFieldRequied();
+                this.vouchers = res.data;
+                this.formType = 'add';
+                this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
+                this.formVoucherReceipt.preData = { ...this.vouchers };
+                // this.notification.notifyCode('SYS006');
+                this.clearGrid();
+                this.setFieldRequied();
+                this.detectorRef.detectChanges();
             }
           });
         }
@@ -469,9 +482,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  refreshGrid() {
+  clearGrid() {
     this.grvVouchersLine.dataSource = [];
-    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */

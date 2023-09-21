@@ -326,7 +326,7 @@ export class PopupAddPostComponent implements OnInit {
   }
 
   // chia sẻ người dùng
-  addPerrmissonShares(event: any) {
+  addPerShares(event: any) {
     debugger
     let arrPermisison = Array.from<any>(event);
     if(arrPermisison?.length > 0)
@@ -413,7 +413,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // gắn thẻ người dùng
 
-  addPerrmissonTags(event: any) {
+  addPerTags(event: any) {
     debugger
     let arrPermission = Array.from<any>(event.dataSelected);
     if (arrPermission?.length > 0) 
