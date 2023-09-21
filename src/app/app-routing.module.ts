@@ -10,6 +10,7 @@ import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
 import { SosComponent } from '@pages/sos/sos.component';
+import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 
 var childAuthRoutes: Routes = [
   {
@@ -250,6 +251,10 @@ var childPublicRoutes: Routes = [
   {
     path: 'forms',
     component: ReviewComponent,
+  },
+  {
+    path: 'esign/:id',
+    component: ExternalSigningComponent,
   },
   {
     path: 'error',

@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { DatePipe } from '@angular/common';
 import {
   AfterViewInit,
@@ -14,6 +15,7 @@ import {
   ViewChild,
   ViewChildren,
   OnDestroy,
+  TemplateRef,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
@@ -57,6 +59,11 @@ export class PdfComponent
   extends UIComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
+  paSignature: any;
+  passwordPublicSign: any;
+  emailPublicSign: any;
+  publicSignStatus: any;
+  isSigned =false;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -104,6 +111,7 @@ export class PdfComponent
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
   @ViewChild('rightToolbar') rightToolbar: TabComponent;
+  @ViewChild('publicSignInfo') publicSignInfo: TemplateRef<any>;
 
   //core
   dialog: import('codx-core').DialogRef;
@@ -267,46 +275,18 @@ export class PdfComponent
 
   vllSupplier: any;
   oSignfile: any;
-  onInit() {
-    this.curSelectedHLA = null;
-    // console.log('approver', );
-
-    this.cache.valueList('ES029').subscribe((res) => {
-      if (res) {
-        this.vllSupplier = res.datas;
-      }
-    });
-
-    if (this.isPublic) {
-      this.user.userID = this.approver;
-    }
-    // if (this.isPublic) {
-    //   this.headerRightName = [
-    //     { text: 'Thông tin người kí' },
-    //     { text: 'Trao đổi' },
-    //     { text: 'Hướng dẫn ký số' },
-    //   ];
-    // }
-    if (this.inputUrl == null) {
-      this.esService.getSignFormat().subscribe((res: any) => {
-        this.signPerRow = res?.SignPerRow;
-        this.align = res?.Align;
-        this.direction = res?.Direction;
-        this.areaControl = res?.AreaControl == '1';
-        this.isAwait = res?.Await == '1';
-        this.labels = res?.Label?.filter((label) => {
-          return label.Language == this.user.language;
-        });
-        this.canHighLight =
-          res.AllowHighlight == null
-            ? false
-            : res.AllowHighlight == '0'
-            ? false
-            : true;
+  getPASignature(){
+    this.esService.getDataSignature(this.signerInfo.authorID, this.signerInfo?.signType).subscribe(signature=>{
+      if(signature){
+        this.paSignature=signature[0];
+        this.paSignature.modifiedOn= new Date();
         this.detectorRef.detectChanges();
-      });
 
-      this.esService
+      }
+    })
+  }
+  loadSFByID(){
+    this.esService
         .getSFByID([
           this.recID,
           this.user?.userID,
@@ -364,6 +344,9 @@ export class PdfComponent
             } else {
               this.signerInfo = res.approvers[0];
             }
+            if(this.isPublic){
+              this.getPASignature();
+            }
             this.curFileID = this.lstFiles[0]['fileID'];
             this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
             this.curSignerID = this.signerInfo?.authorID;
@@ -371,6 +354,50 @@ export class PdfComponent
           }
           //this.detectorRef.detectChanges();
         });
+        
+          this.detectorRef.detectChanges();
+  }
+  onInit() {
+    this.curSelectedHLA = null;
+    // console.log('approver', );
+
+    this.cache.valueList('ES029').subscribe((res) => {
+      if (res) {
+        this.vllSupplier = res?.datas?.filter(x=>x?.value != 4);
+      }
+    });
+
+    if (this.isPublic) {
+      this.user.userID = this.approver;
+    }
+    //if (this.isPublic) {
+      // this.headerRightName = [
+      //   { text: 'Thông tin người kí' },
+      //   { text: 'Trao đổi' },
+      //   { text: 'Hướng dẫn ký số' },
+      // ];
+    //}
+    if (this.inputUrl == null) {
+      this.esService.getSignFormat().subscribe((res: any) => {
+        this.signPerRow = res?.SignPerRow;
+        this.align = res?.Align;
+        this.direction = res?.Direction;
+        this.areaControl = res?.AreaControl == '1';
+        this.isAwait = res?.Await == '1';
+        this.labels = res?.Label?.filter((label) => {
+          return label.Language == this.user.language;
+        });
+        this.canHighLight =
+          res.AllowHighlight == null
+            ? false
+            : res.AllowHighlight == '0'
+            ? false
+            : true;
+        this.detectorRef.detectChanges();
+      });
+
+      this.loadSFByID();
+      
 
       this.cache.valueList('ES015').subscribe((res) => {
         this.vllActions = res.datas;
@@ -756,6 +783,42 @@ export class PdfComponent
             resolve(res);
           });
       });
+    }
+  }
+  popupPublicESign(status){
+    this.publicSignStatus= status;
+    var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);   
+    this.detectorRef.detectChanges();
+    
+  }
+  publicESign(dialog){
+    this.esService.editSignature(this.paSignature).subscribe((res) => {
+      if (res && this.transRecID) {
+          this.codxShareService
+          .codxApprove(this.transRecID, this.publicSignStatus, null, null, null)
+          .subscribe((res: ResponseModel) => {
+            if (res?.msgCodeError==null && res?.rowCount>0) {  
+              this.notificationsService.notifyCode('SYS034');
+              //this.canOpenSubPopup = false;
+              dialog && dialog?.close();
+              this.isSigned =true;
+              this.detectorRef.detectChanges();
+            }
+          });
+        
+      }
+    });
+  }
+
+  valueChange(event) {
+    if (event?.field) {
+      if (event?.field =='emailPublicSign') {
+        this.paSignature.email = event?.data;
+      } 
+      else if (event?.field =='passwordPublicSign') {
+        this.paSignature.password= event?.data;
+      }      
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -1413,6 +1476,7 @@ export class PdfComponent
       }
     }
 
+    
     switch (type) {
       case 'text':
         let textArea = new Konva.Text({
@@ -1493,6 +1557,8 @@ export class PdfComponent
 
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
+console.log('run addArea', url);
+
         img.setAttribute('crossOrigin', 'anonymous');
         img.referrerPolicy = 'noreferrer';
         img.src = url;
@@ -1642,6 +1708,8 @@ export class PdfComponent
       if (res?.event[0]) {
         area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
+    console.log('run changeSignature_StampImg');
+
         this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
       }
     });
@@ -1649,7 +1717,8 @@ export class PdfComponent
 
   changeSignature_StampImg_Area_Immediate(curArea: tmpSignArea, file) {
     let curLayer = this.lstLayer.get(curArea.location.pageNumber + 1);
-
+    console.log('run changeSignature_StampImg_Area_Immediate');
+    
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       const img = document.createElement('img') as HTMLImageElement;
@@ -1703,7 +1772,9 @@ export class PdfComponent
         // thiet lap chu ki nhay
         let setupShowForm = new SetupShowSignature();
         setupShowForm.showSignature1 = true;
-        this.addSignature(setupShowForm);
+        console.log('run changeSignature_StampImg_Public');
+        
+        this.addSignature(setupShowForm,area);
         return;
         this.url = this.signerInfo?.signature1
           ? this.signerInfo?.signature1
@@ -1760,12 +1831,16 @@ export class PdfComponent
         curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
+console.log('run addArea', newUrl);
+        
         curImgEle.src = curArea.labelValue;
         let min = 0;
         let scale = 1;
         let scaleW = 1;
         let scaleH = 1;
         curImgEle.onload = () => {
+        console.log('run changeAnnotPro', curArea.labelValue);
+
           let isText = this.curSelectedArea.attrs?.text ? true : false;
           if (isText) {
             // let textW = this.curSelectedArea.width();
@@ -1965,9 +2040,11 @@ export class PdfComponent
     console.log('rotate', e);
   }
 
-  addSignature(setupShowForm) {
+  addSignature(setupShowForm,area=null) {
     let model = {
       userID: this.signerInfo?.authorID,
+      email: this.signerInfo?.userID,//email của approver là đối tác
+      fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
     };
     let data = {
@@ -1983,27 +2060,51 @@ export class PdfComponent
       data
     );
     popupSignature.closed.subscribe((res) => {
-      if (res?.event[0]) {
+      console.log('popupSignature evt ', res);
+      
+      if (res?.event?.length>0 ) {
         let img = res.event[0];
+        this.crrType= {value :img?.referType};
         switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature1 =
-              environment.urlUpload + '/' + img?.pathDisk;
-            this.changeAnnotationItem(this.crrType);
+            // this.signerInfo.signature1 =
+            //   environment.urlUpload + '/' + img?.pathDisk;
+            // this.changeAnnotationItem(this.crrType);
+            // if(this.paSignature) this.paSignature.modifiedOn = new Date();            
+            // this.detectorRef.detectChanges();
+            // this.lstSigners.forEach((signer) => {
+            //   //chu ky chinh
+            //   if (signer?.authorID == model?.userID) {
+            //     signer.signature1 =
+            //       environment.urlUpload + '/' + img?.pathDisk;
+            //       this.detectorRef.detectChanges();
+            //   }              
+            // });
+            // area.labelValue = environment.urlUpload + '/' + img?.pathDisk
+            this.changeAnnotPro(area.labelType, area.recID, environment.urlUpload + '/' + img?.pathDisk);
+
+            // this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
+            //this.changeSignature_StampImg_Area_Immediate(area,img);
             //this.url = this.signerInfo.signature1 ?? '';
+            // area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
+            // this.detectorRef.detectChanges();
+            // this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
+            
             break;
-          case 'S2': //Ky nhay
-            this.signerInfo.signature2 =
-              environment.urlUpload + '/' + img?.pathDisk;
-            this.changeAnnotationItem(this.crrType);
-            //this.url = this.signerInfo.signature2 ?? '';
-            break;
-          case 'S3': //Con dau
-            this.signerInfo.stamp = environment.urlUpload + '/' + img?.pathDisk;
-            this.changeAnnotationItem(this.crrType);
-            //this.url = this.signerInfo.stamp ?? '';
-            break;
+          // case 'S2': //Ky nhay
+          //   this.signerInfo.signature2 =
+          //     environment.urlUpload + '/' + img?.pathDisk;
+          //   this.changeAnnotationItem(this.crrType);
+          //   //this.url = this.signerInfo.signature2 ?? '';
+          //   break;
+          // case 'S3': //Con dau
+          //   this.signerInfo.stamp = environment.urlUpload + '/' + img?.pathDisk;
+          //   this.changeAnnotationItem(this.crrType);
+          //   //this.url = this.signerInfo.stamp ?? '';
+          //   break;
         }
+        this.detectorRef.detectChanges();
+        this.getPASignature();
       }
     });
   }
@@ -2599,8 +2700,8 @@ export class PdfComponent
   }
 
   //#region Public Signing
-  currentTab: number;
-  checkedConfirm: boolean = false;
+  currentTab=0;
+  checkedConfirm: boolean = true;
   @ViewChild('imgSignature1', { static: false })
   imgSignature1: ImageViewerComponent;
   @ViewChild('imgSignature2', { static: false })
