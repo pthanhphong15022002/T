@@ -2,7 +2,7 @@
 <div class="d-flex flex-column schedule-content">
   <div class="d-flex justify-content-between">
     <span
-      class="text-break fw-bold fs-4 ps-3"
+      class="text-break fw-bold fs-4"
       >{{ data?.title }}
     </span>
   </div>
@@ -52,8 +52,8 @@
       <codx-label default="Họp ngay" name="lblMeeting" class=""></codx-label>
     </span> -->
   </div>
-<hr />
-  <div class="d-flex mb-1 me-6" *ngIf="data?.onlineUrl">
+<hr class="my-2" />
+  <div class="d-flex me-6" *ngIf="data?.onlineUrl">
     <codx-label
       default="Họp trực tuyến"
       name="lblOnlineUrl"
@@ -73,16 +73,16 @@
       ></codx-label>
     </span>
   </div>
-  <div class="d-flex mt-1 mb-2 me-6">
+  <div class="d-flex mt-1 mb-1 me-6">
     <codx-label
       default="Nội dung"
       name="lblMemo"
       class="fw-bold text-nowrap"
     ></codx-label>
     <span class="me-2 fw-bold">:</span>
-    <span class="text-gray-800 text-break" [innerHTML]="data?.memo"> </span>
+    <span class="text-gray-600 text-break" [innerHTML]="data?.memo"> </span>
   </div>
-  <div class="d-flex mb-3" *ngIf="this.haveFile">
+  <div class="d-flex mb-1" *ngIf="this.haveFile">
     <div class="d-flex text-dark me-6">
       <codx-label
         name="lblAttachment"
@@ -141,7 +141,7 @@
           [objectId]="data?.bookingAttendees"
           objectType="AD_Users"
           [numberImages]="6"
-          [width]="30"
+          [width]="25"
         >
         </codx-imgs>
       </div>
@@ -152,7 +152,7 @@
     style="max-height: 150px; overflow: auto"
   >
     <div *ngFor="let item of data?.bookingItems">
-      <div class="d-flex mb-4 justify-content-between">
+      <div class="d-flex mb-2 pb-2 border-bottom justify-content-between">
         <div class="d-flex flex-row">
           <div class="me-2">
             <codx-img
@@ -164,14 +164,12 @@
             ></codx-img>
           </div>
           <div class="">
-            <div class="">
-              <span href="#" class="fw-bold">{{ item?.itemName }}</span>
-            </div>
-            <div class="d-flex flex-row flex-grow-1">
+            <span href="#" class="text-dark fw-bold">{{ item?.itemName }}</span>
+            <div class="d-flex flex-row flex-grow-1 fs-7">
               <codx-label
                 default="Đơn vị tính"
                 name="lblQuantity"
-                class="text-gray-800"
+                class="text-gray-700"
               ></codx-label>
               <span>:</span>
               <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
@@ -183,7 +181,7 @@
           <codx-label
             default="Số lượng"
             name="lblQuantity"
-            class="text-gray-800"
+            class="text-gray-700"
           ></codx-label>
           <span>:</span>
           <span class="ms-2 fw-bold">{{ item?.quantity }}</span>

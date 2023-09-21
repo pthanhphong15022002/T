@@ -217,9 +217,9 @@ input.e-input.codx-number{
   height: 30px !important;
   line-height: 30px;
 }
-.e-input.e-lib.e-keyboard{
-  height: 30px !important;
-}
+// .e-input.e-lib.e-keyboard{
+//   height: 30px !important;
+// }
 
 input.e-input::placeholder,
 textarea.e-input::placeholder,
@@ -1073,9 +1073,6 @@ codx-header
 //   color: var(--white) !important;
 // }
 
-.e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
-  color: var(--primary-inverse) !important;
-}
 
 /****/
 .tab-tasklist .e-tab-wrap {
@@ -1883,6 +1880,10 @@ codx-listview.card .card-header {
 .e-toolbar .e-tbar-btn:hover span {
   background: transparent !important;
 }
+ .e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
+   color: var(--primary-light) !important;
+ }
+
 .h-32px{
   height: 32px;
 }
