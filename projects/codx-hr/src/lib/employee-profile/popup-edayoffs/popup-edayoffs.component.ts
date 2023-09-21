@@ -457,8 +457,12 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.dayoffObj['kowID']) {
       this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
-        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])) {
-          this.groupKowTypeView[i].isShow = true;
+
+        this.groupKowTypeView[i].isShow = this.groupKowTypeView[
+          i
+        ].value.includes(this.dayoffObj['kowID']);
+
+        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])== true ) {
           this.showInfoDayoffType = true;
         }
 
