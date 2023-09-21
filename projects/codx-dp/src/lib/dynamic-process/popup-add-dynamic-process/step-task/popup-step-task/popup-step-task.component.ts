@@ -19,10 +19,7 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
-import {
-  ComboBoxComponent,
-  MultiSelectComponent,
-} from '@syncfusion/ej2-angular-dropdowns';
+import {ComboBoxComponent} from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -40,11 +37,13 @@ export class PopupJobComponent implements OnInit {
   step: DP_Steps;
   dialog!: DialogRef;
   stepsTasks: DP_Steps_Tasks;
+  listStep: DP_Steps[] = [];
   listTask: DP_Steps_Tasks[] = [];
   roles: DP_Steps_Tasks_Roles[] = [];
   owner: DP_Steps_Tasks_Roles[] = [];
   participant: DP_Steps_Tasks_Roles[] = [];
 
+  fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
   fieldsFields = { text: 'title', value: 'recID' };
@@ -62,16 +61,12 @@ export class PopupJobComponent implements OnInit {
   listGroupTask = [];
   listGroupTaskCombobox = [];
   listFileTask: string[] = [];
-
-  stepID = '';
-  stepName = '';
+  user: any;
   recIdEmail = '';
-  taskGroupID = '';
   isNewEmails = true;
   isHaveFile = false;
-  showLabelAttachment = false;
-  user: any;
   isBoughtTM = false;
+  showLabelAttachment = false;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -89,62 +84,47 @@ export class PopupJobComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
+    this.listStep = dt?.data?.listStep;
+    this.listTask = dt?.data?.listTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
-    this.stepID = this.step?.recID;
-    this.stepName = this.step?.stepName;
+    this.listFileTask = dt?.data?.listFileTask;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroupTask = dt?.data?.listGroup || [];
-      this.listGroupTaskCombobox = JSON.parse(
-        JSON.stringify(this.listGroupTask)
-      );
-      let index = this.listGroupTaskCombobox?.findIndex(
-        (group) => !group.recID
-      );
-      if (index >= 0) {
-        this.listGroupTaskCombobox?.splice(index, 1);
-      }
+      this.listGroupTaskCombobox = JSON.parse(JSON.stringify(this.listGroupTask));
+      let index = this.listGroupTaskCombobox?.findIndex((group) => !group.recID);
+      index >= 0 && this.listGroupTaskCombobox?.splice(index, 1);
     }
 
     if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['durationDay'] = 1;
-      this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['stepID'] = this.step?.recID
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
     } else if (this.action == 'copy') {
-      this.stepsTasks = JSON.parse(JSON.stringify(dt?.data?.taskInput)) || new DP_Steps_Tasks();
+      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
       this.showLabelAttachment = true;
     } else {
-      this.stepsTasks = JSON.parse(JSON.stringify(dt?.data?.taskInput)) || new DP_Steps_Tasks();
+      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
     }
-
-    this.listTask = dt?.data?.listTask;
-    this.taskGroupID = dt?.data?.groupTaskID;
-    this.listFileTask = dt?.data?.listFileTask;
-    this.user = this.authStore.get();
   }
   async ngOnInit() {
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner =
-      this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) ||
-      [];
-    this.participant =
-      this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) ||
-      [];
+    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) || [];
+    this.participant = this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) || [];
 
-    let group = this.listGroupTask?.find(
-      (x) => x.recID === this.stepsTasks?.taskGroupID
-    );
+    let group = this.listGroupTask?.find((x) => x.recID === this.stepsTasks?.taskGroupID);
     let listTaskConvert = group?.recID
       ? JSON.parse(JSON.stringify(group?.task))
       : JSON.parse(JSON.stringify(this.listTask));
@@ -305,6 +285,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   handelSave() {
+    // this.stepsTasks = JSON.parse(JSON.stringify(this.stepsTasks));
     let task = this.stepsTasks;
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
@@ -479,7 +460,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   valueChangeText(event) {
-    this.stepsTasks[event?.field] = event?.data;
+    this.stepsTasks[event?.field] = JSON.parse(JSON.stringify(event?.data));
   }
 
   valueChangeCombobox(event) {
@@ -488,6 +469,9 @@ export class PopupJobComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
+    if(event?.field == "createTask" && !event?.data){
+      this.stepsTasks.assignControl = null;
+    }
   }
 
   changeRoler(e, roleType) {
