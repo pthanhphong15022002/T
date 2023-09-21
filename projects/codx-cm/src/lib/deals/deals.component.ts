@@ -1059,6 +1059,7 @@ export class DealsComponent
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
+      data:data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
       applyFor: '1',
