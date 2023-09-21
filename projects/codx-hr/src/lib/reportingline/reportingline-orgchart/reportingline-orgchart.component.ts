@@ -149,7 +149,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     this.posEmpPageIndex = 0;
     this.scrolling = true;
     this.currentViewPosEmp = { countEmp: 0, employees: [] }
-    if (changes.positionID.currentValue != changes.positionID.previousValue) {
+    if (changes.positionID?.currentValue && changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.haveHighLight = true;
       // if(this.addedData.positionID != null){

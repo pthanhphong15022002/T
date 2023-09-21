@@ -653,6 +653,7 @@ export class PopupConvertLeadComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
         case 'C':
@@ -1255,7 +1256,7 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.cmSv.getListUserByOrg(this.listParticipants)
       : this.listParticipants;

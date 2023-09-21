@@ -3,8 +3,7 @@ import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, Request
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
-import { DateTime } from '@syncfusion/ej2-angular-charts';
-import { Observable, of } from 'rxjs';
+import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-comment.component';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -12,19 +11,12 @@ import { Observable, of } from 'rxjs';
   styleUrls: ['./appropval-news.component.scss']
 })
 export class AppropvalNewsComponent extends UIComponent {
-
+  user: any;
   service: string = 'WP';
   assemblyName: string = 'ERM.Business.WP';
-  user: any;
-  acceptApprove: string = '5';
-  cancelApprove: string = '4';
-  remakeApprove: string = '2';
   views: Array<ViewModel> = [];
   gridViewSetUp: any = null;
-  dataSelected: any = null;
-  itemSelected: any = null;
   selectedID: string = '';
-  hideMF:boolean = false;
   function:any = null;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -69,17 +61,15 @@ export class AppropvalNewsComponent extends UIComponent {
   {
     super(injector);
     this.user = this.auth.get();
-
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
       if (param['funcID']) {
-        this.funcID = param['funcID'];
-        this.hideMF = this.funcID === "WPT0211";
-        this.cache.functionList(this.funcID)
+        this.cache.functionList(param['funcID'])
         .subscribe((func: any) => {
-          if (func) {
+          if (func){
             this.function = func;
+            this.loadDataTab();
             this.cache
               .gridViewSetup(func.formName, func.gridViewName)
               .subscribe((grd: any) => {
@@ -87,11 +77,11 @@ export class AppropvalNewsComponent extends UIComponent {
               });
           }
         });
-        this.loadDataTab();
       }
       this.detectorRef.detectChanges();
     });
   }
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -107,33 +97,35 @@ export class AppropvalNewsComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+
   // get data tab list
   loadDataTab() {
-    if (this.funcID){
+    if (this.function){
       this.api.execSv(
         this.service,
         this.assemblyName,
         'NewsBusiness',
         'GetDataTabApproAsync',
-        [this.funcID])
-      .subscribe((res: any[]) => {
-        if(res) 
-        {
-          this.tabAsside.map((tab: any) => {
-            tab.total = 0;
-            if(tab.value == "")
-              res.forEach(x => tab.total += x.Count);
-            else 
-            {
-              let ele = res.find(x => x.Status == tab.value);
-              tab.total = ele ? ele.Count : 0;
-            }
-          });
-        }
-        this.detectorRef.detectChanges();
+        [this.function.functionID])
+        .subscribe((res: any[]) => {
+          if(res) 
+          {
+            this.tabAsside.map((tab: any) => {
+              tab.total = 0;
+              if(tab.value == "")
+                res.forEach(x => tab.total += x.Count);
+              else 
+              {
+                let ele = res.find(x => x.Status == tab.value);
+                tab.total = ele ? ele.Count : 0;
+              }
+            });
+            this.detectorRef.detectChanges();
+          }
       });
     }
   }
+
   //selected change
   selectedChange(event: any) {
     if (event?.data?.recID) 
@@ -153,98 +145,22 @@ export class AppropvalNewsComponent extends UIComponent {
         e.active = e.value === item.value ;
     });
   }
+
   // click moreFunc
   clickMF(event: any, data: any) {
-    debugger
     switch (event.functionID) {
       case 'SYS02': //delete
         this.deletedPost(data);
         break;
       case 'SYS03': //edit
-        let option = new DialogModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        // WP_News
-        if(this.function.entityName !== "WP_AprovalComments"){
-          option.IsFull = true;
-          option.zIndex = 100;
-          let obj = {
-            action: event.text,
-            isAdd:false,
-            data: data
-          };
-          this.callFuc.openForm(
-            PopupAddComponent,
-            '',
-            0,
-            0,
-            this.view.funcID,
-            obj,
-            '',
-            option
-          ).closed.subscribe((res: any) => {
-            if (res?.event)
-            {
-              this.view.dataService.update(res.event).subscribe();
-              this.selectedID = event.data.recID;
-              this.itemSelected = data;
-              this.detectorRef.detectChanges();
-            }
-          });
-        } 
-        // MXH
-        else 
-        {
-          this.api
-            .execSv(
-              this.service,
-              this.assemblyName,
-              'CommentsBusiness',
-              'GetPostByIDAsync',
-              [data.recID])
-              .subscribe((res1: any) => {
-              if (res1) {
-                let obj = {
-                  data: res1,
-                  status: 'edit',
-                  headerText: event.text,
-                };
-                this.callfc.openForm(
-                  PopupAddPostComponent,
-                  event.text,
-                  700,
-                  550,
-                  '',
-                  obj,
-                  '',
-                  option
-                ).closed.subscribe((res2:any) => {
-                  if (res2?.event) {
-                    this.view.dataService.update(res2.event).subscribe();
-                    this.selectedID = event.data.recID;
-                    this.itemSelected = data;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              }
-            });
-        }
+        this.editPost(event,data);
         break;
-      case "WPT02131": // duyệt
+      case "WPT02121": // duyệt
           this.notifySvr.alertCode("WP004")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(data.recID, "5")
-              .subscribe((res:any) => {
-                if(res)
-                {
-                  data.approveStatus = "5";
-                  this.view.dataService.update(data).subscribe();
-                  this.loadDataTab();
-                  this.notifySvr.notifyCode("WP005");
-                }
-              });
+              this.approvalPost(this.function.entityName,data, "5","WP005");
             }
           });
         break;
@@ -253,16 +169,7 @@ export class AppropvalNewsComponent extends UIComponent {
         .subscribe((option:any) =>{
           if(option?.event?.status == "Y")
           {
-            this.approvalPost(data.recID, "2")
-            .subscribe((res:any) => {
-                if(res)
-                {
-                  data.approveStatus = "2";
-                  this.view.dataService.update(data).subscribe();
-                  this.loadDataTab();
-                  this.notifySvr.notifyCode("WP009");
-                }
-              });
+            this.approvalPost(this.function.entityName,data, "2","WP009");
           }
         });
         break;
@@ -271,20 +178,10 @@ export class AppropvalNewsComponent extends UIComponent {
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(data.recID, "2")
-              .subscribe((res:any) => {
-                  if(res)
-                  {
-                    data.approveStatus = "2";
-                    this.view.dataService.update(data).subscribe();
-                    this.loadDataTab();
-                    this.notifySvr.notifyCode("WP007");
-                  }
-                });
+              this.approvalPost(this.function.entityName,data, "2","WP007");
             }
         });
         break;
-
       default:
       break;
     }
@@ -293,8 +190,16 @@ export class AppropvalNewsComponent extends UIComponent {
   beforDeletedPost(option: RequestOption, recID: string) {
     option.service = 'WP';
     option.assemblyName = 'ERM.Business.WP';
-    option.className = this.funcID == "WPT0213" ? "CommentsBusiness" : "NewsBusiness";
-    option.methodName =  this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteAsync";
+    if(this.function.functionID == "WPT0213")
+    {
+      option.className = "CommentsBusiness";
+      option.methodName =  "DeletePostAsync";
+    }
+    else
+    {
+      option.className = "NewsBusiness";
+      option.methodName =  "DeleteAsync";
+    }
     option.data = recID;
     return true;
   }
@@ -306,31 +211,127 @@ export class AppropvalNewsComponent extends UIComponent {
       this.view.dataService
       .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data.recID))
       .subscribe();
+      this.loadDataTab();
     }
   }
 
   //change data moreFC
   changeDataMF(evt:any[],item:any){
-    if(item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5"))
-    {
-      evt.map(x => {
-        if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
-        {
-          x.disabled = true;
-        }
-      });
-    }
-    
+    evt.map(x => {
+      if(x.functionID == "SYS02" || x.functionID == "SYS03")
+        x.disabled = false;
+      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+        x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
+      else
+        x.disabled = true;
+    });
   }
 
   //xét duyệt bài viết
-  approvalPost(recID:string,approvalStatus)
-  {
-    return this.api.execSv(
+  approvalPost(entityName:string,data:any,approvalStatus:string,mssg:string){
+    debugger
+    this.api.execSv(
       "WP",
       "ERM.Business.WP",
       "NewsBusiness",
       "ApprovalPostAsync",
-      [this.function.entityName,recID,approvalStatus]);
+      [entityName,data.recID,approvalStatus]).subscribe((res:any) => {
+        if(res)
+        {
+          data.approveStatus = approvalStatus;
+          this.changeApproSatusPost(data);
+          if(this.tmpDetail.objectID == data.recID)
+          {
+            this.tmpDetail.data.approvalStatus = approvalStatus;
+            this.tmpDetail.hideMFC = true;
+          }
+          this.notifySvr.notifyCode(mssg);
+        }
+        else
+          this.notifySvr.notifyCode("SYS019");
+    });
+  }
+
+  // edit post
+  editPost(evt:any,data:any){
+    debugger
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.zIndex = 100;
+    // WP_News
+    if(this.function.entityName !== "WP_AprovalComments")
+    {
+      option.IsFull = true;
+      let obj = {
+        action: evt.text,
+        isAdd:false,
+        data: data
+      };
+      this.callFuc.openForm(
+        PopupAddComponent,
+        '',
+        0,
+        0,
+        this.function.functionID,
+        obj,
+        '',
+        option
+      ).closed.subscribe((res: any) => {
+        if (res?.event)
+        {
+          this.view.dataService.update(res.event).subscribe();
+          this.selectedID = res.event.recID;
+          this.detectorRef.detectChanges();
+        }
+      });
+    } 
+    // WP_Comments
+    else 
+    {
+      this.api
+        .execSv(
+          "WP",
+          "ERM.Business.WP",
+          'CommentsBusiness',
+          'GetPostByIDAsync',
+          [data.recID])
+          .subscribe((res1: any) => {
+          if (res1) {
+            let obj = {
+              data: res1,
+              status: 'edit',
+              headerText: evt.text,
+            };
+            this.callfc.openForm(
+              PopupAddCommentComponent,
+              "",
+              700,
+              650,
+              '',
+              obj,
+              '',
+              option
+            ).closed.subscribe((res2:any) => {
+              if (res2?.event){
+                this.view.dataService.update(res2.event).subscribe();
+                this.selectedID = res2.event.recID;
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+        });
+    }
+  }
+
+  // change approval post
+  changeApproSatusPost(data:any){
+    debugger
+    let tabActive = this.tabAsside.find(x => x.active);
+    if(tabActive.value == "")
+      this.view.dataService.update(data).subscribe();
+    else
+      this.view.dataService.remove(data).subscribe();
+    this.loadDataTab();
   }
 }

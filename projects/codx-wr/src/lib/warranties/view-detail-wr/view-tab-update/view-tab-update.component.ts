@@ -84,7 +84,9 @@ export class ViewTabUpdateComponent implements OnInit {
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private notiSv: NotificationsService
-  ) {}
+  ) {
+    this.getGridViewSetup();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['transID']) {
@@ -118,40 +120,41 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
+
       // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
 
-      this.columnsGrid = [
-        {
-          headerTemplate: this.headerStatusCode,
-          template: this.tempStatusCode,
-          width: 150,
-        },
-        {
-          headerTemplate: this.headerComment,
-          template: this.tempComment,
-          width: 400,
-        },
-        {
-          headerTemplate: this.headerScheduleTime,
-          template: this.tempScheduleTime,
-          width: 250,
-        },
-        {
-          headerTemplate: this.headerEngineerID,
-          template: this.tempEngineerID,
-          width: 150,
-        },
-        {
-          headerTemplate: this.headerCreatedBy,
-          template: this.tempCreatedBy,
-          width: 150,
-        },
-        {
-          headerTemplate: this.headerAttachment,
-          template: this.tempAttachment,
-          width: 80,
-        },
-      ];
+      // this.columnsGrid = [
+      //   {
+      //     headerTemplate: this.headerStatusCode,
+      //     template: this.tempStatusCode,
+      //     width: 150,
+      //   },
+      //   {
+      //     headerTemplate: this.headerComment,
+      //     template: this.tempComment,
+      //     width: 400,
+      //   },
+      //   {
+      //     headerTemplate: this.headerScheduleTime,
+      //     template: this.tempScheduleTime,
+      //     width: 250,
+      //   },
+      //   {
+      //     headerTemplate: this.headerEngineerID,
+      //     template: this.tempEngineerID,
+      //     width: 150,
+      //   },
+      //   {
+      //     headerTemplate: this.headerCreatedBy,
+      //     template: this.tempCreatedBy,
+      //     width: 150,
+      //   },
+      //   {
+      //     headerTemplate: this.headerAttachment,
+      //     template: this.tempAttachment,
+      //     width: 80,
+      //   },
+      // ];
       this.wrSv.listOrderUpdateSubject.next({
         e: this.lstUpdate,
         date: null,
@@ -210,8 +213,14 @@ export class ViewTabUpdateComponent implements OnInit {
       let template: any;
       let colums: any;
       switch (key) {
-        case 'Comment':
-          template = this.tempComment;
+        case 'ScheduleTime':
+          template = this.tempScheduleTime;
+          break;
+        case 'EngineerID':
+          template = this.tempEngineerID;
+          break;
+        case 'CreatedBy':
+          template = this.tempCreatedBy;
           break;
       }
 
@@ -232,6 +241,12 @@ export class ViewTabUpdateComponent implements OnInit {
 
       this.columnsGrid.push(colums);
     });
+    var colums = {
+      headerTemplate: this.headerAttachment,
+      template: this.tempAttachment,
+      width: 80,
+    };
+    this.columnsGrid.push(colums);
   }
 
   //#region more

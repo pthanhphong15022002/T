@@ -127,7 +127,6 @@
 
       <div class="d-flex flex-row mt-1">
         <span
-          class="fw-bold"
           [ngbTooltip]="grvSetup?.BusinessPlace?.headerText"
           [innerHTML]="
             data.businessPlace
@@ -307,7 +306,7 @@
 
   <ng-template #descTmp>
     <span
-      class="mt-1"
+      class="mt-1 fw-bold"
       [ngbTooltip]="grvSetup?.KowID?.headerText"
       [innerHTML]="data?.kowID | formatvalue : view.formModel : 'kowID' | async"
     ></span>

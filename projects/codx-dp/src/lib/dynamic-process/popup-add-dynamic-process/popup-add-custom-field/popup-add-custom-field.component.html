@@ -176,6 +176,7 @@
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">
               <codx-label
+                [setRequire]="true"
                 fiedName="RefValue"
                 [formModel]="form.formModel"
                 [default]="'Danh sách tùy chọn'"
@@ -230,35 +231,46 @@
             ></ejs-combobox
           ></ng-container>
         </div>
-        <div class="form-group" *ngIf="field.dataFormat == 'V'">
+        <div class="form-group" *ngIf="field.dataType == 'L'">
           <codx-label
             class="label-colon"
             name="demoVll"
-            formName="SYS_ValueList"
+            [formName]="form.formModel"
             default="Xem trước"
             class="me-4"
           >
           </codx-label>
-          <ng-container *ngIf="!this.crrVll?.multiSelect">
-            <ejs-combobox
-              #comboxView
-              [enabled]="enabled"
-              [dataSource]="datasVllCrr"
-              [fields]="fieldsCrrVll"
-              [value]="crrValueFirst"
-              [allowFiltering]="false"
-              [placeholder]="this.crrVll?.note"
-            ></ejs-combobox>
+          <ng-container *ngIf="field.dataFormat == 'C'">
+            <codx-input
+              *ngIf="field.dataFormat == 'C'"
+              type="combobox"
+              [refValue]="field.refValue"
+            >
+            </codx-input>
           </ng-container>
-          <ng-container *ngIf="this.crrVll?.multiSelect">
-            <ejs-multiselect
-              [dataSource]="datasVllCrr"
-              [mode]="'Default'"
-              [fields]="fieldsCrrVll"
-              [value]=""
-              [showDropDownIcon]="true"
-              [placeholder]="this.crrVll?.note"
-            ></ejs-multiselect>
+
+          <ng-container *ngIf="field.dataFormat == 'V'">
+            <ng-container *ngIf="!this.crrVll?.multiSelect">
+              <ejs-combobox
+                #comboxView
+                [enabled]="enabled"
+                [dataSource]="datasVllCrr"
+                [fields]="fieldsCrrVll"
+                [value]="crrValueFirst"
+                [allowFiltering]="false"
+                [placeholder]="this.crrVll?.note"
+              ></ejs-combobox>
+            </ng-container>
+            <ng-container *ngIf="this.crrVll?.multiSelect">
+              <ejs-multiselect
+                [dataSource]="datasVllCrr"
+                [mode]="'Default'"
+                [fields]="fieldsCrrVll"
+                [value]=""
+                [showDropDownIcon]="true"
+                [placeholder]="this.crrVll?.note"
+              ></ejs-multiselect>
+            </ng-container>
           </ng-container>
         </div>
       </ng-container>
@@ -368,7 +380,6 @@
 <!-- //form Add VLL -->
 <ng-template #addVll>
   <codx-form
-    class="h-100"
     [headerText]="titleForm"
     [body]="bodyVll"
     [footer]="footerVll"
@@ -498,15 +509,28 @@
             class="me-4"
           >
           </codx-label>
-          <ejs-combobox
-            #viewComboxForm
-            [enabled]="enabled"
-            [dataSource]="datasVll"
-            [fields]="fieldsResourceVll"
-            [value]="crrValue"
-            [allowFiltering]="false"
-            [placeholder]=""
-          ></ejs-combobox>
+          <ng-container *ngIf="!this.crrVll?.multiSelect">
+            <ejs-combobox
+              #viewComboxForm
+              [enabled]="enabled"
+              [dataSource]="datasVll"
+              [fields]="fieldsResourceVll"
+              [value]="crrValue"
+              [allowFiltering]="false"
+              [placeholder]=""
+              [placeholder]="this.crrVll?.note"
+            ></ejs-combobox>
+          </ng-container>
+          <ng-container *ngIf="this.crrVll?.multiSelect">
+            <ejs-multiselect
+              [dataSource]="datasVllCrr"
+              [mode]="'Default'"
+              [fields]="fieldsCrrVll"
+              [value]=""
+              [showDropDownIcon]="true"
+              [placeholder]="this.crrVll?.note"
+            ></ejs-multiselect>
+          </ng-container>
         </div>
       </div>
     </div>

@@ -79,7 +79,7 @@ export class CasesComponent
   className = 'CasesBusiness';
   method = 'GetListCasesAsync';
   idField = 'recID';
-
+  listInsStep = [];
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -438,7 +438,7 @@ export class CasesComponent
         this.moveStage(data);
         break;
       case 'CM0401_2':
-        this.handelStartDay(data);
+        this.startInstance(data);
         break;
       case 'CM0401_3':
         this.moveReason(data, true);
@@ -593,27 +593,6 @@ export class CasesComponent
             }
           });
         });
-    });
-  }
-  handelStartDay(data) {
-    this.notificationsService
-      .alertCode('DP033', null, ['"' + data?.caseName + '"' || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.startCases(data.recID, data.caseType);
-        }
-      });
-  }
-  startCases(caseId, caseType) {
-    var data = [caseId, caseType];
-    this.codxCmService.startCases(data).subscribe((res) => {
-      if (res[0]) {
-        this.dataSelected = res[0];
-        this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected).subscribe();
-        if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      }
-      this.detectorRef.detectChanges();
     });
   }
 
@@ -1504,6 +1483,36 @@ export class CasesComponent
         if (e?.event && e?.event != null) {
           this.view.dataService.update(e?.event).subscribe();
           this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
+
+  //#region step start
+  startInstance(data) {
+    this.notificationsService
+      .alertCode('DP033', null, ['"' + data?.caseName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.api
+          .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [data?.refID])
+          .subscribe((res) => {
+            console.log(res);
+            if (res) {
+              this.listInsStep = res;
+            }
+          });
+
+          // var data = [data?.recID, data?.caseType];
+          // this.codxCmService.startCases(data).subscribe((res) => {
+          //   if (res[0]) {
+          //     this.dataSelected = res[0];
+          //     this.notificationsService.notifyCode('SYS007');
+          //     this.view.dataService.update(this.dataSelected).subscribe();
+          //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          //   }
+          //   this.detectorRef.detectChanges();
+          // });
         }
       });
   }

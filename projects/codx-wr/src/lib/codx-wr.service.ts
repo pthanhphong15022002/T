@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class CodxWrService {
-  listOrderPartsSubject = new BehaviorSubject<any>(null);
+  // listOrderPartsSubject = new BehaviorSubject<any>(null);
   listOrderUpdateSubject = new BehaviorSubject<any>(null);
 
   constructor(

@@ -69,7 +69,7 @@
                       [Group]="form.formGroup"
                       [disabled]="
                         !journal?.multiCurrency ||
-                        master.currencyID === baseCurr
+                        master.currencyID === acParams.BaseCurr
                       "
                       (controlBlur)="onInputChange($event)"
                     ></codx-input>

@@ -380,7 +380,7 @@
     [dialog]="dialog"
     [multiple]="false"
     listName="WP001"
-    (eventApply)="addPerrmissonShares($event)"
+    (eventApply)="addPerShares($event)"
   >
   </codx-share>
 </ng-template>
@@ -390,9 +390,8 @@
     [multiple]="true"
     [width]="width"
     [value]="crrPermisionTag"
-    [allowRemove]="false"
     [height]="height"
-    (clickSave)="addPerrmissonTags($event)"
+    (clickSave)="addPerTags($event)"
   >
   </codx-combobox-popup>
 </ng-container>

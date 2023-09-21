@@ -20,7 +20,10 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal, Vll075 } from '../../../journals/interfaces/IJournal.interface';
+import {
+  IJournal,
+  Vll075,
+} from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
@@ -466,7 +469,7 @@ export class CashtransferAddComponent extends UIComponent {
     this.masterService
       .addNew(() =>
         this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
-          this.dialogData.data.journalNo,
+          this.cashTransfer.journalNo,
         ])
       )
       .subscribe((res: ICashTransfer) => {

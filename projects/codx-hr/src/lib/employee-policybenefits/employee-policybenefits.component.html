@@ -17,6 +17,7 @@
   <div class="d-flex align-items-center p-3 border-bottom w-100">
     <div class="w-20 min-w-200px p-1">
       <div class="line-clamp line-clamp-1" 
+      [ngbTooltip]="grvSetup?.BenefitID?.headerText"
         [innerHTML]="
           data?.benefitID | formatvalue : view.formModel : 'benefitID' | async
         "
@@ -26,6 +27,7 @@
 
     <div class="w-25 min-w-150px px-2">
       <span
+      [ngbTooltip]="grvSetup?.PolicyName?.headerText"
         [innerHTML]="
           data?.policyName | formatvalue : view.formModel : 'policyName' | async
         "
@@ -35,6 +37,7 @@
 
     <div class="w-15 min-w-150px px-2">
       <span
+      [ngbTooltip]="grvSetup?.FixedAmt?.headerText"
         [innerHTML]="
           data?.fixedAmt | formatvalue : view.formModel : 'fixedAmt' | async
         "
@@ -72,6 +75,8 @@
         >
         </codx-label>
         <span class="badge badge-success border-0 ms-2"
+      [ngbTooltip]="grvSetup?.PercentageOn?.headerText"
+
         [innerHTML]="data.percentageOn
         | formatvalue : view.formModel : 'percentageOn'
         | async"
@@ -112,7 +117,9 @@
 
     <div class="w-25 min-w-300px px-2">
       <div class="flex-row">
-        <span>
+        <span
+        [ngbTooltip]="grvSetup?.ActiveOn?.headerText"
+        >
           <i class="icon-calendar_today icon-14 text-dark"></i>
           {{ data.activeOn | fmDT }}
         </span>

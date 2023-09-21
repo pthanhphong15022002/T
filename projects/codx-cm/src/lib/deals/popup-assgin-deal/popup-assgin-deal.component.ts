@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, CacheService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, CacheService, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { tmpInstancesStepsRoles } from '../../models/tmpModel';
 import { CM_Permissions } from '../../models/cm_model';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-assgin-deal',
@@ -25,6 +26,9 @@ employeeName: any;
 gridViewSetup: any;
 applyProcess: boolean = false;
 
+@ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
+@ViewChild('form') form: CodxFormComponent;
+
 recID: any;
 stepID: any;
 refID: any;
@@ -42,7 +46,7 @@ orgUnitName: string = '';
 positionName: string = '';
 
 listParticipants = [];
-
+data:any;
 listUser: any[] = [];
 readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
 readonly viewBUID: string = 'ViewBUID';
@@ -62,13 +66,14 @@ constructor(
   this.user = this.authStore.get();
   this.title = dialogData?.data.titleAction;
   this.applyProcess = dialogData?.data.applyProcess;
+  this.data = dialogData?.data.data;
   if (this.applyProcess) {
     this.refID = dialogData?.data?.refID;
     (this.stepID = dialogData?.data?.stepID),
       (this.processID = dialogData?.data.processID);
   }
   this.recID = dialogData?.data?.recID;
-  this.buid = dialogData?.data?.buid;
+  //this.buid = dialogData?.data?.buid;
   this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
@@ -156,9 +161,9 @@ changeOwner(evt: any, view: any) {
   if (evt?.data) {
     if (view === this.viewDefault) {
       this.owner = evt.data;
-      this.buid = '';
+      //this.buid = '';
     } else if (view === this.viewBUID) {
-      this.buid = evt.data;
+   //   this.buid = evt.data;
     //  var datas = [this.buid];
       // this.codxCmService.getListUserByBUID(datas).subscribe((res) => {
       //   if (res) {
@@ -167,6 +172,13 @@ changeOwner(evt: any, view: any) {
       // });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
+    this.codxCmService
+    .getEmployeesByDomainID(this.owner)
+    .subscribe((user) => {
+      if (user) {
+        this.assignTo(user);
+      }
+    });
 
    //this.searchOwner('1', 'O', '0', this.owner, ownerName);
   }
@@ -230,16 +242,18 @@ assignTo(user: any) {
   this.orgUnitName = user?.orgUnitName;
   this.positionName = user?.positionName;
 }
-deleteOrg($event) {
-  if ($event) {
-    let index = this.listUser.findIndex((x) => x.userID === $event);
-    this.listUser.splice(index, 1);
-
-    if (this.listUser.length < 0 && !this.listUser) {
-      this.owner = '';
-      this.buid = '';
-    }
-  }
+deleteOrg() {
+  this.employeeName = null;
+  this.orgUnitName = null;
+  this.positionName = null;
+  this.owner = null;
+ if(this.cbxOwner) {
+  (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =
+  [];
+  this.cbxOwner.crrValue =  this.owner ;
+ }
+ this.form.formGroup.patchValue(this.data);
+ this.data.owner = this.owner;
 }
 
 onSaveForm() {

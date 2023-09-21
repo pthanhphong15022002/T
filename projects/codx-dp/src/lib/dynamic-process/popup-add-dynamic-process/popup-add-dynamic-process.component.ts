@@ -2863,7 +2863,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       roleOld = JSON.parse(JSON.stringify(data['roles']));
       taskInput = JSON.parse(JSON.stringify(data));
     }
-
+    console.log('----2',data?.taskName == taskInput['taskName']);
+    console.log('----2',data == taskInput);
     let dataInput = {
       action,
       typeTask: this.typeTask,
@@ -2937,6 +2938,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     taskData['roles']?.forEach((role) => {
       this.addRole(role);
     });
+    console.log('-----------',this.taskList.map(task => {return {task: task.recID,name: task.taskName}}));
+    
     this.updateStepChange(taskData?.stepID);
   }
 

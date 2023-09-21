@@ -490,12 +490,16 @@
         </ng-container>
         <!-- //test -->
         <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
-          <ng-container *ngIf="data.dataFormmat == 'C'">
-            <span>{{ data.dataValue }}</span>
+          <ng-container *ngIf="data.dataFormat == 'C'">
+            <span>{{ getViewText(data.refValue, data.dataValue) }}</span>
           </ng-container>
 
-          <ng-container *ngIf="data.dataFormmat == 'V'">
-            <span>{{ data.dataValue }}</span>
+          <ng-container *ngIf="data.dataFormat == 'V'">
+            <div class="flex flex-column">
+              <div *ngFor="let item of listValue(data.dataValue)">
+                <span>{{ item }}</span>
+              </div>
+            </div>
           </ng-container>
         </ng-container>
       </ng-container>
