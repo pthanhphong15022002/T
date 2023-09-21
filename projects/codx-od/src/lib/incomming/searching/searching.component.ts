@@ -90,6 +90,7 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
     });
   }
   onSelected(e: any ) {
+    debugger
     var functionID = e?.unbounds?.functionID;
     if(!functionID) return;
     
