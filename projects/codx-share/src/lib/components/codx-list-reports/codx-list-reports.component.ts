@@ -148,6 +148,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     ).closed.subscribe((res:any)=>{
       if(res?.event)
       {
+        this.lstReport = this.lstReport.map(x => x.recID == res.event.recID ? res.event : x);
         this.dataSelected = res.event;
         this.detectorRef.detectChanges();
       }

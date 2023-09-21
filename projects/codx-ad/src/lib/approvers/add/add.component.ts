@@ -112,7 +112,6 @@ export class AddApproversComponent extends UIComponent {
               .valueList(this.grv.RoleType?.referedValue)
               .subscribe((vll) => {
                 this.lstRoleTypes = vll?.datas;
-                console.log('lstRoleTypes', this.lstRoleTypes);
               });
           }
         }
@@ -244,7 +243,9 @@ export class AddApproversComponent extends UIComponent {
   }
 
   selectMember(p, memberID) {
-    p.open();
+    if (this.lstRoleTypes && this.lstRoleTypes.length > 0) {
+      p.open();
+    }
     this.popover = p;
     this.curSelectMemberID = memberID;
     console.log('selectMember', p, memberID);

@@ -1,10 +1,13 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
   SimpleChanges,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -24,6 +27,16 @@ import { CodxWrService } from '../../../codx-wr.service';
 export class ViewTabPartsComponent implements OnInit {
   @Input() transID: any;
   @Output() listChange = new EventEmitter<any>();
+
+  @ViewChild('headerPartInfo') headerPartInfo: TemplateRef<any>;
+  @ViewChild('tempPartInfo') tempPartInfo: TemplateRef<any>;
+  @ViewChild('headerQuantity') headerQuantity: TemplateRef<any>;
+  @ViewChild('tempQuantity') tempQuantity: TemplateRef<any>;
+  @ViewChild('headerStatus') headerStatus: TemplateRef<any>;
+  @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
+  // @ViewChild('headerNote') headerNote: TemplateRef<any>;
+  // @ViewChild('tempNote') tempNote: TemplateRef<any>;
+
   formModel: FormModel = {
     formName: 'WRWorkOrderParts',
     gridViewName: 'grvWRWorkOrderParts',
@@ -48,7 +61,8 @@ export class ViewTabPartsComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
-    private wrSv: CodxWrService
+    private wrSv: CodxWrService,
+    private detectorRef: ChangeDetectorRef
   ) {
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -84,6 +98,10 @@ export class ViewTabPartsComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  ngAfterViewInit(): void {
+    this.detectorRef.detectChanges();
+  }
+
   getListOrderParts() {
     this.loaded = false;
     this.request.predicates = this.predicates;
@@ -91,9 +109,30 @@ export class ViewTabPartsComponent implements OnInit {
     this.request.entityName = 'WR_WorkOrderParts';
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
-      this.lstParts = item;
-      this.wrSv.listOrderPartsSubject.next(this.lstParts);
       this.loaded = true;
+      this.lstParts = item;
+      this.columnsGrid.unshift({
+        headerTemplate: this.headerPartInfo,
+        template: this.tempPartInfo,
+        width: 400,
+      });
+
+      // {
+      //   headerTemplate: this.headerQuantity,
+      //   template: this.tempQuantity,
+      //   width: 150,
+      // },
+      // {
+      //   headerTemplate: this.headerStatus,
+      //   template: this.tempStatus,
+      //   width: 250,
+      // },
+      // {
+      //   headerTemplate: this.headerNote,
+      //   template: this.tempNote,
+      //   width: 150,
+      // },
+      // this.wrSv.listOrderPartsSubject.next(this.lstParts);
     });
   }
 
@@ -122,24 +161,34 @@ export class ViewTabPartsComponent implements OnInit {
     this.arrFieldIsVisible.forEach((key) => {
       let field = Util.camelize(key);
       let template: any;
-      let colums: any;
+      let column: any;
+
+      console.log(key);
+      switch (key) {
+        case 'Qty':
+          template = this.tempQuantity;
+          break;
+        case 'Status':
+          template = this.tempStatus;
+          break;
+      }
 
       if (template) {
-        colums = {
+        column = {
           field: field,
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
           template: template,
         };
       } else {
-        colums = {
+        column = {
           field: field,
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
         };
       }
 
-      this.columnsGrid.push(colums);
+      this.columnsGrid.push(column);
     });
   }
 }

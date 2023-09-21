@@ -43,8 +43,6 @@ declare var jsBh: any;
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-
-
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -148,15 +146,15 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
-        subModel:{
-          gridviewName:'grvCashPaymentsLines',
-          formName:'CashPaymentsLines',
-          entityName:'AC_CashPaymentsLines',
-          service:'AC',
-          predicates:'TransID=@0',
-          rowNoField:'rowNo',
+        // subModel:{
+        //   gridviewName:'grvCashPaymentsLines',
+        //   formName:'CashPaymentsLines',
+        //   entityName:'AC_CashPaymentsLines',
+        //   service:'AC',
+        //   predicates:'TransID=@0',
+        //   rowNoField:'rowNo',
 
-        },
+        // },
         model: {
           template2: this.templateGrid,
         },
@@ -324,24 +322,30 @@ onSelectedItem(event) {
   copyVoucher(dataCopy) {
     this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(dataCopy))
+      .copy((o) => this.setDefault(dataCopy,'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let data = {
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
-          };
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
+          let datas = {...res};
+          this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+            if (res) {
+              let data = {
+                headerText: this.headerText, //? tiêu đề voucher
+                journal: { ...this.journal }, //?  data journal
+                oData: { ...datas }, //?  data của cashpayment
+                hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                legalName: this.legalName, //? tên company
+              };
+              let dialog = this.callfc.openSide(
+                CashPaymentAddComponent,
+                data,
+                this.optionSidebar,
+                this.view.funcID
+              );
+              this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
+            }
+          })
         }
       });
   }
@@ -631,10 +635,11 @@ onSelectedItem(event) {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data) {
+  setDefault(data:any,action:any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      action
     ]);
   }
 

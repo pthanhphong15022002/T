@@ -38,9 +38,12 @@
   <div class="d-flex flex-column text-content flex-grow-1">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+        <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
           data?.voucherNo
           }}</span>
+        <span *ngIf="(data?.voucherNo == '' || data?.voucherNo == null) && view?.gridViewSetup" class="place-holder line-clamp line-clamp-1 fs-6">
+              {{ view?.gridViewSetup['VoucherNo'].headerText }}
+          </span>
       </div>
       <div>
         <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
@@ -64,7 +67,7 @@
     </div>
     <div style="height: 18px !important;" class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1" #objectID [innerHTML]="
+        <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1" [innerHTML]="
           data?.objectID | tranformSubobject : view.formModel
         "></span>
         <span *ngIf="(data?.objectID == '' || data?.objectID == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1">{{view?.gridViewSetup['ObjectID'].headerText}}</span>
@@ -107,10 +110,8 @@
     <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
     <div id="tipsub" style="background-color: var(--primary-dark)"
       class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-      <!-- <i style="font-size: 16px !important;" class="text-white"
-        [class]="data?.subType | vll : 'AC100' : 'text' | async"></i> -->
-      <i style="font-size: 16px !important;" class="text-white"
-        [class]="journal.journalType | vll : 'AC064' : 'icon' | async"></i>
+        <i style="font-size: 16px !important;" class="text-white"
+        [class]="data?.subType | vll : 'AC100' : 'icon' | async"></i>
     </div>
     <ng-template #content>
       <span *ngIf="(this.view.funcID == 'ACT0410') || (this.view.funcID == 'ACT0429')">{{data?.subType | vll : 'AC063' :

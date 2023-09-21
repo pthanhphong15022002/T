@@ -25,26 +25,43 @@
         >
         <div class="d-flex align-items-center">
           <span
+            [innerHTML]="
+              itemDetail?.emp?.email ?? itemDetail?.emp.email
+                | formatvalue : formModelEmployee : 'email'
+                | async
+            "
+          ></span>
+
+          <!-- <span
             class="me-4 d-flex align-items-center"
             *ngIf="itemDetail?.emp?.email"
           >
             <i class="icon-email icon-16 me-2"></i>
             {{ itemDetail?.emp?.email }}
-          </span>
+          </span> -->
+
           <span
+            class="ms-3"
+            [innerHTML]="
+              itemDetail?.emp?.mobile ?? itemDetail?.emp.mobile
+                | formatvalue : formModelEmployee : 'mobile'
+                | async
+            "
+          ></span>
+          <!-- <span
             class="me-3 d-flex align-items-center"
             *ngIf="itemDetail?.emp?.mobile"
           >
             <i class="icon-phone_android icon-16 me-2"></i>
             {{ itemDetail?.emp?.mobile }}
-          </span>
+          </span> -->
         </div>
       </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span
           *ngIf="
-            itemDetail.orgUnitName || itemDetail?.emp?.orgUnitName;
+            itemDetail?.orgUnitName || itemDetail?.emp?.orgUnitName;
             else noOrgUnitName
           "
           >{{ itemDetail.orgUnitName || itemDetail.emp.orgUnitName }}</span
@@ -81,6 +98,7 @@
       </codx-temp-full>
     </div>
     <codx-vll
+      class="fw-bold"
       name="HR014"
       [value]="itemDetail?.appoint"
       [showText]="true"
@@ -273,7 +291,7 @@
               | async
           "
         ></div>
-        <span *ngIf="itemDetail.oldJobLevel; else noOldJobLevel">{{
+        <span *ngIf="itemDetail?.oldJobLevel; else noOldJobLevel">{{
           itemDetail.oldJobLevel
         }}</span>
         <ng-template #noOldJobLevel>

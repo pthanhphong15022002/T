@@ -43,6 +43,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() listInstanceStep: any[];
   @Input() entityName = '';
   @Input() owner: string;
+
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
@@ -152,7 +153,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.type = e.data;
   }
   changeValueDropdownSelect(e) {
-    this.isShow
+    this.isShow;
     if (e.field == 'status') {
       if (e?.data?.length == 0) {
         this.listInstanceStepShow = this.listInstanceStep;
@@ -169,7 +170,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  handelToggleStep(){
+  handelToggleStep() {
     this.isShow = !this.isShow;
     this.isShowElement = this.isShow;
   }
@@ -390,10 +391,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   showGuide() {
-    if(this.isZoomIn){
+    if (this.isZoomIn) {
       return;
     }
-    if(this.isZoomOut){
+    if (this.isZoomOut) {
       this.dialogGuideZoomOut?.close();
       this.isZoomOut = false;
     }
@@ -414,11 +415,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  zoomGuide(){
-    if(this.isZoomOut){
+  zoomGuide() {
+    if (this.isZoomOut) {
       return;
     }
-    if(this.isZoomIn){
+    if (this.isZoomIn) {
       this.dialogGuideZoomIn?.close();
     }
     this.isZoomOut = true;
@@ -439,30 +440,33 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       );
     }
   }
-  closeGuide(){
-    if(this.isZoomOut){
+  closeGuide() {
+    if (this.isZoomOut) {
       this.dialogGuideZoomOut?.close();
     }
-    if(this.isZoomIn){
+    if (this.isZoomIn) {
       this.dialogGuideZoomIn?.close();
     }
     this.isZoomOut = false;
     this.isZoomIn = false;
   }
-  susscessStepEnd(event, step){
+  susscessStepEnd(event, step) {
     let count = this.listInstanceStepShow?.length - 1;
     let stepEnd;
-    for(let i = count; i >=0 ; i--){
-      if(!this.listInstanceStepShow[i]?.isSuccessStep && !this.listInstanceStepShow[i]?.isFailStep){
+    for (let i = count; i >= 0; i--) {
+      if (
+        !this.listInstanceStepShow[i]?.isSuccessStep &&
+        !this.listInstanceStepShow[i]?.isFailStep
+      ) {
         stepEnd = this.listInstanceStepShow[i];
         break;
       }
     }
-    if(stepEnd?.recID == step?.recID){
+    if (stepEnd?.recID == step?.recID) {
       this.isSusscess.emit(true);
     }
   }
-  toggleReason(){
+  toggleReason() {
     this.isShowElement = !this.isShowElement;
   }
 }

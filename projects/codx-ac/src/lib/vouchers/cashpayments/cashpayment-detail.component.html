@@ -8,8 +8,8 @@
             <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
                 <div id="tipsub" style="background-color: var(--primary-dark)"
                     class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-                    <i style="font-size: 16px !important;" class="text-white"
-                        [class]="itemSelected?.journalType | vll : 'AC064' : 'icon' | async"></i>
+                    <i style="font-size: 13px !important;" class="text-white"
+                        [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
                 </div>
                 <ng-template #content>
                     <span>{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>
@@ -601,19 +601,19 @@
               <tr class="border-bottom">
                 <th class="border-bottom w-20">
                   <div class="d-flex align-items-center justify-content-start ps-3">
-                    <codx-label class="fw-bold" fiedName="lblInvoiceNo" [formModel]="view.formModel" default="Mẫu số">
+                    <codx-label class="fw-bold" fiedName="lblInvoiceNo" [formModel]="formModel" default="Mẫu số">
                     </codx-label>
                   </div>
                 </th>
                 <th class="border-bottom w-20">
                   <div class="d-flex align-items-center justify-content-start ps-3">
-                    <codx-label class="fw-bold" fiedName="lblInvoiceDate" [formModel]="view.formModel" default="Ký hiệu">
+                    <codx-label class="fw-bold" fiedName="lblInvoiceDate" [formModel]="formModel" default="Ký hiệu">
                     </codx-label>
                   </div>
                 </th>
                 <th class="border-bottom w-20">
                   <div class="d-flex align-items-center justify-content-start ps-3">
-                    <codx-label class="fw-bold" fiedName="lblDueDate" [formModel]="view.formModel" default="Số hóa đơn">
+                    <codx-label class="fw-bold" fiedName="lblDueDate" [formModel]="formModel" default="Số hóa đơn">
                     </codx-label>
                   </div>
                 </th>

@@ -2008,7 +2008,7 @@ export class CodxHrService {
                   if (!formModel.fieldRequired.includes(field))
                     formModel.fieldRequired += field + ';';
                 }
-              }        
+              }
             }
             group[keytmp] = element.isRequire
               ? new FormControl(value, Validators.required)
@@ -2344,11 +2344,11 @@ export class CodxHrService {
         evt[i].disabled = true;
       }
 
-      if (data.status !== '5' && IDCompare === this.actionUpdateClosed) {
+      if (data?.status !== '5' && IDCompare === this.actionUpdateClosed) {
         evt[i].disabled = true;
       }
       if (
-        (data.status === '9' || data.status === '0') &&
+        (data?.status === '9' || data?.status === '0') &&
         IDCompare === this.actionExport
       ) {
         evt[i].disabled = true;

@@ -83,6 +83,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
   loading: any = false;
   loadingAcct: any = false;
   journal: IJournal;
+  dataDefault: any;
   voucherCopy: Vouchers = new Vouchers();
   hideFields: Array<any> = [];
   fmVouchers: FormModel = {
@@ -266,20 +267,22 @@ export class ReceiptTransactionsComponent extends UIComponent {
 
   //#region Method
 
-  setDefault(o) {
+  setDefault(data:any,action:any = '') {
     return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+      data,
       this.journalNo,
+      action
     ]);
   }
 
   add(e) {
     this.headerText = this.funcName;
     this.view.dataService
-      .addNew((o) => this.setDefault(o))
+      .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res)
-        {
+      .subscribe((res) => {
+        if (res != null) {
+          if(this.dataDefault == null) this.dataDefault = {...res};
           var obj = {
             formType: 'add',
             headerText: this.headerText,
@@ -287,7 +290,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
-            oData: res,
+            oData: { ...res },
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -299,15 +302,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-              }
-            }
-          });
         }
       });
   }
@@ -329,7 +323,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
             formModelLine: this.fmVouchersLines,
             hideFields: this.hideFields,
             journal: this.journal,
-            oData: res,
+            oData: { ...res },
           };
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -357,48 +351,37 @@ export class ReceiptTransactionsComponent extends UIComponent {
   }
 
   copy(dataCopy) {
-    if(dataCopy)
-    {
-      this.voucherCopy = Object.assign(this.voucherCopy, dataCopy);
-    }
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(o))
+      .copy((o) => this.setDefault(dataCopy,'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if(res)
-        {
-          this.voucherCopy.recID = res.recID;
-          this.voucherCopy.voucherNo = res.voucherNo;
-          this.voucherCopy.status = res.status;
-          this.voucherCopy['_uuid'] = res['_uuid'];
-          var obj = {
-            formType: 'copy',
-            headerText: this.funcName,
-            formModelMaster: this.fmVouchers,
-            formModelLine: this.fmVouchersLines,
-            hideFields: this.hideFields,
-            journal: this.journal,
-            oData: { ...this.voucherCopy },
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          this.dialog = this.callfunc.openSide(
-            ReceiptTransactionsAddComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-              }
+        if (res != null) {
+          let datas = {...res};
+          this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+            if (res) {
+              var obj = {
+                formType: 'copy',
+                headerText: this.funcName,
+                formModelMaster: this.fmVouchers,
+                formModelLine: this.fmVouchersLines,
+                hideFields: this.hideFields,
+                journal: this.journal,
+                oData: { ...datas },
+              };
+              let option = new SidebarModel();
+              option.DataService = this.view.dataService;
+              option.FormModel = this.view.formModel;
+              option.isFull = true;
+              this.dialog = this.callfunc.openSide(
+                ReceiptTransactionsAddComponent,
+                obj,
+                option,
+                this.view.funcID
+              );
+              this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
             }
-          });
+          })
         }
       });
   }

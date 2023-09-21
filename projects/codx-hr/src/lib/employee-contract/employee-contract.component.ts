@@ -9,6 +9,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AuthStore,
   ButtonModel,
   CallFuncService,
   DialogModel,
@@ -65,6 +66,7 @@ export class EmployeeContractComponent extends UIComponent {
   flagChangeMF: boolean = false;
   resignStatus: boolean = false;
   viewActive: string;
+  user;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
   datasUpdated: Array<ViewModel> = [];
@@ -84,6 +86,7 @@ export class EmployeeContractComponent extends UIComponent {
   //#endregion
   constructor(
     inject: Injector,
+    private authStore: AuthStore,
     private hrService: CodxHrService,
     private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
@@ -107,6 +110,9 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.user = this.authStore.get();
+    console.log(this.user);
+
     this.GetGvSetup();
   }
 
@@ -332,6 +338,7 @@ export class EmployeeContractComponent extends UIComponent {
         break;
       case this.actionAddAppendix:
         this.currentEmpObj = data.inforEmployee;
+        console.log(event);
         this.handleSubContract(event.text, 'add');
         break;
       default: {

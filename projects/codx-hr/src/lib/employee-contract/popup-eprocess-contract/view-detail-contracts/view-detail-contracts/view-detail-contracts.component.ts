@@ -41,6 +41,7 @@ export class ViewDetailContractsComponent implements OnInit {
     APPLICATION: 'application',
   };
   lstFile: any[] = [];
+  formModelEmployee;
   // userID: any;
 
   constructor(
@@ -105,6 +106,12 @@ export class ViewDetailContractsComponent implements OnInit {
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -149,20 +156,6 @@ export class ViewDetailContractsComponent implements OnInit {
       this.shareService.changeMFApproval(e, data?.unbounds);
     }
   }
-  // clickMF(val: any, datas: any = null){
-  //   var funcID = val?.functionID;
-  //   if (!datas) {
-  //     datas = this.itemDetail;
-  //   } else {
-  //     var index = this.view.dataService.data.findIndex((object) => {
-  //       return object.recID === datas.recID;
-  //     });
-  //     if (index >= 0) {
-  //       datas = this.view.dataService.data[index];
-  //     }
-  //   }
-  //   this.clickMFunction.emit({event: val, data: datas});
-  // }
 
   clickMF(evt: any, data: any = null) {
     this.clickMFunction.emit({ event: evt, data: data });

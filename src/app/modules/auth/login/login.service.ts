@@ -8,6 +8,7 @@ import {
   TenantStore,
   AuthService,
   UrlUtil,
+  ApiHttpService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -23,7 +24,8 @@ export class LoginService {
     private authService: AuthService,
     private signalRService: SignalRService,
     private navRouter: Router,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
+    private api: ApiHttpService
   ) {}
   returnUrl: string;
   iParams: string;
@@ -91,5 +93,15 @@ export class LoginService {
       // this.notificationsService.notify(data.error.errorMessage);
     }
     return false;
+  }
+
+  getUserLoginSetting(email: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetChangePassSettingAsync',
+      email
+    );
   }
 }

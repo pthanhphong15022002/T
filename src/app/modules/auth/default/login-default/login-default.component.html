@@ -161,8 +161,7 @@
                                     <button
                                       [disabled]="
                                         otpTimeout > 0 ||
-                                        email == '' ||
-                                        email == null
+                                        !loginForm.controls['email'].value
                                       "
                                       type="button"
                                       (click)="generateOTP()"

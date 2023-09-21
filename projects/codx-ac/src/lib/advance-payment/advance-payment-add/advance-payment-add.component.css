@@ -1,7 +1,6 @@
 .voucherText{
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100px;
 }
 .amount .e-editable-value{
     justify-content: end;
@@ -12,3 +11,13 @@
 .height-attachments .mh-200px {
     max-height: 75px !important;
 }
+.dropdown-input .text-truncate{
+    text-align: left !important;
+    font-weight: normal !important;
+ }
+ .dropdown-input .icon-keyboard_arrow_down{
+    display: none;
+ }
+ .dropdown-input .text-muted{
+    color: #212529 !important;
+ }
