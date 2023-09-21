@@ -100,7 +100,7 @@ export class PopupAddPostComponent implements OnInit {
 
   ngOnInit(): void {
     this.setData();
-    this.getSetGridSetUp();
+    this.getSetting();
   }
 
   ngAfterViewInit() {
@@ -127,7 +127,7 @@ export class PopupAddPostComponent implements OnInit {
     this.getMssgDefault();
   }
   // get gridViewSetup
-  getSetGridSetUp() {
+  getSetting() {
     this.cache.functionList('WP')
     .subscribe((func: any) => {
       if (func) {
@@ -261,6 +261,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // edit post
   editPost() {
+    debugger
     if (
       !this.data.contents &&
       this.codxViewFiles.files.length == 0 &&
@@ -326,6 +327,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // chia sẻ người dùng
   addPerrmissonShares(event: any) {
+    debugger
     let arrPermisison = Array.from<any>(event);
     if(arrPermisison?.length > 0)
     {
@@ -412,6 +414,7 @@ export class PopupAddPostComponent implements OnInit {
   // gắn thẻ người dùng
 
   addPerrmissonTags(event: any) {
+    debugger
     let arrPermission = Array.from<any>(event.dataSelected);
     if (arrPermission?.length > 0) 
     {

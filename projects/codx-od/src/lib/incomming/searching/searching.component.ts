@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, Injector, HostBinding, TemplateRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CacheService, CodxService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { CodxOdService } from '../../codx-od.service';
 import { convertHtmlAgency, extractContent, getIdUser } from '../../function/default.function';
@@ -89,7 +89,10 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
         });
     });
   }
-  onSelected(e: any) {
-    // alert(JSON.stringify(e));
+  onSelected(e: any ) {
+    var functionID = e?.unbounds?.functionID;
+    if(!functionID) return;
+    
+    this.codxService.navigate("","/"+"od/dispatches/"+functionID+"?predicate=RecID=@0&dataValue=" + e?.recID);
   }
 }
