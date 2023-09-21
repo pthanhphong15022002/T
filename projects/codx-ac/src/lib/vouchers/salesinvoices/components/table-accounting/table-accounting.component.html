@@ -1,6 +1,6 @@
 <lib-table-line-detail-static
   [columns]="columns"
-  [formModel]="formModel"
+  [formModel]="fmAcctTrans"
   [lines]="lines"
   [loading]="loading"
   [trTemplate]="trTemplate"
@@ -32,7 +32,7 @@
           <div *ngIf="line.objectName">
             <codx-label
               fieldName="lblObject"
-              [formModel]="formModel"
+              [formModel]="fmAcctTrans"
               default="Khách hàng"
               class="label-colon"
             ></codx-label>
@@ -41,7 +41,7 @@
           <div *ngIf="line.diM3">
             <codx-label
               fieldName="lblDIM3"
-              [formModel]="formModel"
+              [formModel]="fmAcctTrans"
               default="Mục phí"
               class="label-colon"
             >
@@ -52,7 +52,7 @@
           <div *ngIf="line.diM2">
             <codx-label
               fieldName="lblDIM2"
-              [formModel]="formModel"
+              [formModel]="fmAcctTrans"
               default="TTCP"
               class="label-colon"
             >
@@ -63,7 +63,7 @@
           <div *ngIf="line.diM1">
             <codx-label
               fieldName="lblDIM1"
-              [formModel]="formModel"
+              [formModel]="fmAcctTrans"
               default="Phòng ban"
               class="label-colon"
             >
@@ -74,7 +74,7 @@
           <div *ngIf="line.projectID">
             <codx-label
               fieldName="lblProjectID"
-              [formModel]="formModel"
+              [formModel]="fmAcctTrans"
               default="Dự án"
               class="label-colon"
             >
@@ -83,7 +83,9 @@
               >{{ line.projectID }} -
               <span
                 [innerHTML]="
-                  line.projectID | formatvalue : formModel : 'projectID' | async
+                  line.projectID
+                    | formatvalue : fmAcctTrans : 'projectID'
+                    | async
                 "
               ></span>
             </span>
