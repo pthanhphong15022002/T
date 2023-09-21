@@ -240,7 +240,7 @@ export class LoginDefaultComponent extends UIComponent {
         'ERM.Business.AD',
         'UsersBusiness',
         'GenOTPLoginAsync',
-        [this.email]
+        [this.loginForm.controls['email'].value]
       )
       .subscribe((success) => {
         if (success) {

@@ -6,6 +6,7 @@
   [headerText]="title"
   [showHeader]="true"
   [headerText]="title"
+  [data]="data"
 >
   <ng-template #body>
     <div class="d-flex justify-content-center w-100 pt-2">
@@ -31,10 +32,11 @@
                   <div class="w-75">
                     <div *ngIf="!applyProcess; else process">
                       <codx-input
+                         #cbxOwner
                         field="owner"
                         [formModel]="formModel"
+                        [Group]="form.formGroup"
                         (valueChange)="changeOwner($event,viewDefault)"
-                        [crrValue]="owner"
                       >
                       </codx-input>
                     </div>

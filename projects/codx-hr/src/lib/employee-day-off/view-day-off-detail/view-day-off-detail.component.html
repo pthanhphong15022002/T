@@ -241,7 +241,7 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone h-od-tab" *ngIf="showInfoDayoffType == true">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <!-- 1 -->
         <li [ngbNavItem]="1">

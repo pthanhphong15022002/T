@@ -294,7 +294,7 @@ export class EmployeeDayOffComponent extends UIComponent {
         dayoffObj: data ?? this.userLogin,
         headerText: actionHeaderText,
         isPortal: this.isPortal,
-        //employeeId: data?.employeeID,
+        employeeId: data?.employeeID ?? this.userLogin.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
         //empObj: actionType == 'add' ? null : this.currentEmpObj,
