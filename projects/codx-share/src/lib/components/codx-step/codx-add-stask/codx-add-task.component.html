@@ -174,29 +174,6 @@
         </codx-input>
       </div>
       <!--end Cuoc goi -->
-
-      <!-- Cuoc hop -->
-      <div *ngIf="typeTask?.value === 'M'" style="flex-basis: 25%" class="">
-        <div class="d-flex justify-content-end">
-          <codx-label
-            fiedName="isOnline"
-            [formModel]="dialog?.formModel"
-            default="Họp trực tuyến"
-          >
-          </codx-label>
-        </div>
-        <div class="d-flex justify-content-center mt-2 ms-2">
-          <codx-input
-            type="switch"
-            class="test-check"
-            [checked]="stepsTasks?.isOnline"
-            field="isOnline"
-            (valueChange)="valueChangeAlert($event)"
-            [disabled]="stepsTasks?.isTaskDefault"
-          >
-          </codx-input>
-        </div>
-      </div>
     </div>
     <!--End ten Cong Viec -->
 
@@ -424,7 +401,28 @@
       >
       </codx-input>
     </div>
+    <!-- Cuoc hop -->
+    <div *ngIf="typeTask?.value === 'M'"  class="form-group d-flex align-item-center justify-content-between">
+      <div class="d-flex align-item-center">
+        <codx-input
+          type="switch"
+          class="test-check me-3"
+          [checked]="stepsTasks?.isOnline"
+          field="isOnline"
+          (valueChange)="valueChangeAlert($event)"
+          [disabled]="stepsTasks?.isTaskDefault"
+        ></codx-input>
+        <codx-label
+          fiedName="isOnline"
+          [formModel]="dialog?.formModel"
+          default="Họp trực tuyến"
+        ></codx-label>
+      </div>
 
+      <div class="d-flex align-item-center">
+        <span class="icon-attachment icon-22 text-primary"></span>
+      </div>
+    </div>
     <div
       class="form-group d-flex align-item-center"
       *ngIf="isBoughtTM && isAddTM"
