@@ -155,6 +155,8 @@
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
         (isSuccessStep)="susscessStepEnd($event, step)"
+        [sessionID]="dataSelected.recID"
+        [formModelAssign]="formModel"
       ></codx-step-task>
       <div
         *ngIf="
@@ -165,8 +167,12 @@
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center text-primary">
-              <div (click)="toggleReason()" class="d-flex align-items-center show-step ms-2 me-3 ">
-                <i *ngIf="isShowElement"
+              <div
+                (click)="toggleReason()"
+                class="d-flex align-items-center show-step ms-2 me-3"
+              >
+                <i
+                  *ngIf="isShowElement"
                   class="icon-20 icon-expand_less text-primary"
                 ></i>
                 <i
@@ -201,8 +207,8 @@
             </div>
           </div>
 
-          <div  [ngClass]="isShowElement ? 'd-block' : 'd-none'">
-            <div class="mt-3 ms-9" >
+          <div [ngClass]="isShowElement ? 'd-block' : 'd-none'">
+            <div class="mt-3 ms-9">
               <div class="mb-3">
                 <codx-label
                   class="fs-6 fw-bold"
@@ -210,7 +216,10 @@
                   [default]="getNameReason(step?.isSuccessStep)"
                 ></codx-label>
               </div>
-              <ng-container *ngFor="let item of listStepReasonValue" class="pb-2">
+              <ng-container
+                *ngFor="let item of listStepReasonValue"
+                class="pb-2"
+              >
                 <ul class="text-left drap-drop mb-1 has-action-menu">
                   <li>
                     {{ item.reasonName }}
@@ -236,9 +245,7 @@
                 <span
                   class="text-dark fw-bold codx-textcontent"
                   [innerHTML]="
-                    step?.memo
-                      | formatvalue : formModel : 'Memo'
-                      | async
+                    step?.memo | formatvalue : formModel : 'Memo' | async
                   "
                 ></span>
               </div>
