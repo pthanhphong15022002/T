@@ -209,6 +209,7 @@ export class SalesinvoicesAddComponent
           }
 
           if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
             this.dialogRef.close();
           } else {
             this.resetForm();
