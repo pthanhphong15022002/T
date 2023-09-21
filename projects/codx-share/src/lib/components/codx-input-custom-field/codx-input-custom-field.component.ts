@@ -582,12 +582,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   cbxChangeVll(value) {
-    this.customField.dataValue = value;
+    // this.customField.dataValue = value;
+    this.valueChangeCustom.emit({
+      e: value,
+      data: this.customField,
+    });
   }
   cbxChangeVllMutilSelect(value) {
-    if (value?.length > 0) {
-      this.customField.dataValue = value.join(';');
-    } else this.customField.dataValue = '';
+    // if (value?.length > 0) {
+    //   this.customField.dataValue = value.join(';');
+    // } else this.customField.dataValue = '';
+
+    this.valueChangeCustom.emit({
+      e: value?.length > 0 ? value.join(';') : '',
+      data: this.customField,
+    });
   }
   dataMutilSelect(dataValue) {
     if (!dataValue) return '';

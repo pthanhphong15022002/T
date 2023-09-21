@@ -179,8 +179,8 @@ export class PopupAddDealComponent
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
       this.categoryCustomer = dt?.data?.categoryCustomer;
-      if(this.action === this.actionAdd) {
-        this.deal.exchangeRate= dt?.data?.exchangeRateDefault;
+      if (this.action === this.actionAdd) {
+        this.deal.exchangeRate = dt?.data?.exchangeRateDefault;
         this.deal.currencyID = dt?.data?.currencyIDDefault;
       }
     }
@@ -439,7 +439,6 @@ export class PopupAddDealComponent
 
   async executeSaveData() {
     if (this.action !== this.actionEdit) {
-
       await this.insertInstance();
     } else {
       await this.editInstance();
@@ -463,6 +462,7 @@ export class PopupAddDealComponent
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event?.e;
           break;
         case 'C':
@@ -515,8 +515,10 @@ export class PopupAddDealComponent
           );
         }
         let idxDefault = -1;
-        if(contact?.isDefault){
-          idxDefault = this.lstContactDeal.findIndex(x => x.isDefault && x.recID != contact.recID);
+        if (contact?.isDefault) {
+          idxDefault = this.lstContactDeal.findIndex(
+            (x) => x.isDefault && x.recID != contact.recID
+          );
         }
         if (index != -1) {
           if (type != 'delete') {
@@ -529,7 +531,7 @@ export class PopupAddDealComponent
             this.lstContactDeal.push(Object.assign({}, contact));
           }
         }
-        if(idxDefault != -1 && type != 'delete'){
+        if (idxDefault != -1 && type != 'delete') {
           this.lstContactDeal[idxDefault].isDefault = false;
         }
       } else {
@@ -539,7 +541,7 @@ export class PopupAddDealComponent
           this.lstContactDeal = lst;
         }
       }
-      if(this.loadContactDeal){
+      if (this.loadContactDeal) {
         this.loadContactDeal.loadListContact(this.lstContactDeal);
       }
       // this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
@@ -670,7 +672,8 @@ export class PopupAddDealComponent
       ];
     }
 
-    option.methodName = this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
+    option.methodName =
+      this.action !== this.actionEdit ? 'AddDealAsync' : 'EditDealAsync';
     option.className = 'DealsBusiness';
     option.data = datas;
     option.service = 'CM';
@@ -684,7 +687,7 @@ export class PopupAddDealComponent
           this.formModel.formName,
           this.formModel.gridViewName
         ));
-      if(this.action === this.actionAdd) {
+      if (this.action === this.actionAdd) {
         this.loadExchangeRate();
       }
       if (this.action !== this.actionAdd) {
