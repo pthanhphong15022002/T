@@ -115,6 +115,7 @@
     <ng-container *ngIf="customField.dataFormat == 'V'">
       <ng-container *ngIf="!mutiSelectVll">
         <ejs-combobox
+          #comboxValue
           [enabled]="!disable"
           [dataSource]="datasVll"
           [fields]="fieldsVll"
@@ -126,6 +127,7 @@
       </ng-container>
       <ng-container *ngIf="mutiSelectVll">
         <ejs-multiselect
+          #comboxValue
           [dataSource]="datasVll"
           [mode]="'Default'"
           [fields]="fieldsVll"

@@ -357,8 +357,8 @@ export class DealsComponent
     let isDisabled = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data.status != '1') ||
-            ['1', '0'].includes(data.status) ||
+          ? (data.closed && data?.status != '1') ||
+            ['1', '0'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
