@@ -1,4 +1,12 @@
-<codx-fulltextsearch #view 
+<codx-views 
+    #view
+    [views]="views"
+    [toolbarDisplay]="false"
+>
+</codx-views>
+<ng-template #template>
+    <codx-fulltextsearch 
+    #viewFullText 
     [centerTmp]="centerTmp" 
     [widthItemTmp]="400" 
     [pageSize]="10" 
@@ -12,9 +20,7 @@
     (selectedChange)="onSelected($event)"
     >
 </codx-fulltextsearch>
-<!-- <ng-template #menu >
-    <button (click)="testSearch()">test</button>
-</ng-template> -->
+</ng-template>
 <ng-template #centerTmp let-data>
         <codx-temp-full [content]="extractContent(data.title)"
             [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
