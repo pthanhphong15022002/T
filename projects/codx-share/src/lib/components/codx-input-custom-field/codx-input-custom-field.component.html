@@ -115,6 +115,7 @@
     <ng-container *ngIf="customField.dataFormat == 'V'">
       <ng-container *ngIf="!mutiSelectVll">
         <ejs-combobox
+          #comboxValue
           [enabled]="!disable"
           [dataSource]="datasVll"
           [fields]="fieldsVll"
@@ -126,13 +127,14 @@
       </ng-container>
       <ng-container *ngIf="mutiSelectVll">
         <ejs-multiselect
+          #comboxValueMutilSelect
           [dataSource]="datasVll"
           [mode]="'Default'"
           [fields]="fieldsVll"
-          [value]=""
+          [value]="crrValueVll"
           [showDropDownIcon]="true"
           [placeholder]="plancehoderVll"
-          (valueChange)="cbxChangeVll($event)"
+          (valueChange)="cbxChangeVllMutilSelect($event)"
           [enabled]="!disable"
         ></ejs-multiselect>
       </ng-container>

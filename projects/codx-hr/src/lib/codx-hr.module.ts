@@ -140,6 +140,7 @@ import { PopupCalculateAnnualLeaveComponent } from './employee-annual-leave/popu
 import { PopupContractbenefitComponent } from './employee-contract/popup-eprocess-contract/popup-contractbenefit/popup-contractbenefit.component';
 import { PopupAnnualLeaveMonthComponent } from './employee-annual-leave/popup-annual-leave-month/popup-annual-leave-month.component';
 import { PopupEdocumentsComponent } from './employee-profile/popup-edocuments/popup-edocuments.component';
+import { EmployeeQuitComponent } from './employee-quit/employee-quit.component';
 export const routes: Routes = [
   {
     path: '',
@@ -253,6 +254,10 @@ export const routes: Routes = [
       {
         path: 'eannualleave/:funcID',
         component: EmployeeAnnualLeaveComponent,
+      },
+      {
+        path: 'equit/:funcID',
+        component: EmployeeQuitComponent,
       },
       // {
       //   path: 'employeeinfomation/:funcID',
@@ -439,7 +444,8 @@ const T_Component: Type<any>[] = [
   DatePipe,
   PopupIncludeExcludeObjComponent,
   PopupContractbenefitComponent,
-  PopupEdocumentsComponent
+  PopupEdocumentsComponent,
+  EmployeeQuitComponent,
 ];
 @NgModule({
   imports: [
