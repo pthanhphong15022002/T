@@ -652,14 +652,14 @@
                               class="text-format d-flex align-items-center"
                               *ngIf="imgConfig.includes(area.labelType)"
                             >
+                            <!-- *ngIf="!isPublic" -->
                               <img
                                 [id]="area.recID"
-                                *ngIf="!isPublic"
                                 class="img"
                                 [src]="env.urlUpload + '/' + area.labelValue"
                                 onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
                               />
-                              <codx-img
+                              <!-- <codx-img
                                 *ngIf="isPublic && area.labelType == 'S1'"
                                 [id]="area.recID"
                                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -677,7 +677,7 @@
                                 [isAllowEdit]="false"
                                 
                               >
-                              </codx-img>
+                              </codx-img> -->
                               <!-- (handleInput)="
                                   changeSignature_StampImg_Area_Immediate(
                                     area,
