@@ -81,7 +81,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       }
     });
     this.cache.systemSetting().subscribe((res) => {
-      console.log('systemSet', res);
       this.sysSetting = res;
     });
   }
