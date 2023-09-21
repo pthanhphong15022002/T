@@ -134,6 +134,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   dataEx:any=[];
   fields: any = {};
   module:any;
+  isLoaded = false;
   rootFunction:any = null;
 
   constructor(
@@ -386,7 +387,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     })
   }
 
-  isLoaded = false;
   saveForm() {
     this.isLoaded = true;
     this.api
@@ -397,14 +397,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'AddUpdateAsync',
         [this.data])
         .subscribe((res:any) => {
-        if(this.data.isUpload && this.data.reportContent)
-        {
-          this.setDataset();
-        }
-        else
-        {
-          this.dialog.close(this.data);
-        }
+        (this.data.isUpload && this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
         this.isLoaded = false;
       });
 
@@ -494,7 +487,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       'FileBussiness',
       'GetFilesByIbjectIDAsync',
       [templateID]).subscribe((res:any) =>{
-        debugger
         if(res?.length > 0)
         {
           this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
