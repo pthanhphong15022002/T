@@ -394,7 +394,17 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          this.dialog.close();
+          if(this.formType == 'edit')
+          {
+            this.dialog.close({
+              update: true,
+              data: res,
+            });
+          }
+          else
+          {
+            this.dialog.close();
+          }
         }
         this.dt.detectChanges();
       });
