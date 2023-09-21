@@ -68,7 +68,7 @@ constructor(
       (this.processID = dialogData?.data.processID);
   }
   this.recID = dialogData?.data?.recID;
-  this.buid = dialogData?.data?.buid;
+  //this.buid = dialogData?.data?.buid;
   this.applyFor = dialogData?.data.applyFor;
   this.owner = dialogData?.data?.owner;
   this.gridViewSetup = dialogData?.data.gridViewSetup;
@@ -156,9 +156,9 @@ changeOwner(evt: any, view: any) {
   if (evt?.data) {
     if (view === this.viewDefault) {
       this.owner = evt.data;
-      this.buid = '';
+      //this.buid = '';
     } else if (view === this.viewBUID) {
-      this.buid = evt.data;
+   //   this.buid = evt.data;
     //  var datas = [this.buid];
       // this.codxCmService.getListUserByBUID(datas).subscribe((res) => {
       //   if (res) {
@@ -167,6 +167,13 @@ changeOwner(evt: any, view: any) {
       // });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
+    this.codxCmService
+    .getEmployeesByDomainID(this.owner)
+    .subscribe((user) => {
+      if (user) {
+        this.assignTo(user);
+      }
+    });
 
    //this.searchOwner('1', 'O', '0', this.owner, ownerName);
   }
@@ -230,16 +237,11 @@ assignTo(user: any) {
   this.orgUnitName = user?.orgUnitName;
   this.positionName = user?.positionName;
 }
-deleteOrg($event) {
-  if ($event) {
-    let index = this.listUser.findIndex((x) => x.userID === $event);
-    this.listUser.splice(index, 1);
-
-    if (this.listUser.length < 0 && !this.listUser) {
-      this.owner = '';
-      this.buid = '';
-    }
-  }
+deleteOrg() {
+  this.employeeName = null;
+  this.orgUnitName = null;
+  this.positionName = null;
+  this.owner = null;
 }
 
 onSaveForm() {
