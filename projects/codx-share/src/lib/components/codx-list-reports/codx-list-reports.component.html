@@ -8,17 +8,17 @@
 >
 </codx-form>
 <ng-template #body>
-  <div class="container">
-    <ng-container *ngIf="loaded">
+  <div class="container h-100">
+    <ng-container *ngIf="loaded;else tmpLoading">
       <ng-container *ngIf="lstReport?.length > 0 ;else tmpNoData">
-        <ng-container *ngFor=" let report of lstReport">
+        <ng-container *ngFor="let report of lstReport">
           <div class="d-flex align-items-start justify-content-between py-2 border-bottom" (click)="selectedItem(report)">
             <div class="d-flex align-items-top w-100">
               <div class="w-20px h-20px me-2">
                 <codx-input type="radio" name="radioBtn" [checked]="report.recID == dataSelected.recID"></codx-input>
               </div>
               <div class="d-flex flex-column w-100">
-                <div class="fw-bold text-dark">{{report.customName}}</div>
+                <div class="fw-bold text-dark">{{report.location}}</div>
                 <div class="text-gray-500">{{report.description}}</div>
               </div>
             </div>
@@ -63,6 +63,13 @@
         </ng-container>
       </ng-container>
     </ng-container>
+    <ng-template #tmpLoading>
+      <div class="row align-items-center justify-content-md-center h-100">
+        <svg viewBox="25 25 50 50">
+          <circle r="20" cy="50" cx="50"></circle>
+        </svg>
+      </div>
+    </ng-template>
   </div>
 </ng-template>
 <ng-template #tmpNoData>

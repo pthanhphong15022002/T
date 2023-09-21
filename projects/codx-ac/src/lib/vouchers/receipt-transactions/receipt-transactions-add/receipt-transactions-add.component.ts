@@ -430,16 +430,18 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         else
         {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
-              this.formType = 'add';
-              this.formVoucherReceipt.refreshData(res.data);
-              this.detectorRef.detectChanges();
-              this.refreshGrid();
-              // this.notification.notifyCode('SYS006');
-              this.setFieldRequied();
+                this.vouchers = res.data;
+                this.formType = 'add';
+                this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
+                this.formVoucherReceipt.preData = { ...this.vouchers };
+                // this.notification.notifyCode('SYS006');
+                this.clearGrid();
+                this.setFieldRequied();
+                this.detectorRef.detectChanges();
             }
           });
         }
@@ -480,9 +482,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  refreshGrid() {
+  clearGrid() {
     this.grvVouchersLine.dataSource = [];
-    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */
