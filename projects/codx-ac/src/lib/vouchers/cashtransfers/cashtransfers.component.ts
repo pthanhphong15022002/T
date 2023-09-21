@@ -1,29 +1,23 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   Component,
-  ElementRef,
   Injector,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   DataRequest,
-  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../../codx-ac.service';
-import { IAcctTran } from '../salesinvoices/interfaces/IAcctTran.interface';
+import { JournalService } from '../../journals/journals.service';
+import { groupBy, toCamelCase } from '../../utils';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
 import { CashtransfersService } from './cashtransfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
-import { JournalService } from '../../journals/journals.service';
-import { groupBy, toCamelCase } from '../../utils';
 
 @Component({
   selector: 'lib-cashtransfers',
@@ -32,13 +26,12 @@ import { groupBy, toCamelCase } from '../../utils';
 })
 export class CashtransfersComponent
   extends UIComponent
-  implements AfterViewInit, AfterViewChecked
+  implements AfterViewInit
 {
   //#region Constructor
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('sider') sider?: TemplateRef<any>;
   @ViewChild('content') content?: TemplateRef<any>;
-  @ViewChild('memo', { read: ElementRef }) memo: ElementRef<HTMLElement>;
 
   views: Array<ViewModel> = [];
   btnAdd = {
@@ -47,28 +40,9 @@ export class CashtransfersComponent
   master: ICashTransfer;
   functionName: string;
   journalNo: string;
-  tabControl: TabModel[] = [
-    { name: 'History', textDefault: 'Lịch sử', isActive: false },
-    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
-  ];
-
-  lines: IAcctTran[][] = [[]];
-  loading: boolean = false;
-  fmAcctTrans: FormModel = {
-    entityName: 'AC_AcctTrans',
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityPer: 'AC_AcctTrans',
-  };
-  gvsAcctTrans: any;
-  overflowed: boolean = false;
-  expanding: boolean = false;
 
   constructor(
     injector: Injector,
-    private acService: CodxAcService,
     private journalService: JournalService,
     cashTransferService: CashtransfersService // don't remove this, please
   ) {
@@ -82,12 +56,6 @@ export class CashtransfersComponent
 
   //#region Init
   onInit(): void {
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
-    
     this.journalService.setChildLinks(this.journalNo);
   }
 
@@ -117,11 +85,6 @@ export class CashtransfersComponent
       this.functionName = toCamelCase(res.defaultName);
     });
   }
-
-  ngAfterViewChecked(): void {
-    const element: HTMLElement = this.memo?.nativeElement;
-    this.overflowed = element?.scrollWidth > element?.offsetWidth;
-  }
   //#endregion
 
   //#region Event
@@ -131,10 +94,10 @@ export class CashtransfersComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
@@ -142,40 +105,14 @@ export class CashtransfersComponent
     }
   }
 
-  onClickShowLess(): void {
-    this.expanding = !this.expanding;
-    this.detectorRef.detectChanges();
-  }
-
   onSelectChange(e): void {
     if (e.data?.error?.isError) {
       return;
     }
 
-    this.master = e.data?.data ?? e?.data;
-    if (!this.master) {
-      return;
+    if (e.data?.data ?? e?.data) {
+      this.master = e.data?.data ?? e?.data;
     }
-
-    this.expanding = false;
-
-    this.loading = true;
-    this.lines = [];
-    this.api
-      .exec(
-        'AC',
-        'AcctTransBusiness',
-        'GetListDataDetailAsync',
-        '8dfddc85-4d44-11ee-8552-d880839a843e'
-      )
-      .subscribe((res: any) => {
-        console.log(res);
-        if (res) {
-          this.lines = groupBy(res, 'entryID');
-        }
-
-        this.loading = false;
-      });
   }
 
   onClickAdd(e): void {
@@ -194,7 +131,6 @@ export class CashtransfersComponent
           CashtransferAddComponent,
           {
             formType: 'add',
-            journalNo: this.journalNo,
             formTitle: `${e.text} ${this.functionName}`,
           },
           options,
@@ -205,7 +141,7 @@ export class CashtransfersComponent
   //#endregion
 
   //#region Method
-  edit(e, data): void {
+  edit(data): void {
     console.log('edit', { data });
 
     const copiedData = { ...data };
@@ -222,8 +158,7 @@ export class CashtransfersComponent
         CashtransferAddComponent,
         {
           formType: 'edit',
-          formTitle: `${e.text} ${this.functionName}`,
-          journalNo: this.journalNo,
+          formTitle: `$${this.functionName}`,
         },
         options,
         this.view.funcID
@@ -231,7 +166,7 @@ export class CashtransfersComponent
     });
   }
 
-  copy(e, data): void {
+  copy(data): void {
     console.log('copy', { data });
 
     this.view.dataService.dataSelected = data;
@@ -247,7 +182,7 @@ export class CashtransfersComponent
         CashtransferAddComponent,
         {
           formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
+          formTitle: `${this.functionName}`,
         },
         options,
         this.view.funcID

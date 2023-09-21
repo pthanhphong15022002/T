@@ -18,14 +18,54 @@ export class TableAccountingComponent extends UIComponent implements OnChanges {
   //#region Constructor
   @Input() lines: IAcctTran[][] = [[]];
   @Input() loading: boolean = false;
-  @Input() formModel: FormModel;
-  @Input() gvs: any;
 
   columns: TableColumn[];
-  isFirstRun: boolean = true;
+  fmAcctTrans: FormModel = {
+    entityName: 'AC_AcctTrans',
+    formName: 'AcctTrans',
+    gridViewName: 'grvAcctTrans',
+    entityPer: 'AC_AcctTrans',
+  };
 
   constructor(injector: Injector) {
     super(injector);
+
+    this.columns = [
+      new TableColumn({
+        labelName: 'Num',
+        headerText: 'STT',
+      }),
+      new TableColumn({
+        labelName: 'Account',
+        headerText: 'Tài khoản',
+        footerText: 'Tổng cộng',
+        footerClass: 'text-end',
+      }),
+      new TableColumn({
+        labelName: 'Debt1',
+        headerText: 'Nợ',
+        field: 'transAmt',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+      new TableColumn({
+        labelName: 'Debt2',
+        headerText: 'Có',
+        field: 'transAmt',
+        headerClass: 'text-end',
+        footerClass: 'text-end',
+        hasSum: true,
+        sumFormat: SumFormat.Currency,
+      }),
+      new TableColumn({
+        labelName: 'Memo',
+        headerText: 'Ghi chú',
+        headerClass: 'pe-3',
+        footerClass: 'pe-3',
+      }),
+    ];
   }
   //#endregion
 
@@ -33,47 +73,6 @@ export class TableAccountingComponent extends UIComponent implements OnChanges {
   override onInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isFirstRun) {
-      this.columns = [
-        new TableColumn({
-          labelName: 'Num',
-          headerText: 'STT',
-        }),
-        new TableColumn({
-          labelName: 'Account',
-          headerText: this.gvs?.AccountID?.headerText ?? 'Tài khoản',
-          footerText: 'Tổng cộng',
-          footerClass: 'text-end',
-        }),
-        new TableColumn({
-          labelName: 'Debt1',
-          headerText: 'Nợ',
-          field: 'transAmt',
-          headerClass: 'text-end',
-          footerClass: 'text-end',
-          hasSum: true,
-          sumFormat: SumFormat.Currency,
-        }),
-        new TableColumn({
-          labelName: 'Debt2',
-          headerText: 'Có',
-          field: 'transAmt',
-          headerClass: 'text-end',
-          footerClass: 'text-end',
-          hasSum: true,
-          sumFormat: SumFormat.Currency,
-        }),
-        new TableColumn({
-          labelName: 'Memo',
-          headerText: this.gvs?.Memo?.headerText ?? 'Ghi chú',
-          headerClass: 'pe-3',
-          footerClass: 'pe-3',
-        }),
-      ];
-
-      this.isFirstRun = false;
-    }
-
     // calculate totalRow
     const totalRow: { total1: number; total2: number } = {
       total1: 0,
