@@ -118,11 +118,11 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
     } else if (this.action == 'copy') {
-      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
+      this.stepsTasks = JSON.parse(JSON.stringify(dt?.data?.taskInput)) || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
       this.showLabelAttachment = true;
     } else {
-      this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
+      this.stepsTasks = JSON.parse(JSON.stringify(dt?.data?.taskInput)) || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
     }
 

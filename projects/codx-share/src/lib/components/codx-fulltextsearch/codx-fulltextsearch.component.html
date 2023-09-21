@@ -1,6 +1,6 @@
 <div class="h-100 bg-white w-100 rounded-3 d-flex">
   
-  <div class="d-flex flex-column border-right overflow-auto h-100 p-5" [style.width.px]="widthLeft">
+  <div class="d-flex flex-column border-right overflow-auto h-100 p-5 min-w-300px" [style.width.px]="widthLeft">
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
