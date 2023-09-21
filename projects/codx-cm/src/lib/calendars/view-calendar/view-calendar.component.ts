@@ -258,7 +258,7 @@ export class ViewCalendarComponent
           // template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
           //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content  nội dung chính
@@ -279,7 +279,7 @@ export class ViewCalendarComponent
           template4: this.resourceHeader, //temp ressources
           template6: this.headerTempContent, //header // more
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate, //lấy event của temo
+          // template: this.eventTemplate, //lấy event của core
           //template2: this.headerTemp,
           template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
@@ -355,34 +355,34 @@ export class ViewCalendarComponent
         let dataEdit = await this.handleTask(type, 'edit', task);
         let taskEdit = dataEdit?.task;
         let fields = taskEdit.fields;
-        if(this.isStepTask){
+        if (this.isStepTask) {
           this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
-            taskEdit,
-            fields,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.update(res).subscribe();
-              this.view.currentView['schedule'].refresh();
-              this.detectorRef.detectChanges();
-              this.notiService.notifyCode('SYS007');
-            }
-          });
+            .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
+              taskEdit,
+              fields,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.update(res).subscribe();
+                this.view.currentView['schedule'].refresh();
+                this.detectorRef.detectChanges();
+                this.notiService.notifyCode('SYS007');
+              }
+            });
         }
-        if(this.isActivitie){
+        if (this.isActivitie) {
           this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-            taskEdit
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.update(res).subscribe();
-              this.view.currentView['schedule'].refresh();
-              this.detectorRef.detectChanges();
-              this.notiService.notifyCode('SYS007');
-            }
-          });
+            .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
+              taskEdit,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.view.dataService.update(res).subscribe();
+                this.view.currentView['schedule'].refresh();
+                this.detectorRef.detectChanges();
+                this.notiService.notifyCode('SYS007');
+              }
+            });
         }
       } else {
         this.notiService.notifyCode('');
@@ -390,7 +390,7 @@ export class ViewCalendarComponent
     }
   }
 
-  async deleteTask(data){
+  async deleteTask(data) {
     if (data) {
       let task = await this.getTask(data);
       if (task) {
@@ -680,7 +680,7 @@ export class ViewCalendarComponent
       this.isActivitie && this.addActivitie(task);
       this.isStepTask && this.addStepTask(task);
     }
-   return task;
+    return task;
   }
   addActivitie(task) {
     task['progress'] = 0;
@@ -725,14 +725,14 @@ export class ViewCalendarComponent
         }
       });
   }
-  
-  convertDataCalendar(res){
+
+  convertDataCalendar(res) {
     res.StartDate = res.ActualStart ?? res.StartDate;
     res.EndDate = res.ActualEnd ?? res.EndDate;
     res.isActual = res.ActualStart != null ? true : false;
-    if(this.isStepTask){
+    if (this.isStepTask) {
       res.entityName = 'DP_Instances_Steps_Tasks';
-    }else if(this.isActivitie){
+    } else if (this.isActivitie) {
       res.entityName = 'DP_Activities';
     }
   }
