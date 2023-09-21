@@ -181,7 +181,9 @@
                                       formModel=""
                                       default="Xác thực sẽ hết hạn sau "
                                     ></codx-label>
-                                    {{ otpTimeout / 1000 }}
+                                    <!-- {{ otpTimeout / 1000 }} -->
+                                    {{ otpMinutes }}:
+                                    {{ otpTimeout % 60 }}
                                   </div>
                                 </div>
                                 <div class="form-group d-grid gap-2 mb-5">
@@ -263,13 +265,12 @@
                                     </div>
                                   </div>
                                   <ng-template #avatar></ng-template>
-                                  <!-- //nho xoa -->
-                                  <!-- <div class="qr-codx-msg mt-3 text-center">
+                                  <div class="qr-codx-msg mt-3 text-center">
                                     <codx-label
                                       class="fs-7 text-gray-600"
                                       default="Chỉ dùng đăng nhập CoDX trên máy tính"
                                     ></codx-label>
-                                    <button
+                                    <!-- <button
                                       type="button"
                                       (click)="testQR()"
                                       tabindex="-1"
@@ -280,8 +281,8 @@
                                         class="text-primary"
                                         default="Test QR"
                                       ></codx-label>
-                                    </button>
-                                  </div> -->
+                                    </button> -->
+                                  </div>
                                 </div>
                                 <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
                                   <codx-label
@@ -403,8 +404,9 @@
                           ></a>
                         </div>
                         <div class="form-group d-grid gap-2 mb-5">
+                          <!-- //nho xoa -->
+                          <!-- [disabled]="loginForm.invalid" -->
                           <button
-                            [disabled]="loginForm.invalid"
                             type="submit"
                             class="btn btn-primary fw-bold px-6 py-3"
                           >
@@ -719,7 +721,7 @@
                             <codx-input
                               type="password"
                               class="form-control border-0 p-0 ps-3 d-flex"
-                              field="Password"
+                              field="confirmPassword"
                               placeholder="Xác nhận mật khẩu"
                               [Group]="changePassForm"
                               ControlName="confirmPassword"
@@ -740,7 +742,7 @@
                           [disabled]="changePassForm.invalid"
                         >
                           {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                            "Đổi mật khẩu" | lang : "Login" : "btnLogin" | async
                           }}
                         </button>
                       </div>

@@ -771,6 +771,7 @@ export class CM_Targets {
   currencyID: string;
   memo: string;
   owner: string;
+  salespersonID: string;
   buid: string;
   createdOn: Date = new Date();
   exchangeRate: number;

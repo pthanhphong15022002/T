@@ -156,6 +156,9 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
+
+  }
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.listdetail,
@@ -180,13 +183,9 @@ export class CmCustomerComponent
         active: false,
         model: {
           template2: this.templateMore,
-          resources: this.columnGrids,
         },
       },
     ];
-  }
-  ngAfterViewInit(): void {
-
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';

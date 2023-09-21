@@ -29,6 +29,7 @@ export class AdvancePaymentComponent extends UIComponent{
   gridViewSetup: any;
   company: any;
   itemSelected: any;
+  parent: any;
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
@@ -51,6 +52,18 @@ export class AdvancePaymentComponent extends UIComponent{
         this.company = res[0];
       }
     });
+
+    this.routerActive.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((params) => {
+      if (params?.parent) {
+        this.cache.functionList(params.parent)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) this.parent = res;
+        });
+      }
+    });
   }
 
   //End Constructor
@@ -64,7 +77,7 @@ export class AdvancePaymentComponent extends UIComponent{
     this.views = [
       {
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template2: this.templateMore,
@@ -86,6 +99,8 @@ export class AdvancePaymentComponent extends UIComponent{
     .subscribe((res: any) => {
       this.funcName = res.defaultName;
     });
+
+    this.view.setRootNode(this.parent?.customName);
   }
 
   ngOnDestroy() {
@@ -154,12 +169,6 @@ export class AdvancePaymentComponent extends UIComponent{
             '',
             opt
           );
-          dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-            }
-          });
         }
       });
   }
@@ -190,12 +199,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -229,12 +232,6 @@ export class AdvancePaymentComponent extends UIComponent{
           '',
           opt
         );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
-        });
       }
     });
   }
@@ -264,15 +261,10 @@ export class AdvancePaymentComponent extends UIComponent{
   }
 
   changeItemDetail(event) {
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
+    if (event?.data) {
+      this.itemSelected = event?.data;
+      this.detectorRef.detectChanges();
     }
-    this.detectorRef.detectChanges();
   }
   //End Function
 }

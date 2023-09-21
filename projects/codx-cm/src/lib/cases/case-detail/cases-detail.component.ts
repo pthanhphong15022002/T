@@ -32,6 +32,7 @@ export class CasesDetailComponent
   @Input() colorReasonFail: any;
   @Input() gridViewSetup: any;
   @Input() formModel: FormModel;
+  @Input() listInsStepStart = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
@@ -122,6 +123,9 @@ export class CasesDetailComponent
           : this.dataSelected?.recID;
         this.loadTree(this.id);
       }
+    }
+    if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
+      this.listSteps = this.listInsStepStart;
     }
   }
   async promiseAllAsync() {

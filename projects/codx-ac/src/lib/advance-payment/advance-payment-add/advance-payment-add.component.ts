@@ -6,6 +6,7 @@ import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Reason } from '../../models/Reason.model';
 
 @Component({
   selector: 'lib-advance-payment-add',
@@ -26,6 +27,9 @@ export class AdvancePaymentAddComponent extends UIComponent
   formType: any;
   validate: any = 0;
   dialogRef!: DialogRef;
+  reason: Array<Reason> = [];
+  isHaveFile: any = false;
+  showLabelAttachment: any = false;
   advancedPayment: AdvancedPayment;
   advancedPaymentLines: Array<AdvancedPaymentLines> = [];
   fmAdvancedPaymentLines: FormModel = {
@@ -62,6 +66,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   }
 
   onInit(): void {
+    this.showLabelAttachment = this.advancedPayment?.attachments > 0 ? true : false;
   }
 
   ngAfterViewInit(){
@@ -94,6 +99,23 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   valueChange(e: any){
     this.advancedPayment[e.field] = e.data;
+  }
+
+  dropdownChange(e: any)
+  {
+    switch(e.field)
+    {
+      case 'objectID':
+        this.advancedPayment[e.field] = e.data[0];
+        break;
+      case 'reasonID':
+        this.advancedPayment[e.field] = e.data[0];
+        if (e.itemData[0].ReasonID) {
+          let text = e.itemData[0].ReasonName;
+          this.setMemo(e.field.toLowerCase(), text, 0);
+        }
+        break;
+    }
   }
 
   lineChange(e: any, i: any)
@@ -129,29 +151,10 @@ export class AdvancePaymentAddComponent extends UIComponent
           this.advancedPayment.status = '7';
           this.form.formGroup.patchValue({ status: this.advancedPayment.status });
         }
-        else if (res?.save?.data) {
-          this.saveLine();
-          this.dialogRef.close({
-            update: true,
-            data: res.save.data,
-          });
-        }
-        else if (res?.update?.data) {
-          this.saveLine();
-          this.dialogRef.close({
-            update: true,
-            data: res.update.data,
-          });
-        }
         else
         {
           this.saveLine();
-          this.dialogRef.close({
-            update: true,
-            data: res,
-          });
         }
-        this.dt.detectChanges();
       });
   }
 
@@ -228,6 +231,9 @@ export class AdvancePaymentAddComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
+          this.saveFileUpload();
+          this.dialogRef.close();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -245,7 +251,6 @@ export class AdvancePaymentAddComponent extends UIComponent
       .subscribe((res) => {
         if (res) {
           idx = this.advancedPaymentLines.length;
-              res.rowNo = idx + 1;
               this.advancedPaymentLines.push(res);
         }
       });
@@ -304,9 +309,52 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   fileAdded(event: any) {
     this.advancedPayment.attachments = event.data.length;
+    this.detectorRef.detectChanges();
+  }
+
+  fileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  addFiles(evt){
+    this.advancedPayment.attachments = evt.data.length;
+    this.form.formGroup.patchValue({attachments: this.advancedPayment.attachments});
   }
 
   popupUploadFile() {
     this.attachment.uploadFile();
+  }
+
+  async saveFileUpload(){
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((file: any) => {
+        if (file?.status == 0) {
+          this.fileAdded(file);
+        }
+      });
+    }
+  }
+
+  setMemo(field, text, idx) {
+    if (!this.reason.some((x) => x.field == field)) {
+      let transText = new Reason();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.reason.push(transText);
+    } else {
+      let iTrans = this.reason.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.advancedPayment.memo = this.acService.setMemo(
+      this.advancedPayment,
+      this.reason
+    );
+    this.form.formGroup.patchValue({
+      memo: this.advancedPayment.memo,
+    });
   }
 }

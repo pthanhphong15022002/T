@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  CacheService,
   DialogData,
   DialogRef,
   FormModel,
@@ -17,7 +18,7 @@ export class PopupSubEContractComponent implements OnInit {
   fmSubContract: FormModel;
   dialog: DialogRef;
   oSubContract: any;
-  isAfterRender: boolean = false;
+  isAfterRender: boolean = true;
   fgSubContract: FormGroup;
   employeeID: string;
   contractNo: string;
@@ -27,6 +28,7 @@ export class PopupSubEContractComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
     private notify: NotificationsService,
+    private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -40,10 +42,14 @@ export class PopupSubEContractComponent implements OnInit {
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
     this.fmSubContract.gridViewName = 'grvEContractsPL';
-    this.fmSubContract.formName = 'EContracts';
+    this.fmSubContract.formName = 'EContractsPL';
   }
 
   ngOnInit(): void {
+    // HRTPro01PL, HRTPro01A10
+
+    // this.fmSubContract = res;
+
     this.hrService
       .getFormGroup(
         this.fmSubContract.formName,
@@ -100,7 +106,10 @@ export class PopupSubEContractComponent implements OnInit {
       return;
     }
 
-    if (this.oSubContract.effectedDate > this.oSubContract.expiredDate) {
+    if (
+      this.fgSubContract.value.effectedDate >
+      this.fgSubContract.value.expiredDate
+    ) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
         'EffectedDate',
@@ -109,9 +118,9 @@ export class PopupSubEContractComponent implements OnInit {
       return;
     }
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      //this.oSubContract.contractTypeID = '1';
-      this.oSubContract.status = '1';
-      this.hrService.addEContract(this.oSubContract).subscribe((res) => {
+      this.fgSubContract.value.contractTypeID = '1';
+      this.fgSubContract.value.status = '1';
+      this.hrService.addEContract(this.fgSubContract.value).subscribe((res) => {
         if (res) {
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close(res);
@@ -119,12 +128,14 @@ export class PopupSubEContractComponent implements OnInit {
       });
     } else if (this.actionType == 'edit') {
       //this.oSubContract.contractTypeID = '1';
-      this.hrService.editEContract(this.oSubContract).subscribe((res) => {
-        if (res) {
-          this.notify.notifyCode('SYS007');
-          this.dialog && this.dialog.close(res);
-        }
-      });
+      this.hrService
+        .editEContract(this.fgSubContract.value)
+        .subscribe((res) => {
+          if (res) {
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(res);
+          }
+        });
     }
   }
 
@@ -133,9 +144,9 @@ export class PopupSubEContractComponent implements OnInit {
       if (event.field == 'signerID') {
         //Get thong tin user
 
-        this.oSubContract.signerPosition = '';
+        this.fgSubContract.value.signerPosition = '';
         this.fgSubContract.patchValue({
-          signerPosition: this.oSubContract.signerPosition,
+          signerPosition: this.fgSubContract.value.signerPosition,
         });
       }
     }

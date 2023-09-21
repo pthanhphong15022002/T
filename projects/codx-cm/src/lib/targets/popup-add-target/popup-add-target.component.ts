@@ -119,7 +119,6 @@ export class PopupAddTargetComponent {
     this.isAllocation = this.data?.allocation == '1' ? true : false;
     if (this.action == 'add') {
       this.dataOld = JSON.parse(JSON.stringify(this.data));
-      this.data.owner = null;
     } else {
       this.lstOwners.forEach((element) => {
         if (this.data.target > 0) {
@@ -362,7 +361,7 @@ export class PopupAddTargetComponent {
   }
   eventApply(e) {
     var id = '';
-    id = this.data?.owner;
+    id = this.data?.salespersonID;
     if (id != null && id?.trim() != '') {
       e?.dataSelected?.forEach((user) => {
         if (!id.split(';').includes(user?.UserID)) {
@@ -400,7 +399,7 @@ export class PopupAddTargetComponent {
       });
       this.setTargetOwner('user');
     }
-    this.data.owner = id;
+    this.data.salespersonID = id;
     this.countClick = 0;
     // this.setQuarterInOwner();
     // this.setTargetToLine(1, 4);
@@ -760,7 +759,7 @@ export class PopupAddTargetComponent {
             let year = this.data?.year;
             this.data = JSON.parse(JSON.stringify(this.dataOld));
             this.data.businessLineID = businessLine;
-            this.data.owner = null;
+            this.data.salespersonID = null;
             this.data.year = year;
             this.data.category = '1';
             this.data.targetName = targetName;
@@ -1069,15 +1068,15 @@ export class PopupAddTargetComponent {
               }
             }
             let id = '';
-            for (var j = 0; j < this.data?.owner?.split(';').length; j++) {
-              let owner = this.data?.owner?.split(';')[j];
-              if (owner == item?.userID) {
-                this.data?.owner?.split(';').splice(j, 1);
+            for (var j = 0; j < this.data?.salespersonID?.split(';').length; j++) {
+              let salespersonID = this.data?.salespersonID?.split(';')[j];
+              if (salespersonID == item?.userID) {
+                this.data?.salespersonID?.split(';').splice(j, 1);
               } else {
-                id = id ? id + ';' + owner : owner;
+                id = id ? id + ';' + salespersonID : salespersonID;
               }
             }
-            this.data.owner = id;
+            this.data.salespersonID = id;
             this.lstOwners.forEach((res) => {
               if (res.userID != item?.userID && !res.isExit) {
                 res.target +=
