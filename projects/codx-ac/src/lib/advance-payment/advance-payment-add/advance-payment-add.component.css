@@ -1,7 +1,6 @@
 .voucherText{
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100px;
 }
 .amount .e-editable-value{
     justify-content: end;
