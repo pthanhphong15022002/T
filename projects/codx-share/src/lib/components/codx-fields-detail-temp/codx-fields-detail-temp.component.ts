@@ -357,4 +357,8 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   parseValue(dataValue) {
     return JSON.parse(dataValue);
   }
+
+  listValue(dataValue) {
+    return dataValue?.split(';');
+  }
 }
