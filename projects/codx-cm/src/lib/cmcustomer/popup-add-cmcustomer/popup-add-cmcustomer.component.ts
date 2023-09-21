@@ -427,6 +427,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.data.districtID = lstDis?.DistrictID;
         if (this.data.wardID != lstDis?.WardID)
           this.data.wardID = lstDis?.WardID;
+      }else{
+        this.data.provinceID = null;
+        this.data.districtID = null;
+        this.data.wardID = null;
       }
       if (this.action != 'edit') {
         if (this.listAddress != null && this.listAddress.length > 0) {
@@ -434,6 +438,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
           if (index != -1) {
             this.listAddress[index].adressName = name?.trim();
             this.listAddress[index].isDefault = true;
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
           } else {
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
