@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -241,7 +241,6 @@ export class AdvancePaymentAddComponent extends UIComponent
   addLine()
   {
     let data = new AdvancedPaymentLines();
-    let idx;
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SetDefaultAsync', [
         this.advancedPayment,
@@ -250,8 +249,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          idx = this.advancedPaymentLines.length;
-              this.advancedPaymentLines.push(res);
+          this.advancedPaymentLines.push(res);
         }
       });
   }

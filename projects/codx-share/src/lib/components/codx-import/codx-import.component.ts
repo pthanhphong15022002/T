@@ -87,8 +87,24 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.formModel = dt.data;
+    if(this.formModel?.entityName){
+      let entityName = this.formModel?.entityName;
+      var arObj = entityName.split('_');
+      this.service  = arObj[0];
+      if (this.service ) {
+        switch (this.service .toLocaleLowerCase()) {
+          case 'ad':
+            this.service  = 'sys';
+            break;
+          case 'pr':
+            this.service  = 'hr';
+            break;
+        }
+      }
+    }
     //this.recID = dt.data?.[1];
   }
+
   ngAfterViewInit(): void {
     this.getHeight();
   }
@@ -99,8 +115,8 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     });
     this.request.page = 0;
     this.request.pageSize = 10;
-    this.request.formName = 'PurchaseInvoices';
-    this.request.gridViewName = 'grvPurchaseInvoices';
+    this.request.formName = this.formModel.formName;
+    this.request.gridViewName = this.formModel.gridViewName;
     this.request.funcID = this.formModel?.funcID;
     this.getData();
   }
@@ -109,6 +125,10 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   ngOnChanges(changes: SimpleChanges) {}
 
+  getFunctionList()
+  {
+    
+  }
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
   }
@@ -141,7 +161,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   private fetch(): Observable<any[]> {
     return this.api
       .execSv<Array<any>>(
-        this.service,
+        "SYS",
         this.assemblyName,
         this.className,
         this.method,
