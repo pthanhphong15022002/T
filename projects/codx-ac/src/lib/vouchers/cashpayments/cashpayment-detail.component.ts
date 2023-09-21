@@ -417,23 +417,30 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   copyVoucher(dataCopy) {
     this.dataService
-      .copy((o) => this.setDefault(dataCopy))
+      .copy((o) => this.setDefault(dataCopy,'copy'))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let data = {
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
-          };
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            this.optionSidebar,
-            this.formModel.funcID
-          );
+          let datas = {...res};
+          this.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+            if (res) {
+              let data = {
+                headerText: this.headerText, //? tiêu đề voucher
+                journal: { ...this.journal }, //?  data journal
+                oData: { ...datas }, //?  data của cashpayment
+                hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                legalName: this.legalName, //? tên company
+              };
+              let dialog = this.callfc.openSide(
+                CashPaymentAddComponent,
+                data,
+                this.optionSidebar,
+                this.formModel.funcID
+              );
+              this.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
+            }
+          })
         }
       });
   }
@@ -652,10 +659,11 @@ export class CashpaymentDetailComponent extends UIComponent {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data) {
+  setDefault(data:any,action:any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      action
     ]);
   }
 

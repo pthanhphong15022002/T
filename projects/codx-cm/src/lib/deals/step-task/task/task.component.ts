@@ -43,7 +43,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() owner: string;
   @Input() isPause = false;
   @Input() entityName = '';
-  @Output() saveAssign = new EventEmitter<any>(); 
+
+  @Input() sessionID = ''; // session giao việc
+  @Input() formModelAssign: FormModel; // formModel của giao việc
+
+  @Output() saveAssign = new EventEmitter<any>();
   activitie: DP_Activities = new DP_Activities();
   listActivitie: DP_Activities[] = [];
   taskType;
@@ -52,7 +56,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   isNoData = false;
   titleName = '';
   vllData;
-  dataTooltipDay
+  dataTooltipDay;
   moreDefaut = {
     share: true,
     write: true,
@@ -66,7 +70,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
-    private stepService: StepService,
+    private stepService: StepService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -120,7 +124,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.objectID == task?.owner) ||task?.roles[0];
+      task?.roles.find((role) => role.objectID == task?.owner) ||
+      task?.roles[0];
     return role?.objectName;
   }
 
@@ -171,9 +176,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
             break;
           case 'DP27': // đặt xe
-            if (task?.taskType != 'B' ||(task?.taskType == 'B' && task?.actionStatus == '2')){
+            if (
+              task?.taskType != 'B' ||
+              (task?.taskType == 'B' && task?.actionStatus == '2')
+            ) {
               res.disabled = true;
-            }else{
+            } else {
               task?.status == '1' && (res.isblur = true);
             }
             break;
@@ -235,7 +243,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP31':
         this.startActivitie(task);
         break;
-        
     }
   }
   convertMoreFunctions(listMore, more, type) {
@@ -272,7 +279,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.objectType = this.entityName;
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
-          this.activitie,this.entityName
+          this.activitie,
+          this.entityName,
         ])
         .subscribe((res) => {
           if (res) {
@@ -294,7 +302,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.api
         .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event, this.entityName
+          taskOutput?.event,
+          this.entityName,
         ])
         .subscribe((res) => {
           if (res) {
@@ -316,7 +325,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       if (x.event && x.event.status == 'Y') {
         this.api
           .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
-            task?.recID,this.entityName
+            task?.recID,
+            this.entityName,
           ])
           .subscribe((res) => {
             if (res) {
@@ -359,7 +369,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [this.activitie])
+        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+          this.activitie,
+        ])
         .subscribe((res) => {
           if (res) {
             this.listActivitie.push(res);
@@ -371,7 +383,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   //#endregion
-  
+
   //#region open popup
   async chooseTypeTask() {
     let popupTypeTask = this.callFunc.openForm(
@@ -459,10 +471,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         .subscribe((res) => {
           if (res) {
             task.progress = dataPopupOutput?.event?.progressTask;
-            task.status = task.progress == 100 ? "3" : "2";
-            task.actualEnd = res?.actualEnd
-            task.actualStart = res?.actualStart
-            task.note = res?.note
+            task.status = task.progress == 100 ? '3' : '2';
+            task.actualEnd = res?.actualEnd;
+            task.actualStart = res?.actualStart;
+            task.note = res?.note;
             this.listActivitie;
             this.notiService.notifyCode('SYS007');
             this.detectorRef.detectChanges();
@@ -504,7 +516,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         default:
           listRefIDAssign = data.recID;
           break;
-
       }
 
       let listData = {
@@ -518,6 +529,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         listRefIDAssign: listRefIDAssign,
         instanceStep: null,
         isActivitie: true,
+        sessionID: this.sessionID, // session giao việc
+        formModelAssign: this.formModelAssign, // formModel của giao việc
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -539,7 +552,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
   //#endregion
-  
+
   startActivitie(activitie) {
     if (activitie?.taskType == 'Q') {
       //báo giá
@@ -575,8 +588,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
-  setNameTypeTask(taskType){
-    let type = this.listTaskType?.find(task => task?.value == taskType);
+  setNameTypeTask(taskType) {
+    let type = this.listTaskType?.find((task) => task?.value == taskType);
     return type?.text;
   }
   //#region giao việc
@@ -591,7 +604,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       entityName: 'DP_Instances_Steps_Tasks',
       gridViewName: 'grvDPInstancesStepsTasks',
     };
-    
+
     var task = new TM_Tasks();
     task.taskName = data.taskName;
     task.refID = data?.recID;
@@ -639,10 +652,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
   //#endregion
-  createMeeting(task){
-    this.stepService.createMeeting(task,this.titleName);
+  createMeeting(task) {
+    this.stepService.createMeeting(task, this.titleName);
   }
-  openTooltip(popup, data){
+  openTooltip(popup, data) {
     this.dataTooltipDay = data;
     popup.open();
   }

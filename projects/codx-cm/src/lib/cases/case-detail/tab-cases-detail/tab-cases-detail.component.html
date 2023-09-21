@@ -15,10 +15,7 @@
 </container-element>
 <!-- nvthuan công việc -->
 <ng-template #task let-data="value">
-  <div
-    *ngFor="let step of listStep"
-    class="list-step ps-4"
-  >
+  <div *ngFor="let step of listStep" class="list-step ps-4">
     <codx-step-task
       [dataSources]="step"
       [isShowButton]="false"
@@ -28,120 +25,152 @@
       [isStart]="dataSelected?.status == '2'"
       [isClose]="dataSelected?.closed"
       [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+      [sessionID]="dataSelected.recID"
+      [formModelAssign]="formModel"
       (saveAssign)="saveAssignTask($event)"
     ></codx-step-task>
     <hr class="m-0 p-0" />
   </div>
-    <div *ngFor="let step of listStep; let i = index" >
-      <codx-step-task
-        [dataSources]="step"
-        [isShowButton]="false"
-        [isShowMore]="true"
-        [isDeepCopy]="false"
-        (saveAssign)="saveAssignTask($event)"
-      ></codx-step-task>
-      <hr class="m-0 p-0" />
-    </div>
+  <div *ngFor="let step of listStep; let i = index">
+    <codx-step-task
+      [dataSources]="step"
+      [isShowButton]="false"
+      [isShowMore]="true"
+      [isDeepCopy]="false"
+      [sessionID]="dataSelected.recID"
+      [formModelAssign]="formModel"
+      (saveAssign)="saveAssignTask($event)"
+    ></codx-step-task>
+    <hr class="m-0 p-0" />
+  </div>
 </ng-template>
 
-<ng-template #information>  <div class="d-flex flex-column">
+<ng-template #information>
+  <div class="d-flex flex-column">
     <div>
       <h2><codx-label default="Thông tin chung"></codx-label></h2>
     </div>
 
-      <div class="mb-3">
-        <div class="row py-2">
-          <div class="col-2">
-            <codx-label
-              class="label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="State"
-
-
-            ></codx-label>
-          </div>
-          <div class="col-4">
-            <span
-              class="fs-7"
-              #state
-              [innerHTML]="
-                dataSelected?.state
-                  | formatvalue : formModel : 'state' : state
-                  | async
-              "
-            ></span>
-          </div>
-
-          <div class="col-2">
-            <codx-label
-              class="label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="ProcessID"
-
-            ></codx-label>
-          </div>
-          <div class="col-4">
-            <span
-              class="fs-7"
-              #processID
-              [innerHTML]="
-                dataSelected?.processName
-                  | formatvalue : formModel : 'processID' : processID : 'CMCases'
-                  : 'grvCMCases'
-                  | async
-              "
-            ></span>
-          </div>
+    <div class="mb-3">
+      <div class="row py-2">
+        <div class="col-2">
+          <codx-label
+            class="label-colon"
+            [setRequire]="false"
+            [formModel]="formModel"
+            fiedName="State"
+          ></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+            class="fs-7"
+            #state
+            [innerHTML]="
+              dataSelected?.state
+                | formatvalue : formModel : 'state' : state
+                | async
+            "
+          ></span>
         </div>
 
+        <div class="col-2">
+          <codx-label
+            class="label-colon"
+            [setRequire]="false"
+            [formModel]="formModel"
+            fiedName="ProcessID"
+          ></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+            class="fs-7"
+            #processID
+            [innerHTML]="
+              dataSelected?.processName
+                | formatvalue
+                  : formModel
+                  : 'processID'
+                  : processID
+                  : 'CMCases'
+                  : 'grvCMCases'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
 
-        <div class="row py-2">
-          <div class="col-2">
-            <codx-label
-              class="label-colon"
-              [setRequire]="false"
-              [formModel]="formModel"
-              fiedName="OccuredPlace"
-            ></codx-label
-            >
-          </div>
-          <div class="col-4">
-            <span
-              class="fs-7"
-              #occuredPlace
-              [innerHTML]="
-                dataSelected?.occuredPlace
-                  | formatvalue
-                    : formModel
-                    : 'occuredPlace'
-                    : occuredPlace
-                    : 'CMCases'
-                    : 'grvCMCases'
-                  | async
-              "
-            ></span>
-          </div>
+      <div class="row py-2">
+        <div class="col-2">
+          <codx-label
+            class="label-colon"
+            [setRequire]="false"
+            [formModel]="formModel"
+            fiedName="OccuredPlace"
+          ></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+            class="fs-7"
+            #occuredPlace
+            [innerHTML]="
+              dataSelected?.occuredPlace
+                | formatvalue
+                  : formModel
+                  : 'occuredPlace'
+                  : occuredPlace
+                  : 'CMCases'
+                  : 'grvCMCases'
+                | async
+            "
+          ></span>
+        </div>
 
-          <div class="col-2">
-            <codx-label
+        <div class="col-2">
+          <codx-label
             class="label-colon"
             [setRequire]="false"
             [formModel]="formModel"
             fiedName="ChannelID"
+          ></codx-label>
+        </div>
+        <div class="col-4">
+          <span
+            class="fs-7"
+            #channelID
+            [innerHTML]="
+              dataSelected?.channelID
+                | formatvalue
+                  : formModel
+                  : 'channelID'
+                  : channelID
+                  : 'CMCases'
+                  : 'grvCMCases'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+
+      <div *ngIf="casesType == '1'">
+        <div class="row py-2">
+          <div class="col-2">
+            <codx-label
+              class="label-colon"
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="OccuredOn"
             ></codx-label>
           </div>
           <div class="col-4">
             <span
               class="fs-7"
-              #channelID
+              #occuredOn
               [innerHTML]="
-                dataSelected?.channelID
+                dataSelected?.occuredOn
                   | formatvalue
                     : formModel
-                    : 'channelID'
-                    : channelID
+                    : 'occuredOn'
+                    : occuredOn
                     : 'CMCases'
                     : 'grvCMCases'
                   | async
@@ -150,63 +179,29 @@
           </div>
         </div>
 
-        <div *ngIf="casesType == '1'">
-          <div class="row py-2">
-            <div class="col-2">
-              <codx-label
-                class="label-colon"
-                [setRequire]="false"
-                [formModel]="formModel"
-                fiedName="OccuredOn"
-              ></codx-label
-              >
-            </div>
-            <div class="col-4">
-              <span
-                class="fs-7"
-                #occuredOn
-                [innerHTML]="
-                  dataSelected?.occuredOn
-                    | formatvalue
-                      : formModel
-                      : 'occuredOn'
-                      : occuredOn
-                      : 'CMCases'
-                      : 'grvCMCases'
-                    | async
-                "
-              ></span>
-            </div>
-          </div>
-
-          <div class="row py-2">
-            <div class="col-2">
-              <codx-label
+        <div class="row py-2">
+          <div class="col-2">
+            <codx-label
               class="label-colon"
-                [setRequire]="false"
-                [formModel]="formModel"
-                fiedName="DetectedOn"
-              ></codx-label
-              >
-            </div>
-            <div class="col-4">
-              <span
-                class="fs-7"
-                #detectedOn
-                [innerHTML]="
-                  dataSelected?.detectedOn
-                    | formatvalue
-                      : formModel
-                      : 'detectedOn'
-                      : detectedOn
-                    | async
-                "
-              ></span>
-            </div>
+              [setRequire]="false"
+              [formModel]="formModel"
+              fiedName="DetectedOn"
+            ></codx-label>
+          </div>
+          <div class="col-4">
+            <span
+              class="fs-7"
+              #detectedOn
+              [innerHTML]="
+                dataSelected?.detectedOn
+                  | formatvalue : formModel : 'detectedOn' : detectedOn
+                  | async
+              "
+            ></span>
           </div>
         </div>
-
       </div>
+    </div>
 
     <div class="mt-5">
       <div class="mb-3">
@@ -262,7 +257,11 @@
       <div class="d-flex flex-column-reverse py-2">
         <div class="d-flex justify-content-start">
           <div class="col-2">
-            <codx-label default="Mô tả chi tiết" fieldName="Solution"></codx-label>:
+            <codx-label
+              default="Mô tả chi tiết"
+              fieldName="Solution"
+            ></codx-label
+            >:
           </div>
           <div class="col-10">
             <span
@@ -293,7 +292,7 @@
         *ngIf="item?.fields?.length > 0"
         [dataStep]="item"
         [showColumnControl]="showColumnControl(item.stepID)"
-        [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2' "
+        [isUpdate]="dataSelected.status == '1' || dataSelected.status == '2'"
       >
       </codx-fields-detail-temp>
     </ng-container>
