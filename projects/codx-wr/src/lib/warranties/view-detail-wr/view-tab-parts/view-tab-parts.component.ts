@@ -34,8 +34,8 @@ export class ViewTabPartsComponent implements OnInit {
   @ViewChild('tempQuantity') tempQuantity: TemplateRef<any>;
   @ViewChild('headerStatus') headerStatus: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
-  @ViewChild('headerNote') headerNote: TemplateRef<any>;
-  @ViewChild('tempNote') tempNote: TemplateRef<any>;
+  // @ViewChild('headerNote') headerNote: TemplateRef<any>;
+  // @ViewChild('tempNote') tempNote: TemplateRef<any>;
 
   formModel: FormModel = {
     formName: 'WRWorkOrderParts',
@@ -111,28 +111,27 @@ export class ViewTabPartsComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstParts = item;
-      this.columnsGrid = [
-        {
-          headerTemplate: this.headerPartInfo,
-          template: this.tempPartInfo,
-          width: 400,
-        },
-        {
-          headerTemplate: this.headerQuantity,
-          template: this.tempQuantity,
-          width: 150,
-        },
-        {
-          headerTemplate: this.headerStatus,
-          template: this.tempStatus,
-          width: 250,
-        },
-        {
-          headerTemplate: this.headerNote,
-          template: this.tempNote,
-          width: 150,
-        },
-      ];
+      this.columnsGrid.unshift({
+        headerTemplate: this.headerPartInfo,
+        template: this.tempPartInfo,
+        width: 400,
+      });
+
+      // {
+      //   headerTemplate: this.headerQuantity,
+      //   template: this.tempQuantity,
+      //   width: 150,
+      // },
+      // {
+      //   headerTemplate: this.headerStatus,
+      //   template: this.tempStatus,
+      //   width: 250,
+      // },
+      // {
+      //   headerTemplate: this.headerNote,
+      //   template: this.tempNote,
+      //   width: 150,
+      // },
       // this.wrSv.listOrderPartsSubject.next(this.lstParts);
     });
   }
@@ -162,26 +161,34 @@ export class ViewTabPartsComponent implements OnInit {
     this.arrFieldIsVisible.forEach((key) => {
       let field = Util.camelize(key);
       let template: any;
-      let colums: any;
+      let column: any;
 
       console.log(key);
+      switch (key) {
+        case 'Qty':
+          template = this.tempQuantity;
+          break;
+        case 'Status':
+          template = this.tempStatus;
+          break;
+      }
 
       if (template) {
-        colums = {
+        column = {
           field: field,
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
           template: template,
         };
       } else {
-        colums = {
+        column = {
           field: field,
           headerText: grvSetup[key].headerText,
           width: grvSetup[key].width,
         };
       }
 
-      this.columnsGrid.push(colums);
+      this.columnsGrid.push(column);
     });
   }
 }

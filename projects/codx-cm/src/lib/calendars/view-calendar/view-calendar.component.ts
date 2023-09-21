@@ -258,7 +258,7 @@ export class ViewCalendarComponent
           // template4: this.resourceHeader,
           template6: this.headerTempContent, //header morefun
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
           //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content  nội dung chính
@@ -279,7 +279,7 @@ export class ViewCalendarComponent
           template4: this.resourceHeader, //temp ressources
           template6: this.headerTempContent, //header // more
           //template7: this.footerNone, ///footer
-          template: this.eventTemplate, //lấy event của temo
+          // template: this.eventTemplate, //lấy event của temo
           //template2: this.headerTemp,
           template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
@@ -340,7 +340,7 @@ export class ViewCalendarComponent
         this.editTask(data);
         break;
       case 'SYS04':
-        console.log(data);
+        this.copyTask(data);
         break;
     }
   }
@@ -634,6 +634,7 @@ export class ViewCalendarComponent
           this.convertDataCalendar(task);
           this.isActivitie = false;
           this.view.dataService.add(res).subscribe();
+          this.view.currentView['schedule'].refresh();1
           this.notiService.notifyCode('SYS006');
           this.detectorRef.detectChanges();
         }
@@ -648,6 +649,7 @@ export class ViewCalendarComponent
           let task = res[0];
           this.convertDataCalendar(task);
           this.view.dataService.add(task).subscribe();
+          this.view.currentView['schedule'].refresh();
           this.isStepTask = false;
           this.notiService.notifyCode('SYS006');
           this.detectorRef.detectChanges();
@@ -712,6 +714,22 @@ export class ViewCalendarComponent
     }
   }
   //#endregion
+
+  //#region copy task
+  async copyTask(data) {
+    if (data) {
+      const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
+      let task = await this.getTask(data);
+      if (task) {
+        delete task?.id;
+        await this.handleTask(type, 'add', task);
+      } else {
+        this.notiService.notifyCode('');
+      }
+    }
+  }
+  //#endregion
+
   //#region delete task
   async deleteTask(data) {
     if (data) {
@@ -723,12 +741,8 @@ export class ViewCalendarComponent
               this.api
               .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
               .subscribe((rec) => {
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: rec,
-                });
-                // this.view.dataService.remove(rec).subscribe();
-                this.view.currentView['schedule'].datas?.remove(rec);
+                this.view.dataService.remove(rec).subscribe();
+                this.view.currentView['schedule'].refresh();
                 this.detectorRef.detectChanges();
                 this.notiService.notifyCode('SYS007');
               })

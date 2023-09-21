@@ -93,7 +93,6 @@ const Component: Type<any>[] = [
     CodxCoreModule,
     CodxShareModule,
     LazyLoadImageModule,
-
     NgbModule,
     CoreModule,
     RouterModule.forChild(routes),

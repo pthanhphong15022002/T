@@ -19,6 +19,7 @@
     <div class="d-flex align-items-center p-3 border-bottom w-100">
         <div class="w-25 min-w-400px p-1">
             <span
+          [ngbTooltip]="grvSetup?.PolicyType?.headerText"
             [innerHTML]="
             data?.policyType
               | formatvalue : view.formModel : 'policyType'
@@ -31,6 +32,7 @@
     
         <div class="w-25 min-w-150px px-2">
             <span
+        [ngbTooltip]="grvSetup?.FixedAmt?.headerText"
             [innerHTML]="
             data?.fixedAmt
               | formatvalue : view.formModel : 'fixedAmt'
@@ -43,6 +45,7 @@
     
         <div class="w-25 min-w-100px px-2">
             <span
+        [ngbTooltip]="grvSetup?.Percentage?.headerText"
             [innerHTML]="
             data?.percentage
               | formatvalue : view.formModel : 'percentage'
@@ -53,7 +56,9 @@
             <!-- {{data.percentage}} -->
         </div>
 
-        <div class="w-25 min-w-200px px-2">
+        <div class="w-25 min-w-200px px-2"
+          [ngbTooltip]="grvSetup?.Percentage?.ActiveOn"
+        >
             <i class="icon-calendar_today icon-14 text-dark"></i>
             {{data.activeOn | fmDT}}
         </div>

@@ -18,9 +18,10 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
+import { JournalService } from '../../../journals/journals.service';
 import { groupBy } from '../../../utils';
 import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
 import {
@@ -30,9 +31,8 @@ import {
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
-import { MF, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
 import { PurchaseinvoicesComponent } from '../purchaseinvoices.component';
-import { JournalService } from '../../../journals/journals.service';
+import { MF, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices-detail',
@@ -41,7 +41,7 @@ import { JournalService } from '../../../journals/journals.service';
 })
 export class PurchaseinvoicesDetailComponent
   extends UIComponent
-  implements AfterViewInit, AfterViewChecked, OnChanges
+  implements AfterViewChecked, OnChanges
 {
   //#region Constructor
   @ViewChild('memoContent', { read: ElementRef })
@@ -64,13 +64,6 @@ export class PurchaseinvoicesDetailComponent
   columns: TableColumn[] = [];
 
   fmPurchaseInvoicesLines: FormModel;
-  fmAcctTrans: FormModel = {
-    entityName: 'AC_AcctTrans',
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityPer: 'AC_AcctTrans',
-  };
-  gvsAcctTrans: any;
 
   funcName: string;
   tabInfo: TabModel[] = [
@@ -135,19 +128,11 @@ export class PurchaseinvoicesDetailComponent
         sumFormat: SumFormat.Currency,
       }),
     ];
-
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
   }
   //#endregion
 
   //#region Init
-  override onInit(): void {}
-
-  ngAfterViewInit(): void {
+  override onInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       this.funcName = res.defaultName;
     });
