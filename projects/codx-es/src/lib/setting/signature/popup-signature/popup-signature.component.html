@@ -29,6 +29,7 @@
           </a>
         </li>
         <!--<li class="nav-item m-0"  *ngIf="setupShowForm.showSign">
+          
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==2?'active':''" data-bs-toggle="tab" id="#pane_2" (click)="changeTab(2)">
             <span class="d-flex flex-column ">
@@ -39,7 +40,8 @@
             </span>
           </a>
         </li> -->
-        <li class="nav-item m-0" *ngIf="setupShowForm.showSignature1">
+        <!--Tạm ẩn header-->
+        <li class="nav-item m-0" *ngIf="setupShowForm.showSignature1 && false">
           <a
             class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab == 3 ? 'active' : ''"
@@ -173,7 +175,7 @@
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
               referType="S1"
               [width]="200"
-              [funcId]="'ESS21'"
+              [funcId]="'ESS23'"
               [objectId]="data.recID"
               [objectType]="'ES_Signatures'"
               data-kt-menu-trigger="click"

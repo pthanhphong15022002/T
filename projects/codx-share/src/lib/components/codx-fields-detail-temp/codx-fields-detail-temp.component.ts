@@ -361,4 +361,10 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   listValue(dataValue) {
     return dataValue?.split(';');
   }
+
+  getViewText(refValue, value) {
+    // this.cache.getComboboxSource('User').subscribe((res) => {});
+    // chưa làm
+    return value;
+  }
 }

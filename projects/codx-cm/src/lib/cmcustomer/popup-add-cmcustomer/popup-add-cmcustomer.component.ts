@@ -212,22 +212,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.dialog.formModel.gridViewName
       )
     );
-    if (this.action == 'edit') {
-      this.listAddress = await firstValueFrom(
-        this.cmSv.getListAddress(
-          this.dialog.formModel.entityName,
-          this.data.recID
-        )
-      );
-      if (this.data.address != null && this.data.address.trim() != '') {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex((x) => x.isDefault == true);
-          if (index != -1) {
-            this.tmpAddress = this.listAddress[index];
-          }
-        }
-      }
-    }
+    // if (this.action == 'edit') {
+    //   // this.listAddress = await firstValueFrom(
+    //   //   this.cmSv.getListAddress(
+    //   //     this.dialog.formModel.entityName,
+    //   //     this.data.recID
+    //   //   )
+    //   // );
+    //   if (this.data.address != null && this.data.address.trim() != '') {
+    //     if (this.listAddress != null && this.listAddress.length > 0) {
+    //       var index = this.listAddress.findIndex((x) => x.isDefault == true);
+    //       if (index != -1) {
+    //         this.tmpAddress = this.listAddress[index];
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   setTitle(e: any) {
@@ -385,13 +385,142 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeAdress(e) {
+    this.isAdress = true;
     if (e && e.data) {
       this.data.address = e?.data?.trim();
     } else {
       this.data.address = null;
     }
     this.setAddress(this.data.address);
-    if (!this.isAdress) this.isAdress = true;
+
+    this.isAdress = false;
+  }
+
+  async setAddress(name) {
+    if (name != null && name != '') {
+      var tmp = new BS_AddressBook();
+      var param = await firstValueFrom(
+        this.cache.viewSettingValues('CMParameters')
+      );
+      let lever = 0;
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        lever = paramDefault['ControlInputAddress'] ?? 0;
+      }
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [name, lever]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        if (this.data.provinceID != lstDis?.ProvinceID)
+          this.data.provinceID = lstDis?.ProvinceID;
+        if (this.data.districtID != lstDis?.DistrictID)
+          this.data.districtID = lstDis?.DistrictID;
+        if (this.data.wardID != lstDis?.WardID)
+          this.data.wardID = lstDis?.WardID;
+      }else{
+        this.data.provinceID = null;
+        this.data.districtID = null;
+        this.data.wardID = null;
+      }
+      if (this.action != 'edit') {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex((x) => x.isDefault == true);
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].isDefault = true;
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
+          } else {
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
+            tmp.isDefault = true;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
+      } else {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex(
+            (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
+          );
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
+          } else {
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.isDefault = true;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
+      }
+    } else {
+      this.data.provinceID = null;
+      this.data.countryID = null;
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.regionID = null;
+      this.data.wardID = null;
+      this.data.address = null;
+      if (this.listAddress != null && this.listAddress.length > 0) {
+        var indexDelete = this.listAddress.findIndex(
+          (x) => x.isDefault == true
+        );
+        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+          if (indexDelete != -1) {
+            this.listAddress[indexDelete].isDefault = false;
+          }
+        } else {
+          this.listAddressDelete.push(this.listAddress[0]);
+          this.listAddress.splice(indexDelete, 1);
+        }
+      }
+    }
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+      this.codxListAddress.loadListAdress(this.listAddress);
+    }
   }
 
   valueChangeContact(e) {
@@ -528,125 +657,127 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-      this.data.customerName = this.data?.customerName;
-      this.data.category = this.funcID == 'CM0101' ? '1' : '2';
-    } else if (this.funcID == 'CM0103') {
-      this.data.partnerName = this.data?.partnerName;
-      this.data.annualRevenue =
-        this.data?.annualRevenue != null &&
-        parseFloat(this.data?.annualRevenue) >= 0
-          ? parseFloat(this.data?.annualRevenue)
-          : 0;
-    }
-
-    if (this.funcID == 'CM0104') {
-      this.data.annualRevenue =
-        this.data?.annualRevenue != null &&
-        parseFloat(this.data?.annualRevenue) >= 0
-          ? parseFloat(this.data?.annualRevenue)
-          : 0;
-    }
-
-    if (this.funcID == 'CM0102') {
-      if (this.data.objectType == null || this.data.objectType.trim() == '') {
-        this.gridViewSetup['ContactType'].isRequire = false;
-        this.gridViewSetup['ObjectID'].isRequire = false;
+    if (!this.isAdress) {
+      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+        this.data.customerName = this.data?.customerName;
+        this.data.category = this.funcID == 'CM0101' ? '1' : '2';
+      } else if (this.funcID == 'CM0103') {
+        this.data.partnerName = this.data?.partnerName;
+        this.data.annualRevenue =
+          this.data?.annualRevenue != null &&
+          parseFloat(this.data?.annualRevenue) >= 0
+            ? parseFloat(this.data?.annualRevenue)
+            : 0;
       }
-      this.gridViewSetup['FirstName'].isRequire = false;
 
-      // if (this.data.firstName != null && this.data.firstName.trim() != '') {
-      //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
-      //     this.data.contactName =
-      //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-      //   } else {
-      //     this.data.contactName = this.data.firstName.trim();
-      //   }
-      // } else {
-      //   this.data.contactName = '';
-      // }
-    }
-    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
-    if (this.count > 0) {
-      return;
-    }
-    let check = false;
-    if (this.action != 'edit') {
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CustomersBusiness',
-          'IsExitCoincideIDAsync',
-          [
-            this.data?.recID,
-            this.funcID == 'CM0102'
-              ? this.data?.contactID
-              : this.funcID == 'CM0103'
-              ? this.data?.partnerID
-              : this.funcID == 'CM0104'
-              ? this.data?.competitorID
-              : this.data?.customerID,
-            this.dialog?.formModel?.entityName,
-          ]
-        )
-      );
-    }
+      if (this.funcID == 'CM0104') {
+        this.data.annualRevenue =
+          this.data?.annualRevenue != null &&
+          parseFloat(this.data?.annualRevenue) >= 0
+            ? parseFloat(this.data?.annualRevenue)
+            : 0;
+      }
 
-    if (check) {
-      this.notiService.notifyCode('Trùng mã khách hàng');
-      return;
-    }
+      if (this.funcID == 'CM0102') {
+        if (this.data.objectType == null || this.data.objectType.trim() == '') {
+          this.gridViewSetup['ContactType'].isRequire = false;
+          this.gridViewSetup['ObjectID'].isRequire = false;
+        }
+        this.gridViewSetup['FirstName'].isRequire = false;
 
-    if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CustomersBusiness',
-          'IsExitCoincideTaxCodeAsync',
-          [
-            this.data?.recID,
-            this.data?.taxCode,
-            this.dialog?.formModel?.entityName,
-          ]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM016');
+        // if (this.data.firstName != null && this.data.firstName.trim() != '') {
+        //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
+        //     this.data.contactName =
+        //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
+        //   } else {
+        //     this.data.contactName = this.data.firstName.trim();
+        //   }
+        // } else {
+        //   this.data.contactName = '';
+        // }
+      }
+      this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+      if (this.count > 0) {
         return;
       }
-    }
-
-    if (this.funcID == 'CM0102') {
-      if (this.data.mobile != null && this.data.mobile.trim() != '') {
-        if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
-      } else {
-        this.data.mobile = null;
+      let check = false;
+      if (this.action != 'edit') {
+        check = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CustomersBusiness',
+            'IsExitCoincideIDAsync',
+            [
+              this.data?.recID,
+              this.funcID == 'CM0102'
+                ? this.data?.contactID
+                : this.funcID == 'CM0103'
+                ? this.data?.partnerID
+                : this.funcID == 'CM0104'
+                ? this.data?.competitorID
+                : this.data?.customerID,
+              this.dialog?.formModel?.entityName,
+            ]
+          )
+        );
       }
-      if (
-        this.data.personalEmail != null &&
-        this.data.personalEmail.trim() != ''
-      ) {
-        if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
-      } else {
-        this.data.personalEmail = null;
-      }
-    }
 
-    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-    //   if (this.contactsPerson == null) {
-    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
-    //     return;
-    //   }
-    // }
-    if (this.data.phone != null && this.data.phone.trim() != '') {
-      if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
+      if (check) {
+        this.notiService.notifyCode('Trùng mã khách hàng');
+        return;
+      }
+
+      if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
+        check = await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CustomersBusiness',
+            'IsExitCoincideTaxCodeAsync',
+            [
+              this.data?.recID,
+              this.data?.taxCode,
+              this.dialog?.formModel?.entityName,
+            ]
+          )
+        );
+        if (check) {
+          this.notiService.notifyCode('CM016');
+          return;
+        }
+      }
+
+      if (this.funcID == 'CM0102') {
+        if (this.data.mobile != null && this.data.mobile.trim() != '') {
+          if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
+        } else {
+          this.data.mobile = null;
+        }
+        if (
+          this.data.personalEmail != null &&
+          this.data.personalEmail.trim() != ''
+        ) {
+          if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
+        } else {
+          this.data.personalEmail = null;
+        }
+      }
+
+      // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
+      //   if (this.contactsPerson == null) {
+      //     this.notiService.notifyCode('CM002'); //Chưa có msssg
+      //     return;
+      //   }
+      // }
+      if (this.data.phone != null && this.data.phone.trim() != '') {
+        if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
+      }
+      if (this.data.email != null && this.data.email.trim() != '') {
+        if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
+      }
+      this.onSaveHanle();
     }
-    if (this.data.email != null && this.data.email.trim() != '') {
-      if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
-    }
-    this.onSaveHanle();
   }
 
   async onSaveHanle() {
@@ -698,124 +829,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
   }
   //#endregion
-  async setAddress(name) {
-    if (name != null && name != '') {
-      var tmp = new BS_AddressBook();
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      let lever = 0;
-      if (param?.length > 0) {
-        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        lever = paramDefault['ControlInputAddress'] ?? 0;
-      }
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [name, lever]
-        )
-      );
-      if (json != null && json.trim() != '') {
-        let lstDis = JSON.parse(json);
-        if (this.data.provinceID != lstDis?.ProvinceID)
-          this.data.provinceID = lstDis?.ProvinceID;
-        if (this.data.districtID != lstDis?.DistrictID)
-          this.data.districtID = lstDis?.DistrictID;
-        if (this.data.wardID != lstDis?.WardID)
-          this.data.wardID = lstDis?.WardID;
-      }
-      if (this.action != 'edit') {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex((x) => x.isDefault == true);
-          if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
-            this.listAddress[index].isDefault = true;
-          } else {
-            tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
-            tmp.provinceID = this.data.provinceID;
-            tmp.districtID = this.data.districtID;
-            tmp.wardID = this.data.wardID;
-            tmp.isDefault = true;
-            this.tmpAddress = tmp;
-            this.listAddress.push(tmp);
-          }
-        } else {
-          tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
-          tmp.isDefault = true;
-          tmp.provinceID = this.data.provinceID;
-          tmp.districtID = this.data.districtID;
-          tmp.wardID = this.data.wardID;
-          this.tmpAddress = tmp;
-          this.listAddress.push(tmp);
-        }
-      } else {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex(
-            (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
-          );
-          if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
-            this.listAddress[index].provinceID = this.data.provinceID;
-            this.listAddress[index].districtID = this.data.districtID;
-            this.listAddress[index].wardID = this.data.wardID;
-
-          } else {
-            tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
-            tmp.isDefault = true;
-            tmp.provinceID = this.data.provinceID;
-            tmp.districtID = this.data.districtID;
-            tmp.wardID = this.data.wardID;
-            this.tmpAddress = tmp;
-            this.listAddress.push(tmp);
-          }
-        } else {
-          tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
-          tmp.isDefault = true;
-          tmp.provinceID = this.data.provinceID;
-          tmp.districtID = this.data.districtID;
-          tmp.wardID = this.data.wardID;
-          this.tmpAddress = tmp;
-          this.listAddress.push(tmp);
-        }
-      }
-    } else {
-      this.data.provinceID = null;
-      this.data.countryID = null;
-      this.data.provinceID = null;
-      this.data.districtID = null;
-      this.data.regionID = null;
-      this.data.wardID = null;
-      this.data.address = null;
-      if (this.listAddress != null && this.listAddress.length > 0) {
-        var indexDelete = this.listAddress.findIndex(
-          (x) => x.isDefault == true
-        );
-        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-          if (indexDelete != -1) {
-            this.listAddress[indexDelete].isDefault = false;
-          }
-        } else {
-          this.listAddressDelete.push(this.listAddress[0]);
-          this.listAddress.splice(indexDelete, 1);
-        }
-      }
-    }
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-      this.codxListAddress.loadListAdress(this.listAddress);
-    }
-  }
 
   checkEmailOrPhone(field, type) {
     if (type == 'E') {
@@ -856,8 +869,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   lstAddressEmit(e) {
-    if (e != null && e.length > 0) {
-      this.listAddress = e;
+    this.listAddress = e;
+    if (this.listAddress != null && this.listAddress.length > 0) {
       var index = this.listAddress.findIndex((x) => x.isDefault == true);
       if (index != -1) {
         this.tmpAddress = this.listAddress[index];
