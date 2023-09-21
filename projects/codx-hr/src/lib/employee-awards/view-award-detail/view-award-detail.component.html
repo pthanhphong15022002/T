@@ -106,7 +106,7 @@
           class="text-gray-600 label-colon"
         >
         </codx-label>
-        <span class="text-dark fw-bold">
+        <span class="text-dark">
           {{ itemDetail?.decisionNo }}
         </span>
       </div>
@@ -120,7 +120,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.signedDate
               | formatvalue : formModel : 'signedDate'
@@ -139,7 +139,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.signer | formatvalue : formModel : 'signer' | async
           "
@@ -173,7 +173,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.awardFormCategory
               | formatvalue : formModel : 'awardFormCategory'
@@ -192,7 +192,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.awardDate
               | formatvalue : formModel : 'awardDate'
@@ -210,7 +210,7 @@
           class="text-gray-600 label-colon"
         >
         </codx-label>
-        <span class="fw-bold text-dark">
+        <span class="text-dark">
           {{ itemDetail?.inYear }}
         </span>
       </div>
@@ -224,7 +224,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.awardPlace
               | formatvalue : formModel : 'awardPlace'
@@ -243,7 +243,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.awardLevelCategory
               | formatvalue : formModel : 'awardLevelCategory'
@@ -262,7 +262,7 @@
         >
         </codx-label>
         <span
-          class="text-dark fw-bold"
+          class="text-dark"
           [innerHTML]="
             itemDetail?.note | formatvalue : formModel : 'note' | async
           "
@@ -275,7 +275,7 @@
           fiedName="reason"
           [formModel]="formModel"
           [setRequire]="false"
-          class="text-primary fw-bold fs-6 label-colon mb-2"
+          class="text-primary fs-6 label-colon mb-2"
         >
         </codx-label>
         <span
