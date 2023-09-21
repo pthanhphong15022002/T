@@ -279,7 +279,7 @@ export class ViewCalendarComponent
           template4: this.resourceHeader, //temp ressources
           template6: this.headerTempContent, //header // more
           //template7: this.footerNone, ///footer
-          // template: this.eventTemplate, //lấy event của core
+          // template: this.eventTemplate, //lấy event của temo
           //template2: this.headerTemp,
           template3: this.cellTemplate, //tem cell
           template8: this.contentTmp, //content
@@ -721,36 +721,27 @@ export class ViewCalendarComponent
           if (x.event && x.event.status == 'Y') {
             if (this.isStepTask) {
               this.api
-                .exec<any>(
-                  'DP',
-                  'InstanceStepsBusiness',
-                  'DeleteTaskStepAsync',
-                  task
-                )
-                .subscribe((rec) => {
-                  this.view.dataService.onAction.next({
-                    type: 'delete',
-                    data: rec,
-                  });
-                  // this.view.dataService.remove(rec).subscribe();
-                  this.view.currentView['schedule'].datas?.remove(rec);
-                  this.detectorRef.detectChanges();
-                  this.notiService.notifyCode('SYS007');
+              .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
+              .subscribe((rec) => {
+                this.view.dataService.onAction.next({
+                  type: 'delete',
+                  data: rec,
                 });
-            } else if (this.isActivitie) {
-              this.api
-                .exec<any>(
-                  'DP',
-                  'InstanceStepsBusiness',
-                  'DeleteActivitiesAsync',
-                  [task?.recID, task?.objectType]
-                )
-                .subscribe((res) => {
-                  this.view.dataService.remove(res).subscribe();
-                  this.view.currentView['schedule'].refresh();
-                  this.detectorRef.detectChanges();
-                  this.notiService.notifyCode('SYS007');
-                });
+                // this.view.dataService.remove(rec).subscribe();
+                this.view.currentView['schedule'].datas?.remove(rec);
+                this.detectorRef.detectChanges();
+                this.notiService.notifyCode('SYS007');
+              })
+            }else if(this.isActivitie){
+              this.api.exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+                task?.recID,task?.objectType
+              ])
+              .subscribe((res) => {
+                this.view.dataService.remove(res).subscribe();
+                this.view.currentView['schedule'].refresh();
+                this.detectorRef.detectChanges();
+                this.notiService.notifyCode('SYS007');
+              })
             }
           }
         });

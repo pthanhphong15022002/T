@@ -4,7 +4,7 @@ import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/c
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
-  selector: 'lib-popup-add-comment',
+  selector: 'wp-popup-add-comment',
   templateUrl: './popup-add-comment.component.html',
   styleUrls: ['./popup-add-comment.component.scss']
 })
@@ -56,7 +56,9 @@ export class PopupAddCommentComponent {
   emojiPreview: boolean = false;
   emojiPerLine: number = 7;
   emojiMaxFrequentRows: number = 4;
-
+  defaultImage = "../../../assets/media/svg/files/blank-image.svg"
+  readonly loaderImage = '../../../assets/media/img/loader.gif';
+  fileRef:any = null;
   // popup
   showCBB: boolean = false;
   width: number = 720;
@@ -75,16 +77,18 @@ export class PopupAddCommentComponent {
     private codxShareSV : CodxShareService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) {
+  ) 
+  {
     (this.dialogData = dialogData?.data),
       (this.dialogRef = dialogRef),
       (this.user = authStore.get());
-    this.formModel = new FormModel();
+      this.formModel = new FormModel();
+
   }
 
   ngOnInit(): void {
     this.setData();
-    this.getSetGridSetUp();
+    this.getSetting();
   }
 
   ngAfterViewInit() {
@@ -93,11 +97,13 @@ export class PopupAddCommentComponent {
 
   // set data default
   setData() {
-    if (this.dialogData) {
+    if (this.dialogData) 
+    {
       this.headerText = this.dialogData.headerText;
       this.status = this.dialogData.status;
       this.data = this.dialogData.data;
-      if (this.status !== 'edit') {
+      if (this.status !== 'edit') 
+      {
         this.data.recID = Util.uid();
         this.data.contents = "";
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
@@ -112,10 +118,11 @@ export class PopupAddCommentComponent {
     this.getMssgDefault();
   }
   // get gridViewSetup
-  getSetGridSetUp() {
+  getSetting() {
     this.cache.functionList('WP')
     .subscribe((func: any) => {
-      if (func) {
+      if (func) 
+      {
         this.formModel.funcID = 'WP';
         this.formModel.formName = func.formName;
         this.formModel.gridViewName = func.gridViewName;
@@ -270,10 +277,10 @@ export class PopupAddCommentComponent {
             [this.data]
           )
           .subscribe((res2: any) => {
-            if (res2) this.notifySvr.notifyCode('WP021');
-            else this.notifySvr.notifyCode('SYS021');
+            this.notifySvr.notifyCode(res2 ? "SYS007" : "WP021");
             this.loaded = false;
             this.dialogRef.close(this.data);
+            this.dt.detectChanges();
           });
       } else this.loaded = false;
     });
@@ -383,7 +390,6 @@ export class PopupAddCommentComponent {
   }
 
   // gắn thẻ người dùng
-
   addPerrmissonTags(event: any) {
     debugger;
     if (event) {
@@ -431,6 +437,7 @@ export class PopupAddCommentComponent {
 
     this.showCBB = false;
   }
+
   // get getSettingValue
   getSettingValue() {
     this.api
@@ -449,9 +456,8 @@ export class PopupAddCommentComponent {
         }
       });
   }
-  defaultImage = "../../../assets/media/svg/files/blank-image.svg"
-  readonly loaderImage = '../../../assets/media/img/loader.gif';
-  fileRef:any = null;
+  
+
   // get file by refID
   getFileByRefID(objectID:string){
     this.api
