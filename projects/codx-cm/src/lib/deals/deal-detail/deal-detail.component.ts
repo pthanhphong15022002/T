@@ -194,7 +194,10 @@ export class DealDetailComponent implements OnInit {
     try {
       await this.getListInstanceStep();
       await this.getTree(); //ve cay giao viec
-      await this.getListContactByDealID(this.dataSelected.recID,this.dataSelected?.categoryCustomer);
+      await this.getListContactByDealID(
+        this.dataSelected.recID,
+        this.dataSelected?.categoryCustomer
+      );
       await this.getHistoryByDeaID();
     } catch (error) {}
   }
@@ -210,9 +213,9 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
-    resetTab(data) {
+  resetTab(data) {
     if (this.tabObj) {
-      this.isCategoryCustomer = data == '1' ;
+      this.isCategoryCustomer = data == '1';
       if (this.isCategoryCustomer) {
         (this.tabObj as TabComponent).hideTab(1, false);
       } else {
@@ -220,7 +223,6 @@ export class DealDetailComponent implements OnInit {
       }
     }
   }
-
 
   listTab() {
     this.tabDetail = [
@@ -332,28 +334,27 @@ export class DealDetailComponent implements OnInit {
   //     }
   //   });
   // }
-  async getListContactByDealID(objectID,categoryCustomer) {
-    if(categoryCustomer == '1') {
+  async getListContactByDealID(objectID, categoryCustomer) {
+    if (categoryCustomer == '1') {
       this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
         if (res && res?.length > 0) {
           let contactMain = res.filter((res) => res.isDefault)[0];
-          this.contactPerson =  contactMain?contactMain:null;
+          this.contactPerson = contactMain ? contactMain : null;
           this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
-       //   this.lstContactDeal = res;
+          //   this.lstContactDeal = res;
           // if (this.action === this.actionEdit && this.isLoad) {
           //   this.lstContactOld = JSON.parse(JSON.stringify(res));
           //   this.isLoad = false;
           // }
         }
       });
-    }
-    else {
-      this.contactPerson  = null;
+    } else {
+      this.contactPerson = null;
     }
   }
   //load giao việc
   async getTree() {
-    let seesionID = this.dataSelected.refID;
+    let seesionID = this.dataSelected.recID; ///da doi lai lay theo recID của doi tuong
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
     });
@@ -571,16 +572,20 @@ export class DealDetailComponent implements OnInit {
                 if (idx != -1) {
                   let lsJs = [];
                   lsJs = JSON.parse(step?.fields[idx]?.dataValue) ?? [];
-                  var idxContactField = lsJs.findIndex(x => x.recID == data.recID);
-                  if(idxContactField != -1){
-                    if($event?.action == 'edit'){
+                  var idxContactField = lsJs.findIndex(
+                    (x) => x.recID == data.recID
+                  );
+                  if (idxContactField != -1) {
+                    if ($event?.action == 'edit') {
                       lsJs[idxContactField] = data;
-                    }else{
+                    } else {
                       lsJs.splice(idxContactField, 1);
                     }
-                    step.fields[idx].dataValue = lsJs != null && lsJs?.length > 0 ? JSON.stringify(lsJs) : '';
+                    step.fields[idx].dataValue =
+                      lsJs != null && lsJs?.length > 0
+                        ? JSON.stringify(lsJs)
+                        : '';
                   }
-
                 }
               }
             }
