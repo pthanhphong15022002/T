@@ -653,6 +653,7 @@ export class PopupConvertLeadComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
         case 'C':

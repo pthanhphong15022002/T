@@ -268,6 +268,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
         case 'C':
@@ -355,5 +356,9 @@ export class CodxFieldsDetailTempComponent implements OnInit {
 
   parseValue(dataValue) {
     return JSON.parse(dataValue);
+  }
+
+  listValue(dataValue) {
+    return dataValue?.split(';');
   }
 }

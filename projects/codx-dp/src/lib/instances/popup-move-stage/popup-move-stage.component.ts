@@ -95,8 +95,8 @@ export class PopupMoveStageComponent implements OnInit {
   processID: any;
   stepID: any;
   probability: any;
-  instanceCM:any;
-  datas:any;
+  instanceCM: any;
+  datas: any;
   expectedClosed: any = null;
 
   oldStatus: string = '';
@@ -108,10 +108,10 @@ export class PopupMoveStageComponent implements OnInit {
     entityName: 'CM_Deals',
   };
 
-  isChanged:boolean = false;
+  isChanged: boolean = false;
   isLockReasons: boolean = false;
   isLoad: boolean = false;
-  progressAll:boolean = false;
+  progressAll: boolean = false;
   progressDefault = false;
   isMoveNext: boolean = false;
   isDurationControl: boolean = false;
@@ -155,7 +155,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.isLoad = true;
       this.isCallInstance = this.dataCM?.isCallInstance ?? false;
     }
-    this.stepID = this.dataCM ? this.dataCM?.stepID : this.datas?.instance?.stepID;
+    this.stepID = this.dataCM
+      ? this.dataCM?.stepID
+      : this.datas?.instance?.stepID;
     this.processID = this.dataCM
       ? this.dataCM?.processID
       : this.datas?.instance?.processID;
@@ -201,7 +203,13 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage() {
-    let datas = [this.recID, this.processID, this.stepID, this.applyFor, this.isCallInstance];
+    let datas = [
+      this.recID,
+      this.processID,
+      this.stepID,
+      this.applyFor,
+      this.isCallInstance,
+    ];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
         this.isDurationControl = res[0];
@@ -216,13 +224,16 @@ export class PopupMoveStageComponent implements OnInit {
           this.stepIdClick != this.stepIdOld &&
           this.autoClickedSteps(this.listStepsCbx);
         this.eventAutoClick();
-       if(this.applyFor != '0') {
-        this.isUpdateFail = this.checkMoveStage( this.isCallInstance ? res[5]: this.datas?.instance,this.instanceCM);
-        if(this.applyFor == '1') {
-          this.oldStepID = this.instanceCM.stepID;
-          this.oldStatus = this.instanceCM.status;
+        if (this.applyFor != '0') {
+          this.isUpdateFail = this.checkMoveStage(
+            this.isCallInstance ? res[5] : this.datas?.instance,
+            this.instanceCM
+          );
+          if (this.applyFor == '1') {
+            this.oldStepID = this.instanceCM.stepID;
+            this.oldStatus = this.instanceCM.status;
+          }
         }
-       }
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -397,7 +408,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.listTaskDone = this.instancesStepOld.tasks.filter(
       (x) => x.progress < this.oneHundredNumber
     );
-    this.stepName = this.listStepsCbx.filter((x) => x.stepID == this.instancesStepOld.stepID)[0]?.stepName;
+    this.stepName = this.listStepsCbx.filter(
+      (x) => x.stepID == this.instancesStepOld.stepID
+    )[0]?.stepName;
   }
 
   onSave() {
@@ -471,13 +484,13 @@ export class PopupMoveStageComponent implements OnInit {
       }
       this.listTmpTask = this.convertTmpDataInTask(this.listTaskDone, 'T');
     }
-    if(this.isUpdateFail) {
+    if (this.isUpdateFail) {
       this.notiService.notifyCode('SYS021');
       this.dialog.close();
       return;
     }
 
-   this.beforeSave();
+    this.beforeSave();
   }
   beforeSave() {
     if (!this.owner && this.isMoveNext) {
@@ -527,7 +540,7 @@ export class PopupMoveStageComponent implements OnInit {
           comment: this.instancesStepOld?.note,
           expectedClosed: this.expectedClosed,
         };
-        if(this.applyFor == '1' && !this.isCallInstance) {
+        if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [
             this.instanceCM.recID,
             this.instanceCM.stepID,
@@ -538,7 +551,6 @@ export class PopupMoveStageComponent implements OnInit {
           ];
           this.codxDpService.moveStageDeal(dataUpdate).subscribe((res) => {
             if (res) {
-
             }
           });
         }
@@ -661,6 +673,8 @@ export class PopupMoveStageComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'C':
+        case 'L':
           result = event.e;
           break;
       }
@@ -771,7 +785,7 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
   handleDataTask(listTask: any) {
-    if(listTask?.length > 0 && listTask) {
+    if (listTask?.length > 0 && listTask) {
       for (let item of listTask) {
         let task = this.listTaskDone.find((x) => x.recID === item?.taskID);
         let taskNew = {
@@ -781,9 +795,8 @@ export class PopupMoveStageComponent implements OnInit {
           note: item?.note,
         };
         this.updateDataTask(task, taskNew);
+      }
     }
-    }
-
   }
   updateDataTask(taskNew: any, taskOld: any) {
     taskNew.actualEnd = taskOld?.actualEnd;
@@ -882,17 +895,15 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
 
-  checkMoveStage(instance,dataCM){
-    if(!instance || !dataCM) {
+  checkMoveStage(instance, dataCM) {
+    if (!instance || !dataCM) {
       return true;
     }
-    if(instance?.closed != dataCM?.closed) {
+    if (instance?.closed != dataCM?.closed) {
       return true;
-    }
-    else if(instance?.status != dataCM?.status) {
+    } else if (instance?.status != dataCM?.status) {
       return true;
-    }
-    else if(instance?.stepID != dataCM?.stepID) {
+    } else if (instance?.stepID != dataCM?.stepID) {
       return true;
     }
     return false;
