@@ -43,7 +43,6 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
     this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&locale=vi&lvtk=${this._user.token}`;
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
