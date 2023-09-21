@@ -637,7 +637,6 @@ export class CodxAddTaskComponent implements OnInit {
       if (index != -1) {
         this.listField[index].dataValue = result;
       }
-      let a = this.instanceStep?.fields;
     }
   }
 
