@@ -276,7 +276,7 @@ implements OnInit{
 
   addRowGrid1(){
     debugger
-    if(this.benefitPolicyObj.policyID){
+    if(this.benefitPolicyObj.policyID || this.originPolicyId){
       this.CheckIfPolicyIDExist(this.benefitPolicyObj.policyID).subscribe((res) => {
         if(res[0] == true){
           this.originPolicyId = this.benefitPolicyObj.policyID;

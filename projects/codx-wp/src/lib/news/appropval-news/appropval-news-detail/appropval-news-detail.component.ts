@@ -1,94 +1,75 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption, ImageViewerComponent } from 'codx-core';
-import { Observable, map } from 'rxjs';
-import { PopupAddPostComponent } from '../../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
+import { PopupAddCommentComponent } from '../../popup/popup-add-comment/popup-add-comment.component';
 
 @Component({
-  selector: 'wp-appropval-news-detail',
+  selector: 'wp-appropval-detail',
   templateUrl: './appropval-news-detail.component.html',
   styleUrls: ['./appropval-news-detail.component.scss']
 })
 export class AppropvalNewsDetailComponent implements OnInit {
 
+  @Input() function: any;
   @Input() objectID: any;
-  @Input() funcID: any;
-  @Input() entityName: any;
   @Input() formModel : any;
   @Input() dataService:CRUDService;
-  @Output() evtUpdateApproval = new EventEmitter();
-
+  @Output() evtApprovalPost = new EventEmitter();
   @ViewChild("codx_img") codx_img:ImageViewerComponent;
-  ENTITYNAME = {
-    WP_News : 'WP_News',
-    WP_Comments: 'WP_Comments'
-  }
+  
   NEWSTYPE = {
     POST:"1",
     VIDEO:"2"
   }
   data: any = null;
-  service = "WP";
-  assemblyName = "ERM.Business.WP";
-  className = "NewsBusiness";
-  function:any = null;
   hideMFC:boolean = false;
   imgOn:DateTime = new DateTime();
-  constructor(private api:ApiHttpService,
+  constructor(
+    private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
     private cache:CacheService,
     private notifySvr: NotificationsService,
-    private sanitizer: DomSanitizer
-
-    ) { }
+    private sanitizer: DomSanitizer) 
+    { }
   ngOnInit(): void {
-    this.getDataDetail(this.objectID);
-    this.cache.functionList(this.funcID)
-      .subscribe((func: any) =>{
-        if(func)
-        {
-          this.function = func;
-        }
-      });
+    this.getPostInfo(this.objectID);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID.currentValue != changes.objectID.previousValue && !changes.firstChange){
-      this.getDataDetail(this.objectID);
+    if(changes["objectID"] && !changes["objectID"].firstChange && changes["objectID"].previousValue != changes["objectID"].currentValue)
+    {
+      this.getPostInfo(this.objectID);
     }
   }
   
   // get data detail
-  getDataDetail(objectID:string){
-    if(objectID == null || objectID == "")
+  getPostInfo(objectID:string)
+  {
+    if(objectID == "")
     {
       this.data = null;
-      this.hideMFC = true;   
-      this.dt.detectChanges();
+      return;
     }
-    else{
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "NewsBusiness",
-        "GetPostByApprovalAsync",
-        [this.objectID,this.funcID])
-        .subscribe((res:any) => {
-          this.data = JSON.parse(JSON.stringify(res));
-          this.hideMFC = res?.approveStatus == "5";    
-          this.imgOn = new DateTime();
-          this.dt.detectChanges();
-        });
-    }
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostInfoApprovalAsync",
+      [this.objectID,this.function.entityName])
+      .subscribe((res:any) => {
+        this.data = JSON.parse(JSON.stringify(res));
+        this.hideMFC = res?.approveStatus == "5";    
+        this.imgOn = new DateTime();
+        this.dt.detectChanges();
+      });
   }
 
   //  click morefunction
   clickMF(event:any){
     if(event?.functionID){
-      let headerText = event.text + " " + this.function.customName;
       switch(event.functionID){
         case "SYS02": //delete
           this.deletedPost(this.data);
@@ -102,17 +83,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
             .subscribe((option:any) =>{
               if(option?.event?.status == "Y")
               {
-                this.approvalPost(this.funcID,this.data.recID, "5")
-                .subscribe((res:any) => {
-                    if(res)
-                    {
-                      this.data.approveStatus = "5";
-                      this.hideMFC = true;
-                      this.dataService.update(this.data).subscribe();
-                      this.evtUpdateApproval.emit("5");
-                      this.notifySvr.notifyCode("WP005");
-                    }
-                  });
+                this.approvalPost("5","WP005");
               }
             });
           break;
@@ -121,16 +92,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(this.funcID,this.data.recID, "2")
-              .subscribe((res:any) => {
-                  if(res)
-                  {
-                    this.data.approveStatus = "2";
-                    this.dataService.update(this.data).subscribe();
-                    this.evtUpdateApproval.emit("2");
-                    this.notifySvr.notifyCode("WP009");
-                  }
-                });
+              this.approvalPost("2","WP009");
             }
           });
           break;
@@ -139,15 +101,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(this.funcID,this.data.recID, "4").subscribe((res:any) => {
-                  if(res)
-                  {
-                    this.data.approveStatus = "4";
-                    this.dataService.update(this.data).subscribe();
-                    this.evtUpdateApproval.emit("4");
-                    this.notifySvr.notifyCode("WP007");
-                  }
-                });
+              this.approvalPost("4","WP007");
             }
           });
           break;
@@ -156,15 +110,29 @@ export class AppropvalNewsDetailComponent implements OnInit {
       }
     }
   }
+
   //xét duyệt bài viết
-  approvalPost(funcID:string,recID:string,approvalStatus):Observable<any>{
-    return this.api.execSv(
-      this.service,
-      this.assemblyName,
-      this.className,
+  approvalPost(approvalStatus:string, mssg:string){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
       "ApprovalPostAsync",
-      [funcID,recID,approvalStatus]);
+    [this.function.entityName,this.data.recID,approvalStatus])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.data.approveStatus = approvalStatus;
+        this.hideMFC = true;
+        this.notifySvr.notifyCode(mssg);
+        this.evtApprovalPost.emit(this.data);
+        this.dt.detectChanges();
+      }
+      else
+        this.notifySvr.notifyCode("SYS019");
+    });
   }
+  
   // xóa bài viết
   deletedPost(data:any){
     if(!data)return;
@@ -175,11 +143,19 @@ export class AppropvalNewsDetailComponent implements OnInit {
   }
 
   beforDeletedPost(option:RequestOption,data:any){
-    option.service = "WP";
-    option.assemblyName = "ERM.Business.WP";
-    option.className = "NewsBusiness";
-    option.methodName = this.funcID == "WPT0213" ? "DeletePostAsync" : "DeleteNewsAsync";
-    option.data = data;
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    if(this.function.functionID == "WPT0213")
+    {
+      option.className = "CommentsBusiness";
+      option.methodName =  "DeletePostAsync";
+    }
+    else
+    {
+      option.className = "NewsBusiness";
+      option.methodName =  "DeleteAsync";
+    }
+    option.data = data.recID;
     return true;
   }
 
@@ -189,43 +165,70 @@ export class AppropvalNewsDetailComponent implements OnInit {
     let option = new DialogModel();
     option.DataService = this.dataService;
     option.FormModel = this.formModel;
-    if(this.funcID == "WPT0211" || this.funcID == "WPT0212")
+    option.zIndex = 100;
+    if(this.function.entityName !== "WP_AprovalComments")
     {
       option.IsFull = true;
       let object = {
         headerText: headerText,
-        data: this.data,
+        data: data,
         isAdd:false
       }
-      this.callFuc.openForm(PopupAddComponent,"",0,0,this.funcID,object,'',option);
+      this.callFuc.openForm(PopupAddComponent,"",0,0,this.function.functionID,object,'',option)
+      .closed.subscribe((res: any) => {
+        if (res?.event)
+        {
+          this.data = JSON.parse(res.event);
+          this.dt.detectChanges();
+        }
+      });
     }
     else 
     {
-      this.api.execSv(
-        this.service,
-        this.assemblyName,
-        "CommentsBusiness",
-        "GetPostByIDAsync", 
-        [this.data.recID])
-        .subscribe((res:any) => { 
-          if(res) 
-          {
+      this.api
+        .execSv(
+          "WP",
+          "ERM.Business.WP",
+          'CommentsBusiness',
+          'GetPostByIDAsync',
+          [data.recID])
+          .subscribe((res1: any) => {
+          if (res1) {
             let obj = {
-              post: res,
+              data: res1,
               status: 'edit',
-              headerText: headerText,
+              headerText: evt.text,
             };
-            let option = new DialogModel();
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
-              if (res?.event) 
+            this.callFuc.openForm(
+              PopupAddCommentComponent,
+              "",
+              700,
+              650,
+              '',
+              obj,
+              '',
+              option
+            ).closed.subscribe((res2:any) => {
+              if (res2?.event)
               {
-                this.dataService.update(res.event).subscribe();
+                this.data = JSON.parse(res2.event);
+                this.dt.detectChanges();
               }
             });
           }
-      });
+        });
     }
+  }
+
+  //change data moreFC
+  changeDataMF(evt:any[],data:any){
+    evt.map(x => {
+      if(x.functionID == "SYS02" || x.functionID == "SYS03")
+        x.disabled = false;
+      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+        x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
+      else
+        x.disabled = true;
+    });
   }
 }
