@@ -201,8 +201,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage() {
-
-    var datas = [this.recID, this.processID, this.stepID, this.applyFor, this.isCallInstance];
+    let datas = [this.recID, this.processID, this.stepID, this.applyFor, this.isCallInstance];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
         this.isDurationControl = res[0];
