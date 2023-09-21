@@ -1168,7 +1168,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       action,
       titleName: this.titleAction,
       taskType: this.taskType,
-      step: this.currentStep,
+      instanceStep: this.currentStep,
       listGroup: this.listGroupTask,
       dataTask: dataTask || {},
       listTask: this.listTask,

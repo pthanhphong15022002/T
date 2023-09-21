@@ -55,7 +55,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect
+  @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
+  @ViewChild('comboxValueMutilSelect')
+  comboxValueMutilSelect: ComboBoxComponent;
 
   addSuccess = true;
   errorMessage = '';
@@ -105,6 +107,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   fieldsVll = { text: 'textValue', value: 'value' };
   plancehoderVll: any;
   mutiSelectVll = false;
+  crrValueVll = ''; //value mutilSelect
 
   constructor(
     private cache: CacheService,
@@ -565,11 +568,40 @@ export class CodxInputCustomFieldComponent implements OnInit {
           }
           //chua lam 2
         } else this.datasVll = [];
-        if (this.comboxValue) this.comboxValue.refresh();
+
+        if (vl?.multiSelect) {
+          this.crrValueVll = this.customField.dataValue
+            ? this.customField.dataValue?.split(';')
+            : '';
+          if (this.comboxValueMutilSelect)
+            this.comboxValueMutilSelect.refresh();
+        } else {
+          if (this.comboxValue) this.comboxValue.refresh();
+        }
       });
   }
 
   cbxChangeVll(value) {
-    this.customField.dataValue = value;
+    // this.customField.dataValue = value;
+    this.valueChangeCustom.emit({
+      e: value,
+      data: this.customField,
+    });
+  }
+  cbxChangeVllMutilSelect(value) {
+    // if (value?.length > 0) {
+    //   this.customField.dataValue = value.join(';');
+    // } else this.customField.dataValue = '';
+
+    this.valueChangeCustom.emit({
+      e: value?.length > 0 ? value.join(';') : '',
+      data: this.customField,
+    });
+  }
+  dataMutilSelect(dataValue) {
+    if (!dataValue) return '';
+    var value = dataValue.split(';');
+    if (value?.length > 0) return value;
+    return '';
   }
 }

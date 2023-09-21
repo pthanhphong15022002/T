@@ -49,6 +49,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
   empObj: any;
   disabledInput = false;
+  isPortal: boolean;
   // genderGrvSetup: any;
   allowToViewEmSelector: boolean = false;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -78,6 +79,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
     if (data?.data?.dayoffObj) {
       this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
+      if (data?.data?.actionType === 'add') {
+        this.dayoffObj.kowID = '';
+      }
     } else {
       this.dayoffObj = {};
     }
@@ -88,7 +92,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     } else this.employId = data?.data?.employeeID;
     if (this.dayoffObj?.emp && this.fromListView) {
       this.empObj = this.dayoffObj?.emp;
-    } else this.empObj = data?.data?.empObj;
+    } else {
+      this.empObj = data?.data?.empObj || data?.data;
+    }
 
     if (this.dayoffObj) {
       this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
@@ -102,6 +108,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.formModel = dialog.formModel;
 
     this.actionType = data?.data?.actionType;
+    this.isPortal = data?.data?.isPortal;
     if (this.actionType == 'view') {
       this.disabledInput = true;
     }
@@ -109,7 +116,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName,
+        this.formModel
+      )
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -169,6 +180,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             this.dayoffObj.employeeID = this.employId;
             this.dayoffObj.periodType = '1';
             this.dayoffObj.totalSubDays = 0;
+            console.log(this.dayoffObj);
             this.formModel.currentData = this.dayoffObj;
             this.formGroup.patchValue(this.dayoffObj);
             this.isAfterRender = true;
@@ -196,7 +208,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(false)
+      this.form.validation(false);
       return;
     }
     if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {
@@ -457,8 +469,14 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (this.dayoffObj['kowID']) {
       this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
-        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID'])) {
-          this.groupKowTypeView[i].isShow = true;
+        this.groupKowTypeView[i].isShow = this.groupKowTypeView[
+          i
+        ].value.includes(this.dayoffObj['kowID']);
+
+        if (
+          this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID']) ==
+          true
+        ) {
           this.showInfoDayoffType = true;
         }
 

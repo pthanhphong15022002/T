@@ -234,6 +234,8 @@ export class IncommingComponent
       let option = new SidebarModel();
       // option.zIndex = 499;
       option.DataService = this.view?.currentView?.dataService;
+      var list = this.funcList?.defaultValue.split(";");
+
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
         {
@@ -243,7 +245,7 @@ export class IncommingComponent
           type: 'add',
           formModel: this.view.formModel,
           service: this.view.service,
-          dispatchType: this.funcList?.defaultValue,
+          dispatchType: list[0],
           data: res
         },
         option
