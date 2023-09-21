@@ -491,7 +491,7 @@
         <!-- //test -->
         <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
           <ng-container *ngIf="data.dataFormat == 'C'">
-            <span>{{ data.dataValue }}</span>
+            <span>{{ getViewText(data.refValue, data.dataValue) }}</span>
           </ng-container>
 
           <ng-container *ngIf="data.dataFormat == 'V'">
