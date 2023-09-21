@@ -337,8 +337,6 @@
               <lib-table-accounting
                 [lines]="acctTranLines"
                 [loading]="acctLoading"
-                [formModel]="fmAcctTrans"
-                [gvs]="gvsAcctTrans"
               ></lib-table-accounting>
             </ng-template>
           </e-tabitem>
@@ -349,13 +347,12 @@
 </ng-template>
 
 <ng-template #footer>
-  <ng-container *ngIf="viewData">
-    <codx-tabs
-      [entityName]="formModel.entityName"
-      [formModel]="formModel"
-      [objectID]="viewData.recID"
-      [funcID]="formModel.funcID"
-      [TabControl]="tabInfo"
-    ></codx-tabs>
-  </ng-container>
+  <codx-tabs
+    *ngIf="viewData"
+    [entityName]="formModel.entityName"
+    [formModel]="formModel"
+    [objectID]="viewData.recID"
+    [funcID]="formModel.funcID"
+    [TabControl]="tabInfo"
+  ></codx-tabs>
 </ng-template>
