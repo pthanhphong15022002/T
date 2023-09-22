@@ -54,7 +54,7 @@
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
   <div style="height: 250px !important">
-    <ejs-tab enablePersistence="true" (selected)="onTabSelectedMaster($event)">
+    <ejs-tab (selected)="onTabSelectedMaster($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event,elementTabDetail)"
+    <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -537,12 +537,7 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="
-  formCashPayment.data?.subType == '1' ||
-  formCashPayment.data?.subType == '9' ||
-      (formCashPayment.data?.subType == '3' && subTypeAdv == '1') ||
-      (formCashPayment.data?.subType == '4' && subTypeAdv == '1')
-    ">
+  <ng-container *ngIf="elementTabDetail?.selectingID == '0'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false"
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
@@ -554,18 +549,13 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
               " (click)="onAddLine('1')">
               <i class="icon-playlist_add icon-16"></i>
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
-            <!-- <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
-              class="btn btn-sm btn-light-primary rounded-15"(click)="onSaveLine()">
-              <i class="icon-playlist_add icon-16"></i>
-              <codx-label fiedName="lblSaveAndClear" default="Lưu dòng"></codx-label>
-            </button> -->
           </div>
           <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
@@ -586,13 +576,8 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="
-  formCashPayment.data?.subType == '2' ||
-      (formCashPayment.data?.subType == '3' && subTypeAdv == '2') ||
-      (formCashPayment.data?.subType == '4' && subTypeAdv == '2') ||
-      formCashPayment.data?.subType == '9'
-    ">
-    <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
+  <ng-container *ngIf="elementTabDetail?.selectingID == '1'">
+    <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices" [editOnClick]="true"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" [showEmptyRecord]="false" rowNoField="rowNo"
         [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID"
@@ -626,14 +611,24 @@
         </div>
       </div>
     </div>
+    <!-- <ejs-grid id="gridViewV3" allowPaging='true' [allowExcelExport]='true'
+     [allowPdfExport]='true' height='220px' [allowSorting]='true'
+        [contextMenuItems]="menuItems" [allowGrouping]='true' (contextMenuClick)="columnMenuClick($event)">
+        <e-columns>
+            <e-column field='OrderID' headerText='Order ID' width='120' textAlign="Right" isPrimaryKey='true'></e-column>
+            <e-column field='CustomerID' headerText='Customer Name'></e-column>
+            <e-column field='Freight' headerText='Freight' format='C2' textAlign="Right" editType='numericedit'></e-column>
+            <e-column field='ShipCity' headerText='Ship City' width='150'></e-column>
+        </e-columns>
+    </ejs-grid> -->
   </ng-container>
 </ng-template>
 <!-- End: Grid SettledInvoices -->
 
 <!-- Start: Grid VATInvoices -->
 <ng-template #TmpTabVATInvoices>
-  <ng-container *ngIf="formCashPayment.data?.subType == '9'">
-    <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
+  <ng-container *ngIf="elementTabDetail?.selectingID == '2'">
+    <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices"
         entityName="AC_VATInvoices" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)"
         (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true"

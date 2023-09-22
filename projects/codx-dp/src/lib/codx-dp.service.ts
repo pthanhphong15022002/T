@@ -533,12 +533,21 @@ export class CodxDpService {
     );
   }
 
-  getTree(recID) {
+  getTreeBySession(recID) {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
       'GetListTaskTreeBySessionIDAsync',
       recID
+    );
+  }
+  //listRef chuỗi json
+  getTreeByListRef(listRef) {
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeByListRefIDAsync',
+      listRef
     );
   }
 

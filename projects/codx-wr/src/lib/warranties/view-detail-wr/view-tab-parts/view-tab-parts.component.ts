@@ -111,12 +111,6 @@ export class ViewTabPartsComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstParts = item;
-      this.columnsGrid.unshift({
-        headerTemplate: this.headerPartInfo,
-        template: this.tempPartInfo,
-        width: 400,
-      });
-
       // {
       //   headerTemplate: this.headerQuantity,
       //   template: this.tempQuantity,
@@ -163,7 +157,6 @@ export class ViewTabPartsComponent implements OnInit {
       let template: any;
       let column: any;
 
-      console.log(key);
       switch (key) {
         case 'Qty':
           template = this.tempQuantity;
@@ -189,6 +182,12 @@ export class ViewTabPartsComponent implements OnInit {
       }
 
       this.columnsGrid.push(column);
+    });
+
+    this.columnsGrid.unshift({
+      headerTemplate: this.headerPartInfo,
+      template: this.tempPartInfo,
+      width: 400,
     });
   }
 }

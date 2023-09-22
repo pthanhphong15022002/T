@@ -1,31 +1,36 @@
-
-<div class="f-flex flex-column w-100 h-100">
-  <div #body class="bg-white h-100 mx-3 mt-4 d-flex flex-column pt-4 pb-60px px-6 scroll-y">
-      <!-- begin content -->
-        <ng-container *ngFor="let md of listReport">
-          <div class="d-flex flex-column my-2">
-            <div class="d-flex align-items-center">
-              <span class="icon-16" [ngClass]="md.largeIcon"></span>
-              <span class="fs-4 ms-2 fw-bold">{{md.customName}}</span>
-            </div>
-            <div class="mx-7"><span class="fs-6 text-gray-800">{{md.countsNote}}</span></div>
-            <div class="d-flex flex-wrap mx-4">
-              <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
-                *ngFor="let c of md.childs"
-                [style.backgroundColor]="c?.color"
-                (click)="selectedChange(c)"
-              >
-                <div class="d-flex flex-column h-100">
-                  <span class="fs-5-sm">{{c.customName}}</span>
-                  <span class="fs-7 opacity-75">{{c.countsNote}}</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center h-50px">
-                  <span class="icon-30px" [ngClass]="md.largeIcon"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      <!-- end content -->
+<ng-container *ngIf="listReport">
+  <codx-view2
+    [dataSource]="listReport"
+    [tmpItem]="tmp"
+    [tmpRightToolBar]="tmpRightToolBar"
+  >
+  </codx-view2>
+</ng-container>
+<ng-template #tmp let-data>
+  <div class="d-flex flex-column w-250px m-2 text-white position-relative cursor-pointer" 
+    (click)="selectedChange(data)"
+  >
+    <codx-card-img
+      imgCss="h-170px rounded"
+      cardCss="border rounded"
+      [imageSrc]="data?.background || imgDefault"
+      [footer]="footer"
+    >
+    </codx-card-img>
   </div>
-</div>
+  <ng-template #footer>
+    <div class="d-flex flex-column justify-content-center text-dark py-2 min-height-70px">
+      <span class="fs-5-sm line-clamp line-clamp-2">{{data.customName}}</span>
+      <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #tmpRightToolBar >
+  <ng-container *ngIf="listGroupReport && listGroupReport.length > 0">
+    <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list fw-bold pt-2">
+      <div class="mx-2 cursor-pointer" *ngFor="let item of listGroupReport" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
+        <span>{{item?.customName}}</span>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

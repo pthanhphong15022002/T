@@ -142,7 +142,7 @@
                                   >
                                     <div class="d-flex flex-column flex-grow-1">
                                       <codx-input
-                                        type="password"
+                                        type="text"
                                         field="password"
                                         placeholder="OTP"
                                         formControlName="password"
@@ -161,8 +161,7 @@
                                     <button
                                       [disabled]="
                                         otpTimeout > 0 ||
-                                        email == '' ||
-                                        email == null
+                                        !loginForm.controls['email'].value
                                       "
                                       type="button"
                                       (click)="generateOTP()"

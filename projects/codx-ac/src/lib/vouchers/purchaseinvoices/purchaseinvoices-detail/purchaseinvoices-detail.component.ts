@@ -41,7 +41,7 @@ import { MF, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
 })
 export class PurchaseinvoicesDetailComponent
   extends UIComponent
-  implements AfterViewInit, AfterViewChecked, OnChanges
+  implements AfterViewChecked, OnChanges
 {
   //#region Constructor
   @ViewChild('memoContent', { read: ElementRef })
@@ -64,13 +64,6 @@ export class PurchaseinvoicesDetailComponent
   columns: TableColumn[] = [];
 
   fmPurchaseInvoicesLines: FormModel;
-  fmAcctTrans: FormModel = {
-    entityName: 'AC_AcctTrans',
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityPer: 'AC_AcctTrans',
-  };
-  gvsAcctTrans: any;
 
   funcName: string;
   tabInfo: TabModel[] = [
@@ -135,19 +128,11 @@ export class PurchaseinvoicesDetailComponent
         sumFormat: SumFormat.Currency,
       }),
     ];
-
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
   }
   //#endregion
 
   //#region Init
-  override onInit(): void {}
-
-  ngAfterViewInit(): void {
+  override onInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       this.funcName = res.defaultName;
     });

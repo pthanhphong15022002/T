@@ -15,6 +15,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -51,6 +52,7 @@ export class CodxAddTaskComponent implements OnInit {
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
 
+  fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
 
@@ -80,10 +82,11 @@ export class CodxAddTaskComponent implements OnInit {
 
   isShowDate = false;
   isShowTime = false;
-  isAddTM = false;
   startDayOld;
   endDayOld;
   isOneRadio = true;
+
+  dialogPopupLink: DialogRef;
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -102,6 +105,7 @@ export class CodxAddTaskComponent implements OnInit {
     private stepService: StepService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -273,6 +277,9 @@ export class CodxAddTaskComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
+    if(event?.field == 'isOnline' && !event?.data){
+      this.stepsTasks.reference = '';
+    }
   }
 
   changeValueDate(event) {
@@ -705,16 +712,13 @@ export class CodxAddTaskComponent implements OnInit {
         if (this.stepsTasks.status == '3') {
           this.isShowDate = false;
           this.isShowTime = false;
-          this.isAddTM = false;
         } else {
           this.isShowDate = true;
           this.isShowTime = true;
-          this.isAddTM = true;
         }
       } else {
         this.isShowDate = false;
         this.isShowTime = true;
-        this.isAddTM = true;
       }
     } else {
       //edit
@@ -722,23 +726,39 @@ export class CodxAddTaskComponent implements OnInit {
         if (this.stepsTasks?.status == '3') {
           this.isShowDate = false;
           this.isShowTime = false;
-          this.isAddTM = false;
         } else {
           if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
             this.isShowDate = false;
             this.isShowTime = false;
-            this.isAddTM = false;
           } else {
             this.isShowDate = true;
             this.isShowTime = true;
-            this.isAddTM = true;
           }
         }
       } else {
         this.isShowDate = false;
         this.isShowTime = true;
-        this.isAddTM = true;
       }
     }
+  }
+  openPopupLink(addLink) {
+    let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
+    option.zIndex = 3000;
+    this.dialogPopupLink = this.callfc.openForm(
+      addLink,
+      '',
+      500,
+      300,
+      ''
+    );
+    this.dialogPopupLink.closed.subscribe((res: any) => {
+      if (res?.event?.attendee != null || res?.event?.owner != null) {
+        this.stepsTasks.reference = res?.event?.attendee || '';
+        // this.meeting.link = res?.event?.attendee;
+        // this.meeting.link2 = res?.event?.owner;
+        // this.changDetec.detectChanges();
+      }
+    });
   }
 }

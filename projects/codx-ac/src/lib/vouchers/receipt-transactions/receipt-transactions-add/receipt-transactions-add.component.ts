@@ -90,7 +90,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.journal = dialogData.data?.journal;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
+    this.vouchers = {...dialogData.data?.oData};
+    // this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
 
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
@@ -258,32 +259,41 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
-    this.updateFromFrontEnd(e);
-    this.updateFromBackEnd(e);
 
-  }
+    e.data.updateColumns='';
 
-  /** Update từ Front End */
-  updateFromFrontEnd(e: any) {
-    this.grvVouchersLine.startProcess();
+    /** Update từ Front End */
     switch (e.field) {
       case 'costAmt':
-        this.costAmt_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costPrice = e.data.costAmt / e.data.quantity;
+              this.dt.detectChanges();
+              this.grvVouchersLine.endProcess();
+            }, 100);
+          }
+        }
         break;
       case 'costPrice':
-        this.costPrice_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costAmt = e.data.costPrice * e.data.quantity;
+              this.dt.detectChanges();
+              this.grvVouchersLine.endProcess();
+            }, 100);
+          }
+        }
         break;
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
     }
-    this.grvVouchersLine.endProcess();
-  }
 
-  /** Update từ Back End */
-  updateFromBackEnd(e: any) {
-    this.grvVouchersLine.startProcess();
-    e.data.updateColumns='';
+    /** Update từ Back End */
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -301,6 +311,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       'idiM9',
     ];
     if (postFields.includes(e.field)) {
+      this.grvVouchersLine.startProcess();
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
@@ -321,14 +332,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
-            this.grvVouchersLine.endProcess();
           }
+          this.grvVouchersLine.endProcess();
         });
     }
-    else
-    {
-      this.grvVouchersLine.endProcess();
-    }
+
   }
 
   /** Nhận các event mà lưới trả về */
@@ -394,7 +402,17 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          this.dialog.close();
+          if(this.formType == 'edit')
+          {
+            this.dialog.close({
+              update: true,
+              data: res,
+            });
+          }
+          else
+          {
+            this.dialog.close();
+          }
         }
         this.dt.detectChanges();
       });
@@ -419,16 +437,15 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         else
         {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
               this.formType = 'add';
               this.formVoucherReceipt.refreshData(res.data);
-              this.detectorRef.detectChanges();
-              this.refreshGrid();
-              // this.notification.notifyCode('SYS006');
+              this.clearGrid();
               this.setFieldRequied();
+              this.detectorRef.detectChanges();
             }
           });
         }
@@ -469,9 +486,8 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  refreshGrid() {
+  clearGrid() {
     this.grvVouchersLine.dataSource = [];
-    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */
@@ -708,31 +724,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   /** Xóa dòng */
   deleteRow(data) {
     this.grvVouchersLine.deleteRow(data);
-  }
-
-  /** Cập nhật thành tiền khi thay đổi đơn giá */
-  costPrice_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costAmt = line.costPrice * line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-      }
-    }
-  }
-
-  /** Cập nhật đơn giá khi thay đổi thành tiền */
-  costAmt_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costPrice = line.costAmt / line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-
-      }
-    }
   }
 
   /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */

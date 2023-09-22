@@ -331,22 +331,22 @@
           </ng-template>
           <ng-template #content>
             <div class="d-flex flex-column">
-              <div class="text-dark fw-bold mb-1 mt-2">
+              <div class="text-dark fw-bold mb-2 mt-4">
                 <codx-label default="Thông tin chung"></codx-label>
               </div>
               <div class="mb-1">
-                <div class="row py-2">
-                  <div class="col-2">
-                    <codx-label
-                      class="label-colon"
-                      [setRequire]="false"
-                      [formModel]="formModel"
-                      fiedName="State"
-                    ></codx-label>
-                  </div>
-                  <div class="col-4">
+                <div class="d-flex align-items-center my-2">
+                  <div class="d-flex flex-wrap align-items-center w-50">
+                    <div class="">
+                      <codx-label
+                        class="label-colon text-gray-600"
+                        [setRequire]="false"
+                        [formModel]="formModel"
+                        fiedName="State"
+                      ></codx-label>
+                    </div>
                     <span
-                      class="fs-7"
+                      class="text-dark fw-bold"
                       #state
                       [innerHTML]="
                         dataSelected?.state
@@ -355,18 +355,17 @@
                       "
                     ></span>
                   </div>
-
-                  <div class="col-2">
-                    <codx-label
-                      class="label-colon"
-                      [setRequire]="false"
-                      [formModel]="formModel"
-                      fiedName="ProcessID"
-                    ></codx-label>
-                  </div>
-                  <div class="col-4">
+                  <div class="d-flex flex-wrap align-items-center w-50">
+                    <div class="">
+                      <codx-label
+                        class="label-colon text-gray-600"
+                        [setRequire]="false"
+                        [formModel]="formModel"
+                        fiedName="ProcessID"
+                      ></codx-label>
+                    </div>
                     <span
-                      class="fs-7"
+                      class="text-dark fw-bold"
                       #processID
                       [innerHTML]="
                         dataSelected?.processName
@@ -382,18 +381,18 @@
                   </div>
                 </div>
 
-                <div class="row py-2">
-                  <div class="col-2">
-                    <codx-label
-                      class="label-colon"
-                      [setRequire]="false"
-                      [formModel]="formModel"
-                      fiedName="OccuredPlace"
-                    ></codx-label>
-                  </div>
-                  <div class="col-4">
+                <div class="d-flex align-items-top my-2">
+                  <div class="d-flex flex-wrap align-items-center w-50">
+                    <div class="">
+                      <codx-label
+                        class="label-colon text-gray-600"
+                        [setRequire]="false"
+                        [formModel]="formModel"
+                        fiedName="OccuredPlace"
+                      ></codx-label>
+                    </div>
                     <span
-                      class="fs-7"
+                      class="text-dark fw-bold"
                       #occuredPlace
                       [innerHTML]="
                         dataSelected?.occuredPlace
@@ -407,46 +406,46 @@
                       "
                     ></span>
                   </div>
-
-                  <div class="col-2">
-                    <codx-label
-                      class="label-colon"
-                      [setRequire]="false"
-                      [formModel]="formModel"
-                      fiedName="ChannelID"
-                    ></codx-label>
-                  </div>
-                  <div class="col-4">
+                  <div class="d-flex flex-wrap align-items-center w-50">
+                    <div class="">
+                      <codx-label
+                        class="label-colon text-gray-600"
+                        [setRequire]="false"
+                        [formModel]="formModel"
+                        fiedName="ChannelID"
+                      ></codx-label>
+                    </div>
                     <span
-                      class="fs-7"
-                      #channelID
-                      [innerHTML]="
-                        dataSelected?.channelID
-                          | formatvalue
-                            : formModel
-                            : 'channelID'
-                            : channelID
-                            : 'CMCases'
-                            : 'grvCMCases'
-                          | async
-                      "
-                    ></span>
-                  </div>
+                        class="text-dark fw-bold"
+                        #channelID
+                        [innerHTML]="
+                          dataSelected?.channelID
+                            | formatvalue
+                              : formModel
+                              : 'channelID'
+                              : channelID
+                              : 'CMCases'
+                              : 'grvCMCases'
+                            | async
+                        "
+                      >
+                    </span>
+                  </div> 
                 </div>
 
                 <div *ngIf="casesType == '1'">
-                  <div class="row py-2">
-                    <div class="col-2">
-                      <codx-label
-                        class="label-colon"
-                        [setRequire]="false"
-                        [formModel]="formModel"
-                        fiedName="OccuredOn"
-                      ></codx-label>
-                    </div>
-                    <div class="col-4">
+                  <div class="d-flex align-items-top my-2">
+                    <div class="d-flex flex-wrap align-items-center w-50">
+                      <div class="">
+                        <codx-label
+                          class="label-colon text-gray-600"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="OccuredOn"
+                        ></codx-label>
+                      </div>
                       <span
-                        class="fs-7"
+                        class="text-dark fw-bold"
                         #occuredOn
                         [innerHTML]="
                           dataSelected?.occuredOn
@@ -459,21 +458,19 @@
                             | async
                         "
                       ></span>
-                    </div>
-                  </div>
 
-                  <div class="row py-2">
-                    <div class="col-2">
-                      <codx-label
-                        class="label-colon"
-                        [setRequire]="false"
-                        [formModel]="formModel"
-                        fiedName="DetectedOn"
-                      ></codx-label>
                     </div>
-                    <div class="col-4">
+                    <div class="d-flex flex-wrap align-items-center w-50">
+                      <div class="">
+                        <codx-label
+                          class="label-colon text-gray-600"
+                          [setRequire]="false"
+                          [formModel]="formModel"
+                          fiedName="DetectedOn"
+                        ></codx-label>
+                      </div>
                       <span
-                        class="fs-7"
+                        class="text-dark fw-bold"
                         #detectedOn
                         [innerHTML]="
                           dataSelected?.detectedOn
@@ -490,89 +487,82 @@
               </div>
 
               <div class="mt-1">
-                <div class="text-dark fw-bold mb-1 mt-1">
+                <div class="text-dark fw-bold mb-2 mt-3">
                   <codx-label default="Mô tả chi tiết"></codx-label>
                 </div>
-                <div class="d-flex flex-column-reverse">
-                  <div class="d-flex justify-content-start pb-2">
-                    <div class="col-2">
-                      <codx-label
-                        default="Hiện trạng"
-                        fieldName="Reality"
-                      ></codx-label
-                      >:
-                    </div>
-                    <div class="col-10">
-                      <span
-                        class="fs-7"
-                        #reality
-                        [innerHTML]="
-                          dataSelected?.reality
-                            | formatvalue
-                              : formModel
-                              : 'reality'
-                              : reality
-                              : 'CMCases'
-                              : 'grvCMCases'
-                            | async
-                        "
-                      ></span>
-                    </div>
+                <div class="d-flex pb-2 w-100">
+                  <div class="me-2 text-nowrap">
+                    <codx-label class="text-gray-600"
+                      default="Hiện trạng"
+                      fieldName="Reality"
+                    ></codx-label
+                    >:
+                  </div>
+                  <div class="w-100">
+                    <span
+                      class="text-dark fw-bold"
+                      #reality
+                      [innerHTML]="
+                        dataSelected?.reality
+                          | formatvalue
+                            : formModel
+                            : 'reality'
+                            : reality
+                            : 'CMCases'
+                            : 'grvCMCases'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-                <div class="d-flex flex-column-reverse py-2">
-                  <div class="d-flex justify-content-start">
-                    <div class="col-2">
-                      <codx-label
-                        default="Mô tả chi tiết"
-                        fieldName="Memo"
-                      ></codx-label
-                      >:
-                    </div>
-                    <div class="col-10">
-                      <span
-                        class="fs-7"
-                        #memo
-                        [innerHTML]="
-                          dataSelected?.memo
-                            | formatvalue
-                              : formModel
-                              : 'memo'
-                              : memo
-                              : 'CMCases'
-                              : 'grvCMCases'
-                            | async
-                        "
-                      ></span>
-                    </div>
+                <div class="d-flex w-100 mb-2">
+                  <div class="me-2 text-nowrap">
+                    <codx-label class="text-gray-600"
+                      default="Mô tả chi tiết"
+                      fieldName="Memo"
+                    ></codx-label
+                    >:
+                  </div>
+                  <div class="w-100">
+                    <span
+                      class="text-dark fw-bold"
+                      #memo
+                      [innerHTML]="
+                        dataSelected?.memo
+                          | formatvalue
+                            : formModel
+                            : 'memo'
+                            : memo
+                            : 'CMCases'
+                            : 'grvCMCases'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-
-                <div class="d-flex flex-column-reverse py-2">
-                  <div class="d-flex justify-content-start">
-                    <div class="col-2">
-                      <codx-label
-                        default="Gợi ý biện pháp xử lý"
-                        fieldName="Solution"
-                      ></codx-label
-                      >:
-                    </div>
-                    <div class="col-10">
-                      <span
-                        class="fs-7"
-                        #solution
-                        [innerHTML]="
-                          dataSelected?.solution
-                            | formatvalue
-                              : formModel
-                              : 'solution'
-                              : solution
-                              : 'CMCases'
-                              : 'grvCMCases'
-                            | async
-                        "
-                      ></span>
-                    </div>
+                <div class="d-flex w-100 mb-2">
+                  <div class="me-2 text-nowrap">
+                    <codx-label
+                      default="Gợi ý biện pháp xử lý"
+                      fieldName="Solution"
+                    ></codx-label
+                    >:
+                  </div>
+                  <div class="w-100">
+                    <span
+                      class="text-dark fw-bold"
+                      #solution
+                      [innerHTML]="
+                        dataSelected?.solution
+                          | formatvalue
+                            : formModel
+                            : 'solution'
+                            : solution
+                            : 'CMCases'
+                            : 'grvCMCases'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
               </div>
