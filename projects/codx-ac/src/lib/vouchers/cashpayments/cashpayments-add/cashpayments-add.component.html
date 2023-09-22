@@ -549,7 +549,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
               " (click)="onAddLine('1')">

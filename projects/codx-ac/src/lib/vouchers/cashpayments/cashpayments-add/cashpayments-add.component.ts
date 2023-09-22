@@ -1549,6 +1549,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         }
         break;
       case 'closeEdit': //? khi thoát dòng
+      if(this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected){
+        this.eleGridCashPayment.rowDataSelected = null;
+      }
         setTimeout(() => {
           let element = document.getElementById('btnadd');
           element.focus();
