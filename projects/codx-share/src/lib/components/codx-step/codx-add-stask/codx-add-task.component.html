@@ -433,6 +433,11 @@
         </span>
       </div>
     </div>
+
+    <div class="d-flex align-items-center fw-bold" *ngIf="stepsTasks?.isOnline">
+      <a href="">{{ stepsTasks?.reference }}</a>
+    </div>
+
     <div
       class="form-group d-flex align-item-center"
       *ngIf="isBoughtTM && isAddTM"

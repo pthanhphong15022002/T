@@ -1856,8 +1856,8 @@ export class PdfComponent
         curImgEle.src = environment.urlUpload + '/' + curArea.labelValue;
         let min = 0;
         let scale = 1;
-        let scaleW = 1;
-        let scaleH = 1;
+        let scaleW = this.curSelectedArea.scaleX();
+        let scaleH = this.curSelectedArea.scaleY();
         curImgEle.onload = () => {
           console.log('run changeAnnotPro', curArea.labelValue);
 

@@ -277,6 +277,9 @@ export class CodxAddTaskComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
+    if(event?.field == 'isOnline' && !event?.data){
+      this.stepsTasks.reference = '';
+    }
   }
 
   changeValueDate(event) {
