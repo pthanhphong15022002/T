@@ -447,14 +447,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
-                this.vouchers = res.data;
-                this.formType = 'add';
-                this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
-                this.formVoucherReceipt.preData = { ...this.vouchers };
-                // this.notification.notifyCode('SYS006');
-                this.clearGrid();
-                this.setFieldRequied();
-                this.detectorRef.detectChanges();
+              this.formType = 'add';
+              this.formVoucherReceipt.refreshData(res.data);
+              this.clearGrid();
+              this.setFieldRequied();
+              this.detectorRef.detectChanges();
             }
           });
         }
