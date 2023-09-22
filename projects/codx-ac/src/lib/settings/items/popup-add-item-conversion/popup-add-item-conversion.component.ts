@@ -93,7 +93,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
     this.itemConversion.inverted = this.itemConversion.inverted ? 1 : 0;
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup,
       )
@@ -135,7 +135,7 @@ export class PopupAddItemConversionComponent extends UIComponent {
     this.itemConversion.conversion = this.itemConversion.conversion.toString();
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

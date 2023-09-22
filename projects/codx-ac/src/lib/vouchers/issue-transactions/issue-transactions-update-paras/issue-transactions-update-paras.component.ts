@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
+import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SubModel, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
@@ -17,13 +17,11 @@ import { IssueTransactionsLineAddComponent } from '../issue-transactions-line-ad
 import { Validators } from '@angular/forms';
 
 @Component({
-  selector: 'lib-issue-transactions-add',
-  templateUrl: './issue-transactions-add.component.html',
-  styleUrls: ['./issue-transactions-add.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'lib-issue-transactions-update-paras',
+  templateUrl: './issue-transactions-update-paras.component.html',
+  styleUrls: ['./issue-transactions-update-paras.component.css']
 })
-export class IssueTransactionsAddComponent extends UIComponent implements OnInit {
+export class IssueTransactionsUpdateParasComponent extends UIComponent implements OnInit {
 
   //#region Constructor
 
@@ -64,7 +62,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-
+  childModel: SubModel;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -111,6 +109,15 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   ngAfterViewInit() {
+    this.childModel = {
+      gridviewName: this.fmVouchersLines.gridViewName,
+      formName: this.fmVouchersLines.formName,
+      entityName: this.fmVouchersLines.entityName,
+      service:'IV',
+      predicates:'TransID=@0',
+      rowNoField:'rowNo',
+  
+    }
     this.formVoucherIssue.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
@@ -258,43 +265,31 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
+    this.updateFromFrontEnd(e);
+    this.updateFromBackEnd(e);
 
+  }
+
+  /** Update từ Front End */
+  updateFromFrontEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
-        this.grvVouchersLine.startProcess();
-        if (e.data) {
-          if (e.data.quantity != 0) {
-            setTimeout(() => {
-              e.data.costPrice = e.data.costAmt / e.data.quantity;
-              this.dt.detectChanges();
-              this.grvVouchersLine.endProcess();
-            }, 100);
-          }
-        }
+        this.costAmt_Change(e.data);
         break;
       case 'costPrice':
-        this.grvVouchersLine.startProcess();
-        if (e.data) {
-          if (e.data.quantity != 0) {
-            setTimeout(() => {
-              e.data.costAmt = e.data.costPrice * e.data.quantity;
-              this.dt.detectChanges();
-              this.grvVouchersLine.endProcess();
-            }, 100);
-          }
-        }
+        this.costPrice_Change(e.data);
         break;
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
     }
-
-    this.updateFromBackEnd(e);
-
+    this.grvVouchersLine.endProcess();
   }
 
   /** Update từ Back End */
   updateFromBackEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
@@ -312,7 +307,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       'idiM8',
       'idiM9',
     ];
-    this.grvVouchersLine.startProcess();
     if (postFields.includes(e.field)) {
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
@@ -407,17 +401,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          if(this.formType == 'edit')
-          {
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
-          }
-          else
-          {
-            this.dialog.close();
-          }
+          this.dialog.close();
         }
         this.dt.detectChanges();
       });
@@ -442,18 +426,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         else
         {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
-                this.vouchers = res.data;
-                this.formType = 'add';
-                this.formVoucherIssue.formGroup.patchValue(this.vouchers);
-                this.formVoucherIssue.preData = { ...this.vouchers };
-                // this.notification.notifyCode('SYS006');
-                this.clearGrid();
-                this.setFieldRequied();
-                this.detectorRef.detectChanges();
+              this.formType = 'add';
+              this.formVoucherIssue.refreshData(res.data);
+              this.detectorRef.detectChanges();
+              this.refreshGrid();
+              // this.notification.notifyCode('SYS006');
+              this.setFieldRequied();
             }
           });
         }
@@ -494,8 +476,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  clearGrid() {
+  refreshGrid() {
     this.grvVouchersLine.dataSource = [];
+    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */
@@ -732,6 +715,31 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   /** Xóa dòng */
   deleteRow(data) {
     this.grvVouchersLine.deleteRow(data);
+  }
+
+  /** Cập nhật thành tiền khi thay đổi đơn giá */
+  costPrice_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
+        setTimeout(() => {
+          line.costAmt = line.costPrice * line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+      }
+    }
+  }
+
+  /** Cập nhật đơn giá khi thay đổi thành tiền */
+  costAmt_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
+        setTimeout(() => {
+          line.costPrice = line.costAmt / line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+
+      }
+    }
   }
 
   /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */
