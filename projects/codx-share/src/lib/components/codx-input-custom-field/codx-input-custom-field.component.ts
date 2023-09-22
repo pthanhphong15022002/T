@@ -410,7 +410,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
               );
               if (idx == -1) this.listContacts.push(contact);
               else this.listContacts[idx] = contact;
-              this.listContacts = JSON.parse(JSON.stringify( this.listContacts));
               this.valueChangeCustom.emit({
                 e: JSON.stringify(this.listContacts),
                 data: this.customField,
@@ -499,7 +498,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
               );
               if (idx == -1) this.listContacts.push(contact);
               else this.listContacts[idx] = contact;
-              this.listContacts = JSON.parse(JSON.stringify( this.listContacts));
               this.valueChangeCustom.emit({
                 e: JSON.stringify(this.listContacts),
                 data: this.customField,
