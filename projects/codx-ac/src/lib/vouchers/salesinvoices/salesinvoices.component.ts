@@ -159,10 +159,10 @@ export class SalesinvoicesComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
@@ -226,7 +226,7 @@ export class SalesinvoicesComponent
   //#endregion
 
   //#region Method
-  getDefault(): Observable<any> {
+  getDefault$(): Observable<any> {
     return this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
       this.journalNo,
     ]);
@@ -236,7 +236,7 @@ export class SalesinvoicesComponent
     this.view.dataService.delete([data], true).subscribe();
   }
 
-  edit(e, data): void {
+  edit(data): void {
     console.log('edit', { data });
 
     const copiedData = { ...data };
@@ -259,26 +259,28 @@ export class SalesinvoicesComponent
     });
   }
 
-  copy(e, data): void {
+  copy(data): void {
     console.log('copy', { data });
 
     this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res) => {
-      let options = new SidebarModel();
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      options.isFull = true;
+    this.view.dataService
+      .copy(() => this.getDefault$())
+      .subscribe((res) => {
+        let options = new SidebarModel();
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
+        options.isFull = true;
 
-      this.callfc.openSide(
-        SalesinvoicesAddComponent,
-        {
-          formType: 'add',
-          formTitle: this.functionName,
-        },
-        options,
-        this.view.funcID
-      );
-    });
+        this.callfc.openSide(
+          SalesinvoicesAddComponent,
+          {
+            formType: 'add',
+            formTitle: this.functionName,
+          },
+          options,
+          this.view.funcID
+        );
+      });
   }
 
   export(data): void {
@@ -307,7 +309,7 @@ export class SalesinvoicesComponent
 
   //#region Function
   emitDefault(): void {
-    this.getDefault().subscribe((res) => {
+    this.getDefault$().subscribe((res) => {
       this.defaultSubject.next({
         ...res,
         recID: res.data.recID,

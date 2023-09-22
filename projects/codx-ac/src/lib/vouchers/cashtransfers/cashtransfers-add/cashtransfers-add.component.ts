@@ -304,6 +304,8 @@ export class CashtransferAddComponent extends UIComponent {
           return;
         }
 
+        this.detectorRef.markForCheck();
+
         const tempCashTransfer = res.save?.data || res.update?.data || res;
         if (tempCashTransfer) {
           this.vatInvoice.transID = tempCashTransfer.recID;

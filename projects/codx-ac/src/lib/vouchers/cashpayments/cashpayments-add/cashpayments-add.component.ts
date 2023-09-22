@@ -246,7 +246,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   }
   onInit(): void {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if(this.formCashPayment?.data?.coppyForm) this.formCashPayment.data._isEdit = true; //? test copy để tạm
+  }
   
 
   /**
