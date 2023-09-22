@@ -1,10 +1,13 @@
 <ng-container *ngIf="listReport">
-  <codx-view2
-    [dataSource]="listReport"
-    [tmpItem]="tmp"
-    [tmpRightToolBar]="tmpRightToolBar"
-  >
-  </codx-view2>
+  <div class="mt-4 h-100 bg-white">
+    <codx-view2
+      [dataSource]="listReport"
+      [tmpItem]="tmp"
+      [tmpRightToolBar]="tmpRightToolBar"
+      [bodyCss]="'px-4'"
+    >
+    </codx-view2>
+  </div>
 </ng-container>
 <ng-template #tmp let-data>
   <div class="d-flex flex-column w-250px m-2 text-white position-relative cursor-pointer" 
@@ -27,7 +30,7 @@
 </ng-template>
 <ng-template #tmpRightToolBar >
   <ng-container *ngIf="listGroupReport && listGroupReport.length > 0">
-    <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list fw-bold pt-2">
+    <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list fw-bold pt-2 ms-4">
       <div class="mx-2 cursor-pointer" *ngFor="let item of listGroupReport" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
         <span>{{item?.customName}}</span>
       </div>
