@@ -4,7 +4,7 @@ import {
   ElementRef,
   Injector,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -13,7 +13,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType
+  ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
@@ -53,12 +53,11 @@ export class PurchaseinvoicesComponent
   constructor(
     inject: Injector,
     private purchaseInvoiceService: PurchaseInvoiceService, // don't remove this
-    private journalService: JournalService,
-    private routerActive: ActivatedRoute
+    private journalService: JournalService
   ) {
     super(inject);
 
-    this.routerActive.queryParams.subscribe((params) => {
+    this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
   }
@@ -214,7 +213,7 @@ export class PurchaseinvoicesComponent
     if (e.data?.error?.isError) {
       return;
     }
-    
+
     if (e.data.data ?? e.data) {
       this.master = e.data.data ?? e.data;
     }
