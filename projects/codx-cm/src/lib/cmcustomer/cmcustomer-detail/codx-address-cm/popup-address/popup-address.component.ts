@@ -1,5 +1,5 @@
 import { firstValueFrom } from 'rxjs';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   DialogRef,
   DialogData,
@@ -8,6 +8,7 @@ import {
   DataRequest,
   ApiHttpService,
   AlertConfirmInputConfig,
+  CodxFormComponent,
 } from 'codx-core';
 import { BS_AddressBook } from '../../../../models/cm_model';
 import { CodxCmService } from '../../../../codx-cm.service';
@@ -19,6 +20,8 @@ import { E } from '@angular/cdk/keycodes';
   styleUrls: ['./popup-address.component.css'],
 })
 export class PopupAddressComponent implements OnInit {
+  @ViewChild('form') form: CodxFormComponent;
+
   dialog: any;
   data = new BS_AddressBook();
   gridViewSetup: any;
@@ -40,6 +43,7 @@ export class PopupAddressComponent implements OnInit {
   lstAddress = [];
   checkAddressName = false;
   checkSetName = false;
+  leverSetting: number;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -68,7 +72,7 @@ export class PopupAddressComponent implements OnInit {
     this.lstAddress = dt?.data?.listAddress;
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (this.action == 'add') {
       if (this.lstAddress != null && this.lstAddress.length > 0) {
         if (this.lstAddress.some((x) => x.isDefault == true)) {
@@ -85,6 +89,16 @@ export class PopupAddressComponent implements OnInit {
       this.setNameAdress();
       this.checkAddressName = !!this.data.adressName;
     }
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
   }
 
   setNameAdress() {
@@ -143,6 +157,17 @@ export class PopupAddressComponent implements OnInit {
   onSave() {
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) return;
+    if (
+      !this.cmSv.checkValidateSetting(
+        this.data.adressName,
+        this.data,
+        this.leverSetting,
+        this.gridViewSetup,
+        this.gridViewSetup?.AdressName?.headerText
+      )
+    ) {
+      return;
+    }
 
     if (this.lstAddress != null && this.lstAddress.length > 0) {
       var checkCoincide = this.lstAddress.some(
@@ -189,32 +214,7 @@ export class PopupAddressComponent implements OnInit {
 
   async onSaveHanle() {
     this.data.isDefault = this.isDefault;
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('CMParameters')
-    );
-    let lever = 0;
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      let paramDefault = JSON.parse(dataParam.dataValue);
-      lever = paramDefault['ControlInputAddress'] ?? 0;
-    }
-    let json = await firstValueFrom(
-      this.api.execSv<any>(
-        'BS',
-        'ERM.Business.BS',
-        'ProvincesBusiness',
-        'GetLocationAsync',
-        [this.data.adressName, lever]
-      )
-    );
-    if (json != null && json.trim() != '') {
-      let lstDis = JSON.parse(json);
-      if (this.data.provinceID != lstDis?.ProvinceID)
-        this.data.provinceID = lstDis?.ProvinceID;
-      if (this.data.districtID != lstDis?.DistrictID)
-        this.data.districtID = lstDis?.DistrictID;
-      if (this.data.wardID != lstDis?.WardID) this.data.wardID = lstDis?.WardID;
-    }
+
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
@@ -290,12 +290,13 @@ export class PopupAddressComponent implements OnInit {
   valueIsDefault(e) {
     this.isDefault = e.data;
   }
-  valueChange(e) {
+  async valueChange(e) {
     this.data[e.field] = e?.data?.trim();
     if (e.data) {
       switch (e.field) {
         case 'adressName':
           // this.checkEventListen();
+
           this.checkAddressName = !!this.data.adressName;
           break;
         case 'countryID':
@@ -340,8 +341,37 @@ export class PopupAddressComponent implements OnInit {
     }
   }
 
-  checkAdressName() {
+  async checkAdressName() {
     this.checkAddressName = !!this.data.adressName;
+
+    let json = await firstValueFrom(
+      this.api.execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'ProvincesBusiness',
+        'GetLocationAsync',
+        [this.data.adressName, this.leverSetting]
+      )
+    );
+    if (json != null && json.trim() != '') {
+      let lstDis = JSON.parse(json);
+      if (this.data.provinceID != lstDis?.ProvinceID)
+        this.data.provinceID = lstDis?.ProvinceID ?? null;
+      if (this.data.districtID != lstDis?.DistrictID)
+        this.data.districtID = lstDis?.DistrictID ?? null;
+      if (this.data.wardID != lstDis?.WardID)
+        this.data.wardID = lstDis?.WardID ?? null;
+    } else {
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.wardID = null;
+    }
+    this.form.formGroup.patchValue({
+      provinceID: this.data?.provinceID,
+      districtID: this.data?.districtID,
+      wardID: this.data?.wardID,
+    });
+    // this.cmSv.checkValidateSetting(this.data, this.leverSetting, this.gridViewSetup);
   }
 
   checkEventListen() {
