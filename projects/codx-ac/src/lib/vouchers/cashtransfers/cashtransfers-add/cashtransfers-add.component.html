@@ -7,6 +7,8 @@
   [customToolbar]="customToolbar"
   [data]="cashTransfer"
   ngClass="ac-dialog"
+  (onAfterInit)="onAfterFormInit()"
+  (afterValidate)="onAfterValidation()"
 >
 </codx-form>
 
@@ -587,8 +589,8 @@
           [ngClass]="isEdit ? 'icon-edit_square' : 'icon-add_box'"
         ></i>
       </div>
-      <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold">
-        {{ formTitle }}
+      <div class="dialog-title line-clamp line-clamp-1 me-3 fw-bold text-uppercase">
+        {{ dialogData.data.formTitle }}
       </div>
       <div class="ms-3 input-circle input-sm">
         <codx-vll
