@@ -347,7 +347,7 @@ export class ViewCalendarComponent
 
   //------------------More Func-----------------//
 
-  async getTask(data) {
+  async getTask(data, action = null) {
     let task;
     if (data) {
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
@@ -357,7 +357,7 @@ export class ViewCalendarComponent
             'DP',
             'InstanceStepsBusiness',
             'GetTaskInCalendarAsync',
-            [data?.stepID, data?.recID]
+            [data?.stepID, data?.recID, action]
           )
         );
         this.isStepTask = true;
@@ -719,12 +719,12 @@ export class ViewCalendarComponent
   async copyTask(data) {
     if (data) {
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
-      let task = await this.getTask(data);
+      let task = await this.getTask(data,'copy');
       if (task) {
         delete task?.id;
         await this.handleTask(type, 'add', task);
       } else {
-        this.notiService.notifyCode('');
+        this.notiService.notifyCode('Bạn không có quyền thêm công việc');
       }
     }
   }
