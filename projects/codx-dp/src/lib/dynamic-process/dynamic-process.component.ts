@@ -60,12 +60,14 @@ export class DynamicProcessComponent
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
   @ViewChild('releasedNameTem') releasedNameTem: CodxLabelComponent;
-  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
+  @ViewChild('popUpQuestionCopy') popUpQuestionCopy: TemplateRef<any>;
+  @ViewChild('bodyFormCopyName') bodyFormCopyName: TemplateRef<any>;
+  @ViewChild('footerFormCopyName') footerFormCopyName: TemplateRef<any>;
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   dialog!: DialogRef;
-  dialogQuestionCopy: DialogRef;
+  dialogQuestionCopy!: DialogRef;
   // create variables
   crrFunID: string = '';
   gridViewSetup: any;
@@ -402,6 +404,7 @@ export class DynamicProcessComponent
       550,
       500
     );
+    this.dialogQuestionCopy.closed.subscribe();
   }
   checkValueCopy($event, data) {
     // if ($event && $event.currentTarget.checked) {
