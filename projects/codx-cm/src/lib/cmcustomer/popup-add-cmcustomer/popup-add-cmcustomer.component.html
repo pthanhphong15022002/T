@@ -409,7 +409,6 @@
     <button
       type="button"
       class="btn btn-primary"
-      [disabled]="isAdress"
       (click)="onSave()"
     >
       <codx-label
@@ -571,6 +570,7 @@
     <codx-input
       [formModel]="form.formModel"
       [crrValue]="data?.address"
+      (controlBlur)="valueBlur($event)"
       (valueChange)="valueChangeAdress($event)"
       field="address"
     >
@@ -893,6 +893,7 @@
       <codx-input
         [formModel]="form.formModel"
         [crrValue]="data?.address"
+        (controlBlur)="valueBlur($event)"
         (valueChange)="valueChangeAdress($event)"
         field="address"
       >
@@ -1091,6 +1092,7 @@
     <codx-input
       [formModel]="form.formModel"
       [crrValue]="data?.address"
+      (controlBlur)="valueBlur($event)"
       (valueChange)="valueChangeAdress($event)"
       field="address"
     >
