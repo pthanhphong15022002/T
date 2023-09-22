@@ -186,10 +186,11 @@
     class="form-group"
     *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
   >
-    <div class="d-flex align-items-center justify-content-between">
+    <codx-label [formModel]="dialog.formModel" [fiedName]="'Mobile'">
+    </codx-label>
+    <!-- <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
-        <codx-label [formModel]="dialog.formModel" [fiedName]="'Mobile'">
-        </codx-label>
+
       </div>
       <div class="d-flex align-items-center mb-2">
         <codx-label
@@ -206,7 +207,7 @@
         >
         </codx-input>
       </div>
-    </div>
+    </div> -->
     <codx-input
       [formModel]="form.formModel"
       [crrValue]="data?.mobile"
@@ -219,10 +220,11 @@
     class="form-group"
     *ngIf="actionOld != 'editType' && actionOld != 'editRole'"
   >
-    <div class="d-flex align-items-center justify-content-between">
+    <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
+    </codx-label>
+    <!-- <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
-        <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
-        </codx-label>
+
       </div>
       <div class="d-flex align-items-center mb-2">
         <codx-label
@@ -239,7 +241,7 @@
         >
         </codx-input>
       </div>
-    </div>
+    </div> -->
     <codx-input
       [formModel]="form.formModel"
       [crrValue]="data?.personalEmail"

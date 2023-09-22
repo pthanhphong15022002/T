@@ -82,18 +82,20 @@ export class PopupAddCustomerWrComponent implements OnInit {
     } else {
       this.data.email = null;
     }
-    if (
-      !this.checkValidateSetting(
-        this.data?.address,
-        this.data,
-        this.leverSetting,
-        this.gridViewSetup,
-        this.gridViewSetup?.Address?.headerText
-      )
-    ) {
-      return;
-    }
+    if (!this.radioChecked)
+      if (
+        !this.checkValidateSetting(
+          this.data?.address,
+          this.data,
+          this.leverSetting,
+          this.gridViewSetup,
+          this.gridViewSetup?.Address?.headerText
+        )
+      ) {
+        return;
+      }
     this.dialog.close([this.data, this.radioChecked]);
+    this.data = null;
   }
   //#endregion
 
@@ -104,22 +106,14 @@ export class PopupAddCustomerWrComponent implements OnInit {
     if (lever == 0) {
       return true;
     }
-    if (!(data?.provinceID?.length > 0)) {
-      unFillFields += gridViewSetup?.ProvinceID?.headerText;
+    if (!(data?.province?.length > 0)) {
+      unFillFields += gridViewSetup?.Province?.headerText;
     }
-    if (!(data?.districtID?.length > 0) && lever >= 2) {
-      unFillFields += ' ' + gridViewSetup?.DistrictID?.headerText;
-    }
-    if (!(data?.wardID?.length > 0) && lever >= 3) {
-      unFillFields += ' ' + gridViewSetup?.WardID?.headerText;
+    if (!(data?.district?.length > 0) && lever >= 2) {
+      unFillFields += ' ' + gridViewSetup?.District?.headerText;
     }
     if (unFillFields.length > 0) {
-      this.notification.notifyCode(
-        'CM048',
-        0,
-        unFillFields,
-        headerText
-      );
+      this.notification.notifyCode('CM048', 0, unFillFields, headerText);
       return false;
     }
     return true;

@@ -441,7 +441,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [disabled]="action == 'edit' || disabledShowInput"
-          [placeholder]="action != 'edit'  ? planceHolderAutoNumber : ''"
+          [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
           field="customerID"
         >
         </codx-input>
@@ -578,7 +578,7 @@
   </div>
   <div class="row" *ngIf="funcID == 'CM0105'">
     <div class="col-6 form-group">
-      <div class="d-flex align-items-center justify-content-between">
+      <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
           <codx-label [formModel]="form.formModel" [fiedName]="'Phone'">
           </codx-label>
@@ -597,7 +597,7 @@
           >
           </codx-input>
         </div>
-      </div>
+      </div> -->
 
       <codx-input
         [formModel]="form.formModel"
@@ -607,7 +607,7 @@
       </codx-input>
     </div>
     <div class="col-6 form-group">
-      <div class="d-flex align-items-center justify-content-between">
+      <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
           <codx-label [formModel]="form.formModel" [fiedName]="'Email'">
           </codx-label>
@@ -626,7 +626,7 @@
           >
           </codx-input>
         </div>
-      </div>
+      </div> -->
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -900,10 +900,11 @@
     </div>
     <div class="row">
       <div class="col-6 form-group">
-        <div class="d-flex align-items-center justify-content-between">
+        <codx-label [formModel]="form.formModel" [fiedName]="'Mobile'">
+        </codx-label>
+        <!-- <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
-            <codx-label [formModel]="form.formModel" [fiedName]="'Mobile'">
-            </codx-label>
+
           </div>
           <div class="d-flex align-items-center">
             <codx-label
@@ -919,7 +920,7 @@
             >
             </codx-input>
           </div>
-        </div>
+        </div> -->
 
         <codx-input
           [formModel]="form.formModel"
@@ -929,13 +930,11 @@
         </codx-input>
       </div>
       <div class="col-6 form-group">
-        <div class="d-flex align-items-center justify-content-between">
+        <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
+        </codx-label>
+        <!-- <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
-            <codx-label
-              [formModel]="form.formModel"
-              [fiedName]="'PersonalEmail'"
-            >
-            </codx-label>
+
           </div>
           <div class="d-flex align-items-center">
             <codx-label
@@ -951,7 +950,7 @@
             >
             </codx-input>
           </div>
-        </div>
+        </div> -->
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
