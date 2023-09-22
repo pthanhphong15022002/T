@@ -51,6 +51,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         os: dInfo.os + ' ' + dInfo.osVersion,
         ip: '',
         imei: null,
+        id: null,
         trust: false,
         times: '2',
         tenantID: '',
