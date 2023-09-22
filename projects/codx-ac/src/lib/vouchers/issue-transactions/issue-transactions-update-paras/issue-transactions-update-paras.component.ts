@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
+import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Component, CodxInplaceComponent, CodxInputComponent, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SubModel, UIComponent, Util } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
@@ -10,27 +10,24 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { ReceiptTransactionsLineAddComponent } from '../receipt-transactions-line-add/receipt-transactions-line-add.component';
 import { VouchersLines } from '../../../models/VouchersLines.model';
 import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
+import { IssueTransactionsLineAddComponent } from '../issue-transactions-line-add/issue-transactions-line-add.component';
 import { Validators } from '@angular/forms';
 
-
 @Component({
-  selector: 'lib-receipt-transactions-add',
-  templateUrl: './receipt-transactions-add.component.html',
-  styleUrls: ['./receipt-transactions-add.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'lib-issue-transactions-update-paras',
+  templateUrl: './issue-transactions-update-paras.component.html',
+  styleUrls: ['./issue-transactions-update-paras.component.css']
 })
-export class ReceiptTransactionsAddComponent extends UIComponent implements OnInit {
+export class IssueTransactionsUpdateParasComponent extends UIComponent implements OnInit {
 
   //#region Constructor
 
   @ViewChild('grvVouchersLine')
   public grvVouchersLine: CodxGridviewV2Component;
-  @ViewChild('formVoucherReceipt') public formVoucherReceipt: CodxFormComponent;
+  @ViewChild('formVoucherIssue') public formVoucherIssue: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
 
   private destroy$ = new Subject<void>();
@@ -65,7 +62,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-
+  childModel: SubModel;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -112,7 +109,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngAfterViewInit() {
-    this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
+    this.childModel = {
+      gridviewName: this.fmVouchersLines.gridViewName,
+      formName: this.fmVouchersLines.formName,
+      entityName: this.fmVouchersLines.entityName,
+      service:'IV',
+      predicates:'TransID=@0',
+      rowNoField:'rowNo',
+  
+    }
+    this.formVoucherIssue.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
 
@@ -153,7 +159,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           {
             this.vouchers.warehouseID = e.data;
             this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
-            this.formVoucherReceipt.formGroup.patchValue({
+            this.formVoucherIssue.formGroup.patchValue({
               warehouseName: this.vouchers.warehouseName,
             });
           }
@@ -210,12 +216,12 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onDiscard() {
-    if (this.formVoucherReceipt && this.formVoucherReceipt.data._isEdit) {
+    if (this.formVoucherIssue && this.formVoucherIssue.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
           this.detectorRef.detectChanges();
           this.dialog.dataService
-            .delete([this.formVoucherReceipt.data], false, null, '', '', null, null, false)
+            .delete([this.formVoucherIssue.data], false, null, '', '', null, null, false)
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res.data != null) {
@@ -259,41 +265,32 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
+    this.updateFromFrontEnd(e);
+    this.updateFromBackEnd(e);
 
-    e.data.updateColumns='';
+  }
 
-    /** Update từ Front End */
+  /** Update từ Front End */
+  updateFromFrontEnd(e: any) {
+    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
-        this.grvVouchersLine.startProcess();
-        if (e.data) {
-          if (e.data.quantity != 0) {
-            setTimeout(() => {
-              e.data.costPrice = e.data.costAmt / e.data.quantity;
-              this.dt.detectChanges();
-              this.grvVouchersLine.endProcess();
-            }, 100);
-          }
-        }
+        this.costAmt_Change(e.data);
         break;
       case 'costPrice':
-        this.grvVouchersLine.startProcess();
-        if (e.data) {
-          if (e.data.quantity != 0) {
-            setTimeout(() => {
-              e.data.costAmt = e.data.costPrice * e.data.quantity;
-              this.dt.detectChanges();
-              this.grvVouchersLine.endProcess();
-            }, 100);
-          }
-        }
+        this.costPrice_Change(e.data);
         break;
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
     }
+    this.grvVouchersLine.endProcess();
+  }
 
-    /** Update từ Back End */
+  /** Update từ Back End */
+  updateFromBackEnd(e: any) {
+    this.grvVouchersLine.startProcess();
+    e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -311,7 +308,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       'idiM9',
     ];
     if (postFields.includes(e.field)) {
-      this.grvVouchersLine.startProcess();
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
@@ -332,11 +328,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
+            this.grvVouchersLine.endProcess();
           }
-          this.grvVouchersLine.endProcess();
         });
     }
-
+    else
+    {
+      this.grvVouchersLine.endProcess();
+    }
   }
 
   /** Nhận các event mà lưới trả về */
@@ -390,29 +389,19 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   onSave() {
     if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
-      this.formVoucherReceipt.formGroup.patchValue({ status: this.vouchers.status });
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.formVoucherReceipt.save(null, 0, '', 'SYS006', true)
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.vouchers.status = '7';
-          this.formVoucherReceipt.formGroup.patchValue({ status: this.vouchers.status });
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          if(this.formType == 'edit')
-          {
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
-          }
-          else
-          {
-            this.dialog.close();
-          }
+          this.dialog.close();
         }
         this.dt.detectChanges();
       });
@@ -423,29 +412,30 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   {
     if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
-      this.formVoucherReceipt.formGroup.patchValue({ status: this.vouchers.status });
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.formVoucherReceipt.save(null, 0, '', 'SYS006', true)
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.vouchers.status = '7';
-          this.formVoucherReceipt.formGroup.patchValue({ status: this.vouchers.status });
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
         else
         {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [this.journalNo])
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (res) {
               this.formType = 'add';
-              this.formVoucherReceipt.refreshData(res.data);
-              this.clearGrid();
-              this.setFieldRequied();
+              this.formVoucherIssue.refreshData(res.data);
               this.detectorRef.detectChanges();
+              this.refreshGrid();
+              // this.notification.notifyCode('SYS006');
+              this.setFieldRequied();
             }
           });
         }
@@ -486,15 +476,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  clearGrid() {
+  refreshGrid() {
     this.grvVouchersLine.dataSource = [];
+    this.grvVouchersLine.refresh();
   }
 
   /** Xóa field requied của master */
   setFieldRequied()
   {
     if (this.journal.assignRule == '2') {
-      this.formVoucherReceipt.setRequire([{
+      this.formVoucherIssue.setRequire([{
         field: 'VoucherNo',
         isDisable: false,
         require: false
@@ -519,7 +510,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       this.vouchers,
       this.reason
     );
-    this.formVoucherReceipt.formGroup.patchValue({
+    this.formVoucherIssue.formGroup.patchValue({
       memo: this.vouchers.memo,
     });
   }
@@ -544,16 +535,16 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if (this.formVoucherReceipt.validation())
+    if (this.formVoucherIssue.validation())
       return;
-    this.formVoucherReceipt
+    this.formVoucherIssue
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved))) {
           if (!this.vouchers.voucherNo && res?.save?.data?.voucherNo) {
             this.vouchers.voucherNo = res.save.data.voucherNo;
-            this.formVoucherReceipt.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
+            this.formVoucherIssue.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
           this.checkModeGridBeforeAddLine();
         }
@@ -612,7 +603,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       .subscribe((res) => {
         if (res) {
           var dialogs = this.callfc.openForm(
-            ReceiptTransactionsLineAddComponent,
+            IssueTransactionsLineAddComponent,
             '',
             900,
             850,
@@ -669,7 +660,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           .subscribe((res) => {
             if (res) {
               var dialogs = this.callfc.openForm(
-                ReceiptTransactionsLineAddComponent,
+                IssueTransactionsLineAddComponent,
                 '',
                 650,
                 600,
@@ -724,6 +715,31 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   /** Xóa dòng */
   deleteRow(data) {
     this.grvVouchersLine.deleteRow(data);
+  }
+
+  /** Cập nhật thành tiền khi thay đổi đơn giá */
+  costPrice_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
+        setTimeout(() => {
+          line.costAmt = line.costPrice * line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+      }
+    }
+  }
+
+  /** Cập nhật đơn giá khi thay đổi thành tiền */
+  costAmt_Change(line: any) {
+    if (line) {
+      if (line.quantity != 0) {
+        setTimeout(() => {
+          line.costPrice = line.costAmt / line.quantity;
+          this.dt.detectChanges();
+        }, 100);
+
+      }
+    }
   }
 
   /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */

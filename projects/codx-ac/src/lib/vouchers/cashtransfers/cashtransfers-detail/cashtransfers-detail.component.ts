@@ -17,11 +17,11 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { groupBy, toCamelCase } from '../../../utils';
+import { CodxAcService } from '../../../codx-ac.service';
+import { groupBy } from '../../../utils';
 import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
 import { CashtransferAddComponent } from '../cashtransfers-add/cashtransfers-add.component';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
-import { CodxAcService } from '../../../codx-ac.service';
 
 @Component({
   selector: 'lib-cashtransfers-detail',
@@ -63,7 +63,7 @@ export class CashtransfersDetailComponent
   //#region Init
   override onInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
 
@@ -145,7 +145,7 @@ export class CashtransfersDetailComponent
         CashtransferAddComponent,
         {
           formType: 'edit',
-          formTitle: `${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.formModel.funcID
@@ -169,7 +169,7 @@ export class CashtransfersDetailComponent
         CashtransferAddComponent,
         {
           formType: 'add',
-          formTitle: `${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.formModel.funcID

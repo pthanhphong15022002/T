@@ -282,10 +282,9 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Note
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gridViewSetup,
-        [''],
         ignoredFields)
     ) {
       return;
@@ -336,10 +335,9 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
     //End Note
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gridViewSetup,
-        [''],
         ignoredFields)
     ) {
       return;

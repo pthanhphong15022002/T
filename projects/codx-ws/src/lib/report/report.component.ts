@@ -8,13 +8,25 @@ import { isObservable } from 'rxjs';
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent extends WSUIComponent{
-
   listReport:any;
-
+  listReports: any;
+  listGroupReport = [];
+  selectedToolBar = "All";
+  imgDefault = "assets/themes/ws/default/img/Report_Empty.svg";
   override onInit(): void {
+    this.formatListGroupReport();
     this.getModuleByUserID();
   }
   
+  formatListGroupReport()
+  {
+    var obj = 
+    {
+      functionID : "All",
+      customName : "Tất cả"
+    }
+    this.listGroupReport.push(obj);
+  }
 
   getModuleByUserID()
   {
@@ -40,10 +52,18 @@ export class ReportComponent extends WSUIComponent{
     if(isObservable(result))
     {
       result.subscribe((item:any)=>{
-        if(item) this.formatData(item);
+        if(item) {
+          this.listReport = item ;
+          this.listReports = item; //this.formatData(item);
+          this.formatData(this.listReport);
+        }
       })
     }
-    else this.formatData(result);
+    else {
+      this.listReport = result; 
+      this.listReports = result;
+      this.formatData(this.listReport);
+    } //this.formatData(result);
   }
 
   getFuncListByModules(data:any)
@@ -52,26 +72,25 @@ export class ReportComponent extends WSUIComponent{
     if(isObservable(result))
     {
       result.subscribe((item:any)=>{
-        if(item) this.groupData(item);
+        if(item) {
+          this.formatData2(item);
+        }
       })
     }
-    else this.groupData(result);
+    else this.formatData2(result);
   }
 
-  groupData(data)
-  {
-    data.forEach(element => {
-      element.childs = this.listReport.filter(x=>x.moduleID == element?.functionID);
-    });
-    this.listReport = data;
-  }
 
   formatData(data:any)
   {
-    this.listReport = data;
     var listModule = data.map(function(item){return item.moduleID});
     listModule = this.removeDuplicates(listModule);
     this.getFuncListByModules(JSON.stringify(listModule))
+  }
+
+  formatData2(data:any)
+  {
+    this.listGroupReport = this.listGroupReport.concat(data);
   }
 
   removeDuplicates(arr:any) {
@@ -84,5 +103,12 @@ export class ReportComponent extends WSUIComponent{
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);
+  }
+
+  selectedChangeToolBar(data:any)
+  {
+    this.selectedToolBar = data?.functionID;
+    if(this.selectedToolBar == "All") this.listReport = this.listReports;
+    else this.listReport = this.listReports.filter(x=>x.moduleID == this.selectedToolBar);
   }
 }

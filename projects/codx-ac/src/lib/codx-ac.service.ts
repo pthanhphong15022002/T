@@ -46,6 +46,18 @@ export class CodxAcService {
     return v;
   }
 
+  clearCache(storeName: string){
+    switch(storeName){
+      case 'account':
+        this.api
+          .exec('AC', 'ACBusiness', 'GetCacheAccountAsync', '')
+          .subscribe((res) => {
+            if (res) this.stores.set('account', res);
+          });
+        break;
+    }
+  }
+
   getGridViewSetup(formName: any, gridViewName: any) {
     return this.cache.gridViewSetup(formName, gridViewName);
   }
@@ -125,11 +137,10 @@ export class CodxAcService {
     return newMemo;
   }
 
-  /** @param irregularGvsPropNames Use irregularGvsPropNames in case unable to transform some data prop names to gvs prop names respectively. */
-  validateFormData(
+  /** Check if rerquired fields are valid */
+  isFormDataValid(
     formGroup: FormGroup,
     gridViewSetup: any,
-    irregularGvsPropNames: string[] = [],
     ignoredFields: string[] = []
   ): boolean {
     ignoredFields = ignoredFields.map((i) => i.toLowerCase());
@@ -142,11 +153,9 @@ export class CodxAcService {
       }
 
       if (controls[propName].invalid) {
-        const gvsPropName =
-          irregularGvsPropNames.find(
-            (i) => i.toLowerCase() === propName.toLowerCase()
-          ) ?? toPascalCase(propName);
-
+        const gvsPropName: string = Object.keys(gridViewSetup).find(
+          (p: string) => p.toLowerCase() === propName.toLowerCase()
+        );
         invalidFields.push(gvsPropName);
       }
     }
@@ -221,7 +230,7 @@ export class CodxAcService {
     injector: Injector,
     formModel: FormModel,
     service?: string,
-    gridView?: any,
+    gridView?: any
   ): CRUDService {
     const crudService = new CRUDService(injector);
     if (service) {

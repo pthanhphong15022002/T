@@ -1,1 +1,47 @@
-<p>codx-view2 works!</p>
+<div class="d-flex flex-column w-100 h-100 bg-white">
+    <ng-container *ngIf="tmpHeader">
+        <ng-container *ngTemplateOutlet="tmpHeader"></ng-container>
+    </ng-container>
+    <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+</div>
+
+<ng-template #toolbar>
+    <div class="d-flex align-items-center justify-content-between w-100 py-2 min-height-50px">
+        <ng-container *ngIf="tmpRightToolBar">
+            <div class="d-flex align-items-center justify-content-start w-70">
+                <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
+            </div>
+        </ng-container>
+        <div class="d-flex align-items-center justify-content-end">
+            <codx-searchbar
+                class="mt-1"
+                [type]="'slide'"
+                (searchEvent)="onSearch($event)"
+            ></codx-searchbar>
+            <codx-toolbar-choose
+                class="mt-2 mx-2"
+                [views]="viewList"
+                (viewChange)="viewChanged($event)"
+                (sortChange)="sortChanged($event)"
+            >
+            </codx-toolbar-choose>
+            <codx-toolbar-more
+                class="mt-2 me-2"
+                [buttons]="fMoreFuncs"
+                (buttonClick)="clickToolbarMore($event)"
+            >
+            </codx-toolbar-more>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #body>
+    <ng-container *ngIf="dataSource && (dataSource.length > 0) && tmpItem">
+        <div class="d-flex flex-wrap h-auto scroll-y">
+            <ng-container *ngFor="let item of dataSource">
+                <ng-container *ngTemplateOutlet="tmpItem ; context:{ $implicit: item }"></ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-template>

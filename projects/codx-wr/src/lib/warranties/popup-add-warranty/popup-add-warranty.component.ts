@@ -22,10 +22,10 @@ import {
   Util,
 } from 'codx-core';
 import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-servicetag.component';
-import { PopupAddCustomerWrComponent } from './popup-add-customerwr/popup-add-customerwr.component';
 import { WR_WorkOrders } from '../../_models-wr/wr-model.model';
 import { firstValueFrom } from 'rxjs';
 import { CodxWrService } from '../../codx-wr.service';
+import { PopupAddCustomerWrComponent } from './popup-add-customerwr/popup-add-customerwr.component';
 
 @Component({
   selector: 'lib-popup-add-warranty',
@@ -166,38 +166,15 @@ export class PopupAddWarrantyComponent implements OnInit {
   async addCustomer() {
     let lstAddress = [];
     if (this.data?.address != null && this.data?.address?.trim() != '') {
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      let lever = 0;
-      if (param?.length > 0) {
-        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        lever = paramDefault['ControlInputAddress'] ?? 0;
-      }
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [this.data.address, lever]
-        )
-      );
       var tmp = {};
 
-      if (json != null && json.trim() != '') {
-        let lstDis = JSON.parse(json);
-        this.data.province = lstDis?.ProvinceID;
-        this.data.district = lstDis?.DistrictID;
-        tmp['provinceID'] = lstDis?.ProvinceID;
-        tmp['districtID'] = lstDis?.DistrictID;
-        tmp['wardID'] = lstDis?.WardID;
-      }
       tmp['recID'] = Util.uid();
       tmp['adressType'] = '0';
       tmp['adressName'] = this.data.address;
       tmp['isDefault'] = true;
+      tmp['provinceID'] = this.data?.province;
+      tmp['districtID'] = this.data?.district;
+      tmp['wardID'] = null;
       lstAddress.push(Object.assign({}, tmp));
     }
     var tmpCus = {};
@@ -321,11 +298,16 @@ export class PopupAddWarrantyComponent implements OnInit {
   clickAddServiceTag() {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.dialog?.formModel;
+    let formModel = new FormModel();
+    formModel.formName = this.dialog.formModel?.formName;
+    formModel.gridViewName = this.dialog.formModel?.gridViewName;
+    formModel.entityName = this.dialog.formModel?.entityName;
+    dialogModel.FormModel = formModel;
+    let dataService = JSON.parse(JSON.stringify(this.data));
     let obj = {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
-      data: this.data,
+      data: dataService,
       gridViewSetup: this.gridViewSetup,
     };
     this.callFc
@@ -342,7 +324,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       .closed.subscribe((e) => {
         if (e && e?.event != null) {
           if (e?.event?.seriNo) {
-            this.data = e?.event;
+            this.data = JSON.parse(JSON.stringify(e?.event));
             this.isCheckCbx = false;
             this.form.formGroup.patchValue(this.data);
             this.detectorRef.detectChanges();
@@ -356,10 +338,15 @@ export class PopupAddWarrantyComponent implements OnInit {
       this.radioChecked = true;
       let dialogModel = new DialogModel();
       dialogModel.zIndex = 1010;
-      dialogModel.FormModel = this.dialog?.formModel;
+      let formModel = new FormModel();
+      formModel.formName = this.dialog.formModel?.formName;
+      formModel.gridViewName = this.dialog.formModel?.gridViewName;
+      formModel.entityName = this.dialog.formModel?.entityName;
+      dialogModel.FormModel = formModel;
+      let dataService = JSON.parse(JSON.stringify(this.data));
       let obj = {
         title: this.moreFuncAdd + ' ' + res?.defaultName,
-        data: this.data,
+        data: dataService,
         gridViewSetup: this.gridViewSetup,
       };
       this.callFc
@@ -377,7 +364,7 @@ export class PopupAddWarrantyComponent implements OnInit {
           if (e?.event && e?.event != null) {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
-              this.data = e?.event[0];
+              this.data = JSON.parse(JSON.stringify(e?.event[0]));
               if (this.isCheckCbx && type != 'switch') {
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;
