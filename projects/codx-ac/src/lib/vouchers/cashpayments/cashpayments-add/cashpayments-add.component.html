@@ -543,7 +543,7 @@
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
-        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (created)="created($event)" (gridInit)="beforeInitGridCashpayments($event)"
+        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">

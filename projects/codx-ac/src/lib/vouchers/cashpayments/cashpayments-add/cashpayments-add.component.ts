@@ -343,10 +343,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     eleGrid.showHideColumns(hideFields);
   }
 
-  created(e){
-    console.log(e);
-  }
-
   /**
    * *Hàm khởi tạo trước khi init của lưới SettledInvoices (Ẩn hiện các cột theo đồng tiền hạch toán)
    * @param columnsGrid danh sách cột của lưới
@@ -1030,6 +1026,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * *Hàm hủy các observable api
    */
   onDestroy() {
+    if(this.eleGridCashPayment) this.eleGridCashPayment.onDestroy();
+    if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.onDestroy();
+    if(this.eleGridVatInvoices) this.eleGridVatInvoices.onDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
