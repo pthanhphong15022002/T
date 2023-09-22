@@ -175,6 +175,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       os: dInfo.os + ' ' + dInfo.osVersion,
       ip: '',
       imei: null,
+      id: null,
       trust: false,
       tenantID: this.tenant,
       times: '1',

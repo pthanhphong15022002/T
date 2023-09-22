@@ -33,6 +33,7 @@ export class TenantsComponent implements OnInit {
       name: dInfo.browser,
       os: dInfo.os + ' ' + dInfo.osVersion,
       ip: '',
+      id: null,
       imei: null,
       trust: false,
       tenantID: '',

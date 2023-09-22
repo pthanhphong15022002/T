@@ -89,46 +89,46 @@ export class PopupAddServicetagComponent implements OnInit {
 
     this.data.seriNo = this.data.serviceTag;
     this.dialog.close(this.data);
+    this.data = new WR_WorkOrders();
   }
   //#endregion
 
   valueChange(e) {
-    if (this.data[e?.field] != e?.data) {
-      this.data[e?.field] = e?.data;
-      if (e?.field == 'productID') {
-        this.data.productType = e?.component?.itemsSelected[0]?.ProductType;
-        if (
-          this.data?.productType == null ||
-          this.data?.productType?.trim() == ''
-        ) {
-          (
-            this.productType.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.productType.crrValue = null;
-        }
-        this.data.productBrand = e?.component?.itemsSelected[0]?.ProductBrand;
-        if (
-          this.data?.productBrand == null ||
-          this.data?.productBrand?.trim() == ''
-        ) {
-          (
-            this.productBrand.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.productBrand.crrValue = null;
-        }
-        this.data.productModel = e?.component?.itemsSelected[0]?.ProductModel;
-        if (
-          this.data?.productModel == null ||
-          this.data?.productModel?.trim() == ''
-        ) {
-          (
-            this.productModel.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.productModel.crrValue = null;
-        }
-        this.form.formGroup.patchValue(this.data);
+    this.data[e?.field] = e?.data;
+    if (e?.field == 'productID') {
+      this.data.productType = e?.component?.itemsSelected[0]?.ProductType;
+      if (
+        this.data?.productType == null ||
+        this.data?.productType?.trim() == ''
+      ) {
+        (
+          this.productType.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.productType.crrValue = null;
       }
+      this.data.productBrand = e?.component?.itemsSelected[0]?.ProductBrand;
+      if (
+        this.data?.productBrand == null ||
+        this.data?.productBrand?.trim() == ''
+      ) {
+        (
+          this.productBrand.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.productBrand.crrValue = null;
+      }
+      this.data.productModel = e?.component?.itemsSelected[0]?.ProductModel;
+      if (
+        this.data?.productModel == null ||
+        this.data?.productModel?.trim() == ''
+      ) {
+        (
+          this.productModel.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.productModel.crrValue = null;
+      }
+      this.form.formGroup.patchValue(this.data);
     }
+
     this.changeDetector.detectChanges();
   }
 
