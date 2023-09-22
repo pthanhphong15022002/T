@@ -24,6 +24,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
   userID: any;
   leverSetting: number;
   gridViewSetup: any;
+  isSave = false;
   constructor(
     private api: ApiHttpService,
     private authstore: AuthStore,
@@ -166,7 +167,8 @@ export class PopupAddCustomerWrComponent implements OnInit {
   }
 
   valueChangeCbx(e) {
-    if (e?.data != this.data?.customerID) {
+    if (e) {
+      this.isSave = true;
       this.api
         .execSv<any>(
           'CM',
@@ -199,6 +201,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
               this.data.contactName = '';
             }
           }
+          this.isSave = false;
           this.changeDetectoref.detectChanges();
         });
     }
