@@ -258,31 +258,43 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
-    this.updateFromFrontEnd(e);
-    this.updateFromBackEnd(e);
 
-  }
-
-  /** Update từ Front End */
-  updateFromFrontEnd(e: any) {
-    this.grvVouchersLine.startProcess();
     switch (e.field) {
       case 'costAmt':
-        this.costAmt_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costPrice = e.data.costAmt / e.data.quantity;
+              this.dt.detectChanges();
+              this.grvVouchersLine.endProcess();
+            }, 100);
+          }
+        }
         break;
       case 'costPrice':
-        this.costPrice_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costAmt = e.data.costPrice * e.data.quantity;
+              this.dt.detectChanges();
+              this.grvVouchersLine.endProcess();
+            }, 100);
+          }
+        }
         break;
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
     }
-    this.grvVouchersLine.endProcess();
+
+    this.updateFromBackEnd(e);
+
   }
 
   /** Update từ Back End */
   updateFromBackEnd(e: any) {
-    this.grvVouchersLine.startProcess();
     e.data.updateColumns='';
     const postFields: string[] = [
       'itemID',
@@ -300,6 +312,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       'idiM8',
       'idiM9',
     ];
+    this.grvVouchersLine.startProcess();
     if (postFields.includes(e.field)) {
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
@@ -719,31 +732,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   /** Xóa dòng */
   deleteRow(data) {
     this.grvVouchersLine.deleteRow(data);
-  }
-
-  /** Cập nhật thành tiền khi thay đổi đơn giá */
-  costPrice_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costAmt = line.costPrice * line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-      }
-    }
-  }
-
-  /** Cập nhật đơn giá khi thay đổi thành tiền */
-  costAmt_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costPrice = line.costAmt / line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-
-      }
-    }
   }
 
   /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */
