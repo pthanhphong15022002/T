@@ -734,6 +734,10 @@ export class ViewCalendarComponent
   async deleteTask(data) {
     if (data) {
       let task = await this.getTask(data);
+      if(task?.isTaskDefault){
+        this.notiService.notifyCode('Bạn không có quyền xóa công việc này');
+        return;
+      }
       if (task) {
         this.notiService.alertCode('SYS030').subscribe((x) => {
           if (x.event && x.event.status == 'Y') {
