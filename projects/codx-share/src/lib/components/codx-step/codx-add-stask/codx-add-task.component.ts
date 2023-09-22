@@ -52,6 +52,7 @@ export class CodxAddTaskComponent implements OnInit {
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
 
+  fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
 
@@ -81,7 +82,6 @@ export class CodxAddTaskComponent implements OnInit {
 
   isShowDate = false;
   isShowTime = false;
-  isAddTM = false;
   startDayOld;
   endDayOld;
   isOneRadio = true;
@@ -712,16 +712,13 @@ export class CodxAddTaskComponent implements OnInit {
         if (this.stepsTasks.status == '3') {
           this.isShowDate = false;
           this.isShowTime = false;
-          this.isAddTM = false;
         } else {
           this.isShowDate = true;
           this.isShowTime = true;
-          this.isAddTM = true;
         }
       } else {
         this.isShowDate = false;
         this.isShowTime = true;
-        this.isAddTM = true;
       }
     } else {
       //edit
@@ -729,22 +726,18 @@ export class CodxAddTaskComponent implements OnInit {
         if (this.stepsTasks?.status == '3') {
           this.isShowDate = false;
           this.isShowTime = false;
-          this.isAddTM = false;
         } else {
           if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
             this.isShowDate = false;
             this.isShowTime = false;
-            this.isAddTM = false;
           } else {
             this.isShowDate = true;
             this.isShowTime = true;
-            this.isAddTM = true;
           }
         }
       } else {
         this.isShowDate = false;
         this.isShowTime = true;
-        this.isAddTM = true;
       }
     }
   }
