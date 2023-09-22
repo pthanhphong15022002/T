@@ -17,7 +17,6 @@ import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
-import { toCamelCase } from '../../utils';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
 import { SalesInvoiceService } from './salesinvoices.service';
@@ -104,7 +103,7 @@ export class SalesinvoicesComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
   //#endregion
