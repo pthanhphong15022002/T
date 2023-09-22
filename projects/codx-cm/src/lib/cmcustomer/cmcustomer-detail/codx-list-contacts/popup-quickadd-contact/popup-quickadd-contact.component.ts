@@ -258,6 +258,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.objectName = this.objectName;
       if (type == 'save') {
         this.dialog.close(this.data);
+        this.data = new CM_Contacts();
       } else {
         this.deleteContact(this.data);
       }
