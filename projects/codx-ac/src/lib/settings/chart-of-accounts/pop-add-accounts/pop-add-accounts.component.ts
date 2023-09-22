@@ -156,10 +156,9 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     //End Note
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gridViewSetup,
-        [''],
         ignoredFields)
     ) {
       return;
