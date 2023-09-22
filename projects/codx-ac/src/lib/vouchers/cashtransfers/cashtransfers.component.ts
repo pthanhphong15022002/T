@@ -14,7 +14,6 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { JournalService } from '../../journals/journals.service';
-import { groupBy, toCamelCase } from '../../utils';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
 import { CashtransfersService } from './cashtransfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
@@ -82,7 +81,7 @@ export class CashtransfersComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
   //#endregion
@@ -131,7 +130,7 @@ export class CashtransfersComponent
           CashtransferAddComponent,
           {
             formType: 'add',
-            formTitle: `${e.text} ${this.functionName}`,
+            formTitle: this.functionName,
           },
           options,
           this.view.funcID
@@ -158,7 +157,7 @@ export class CashtransfersComponent
         CashtransferAddComponent,
         {
           formType: 'edit',
-          formTitle: `$${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.view.funcID
@@ -182,7 +181,7 @@ export class CashtransfersComponent
         CashtransferAddComponent,
         {
           formType: 'add',
-          formTitle: `${this.functionName}`,
+          formTitle: this.functionName,
         },
         options,
         this.view.funcID

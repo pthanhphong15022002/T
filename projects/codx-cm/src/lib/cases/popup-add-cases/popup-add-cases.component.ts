@@ -712,9 +712,11 @@ export class PopupAddCasesComponent
       if (this.funcID == 'CM0401') {
         this.applyProcess = dataValue?.ProcessCase == '1';
         this.cases.applyProcess = this.applyProcess;
+        this.cases.caseType = '1';
       } else if (this.funcID == 'CM0402') {
         this.applyProcess = dataValue?.ProcessRequest == '1';
         this.cases.applyProcess = this.applyProcess;
+        this.cases.caseType = '2';
       }
     }
   }

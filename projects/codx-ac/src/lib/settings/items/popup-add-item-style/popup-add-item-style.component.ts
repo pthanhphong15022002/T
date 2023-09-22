@@ -80,7 +80,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
     console.log(this.itemStyle);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -122,7 +122,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
     console.log(this.itemStyle);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

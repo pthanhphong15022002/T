@@ -44,7 +44,7 @@ export class ContractsViewDetailComponent
   grvSetup: any;
   tabClicked = '';
   treeTask = [];
-  id='';
+  sessionID = '';
   isShowFull = false;
 
   listPaymentHistory: CM_ContractsPayments[] = [];
@@ -119,7 +119,6 @@ export class ContractsViewDetailComponent
       this.contract = dt?.data?.contract;
     }
     this.isView = dt?.data?.isView;
-   
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
@@ -142,18 +141,17 @@ export class ContractsViewDetailComponent
     this.loadTabs();
   }
 
-  setDataInput(){
+  setDataInput() {
     this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
     this.getPayMentByContractID(this.contract?.recID);
     if (this.contract?.applyProcess) {
       this.getListInstanceStep(this.contract);
       this.listTypeContract = this.contractService.listTypeContract;
-      this.id = this.contract?.refID;
     } else {
       this.listTypeContract = this.contractService.listTypeContractNoTask;
-      this.id = this.contract?.recID;
     }
-    this.loadTree(this.id);
+    this.sessionID = this.contract?.recID;
+    this.loadTree(this.sessionID);
   }
 
   changeTab(e) {
@@ -253,33 +251,30 @@ export class ContractsViewDetailComponent
     this.tabControl.push(quotations);
   }
 
-  checkSusscess(e){
-    if(e){
+  checkSusscess(e) {
+    if (e) {
       this.isSusscess.emit(true);
     }
   }
 
   saveAssign(e) {
     if (e) {
-      this.loadTree(this.id);
+      this.loadTree(this.sessionID);
     }
   }
 
   loadTree(recID) {
-    if(!recID){
+    if (!recID) {
       this.treeTask = [];
       return;
     }
-    this.api.exec<any>(
-        'TM',
-        'TaskBusiness',
-        'GetListTaskTreeBySessionIDAsync',
-        recID
-      ).subscribe((res) => {
-        this.treeTask = res ? res : []; 
-    });
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
+        this.treeTask = res ? res : [];
+      });
   }
-  clickShowTab(event){
+  clickShowTab(event) {
     this.isShowFull = event;
   }
 }

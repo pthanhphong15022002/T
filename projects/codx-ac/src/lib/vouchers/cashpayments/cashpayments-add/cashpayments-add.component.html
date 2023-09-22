@@ -54,7 +54,7 @@
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
   <div style="height: 250px !important">
-    <ejs-tab enablePersistence="true" (selected)="onTabSelectedMaster($event)">
+    <ejs-tab (selected)="onTabSelectedMaster($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -86,7 +86,7 @@
   <!-- End: Tab General -->
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
-    <ejs-tab #elementTabDetail enablePersistence="true" (created)="createTabDetail($event,elementTabDetail)"
+    <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selected)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
@@ -543,13 +543,13 @@
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
-        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (created)="created($event)" (gridInit)="beforeInitGridCashpayments($event)"
+        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
-            <button style="border: 1px solid !important;" tab-index="11" id="btnadd"
+            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnadd"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
               " (click)="onAddLine('1')">

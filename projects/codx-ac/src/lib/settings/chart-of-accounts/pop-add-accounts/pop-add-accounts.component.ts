@@ -156,10 +156,9 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     //End Note
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gridViewSetup,
-        [''],
         ignoredFields)
     ) {
       return;
@@ -173,6 +172,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res && !res.save.error) {
+            this.acService.clearCache('account');
             this.dialog.close(res.save);
           } else {
             this.notification.notifyCode(
@@ -193,6 +193,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save || res.update) {
+            this.acService.clearCache('account');
             this.dialog.close();
             this.dt.detectChanges();
           }
