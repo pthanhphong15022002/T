@@ -87,8 +87,14 @@
       </div>
     </div>
 
-    <codx-img [objectId]="data?.createdBy" objectType="AD_Users" [width]="30">
-    </codx-img>
+    <codx-imgs
+      [objectId]="data?.createdBy"
+      objectType="AD_Users"
+      [width]="30"
+      [isToolTip]="true"
+      [numberImages]="1"
+    >
+    </codx-imgs>
   </div>
 </ng-template>
 
