@@ -1,13 +1,12 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   Injector,
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   CRUDService,
@@ -22,7 +21,7 @@ import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { groupBy, toCamelCase } from '../../../utils';
+import { groupBy } from '../../../utils';
 import { IAcctTran } from '../interfaces/IAcctTran.interface';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
@@ -38,7 +37,7 @@ import { fmSalesInvoicesLines } from '../salesinvoices.service';
 })
 export class SalesinvoicesDetailComponent
   extends UIComponent
-  implements AfterViewInit, AfterViewChecked, OnChanges
+  implements AfterViewChecked, OnChanges
 {
   //#region Constructor
   @ViewChild('memoContent', { read: ElementRef })
@@ -61,14 +60,6 @@ export class SalesinvoicesDetailComponent
   columns: TableColumn[] = [];
 
   fmSalesInvoicesLines: FormModel;
-  fmAcctTrans: FormModel = {
-    entityName: 'AC_AcctTrans',
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityPer: 'AC_AcctTrans',
-  };
-  gvsAcctTrans: any;
-
   functionName: string;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
@@ -132,21 +123,13 @@ export class SalesinvoicesDetailComponent
         sumFormat: SumFormat.Currency,
       }),
     ];
-
-    this.cache
-      .gridViewSetup(this.fmAcctTrans.formName, this.fmAcctTrans.gridViewName)
-      .subscribe((gvs) => {
-        this.gvsAcctTrans = gvs;
-      });
   }
   //#endregion
 
   //#region Init
-  override onInit(): void {}
-
-  ngAfterViewInit(): void {
+  override onInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
 

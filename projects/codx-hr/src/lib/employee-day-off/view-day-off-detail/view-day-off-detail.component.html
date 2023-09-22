@@ -124,8 +124,8 @@
         <span
           class="text-dark"
           [innerHTML]="
-            itemDetail?.registeredDate
-              | formatvalue : formModel : 'registeredDate'
+            itemDetail?.createdOn
+              | formatvalue : formModel : 'createdOn'
               | async
           "
         >
@@ -134,7 +134,7 @@
 
       <div class="d-flex align-items-center mb-1 me-4">
         <codx-label
-          fiedName="registeredDate"
+          fiedName="registeredBy"
           [formModel]="formModel"
           [setRequire]="false"
           class="text-gray-600 label-colon"
@@ -241,7 +241,7 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone h-od-tab" *ngIf="showInfoDayoffType == true">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <!-- 1 -->
         <li [ngbNavItem]="1">

@@ -246,6 +246,8 @@ export class PurchaseinvoicesAddComponent
         return;
       }
 
+      this.detectorRef.markForCheck();
+
       this.api
         .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateAsync', [
           this.master,
@@ -257,13 +259,14 @@ export class PurchaseinvoicesAddComponent
           }
 
           if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
             this.dialog.close();
           } else {
             this.resetForm();
           }
         });
     });
-  }
+  }p
 
   onClickClose(): void {
     this.dialog.close();

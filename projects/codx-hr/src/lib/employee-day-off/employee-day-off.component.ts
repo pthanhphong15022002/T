@@ -8,6 +8,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AuthStore,
   ButtonModel,
   DialogRef,
   NotificationsService,
@@ -47,6 +48,7 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   constructor(
     injector: Injector,
+    private authStore: AuthStore,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
@@ -95,11 +97,15 @@ export class EmployeeDayOffComponent extends UIComponent {
   eDayOff: any;
   flagChangeMF: boolean = false;
   runModeCheck: boolean = false;
+  isPortal: boolean;
   viewActive: string;
+  user;
+  userLogin;
 
   GetGvSetup() {
     let funID = this.activatedRoute.snapshot.params['funcID'];
     this.cache.functionList(funID).subscribe((fuc) => {
+      this.isPortal = fuc.isPortal;
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((res) => {
@@ -109,6 +115,21 @@ export class EmployeeDayOffComponent extends UIComponent {
   }
 
   onInit() {
+    this.user = this.authStore.get();
+    if (this.user.userID) {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeByUserIDAsync',
+          this.user.userID
+        )
+        .subscribe((res: any) => {
+          this.userLogin = res;
+        });
+    }
+
     this.GetGvSetup();
   }
 
@@ -259,16 +280,21 @@ export class EmployeeDayOffComponent extends UIComponent {
     option.Width = '550px';
     option.FormModel = this.view.formModel;
 
-    this.currentEmpObj = data?.emp;
+    if (data?.emp) {
+      this.currentEmpObj = data?.emp;
+    } else {
+      this.currentEmpObj = this.userLogin;
+    }
     //open form
     let dialogAdd = this.callfc.openSide(
       PopupEdayoffsComponent,
       {
         //pass data
         actionType: actionType,
-        dayoffObj: data,
+        dayoffObj: data ?? this.userLogin,
         headerText: actionHeaderText,
-        //employeeId: data?.employeeID,
+        isPortal: this.isPortal,
+        employeeId: data?.employeeID ?? this.userLogin.employeeID,
         funcID: this.view.funcID,
         fromListView: true,
         //empObj: actionType == 'add' ? null : this.currentEmpObj,

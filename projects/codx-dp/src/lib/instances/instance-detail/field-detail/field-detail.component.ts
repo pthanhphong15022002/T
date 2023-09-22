@@ -240,6 +240,8 @@ export class FieldDetailComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
+        case 'C':
           result = event.e;
           break;
       }

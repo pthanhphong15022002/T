@@ -192,11 +192,12 @@ export class SalesinvoicesAddComponent
   }
 
   onClickSave(closeAfterSave: boolean): void {
-    this.form.formGroup.patchValue({ status: '1' });
     this.form.save(null, null, null, null, false).subscribe((res: any) => {
       if (res === false || res.save?.error || res.update?.error) {
         return;
       }
+
+      this.detectorRef.markForCheck();
 
       this.api
         .exec('AC', 'SalesInvoicesBusiness', 'UpdateAsync', [
@@ -209,6 +210,7 @@ export class SalesinvoicesAddComponent
           }
 
           if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
             this.dialogRef.close();
           } else {
             this.resetForm();
