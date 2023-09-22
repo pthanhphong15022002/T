@@ -95,6 +95,7 @@ import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transacti
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
 import { AdvancePaymentDetailComponent } from './advance-payment/advance-payment-detail/advance-payment-detail.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
+import { IssueTransactionsUpdateParasComponent } from './vouchers/issue-transactions/issue-transactions-update-paras/issue-transactions-update-paras.component';
 export const routes: Routes = [
   {
     path: '',
@@ -327,6 +328,7 @@ export const routes: Routes = [
     SalesinvoicesDetailComponent,
     AdvancePaymentDetailComponent,
     CashtransfersDetailComponent,
+    IssueTransactionsUpdateParasComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

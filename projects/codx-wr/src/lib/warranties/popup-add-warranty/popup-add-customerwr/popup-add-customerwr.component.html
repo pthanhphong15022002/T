@@ -149,7 +149,7 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
+      <button type="button" class="btn btn-primary" [disabled]="isSave" (click)="onSave()">
         <codx-label
           name="lblSave"
           [formModel]="dialog.formModel"

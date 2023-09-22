@@ -104,6 +104,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   ];
 
   checkContact: boolean = false;
+  leverSetting: number;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -174,7 +175,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.regionID = null;
       this.data.wardID = null;
     }
-
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter(
+        (x) => x.category == '1' && !x.transType
+      )[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
     // this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
     //   if (res && res.length) {
     //     let m = res.find((x) => x.functionID == 'SYS01');
@@ -399,24 +411,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
   async setAddress(name) {
     if (name != null && name != '') {
       var tmp = new BS_AddressBook();
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      let lever = 0;
-      if (param?.length > 0) {
-        let dataParam = param.filter(
-          (x) => x.category == '1' && !x.transType
-        )[0];
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        lever = paramDefault['ControlInputAddress'] ?? 0;
-      }
+
       let json = await firstValueFrom(
         this.api.execSv<any>(
           'BS',
           'ERM.Business.BS',
           'ProvincesBusiness',
           'GetLocationAsync',
-          [name, lever]
+          [name, this.leverSetting]
         )
       );
       if (json != null && json.trim() != '') {
@@ -700,6 +702,19 @@ export class PopupAddCmCustomerComponent implements OnInit {
       if (this.count > 0) {
         return;
       }
+
+      if (
+        !this.cmSv.checkValidateSetting(
+          this.data.address,
+          this.data,
+          this.leverSetting,
+          this.gridViewSetup,
+          this.gridViewSetup?.Address?.headerText
+        )
+      ) {
+        return;
+      }
+
       let check = false;
       if (this.action != 'edit') {
         check = await firstValueFrom(

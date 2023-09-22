@@ -8,6 +8,7 @@ export class Device {
   public os: string;
   public ip: string;
   public imei: string;
+  public id: string;
   public trust: boolean;
   public times: string;
   public tenantID: string;
