@@ -347,7 +347,7 @@ export class ViewCalendarComponent
 
   //------------------More Func-----------------//
 
-  async getTask(data) {
+  async getTask(data, action = null) {
     let task;
     if (data) {
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
@@ -357,7 +357,7 @@ export class ViewCalendarComponent
             'DP',
             'InstanceStepsBusiness',
             'GetTaskInCalendarAsync',
-            [data?.stepID, data?.recID]
+            [data?.stepID, data?.recID, action]
           )
         );
         this.isStepTask = true;
@@ -719,12 +719,12 @@ export class ViewCalendarComponent
   async copyTask(data) {
     if (data) {
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
-      let task = await this.getTask(data);
+      let task = await this.getTask(data,'copy');
       if (task) {
         delete task?.id;
         await this.handleTask(type, 'add', task);
       } else {
-        this.notiService.notifyCode('');
+        this.notiService.notifyCode('Bạn không có quyền thêm công việc');
       }
     }
   }
@@ -734,6 +734,10 @@ export class ViewCalendarComponent
   async deleteTask(data) {
     if (data) {
       let task = await this.getTask(data);
+      if(task?.isTaskDefault){
+        this.notiService.notifyCode('Bạn không có quyền xóa công việc này');
+        return;
+      }
       if (task) {
         this.notiService.alertCode('SYS030').subscribe((x) => {
           if (x.event && x.event.status == 'Y') {

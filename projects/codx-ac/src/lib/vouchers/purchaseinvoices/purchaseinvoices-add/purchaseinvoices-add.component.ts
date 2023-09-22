@@ -246,6 +246,8 @@ export class PurchaseinvoicesAddComponent
         return;
       }
 
+      this.detectorRef.markForCheck();
+
       this.api
         .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateAsync', [
           this.master,
@@ -413,8 +415,20 @@ export class PurchaseinvoicesAddComponent
     }
 
     const field: string = e.field.toLowerCase();
-    const postFields: string[] = ['quantity', 'unitprice', 'vatid'];
+    const postFields: string[] = [
+      'quantity',
+      'unitprice',
+      'vatid',
+      'vatbase',
+      'goods',
+    ];
     if (postFields.includes(field)) {
+      if (field === 'goods') {
+        this.master.unbounds = {
+          itemID: e?.itemData?.ItemID,
+        };
+      }
+
       this.api
         .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
           field,

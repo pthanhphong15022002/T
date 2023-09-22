@@ -811,10 +811,6 @@ codx-tmmeetings .toolbar {
   margin-bottom: 0 !important;
 }
 
-.e-splitter.e-splitter-horizontal,
-.e-splitter.e-splitter-vertical {
-  border: 0;
-}
 
 .user-mini-nav-custom {
   height: 24px;
@@ -3534,18 +3530,8 @@ lib-layoutonlyheader{
   max-height: none!important;
 }
 
-lib-employee-list{
-  .e-splitter .e-split-bar.e-split-bar-horizontal .e-resize-handler {
-    display: none;
-  }
-  .e-splitter .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar {
-    cursor: none;
-  }
-  .e-splitter .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
-    cursor: none;
-    display: none;
-  }
-}
+
+
 .codx-his.envelop table th, .codx-his.envelop table td{
   padding: 5px 10px!important;
   min-width: 100px;
@@ -3686,16 +3672,45 @@ codx-detail-toolbar codx-mfunc .dropdown {
  }
 }
 
-codx-view-tree-detail .e-splitter{
-  .e-resize-handler.e-icons{
-    display: none!important;
+// codx-view-tree-detail .e-splitter{
+//   .e-resize-handler.e-icons{
+//     display: none!important;
+//   }
+//   .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
+//     cursor: default;
+//   }
+//   .e-split-bar.e-split-bar-horizontal {
+//     background: transparent!important;
+//   }
+// }
+
+/*
+.e-splitter .e-split-bar.e-split-bar-horizontal {
+  background: #dee2e6;
+}
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
+lib-employee-list{
+  .e-splitter .e-split-bar.e-split-bar-horizontal .e-resize-handler {
+    display: none;
   }
-  .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
-    cursor: default;
+  .e-splitter .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar {
+    cursor: none;
   }
-  .e-split-bar.e-split-bar-horizontal {
-    background: transparent!important;
+  .e-splitter .e-split-bar.e-split-bar-horizontal.e-resizable-split-bar::after {
+    cursor: none;
+    display: none;
   }
+}
+
+*/
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
 }
 .target-treeview .menu-item{
   padding-top: 2px;

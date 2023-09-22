@@ -36,6 +36,7 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
 import { Vouchers } from '../../models/Vouchers.model';
+import { IssueTransactionsUpdateParasComponent } from './issue-transactions-update-paras/issue-transactions-update-paras.component';
 
 @Component({
   selector: 'lib-issue-transactions',
@@ -165,6 +166,22 @@ export class IssueTransactionsComponent extends UIComponent {
           panelRightRef: this.templateDetail,
         },
       },
+      {
+        type: ViewType.grid, //? thiết lập view lưới
+        active: true,
+        sameData: true,
+        subModel:{
+          gridviewName: this.fmVouchersLines.gridViewName,
+          formName: this.fmVouchersLines.formName,
+          entityName: this.fmVouchersLines.entityName,
+          service:'IV',
+          predicates:'TransID=@0',
+          rowNoField:'rowNo',
+        },
+        model: {
+          template2: this.templateMore,
+        },
+      },
     ];
     
     this.view.setRootNode(this.parent?.customName);
@@ -273,6 +290,28 @@ export class IssueTransactionsComponent extends UIComponent {
       this.journalNo,
       action
     ]);
+  }
+
+  openFormDbGrid(e)
+  {
+    var obj = {
+      formType: 'add',
+      headerText: this.headerText,
+      formModelMaster: this.fmVouchers,
+      formModelLine: this.fmVouchersLines,
+      hideFields: this.hideFields,
+      journal: this.journal,
+    };
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.isFull = true;
+    this.dialog = this.callfunc.openSide(
+      IssueTransactionsUpdateParasComponent,
+      obj,
+      option,
+      this.view.funcID
+    );
   }
 
   add(e) {

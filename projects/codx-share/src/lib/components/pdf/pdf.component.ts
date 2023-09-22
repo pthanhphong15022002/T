@@ -63,7 +63,7 @@ export class PdfComponent
   passwordPublicSign: any;
   emailPublicSign: any;
   publicSignStatus: any;
-  isSigned =false;
+  isSigned = false;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -275,87 +275,88 @@ export class PdfComponent
 
   vllSupplier: any;
   oSignfile: any;
-  getPASignature(){
-    this.esService.getDataSignature(this.signerInfo.authorID, this.signerInfo?.signType).subscribe(signature=>{
-      if(signature){
-        this.paSignature=signature[0];
-        this.paSignature.modifiedOn= new Date();
-        this.detectorRef.detectChanges();
-
-      }
-    })
-  }
-  loadSFByID(){
+  getPASignature() {
     this.esService
-        .getSFByID([
-          this.recID,
-          this.user?.userID,
-          this.isApprover,
-          this.isEditable,
-          this.transRecID,
-        ])
-        .subscribe((res: any) => {
-          console.table('sf', res);
-          if (this.oURL?.length > 0) {
-            res.urls = this.oURL;
-          }
-          let sf = res?.signFile;
-          if (sf) {
-            sf.files.forEach((file: any, index) => {
-              if (file?.eSign) {
-                this.lstFiles.push({
-                  fileName: file.fileName,
-                  fileRefNum: sf.refNo,
-                  fileID: file.fileID,
-                  fileUrl: environment.urlUpload + '/' + res.urls[index],
-                  signers: res?.approvers,
-                  areas: file.areas,
-                  fileIdx: index,
-                });
-              }
-            });
-            this.lstSigners = res.approvers;
-            this.lstSigners.forEach((signer) => {
-              //chu ky chinh
-              if (signer.signature1) {
-                signer.signature1 =
-                  environment.urlUpload + '/' + signer.signature1;
-              }
-              //chu ky nhay
-              if (signer.signature2) {
-                signer.signature2 =
-                  environment.urlUpload + '/' + signer.signature2;
-              }
-              //con dau
-              if (signer.stamp) {
-                signer.stamp = environment.urlUpload + '/' + signer.stamp;
-              }
-              //approverType
-              // if (signer.authorID == this.curSignerType) {
-              //   signer.approverType = this.curSignerType;
-              // }
-            });
-            if (this.isApprover) {
-              this.signerInfo = res?.approvers.find(
-                (approver) => approver.authorID == this.oApprovalTrans.stepRecID
-              );
-
-              this.changeSignerInfo.emit(this.signerInfo);
-            } else {
-              this.signerInfo = res.approvers[0];
-            }
-            if(this.isPublic){
-              this.getPASignature();
-            }
-            this.curFileID = this.lstFiles[0]['fileID'];
-            this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
-            this.curSignerID = this.signerInfo?.authorID;
-            this.curSignerRecID = this.signerInfo?.recID;
-          }
-          //this.detectorRef.detectChanges();
-        });
-        
+      .getDataSignature(this.signerInfo.authorID, this.signerInfo?.signType)
+      .subscribe((signature) => {
+        if (signature) {
+          this.paSignature = signature[0];
+          this.paSignature.modifiedOn = new Date();
           this.detectorRef.detectChanges();
+        }
+      });
+  }
+  loadSFByID() {
+    this.esService
+      .getSFByID([
+        this.recID,
+        this.user?.userID,
+        this.isApprover,
+        this.isEditable,
+        this.transRecID,
+      ])
+      .subscribe((res: any) => {
+        console.table('sf', res);
+        if (this.oURL?.length > 0) {
+          res.urls = this.oURL;
+        }
+        let sf = res?.signFile;
+        if (sf) {
+          sf.files.forEach((file: any, index) => {
+            if (file?.eSign) {
+              this.lstFiles.push({
+                fileName: file.fileName,
+                fileRefNum: sf.refNo,
+                fileID: file.fileID,
+                fileUrl: environment.urlUpload + '/' + res.urls[index],
+                signers: res?.approvers,
+                areas: file.areas,
+                fileIdx: index,
+              });
+            }
+          });
+          this.lstSigners = res.approvers;
+          this.lstSigners.forEach((signer) => {
+            //chu ky chinh
+            if (signer.signature1) {
+              signer.signature1 =
+                environment.urlUpload + '/' + signer.signature1;
+            }
+            //chu ky nhay
+            if (signer.signature2) {
+              signer.signature2 =
+                environment.urlUpload + '/' + signer.signature2;
+            }
+            //con dau
+            if (signer.stamp) {
+              signer.stamp = environment.urlUpload + '/' + signer.stamp;
+            }
+            //approverType
+            // if (signer.authorID == this.curSignerType) {
+            //   signer.approverType = this.curSignerType;
+            // }
+          });
+          if (this.isApprover) {
+            this.signerInfo = res?.approvers.find(
+              (approver) => approver.authorID == this.oApprovalTrans.stepRecID
+            );
+
+            this.changeSignerInfo.emit(this.signerInfo);
+          } else {
+            this.signerInfo = res.approvers[0];
+          }
+          if (this.isPublic) {
+            this.getPASignature();
+          }
+          this.curFileID = this.lstFiles[0]['fileID'];
+          this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
+          this.curSignerID = this.signerInfo?.authorID;
+          this.curSignerRecID = this.signerInfo?.recID;
+        }
+        //this.detectorRef.detectChanges();
+      });
+
+    this.detectorRef.detectChanges();
   }
   onInit() {
     this.curSelectedHLA = null;
@@ -363,7 +364,7 @@ export class PdfComponent
 
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
-        this.vllSupplier = res?.datas?.filter(x=>x?.value != 4);
+        this.vllSupplier = res?.datas?.filter((x) => x?.value != 4);
       }
     });
 
@@ -371,11 +372,11 @@ export class PdfComponent
       this.user.userID = this.approver;
     }
     //if (this.isPublic) {
-      // this.headerRightName = [
-      //   { text: 'Thông tin người kí' },
-      //   { text: 'Trao đổi' },
-      //   { text: 'Hướng dẫn ký số' },
-      // ];
+    // this.headerRightName = [
+    //   { text: 'Thông tin người kí' },
+    //   { text: 'Trao đổi' },
+    //   { text: 'Hướng dẫn ký số' },
+    // ];
     //}
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
@@ -397,7 +398,6 @@ export class PdfComponent
       });
 
       this.loadSFByID();
-      
 
       this.cache.valueList('ES015').subscribe((res) => {
         this.vllActions = res.datas;
@@ -785,39 +785,36 @@ export class PdfComponent
       });
     }
   }
-  popupPublicESign(status){
-    this.publicSignStatus= status;
-    var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);   
+  popupPublicESign(status) {
+    this.publicSignStatus = status;
+    var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
     this.detectorRef.detectChanges();
-    
   }
-  publicESign(dialog){
+  publicESign(dialog) {
     this.esService.editSignature(this.paSignature).subscribe((res) => {
       if (res && this.transRecID) {
-          this.codxShareService
+        this.codxShareService
           .codxApprove(this.transRecID, this.publicSignStatus, null, null, null)
           .subscribe((res: ResponseModel) => {
-            if (res?.msgCodeError==null && res?.rowCount>0) {  
+            if (res?.msgCodeError == null && res?.rowCount > 0) {
               this.notificationsService.notifyCode('SYS034');
               //this.canOpenSubPopup = false;
               dialog && dialog?.close();
-              this.isSigned =true;
+              this.isSigned = true;
               this.detectorRef.detectChanges();
             }
           });
-        
       }
     });
   }
 
   valueChange(event) {
     if (event?.field) {
-      if (event?.field =='emailPublicSign') {
+      if (event?.field == 'emailPublicSign') {
         this.paSignature.email = event?.data;
-      } 
-      else if (event?.field =='passwordPublicSign') {
-        this.paSignature.password= event?.data;
-      }      
+      } else if (event?.field == 'passwordPublicSign') {
+        this.paSignature.password = event?.data;
+      }
       this.detectorRef.detectChanges();
     }
   }
@@ -1494,7 +1491,6 @@ export class PdfComponent
       }
     }
 
-    
     switch (type) {
       case 'text':
         let textArea = new Konva.Text({
@@ -1575,7 +1571,7 @@ export class PdfComponent
 
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
-console.log('run addArea', url);
+        console.log('run addArea', url);
 
         img.setAttribute('crossOrigin', 'anonymous');
         img.referrerPolicy = 'noreferrer';
@@ -1732,7 +1728,7 @@ console.log('run addArea', url);
       if (res?.event[0]) {
         area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
-    console.log('run changeSignature_StampImg');
+        console.log('run changeSignature_StampImg');
 
         this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
       }
@@ -1742,7 +1738,7 @@ console.log('run addArea', url);
   changeSignature_StampImg_Area_Immediate(curArea: tmpSignArea, file) {
     let curLayer = this.lstLayer.get(curArea.location.pageNumber + 1);
     console.log('run changeSignature_StampImg_Area_Immediate');
-    
+
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       const img = document.createElement('img') as HTMLImageElement;
@@ -1797,8 +1793,8 @@ console.log('run addArea', url);
         let setupShowForm = new SetupShowSignature();
         setupShowForm.showSignature1 = true;
         console.log('run changeSignature_StampImg_Public');
-        
-        this.addSignature(setupShowForm,area);
+
+        this.addSignature(setupShowForm, area);
         return;
         this.url = this.signerInfo?.signature1
           ? this.signerInfo?.signature1
@@ -1855,15 +1851,15 @@ console.log('run addArea', url);
         curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
-console.log('run addArea', newUrl);
-        
-        curImgEle.src = curArea.labelValue;
+        console.log('run addArea', newUrl);
+
+        curImgEle.src = environment.urlUpload + '/' + curArea.labelValue;
         let min = 0;
         let scale = 1;
-        let scaleW = 1;
-        let scaleH = 1;
+        let scaleW = this.curSelectedArea.scaleX();
+        let scaleH = this.curSelectedArea.scaleY();
         curImgEle.onload = () => {
-        console.log('run changeAnnotPro', curArea.labelValue);
+          console.log('run changeAnnotPro', curArea.labelValue);
 
           let isText = this.curSelectedArea.attrs?.text ? true : false;
           if (isText) {
@@ -2067,10 +2063,10 @@ console.log('run addArea', newUrl);
     console.log('rotate', e);
   }
 
-  addSignature(setupShowForm,area=null) {
+  addSignature(setupShowForm, area = null) {
     let model = {
       userID: this.signerInfo?.authorID,
-      email: this.signerInfo?.userID,//email của approver là đối tác
+      email: this.signerInfo?.userID, //email của approver là đối tác
       fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
     };
@@ -2088,16 +2084,16 @@ console.log('run addArea', newUrl);
     );
     popupSignature.closed.subscribe((res) => {
       console.log('popupSignature evt ', res);
-      
-      if (res?.event?.length>0 ) {
+
+      if (res?.event?.length > 0) {
         let img = res.event[0];
-        this.crrType= {value :img?.referType};
+        this.crrType = { value: img?.referType };
         switch (img?.referType) {
           case 'S1': // Ky chinh
             // this.signerInfo.signature1 =
             //   environment.urlUpload + '/' + img?.pathDisk;
             // this.changeAnnotationItem(this.crrType);
-            // if(this.paSignature) this.paSignature.modifiedOn = new Date();            
+            // if(this.paSignature) this.paSignature.modifiedOn = new Date();
             // this.detectorRef.detectChanges();
             // this.lstSigners.forEach((signer) => {
             //   //chu ky chinh
@@ -2105,10 +2101,10 @@ console.log('run addArea', newUrl);
             //     signer.signature1 =
             //       environment.urlUpload + '/' + img?.pathDisk;
             //       this.detectorRef.detectChanges();
-            //   }              
+            //   }
             // });
             // area.labelValue = environment.urlUpload + '/' + img?.pathDisk
-            this.changeAnnotPro(area.labelType, area.recID, environment.urlUpload + '/' + img?.pathDisk);
+            this.changeAnnotPro(area.labelType, area.recID, img?.pathDisk);
 
             // this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
             //this.changeSignature_StampImg_Area_Immediate(area,img);
@@ -2116,7 +2112,7 @@ console.log('run addArea', newUrl);
             // area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
             // this.detectorRef.detectChanges();
             // this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
-            
+
             break;
           // case 'S2': //Ky nhay
           //   this.signerInfo.signature2 =
@@ -2727,7 +2723,7 @@ console.log('run addArea', newUrl);
   }
 
   //#region Public Signing
-  currentTab=0;
+  currentTab = 0;
   checkedConfirm: boolean = true;
   @ViewChild('imgSignature1', { static: false })
   imgSignature1: ImageViewerComponent;

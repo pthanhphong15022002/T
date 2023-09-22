@@ -402,7 +402,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
-          if(e && e.event != null){
+          if (e && e.event != null) {
             if (e.event?.recID) {
               let contact = e.event;
               let idx = this.listContacts.findIndex(
@@ -410,7 +410,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
               );
               if (idx == -1) this.listContacts.push(contact);
               else this.listContacts[idx] = contact;
-              this.listContacts = JSON.parse(JSON.stringify( this.listContacts));
+              // this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
               this.valueChangeCustom.emit({
                 e: JSON.stringify(this.listContacts),
                 data: this.customField,
@@ -419,7 +419,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
               this.changeDef.detectChanges();
             }
           }
-
         });
       });
   }
@@ -491,7 +490,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           opt
         );
         dialog.closed.subscribe((e) => {
-          if(e && e?.event){
+          if (e && e?.event) {
             if (e.event?.recID) {
               let contact = e.event;
               let idx = this.listContacts.findIndex(
@@ -499,7 +498,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
               );
               if (idx == -1) this.listContacts.push(contact);
               else this.listContacts[idx] = contact;
-              this.listContacts = JSON.parse(JSON.stringify( this.listContacts));
+              // this.listContacts = JSON.parse(JSON.stringify( this.listContacts));
               this.valueChangeCustom.emit({
                 e: JSON.stringify(this.listContacts),
                 data: this.customField,
@@ -507,7 +506,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
               });
             }
           }
-
         });
       });
   }

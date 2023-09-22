@@ -146,7 +146,7 @@ export class LeadDetailComponent implements OnInit {
           this.oldRecId
         ) {
           this.hasRunOnce = true;
-        //  this.resetTab(this.dataSelected.applyProcess);
+          //  this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
           this.isLoadOwner = true;
         }
@@ -154,7 +154,7 @@ export class LeadDetailComponent implements OnInit {
         this.oldRecId = changes['dataSelected'].currentValue.recID;
 
         this.tabControl.push(references);
-        if(!this.dataSelected?.dealID) {
+        if (!this.dataSelected?.dealID) {
           this.tmpDeal = null;
         }
       }
@@ -195,9 +195,7 @@ export class LeadDetailComponent implements OnInit {
   // }
 
   async promiseAllLoad() {
-    this.seesionID = this.dataSelected.applyProcess
-      ? this.dataSelected.refID
-      : this.dataSelected.recID;
+    this.seesionID = this.dataSelected.recID; //da doi lai lay bang recID
     this.loadTree(this.seesionID);
     this.isDataLoading = true;
     this.dataSelected.applyProcess && (await this.getListInstanceStep());
@@ -280,8 +278,7 @@ export class LeadDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.tmpDeal = res[0];
-        }
-        else {
+        } else {
           this.tmpDeal = null;
         }
       });
@@ -333,15 +330,14 @@ export class LeadDetailComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  //load giao việc
-  getTree() {
-    let seesionID = this.dataSelected.applyProcess
-      ? this.dataSelected.refID
-      : this.dataSelected.recID;
-    this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
-      this.treeTask = tree || [];
-    });
-  }
+  // //load giao việc
+  // getTree() {
+  //   let seesionID = this.dataSelected.recID;
+  //   this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
+  //     this.treeTask = tree || [];
+  //   });
+  // }
+
   saveAssign(e) {
     if (e) {
       this.loadTree(this.seesionID);
