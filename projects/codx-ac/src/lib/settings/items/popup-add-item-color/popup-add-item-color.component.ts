@@ -83,7 +83,7 @@ export class PopupAddItemColorComponent extends UIComponent {
     console.log(this.itemColor);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -118,7 +118,7 @@ export class PopupAddItemColorComponent extends UIComponent {
     console.log(this.itemColor);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

@@ -1,13 +1,12 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   Injector,
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   CRUDService,
@@ -22,7 +21,7 @@ import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { groupBy, toCamelCase } from '../../../utils';
+import { groupBy } from '../../../utils';
 import { IAcctTran } from '../interfaces/IAcctTran.interface';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
@@ -130,7 +129,7 @@ export class SalesinvoicesDetailComponent
   //#region Init
   override onInit(): void {
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
 

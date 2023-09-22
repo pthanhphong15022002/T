@@ -365,7 +365,9 @@ export class PopupQuickaddContactComponent implements OnInit {
       }
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioCheckedContact = false;
+
       this.default();
+      this.data = new CM_Contacts();
       if (this.data.contactID == null || this.data.contactID?.trim() == '') {
         this.cmSv
           .genAutoNumber('CM0102', 'CM_Contacts', 'ContactID')
@@ -376,7 +378,6 @@ export class PopupQuickaddContactComponent implements OnInit {
           });
       }
 
-      this.data = new CM_Contacts();
       this.action = this.actionOld;
     }
   }
