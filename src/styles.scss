@@ -3704,6 +3704,10 @@ lib-employee-list{
 
 */
 
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
 .target-treeview .menu-item{
   padding-top: 2px;
   padding-bottom: 8px;
