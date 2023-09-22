@@ -192,10 +192,9 @@ export class CM_Deals {
   currencyID: string;
   exchangeRate: number;
   dealValueTo: number = 0;
-  expectedFrom:Date;
-  expectedTo:Date;
-  datas:string;
-
+  expectedFrom: Date;
+  expectedTo: Date;
+  datas: string;
 }
 
 export class CM_Permissions {
@@ -280,8 +279,8 @@ export class CM_Customers {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  allowCall: boolean;
-  allowEmail: boolean;
+  allowCall: boolean = true;
+  allowEmail: boolean = true;
   occupation: string;
   gender: string;
   birthday: Date;
@@ -606,7 +605,7 @@ export class CM_Cases {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  applyProcess:boolean;
+  applyProcess: boolean;
 }
 
 export class CM_Partners {
@@ -749,7 +748,7 @@ export class CM_Leads {
   closedBy: string;
   closedOn: Date;
   closed: boolean;
-  applyProcess:boolean = true;
+  applyProcess: boolean = true;
   currencyID: string;
   exchangeRate: number;
   dealValue: number = 0;
