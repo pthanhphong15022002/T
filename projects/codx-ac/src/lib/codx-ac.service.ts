@@ -46,6 +46,18 @@ export class CodxAcService {
     return v;
   }
 
+  clearCache(storeName: string){
+    switch(storeName){
+      case 'account':
+        this.api
+          .exec('AC', 'ACBusiness', 'GetCacheAccountAsync', '')
+          .subscribe((res) => {
+            if (res) this.stores.set('account', res);
+          });
+        break;
+    }
+  }
+
   getGridViewSetup(formName: any, gridViewName: any) {
     return this.cache.gridViewSetup(formName, gridViewName);
   }
