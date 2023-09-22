@@ -88,6 +88,15 @@ export class PopupQuickaddContactComponent implements OnInit {
     }
     if (this.action == 'add') {
       this.default();
+      if (this.data?.contactID == null || this.data?.contactID?.trim() == '') {
+        this.cmSv
+          .genAutoNumber('CM0102', 'CM_Contacts', 'ContactID')
+          .subscribe((res) => {
+            if (res) {
+              this.data.contactID = res;
+            }
+          });
+      }
     }
   }
 
@@ -146,8 +155,11 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
   //#region save
   beforeSave(type) {
-    if(this.objectType == '4'){
-      this.data.refID = this.data.refID == null || this.data.refID?.trim() == '' ? Util.uid() : this.data.refID;
+    if (this.objectType == '4') {
+      this.data.refID =
+        this.data.refID == null || this.data.refID?.trim() == ''
+          ? Util.uid()
+          : this.data.refID;
     }
     if (this.type == 'formDetail') {
       this.data.contactType = this.contactType;
@@ -347,9 +359,22 @@ export class PopupQuickaddContactComponent implements OnInit {
       if (this.type == 'formDetail') {
         this.lstContactCbx = await this.loadContact();
       }
+      if (this.objectType == '4') {
+        this.data.contactID = null;
+      }
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioCheckedContact = false;
       this.default();
+      if (this.data.contactID == null || this.data.contactID?.trim() == '') {
+        this.cmSv
+          .genAutoNumber('CM0102', 'CM_Contacts', 'ContactID')
+          .subscribe((res) => {
+            if (res) {
+              this.data.contactID = res;
+            }
+          });
+      }
+
       this.data = new CM_Contacts();
       this.action = this.actionOld;
     }
@@ -368,7 +393,14 @@ export class PopupQuickaddContactComponent implements OnInit {
             if (this.objectType == '4') {
               this.data.recID = Util.uid();
               this.data.refID = this.contactID;
-              this.data.contactID = null;
+
+              this.cmSv
+                .genAutoNumber('CM0102', 'CM_Contacts', 'ContactID')
+                .subscribe((res) => {
+                  if (res) {
+                    this.data.contactID = res;
+                  }
+                });
             }
           }
         }

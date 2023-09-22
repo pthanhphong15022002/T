@@ -25,6 +25,8 @@ export class GanttChartComponent
   @Input() ganttDs = [];
   @Input() dataSelected;
   @Input() listSteps: DP_Instances_Steps[] = [];
+  @Input() sessionID = ''; // session giao việc
+  @Input() formModelAssign: FormModel; // formModel của giao việc
 
   crrViewGant = 'W';
   vllViewGannt = 'DP042';
@@ -234,7 +236,7 @@ export class GanttChartComponent
         case 'G':
           for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
             if (this.ganttDsClone[i]?.type == 'T') {
-              if(!this.ganttDsClone[i]?.taskGroupID) continue
+              if (!this.ganttDsClone[i]?.taskGroupID) continue;
               if (listRefIDAssign && listRefIDAssign.trim() != '')
                 listRefIDAssign += ';' + this.ganttDsClone[i].recID;
               else listRefIDAssign = this.ganttDsClone[i].recID;
@@ -243,7 +245,6 @@ export class GanttChartComponent
           break;
         case 'P':
           for (var i = idxCrr + 1; i < this.ganttDsClone.length; i++) {
-           
             if (this.ganttDsClone[i]?.type == 'G') {
               continue;
             } else if (this.ganttDsClone[i]?.type == 'T') {
@@ -252,7 +253,7 @@ export class GanttChartComponent
               else listRefIDAssign = this.ganttDsClone[i].recID;
             } else break;
           }
-            //thieu cong task ngooai mai hoir thuan de xets
+          //thieu cong task ngooai mai hoir thuan de xets
           break;
       }
       //end
@@ -261,6 +262,8 @@ export class GanttChartComponent
         listIdRoleInstance: this.ownerInstance,
         type: data?.type,
         listRefIDAssign: listRefIDAssign,
+        sessionID: this.sessionID, // session giao việc
+        formModelAssign: this.formModelAssign, // formModel của giao việc
       };
       let option = new SidebarModel();
       option.Width = '550px';
