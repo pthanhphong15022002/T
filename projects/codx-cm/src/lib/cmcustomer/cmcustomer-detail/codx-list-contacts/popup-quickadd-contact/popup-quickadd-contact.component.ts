@@ -222,6 +222,7 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data.share = true;
       if (type == 'save') {
         this.dialog.close(this.data);
+        this.data = new CM_Contacts(); //gán lại gia tri de ko bị binding Data
       } else {
         this.deleteContact(this.data);
       }
