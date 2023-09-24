@@ -168,14 +168,14 @@
           </ng-container>
           <ng-template #simple>
             <div class="my-2">
-              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-26px me-2 cursor-pointer"
+              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-2 cursor-pointer"
                 title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1" (click)="openFile(item)">
               </codx-temp-full>
             </div>
           </ng-template>
           <ng-template #full>
             <div class="my-2">
-              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-26px me-2 cursor-pointer"
+              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-2 cursor-pointer"
                 title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
                 subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1" (click)="openFile(item)">
               </codx-temp-full>

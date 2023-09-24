@@ -101,6 +101,8 @@ cancel() {
 }
 async promiseAll() {
   await this.getListPermission(this.processID, this.applyFor, this.stepID);
+  this.owner && await this.getInformationUser(this.owner);
+
 }
 async getListPermission(processId, applyFor, stepID) {
   var data = [processId, applyFor, stepID];
@@ -114,6 +116,15 @@ async getListPermissionInGroup(permissions) {
   return permissions != null && permissions.length > 0
     ? await this.codxCmService.getListUserByOrg(permissions)
     : permissions;
+}
+async getInformationUser(objectID){
+  this.codxCmService
+  .getEmployeesByDomainID(objectID)
+  .subscribe((user) => {
+    if (user) {
+      this.assignTo(user);
+    }
+  });
 }
 
 async getListUserByOrg(lstRoles, objectType) {
@@ -172,17 +183,19 @@ changeOwner(evt: any, view: any) {
       // });
       this.owner = evt.component.itemsSelected[0].Owner;
     }
-    this.codxCmService
-    .getEmployeesByDomainID(this.owner)
-    .subscribe((user) => {
-      if (user) {
-        this.assignTo(user);
-      }
-    });
+    // this.codxCmService
+    // .getEmployeesByDomainID(this.owner)
+    // .subscribe((user) => {
+    //   if (user) {
+    //     this.assignTo(user);
+    //   }
+    // });
+    this.getInformationUser(this.owner);
 
    //this.searchOwner('1', 'O', '0', this.owner, ownerName);
   }
 }
+
 searchOwner(objectType:any,roleType:any, memberType: any,owner:any, ownerName:any, dataPermission: any ){
   let index  = -1;
   if(dataPermission?.length > 0 && dataPermission) {
