@@ -536,7 +536,7 @@ export class OpenFolderComponent implements OnInit {
     var item2 = '';
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="mh-20px" src="../../../assets/codx/dms/folder.svg">';
+      item1 = '<img class="mh-20px" src="../../../assets/themes/dm/default/img/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
