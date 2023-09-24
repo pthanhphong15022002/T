@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,6 +35,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
   selector: 'lib-popup-add-custom-field',
   templateUrl: './popup-add-custom-field.component.html',
   styleUrls: ['./popup-add-custom-field.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;

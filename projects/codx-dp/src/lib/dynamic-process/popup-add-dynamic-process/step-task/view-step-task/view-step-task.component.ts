@@ -1,4 +1,9 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
@@ -14,6 +19,7 @@ import {
   selector: 'lib-view-job',
   templateUrl: './view-step-task.component.html',
   styleUrls: ['./view-step-task.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewJobComponent implements OnInit {
   title = '';
@@ -28,9 +34,9 @@ export class ViewJobComponent implements OnInit {
   listTypeTask = [];
   listDataLink = [];
   tabInstances = [
-    { type: 'history', title: 'History'},
-    { type: 'comment', title: 'Comment'},
-    { type: 'attachments', title: 'Attachments'},
+    { type: 'history', title: 'History' },
+    { type: 'comment', title: 'Comment' },
+    { type: 'attachments', title: 'Attachments' },
   ];
   viewModelDetail = 'history';
   dateFomat = 'dd/MM/yyyy';
@@ -65,7 +71,7 @@ export class ViewJobComponent implements OnInit {
     this.getModeFunction();
     console.log(this.dataInput);
     console.log(this.listDataInput);
-    //TODO: check quyền cập nhật tiến độ 
+    //TODO: check quyền cập nhật tiến độ
     //TODO: role và công việc liên kết
     this.isShowUpdate = this.isRoleAll && this.isUpdate;
   }
@@ -93,10 +99,19 @@ export class ViewJobComponent implements OnInit {
       }
     });
 
-    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
-    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
-    this.person = this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
-    this.connection = this.dataInput['roles']?.filter((role) => role.roleType === 'R')?.map(item => {return item.objectID}).join(';') || [];
+    this.owner =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
+    this.participant =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    this.person =
+      this.dataInput['roles']?.filter((role) => role.roleType === 'S') || [];
+    this.connection =
+      this.dataInput['roles']
+        ?.filter((role) => role.roleType === 'R')
+        ?.map((item) => {
+          return item.objectID;
+        })
+        .join(';') || [];
   }
 
   getModeFunction() {
@@ -137,7 +152,7 @@ export class ViewJobComponent implements OnInit {
       ) || false
     );
   }
-  
+
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
     let doc = document.getElementsByClassName('extend-more')[0];
@@ -157,6 +172,5 @@ export class ViewJobComponent implements OnInit {
         ext.classList.add('rotate-back');
       }
     }
-
   }
 }
