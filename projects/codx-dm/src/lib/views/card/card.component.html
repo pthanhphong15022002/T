@@ -1,5 +1,5 @@
 <codx-card-img (dblclick)="dbView()" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
-  imgCss="card-img-center h-75px mt-5 mb-2" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
+  imgCss="card-img-center h-75px mt-3" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
   [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)" [typeMF]="'hover'" [footer]="cardImgFooter"
   (changeDataMF)="dmSV.filterMoreFunction($event, data)"
   [hideMF]="(formModel.funcID == 'DMT06' && favoriteID == '3')?true:false">
